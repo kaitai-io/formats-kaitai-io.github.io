@@ -250,6 +250,27 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// &lt;summary&gt;
+    /// This spec allows to parse files used by Microsoft Windows family of
+    /// operating systems to store parts of its &amp;quot;registry&amp;quot;. &amp;quot;Registry&amp;quot; is a
+    /// hierarchical database that is used to store system settings (global
+    /// configuration, per-user, per-application configuration, etc).
+    /// 
+    /// Typically, registry files are stored in:
+    /// 
+    /// * System-wide: several files in `%SystemRoot%\System32\Config\`
+    /// * User-wide:
+    ///   * `%USERPROFILE%\Ntuser.dat`
+    ///   * `%USERPROFILE%\Local Settings\Application Data\Microsoft\Windows\Usrclass.dat` (localized, Windows 2000, Server 2003 and Windows XP)
+    ///   * `%USERPROFILE%\AppData\Local\Microsoft\Windows\Usrclass.dat` (non-localized, Windows Vista and later)
+    /// 
+    /// Note that one typically can&#39;t access files directly on a mounted
+    /// filesystem with a running Windows OS.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;
+    /// Reference: &lt;a href=&quot;https://github.com/libyal/libregf/blob/master/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc&quot;&gt;Source&lt;/a&gt;
+    /// &lt;/remarks&gt;
     public partial class Regf : KaitaiStruct
     {
         public static Regf FromFile(string fileName)
@@ -357,11 +378,36 @@ namespace Kaitai
             private Regf m_root;
             private Regf.HiveBin m_parent;
             public byte[] Signature { get { return _signature; } }
+
+            /// &lt;summary&gt;
+            /// The offset of the hive bin, Value in bytes and relative from
+            /// the start of the hive bin data
+            /// &lt;/summary&gt;
             public uint Offset { get { return _offset; } }
+
+            /// &lt;summary&gt;
+            /// Size of the hive bin
+            /// &lt;/summary&gt;
             public uint Size { get { return _size; } }
+
+            /// &lt;summary&gt;
+            /// 0 most of the time, can contain remnant data
+            /// &lt;/summary&gt;
             public uint Unknown1 { get { return _unknown1; } }
+
+            /// &lt;summary&gt;
+            /// 0 most of the time, can contain remnant data
+            /// &lt;/summary&gt;
             public uint Unknown2 { get { return _unknown2; } }
+
+            /// &lt;summary&gt;
+            /// Only the root (first) hive bin seems to contain a valid FILETIME
+            /// &lt;/summary&gt;
             public Filetime Timestamp { get { return _timestamp; } }
+
+            /// &lt;summary&gt;
+            /// Contains number of bytes
+            /// &lt;/summary&gt;
             public uint Unknown4 { get { return _unknown4; } }
             public Regf M_Root { get { return m_root; } }
             public Regf.HiveBin M_Parent { get { return m_parent; } }

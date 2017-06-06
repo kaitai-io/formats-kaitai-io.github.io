@@ -2,7 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 /**
- * MessagePack (msgpack) is a system to serialize arbitrary structured data into a compact binary stream.
+ * MessagePack (msgpack) is a system to serialize arbitrary structured
+ * data into a compact binary stream.
  */
 
 class Msgpack extends \Kaitai\Struct\Struct {

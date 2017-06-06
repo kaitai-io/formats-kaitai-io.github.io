@@ -14,7 +14,8 @@
 #endif
 
 /**
- * MessagePack (msgpack) is a system to serialize arbitrary structured data into a compact binary stream.
+ * MessagePack (msgpack) is a system to serialize arbitrary structured
+ * data into a compact binary stream.
  * \sa Source
  */
 

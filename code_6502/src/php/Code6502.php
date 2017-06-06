@@ -1,6 +1,13 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * This spec can be used to disassemble raw stream of 6502 CPU machine
+ * code into individual operations. Each operation includes an opcode
+ * and, optionally, an argument. Register arguments are part of the
+ * `opcode` enum.
+ */
+
 class Code6502 extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Code6502 $root = null) {
         parent::__construct($io, $parent, $root);

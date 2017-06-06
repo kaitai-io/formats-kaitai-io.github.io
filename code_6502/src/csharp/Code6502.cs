@@ -4,6 +4,13 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// This spec can be used to disassemble raw stream of 6502 CPU machine
+    /// code into individual operations. Each operation includes an opcode
+    /// and, optionally, an argument. Register arguments are part of the
+    /// `opcode` enum.
+    /// </summary>
     public partial class Code6502 : KaitaiStruct
     {
         public static Code6502 FromFile(string fileName)

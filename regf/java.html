@@ -254,6 +254,25 @@ import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.HashMap;
 
+
+/**
+ * This spec allows to parse files used by Microsoft Windows family of
+ * operating systems to store parts of its &quot;registry&quot;. &quot;Registry&quot; is a
+ * hierarchical database that is used to store system settings (global
+ * configuration, per-user, per-application configuration, etc).
+ * 
+ * Typically, registry files are stored in:
+ * 
+ * * System-wide: several files in `%SystemRoot%\System32\Config\`
+ * * User-wide:
+ *   * `%USERPROFILE%\Ntuser.dat`
+ *   * `%USERPROFILE%\Local Settings\Application Data\Microsoft\Windows\Usrclass.dat` (localized, Windows 2000, Server 2003 and Windows XP)
+ *   * `%USERPROFILE%\AppData\Local\Microsoft\Windows\Usrclass.dat` (non-localized, Windows Vista and later)
+ * 
+ * Note that one typically can&#39;t access files directly on a mounted
+ * filesystem with a running Windows OS.
+ * @see &lt;a href=&quot;https://github.com/libyal/libregf/blob/master/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc&quot;&gt;Source&lt;/a&gt;
+ */
 public class Regf extends KaitaiStruct {
     public static Regf fromFile(String fileName) throws IOException {
         return new Regf(new KaitaiStream(fileName));
@@ -415,11 +434,36 @@ public class Regf extends KaitaiStruct {
         private Regf _root;
         private Regf.HiveBin _parent;
         public byte[] signature() { return signature; }
+
+        /**
+         * The offset of the hive bin, Value in bytes and relative from
+         * the start of the hive bin data
+         */
         public long offset() { return offset; }
+
+        /**
+         * Size of the hive bin
+         */
         public long size() { return size; }
+
+        /**
+         * 0 most of the time, can contain remnant data
+         */
         public long unknown1() { return unknown1; }
+
+        /**
+         * 0 most of the time, can contain remnant data
+         */
         public long unknown2() { return unknown2; }
+
+        /**
+         * Only the root (first) hive bin seems to contain a valid FILETIME
+         */
         public Filetime timestamp() { return timestamp; }
+
+        /**
+         * Contains number of bytes
+         */
         public long unknown4() { return unknown4; }
         public Regf _root() { return _root; }
         public Regf.HiveBin _parent() { return _parent; }

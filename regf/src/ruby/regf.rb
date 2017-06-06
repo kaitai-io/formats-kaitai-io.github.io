@@ -6,6 +6,24 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# This spec allows to parse files used by Microsoft Windows family of
+# operating systems to store parts of its "registry". "Registry" is a
+# hierarchical database that is used to store system settings (global
+# configuration, per-user, per-application configuration, etc).
+# 
+# Typically, registry files are stored in:
+# 
+# * System-wide: several files in `%SystemRoot%\System32\Config\`
+# * User-wide:
+#   * `%USERPROFILE%\Ntuser.dat`
+#   * `%USERPROFILE%\Local Settings\Application Data\Microsoft\Windows\Usrclass.dat` (localized, Windows 2000, Server 2003 and Windows XP)
+#   * `%USERPROFILE%\AppData\Local\Microsoft\Windows\Usrclass.dat` (non-localized, Windows Vista and later)
+# 
+# Note that one typically can't access files directly on a mounted
+# filesystem with a running Windows OS.
+# @see https://github.com/libyal/libregf/blob/master/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc Source
 class Regf < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -61,11 +79,30 @@ class Regf < Kaitai::Struct::Struct
       @unknown4 = @_io.read_u4le
     end
     attr_reader :signature
+
+    ##
+    # The offset of the hive bin, Value in bytes and relative from
+    # the start of the hive bin data
     attr_reader :offset
+
+    ##
+    # Size of the hive bin
     attr_reader :size
+
+    ##
+    # 0 most of the time, can contain remnant data
     attr_reader :unknown1
+
+    ##
+    # 0 most of the time, can contain remnant data
     attr_reader :unknown2
+
+    ##
+    # Only the root (first) hive bin seems to contain a valid FILETIME
     attr_reader :timestamp
+
+    ##
+    # Contains number of bytes
     attr_reader :unknown4
   end
   class HiveBinCell < Kaitai::Struct::Struct

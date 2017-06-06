@@ -8,7 +8,8 @@ end
 
 
 ##
-# MessagePack (msgpack) is a system to serialize arbitrary structured data into a compact binary stream.
+# MessagePack (msgpack) is a system to serialize arbitrary structured
+# data into a compact binary stream.
 # @see https://github.com/msgpack/msgpack/blob/master/spec.md Source
 class Msgpack < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)

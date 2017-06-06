@@ -6,6 +6,12 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# This spec can be used to disassemble raw stream of 6502 CPU machine
+# code into individual operations. Each operation includes an opcode
+# and, optionally, an argument. Register arguments are part of the
+# `opcode` enum.
 class Code6502 < Kaitai::Struct::Struct
 
   OPCODE = {

@@ -9,6 +9,11 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 class Code6502(KaitaiStruct):
+    """This spec can be used to disassemble raw stream of 6502 CPU machine
+    code into individual operations. Each operation includes an opcode
+    and, optionally, an argument. Register arguments are part of the
+    `opcode` enum.
+    """
 
     class Opcode(Enum):
         brk_impl = 0

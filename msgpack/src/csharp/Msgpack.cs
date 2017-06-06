@@ -6,7 +6,8 @@ namespace Kaitai
 {
 
     /// <summary>
-    /// MessagePack (msgpack) is a system to serialize arbitrary structured data into a compact binary stream.
+    /// MessagePack (msgpack) is a system to serialize arbitrary structured
+    /// data into a compact binary stream.
     /// </summary>
     /// <remarks>
     /// Reference: <a href="https://github.com/msgpack/msgpack/blob/master/spec.md">Source</a>

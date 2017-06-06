@@ -13,6 +13,13 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 
+/**
+ * This spec can be used to disassemble raw stream of 6502 CPU machine
+ * code into individual operations. Each operation includes an opcode
+ * and, optionally, an argument. Register arguments are part of the
+ * `opcode` enum.
+ */
+
 class code_6502_t : public kaitai::kstruct {
 
 public:
