@@ -1,0 +1,99 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__microsoft_cfb {
+		label="MicrosoftCfb";
+		graph[style=dotted];
+
+		microsoft_cfb__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">...</TD><TD>CfbHeader</TD><TD PORT="header_type">header</TD></TR>
+		</TABLE>>];
+		microsoft_cfb__inst__sector_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>sector_size</TD><TD>(1 &lt;&lt; header.sector_shift)</TD></TR>
+		</TABLE>>];
+		microsoft_cfb__inst__fat [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="fat_pos">sector_size</TD><TD PORT="fat_size">(header.size_fat * sector_size)</TD><TD>FatEntries</TD><TD PORT="fat_type">fat</TD></TR>
+		</TABLE>>];
+		microsoft_cfb__inst__dir [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="dir_pos">((header.ofs_dir + 1) * sector_size)</TD><TD PORT="dir_size">128</TD><TD>DirEntry</TD><TD PORT="dir_type">dir</TD></TR>
+		</TABLE>>];
+		subgraph cluster__cfb_header {
+			label="MicrosoftCfb::CfbHeader";
+			graph[style=dotted];
+
+			cfb_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="signature_pos">0</TD><TD PORT="signature_size">8</TD><TD>D0 CF 11 E0 A1 B1 1A E1</TD><TD PORT="signature_type">signature</TD></TR>
+				<TR><TD PORT="clsid_pos">8</TD><TD PORT="clsid_size">16</TD><TD>00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</TD><TD PORT="clsid_type">clsid</TD></TR>
+				<TR><TD PORT="version_minor_pos">24</TD><TD PORT="version_minor_size">2</TD><TD>u2le</TD><TD PORT="version_minor_type">version_minor</TD></TR>
+				<TR><TD PORT="version_major_pos">26</TD><TD PORT="version_major_size">2</TD><TD>u2le</TD><TD PORT="version_major_type">version_major</TD></TR>
+				<TR><TD PORT="byte_order_pos">28</TD><TD PORT="byte_order_size">2</TD><TD>FE FF</TD><TD PORT="byte_order_type">byte_order</TD></TR>
+				<TR><TD PORT="sector_shift_pos">30</TD><TD PORT="sector_shift_size">2</TD><TD>u2le</TD><TD PORT="sector_shift_type">sector_shift</TD></TR>
+				<TR><TD PORT="mini_sector_shift_pos">32</TD><TD PORT="mini_sector_shift_size">2</TD><TD>u2le</TD><TD PORT="mini_sector_shift_type">mini_sector_shift</TD></TR>
+				<TR><TD PORT="reserved1_pos">34</TD><TD PORT="reserved1_size">6</TD><TD></TD><TD PORT="reserved1_type">reserved1</TD></TR>
+				<TR><TD PORT="size_dir_pos">40</TD><TD PORT="size_dir_size">4</TD><TD>s4le</TD><TD PORT="size_dir_type">size_dir</TD></TR>
+				<TR><TD PORT="size_fat_pos">44</TD><TD PORT="size_fat_size">4</TD><TD>s4le</TD><TD PORT="size_fat_type">size_fat</TD></TR>
+				<TR><TD PORT="ofs_dir_pos">48</TD><TD PORT="ofs_dir_size">4</TD><TD>s4le</TD><TD PORT="ofs_dir_type">ofs_dir</TD></TR>
+				<TR><TD PORT="transaction_seq_pos">52</TD><TD PORT="transaction_seq_size">4</TD><TD>s4le</TD><TD PORT="transaction_seq_type">transaction_seq</TD></TR>
+				<TR><TD PORT="mini_stream_cutoff_size_pos">56</TD><TD PORT="mini_stream_cutoff_size_size">4</TD><TD>s4le</TD><TD PORT="mini_stream_cutoff_size_type">mini_stream_cutoff_size</TD></TR>
+				<TR><TD PORT="ofs_mini_fat_pos">60</TD><TD PORT="ofs_mini_fat_size">4</TD><TD>s4le</TD><TD PORT="ofs_mini_fat_type">ofs_mini_fat</TD></TR>
+				<TR><TD PORT="size_mini_fat_pos">64</TD><TD PORT="size_mini_fat_size">4</TD><TD>s4le</TD><TD PORT="size_mini_fat_type">size_mini_fat</TD></TR>
+				<TR><TD PORT="ofs_difat_pos">68</TD><TD PORT="ofs_difat_size">4</TD><TD>s4le</TD><TD PORT="ofs_difat_type">ofs_difat</TD></TR>
+				<TR><TD PORT="size_difat_pos">72</TD><TD PORT="size_difat_size">4</TD><TD>s4le</TD><TD PORT="size_difat_type">size_difat</TD></TR>
+				<TR><TD PORT="difat_pos">76</TD><TD PORT="difat_size">4</TD><TD>s4le</TD><TD PORT="difat_type">difat</TD></TR>
+				<TR><TD COLSPAN="4" PORT="difat__repeat">repeat 109 times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__fat_entries {
+			label="MicrosoftCfb::FatEntries";
+			graph[style=dotted];
+
+			fat_entries__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">4</TD><TD>s4le</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dir_entry {
+			label="MicrosoftCfb::DirEntry";
+			graph[style=dotted];
+
+			dir_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">64</TD><TD>str(UTF-16LE)</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="name_len_pos">64</TD><TD PORT="name_len_size">2</TD><TD>u2le</TD><TD PORT="name_len_type">name_len</TD></TR>
+				<TR><TD PORT="object_type_pos">66</TD><TD PORT="object_type_size">1</TD><TD>u1→ObjType</TD><TD PORT="object_type_type">object_type</TD></TR>
+				<TR><TD PORT="color_flag_pos">67</TD><TD PORT="color_flag_size">1</TD><TD>u1→RbColor</TD><TD PORT="color_flag_type">color_flag</TD></TR>
+				<TR><TD PORT="left_sibling_id_pos">68</TD><TD PORT="left_sibling_id_size">4</TD><TD>s4le</TD><TD PORT="left_sibling_id_type">left_sibling_id</TD></TR>
+				<TR><TD PORT="right_sibling_id_pos">72</TD><TD PORT="right_sibling_id_size">4</TD><TD>s4le</TD><TD PORT="right_sibling_id_type">right_sibling_id</TD></TR>
+				<TR><TD PORT="child_id_pos">76</TD><TD PORT="child_id_size">4</TD><TD>s4le</TD><TD PORT="child_id_type">child_id</TD></TR>
+				<TR><TD PORT="clsid_pos">80</TD><TD PORT="clsid_size">16</TD><TD></TD><TD PORT="clsid_type">clsid</TD></TR>
+				<TR><TD PORT="state_pos">96</TD><TD PORT="state_size">4</TD><TD>u4le</TD><TD PORT="state_type">state</TD></TR>
+				<TR><TD PORT="time_create_pos">100</TD><TD PORT="time_create_size">8</TD><TD>u8le</TD><TD PORT="time_create_type">time_create</TD></TR>
+				<TR><TD PORT="time_mod_pos">108</TD><TD PORT="time_mod_size">8</TD><TD>u8le</TD><TD PORT="time_mod_type">time_mod</TD></TR>
+				<TR><TD PORT="ofs_pos">116</TD><TD PORT="ofs_size">4</TD><TD>s4le</TD><TD PORT="ofs_type">ofs</TD></TR>
+				<TR><TD PORT="size_pos">120</TD><TD PORT="size_size">8</TD><TD>u8le</TD><TD PORT="size_type">size</TD></TR>
+			</TABLE>>];
+			dir_entry__inst__mini_stream [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="mini_stream_pos">((ofs + 1) * _root.sector_size)</TD><TD PORT="mini_stream_size">size</TD><TD></TD><TD PORT="mini_stream_type">mini_stream</TD></TR>
+			</TABLE>>];
+		}
+	}
+	microsoft_cfb__seq:header_type -> cfb_header__seq [style=bold];
+	cfb_header__seq:sector_shift_type -> microsoft_cfb__inst__sector_size [color="#404040"];
+	microsoft_cfb__inst__sector_size:sector_size_type -> microsoft_cfb__inst__fat:fat_pos [color="#404040"];
+	cfb_header__seq:size_fat_type -> microsoft_cfb__inst__fat:fat_size [color="#404040"];
+	microsoft_cfb__inst__sector_size:sector_size_type -> microsoft_cfb__inst__fat:fat_size [color="#404040"];
+	microsoft_cfb__inst__fat:fat_type -> fat_entries__seq [style=bold];
+	cfb_header__seq:ofs_dir_type -> microsoft_cfb__inst__dir:dir_pos [color="#404040"];
+	microsoft_cfb__inst__sector_size:sector_size_type -> microsoft_cfb__inst__dir:dir_pos [color="#404040"];
+	microsoft_cfb__inst__dir:dir_type -> dir_entry__seq [style=bold];
+	dir_entry__seq:ofs_type -> dir_entry__inst__mini_stream:mini_stream_pos [color="#404040"];
+	microsoft_cfb__inst__sector_size:sector_size_type -> dir_entry__inst__mini_stream:mini_stream_pos [color="#404040"];
+	dir_entry__seq:size_type -> dir_entry__inst__mini_stream:mini_stream_size [color="#404040"];
+}

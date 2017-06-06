@@ -1,0 +1,51 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__edid {
+		label="Edid";
+		graph[style=dotted];
+
+		edid__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD>00 FF FF FF FF FF FF 00</TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="mfg_bytes_pos">8</TD><TD PORT="mfg_bytes_size">2</TD><TD>u2le</TD><TD PORT="mfg_bytes_type">mfg_bytes</TD></TR>
+			<TR><TD PORT="product_code_pos">10</TD><TD PORT="product_code_size">2</TD><TD>u2le</TD><TD PORT="product_code_type">product_code</TD></TR>
+			<TR><TD PORT="serial_pos">12</TD><TD PORT="serial_size">4</TD><TD>u4le</TD><TD PORT="serial_type">serial</TD></TR>
+			<TR><TD PORT="mfg_week_pos">16</TD><TD PORT="mfg_week_size">1</TD><TD>u1</TD><TD PORT="mfg_week_type">mfg_week</TD></TR>
+			<TR><TD PORT="mfg_year_mod_pos">17</TD><TD PORT="mfg_year_mod_size">1</TD><TD>u1</TD><TD PORT="mfg_year_mod_type">mfg_year_mod</TD></TR>
+			<TR><TD PORT="edid_version_major_pos">18</TD><TD PORT="edid_version_major_size">1</TD><TD>u1</TD><TD PORT="edid_version_major_type">edid_version_major</TD></TR>
+			<TR><TD PORT="edid_version_minor_pos">19</TD><TD PORT="edid_version_minor_size">1</TD><TD>u1</TD><TD PORT="edid_version_minor_type">edid_version_minor</TD></TR>
+			<TR><TD PORT="input_flags_pos">20</TD><TD PORT="input_flags_size">1</TD><TD>u1</TD><TD PORT="input_flags_type">input_flags</TD></TR>
+			<TR><TD PORT="screen_size_h_pos">21</TD><TD PORT="screen_size_h_size">1</TD><TD>u1</TD><TD PORT="screen_size_h_type">screen_size_h</TD></TR>
+			<TR><TD PORT="screen_size_v_pos">22</TD><TD PORT="screen_size_v_size">1</TD><TD>u1</TD><TD PORT="screen_size_v_type">screen_size_v</TD></TR>
+			<TR><TD PORT="gamma_mod_pos">23</TD><TD PORT="gamma_mod_size">1</TD><TD>u1</TD><TD PORT="gamma_mod_type">gamma_mod</TD></TR>
+			<TR><TD PORT="features_flags_pos">24</TD><TD PORT="features_flags_size">1</TD><TD>u1</TD><TD PORT="features_flags_type">features_flags</TD></TR>
+			<TR><TD PORT="chromacity_pos">25</TD><TD PORT="chromacity_size">10</TD><TD></TD><TD PORT="chromacity_type">chromacity</TD></TR>
+		</TABLE>>];
+		edid__inst__mfg_year [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>mfg_year</TD><TD>(mfg_year_mod + 1990)</TD></TR>
+		</TABLE>>];
+		edid__inst__mfg_id_ch1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>mfg_id_ch1</TD><TD>((mfg_bytes &amp; 31744) &gt;&gt; 10)</TD></TR>
+		</TABLE>>];
+		edid__inst__mfg_id_ch3 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>mfg_id_ch3</TD><TD>(mfg_bytes &amp; 31)</TD></TR>
+		</TABLE>>];
+		edid__inst__gamma [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>gamma</TD><TD>((gamma_mod + 100) / 100.0)</TD></TR>
+		</TABLE>>];
+		edid__inst__mfg_id_ch2 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>mfg_id_ch2</TD><TD>((mfg_bytes &amp; 992) &gt;&gt; 5)</TD></TR>
+		</TABLE>>];
+	}
+	edid__seq:mfg_year_mod_type -> edid__inst__mfg_year [color="#404040"];
+	edid__seq:mfg_bytes_type -> edid__inst__mfg_id_ch1 [color="#404040"];
+	edid__seq:mfg_bytes_type -> edid__inst__mfg_id_ch3 [color="#404040"];
+	edid__seq:gamma_mod_type -> edid__inst__gamma [color="#404040"];
+	edid__seq:mfg_bytes_type -> edid__inst__mfg_id_ch2 [color="#404040"];
+}

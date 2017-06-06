@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Kaitai Struct: declarative binary format parsing language</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Windows-specific</li>
+        <li class="active">Windows registry database</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Windows registry database:
+            
+            Perl parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>This spec allows to parse files used by Microsoft Windows family of
+operating systems to store parts of its &quot;registry&quot;. &quot;Registry&quot; is a
+hierarchical database that is used to store system settings (global
+configuration, per-user, per-application configuration, etc).</p>
+<p>Typically, registry files are stored in:</p>
+<ul>
+<li>System-wide: several files in <code>%SystemRoot%\System32\Config\</code></li>
+<li>User-wide:
+<ul>
+<li><code>%USERPROFILE%\Ntuser.dat</code></li>
+<li><code>%USERPROFILE%\Local Settings\Application Data\Microsoft\Windows\Usrclass.dat</code> (localized, Windows 2000, Server 2003 and Windows XP)</li>
+<li><code>%USERPROFILE%\AppData\Local\Microsoft\Windows\Usrclass.dat</code> (non-localized, Windows Vista and later)</li>
+</ul>
+</li>
+</ul>
+<p>Note that one typically can't access files directly on a mounted
+filesystem with a running Windows OS.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Windows NT and later
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Windows registry database
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Windows registry database parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="Windows registry database parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Windows registry database parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Windows registry database parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Windows registry database parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Windows registry database parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="perl.html" title="Windows registry database parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Windows registry database parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Windows registry database parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Windows registry database parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Perl source code to parse Windows registry database
+            
+        </h2>
+
+        
+
+        <h3>Regf.pm</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/perl/Regf.pm" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="perl"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+use strict;
+use warnings;
+use IO::KaitaiStruct 0.007_000;
+use Encode;
+
+########################################################################
+package Regf;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{header} = Regf::FileHeader-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{_raw_hive_bins} = ();
+    $self-&gt;{hive_bins} = ();
+    while (!$self-&gt;{_io}-&gt;is_eof()) {
+        push @{$self-&gt;{_raw_hive_bins}}, $self-&gt;{_io}-&gt;read_bytes(4096);
+        my $io__raw_hive_bins = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_hive_bins}[-1]);
+        push @{$self-&gt;{hive_bins}}, Regf::HiveBin-&gt;new($io__raw_hive_bins, $self, $self-&gt;{_root});
+    }
+}
+
+sub header {
+    my ($self) = @_;
+    return $self-&gt;{header};
+}
+
+sub hive_bins {
+    my ($self) = @_;
+    return $self-&gt;{hive_bins};
+}
+
+sub _raw_hive_bins {
+    my ($self) = @_;
+    return $self-&gt;{_raw_hive_bins};
+}
+
+########################################################################
+package Regf::Filetime;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u8le();
+}
+
+sub value {
+    my ($self) = @_;
+    return $self-&gt;{value};
+}
+
+########################################################################
+package Regf::HiveBin;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{header} = Regf::HiveBinHeader-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{cells} = ();
+    while (!$self-&gt;{_io}-&gt;is_eof()) {
+        push @{$self-&gt;{cells}}, Regf::HiveBinCell-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub header {
+    my ($self) = @_;
+    return $self-&gt;{header};
+}
+
+sub cells {
+    my ($self) = @_;
+    return $self-&gt;{cells};
+}
+
+########################################################################
+package Regf::HiveBinHeader;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{signature} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (104, 98, 105, 110)));
+    $self-&gt;{offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{unknown1} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{unknown2} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{timestamp} = Regf::Filetime-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{unknown4} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub signature {
+    my ($self) = @_;
+    return $self-&gt;{signature};
+}
+
+sub offset {
+    my ($self) = @_;
+    return $self-&gt;{offset};
+}
+
+sub size {
+    my ($self) = @_;
+    return $self-&gt;{size};
+}
+
+sub unknown1 {
+    my ($self) = @_;
+    return $self-&gt;{unknown1};
+}
+
+sub unknown2 {
+    my ($self) = @_;
+    return $self-&gt;{unknown2};
+}
+
+sub timestamp {
+    my ($self) = @_;
+    return $self-&gt;{timestamp};
+}
+
+sub unknown4 {
+    my ($self) = @_;
+    return $self-&gt;{unknown4};
+}
+
+########################################################################
+package Regf::HiveBinCell;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{cell_size_raw} = $self-&gt;{_io}-&gt;read_s4le();
+    $self-&gt;{identifier} = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes(2));
+    my $_on = $self-&gt;identifier();
+    if ($_on eq &quot;li&quot;) {
+        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;cell_size() - 2) - 4));
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = Regf::HiveBinCell::SubKeyListLi-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;vk&quot;) {
+        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;cell_size() - 2) - 4));
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = Regf::HiveBinCell::SubKeyListVk-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;lf&quot;) {
+        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;cell_size() - 2) - 4));
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = Regf::HiveBinCell::SubKeyListLhLf-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;ri&quot;) {
+        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;cell_size() - 2) - 4));
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = Regf::HiveBinCell::SubKeyListRi-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;lh&quot;) {
+        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;cell_size() - 2) - 4));
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = Regf::HiveBinCell::SubKeyListLhLf-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;nk&quot;) {
+        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;cell_size() - 2) - 4));
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = Regf::HiveBinCell::NamedKey-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;sk&quot;) {
+        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;cell_size() - 2) - 4));
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = Regf::HiveBinCell::SubKeyListSk-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    else {
+        $self-&gt;{data} = $self-&gt;{_io}-&gt;read_bytes((($self-&gt;cell_size() - 2) - 4));
+    }
+}
+
+sub cell_size {
+    my ($self) = @_;
+    return $self-&gt;{cell_size} if ($self-&gt;{cell_size});
+    $self-&gt;{cell_size} = (($self-&gt;cell_size_raw() &lt; 0 ? -1 : 1) * $self-&gt;cell_size_raw());
+    return $self-&gt;{cell_size};
+}
+
+sub is_allocated {
+    my ($self) = @_;
+    return $self-&gt;{is_allocated} if ($self-&gt;{is_allocated});
+    $self-&gt;{is_allocated} = $self-&gt;cell_size_raw() &lt; 0;
+    return $self-&gt;{is_allocated};
+}
+
+sub cell_size_raw {
+    my ($self) = @_;
+    return $self-&gt;{cell_size_raw};
+}
+
+sub identifier {
+    my ($self) = @_;
+    return $self-&gt;{identifier};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data};
+}
+
+sub _raw_data {
+    my ($self) = @_;
+    return $self-&gt;{_raw_data};
+}
+
+########################################################################
+package Regf::HiveBinCell::SubKeyListVk;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $DATA_TYPE_ENUM_REG_NONE = 0;
+our $DATA_TYPE_ENUM_REG_SZ = 1;
+our $DATA_TYPE_ENUM_REG_EXPAND_SZ = 2;
+our $DATA_TYPE_ENUM_REG_BINARY = 3;
+our $DATA_TYPE_ENUM_REG_DWORD = 4;
+our $DATA_TYPE_ENUM_REG_DWORD_BIG_ENDIAN = 5;
+our $DATA_TYPE_ENUM_REG_LINK = 6;
+our $DATA_TYPE_ENUM_REG_MULTI_SZ = 7;
+our $DATA_TYPE_ENUM_REG_RESOURCE_LIST = 8;
+our $DATA_TYPE_ENUM_REG_FULL_RESOURCE_DESCRIPTOR = 9;
+our $DATA_TYPE_ENUM_REG_RESOURCE_REQUIREMENTS_LIST = 10;
+our $DATA_TYPE_ENUM_REG_QWORD = 11;
+
+our $VK_FLAGS_VALUE_COMP_NAME = 1;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{value_name_size} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{data_size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{data_offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{data_type} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{flags} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{padding} = $self-&gt;{_io}-&gt;read_u2le();
+    if ($self-&gt;flags() == $VK_FLAGS_VALUE_COMP_NAME) {
+        $self-&gt;{value_name} = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;value_name_size()));
+    }
+}
+
+sub value_name_size {
+    my ($self) = @_;
+    return $self-&gt;{value_name_size};
+}
+
+sub data_size {
+    my ($self) = @_;
+    return $self-&gt;{data_size};
+}
+
+sub data_offset {
+    my ($self) = @_;
+    return $self-&gt;{data_offset};
+}
+
+sub data_type {
+    my ($self) = @_;
+    return $self-&gt;{data_type};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self-&gt;{flags};
+}
+
+sub padding {
+    my ($self) = @_;
+    return $self-&gt;{padding};
+}
+
+sub value_name {
+    my ($self) = @_;
+    return $self-&gt;{value_name};
+}
+
+########################################################################
+package Regf::HiveBinCell::SubKeyListLhLf;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{count} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{items} = ();
+    my $n_items = $self-&gt;count();
+    for (my $i = 0; $i &lt; $n_items; $i++) {
+        $self-&gt;{items}[$i] = Regf::HiveBinCell::SubKeyListLhLf::Item-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub count {
+    my ($self) = @_;
+    return $self-&gt;{count};
+}
+
+sub items {
+    my ($self) = @_;
+    return $self-&gt;{items};
+}
+
+########################################################################
+package Regf::HiveBinCell::SubKeyListLhLf::Item;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{named_key_offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{hash_value} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub named_key_offset {
+    my ($self) = @_;
+    return $self-&gt;{named_key_offset};
+}
+
+sub hash_value {
+    my ($self) = @_;
+    return $self-&gt;{hash_value};
+}
+
+########################################################################
+package Regf::HiveBinCell::SubKeyListSk;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{unknown1} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{previous_security_key_offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{next_security_key_offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{reference_count} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub unknown1 {
+    my ($self) = @_;
+    return $self-&gt;{unknown1};
+}
+
+sub previous_security_key_offset {
+    my ($self) = @_;
+    return $self-&gt;{previous_security_key_offset};
+}
+
+sub next_security_key_offset {
+    my ($self) = @_;
+    return $self-&gt;{next_security_key_offset};
+}
+
+sub reference_count {
+    my ($self) = @_;
+    return $self-&gt;{reference_count};
+}
+
+########################################################################
+package Regf::HiveBinCell::SubKeyListLi;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{count} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{items} = ();
+    my $n_items = $self-&gt;count();
+    for (my $i = 0; $i &lt; $n_items; $i++) {
+        $self-&gt;{items}[$i] = Regf::HiveBinCell::SubKeyListLi::Item-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub count {
+    my ($self) = @_;
+    return $self-&gt;{count};
+}
+
+sub items {
+    my ($self) = @_;
+    return $self-&gt;{items};
+}
+
+########################################################################
+package Regf::HiveBinCell::SubKeyListLi::Item;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{named_key_offset} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub named_key_offset {
+    my ($self) = @_;
+    return $self-&gt;{named_key_offset};
+}
+
+########################################################################
+package Regf::HiveBinCell::NamedKey;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $NK_FLAGS_KEY_IS_VOLATILE = 1;
+our $NK_FLAGS_KEY_HIVE_EXIT = 2;
+our $NK_FLAGS_KEY_HIVE_ENTRY = 4;
+our $NK_FLAGS_KEY_NO_DELETE = 8;
+our $NK_FLAGS_KEY_SYM_LINK = 16;
+our $NK_FLAGS_KEY_COMP_NAME = 32;
+our $NK_FLAGS_KEY_PREFEF_HANDLE = 64;
+our $NK_FLAGS_KEY_VIRT_MIRRORED = 128;
+our $NK_FLAGS_KEY_VIRT_TARGET = 256;
+our $NK_FLAGS_KEY_VIRTUAL_STORE = 512;
+our $NK_FLAGS_UNKNOWN1 = 4096;
+our $NK_FLAGS_UNKNOWN2 = 16384;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{flags} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{last_key_written_date_and_time} = Regf::Filetime-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{unknown1} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{parent_key_offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{number_of_sub_keys} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{number_of_volatile_sub_keys} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{sub_keys_list_offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{number_of_values} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{values_list_offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{security_key_offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{class_name_offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{largest_sub_key_name_size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{largest_sub_key_class_name_size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{largest_value_name_size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{largest_value_data_size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{unknown2} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{key_name_size} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{class_name_size} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{unknown_string_size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{unknown_string} = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;unknown_string_size()));
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self-&gt;{flags};
+}
+
+sub last_key_written_date_and_time {
+    my ($self) = @_;
+    return $self-&gt;{last_key_written_date_and_time};
+}
+
+sub unknown1 {
+    my ($self) = @_;
+    return $self-&gt;{unknown1};
+}
+
+sub parent_key_offset {
+    my ($self) = @_;
+    return $self-&gt;{parent_key_offset};
+}
+
+sub number_of_sub_keys {
+    my ($self) = @_;
+    return $self-&gt;{number_of_sub_keys};
+}
+
+sub number_of_volatile_sub_keys {
+    my ($self) = @_;
+    return $self-&gt;{number_of_volatile_sub_keys};
+}
+
+sub sub_keys_list_offset {
+    my ($self) = @_;
+    return $self-&gt;{sub_keys_list_offset};
+}
+
+sub number_of_values {
+    my ($self) = @_;
+    return $self-&gt;{number_of_values};
+}
+
+sub values_list_offset {
+    my ($self) = @_;
+    return $self-&gt;{values_list_offset};
+}
+
+sub security_key_offset {
+    my ($self) = @_;
+    return $self-&gt;{security_key_offset};
+}
+
+sub class_name_offset {
+    my ($self) = @_;
+    return $self-&gt;{class_name_offset};
+}
+
+sub largest_sub_key_name_size {
+    my ($self) = @_;
+    return $self-&gt;{largest_sub_key_name_size};
+}
+
+sub largest_sub_key_class_name_size {
+    my ($self) = @_;
+    return $self-&gt;{largest_sub_key_class_name_size};
+}
+
+sub largest_value_name_size {
+    my ($self) = @_;
+    return $self-&gt;{largest_value_name_size};
+}
+
+sub largest_value_data_size {
+    my ($self) = @_;
+    return $self-&gt;{largest_value_data_size};
+}
+
+sub unknown2 {
+    my ($self) = @_;
+    return $self-&gt;{unknown2};
+}
+
+sub key_name_size {
+    my ($self) = @_;
+    return $self-&gt;{key_name_size};
+}
+
+sub class_name_size {
+    my ($self) = @_;
+    return $self-&gt;{class_name_size};
+}
+
+sub unknown_string_size {
+    my ($self) = @_;
+    return $self-&gt;{unknown_string_size};
+}
+
+sub unknown_string {
+    my ($self) = @_;
+    return $self-&gt;{unknown_string};
+}
+
+########################################################################
+package Regf::HiveBinCell::SubKeyListRi;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{count} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{items} = ();
+    my $n_items = $self-&gt;count();
+    for (my $i = 0; $i &lt; $n_items; $i++) {
+        $self-&gt;{items}[$i] = Regf::HiveBinCell::SubKeyListRi::Item-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub count {
+    my ($self) = @_;
+    return $self-&gt;{count};
+}
+
+sub items {
+    my ($self) = @_;
+    return $self-&gt;{items};
+}
+
+########################################################################
+package Regf::HiveBinCell::SubKeyListRi::Item;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{sub_key_list_offset} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub sub_key_list_offset {
+    my ($self) = @_;
+    return $self-&gt;{sub_key_list_offset};
+}
+
+########################################################################
+package Regf::FileHeader;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $FILE_TYPE_NORMAL = 0;
+our $FILE_TYPE_TRANSACTION_LOG = 1;
+
+our $FILE_FORMAT_DIRECT_MEMORY_LOAD = 1;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{signature} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (114, 101, 103, 102)));
+    $self-&gt;{primary_sequence_number} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{secondary_sequence_number} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{last_modification_date_and_time} = Regf::Filetime-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{major_version} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{minor_version} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{type} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{format} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{root_key_offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{hive_bins_data_size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{clustering_factor} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{unknown1} = $self-&gt;{_io}-&gt;read_bytes(64);
+    $self-&gt;{unknown2} = $self-&gt;{_io}-&gt;read_bytes(396);
+    $self-&gt;{checksum} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{reserved} = $self-&gt;{_io}-&gt;read_bytes(3576);
+    $self-&gt;{boot_type} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{boot_recover} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub signature {
+    my ($self) = @_;
+    return $self-&gt;{signature};
+}
+
+sub primary_sequence_number {
+    my ($self) = @_;
+    return $self-&gt;{primary_sequence_number};
+}
+
+sub secondary_sequence_number {
+    my ($self) = @_;
+    return $self-&gt;{secondary_sequence_number};
+}
+
+sub last_modification_date_and_time {
+    my ($self) = @_;
+    return $self-&gt;{last_modification_date_and_time};
+}
+
+sub major_version {
+    my ($self) = @_;
+    return $self-&gt;{major_version};
+}
+
+sub minor_version {
+    my ($self) = @_;
+    return $self-&gt;{minor_version};
+}
+
+sub type {
+    my ($self) = @_;
+    return $self-&gt;{type};
+}
+
+sub format {
+    my ($self) = @_;
+    return $self-&gt;{format};
+}
+
+sub root_key_offset {
+    my ($self) = @_;
+    return $self-&gt;{root_key_offset};
+}
+
+sub hive_bins_data_size {
+    my ($self) = @_;
+    return $self-&gt;{hive_bins_data_size};
+}
+
+sub clustering_factor {
+    my ($self) = @_;
+    return $self-&gt;{clustering_factor};
+}
+
+sub unknown1 {
+    my ($self) = @_;
+    return $self-&gt;{unknown1};
+}
+
+sub unknown2 {
+    my ($self) = @_;
+    return $self-&gt;{unknown2};
+}
+
+sub checksum {
+    my ($self) = @_;
+    return $self-&gt;{checksum};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self-&gt;{reserved};
+}
+
+sub boot_type {
+    my ($self) = @_;
+    return $self-&gt;{boot_type};
+}
+
+sub boot_recover {
+    my ($self) = @_;
+    return $self-&gt;{boot_recover};
+}
+
+1;
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

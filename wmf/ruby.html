@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Kaitai Struct: declarative binary format parsing language</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Image Files</li>
+        <li class="active">wmf</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>wmf:
+            
+            Ruby parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of wmf
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="wmf parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="wmf parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="wmf parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="wmf parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="wmf parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="wmf parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="wmf parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="wmf parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="wmf parsing Python library">Python</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="ruby.html" title="wmf parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="ruby">data = Wmf.from_file("path/to/local/file.wmf")</code></pre>
+
+<p>Or parse structure from a string of bytes:</p>
+
+<pre><code class="ruby">bytes = "\x00\x01\x02..."
+data = Wmf.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="ruby">data.specialHdr // => get special hdr</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Ruby source code to parse wmf
+            
+        </h2>
+
+        
+
+        <h3>wmf.rb</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/ruby/wmf.rb" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+require &#39;kaitai/struct/struct&#39;
+
+unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
+  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
+end
+
+class Wmf &lt; Kaitai::Struct::Struct
+
+  FUNC = {
+    0 =&gt; :func_eof,
+    30 =&gt; :func_savedc,
+    53 =&gt; :func_realizepalette,
+    55 =&gt; :func_setpalentries,
+    247 =&gt; :func_createpalette,
+    258 =&gt; :func_setbkmode,
+    259 =&gt; :func_setmapmode,
+    260 =&gt; :func_setrop2,
+    261 =&gt; :func_setrelabs,
+    262 =&gt; :func_setpolyfillmode,
+    263 =&gt; :func_setstretchbltmode,
+    264 =&gt; :func_settextcharextra,
+    295 =&gt; :func_restoredc,
+    298 =&gt; :func_invertregion,
+    299 =&gt; :func_paintregion,
+    300 =&gt; :func_selectclipregion,
+    301 =&gt; :func_selectobject,
+    302 =&gt; :func_settextalign,
+    313 =&gt; :func_resizepalette,
+    322 =&gt; :func_dibcreatepatternbrush,
+    329 =&gt; :func_setlayout,
+    496 =&gt; :func_deleteobject,
+    505 =&gt; :func_createpatternbrush,
+    513 =&gt; :func_setbkcolor,
+    521 =&gt; :func_settextcolor,
+    522 =&gt; :func_settextjustification,
+    523 =&gt; :func_setwindoworg,
+    524 =&gt; :func_setwindowext,
+    525 =&gt; :func_setviewportorg,
+    526 =&gt; :func_setviewportext,
+    527 =&gt; :func_offsetwindoworg,
+    529 =&gt; :func_offsetviewportorg,
+    531 =&gt; :func_lineto,
+    532 =&gt; :func_moveto,
+    544 =&gt; :func_offsetcliprgn,
+    552 =&gt; :func_fillregion,
+    561 =&gt; :func_setmapperflags,
+    564 =&gt; :func_selectpalette,
+    762 =&gt; :func_createpenindirect,
+    763 =&gt; :func_createfontindirect,
+    764 =&gt; :func_createbrushindirect,
+    804 =&gt; :func_polygon,
+    805 =&gt; :func_polyline,
+    1040 =&gt; :func_scalewindowext,
+    1042 =&gt; :func_scaleviewportext,
+    1045 =&gt; :func_excludecliprect,
+    1046 =&gt; :func_intersectcliprect,
+    1048 =&gt; :func_ellipse,
+    1049 =&gt; :func_floodfill,
+    1051 =&gt; :func_rectangle,
+    1055 =&gt; :func_setpixel,
+    1065 =&gt; :func_frameregion,
+    1078 =&gt; :func_animatepalette,
+    1313 =&gt; :func_textout,
+    1336 =&gt; :func_polypolygon,
+    1352 =&gt; :func_extfloodfill,
+    1564 =&gt; :func_roundrect,
+    1565 =&gt; :func_patblt,
+    1574 =&gt; :func_escape,
+    1791 =&gt; :func_createregion,
+    2071 =&gt; :func_arc,
+    2074 =&gt; :func_pie,
+    2096 =&gt; :func_chord,
+    2338 =&gt; :func_bitblt,
+    2368 =&gt; :func_dibbitblt,
+    2610 =&gt; :func_exttextout,
+    2851 =&gt; :func_stretchblt,
+    2881 =&gt; :func_dibstretchblt,
+    3379 =&gt; :func_setdibtodev,
+    3907 =&gt; :func_stretchdib,
+  }
+  I__FUNC = FUNC.invert
+  def initialize(_io, _parent = nil, _root = self)
+    super(_io, _parent, _root)
+    _read
+  end
+  def _read
+    @special_hdr = SpecialHeader.new(@_io, self, @_root)
+    @header = WmfHeader.new(@_io, self, @_root)
+    @records = []
+    begin
+      _ = Record.new(@_io, self, @_root)
+      @records &lt;&lt; _
+    end until _.function == :func_eof
+  end
+  class SpecialHeader &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+    def _read
+      @magic = @_io.ensure_fixed_contents([215, 205, 198, 154].pack(&#39;C*&#39;))
+      @handle = @_io.ensure_fixed_contents([0, 0].pack(&#39;C*&#39;))
+      @left = @_io.read_s2le
+      @top = @_io.read_s2le
+      @right = @_io.read_s2le
+      @bottom = @_io.read_s2le
+      @inch = @_io.read_u2le
+      @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack(&#39;C*&#39;))
+      @checksum = @_io.read_u2le
+    end
+    attr_reader :magic
+    attr_reader :handle
+    attr_reader :left
+    attr_reader :top
+    attr_reader :right
+    attr_reader :bottom
+    attr_reader :inch
+    attr_reader :reserved
+    attr_reader :checksum
+  end
+  class WmfHeader &lt; Kaitai::Struct::Struct
+
+    METAFILE_TYPE = {
+      1 =&gt; :metafile_type_memory_metafile,
+      2 =&gt; :metafile_type_disk_metafile,
+    }
+    I__METAFILE_TYPE = METAFILE_TYPE.invert
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+    def _read
+      @type = Kaitai::Struct::Stream::resolve_enum(METAFILE_TYPE, @_io.read_u2le)
+      @header_size = @_io.read_u2le
+      @version = @_io.read_u2le
+      @size = @_io.read_u4le
+      @number_of_objects = @_io.read_u2le
+      @max_record = @_io.read_u4le
+      @number_of_members = @_io.read_u2le
+    end
+    attr_reader :type
+    attr_reader :header_size
+    attr_reader :version
+    attr_reader :size
+    attr_reader :number_of_objects
+    attr_reader :max_record
+    attr_reader :number_of_members
+  end
+  class Record &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+    def _read
+      @size = @_io.read_u4le
+      @function = Kaitai::Struct::Stream::resolve_enum(FUNC, @_io.read_u2le)
+      @params = @_io.read_bytes(((size - 3) * 2))
+    end
+    attr_reader :size
+    attr_reader :function
+    attr_reader :params
+  end
+  attr_reader :special_hdr
+  attr_reader :header
+  attr_reader :records
+end
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

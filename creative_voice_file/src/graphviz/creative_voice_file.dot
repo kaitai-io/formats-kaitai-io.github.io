@@ -1,0 +1,145 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__creative_voice_file {
+		label="CreativeVoiceFile";
+		graph[style=dotted];
+
+		creative_voice_file__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">20</TD><TD>43 72 65 61 74 69 76 65 20 56 6F 69 63 65 20 46 69 6C 65 1A</TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="header_size_pos">20</TD><TD PORT="header_size_size">2</TD><TD>u2le</TD><TD PORT="header_size_type">header_size</TD></TR>
+			<TR><TD PORT="version_pos">22</TD><TD PORT="version_size">2</TD><TD>u2le</TD><TD PORT="version_type">version</TD></TR>
+			<TR><TD PORT="checksum_pos">24</TD><TD PORT="checksum_size">2</TD><TD>u2le</TD><TD PORT="checksum_type">checksum</TD></TR>
+			<TR><TD PORT="blocks_pos">26</TD><TD PORT="blocks_size">...</TD><TD>Block</TD><TD PORT="blocks_type">blocks</TD></TR>
+			<TR><TD COLSPAN="4" PORT="blocks__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__block_marker {
+			label="CreativeVoiceFile::BlockMarker";
+			graph[style=dotted];
+
+			block_marker__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="marker_id_pos">0</TD><TD PORT="marker_id_size">2</TD><TD>u2le</TD><TD PORT="marker_id_type">marker_id</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__block_silence {
+			label="CreativeVoiceFile::BlockSilence";
+			graph[style=dotted];
+
+			block_silence__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="duration_samples_pos">0</TD><TD PORT="duration_samples_size">2</TD><TD>u2le</TD><TD PORT="duration_samples_type">duration_samples</TD></TR>
+				<TR><TD PORT="freq_div_pos">2</TD><TD PORT="freq_div_size">1</TD><TD>u1</TD><TD PORT="freq_div_type">freq_div</TD></TR>
+			</TABLE>>];
+			block_silence__inst__sample_rate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>sample_rate</TD><TD>(1000000.0 / (256 - freq_div))</TD></TR>
+			</TABLE>>];
+			block_silence__inst__duration_sec [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>duration_sec</TD><TD>(duration_samples / sample_rate)</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__block_sound_data_new {
+			label="CreativeVoiceFile::BlockSoundDataNew";
+			graph[style=dotted];
+
+			block_sound_data_new__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="sample_rate_pos">0</TD><TD PORT="sample_rate_size">4</TD><TD>u4le</TD><TD PORT="sample_rate_type">sample_rate</TD></TR>
+				<TR><TD PORT="bits_per_sample_pos">4</TD><TD PORT="bits_per_sample_size">1</TD><TD>u1</TD><TD PORT="bits_per_sample_type">bits_per_sample</TD></TR>
+				<TR><TD PORT="num_channels_pos">5</TD><TD PORT="num_channels_size">1</TD><TD>u1</TD><TD PORT="num_channels_type">num_channels</TD></TR>
+				<TR><TD PORT="codec_pos">6</TD><TD PORT="codec_size">2</TD><TD>u2le→Codecs</TD><TD PORT="codec_type">codec</TD></TR>
+				<TR><TD PORT="reserved_pos">8</TD><TD PORT="reserved_size">4</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="wave_pos">12</TD><TD PORT="wave_size">⇲</TD><TD></TD><TD PORT="wave_type">wave</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__block {
+			label="CreativeVoiceFile::Block";
+			graph[style=dotted];
+
+			block__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="block_type_pos">0</TD><TD PORT="block_type_size">1</TD><TD>u1→BlockTypes</TD><TD PORT="block_type_type">block_type</TD></TR>
+				<TR><TD PORT="body_size1_pos">1</TD><TD PORT="body_size1_size">2</TD><TD>u2le</TD><TD PORT="body_size1_type">body_size1</TD></TR>
+				<TR><TD PORT="body_size2_pos">3</TD><TD PORT="body_size2_size">1</TD><TD>u1</TD><TD PORT="body_size2_type">body_size2</TD></TR>
+				<TR><TD PORT="body_pos">4</TD><TD PORT="body_size">...</TD><TD>switch (block_type)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+			block__inst__body_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>body_size</TD><TD>(body_size1 + (body_size2 &lt;&lt; 16))</TD></TR>
+			</TABLE>>];
+block__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:block_types_silence</TD><TD PORT="case0">BlockSilence</TD></TR>
+	<TR><TD>:block_types_sound_data</TD><TD PORT="case1">BlockSoundData</TD></TR>
+	<TR><TD>:block_types_marker</TD><TD PORT="case2">BlockMarker</TD></TR>
+	<TR><TD>:block_types_sound_data_new</TD><TD PORT="case3">BlockSoundDataNew</TD></TR>
+	<TR><TD>:block_types_repeat_start</TD><TD PORT="case4">BlockRepeatStart</TD></TR>
+	<TR><TD>:block_types_extra_info</TD><TD PORT="case5">BlockExtraInfo</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__block_repeat_start {
+			label="CreativeVoiceFile::BlockRepeatStart";
+			graph[style=dotted];
+
+			block_repeat_start__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="repeat_count_1_pos">0</TD><TD PORT="repeat_count_1_size">2</TD><TD>u2le</TD><TD PORT="repeat_count_1_type">repeat_count_1</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__block_sound_data {
+			label="CreativeVoiceFile::BlockSoundData";
+			graph[style=dotted];
+
+			block_sound_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="freq_div_pos">0</TD><TD PORT="freq_div_size">1</TD><TD>u1</TD><TD PORT="freq_div_type">freq_div</TD></TR>
+				<TR><TD PORT="codec_pos">1</TD><TD PORT="codec_size">1</TD><TD>u1→Codecs</TD><TD PORT="codec_type">codec</TD></TR>
+				<TR><TD PORT="wave_pos">2</TD><TD PORT="wave_size">⇲</TD><TD></TD><TD PORT="wave_type">wave</TD></TR>
+			</TABLE>>];
+			block_sound_data__inst__sample_rate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>sample_rate</TD><TD>(1000000.0 / (256 - freq_div))</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__block_extra_info {
+			label="CreativeVoiceFile::BlockExtraInfo";
+			graph[style=dotted];
+
+			block_extra_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="freq_div_pos">0</TD><TD PORT="freq_div_size">2</TD><TD>u2le</TD><TD PORT="freq_div_type">freq_div</TD></TR>
+				<TR><TD PORT="codec_pos">2</TD><TD PORT="codec_size">1</TD><TD>u1→Codecs</TD><TD PORT="codec_type">codec</TD></TR>
+				<TR><TD PORT="num_channels_1_pos">3</TD><TD PORT="num_channels_1_size">1</TD><TD>u1</TD><TD PORT="num_channels_1_type">num_channels_1</TD></TR>
+			</TABLE>>];
+			block_extra_info__inst__num_channels [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>num_channels</TD><TD>(num_channels_1 + 1)</TD></TR>
+			</TABLE>>];
+			block_extra_info__inst__sample_rate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>sample_rate</TD><TD>(256000000.0 / (num_channels * (65536 - freq_div)))</TD></TR>
+			</TABLE>>];
+		}
+	}
+	creative_voice_file__seq:blocks_type -> block__seq [style=bold];
+	block_silence__seq:freq_div_type -> block_silence__inst__sample_rate [color="#404040"];
+	block_silence__seq:duration_samples_type -> block_silence__inst__duration_sec [color="#404040"];
+	block_silence__inst__sample_rate:sample_rate_type -> block_silence__inst__duration_sec [color="#404040"];
+	block__seq:body_type -> block__seq_body_switch [style=bold];
+	block__seq_body_switch:case0 -> block_silence__seq [style=bold];
+	block__seq_body_switch:case1 -> block_sound_data__seq [style=bold];
+	block__seq_body_switch:case2 -> block_marker__seq [style=bold];
+	block__seq_body_switch:case3 -> block_sound_data_new__seq [style=bold];
+	block__seq_body_switch:case4 -> block_repeat_start__seq [style=bold];
+	block__seq_body_switch:case5 -> block_extra_info__seq [style=bold];
+	block__seq:block_type_type -> block__seq:body_type [color="#404040"];
+	block__seq:body_size1_type -> block__inst__body_size [color="#404040"];
+	block__seq:body_size2_type -> block__inst__body_size [color="#404040"];
+	block_sound_data__seq:freq_div_type -> block_sound_data__inst__sample_rate [color="#404040"];
+	block_extra_info__seq:num_channels_1_type -> block_extra_info__inst__num_channels [color="#404040"];
+	block_extra_info__inst__num_channels:num_channels_type -> block_extra_info__inst__sample_rate [color="#404040"];
+	block_extra_info__seq:freq_div_type -> block_extra_info__inst__sample_rate [color="#404040"];
+}

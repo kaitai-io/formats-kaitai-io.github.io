@@ -1,0 +1,693 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__ttf {
+		label="Ttf";
+		graph[style=dotted];
+
+		ttf__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="offset_table_pos">0</TD><TD PORT="offset_table_size">...</TD><TD>OffsetTable</TD><TD PORT="offset_table_type">offset_table</TD></TR>
+			<TR><TD PORT="directory_table_pos">...</TD><TD PORT="directory_table_size">...</TD><TD>DirTableEntry</TD><TD PORT="directory_table_type">directory_table</TD></TR>
+			<TR><TD COLSPAN="4" PORT="directory_table__repeat">repeat offset_table.num_tables times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__post {
+			label="Ttf::Post";
+			graph[style=dotted];
+
+			post__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="format_pos">0</TD><TD PORT="format_size">...</TD><TD>Fixed</TD><TD PORT="format_type">format</TD></TR>
+				<TR><TD PORT="italic_angle_pos">...</TD><TD PORT="italic_angle_size">...</TD><TD>Fixed</TD><TD PORT="italic_angle_type">italic_angle</TD></TR>
+				<TR><TD PORT="underline_position_pos">...</TD><TD PORT="underline_position_size">2</TD><TD>s2be</TD><TD PORT="underline_position_type">underline_position</TD></TR>
+				<TR><TD PORT="underline_thichness_pos">...</TD><TD PORT="underline_thichness_size">2</TD><TD>s2be</TD><TD PORT="underline_thichness_type">underline_thichness</TD></TR>
+				<TR><TD PORT="is_fixed_pitch_pos">...</TD><TD PORT="is_fixed_pitch_size">4</TD><TD>u4be</TD><TD PORT="is_fixed_pitch_type">is_fixed_pitch</TD></TR>
+				<TR><TD PORT="min_mem_type42_pos">...</TD><TD PORT="min_mem_type42_size">4</TD><TD>u4be</TD><TD PORT="min_mem_type42_type">min_mem_type42</TD></TR>
+				<TR><TD PORT="max_mem_type42_pos">...</TD><TD PORT="max_mem_type42_size">4</TD><TD>u4be</TD><TD PORT="max_mem_type42_type">max_mem_type42</TD></TR>
+				<TR><TD PORT="min_mem_type1_pos">...</TD><TD PORT="min_mem_type1_size">4</TD><TD>u4be</TD><TD PORT="min_mem_type1_type">min_mem_type1</TD></TR>
+				<TR><TD PORT="max_mem_type1_pos">...</TD><TD PORT="max_mem_type1_size">4</TD><TD>u4be</TD><TD PORT="max_mem_type1_type">max_mem_type1</TD></TR>
+				<TR><TD PORT="format20_pos">...</TD><TD PORT="format20_size">...</TD><TD>Format20</TD><TD PORT="format20_type">format20</TD></TR>
+			</TABLE>>];
+			subgraph cluster__format20 {
+				label="Ttf::Post::Format20";
+				graph[style=dotted];
+
+				format20__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="number_of_glyphs_pos">0</TD><TD PORT="number_of_glyphs_size">2</TD><TD>u2be</TD><TD PORT="number_of_glyphs_type">number_of_glyphs</TD></TR>
+					<TR><TD PORT="glyph_name_index_pos">2</TD><TD PORT="glyph_name_index_size">2</TD><TD>u2be</TD><TD PORT="glyph_name_index_type">glyph_name_index</TD></TR>
+					<TR><TD COLSPAN="4" PORT="glyph_name_index__repeat">repeat number_of_glyphs times</TD></TR>
+					<TR><TD PORT="glyph_names_pos">4</TD><TD PORT="glyph_names_size">...</TD><TD>PascalString</TD><TD PORT="glyph_names_type">glyph_names</TD></TR>
+					<TR><TD COLSPAN="4" PORT="glyph_names__repeat">repeat until _.length == 0</TD></TR>
+				</TABLE>>];
+				subgraph cluster__pascal_string {
+					label="Ttf::Post::Format20::PascalString";
+					graph[style=dotted];
+
+					pascal_string__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">1</TD><TD>u1</TD><TD PORT="length_type">length</TD></TR>
+						<TR><TD PORT="value_pos">1</TD><TD PORT="value_size">length</TD><TD>str(ascii)</TD><TD PORT="value_type">value</TD></TR>
+					</TABLE>>];
+				}
+			}
+		}
+		subgraph cluster__name {
+			label="Ttf::Name";
+			graph[style=dotted];
+
+			name__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="format_selector_pos">0</TD><TD PORT="format_selector_size">2</TD><TD>u2be</TD><TD PORT="format_selector_type">format_selector</TD></TR>
+				<TR><TD PORT="name_record_count_pos">2</TD><TD PORT="name_record_count_size">2</TD><TD>u2be</TD><TD PORT="name_record_count_type">name_record_count</TD></TR>
+				<TR><TD PORT="string_storage_offset_pos">4</TD><TD PORT="string_storage_offset_size">2</TD><TD>u2be</TD><TD PORT="string_storage_offset_type">string_storage_offset</TD></TR>
+				<TR><TD PORT="name_records_pos">6</TD><TD PORT="name_records_size">...</TD><TD>NameRecord</TD><TD PORT="name_records_type">name_records</TD></TR>
+				<TR><TD COLSPAN="4" PORT="name_records__repeat">repeat name_record_count times</TD></TR>
+			</TABLE>>];
+			subgraph cluster__name_record {
+				label="Ttf::Name::NameRecord";
+				graph[style=dotted];
+
+				name_record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="platform_id_pos">0</TD><TD PORT="platform_id_size">2</TD><TD>u2be</TD><TD PORT="platform_id_type">platform_id</TD></TR>
+					<TR><TD PORT="encoding_id_pos">2</TD><TD PORT="encoding_id_size">2</TD><TD>u2be</TD><TD PORT="encoding_id_type">encoding_id</TD></TR>
+					<TR><TD PORT="language_id_pos">4</TD><TD PORT="language_id_size">2</TD><TD>u2be</TD><TD PORT="language_id_type">language_id</TD></TR>
+					<TR><TD PORT="name_id_pos">6</TD><TD PORT="name_id_size">2</TD><TD>u2be</TD><TD PORT="name_id_type">name_id</TD></TR>
+					<TR><TD PORT="string_length_pos">8</TD><TD PORT="string_length_size">2</TD><TD>u2be</TD><TD PORT="string_length_type">string_length</TD></TR>
+					<TR><TD PORT="string_offset_pos">10</TD><TD PORT="string_offset_size">2</TD><TD>u2be</TD><TD PORT="string_offset_type">string_offset</TD></TR>
+				</TABLE>>];
+				name_record__inst__ascii_value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="ascii_value_pos">(_parent.string_storage_offset + string_offset)</TD><TD PORT="ascii_value_size">string_length</TD><TD>str(ascii)</TD><TD PORT="ascii_value_type">ascii_value</TD></TR>
+				</TABLE>>];
+				name_record__inst__unicode_value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="unicode_value_pos">(_parent.string_storage_offset + string_offset)</TD><TD PORT="unicode_value_size">string_length</TD><TD>str(utf-16be)</TD><TD PORT="unicode_value_type">unicode_value</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__head {
+			label="Ttf::Head";
+			graph[style=dotted];
+
+			head__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">...</TD><TD>Fixed</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="font_revision_pos">...</TD><TD PORT="font_revision_size">...</TD><TD>Fixed</TD><TD PORT="font_revision_type">font_revision</TD></TR>
+				<TR><TD PORT="checksum_adjustment_pos">...</TD><TD PORT="checksum_adjustment_size">4</TD><TD>u4be</TD><TD PORT="checksum_adjustment_type">checksum_adjustment</TD></TR>
+				<TR><TD PORT="magic_number_pos">...</TD><TD PORT="magic_number_size">4</TD><TD>5F 0F 3C F5</TD><TD PORT="magic_number_type">magic_number</TD></TR>
+				<TR><TD PORT="flags_pos">...</TD><TD PORT="flags_size">2</TD><TD>u2be→Flags</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="units_per_em_pos">...</TD><TD PORT="units_per_em_size">2</TD><TD>u2be</TD><TD PORT="units_per_em_type">units_per_em</TD></TR>
+				<TR><TD PORT="created_pos">...</TD><TD PORT="created_size">8</TD><TD>u8be</TD><TD PORT="created_type">created</TD></TR>
+				<TR><TD PORT="modified_pos">...</TD><TD PORT="modified_size">8</TD><TD>u8be</TD><TD PORT="modified_type">modified</TD></TR>
+				<TR><TD PORT="x_min_pos">...</TD><TD PORT="x_min_size">2</TD><TD>s2be</TD><TD PORT="x_min_type">x_min</TD></TR>
+				<TR><TD PORT="y_min_pos">...</TD><TD PORT="y_min_size">2</TD><TD>s2be</TD><TD PORT="y_min_type">y_min</TD></TR>
+				<TR><TD PORT="x_max_pos">...</TD><TD PORT="x_max_size">2</TD><TD>s2be</TD><TD PORT="x_max_type">x_max</TD></TR>
+				<TR><TD PORT="y_max_pos">...</TD><TD PORT="y_max_size">2</TD><TD>s2be</TD><TD PORT="y_max_type">y_max</TD></TR>
+				<TR><TD PORT="mac_style_pos">...</TD><TD PORT="mac_style_size">2</TD><TD>u2be</TD><TD PORT="mac_style_type">mac_style</TD></TR>
+				<TR><TD PORT="lowest_rec_ppem_pos">...</TD><TD PORT="lowest_rec_ppem_size">2</TD><TD>u2be</TD><TD PORT="lowest_rec_ppem_type">lowest_rec_ppem</TD></TR>
+				<TR><TD PORT="font_direction_hint_pos">...</TD><TD PORT="font_direction_hint_size">2</TD><TD>s2be→FontDirectionHint</TD><TD PORT="font_direction_hint_type">font_direction_hint</TD></TR>
+				<TR><TD PORT="index_to_loc_format_pos">...</TD><TD PORT="index_to_loc_format_size">2</TD><TD>s2be</TD><TD PORT="index_to_loc_format_type">index_to_loc_format</TD></TR>
+				<TR><TD PORT="glyph_data_format_pos">...</TD><TD PORT="glyph_data_format_size">2</TD><TD>s2be</TD><TD PORT="glyph_data_format_type">glyph_data_format</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__prep {
+			label="Ttf::Prep";
+			graph[style=dotted];
+
+			prep__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="instructions_pos">0</TD><TD PORT="instructions_size">⇲</TD><TD></TD><TD PORT="instructions_type">instructions</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__hhea {
+			label="Ttf::Hhea";
+			graph[style=dotted];
+
+			hhea__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">...</TD><TD>Fixed</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="ascender_pos">...</TD><TD PORT="ascender_size">2</TD><TD>s2be</TD><TD PORT="ascender_type">ascender</TD></TR>
+				<TR><TD PORT="descender_pos">...</TD><TD PORT="descender_size">2</TD><TD>s2be</TD><TD PORT="descender_type">descender</TD></TR>
+				<TR><TD PORT="line_gap_pos">...</TD><TD PORT="line_gap_size">2</TD><TD>s2be</TD><TD PORT="line_gap_type">line_gap</TD></TR>
+				<TR><TD PORT="advance_width_max_pos">...</TD><TD PORT="advance_width_max_size">2</TD><TD>u2be</TD><TD PORT="advance_width_max_type">advance_width_max</TD></TR>
+				<TR><TD PORT="min_left_side_bearing_pos">...</TD><TD PORT="min_left_side_bearing_size">2</TD><TD>s2be</TD><TD PORT="min_left_side_bearing_type">min_left_side_bearing</TD></TR>
+				<TR><TD PORT="min_right_side_bearing_pos">...</TD><TD PORT="min_right_side_bearing_size">2</TD><TD>s2be</TD><TD PORT="min_right_side_bearing_type">min_right_side_bearing</TD></TR>
+				<TR><TD PORT="x_max_extend_pos">...</TD><TD PORT="x_max_extend_size">2</TD><TD>s2be</TD><TD PORT="x_max_extend_type">x_max_extend</TD></TR>
+				<TR><TD PORT="caret_slope_rise_pos">...</TD><TD PORT="caret_slope_rise_size">2</TD><TD>s2be</TD><TD PORT="caret_slope_rise_type">caret_slope_rise</TD></TR>
+				<TR><TD PORT="caret_slope_run_pos">...</TD><TD PORT="caret_slope_run_size">2</TD><TD>s2be</TD><TD PORT="caret_slope_run_type">caret_slope_run</TD></TR>
+				<TR><TD PORT="reserved_pos">...</TD><TD PORT="reserved_size">10</TD><TD>00 00 00 00 00 00 00 00 00 00</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="metric_data_format_pos">...</TD><TD PORT="metric_data_format_size">2</TD><TD>s2be</TD><TD PORT="metric_data_format_type">metric_data_format</TD></TR>
+				<TR><TD PORT="number_of_hmetrics_pos">...</TD><TD PORT="number_of_hmetrics_size">2</TD><TD>u2be</TD><TD PORT="number_of_hmetrics_type">number_of_hmetrics</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__fpgm {
+			label="Ttf::Fpgm";
+			graph[style=dotted];
+
+			fpgm__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="instructions_pos">0</TD><TD PORT="instructions_size">⇲</TD><TD></TD><TD PORT="instructions_type">instructions</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__kern {
+			label="Ttf::Kern";
+			graph[style=dotted];
+
+			kern__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">2</TD><TD>u2be</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="subtable_count_pos">2</TD><TD PORT="subtable_count_size">2</TD><TD>u2be</TD><TD PORT="subtable_count_type">subtable_count</TD></TR>
+				<TR><TD PORT="subtables_pos">4</TD><TD PORT="subtables_size">...</TD><TD>Subtable</TD><TD PORT="subtables_type">subtables</TD></TR>
+				<TR><TD COLSPAN="4" PORT="subtables__repeat">repeat subtable_count times</TD></TR>
+			</TABLE>>];
+			subgraph cluster__subtable {
+				label="Ttf::Kern::Subtable";
+				graph[style=dotted];
+
+				subtable__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">2</TD><TD>u2be</TD><TD PORT="version_type">version</TD></TR>
+					<TR><TD PORT="length_pos">2</TD><TD PORT="length_size">2</TD><TD>u2be</TD><TD PORT="length_type">length</TD></TR>
+					<TR><TD PORT="format_pos">4</TD><TD PORT="format_size">1</TD><TD>u1</TD><TD PORT="format_type">format</TD></TR>
+					<TR><TD PORT="reserved_pos">5</TD><TD PORT="reserved_size">4b</TD><TD>b4</TD><TD PORT="reserved_type">reserved</TD></TR>
+					<TR><TD PORT="is_override_pos">5:4</TD><TD PORT="is_override_size">1b</TD><TD>BitsType1</TD><TD PORT="is_override_type">is_override</TD></TR>
+					<TR><TD PORT="is_cross_stream_pos">5:5</TD><TD PORT="is_cross_stream_size">1b</TD><TD>BitsType1</TD><TD PORT="is_cross_stream_type">is_cross_stream</TD></TR>
+					<TR><TD PORT="is_minimum_pos">5:6</TD><TD PORT="is_minimum_size">1b</TD><TD>BitsType1</TD><TD PORT="is_minimum_type">is_minimum</TD></TR>
+					<TR><TD PORT="is_horizontal_pos">5:7</TD><TD PORT="is_horizontal_size">1b</TD><TD>BitsType1</TD><TD PORT="is_horizontal_type">is_horizontal</TD></TR>
+					<TR><TD PORT="format0_pos">6</TD><TD PORT="format0_size">...</TD><TD>Format0</TD><TD PORT="format0_type">format0</TD></TR>
+				</TABLE>>];
+				subgraph cluster__format0 {
+					label="Ttf::Kern::Subtable::Format0";
+					graph[style=dotted];
+
+					format0__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="pair_count_pos">0</TD><TD PORT="pair_count_size">2</TD><TD>u2be</TD><TD PORT="pair_count_type">pair_count</TD></TR>
+						<TR><TD PORT="search_range_pos">2</TD><TD PORT="search_range_size">2</TD><TD>u2be</TD><TD PORT="search_range_type">search_range</TD></TR>
+						<TR><TD PORT="entry_selector_pos">4</TD><TD PORT="entry_selector_size">2</TD><TD>u2be</TD><TD PORT="entry_selector_type">entry_selector</TD></TR>
+						<TR><TD PORT="range_shift_pos">6</TD><TD PORT="range_shift_size">2</TD><TD>u2be</TD><TD PORT="range_shift_type">range_shift</TD></TR>
+						<TR><TD PORT="kerning_pairs_pos">8</TD><TD PORT="kerning_pairs_size">...</TD><TD>KerningPair</TD><TD PORT="kerning_pairs_type">kerning_pairs</TD></TR>
+						<TR><TD COLSPAN="4" PORT="kerning_pairs__repeat">repeat pair_count times</TD></TR>
+					</TABLE>>];
+					subgraph cluster__kerning_pair {
+						label="Ttf::Kern::Subtable::Format0::KerningPair";
+						graph[style=dotted];
+
+						kerning_pair__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+							<TR><TD PORT="left_pos">0</TD><TD PORT="left_size">2</TD><TD>u2be</TD><TD PORT="left_type">left</TD></TR>
+							<TR><TD PORT="right_pos">2</TD><TD PORT="right_size">2</TD><TD>u2be</TD><TD PORT="right_type">right</TD></TR>
+							<TR><TD PORT="value_pos">4</TD><TD PORT="value_size">2</TD><TD>s2be</TD><TD PORT="value_type">value</TD></TR>
+						</TABLE>>];
+					}
+				}
+			}
+		}
+		subgraph cluster__dir_table_entry {
+			label="Ttf::DirTableEntry";
+			graph[style=dotted];
+
+			dir_table_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="tag_pos">0</TD><TD PORT="tag_size">4</TD><TD>str(ascii)</TD><TD PORT="tag_type">tag</TD></TR>
+				<TR><TD PORT="checksum_pos">4</TD><TD PORT="checksum_size">4</TD><TD>u4be</TD><TD PORT="checksum_type">checksum</TD></TR>
+				<TR><TD PORT="offset_pos">8</TD><TD PORT="offset_size">4</TD><TD>u4be</TD><TD PORT="offset_type">offset</TD></TR>
+				<TR><TD PORT="length_pos">12</TD><TD PORT="length_size">4</TD><TD>u4be</TD><TD PORT="length_type">length</TD></TR>
+			</TABLE>>];
+			dir_table_entry__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="value_pos">offset</TD><TD PORT="value_size">...</TD><TD>switch (tag)</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+dir_table_entry__inst__value_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>&quot;head&quot;</TD><TD PORT="case0">Head</TD></TR>
+	<TR><TD>&quot;cvt &quot;</TD><TD PORT="case1">Cvt</TD></TR>
+	<TR><TD>&quot;prep&quot;</TD><TD PORT="case2">Prep</TD></TR>
+	<TR><TD>&quot;kern&quot;</TD><TD PORT="case3">Kern</TD></TR>
+	<TR><TD>&quot;hhea&quot;</TD><TD PORT="case4">Hhea</TD></TR>
+	<TR><TD>&quot;post&quot;</TD><TD PORT="case5">Post</TD></TR>
+	<TR><TD>&quot;OS/2&quot;</TD><TD PORT="case6">Os2</TD></TR>
+	<TR><TD>&quot;name&quot;</TD><TD PORT="case7">Name</TD></TR>
+	<TR><TD>&quot;maxp&quot;</TD><TD PORT="case8">Maxp</TD></TR>
+	<TR><TD>&quot;glyf&quot;</TD><TD PORT="case9">Glyf</TD></TR>
+	<TR><TD>&quot;fpgm&quot;</TD><TD PORT="case10">Fpgm</TD></TR>
+	<TR><TD>&quot;cmap&quot;</TD><TD PORT="case11">Cmap</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__os2 {
+			label="Ttf::Os2";
+			graph[style=dotted];
+
+			os2__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">2</TD><TD>u2be</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="x_avg_char_width_pos">2</TD><TD PORT="x_avg_char_width_size">2</TD><TD>s2be</TD><TD PORT="x_avg_char_width_type">x_avg_char_width</TD></TR>
+				<TR><TD PORT="weight_class_pos">4</TD><TD PORT="weight_class_size">2</TD><TD>u2be→WeightClass</TD><TD PORT="weight_class_type">weight_class</TD></TR>
+				<TR><TD PORT="width_class_pos">6</TD><TD PORT="width_class_size">2</TD><TD>u2be→WidthClass</TD><TD PORT="width_class_type">width_class</TD></TR>
+				<TR><TD PORT="fs_type_pos">8</TD><TD PORT="fs_type_size">2</TD><TD>s2be→FsType</TD><TD PORT="fs_type_type">fs_type</TD></TR>
+				<TR><TD PORT="y_subscript_x_size_pos">10</TD><TD PORT="y_subscript_x_size_size">2</TD><TD>s2be</TD><TD PORT="y_subscript_x_size_type">y_subscript_x_size</TD></TR>
+				<TR><TD PORT="y_subscript_y_size_pos">12</TD><TD PORT="y_subscript_y_size_size">2</TD><TD>s2be</TD><TD PORT="y_subscript_y_size_type">y_subscript_y_size</TD></TR>
+				<TR><TD PORT="y_subscript_x_offset_pos">14</TD><TD PORT="y_subscript_x_offset_size">2</TD><TD>s2be</TD><TD PORT="y_subscript_x_offset_type">y_subscript_x_offset</TD></TR>
+				<TR><TD PORT="y_subscript_y_offset_pos">16</TD><TD PORT="y_subscript_y_offset_size">2</TD><TD>s2be</TD><TD PORT="y_subscript_y_offset_type">y_subscript_y_offset</TD></TR>
+				<TR><TD PORT="y_superscript_x_size_pos">18</TD><TD PORT="y_superscript_x_size_size">2</TD><TD>s2be</TD><TD PORT="y_superscript_x_size_type">y_superscript_x_size</TD></TR>
+				<TR><TD PORT="y_superscript_y_size_pos">20</TD><TD PORT="y_superscript_y_size_size">2</TD><TD>s2be</TD><TD PORT="y_superscript_y_size_type">y_superscript_y_size</TD></TR>
+				<TR><TD PORT="y_superscript_x_offset_pos">22</TD><TD PORT="y_superscript_x_offset_size">2</TD><TD>s2be</TD><TD PORT="y_superscript_x_offset_type">y_superscript_x_offset</TD></TR>
+				<TR><TD PORT="y_superscript_y_offset_pos">24</TD><TD PORT="y_superscript_y_offset_size">2</TD><TD>s2be</TD><TD PORT="y_superscript_y_offset_type">y_superscript_y_offset</TD></TR>
+				<TR><TD PORT="y_strikeout_size_pos">26</TD><TD PORT="y_strikeout_size_size">2</TD><TD>s2be</TD><TD PORT="y_strikeout_size_type">y_strikeout_size</TD></TR>
+				<TR><TD PORT="y_strikeout_position_pos">28</TD><TD PORT="y_strikeout_position_size">2</TD><TD>s2be</TD><TD PORT="y_strikeout_position_type">y_strikeout_position</TD></TR>
+				<TR><TD PORT="s_family_class_pos">30</TD><TD PORT="s_family_class_size">2</TD><TD>s2be</TD><TD PORT="s_family_class_type">s_family_class</TD></TR>
+				<TR><TD PORT="panose_pos">32</TD><TD PORT="panose_size">...</TD><TD>Panose</TD><TD PORT="panose_type">panose</TD></TR>
+				<TR><TD PORT="unicode_range_pos">...</TD><TD PORT="unicode_range_size">...</TD><TD>UnicodeRange</TD><TD PORT="unicode_range_type">unicode_range</TD></TR>
+				<TR><TD PORT="ach_vend_id_pos">...</TD><TD PORT="ach_vend_id_size">4</TD><TD>str(ascii)</TD><TD PORT="ach_vend_id_type">ach_vend_id</TD></TR>
+				<TR><TD PORT="selection_pos">...</TD><TD PORT="selection_size">2</TD><TD>u2be→FsSelection</TD><TD PORT="selection_type">selection</TD></TR>
+				<TR><TD PORT="first_char_index_pos">...</TD><TD PORT="first_char_index_size">2</TD><TD>u2be</TD><TD PORT="first_char_index_type">first_char_index</TD></TR>
+				<TR><TD PORT="last_char_index_pos">...</TD><TD PORT="last_char_index_size">2</TD><TD>u2be</TD><TD PORT="last_char_index_type">last_char_index</TD></TR>
+				<TR><TD PORT="typo_ascender_pos">...</TD><TD PORT="typo_ascender_size">2</TD><TD>s2be</TD><TD PORT="typo_ascender_type">typo_ascender</TD></TR>
+				<TR><TD PORT="typo_descender_pos">...</TD><TD PORT="typo_descender_size">2</TD><TD>s2be</TD><TD PORT="typo_descender_type">typo_descender</TD></TR>
+				<TR><TD PORT="typo_line_gap_pos">...</TD><TD PORT="typo_line_gap_size">2</TD><TD>s2be</TD><TD PORT="typo_line_gap_type">typo_line_gap</TD></TR>
+				<TR><TD PORT="win_ascent_pos">...</TD><TD PORT="win_ascent_size">2</TD><TD>u2be</TD><TD PORT="win_ascent_type">win_ascent</TD></TR>
+				<TR><TD PORT="win_descent_pos">...</TD><TD PORT="win_descent_size">2</TD><TD>u2be</TD><TD PORT="win_descent_type">win_descent</TD></TR>
+				<TR><TD PORT="code_page_range_pos">...</TD><TD PORT="code_page_range_size">...</TD><TD>CodePageRange</TD><TD PORT="code_page_range_type">code_page_range</TD></TR>
+			</TABLE>>];
+			subgraph cluster__panose {
+				label="Ttf::Os2::Panose";
+				graph[style=dotted];
+
+				panose__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="family_type_pos">0</TD><TD PORT="family_type_size">1</TD><TD>u1→FamilyKind</TD><TD PORT="family_type_type">family_type</TD></TR>
+					<TR><TD PORT="serif_style_pos">1</TD><TD PORT="serif_style_size">1</TD><TD>u1→SerifStyle</TD><TD PORT="serif_style_type">serif_style</TD></TR>
+					<TR><TD PORT="weight_pos">2</TD><TD PORT="weight_size">1</TD><TD>u1→Weight</TD><TD PORT="weight_type">weight</TD></TR>
+					<TR><TD PORT="proportion_pos">3</TD><TD PORT="proportion_size">1</TD><TD>u1→Proportion</TD><TD PORT="proportion_type">proportion</TD></TR>
+					<TR><TD PORT="contrast_pos">4</TD><TD PORT="contrast_size">1</TD><TD>u1→Contrast</TD><TD PORT="contrast_type">contrast</TD></TR>
+					<TR><TD PORT="stroke_variation_pos">5</TD><TD PORT="stroke_variation_size">1</TD><TD>u1→StrokeVariation</TD><TD PORT="stroke_variation_type">stroke_variation</TD></TR>
+					<TR><TD PORT="arm_style_pos">6</TD><TD PORT="arm_style_size">1</TD><TD>u1→ArmStyle</TD><TD PORT="arm_style_type">arm_style</TD></TR>
+					<TR><TD PORT="letter_form_pos">7</TD><TD PORT="letter_form_size">1</TD><TD>u1→LetterForm</TD><TD PORT="letter_form_type">letter_form</TD></TR>
+					<TR><TD PORT="midline_pos">8</TD><TD PORT="midline_size">1</TD><TD>u1→Midline</TD><TD PORT="midline_type">midline</TD></TR>
+					<TR><TD PORT="x_height_pos">9</TD><TD PORT="x_height_size">1</TD><TD>u1→XHeight</TD><TD PORT="x_height_type">x_height</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__unicode_range {
+				label="Ttf::Os2::UnicodeRange";
+				graph[style=dotted];
+
+				unicode_range__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="basic_latin_pos">0</TD><TD PORT="basic_latin_size">1b</TD><TD>BitsType1</TD><TD PORT="basic_latin_type">basic_latin</TD></TR>
+					<TR><TD PORT="latin_1_supplement_pos">0:1</TD><TD PORT="latin_1_supplement_size">1b</TD><TD>BitsType1</TD><TD PORT="latin_1_supplement_type">latin_1_supplement</TD></TR>
+					<TR><TD PORT="latin_extended_a_pos">0:2</TD><TD PORT="latin_extended_a_size">1b</TD><TD>BitsType1</TD><TD PORT="latin_extended_a_type">latin_extended_a</TD></TR>
+					<TR><TD PORT="latin_extended_b_pos">0:3</TD><TD PORT="latin_extended_b_size">1b</TD><TD>BitsType1</TD><TD PORT="latin_extended_b_type">latin_extended_b</TD></TR>
+					<TR><TD PORT="ipa_extensions_pos">0:4</TD><TD PORT="ipa_extensions_size">1b</TD><TD>BitsType1</TD><TD PORT="ipa_extensions_type">ipa_extensions</TD></TR>
+					<TR><TD PORT="spacing_modifier_letters_pos">0:5</TD><TD PORT="spacing_modifier_letters_size">1b</TD><TD>BitsType1</TD><TD PORT="spacing_modifier_letters_type">spacing_modifier_letters</TD></TR>
+					<TR><TD PORT="combining_diacritical_marks_pos">0:6</TD><TD PORT="combining_diacritical_marks_size">1b</TD><TD>BitsType1</TD><TD PORT="combining_diacritical_marks_type">combining_diacritical_marks</TD></TR>
+					<TR><TD PORT="basic_greek_pos">0:7</TD><TD PORT="basic_greek_size">1b</TD><TD>BitsType1</TD><TD PORT="basic_greek_type">basic_greek</TD></TR>
+					<TR><TD PORT="greek_symbols_and_coptic_pos">1</TD><TD PORT="greek_symbols_and_coptic_size">1b</TD><TD>BitsType1</TD><TD PORT="greek_symbols_and_coptic_type">greek_symbols_and_coptic</TD></TR>
+					<TR><TD PORT="cyrillic_pos">1:1</TD><TD PORT="cyrillic_size">1b</TD><TD>BitsType1</TD><TD PORT="cyrillic_type">cyrillic</TD></TR>
+					<TR><TD PORT="armenian_pos">1:2</TD><TD PORT="armenian_size">1b</TD><TD>BitsType1</TD><TD PORT="armenian_type">armenian</TD></TR>
+					<TR><TD PORT="basic_hebrew_pos">1:3</TD><TD PORT="basic_hebrew_size">1b</TD><TD>BitsType1</TD><TD PORT="basic_hebrew_type">basic_hebrew</TD></TR>
+					<TR><TD PORT="hebrew_extended_pos">1:4</TD><TD PORT="hebrew_extended_size">1b</TD><TD>BitsType1</TD><TD PORT="hebrew_extended_type">hebrew_extended</TD></TR>
+					<TR><TD PORT="basic_arabic_pos">1:5</TD><TD PORT="basic_arabic_size">1b</TD><TD>BitsType1</TD><TD PORT="basic_arabic_type">basic_arabic</TD></TR>
+					<TR><TD PORT="arabic_extended_pos">1:6</TD><TD PORT="arabic_extended_size">1b</TD><TD>BitsType1</TD><TD PORT="arabic_extended_type">arabic_extended</TD></TR>
+					<TR><TD PORT="devanagari_pos">1:7</TD><TD PORT="devanagari_size">1b</TD><TD>BitsType1</TD><TD PORT="devanagari_type">devanagari</TD></TR>
+					<TR><TD PORT="bengali_pos">2</TD><TD PORT="bengali_size">1b</TD><TD>BitsType1</TD><TD PORT="bengali_type">bengali</TD></TR>
+					<TR><TD PORT="gurmukhi_pos">2:1</TD><TD PORT="gurmukhi_size">1b</TD><TD>BitsType1</TD><TD PORT="gurmukhi_type">gurmukhi</TD></TR>
+					<TR><TD PORT="gujarati_pos">2:2</TD><TD PORT="gujarati_size">1b</TD><TD>BitsType1</TD><TD PORT="gujarati_type">gujarati</TD></TR>
+					<TR><TD PORT="oriya_pos">2:3</TD><TD PORT="oriya_size">1b</TD><TD>BitsType1</TD><TD PORT="oriya_type">oriya</TD></TR>
+					<TR><TD PORT="tamil_pos">2:4</TD><TD PORT="tamil_size">1b</TD><TD>BitsType1</TD><TD PORT="tamil_type">tamil</TD></TR>
+					<TR><TD PORT="telugu_pos">2:5</TD><TD PORT="telugu_size">1b</TD><TD>BitsType1</TD><TD PORT="telugu_type">telugu</TD></TR>
+					<TR><TD PORT="kannada_pos">2:6</TD><TD PORT="kannada_size">1b</TD><TD>BitsType1</TD><TD PORT="kannada_type">kannada</TD></TR>
+					<TR><TD PORT="malayalam_pos">2:7</TD><TD PORT="malayalam_size">1b</TD><TD>BitsType1</TD><TD PORT="malayalam_type">malayalam</TD></TR>
+					<TR><TD PORT="thai_pos">3</TD><TD PORT="thai_size">1b</TD><TD>BitsType1</TD><TD PORT="thai_type">thai</TD></TR>
+					<TR><TD PORT="lao_pos">3:1</TD><TD PORT="lao_size">1b</TD><TD>BitsType1</TD><TD PORT="lao_type">lao</TD></TR>
+					<TR><TD PORT="basic_georgian_pos">3:2</TD><TD PORT="basic_georgian_size">1b</TD><TD>BitsType1</TD><TD PORT="basic_georgian_type">basic_georgian</TD></TR>
+					<TR><TD PORT="georgian_extended_pos">3:3</TD><TD PORT="georgian_extended_size">1b</TD><TD>BitsType1</TD><TD PORT="georgian_extended_type">georgian_extended</TD></TR>
+					<TR><TD PORT="hangul_jamo_pos">3:4</TD><TD PORT="hangul_jamo_size">1b</TD><TD>BitsType1</TD><TD PORT="hangul_jamo_type">hangul_jamo</TD></TR>
+					<TR><TD PORT="latin_extended_additional_pos">3:5</TD><TD PORT="latin_extended_additional_size">1b</TD><TD>BitsType1</TD><TD PORT="latin_extended_additional_type">latin_extended_additional</TD></TR>
+					<TR><TD PORT="greek_extended_pos">3:6</TD><TD PORT="greek_extended_size">1b</TD><TD>BitsType1</TD><TD PORT="greek_extended_type">greek_extended</TD></TR>
+					<TR><TD PORT="general_punctuation_pos">3:7</TD><TD PORT="general_punctuation_size">1b</TD><TD>BitsType1</TD><TD PORT="general_punctuation_type">general_punctuation</TD></TR>
+					<TR><TD PORT="superscripts_and_subscripts_pos">4</TD><TD PORT="superscripts_and_subscripts_size">1b</TD><TD>BitsType1</TD><TD PORT="superscripts_and_subscripts_type">superscripts_and_subscripts</TD></TR>
+					<TR><TD PORT="currency_symbols_pos">4:1</TD><TD PORT="currency_symbols_size">1b</TD><TD>BitsType1</TD><TD PORT="currency_symbols_type">currency_symbols</TD></TR>
+					<TR><TD PORT="combining_diacritical_marks_for_symbols_pos">4:2</TD><TD PORT="combining_diacritical_marks_for_symbols_size">1b</TD><TD>BitsType1</TD><TD PORT="combining_diacritical_marks_for_symbols_type">combining_diacritical_marks_for_symbols</TD></TR>
+					<TR><TD PORT="letterlike_symbols_pos">4:3</TD><TD PORT="letterlike_symbols_size">1b</TD><TD>BitsType1</TD><TD PORT="letterlike_symbols_type">letterlike_symbols</TD></TR>
+					<TR><TD PORT="number_forms_pos">4:4</TD><TD PORT="number_forms_size">1b</TD><TD>BitsType1</TD><TD PORT="number_forms_type">number_forms</TD></TR>
+					<TR><TD PORT="arrows_pos">4:5</TD><TD PORT="arrows_size">1b</TD><TD>BitsType1</TD><TD PORT="arrows_type">arrows</TD></TR>
+					<TR><TD PORT="mathematical_operators_pos">4:6</TD><TD PORT="mathematical_operators_size">1b</TD><TD>BitsType1</TD><TD PORT="mathematical_operators_type">mathematical_operators</TD></TR>
+					<TR><TD PORT="miscellaneous_technical_pos">4:7</TD><TD PORT="miscellaneous_technical_size">1b</TD><TD>BitsType1</TD><TD PORT="miscellaneous_technical_type">miscellaneous_technical</TD></TR>
+					<TR><TD PORT="control_pictures_pos">5</TD><TD PORT="control_pictures_size">1b</TD><TD>BitsType1</TD><TD PORT="control_pictures_type">control_pictures</TD></TR>
+					<TR><TD PORT="optical_character_recognition_pos">5:1</TD><TD PORT="optical_character_recognition_size">1b</TD><TD>BitsType1</TD><TD PORT="optical_character_recognition_type">optical_character_recognition</TD></TR>
+					<TR><TD PORT="enclosed_alphanumerics_pos">5:2</TD><TD PORT="enclosed_alphanumerics_size">1b</TD><TD>BitsType1</TD><TD PORT="enclosed_alphanumerics_type">enclosed_alphanumerics</TD></TR>
+					<TR><TD PORT="box_drawing_pos">5:3</TD><TD PORT="box_drawing_size">1b</TD><TD>BitsType1</TD><TD PORT="box_drawing_type">box_drawing</TD></TR>
+					<TR><TD PORT="block_elements_pos">5:4</TD><TD PORT="block_elements_size">1b</TD><TD>BitsType1</TD><TD PORT="block_elements_type">block_elements</TD></TR>
+					<TR><TD PORT="geometric_shapes_pos">5:5</TD><TD PORT="geometric_shapes_size">1b</TD><TD>BitsType1</TD><TD PORT="geometric_shapes_type">geometric_shapes</TD></TR>
+					<TR><TD PORT="miscellaneous_symbols_pos">5:6</TD><TD PORT="miscellaneous_symbols_size">1b</TD><TD>BitsType1</TD><TD PORT="miscellaneous_symbols_type">miscellaneous_symbols</TD></TR>
+					<TR><TD PORT="dingbats_pos">5:7</TD><TD PORT="dingbats_size">1b</TD><TD>BitsType1</TD><TD PORT="dingbats_type">dingbats</TD></TR>
+					<TR><TD PORT="cjk_symbols_and_punctuation_pos">6</TD><TD PORT="cjk_symbols_and_punctuation_size">1b</TD><TD>BitsType1</TD><TD PORT="cjk_symbols_and_punctuation_type">cjk_symbols_and_punctuation</TD></TR>
+					<TR><TD PORT="hiragana_pos">6:1</TD><TD PORT="hiragana_size">1b</TD><TD>BitsType1</TD><TD PORT="hiragana_type">hiragana</TD></TR>
+					<TR><TD PORT="katakana_pos">6:2</TD><TD PORT="katakana_size">1b</TD><TD>BitsType1</TD><TD PORT="katakana_type">katakana</TD></TR>
+					<TR><TD PORT="bopomofo_pos">6:3</TD><TD PORT="bopomofo_size">1b</TD><TD>BitsType1</TD><TD PORT="bopomofo_type">bopomofo</TD></TR>
+					<TR><TD PORT="hangul_compatibility_jamo_pos">6:4</TD><TD PORT="hangul_compatibility_jamo_size">1b</TD><TD>BitsType1</TD><TD PORT="hangul_compatibility_jamo_type">hangul_compatibility_jamo</TD></TR>
+					<TR><TD PORT="cjk_miscellaneous_pos">6:5</TD><TD PORT="cjk_miscellaneous_size">1b</TD><TD>BitsType1</TD><TD PORT="cjk_miscellaneous_type">cjk_miscellaneous</TD></TR>
+					<TR><TD PORT="enclosed_cjk_letters_and_months_pos">6:6</TD><TD PORT="enclosed_cjk_letters_and_months_size">1b</TD><TD>BitsType1</TD><TD PORT="enclosed_cjk_letters_and_months_type">enclosed_cjk_letters_and_months</TD></TR>
+					<TR><TD PORT="cjk_compatibility_pos">6:7</TD><TD PORT="cjk_compatibility_size">1b</TD><TD>BitsType1</TD><TD PORT="cjk_compatibility_type">cjk_compatibility</TD></TR>
+					<TR><TD PORT="hangul_pos">7</TD><TD PORT="hangul_size">1b</TD><TD>BitsType1</TD><TD PORT="hangul_type">hangul</TD></TR>
+					<TR><TD PORT="reserved_for_unicode_subranges1_pos">7:1</TD><TD PORT="reserved_for_unicode_subranges1_size">1b</TD><TD>BitsType1</TD><TD PORT="reserved_for_unicode_subranges1_type">reserved_for_unicode_subranges1</TD></TR>
+					<TR><TD PORT="reserved_for_unicode_subranges2_pos">7:2</TD><TD PORT="reserved_for_unicode_subranges2_size">1b</TD><TD>BitsType1</TD><TD PORT="reserved_for_unicode_subranges2_type">reserved_for_unicode_subranges2</TD></TR>
+					<TR><TD PORT="cjk_unified_ideographs_pos">7:3</TD><TD PORT="cjk_unified_ideographs_size">1b</TD><TD>BitsType1</TD><TD PORT="cjk_unified_ideographs_type">cjk_unified_ideographs</TD></TR>
+					<TR><TD PORT="private_use_area_pos">7:4</TD><TD PORT="private_use_area_size">1b</TD><TD>BitsType1</TD><TD PORT="private_use_area_type">private_use_area</TD></TR>
+					<TR><TD PORT="cjk_compatibility_ideographs_pos">7:5</TD><TD PORT="cjk_compatibility_ideographs_size">1b</TD><TD>BitsType1</TD><TD PORT="cjk_compatibility_ideographs_type">cjk_compatibility_ideographs</TD></TR>
+					<TR><TD PORT="alphabetic_presentation_forms_pos">7:6</TD><TD PORT="alphabetic_presentation_forms_size">1b</TD><TD>BitsType1</TD><TD PORT="alphabetic_presentation_forms_type">alphabetic_presentation_forms</TD></TR>
+					<TR><TD PORT="arabic_presentation_forms_a_pos">7:7</TD><TD PORT="arabic_presentation_forms_a_size">1b</TD><TD>BitsType1</TD><TD PORT="arabic_presentation_forms_a_type">arabic_presentation_forms_a</TD></TR>
+					<TR><TD PORT="combining_half_marks_pos">8</TD><TD PORT="combining_half_marks_size">1b</TD><TD>BitsType1</TD><TD PORT="combining_half_marks_type">combining_half_marks</TD></TR>
+					<TR><TD PORT="cjk_compatibility_forms_pos">8:1</TD><TD PORT="cjk_compatibility_forms_size">1b</TD><TD>BitsType1</TD><TD PORT="cjk_compatibility_forms_type">cjk_compatibility_forms</TD></TR>
+					<TR><TD PORT="small_form_variants_pos">8:2</TD><TD PORT="small_form_variants_size">1b</TD><TD>BitsType1</TD><TD PORT="small_form_variants_type">small_form_variants</TD></TR>
+					<TR><TD PORT="arabic_presentation_forms_b_pos">8:3</TD><TD PORT="arabic_presentation_forms_b_size">1b</TD><TD>BitsType1</TD><TD PORT="arabic_presentation_forms_b_type">arabic_presentation_forms_b</TD></TR>
+					<TR><TD PORT="halfwidth_and_fullwidth_forms_pos">8:4</TD><TD PORT="halfwidth_and_fullwidth_forms_size">1b</TD><TD>BitsType1</TD><TD PORT="halfwidth_and_fullwidth_forms_type">halfwidth_and_fullwidth_forms</TD></TR>
+					<TR><TD PORT="specials_pos">8:5</TD><TD PORT="specials_size">1b</TD><TD>BitsType1</TD><TD PORT="specials_type">specials</TD></TR>
+					<TR><TD PORT="reserved_pos">8:6</TD><TD PORT="reserved_size">7</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__code_page_range {
+				label="Ttf::Os2::CodePageRange";
+				graph[style=dotted];
+
+				code_page_range__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="symbol_character_set_pos">0</TD><TD PORT="symbol_character_set_size">1b</TD><TD>BitsType1</TD><TD PORT="symbol_character_set_type">symbol_character_set</TD></TR>
+					<TR><TD PORT="oem_character_set_pos">0:1</TD><TD PORT="oem_character_set_size">1b</TD><TD>BitsType1</TD><TD PORT="oem_character_set_type">oem_character_set</TD></TR>
+					<TR><TD PORT="macintosh_character_set_pos">0:2</TD><TD PORT="macintosh_character_set_size">1b</TD><TD>BitsType1</TD><TD PORT="macintosh_character_set_type">macintosh_character_set</TD></TR>
+					<TR><TD PORT="reserved_for_alternate_ansi_oem_pos">0:3</TD><TD PORT="reserved_for_alternate_ansi_oem_size">7b</TD><TD>b7</TD><TD PORT="reserved_for_alternate_ansi_oem_type">reserved_for_alternate_ansi_oem</TD></TR>
+					<TR><TD PORT="cp1361_korean_johab_pos">1:2</TD><TD PORT="cp1361_korean_johab_size">1b</TD><TD>BitsType1</TD><TD PORT="cp1361_korean_johab_type">cp1361_korean_johab</TD></TR>
+					<TR><TD PORT="cp950_chinese_traditional_chars_taiwan_and_hong_kong_pos">1:3</TD><TD PORT="cp950_chinese_traditional_chars_taiwan_and_hong_kong_size">1b</TD><TD>BitsType1</TD><TD PORT="cp950_chinese_traditional_chars_taiwan_and_hong_kong_type">cp950_chinese_traditional_chars_taiwan_and_hong_kong</TD></TR>
+					<TR><TD PORT="cp949_korean_wansung_pos">1:4</TD><TD PORT="cp949_korean_wansung_size">1b</TD><TD>BitsType1</TD><TD PORT="cp949_korean_wansung_type">cp949_korean_wansung</TD></TR>
+					<TR><TD PORT="cp936_chinese_simplified_chars_prc_and_singapore_pos">1:5</TD><TD PORT="cp936_chinese_simplified_chars_prc_and_singapore_size">1b</TD><TD>BitsType1</TD><TD PORT="cp936_chinese_simplified_chars_prc_and_singapore_type">cp936_chinese_simplified_chars_prc_and_singapore</TD></TR>
+					<TR><TD PORT="cp932_jis_japan_pos">1:6</TD><TD PORT="cp932_jis_japan_size">1b</TD><TD>BitsType1</TD><TD PORT="cp932_jis_japan_type">cp932_jis_japan</TD></TR>
+					<TR><TD PORT="cp874_thai_pos">1:7</TD><TD PORT="cp874_thai_size">1b</TD><TD>BitsType1</TD><TD PORT="cp874_thai_type">cp874_thai</TD></TR>
+					<TR><TD PORT="reserved_for_alternate_ansi_pos">2</TD><TD PORT="reserved_for_alternate_ansi_size">8b</TD><TD>b8</TD><TD PORT="reserved_for_alternate_ansi_type">reserved_for_alternate_ansi</TD></TR>
+					<TR><TD PORT="cp1257_windows_baltic_pos">3</TD><TD PORT="cp1257_windows_baltic_size">1b</TD><TD>BitsType1</TD><TD PORT="cp1257_windows_baltic_type">cp1257_windows_baltic</TD></TR>
+					<TR><TD PORT="cp1256_arabic_pos">3:1</TD><TD PORT="cp1256_arabic_size">1b</TD><TD>BitsType1</TD><TD PORT="cp1256_arabic_type">cp1256_arabic</TD></TR>
+					<TR><TD PORT="cp1255_hebrew_pos">3:2</TD><TD PORT="cp1255_hebrew_size">1b</TD><TD>BitsType1</TD><TD PORT="cp1255_hebrew_type">cp1255_hebrew</TD></TR>
+					<TR><TD PORT="cp1254_turkish_pos">3:3</TD><TD PORT="cp1254_turkish_size">1b</TD><TD>BitsType1</TD><TD PORT="cp1254_turkish_type">cp1254_turkish</TD></TR>
+					<TR><TD PORT="cp1253_greek_pos">3:4</TD><TD PORT="cp1253_greek_size">1b</TD><TD>BitsType1</TD><TD PORT="cp1253_greek_type">cp1253_greek</TD></TR>
+					<TR><TD PORT="cp1251_cyrillic_pos">3:5</TD><TD PORT="cp1251_cyrillic_size">1b</TD><TD>BitsType1</TD><TD PORT="cp1251_cyrillic_type">cp1251_cyrillic</TD></TR>
+					<TR><TD PORT="cp1250_latin_2_eastern_europe_pos">3:6</TD><TD PORT="cp1250_latin_2_eastern_europe_size">1b</TD><TD>BitsType1</TD><TD PORT="cp1250_latin_2_eastern_europe_type">cp1250_latin_2_eastern_europe</TD></TR>
+					<TR><TD PORT="cp1252_latin_1_pos">3:7</TD><TD PORT="cp1252_latin_1_size">1b</TD><TD>BitsType1</TD><TD PORT="cp1252_latin_1_type">cp1252_latin_1</TD></TR>
+					<TR><TD PORT="cp437_us_pos">4</TD><TD PORT="cp437_us_size">1b</TD><TD>BitsType1</TD><TD PORT="cp437_us_type">cp437_us</TD></TR>
+					<TR><TD PORT="cp850_we_latin_1_pos">4:1</TD><TD PORT="cp850_we_latin_1_size">1b</TD><TD>BitsType1</TD><TD PORT="cp850_we_latin_1_type">cp850_we_latin_1</TD></TR>
+					<TR><TD PORT="cp708_arabic_asmo_708_pos">4:2</TD><TD PORT="cp708_arabic_asmo_708_size">1b</TD><TD>BitsType1</TD><TD PORT="cp708_arabic_asmo_708_type">cp708_arabic_asmo_708</TD></TR>
+					<TR><TD PORT="cp737_greek_former_437_g_pos">4:3</TD><TD PORT="cp737_greek_former_437_g_size">1b</TD><TD>BitsType1</TD><TD PORT="cp737_greek_former_437_g_type">cp737_greek_former_437_g</TD></TR>
+					<TR><TD PORT="cp775_ms_dos_baltic_pos">4:4</TD><TD PORT="cp775_ms_dos_baltic_size">1b</TD><TD>BitsType1</TD><TD PORT="cp775_ms_dos_baltic_type">cp775_ms_dos_baltic</TD></TR>
+					<TR><TD PORT="cp852_latin_2_pos">4:5</TD><TD PORT="cp852_latin_2_size">1b</TD><TD>BitsType1</TD><TD PORT="cp852_latin_2_type">cp852_latin_2</TD></TR>
+					<TR><TD PORT="cp855_ibm_cyrillic_primarily_russian_pos">4:6</TD><TD PORT="cp855_ibm_cyrillic_primarily_russian_size">1b</TD><TD>BitsType1</TD><TD PORT="cp855_ibm_cyrillic_primarily_russian_type">cp855_ibm_cyrillic_primarily_russian</TD></TR>
+					<TR><TD PORT="cp857_ibm_turkish_pos">4:7</TD><TD PORT="cp857_ibm_turkish_size">1b</TD><TD>BitsType1</TD><TD PORT="cp857_ibm_turkish_type">cp857_ibm_turkish</TD></TR>
+					<TR><TD PORT="cp860_ms_dos_portuguese_pos">5</TD><TD PORT="cp860_ms_dos_portuguese_size">1b</TD><TD>BitsType1</TD><TD PORT="cp860_ms_dos_portuguese_type">cp860_ms_dos_portuguese</TD></TR>
+					<TR><TD PORT="cp861_ms_dos_icelandic_pos">5:1</TD><TD PORT="cp861_ms_dos_icelandic_size">1b</TD><TD>BitsType1</TD><TD PORT="cp861_ms_dos_icelandic_type">cp861_ms_dos_icelandic</TD></TR>
+					<TR><TD PORT="cp862_hebrew_pos">5:2</TD><TD PORT="cp862_hebrew_size">1b</TD><TD>BitsType1</TD><TD PORT="cp862_hebrew_type">cp862_hebrew</TD></TR>
+					<TR><TD PORT="cp863_ms_dos_canadian_french_pos">5:3</TD><TD PORT="cp863_ms_dos_canadian_french_size">1b</TD><TD>BitsType1</TD><TD PORT="cp863_ms_dos_canadian_french_type">cp863_ms_dos_canadian_french</TD></TR>
+					<TR><TD PORT="cp864_arabic_pos">5:4</TD><TD PORT="cp864_arabic_size">1b</TD><TD>BitsType1</TD><TD PORT="cp864_arabic_type">cp864_arabic</TD></TR>
+					<TR><TD PORT="cp865_ms_dos_nordic_pos">5:5</TD><TD PORT="cp865_ms_dos_nordic_size">1b</TD><TD>BitsType1</TD><TD PORT="cp865_ms_dos_nordic_type">cp865_ms_dos_nordic</TD></TR>
+					<TR><TD PORT="cp866_ms_dos_russian_pos">5:6</TD><TD PORT="cp866_ms_dos_russian_size">1b</TD><TD>BitsType1</TD><TD PORT="cp866_ms_dos_russian_type">cp866_ms_dos_russian</TD></TR>
+					<TR><TD PORT="cp869_ibm_greek_pos">5:7</TD><TD PORT="cp869_ibm_greek_size">1b</TD><TD>BitsType1</TD><TD PORT="cp869_ibm_greek_type">cp869_ibm_greek</TD></TR>
+					<TR><TD PORT="reserved_for_oem_pos">6</TD><TD PORT="reserved_for_oem_size">16b</TD><TD>b16</TD><TD PORT="reserved_for_oem_type">reserved_for_oem</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__fixed {
+			label="Ttf::Fixed";
+			graph[style=dotted];
+
+			fixed__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="major_pos">0</TD><TD PORT="major_size">2</TD><TD>u2be</TD><TD PORT="major_type">major</TD></TR>
+				<TR><TD PORT="minor_pos">2</TD><TD PORT="minor_size">2</TD><TD>u2be</TD><TD PORT="minor_type">minor</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__glyf {
+			label="Ttf::Glyf";
+			graph[style=dotted];
+
+			glyf__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="number_of_contours_pos">0</TD><TD PORT="number_of_contours_size">2</TD><TD>s2be</TD><TD PORT="number_of_contours_type">number_of_contours</TD></TR>
+				<TR><TD PORT="x_min_pos">2</TD><TD PORT="x_min_size">2</TD><TD>s2be</TD><TD PORT="x_min_type">x_min</TD></TR>
+				<TR><TD PORT="y_min_pos">4</TD><TD PORT="y_min_size">2</TD><TD>s2be</TD><TD PORT="y_min_type">y_min</TD></TR>
+				<TR><TD PORT="x_max_pos">6</TD><TD PORT="x_max_size">2</TD><TD>s2be</TD><TD PORT="x_max_type">x_max</TD></TR>
+				<TR><TD PORT="y_max_pos">8</TD><TD PORT="y_max_size">2</TD><TD>s2be</TD><TD PORT="y_max_type">y_max</TD></TR>
+				<TR><TD PORT="value_pos">10</TD><TD PORT="value_size">...</TD><TD>SimpleGlyph</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+			subgraph cluster__simple_glyph {
+				label="Ttf::Glyf::SimpleGlyph";
+				graph[style=dotted];
+
+				simple_glyph__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="end_pts_of_contours_pos">0</TD><TD PORT="end_pts_of_contours_size">2</TD><TD>u2be</TD><TD PORT="end_pts_of_contours_type">end_pts_of_contours</TD></TR>
+					<TR><TD COLSPAN="4" PORT="end_pts_of_contours__repeat">repeat _parent.number_of_contours times</TD></TR>
+					<TR><TD PORT="instruction_length_pos">2</TD><TD PORT="instruction_length_size">2</TD><TD>u2be</TD><TD PORT="instruction_length_type">instruction_length</TD></TR>
+					<TR><TD PORT="instructions_pos">4</TD><TD PORT="instructions_size">instruction_length</TD><TD></TD><TD PORT="instructions_type">instructions</TD></TR>
+					<TR><TD PORT="flags_pos">...</TD><TD PORT="flags_size">...</TD><TD>Flag</TD><TD PORT="flags_type">flags</TD></TR>
+					<TR><TD COLSPAN="4" PORT="flags__repeat">repeat point_count times</TD></TR>
+				</TABLE>>];
+				simple_glyph__inst__point_count [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>point_count</TD><TD>(end_pts_of_contours.max + 1)</TD></TR>
+				</TABLE>>];
+				subgraph cluster__flag {
+					label="Ttf::Glyf::SimpleGlyph::Flag";
+					graph[style=dotted];
+
+					flag__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">2b</TD><TD>b2</TD><TD PORT="reserved_type">reserved</TD></TR>
+						<TR><TD PORT="y_is_same_pos">0:2</TD><TD PORT="y_is_same_size">1b</TD><TD>BitsType1</TD><TD PORT="y_is_same_type">y_is_same</TD></TR>
+						<TR><TD PORT="x_is_same_pos">0:3</TD><TD PORT="x_is_same_size">1b</TD><TD>BitsType1</TD><TD PORT="x_is_same_type">x_is_same</TD></TR>
+						<TR><TD PORT="repeat_pos">0:4</TD><TD PORT="repeat_size">1b</TD><TD>BitsType1</TD><TD PORT="repeat_type">repeat</TD></TR>
+						<TR><TD PORT="y_short_vector_pos">0:5</TD><TD PORT="y_short_vector_size">1b</TD><TD>BitsType1</TD><TD PORT="y_short_vector_type">y_short_vector</TD></TR>
+						<TR><TD PORT="x_short_vector_pos">0:6</TD><TD PORT="x_short_vector_size">1b</TD><TD>BitsType1</TD><TD PORT="x_short_vector_type">x_short_vector</TD></TR>
+						<TR><TD PORT="on_curve_pos">0:7</TD><TD PORT="on_curve_size">1b</TD><TD>BitsType1</TD><TD PORT="on_curve_type">on_curve</TD></TR>
+						<TR><TD PORT="repeat_value_pos">1</TD><TD PORT="repeat_value_size">1</TD><TD>u1</TD><TD PORT="repeat_value_type">repeat_value</TD></TR>
+					</TABLE>>];
+				}
+			}
+		}
+		subgraph cluster__cvt {
+			label="Ttf::Cvt";
+			graph[style=dotted];
+
+			cvt__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="fwords_pos">0</TD><TD PORT="fwords_size">2</TD><TD>s2be</TD><TD PORT="fwords_type">fwords</TD></TR>
+				<TR><TD COLSPAN="4" PORT="fwords__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__maxp {
+			label="Ttf::Maxp";
+			graph[style=dotted];
+
+			maxp__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="table_version_number_pos">0</TD><TD PORT="table_version_number_size">...</TD><TD>Fixed</TD><TD PORT="table_version_number_type">table_version_number</TD></TR>
+				<TR><TD PORT="num_glyphs_pos">...</TD><TD PORT="num_glyphs_size">2</TD><TD>u2be</TD><TD PORT="num_glyphs_type">num_glyphs</TD></TR>
+				<TR><TD PORT="max_points_pos">...</TD><TD PORT="max_points_size">2</TD><TD>u2be</TD><TD PORT="max_points_type">max_points</TD></TR>
+				<TR><TD PORT="max_contours_pos">...</TD><TD PORT="max_contours_size">2</TD><TD>u2be</TD><TD PORT="max_contours_type">max_contours</TD></TR>
+				<TR><TD PORT="max_composite_points_pos">...</TD><TD PORT="max_composite_points_size">2</TD><TD>u2be</TD><TD PORT="max_composite_points_type">max_composite_points</TD></TR>
+				<TR><TD PORT="max_composite_contours_pos">...</TD><TD PORT="max_composite_contours_size">2</TD><TD>u2be</TD><TD PORT="max_composite_contours_type">max_composite_contours</TD></TR>
+				<TR><TD PORT="max_zones_pos">...</TD><TD PORT="max_zones_size">2</TD><TD>u2be</TD><TD PORT="max_zones_type">max_zones</TD></TR>
+				<TR><TD PORT="max_twilight_points_pos">...</TD><TD PORT="max_twilight_points_size">2</TD><TD>u2be</TD><TD PORT="max_twilight_points_type">max_twilight_points</TD></TR>
+				<TR><TD PORT="max_storage_pos">...</TD><TD PORT="max_storage_size">2</TD><TD>u2be</TD><TD PORT="max_storage_type">max_storage</TD></TR>
+				<TR><TD PORT="max_function_defs_pos">...</TD><TD PORT="max_function_defs_size">2</TD><TD>u2be</TD><TD PORT="max_function_defs_type">max_function_defs</TD></TR>
+				<TR><TD PORT="max_instruction_defs_pos">...</TD><TD PORT="max_instruction_defs_size">2</TD><TD>u2be</TD><TD PORT="max_instruction_defs_type">max_instruction_defs</TD></TR>
+				<TR><TD PORT="max_stack_elements_pos">...</TD><TD PORT="max_stack_elements_size">2</TD><TD>u2be</TD><TD PORT="max_stack_elements_type">max_stack_elements</TD></TR>
+				<TR><TD PORT="max_size_of_instructions_pos">...</TD><TD PORT="max_size_of_instructions_size">2</TD><TD>u2be</TD><TD PORT="max_size_of_instructions_type">max_size_of_instructions</TD></TR>
+				<TR><TD PORT="max_component_elements_pos">...</TD><TD PORT="max_component_elements_size">2</TD><TD>u2be</TD><TD PORT="max_component_elements_type">max_component_elements</TD></TR>
+				<TR><TD PORT="max_component_depth_pos">...</TD><TD PORT="max_component_depth_size">2</TD><TD>u2be</TD><TD PORT="max_component_depth_type">max_component_depth</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__offset_table {
+			label="Ttf::OffsetTable";
+			graph[style=dotted];
+
+			offset_table__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="sfnt_version_pos">0</TD><TD PORT="sfnt_version_size">...</TD><TD>Fixed</TD><TD PORT="sfnt_version_type">sfnt_version</TD></TR>
+				<TR><TD PORT="num_tables_pos">...</TD><TD PORT="num_tables_size">2</TD><TD>u2be</TD><TD PORT="num_tables_type">num_tables</TD></TR>
+				<TR><TD PORT="search_range_pos">...</TD><TD PORT="search_range_size">2</TD><TD>u2be</TD><TD PORT="search_range_type">search_range</TD></TR>
+				<TR><TD PORT="entry_selector_pos">...</TD><TD PORT="entry_selector_size">2</TD><TD>u2be</TD><TD PORT="entry_selector_type">entry_selector</TD></TR>
+				<TR><TD PORT="range_shift_pos">...</TD><TD PORT="range_shift_size">2</TD><TD>u2be</TD><TD PORT="range_shift_type">range_shift</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__cmap {
+			label="Ttf::Cmap";
+			graph[style=dotted];
+
+			cmap__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="version_number_pos">0</TD><TD PORT="version_number_size">2</TD><TD>u2be</TD><TD PORT="version_number_type">version_number</TD></TR>
+				<TR><TD PORT="number_of_encoding_tables_pos">2</TD><TD PORT="number_of_encoding_tables_size">2</TD><TD>u2be</TD><TD PORT="number_of_encoding_tables_type">number_of_encoding_tables</TD></TR>
+				<TR><TD PORT="tables_pos">4</TD><TD PORT="tables_size">...</TD><TD>SubtableHeader</TD><TD PORT="tables_type">tables</TD></TR>
+				<TR><TD COLSPAN="4" PORT="tables__repeat">repeat number_of_encoding_tables times</TD></TR>
+			</TABLE>>];
+			subgraph cluster__subtable_header {
+				label="Ttf::Cmap::SubtableHeader";
+				graph[style=dotted];
+
+				subtable_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="platform_id_pos">0</TD><TD PORT="platform_id_size">2</TD><TD>u2be</TD><TD PORT="platform_id_type">platform_id</TD></TR>
+					<TR><TD PORT="encoding_id_pos">2</TD><TD PORT="encoding_id_size">2</TD><TD>u2be</TD><TD PORT="encoding_id_type">encoding_id</TD></TR>
+					<TR><TD PORT="subtable_offset_pos">4</TD><TD PORT="subtable_offset_size">4</TD><TD>u4be</TD><TD PORT="subtable_offset_type">subtable_offset</TD></TR>
+				</TABLE>>];
+				subtable_header__inst__table [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="table_pos">subtable_offset</TD><TD PORT="table_size">...</TD><TD>Subtable</TD><TD PORT="table_type">table</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__subtable {
+				label="Ttf::Cmap::Subtable";
+				graph[style=dotted];
+
+				subtable__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="format_pos">0</TD><TD PORT="format_size">2</TD><TD>u2be→SubtableFormat</TD><TD PORT="format_type">format</TD></TR>
+					<TR><TD PORT="length_pos">2</TD><TD PORT="length_size">2</TD><TD>u2be</TD><TD PORT="length_type">length</TD></TR>
+					<TR><TD PORT="version_pos">4</TD><TD PORT="version_size">2</TD><TD>u2be</TD><TD PORT="version_type">version</TD></TR>
+					<TR><TD PORT="value_pos">6</TD><TD PORT="value_size">...</TD><TD>switch (format)</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+subtable__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:subtable_format_byte_encoding_table</TD><TD PORT="case0">ByteEncodingTable</TD></TR>
+	<TR><TD>:subtable_format_high_byte_mapping_through_table</TD><TD PORT="case1">HighByteMappingThroughTable</TD></TR>
+	<TR><TD>:subtable_format_trimmed_table_mapping</TD><TD PORT="case2">TrimmedTableMapping</TD></TR>
+	<TR><TD>:subtable_format_segment_mapping_to_delta_values</TD><TD PORT="case3">SegmentMappingToDeltaValues</TD></TR>
+</TABLE>>];
+				subgraph cluster__byte_encoding_table {
+					label="Ttf::Cmap::Subtable::ByteEncodingTable";
+					graph[style=dotted];
+
+					byte_encoding_table__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="glyph_id_array_pos">0</TD><TD PORT="glyph_id_array_size">256</TD><TD></TD><TD PORT="glyph_id_array_type">glyph_id_array</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__high_byte_mapping_through_table {
+					label="Ttf::Cmap::Subtable::HighByteMappingThroughTable";
+					graph[style=dotted];
+
+					high_byte_mapping_through_table__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="sub_header_keys_pos">0</TD><TD PORT="sub_header_keys_size">2</TD><TD>u2be</TD><TD PORT="sub_header_keys_type">sub_header_keys</TD></TR>
+						<TR><TD COLSPAN="4" PORT="sub_header_keys__repeat">repeat 256 times</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__segment_mapping_to_delta_values {
+					label="Ttf::Cmap::Subtable::SegmentMappingToDeltaValues";
+					graph[style=dotted];
+
+					segment_mapping_to_delta_values__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="seg_count_x2_pos">0</TD><TD PORT="seg_count_x2_size">2</TD><TD>u2be</TD><TD PORT="seg_count_x2_type">seg_count_x2</TD></TR>
+						<TR><TD PORT="search_range_pos">2</TD><TD PORT="search_range_size">2</TD><TD>u2be</TD><TD PORT="search_range_type">search_range</TD></TR>
+						<TR><TD PORT="entry_selector_pos">4</TD><TD PORT="entry_selector_size">2</TD><TD>u2be</TD><TD PORT="entry_selector_type">entry_selector</TD></TR>
+						<TR><TD PORT="range_shift_pos">6</TD><TD PORT="range_shift_size">2</TD><TD>u2be</TD><TD PORT="range_shift_type">range_shift</TD></TR>
+						<TR><TD PORT="end_count_pos">8</TD><TD PORT="end_count_size">2</TD><TD>u2be</TD><TD PORT="end_count_type">end_count</TD></TR>
+						<TR><TD COLSPAN="4" PORT="end_count__repeat">repeat seg_count times</TD></TR>
+						<TR><TD PORT="reserved_pad_pos">10</TD><TD PORT="reserved_pad_size">2</TD><TD>u2be</TD><TD PORT="reserved_pad_type">reserved_pad</TD></TR>
+						<TR><TD PORT="start_count_pos">12</TD><TD PORT="start_count_size">2</TD><TD>u2be</TD><TD PORT="start_count_type">start_count</TD></TR>
+						<TR><TD COLSPAN="4" PORT="start_count__repeat">repeat seg_count times</TD></TR>
+						<TR><TD PORT="id_delta_pos">14</TD><TD PORT="id_delta_size">2</TD><TD>u2be</TD><TD PORT="id_delta_type">id_delta</TD></TR>
+						<TR><TD COLSPAN="4" PORT="id_delta__repeat">repeat seg_count times</TD></TR>
+						<TR><TD PORT="id_range_offset_pos">16</TD><TD PORT="id_range_offset_size">2</TD><TD>u2be</TD><TD PORT="id_range_offset_type">id_range_offset</TD></TR>
+						<TR><TD COLSPAN="4" PORT="id_range_offset__repeat">repeat seg_count times</TD></TR>
+						<TR><TD PORT="glyph_id_array_pos">18</TD><TD PORT="glyph_id_array_size">2</TD><TD>u2be</TD><TD PORT="glyph_id_array_type">glyph_id_array</TD></TR>
+						<TR><TD COLSPAN="4" PORT="glyph_id_array__repeat">repeat to end of stream</TD></TR>
+					</TABLE>>];
+					segment_mapping_to_delta_values__inst__seg_count [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>seg_count</TD><TD>(seg_count_x2 / 2)</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__trimmed_table_mapping {
+					label="Ttf::Cmap::Subtable::TrimmedTableMapping";
+					graph[style=dotted];
+
+					trimmed_table_mapping__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="first_code_pos">0</TD><TD PORT="first_code_size">2</TD><TD>u2be</TD><TD PORT="first_code_type">first_code</TD></TR>
+						<TR><TD PORT="entry_count_pos">2</TD><TD PORT="entry_count_size">2</TD><TD>u2be</TD><TD PORT="entry_count_type">entry_count</TD></TR>
+						<TR><TD PORT="glyph_id_array_pos">4</TD><TD PORT="glyph_id_array_size">2</TD><TD>u2be</TD><TD PORT="glyph_id_array_type">glyph_id_array</TD></TR>
+						<TR><TD COLSPAN="4" PORT="glyph_id_array__repeat">repeat entry_count times</TD></TR>
+					</TABLE>>];
+				}
+			}
+		}
+	}
+	ttf__seq:offset_table_type -> offset_table__seq [style=bold];
+	ttf__seq:directory_table_type -> dir_table_entry__seq [style=bold];
+	offset_table__seq:num_tables_type -> ttf__seq:directory_table__repeat [color="#404040"];
+	post__seq:format_type -> fixed__seq [style=bold];
+	post__seq:italic_angle_type -> fixed__seq [style=bold];
+	post__seq:format20_type -> format20__seq [style=bold];
+	format20__seq:number_of_glyphs_type -> format20__seq:glyph_name_index__repeat [color="#404040"];
+	format20__seq:glyph_names_type -> pascal_string__seq [style=bold];
+	pascal_string__seq:length_type -> format20__seq:glyph_names__repeat [color="#404040"];
+	pascal_string__seq:length_type -> pascal_string__seq:value_size [color="#404040"];
+	name__seq:name_records_type -> name_record__seq [style=bold];
+	name__seq:name_record_count_type -> name__seq:name_records__repeat [color="#404040"];
+	name__seq:string_storage_offset_type -> name_record__inst__ascii_value:ascii_value_pos [color="#404040"];
+	name_record__seq:string_offset_type -> name_record__inst__ascii_value:ascii_value_pos [color="#404040"];
+	name_record__seq:string_length_type -> name_record__inst__ascii_value:ascii_value_size [color="#404040"];
+	name__seq:string_storage_offset_type -> name_record__inst__unicode_value:unicode_value_pos [color="#404040"];
+	name_record__seq:string_offset_type -> name_record__inst__unicode_value:unicode_value_pos [color="#404040"];
+	name_record__seq:string_length_type -> name_record__inst__unicode_value:unicode_value_size [color="#404040"];
+	head__seq:version_type -> fixed__seq [style=bold];
+	head__seq:font_revision_type -> fixed__seq [style=bold];
+	hhea__seq:version_type -> fixed__seq [style=bold];
+	kern__seq:subtables_type -> subtable__seq [style=bold];
+	kern__seq:subtable_count_type -> kern__seq:subtables__repeat [color="#404040"];
+	subtable__seq:format0_type -> format0__seq [style=bold];
+	format0__seq:kerning_pairs_type -> kerning_pair__seq [style=bold];
+	format0__seq:pair_count_type -> format0__seq:kerning_pairs__repeat [color="#404040"];
+	dir_table_entry__seq:offset_type -> dir_table_entry__inst__value:value_pos [color="#404040"];
+	dir_table_entry__inst__value:value_type -> dir_table_entry__inst__value_value_switch [style=bold];
+	dir_table_entry__inst__value_value_switch:case0 -> head__seq [style=bold];
+	dir_table_entry__inst__value_value_switch:case1 -> cvt__seq [style=bold];
+	dir_table_entry__inst__value_value_switch:case2 -> prep__seq [style=bold];
+	dir_table_entry__inst__value_value_switch:case3 -> kern__seq [style=bold];
+	dir_table_entry__inst__value_value_switch:case4 -> hhea__seq [style=bold];
+	dir_table_entry__inst__value_value_switch:case5 -> post__seq [style=bold];
+	dir_table_entry__inst__value_value_switch:case6 -> os2__seq [style=bold];
+	dir_table_entry__inst__value_value_switch:case7 -> name__seq [style=bold];
+	dir_table_entry__inst__value_value_switch:case8 -> maxp__seq [style=bold];
+	dir_table_entry__inst__value_value_switch:case9 -> glyf__seq [style=bold];
+	dir_table_entry__inst__value_value_switch:case10 -> fpgm__seq [style=bold];
+	dir_table_entry__inst__value_value_switch:case11 -> cmap__seq [style=bold];
+	dir_table_entry__seq:tag_type -> dir_table_entry__inst__value:value_type [color="#404040"];
+	os2__seq:panose_type -> panose__seq [style=bold];
+	os2__seq:unicode_range_type -> unicode_range__seq [style=bold];
+	os2__seq:code_page_range_type -> code_page_range__seq [style=bold];
+	glyf__seq:value_type -> simple_glyph__seq [style=bold];
+	glyf__seq:number_of_contours_type -> simple_glyph__seq:end_pts_of_contours__repeat [color="#404040"];
+	simple_glyph__seq:instruction_length_type -> simple_glyph__seq:instructions_size [color="#404040"];
+	simple_glyph__seq:flags_type -> flag__seq [style=bold];
+	simple_glyph__inst__point_count:point_count_type -> simple_glyph__seq:flags__repeat [color="#404040"];
+	simple_glyph__seq:end_pts_of_contours_type -> simple_glyph__inst__point_count [color="#404040"];
+	maxp__seq:table_version_number_type -> fixed__seq [style=bold];
+	offset_table__seq:sfnt_version_type -> fixed__seq [style=bold];
+	cmap__seq:tables_type -> subtable_header__seq [style=bold];
+	cmap__seq:number_of_encoding_tables_type -> cmap__seq:tables__repeat [color="#404040"];
+	subtable_header__seq:subtable_offset_type -> subtable_header__inst__table:table_pos [color="#404040"];
+	subtable_header__inst__table:table_type -> subtable__seq [style=bold];
+	subtable__seq:value_type -> subtable__seq_value_switch [style=bold];
+	subtable__seq_value_switch:case0 -> byte_encoding_table__seq [style=bold];
+	subtable__seq_value_switch:case1 -> high_byte_mapping_through_table__seq [style=bold];
+	subtable__seq_value_switch:case2 -> trimmed_table_mapping__seq [style=bold];
+	subtable__seq_value_switch:case3 -> segment_mapping_to_delta_values__seq [style=bold];
+	subtable__seq:format_type -> subtable__seq:value_type [color="#404040"];
+	segment_mapping_to_delta_values__inst__seg_count:seg_count_type -> segment_mapping_to_delta_values__seq:end_count__repeat [color="#404040"];
+	segment_mapping_to_delta_values__inst__seg_count:seg_count_type -> segment_mapping_to_delta_values__seq:start_count__repeat [color="#404040"];
+	segment_mapping_to_delta_values__inst__seg_count:seg_count_type -> segment_mapping_to_delta_values__seq:id_delta__repeat [color="#404040"];
+	segment_mapping_to_delta_values__inst__seg_count:seg_count_type -> segment_mapping_to_delta_values__seq:id_range_offset__repeat [color="#404040"];
+	segment_mapping_to_delta_values__seq:seg_count_x2_type -> segment_mapping_to_delta_values__inst__seg_count [color="#404040"];
+	trimmed_table_mapping__seq:entry_count_type -> trimmed_table_mapping__seq:glyph_id_array__repeat [color="#404040"];
+}

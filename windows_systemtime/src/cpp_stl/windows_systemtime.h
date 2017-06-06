@@ -1,0 +1,85 @@
+#ifndef WINDOWS_SYSTEMTIME_H_
+#define WINDOWS_SYSTEMTIME_H_
+
+// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include <kaitai/kaitaistruct.h>
+#include <kaitai/kaitaistream.h>
+
+#include <stdint.h>
+
+#if KAITAI_STRUCT_VERSION < 7000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
+#endif
+
+/**
+ * Microsoft Windows SYSTEMTIME structure, stores individual components
+ * of date and time as individual fields, up to millisecond precision.
+ */
+
+class windows_systemtime_t : public kaitai::kstruct {
+
+public:
+
+    windows_systemtime_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, windows_systemtime_t* p_root = 0);
+    void _read();
+    ~windows_systemtime_t();
+
+private:
+    uint16_t m_year;
+    uint16_t m_month;
+    uint16_t m_dow;
+    uint16_t m_day;
+    uint16_t m_hour;
+    uint16_t m_min;
+    uint16_t m_sec;
+    uint16_t m_msec;
+    windows_systemtime_t* m__root;
+    kaitai::kstruct* m__parent;
+
+public:
+
+    /**
+     * Year
+     */
+    uint16_t year() const { return m_year; }
+
+    /**
+     * Month (January = 1)
+     */
+    uint16_t month() const { return m_month; }
+
+    /**
+     * Day of week (Sun = 0)
+     */
+    uint16_t dow() const { return m_dow; }
+
+    /**
+     * Day of month
+     */
+    uint16_t day() const { return m_day; }
+
+    /**
+     * Hours
+     */
+    uint16_t hour() const { return m_hour; }
+
+    /**
+     * Minutes
+     */
+    uint16_t min() const { return m_min; }
+
+    /**
+     * Seconds
+     */
+    uint16_t sec() const { return m_sec; }
+
+    /**
+     * Milliseconds
+     */
+    uint16_t msec() const { return m_msec; }
+    windows_systemtime_t* _root() const { return m__root; }
+    kaitai::kstruct* _parent() const { return m__parent; }
+};
+
+#endif  // WINDOWS_SYSTEMTIME_H_

@@ -1,0 +1,42 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__stl {
+		label="Stl";
+		graph[style=dotted];
+
+		stl__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">80</TD><TD></TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="num_triangles_pos">80</TD><TD PORT="num_triangles_size">4</TD><TD>u4le</TD><TD PORT="num_triangles_type">num_triangles</TD></TR>
+			<TR><TD PORT="triangles_pos">84</TD><TD PORT="triangles_size">...</TD><TD>Triangle</TD><TD PORT="triangles_type">triangles</TD></TR>
+			<TR><TD COLSPAN="4" PORT="triangles__repeat">repeat num_triangles times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__triangle {
+			label="Stl::Triangle";
+			graph[style=dotted];
+
+			triangle__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="normal_pos">0</TD><TD PORT="normal_size">...</TD><TD>Vec3d</TD><TD PORT="normal_type">normal</TD></TR>
+				<TR><TD PORT="vertices_pos">...</TD><TD PORT="vertices_size">...</TD><TD>Vec3d</TD><TD PORT="vertices_type">vertices</TD></TR>
+				<TR><TD COLSPAN="4" PORT="vertices__repeat">repeat 3 times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__vec3d {
+			label="Stl::Vec3d";
+			graph[style=dotted];
+
+			vec3d__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="x_pos">0</TD><TD PORT="x_size">4</TD><TD>f4le</TD><TD PORT="x_type">x</TD></TR>
+				<TR><TD PORT="y_pos">4</TD><TD PORT="y_size">4</TD><TD>f4le</TD><TD PORT="y_type">y</TD></TR>
+				<TR><TD PORT="z_pos">8</TD><TD PORT="z_size">4</TD><TD>f4le</TD><TD PORT="z_type">z</TD></TR>
+			</TABLE>>];
+		}
+	}
+	stl__seq:triangles_type -> triangle__seq [style=bold];
+	stl__seq:num_triangles_type -> stl__seq:triangles__repeat [color="#404040"];
+	triangle__seq:normal_type -> vec3d__seq [style=bold];
+	triangle__seq:vertices_type -> vec3d__seq [style=bold];
+}

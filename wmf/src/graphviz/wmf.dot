@@ -1,0 +1,64 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__wmf {
+		label="Wmf";
+		graph[style=dotted];
+
+		wmf__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="special_hdr_pos">0</TD><TD PORT="special_hdr_size">...</TD><TD>SpecialHeader</TD><TD PORT="special_hdr_type">special_hdr</TD></TR>
+			<TR><TD PORT="header_pos">...</TD><TD PORT="header_size">...</TD><TD>WmfHeader</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="records_pos">...</TD><TD PORT="records_size">...</TD><TD>Record</TD><TD PORT="records_type">records</TD></TR>
+			<TR><TD COLSPAN="4" PORT="records__repeat">repeat until _.function == :func_eof</TD></TR>
+		</TABLE>>];
+		subgraph cluster__special_header {
+			label="Wmf::SpecialHeader";
+			graph[style=dotted];
+
+			special_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>D7 CD C6 9A</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="handle_pos">4</TD><TD PORT="handle_size">2</TD><TD>00 00</TD><TD PORT="handle_type">handle</TD></TR>
+				<TR><TD PORT="left_pos">6</TD><TD PORT="left_size">2</TD><TD>s2le</TD><TD PORT="left_type">left</TD></TR>
+				<TR><TD PORT="top_pos">8</TD><TD PORT="top_size">2</TD><TD>s2le</TD><TD PORT="top_type">top</TD></TR>
+				<TR><TD PORT="right_pos">10</TD><TD PORT="right_size">2</TD><TD>s2le</TD><TD PORT="right_type">right</TD></TR>
+				<TR><TD PORT="bottom_pos">12</TD><TD PORT="bottom_size">2</TD><TD>s2le</TD><TD PORT="bottom_type">bottom</TD></TR>
+				<TR><TD PORT="inch_pos">14</TD><TD PORT="inch_size">2</TD><TD>u2le</TD><TD PORT="inch_type">inch</TD></TR>
+				<TR><TD PORT="reserved_pos">16</TD><TD PORT="reserved_size">4</TD><TD>00 00 00 00</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="checksum_pos">20</TD><TD PORT="checksum_size">2</TD><TD>u2le</TD><TD PORT="checksum_type">checksum</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__wmf_header {
+			label="Wmf::WmfHeader";
+			graph[style=dotted];
+
+			wmf_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">2</TD><TD>u2le→MetafileType</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="header_size_pos">2</TD><TD PORT="header_size_size">2</TD><TD>u2le</TD><TD PORT="header_size_type">header_size</TD></TR>
+				<TR><TD PORT="version_pos">4</TD><TD PORT="version_size">2</TD><TD>u2le</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="size_pos">6</TD><TD PORT="size_size">4</TD><TD>u4le</TD><TD PORT="size_type">size</TD></TR>
+				<TR><TD PORT="number_of_objects_pos">10</TD><TD PORT="number_of_objects_size">2</TD><TD>u2le</TD><TD PORT="number_of_objects_type">number_of_objects</TD></TR>
+				<TR><TD PORT="max_record_pos">12</TD><TD PORT="max_record_size">4</TD><TD>u4le</TD><TD PORT="max_record_type">max_record</TD></TR>
+				<TR><TD PORT="number_of_members_pos">16</TD><TD PORT="number_of_members_size">2</TD><TD>u2le</TD><TD PORT="number_of_members_type">number_of_members</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__record {
+			label="Wmf::Record";
+			graph[style=dotted];
+
+			record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="size_pos">0</TD><TD PORT="size_size">4</TD><TD>u4le</TD><TD PORT="size_type">size</TD></TR>
+				<TR><TD PORT="function_pos">4</TD><TD PORT="function_size">2</TD><TD>u2le→Func</TD><TD PORT="function_type">function</TD></TR>
+				<TR><TD PORT="params_pos">6</TD><TD PORT="params_size">((size - 3) * 2)</TD><TD></TD><TD PORT="params_type">params</TD></TR>
+			</TABLE>>];
+		}
+	}
+	wmf__seq:special_hdr_type -> special_header__seq [style=bold];
+	wmf__seq:header_type -> wmf_header__seq [style=bold];
+	wmf__seq:records_type -> record__seq [style=bold];
+	record__seq:function_type -> wmf__seq:records__repeat [color="#404040"];
+	record__seq:size_type -> record__seq:params_size [color="#404040"];
+}

@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Kaitai Struct: declarative binary format parsing language</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Game Data Files</li>
+        <li class="active">Warcraft II map files</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Warcraft II map files:
+            
+            JavaScript parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Warcraft II game engine uses this format for map files. External
+maps can be edited by official Warcraft II map editor and saved in
+.pud files. Maps supplied with the game (i.e. single player
+campaign) follow the same format, but are instead embedded inside
+the game container files.</p>
+<p>There are two major versions: 0x11 (original one) and 0x13 (roughly
+corresponds to v1.33 of the game engine, although some of the
+features got limited support in v1.3).</p>
+<p>File consists of a sequence of typed sections.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Warcraft II engine
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        pud
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.6
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Warcraft II map files
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Warcraft II map files parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="Warcraft II map files parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Warcraft II map files parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Warcraft II map files parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Warcraft II map files parsing Java library">Java</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="javascript.html" title="Warcraft II map files parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Warcraft II map files parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Warcraft II map files parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Warcraft II map files parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Warcraft II map files parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            JavaScript source code to parse Warcraft II map files
+            
+        </h2>
+
+        
+
+        <h3>Warcraft2Pud.js</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/javascript/Warcraft2Pud.js" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+/**
+ * Warcraft II game engine uses this format for map files. External
+ * maps can be edited by official Warcraft II map editor and saved in
+ * .pud files. Maps supplied with the game (i.e. single player
+ * campaign) follow the same format, but are instead embedded inside
+ * the game container files.
+ * 
+ * There are two major versions: 0x11 (original one) and 0x13 (roughly
+ * corresponds to v1.33 of the game engine, although some of the
+ * features got limited support in v1.3).
+ * 
+ * File consists of a sequence of typed sections.
+ */
+
+var Warcraft2Pud = (function() {
+  Warcraft2Pud.Controller = Object.freeze({
+    COMPUTER: 1,
+    PASSIVE_COMPUTER: 2,
+    NOBODY: 3,
+    COMPUTER: 4,
+    HUMAN: 5,
+    RESCUE_PASSIVE: 6,
+    RESCUE_ACTIVE: 7,
+
+    1: &quot;COMPUTER&quot;,
+    2: &quot;PASSIVE_COMPUTER&quot;,
+    3: &quot;NOBODY&quot;,
+    4: &quot;COMPUTER&quot;,
+    5: &quot;HUMAN&quot;,
+    6: &quot;RESCUE_PASSIVE&quot;,
+    7: &quot;RESCUE_ACTIVE&quot;,
+  });
+
+  Warcraft2Pud.TerrainType = Object.freeze({
+    FOREST: 0,
+    WINTER: 1,
+    WASTELAND: 2,
+    SWAMP: 3,
+
+    0: &quot;FOREST&quot;,
+    1: &quot;WINTER&quot;,
+    2: &quot;WASTELAND&quot;,
+    3: &quot;SWAMP&quot;,
+  });
+
+  Warcraft2Pud.UnitType = Object.freeze({
+    INFANTRY: 0,
+    GRUNT: 1,
+    PEASANT: 2,
+    PEON: 3,
+    BALLISTA: 4,
+    CATAPULT: 5,
+    KNIGHT: 6,
+    OGRE: 7,
+    ARCHER: 8,
+    AXETHROWER: 9,
+    MAGE: 10,
+    DEATH_KNIGHT: 11,
+    PALADIN: 12,
+    OGRE_MAGE: 13,
+    DWARVES: 14,
+    GOBLIN_SAPPER: 15,
+    ATTACK_PEASANT: 16,
+    ATTACK_PEON: 17,
+    RANGER: 18,
+    BERSERKER: 19,
+    ALLERIA: 20,
+    TERON_GOREFIEND: 21,
+    KURDAN_AND_SKY_REE: 22,
+    DENTARG: 23,
+    KHADGAR: 24,
+    GROM_HELLSCREAM: 25,
+    HUMAN_TANKER: 26,
+    ORC_TANKER: 27,
+    HUMAN_TRANSPORT: 28,
+    ORC_TRANSPORT: 29,
+    ELVEN_DESTROYER: 30,
+    TROLL_DESTROYER: 31,
+    BATTLESHIP: 32,
+    JUGGERNAUGHT: 33,
+    DEATHWING: 35,
+    GNOMISH_SUBMARINE: 38,
+    GIANT_TURTLE: 39,
+    GNOMISH_FLYING_MACHINE: 40,
+    GOBLIN_ZEPPLIN: 41,
+    GRYPHON_RIDER: 42,
+    DRAGON: 43,
+    TURALYON: 44,
+    EYE_OF_KILROGG: 45,
+    DANATH: 46,
+    KHORGATH_BLADEFIST: 47,
+    CHO_GALL: 49,
+    LOTHAR: 50,
+    GUL_DAN: 51,
+    UTHER_LIGHTBRINGER: 52,
+    ZULJIN: 53,
+    SKELETON: 55,
+    DAEMON: 56,
+    CRITTER: 57,
+    FARM: 58,
+    PIG_FARM: 59,
+    HUMAN_BARRACKS: 60,
+    ORC_BARRACKS: 61,
+    CHURCH: 62,
+    ALTAR_OF_STORMS: 63,
+    HUMAN_SCOUT_TOWER: 64,
+    ORC_SCOUT_TOWER: 65,
+    STABLES: 66,
+    OGRE_MOUND: 67,
+    GNOMISH_INVENTOR: 68,
+    GOBLIN_ALCHEMIST: 69,
+    GRYPHON_AVIARY: 70,
+    DRAGON_ROOST: 71,
+    HUMAN_SHIPYARD: 72,
+    ORC_SHIPYARD: 73,
+    TOWN_HALL: 74,
+    GREAT_HALL: 75,
+    ELVEN_LUMBER_MILL: 76,
+    TROLL_LUMBER_MILL: 77,
+    HUMAN_FOUNDRY: 78,
+    ORC_FOUNDRY: 79,
+    MAGE_TOWER: 80,
+    TEMPLE_OF_THE_DAMNED: 81,
+    HUMAN_BLACKSMITH: 82,
+    ORC_BLACKSMITH: 83,
+    HUMAN_REFINERY: 84,
+    ORC_REFINERY: 85,
+    HUMAN_OIL_WELL: 86,
+    ORC_OIL_WELL: 87,
+    KEEP: 88,
+    STRONGHOLD: 89,
+    CASTLE: 90,
+    FORTRESS: 91,
+    GOLD_MINE: 92,
+    OIL_PATCH: 93,
+    HUMAN_START: 94,
+    ORC_START: 95,
+    HUMAN_GUARD_TOWER: 96,
+    ORC_GUARD_TOWER: 97,
+    HUMAN_CANNON_TOWER: 98,
+    ORC_CANNON_TOWER: 99,
+    CIRCLE_OF_POWER: 100,
+    DARK_PORTAL: 101,
+    RUNESTONE: 102,
+    HUMAN_WALL: 103,
+    ORC_WALL: 104,
+
+    0: &quot;INFANTRY&quot;,
+    1: &quot;GRUNT&quot;,
+    2: &quot;PEASANT&quot;,
+    3: &quot;PEON&quot;,
+    4: &quot;BALLISTA&quot;,
+    5: &quot;CATAPULT&quot;,
+    6: &quot;KNIGHT&quot;,
+    7: &quot;OGRE&quot;,
+    8: &quot;ARCHER&quot;,
+    9: &quot;AXETHROWER&quot;,
+    10: &quot;MAGE&quot;,
+    11: &quot;DEATH_KNIGHT&quot;,
+    12: &quot;PALADIN&quot;,
+    13: &quot;OGRE_MAGE&quot;,
+    14: &quot;DWARVES&quot;,
+    15: &quot;GOBLIN_SAPPER&quot;,
+    16: &quot;ATTACK_PEASANT&quot;,
+    17: &quot;ATTACK_PEON&quot;,
+    18: &quot;RANGER&quot;,
+    19: &quot;BERSERKER&quot;,
+    20: &quot;ALLERIA&quot;,
+    21: &quot;TERON_GOREFIEND&quot;,
+    22: &quot;KURDAN_AND_SKY_REE&quot;,
+    23: &quot;DENTARG&quot;,
+    24: &quot;KHADGAR&quot;,
+    25: &quot;GROM_HELLSCREAM&quot;,
+    26: &quot;HUMAN_TANKER&quot;,
+    27: &quot;ORC_TANKER&quot;,
+    28: &quot;HUMAN_TRANSPORT&quot;,
+    29: &quot;ORC_TRANSPORT&quot;,
+    30: &quot;ELVEN_DESTROYER&quot;,
+    31: &quot;TROLL_DESTROYER&quot;,
+    32: &quot;BATTLESHIP&quot;,
+    33: &quot;JUGGERNAUGHT&quot;,
+    35: &quot;DEATHWING&quot;,
+    38: &quot;GNOMISH_SUBMARINE&quot;,
+    39: &quot;GIANT_TURTLE&quot;,
+    40: &quot;GNOMISH_FLYING_MACHINE&quot;,
+    41: &quot;GOBLIN_ZEPPLIN&quot;,
+    42: &quot;GRYPHON_RIDER&quot;,
+    43: &quot;DRAGON&quot;,
+    44: &quot;TURALYON&quot;,
+    45: &quot;EYE_OF_KILROGG&quot;,
+    46: &quot;DANATH&quot;,
+    47: &quot;KHORGATH_BLADEFIST&quot;,
+    49: &quot;CHO_GALL&quot;,
+    50: &quot;LOTHAR&quot;,
+    51: &quot;GUL_DAN&quot;,
+    52: &quot;UTHER_LIGHTBRINGER&quot;,
+    53: &quot;ZULJIN&quot;,
+    55: &quot;SKELETON&quot;,
+    56: &quot;DAEMON&quot;,
+    57: &quot;CRITTER&quot;,
+    58: &quot;FARM&quot;,
+    59: &quot;PIG_FARM&quot;,
+    60: &quot;HUMAN_BARRACKS&quot;,
+    61: &quot;ORC_BARRACKS&quot;,
+    62: &quot;CHURCH&quot;,
+    63: &quot;ALTAR_OF_STORMS&quot;,
+    64: &quot;HUMAN_SCOUT_TOWER&quot;,
+    65: &quot;ORC_SCOUT_TOWER&quot;,
+    66: &quot;STABLES&quot;,
+    67: &quot;OGRE_MOUND&quot;,
+    68: &quot;GNOMISH_INVENTOR&quot;,
+    69: &quot;GOBLIN_ALCHEMIST&quot;,
+    70: &quot;GRYPHON_AVIARY&quot;,
+    71: &quot;DRAGON_ROOST&quot;,
+    72: &quot;HUMAN_SHIPYARD&quot;,
+    73: &quot;ORC_SHIPYARD&quot;,
+    74: &quot;TOWN_HALL&quot;,
+    75: &quot;GREAT_HALL&quot;,
+    76: &quot;ELVEN_LUMBER_MILL&quot;,
+    77: &quot;TROLL_LUMBER_MILL&quot;,
+    78: &quot;HUMAN_FOUNDRY&quot;,
+    79: &quot;ORC_FOUNDRY&quot;,
+    80: &quot;MAGE_TOWER&quot;,
+    81: &quot;TEMPLE_OF_THE_DAMNED&quot;,
+    82: &quot;HUMAN_BLACKSMITH&quot;,
+    83: &quot;ORC_BLACKSMITH&quot;,
+    84: &quot;HUMAN_REFINERY&quot;,
+    85: &quot;ORC_REFINERY&quot;,
+    86: &quot;HUMAN_OIL_WELL&quot;,
+    87: &quot;ORC_OIL_WELL&quot;,
+    88: &quot;KEEP&quot;,
+    89: &quot;STRONGHOLD&quot;,
+    90: &quot;CASTLE&quot;,
+    91: &quot;FORTRESS&quot;,
+    92: &quot;GOLD_MINE&quot;,
+    93: &quot;OIL_PATCH&quot;,
+    94: &quot;HUMAN_START&quot;,
+    95: &quot;ORC_START&quot;,
+    96: &quot;HUMAN_GUARD_TOWER&quot;,
+    97: &quot;ORC_GUARD_TOWER&quot;,
+    98: &quot;HUMAN_CANNON_TOWER&quot;,
+    99: &quot;ORC_CANNON_TOWER&quot;,
+    100: &quot;CIRCLE_OF_POWER&quot;,
+    101: &quot;DARK_PORTAL&quot;,
+    102: &quot;RUNESTONE&quot;,
+    103: &quot;HUMAN_WALL&quot;,
+    104: &quot;ORC_WALL&quot;,
+  });
+
+  function Warcraft2Pud(_io, _parent, _root) {
+    this._io = _io;
+    this._parent = _parent;
+    this._root = _root || this;
+
+    this._read();
+  }
+  Warcraft2Pud.prototype._read = function() {
+    this.sections = [];
+    while (!this._io.isEof()) {
+      this.sections.push(new Section(this._io, this, this._root));
+    }
+  }
+
+  var SectionStartingResource = Warcraft2Pud.SectionStartingResource = (function() {
+    function SectionStartingResource(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    SectionStartingResource.prototype._read = function() {
+      this.resourcesByPlayer = [];
+      while (!this._io.isEof()) {
+        this.resourcesByPlayer.push(this._io.readU2le());
+      }
+    }
+
+    return SectionStartingResource;
+  })();
+
+  /**
+   * Section that specifies terrain type for this map.
+   */
+
+  var SectionEra = Warcraft2Pud.SectionEra = (function() {
+    function SectionEra(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    SectionEra.prototype._read = function() {
+      this.terrain = this._io.readU2le();
+    }
+
+    return SectionEra;
+  })();
+
+  /**
+   * Section that specifies format version.
+   */
+
+  var SectionVer = Warcraft2Pud.SectionVer = (function() {
+    function SectionVer(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    SectionVer.prototype._read = function() {
+      this.version = this._io.readU2le();
+    }
+
+    return SectionVer;
+  })();
+
+  var SectionDim = Warcraft2Pud.SectionDim = (function() {
+    function SectionDim(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    SectionDim.prototype._read = function() {
+      this.x = this._io.readU2le();
+      this.y = this._io.readU2le();
+    }
+
+    return SectionDim;
+  })();
+
+  /**
+   * Section that confirms that this file is a &quot;map file&quot; by certain
+   * magic string and supplies a tag that could be used in
+   * multiplayer to check that all player use the same version of the
+   * map.
+   */
+
+  var SectionType = Warcraft2Pud.SectionType = (function() {
+    function SectionType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    SectionType.prototype._read = function() {
+      this.magic = this._io.ensureFixedContents([87, 65, 82, 50, 32, 77, 65, 80, 0, 0]);
+      this.unused = this._io.readBytes(2);
+      this.idTag = this._io.readU4le();
+    }
+
+    /**
+     * unused (always set to $0a and $ff by editor, but can be anything for the game)
+     */
+
+    /**
+     * id tag (for consistence check in multiplayer)
+     */
+
+    return SectionType;
+  })();
+
+  var SectionUnit = Warcraft2Pud.SectionUnit = (function() {
+    function SectionUnit(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    SectionUnit.prototype._read = function() {
+      this.units = [];
+      while (!this._io.isEof()) {
+        this.units.push(new Unit(this._io, this, this._root));
+      }
+    }
+
+    return SectionUnit;
+  })();
+
+  var Section = Warcraft2Pud.Section = (function() {
+    function Section(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Section.prototype._read = function() {
+      this.name = KaitaiStream.bytesToStr(this._io.readBytes(4), &quot;ASCII&quot;);
+      this.size = this._io.readU4le();
+      switch (this.name) {
+      case &quot;SLBR&quot;:
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionStartingResource(_io__raw_body, this, this._root);
+        break;
+      case &quot;ERAX&quot;:
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionEra(_io__raw_body, this, this._root);
+        break;
+      case &quot;OWNR&quot;:
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionOwnr(_io__raw_body, this, this._root);
+        break;
+      case &quot;ERA &quot;:
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionEra(_io__raw_body, this, this._root);
+        break;
+      case &quot;SGLD&quot;:
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionStartingResource(_io__raw_body, this, this._root);
+        break;
+      case &quot;VER &quot;:
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionVer(_io__raw_body, this, this._root);
+        break;
+      case &quot;SOIL&quot;:
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionStartingResource(_io__raw_body, this, this._root);
+        break;
+      case &quot;UNIT&quot;:
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionUnit(_io__raw_body, this, this._root);
+        break;
+      case &quot;DIM &quot;:
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionDim(_io__raw_body, this, this._root);
+        break;
+      case &quot;TYPE&quot;:
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionType(_io__raw_body, this, this._root);
+        break;
+      default:
+        this.body = this._io.readBytes(this.size);
+        break;
+      }
+    }
+
+    return Section;
+  })();
+
+  /**
+   * Section that specifies who controls each player.
+   */
+
+  var SectionOwnr = Warcraft2Pud.SectionOwnr = (function() {
+    function SectionOwnr(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    SectionOwnr.prototype._read = function() {
+      this.controllerByPlayer = [];
+      while (!this._io.isEof()) {
+        this.controllerByPlayer.push(this._io.readU1());
+      }
+    }
+
+    return SectionOwnr;
+  })();
+
+  var Unit = Warcraft2Pud.Unit = (function() {
+    function Unit(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Unit.prototype._read = function() {
+      this.x = this._io.readU2le();
+      this.y = this._io.readU2le();
+      this.uType = this._io.readU1();
+      this.owner = this._io.readU1();
+      this.options = this._io.readU2le();
+    }
+    Object.defineProperty(Unit.prototype, &#39;resource&#39;, {
+      get: function() {
+        if (this._m_resource !== undefined)
+          return this._m_resource;
+        if ( ((this.uType == Warcraft2Pud.UnitType.GOLD_MINE) || (this.uType == Warcraft2Pud.UnitType.HUMAN_OIL_WELL) || (this.uType == Warcraft2Pud.UnitType.ORC_OIL_WELL) || (this.uType == Warcraft2Pud.UnitType.OIL_PATCH)) ) {
+          this._m_resource = (this.options * 2500);
+        }
+        return this._m_resource;
+      }
+    });
+
+    /**
+     * if gold mine or oil well, contains 2500 * this, otherwise 0 passive 1 active
+     */
+
+    return Unit;
+  })();
+
+  return Warcraft2Pud;
+})();
+
+// Export for amd environments
+if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+  define(&#39;Warcraft2Pud&#39;, [], function() {
+    return Warcraft2Pud;
+  });
+}
+
+// Export for CommonJS
+if (typeof module === &#39;object&#39; &amp;&amp; module &amp;&amp; module.exports) {
+  module.exports = Warcraft2Pud;
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

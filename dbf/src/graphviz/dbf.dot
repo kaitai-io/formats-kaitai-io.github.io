@@ -1,0 +1,102 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__dbf {
+		label="Dbf";
+		graph[style=dotted];
+
+		dbf__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header1_pos">0</TD><TD PORT="header1_size">...</TD><TD>Header1</TD><TD PORT="header1_type">header1</TD></TR>
+			<TR><TD PORT="header2_pos">...</TD><TD PORT="header2_size">(header1.header_size - 12)</TD><TD>Header2</TD><TD PORT="header2_type">header2</TD></TR>
+			<TR><TD PORT="records_pos">...</TD><TD PORT="records_size">header1.record_size</TD><TD></TD><TD PORT="records_type">records</TD></TR>
+			<TR><TD COLSPAN="4" PORT="records__repeat">repeat header1.num_records times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__header2 {
+			label="Dbf::Header2";
+			graph[style=dotted];
+
+			header2__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_dbase_3_pos">0</TD><TD PORT="header_dbase_3_size">...</TD><TD>HeaderDbase3</TD><TD PORT="header_dbase_3_type">header_dbase_3</TD></TR>
+				<TR><TD PORT="header_dbase_7_pos">...</TD><TD PORT="header_dbase_7_size">...</TD><TD>HeaderDbase7</TD><TD PORT="header_dbase_7_type">header_dbase_7</TD></TR>
+				<TR><TD PORT="fields_pos">...</TD><TD PORT="fields_size">...</TD><TD>Field</TD><TD PORT="fields_type">fields</TD></TR>
+				<TR><TD COLSPAN="4" PORT="fields__repeat">repeat 11 times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__field {
+			label="Dbf::Field";
+			graph[style=dotted];
+
+			field__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">11</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="datatype_pos">11</TD><TD PORT="datatype_size">1</TD><TD>u1</TD><TD PORT="datatype_type">datatype</TD></TR>
+				<TR><TD PORT="data_address_pos">12</TD><TD PORT="data_address_size">4</TD><TD>u4le</TD><TD PORT="data_address_type">data_address</TD></TR>
+				<TR><TD PORT="length_pos">16</TD><TD PORT="length_size">1</TD><TD>u1</TD><TD PORT="length_type">length</TD></TR>
+				<TR><TD PORT="decimal_count_pos">17</TD><TD PORT="decimal_count_size">1</TD><TD>u1</TD><TD PORT="decimal_count_type">decimal_count</TD></TR>
+				<TR><TD PORT="reserved1_pos">18</TD><TD PORT="reserved1_size">2</TD><TD></TD><TD PORT="reserved1_type">reserved1</TD></TR>
+				<TR><TD PORT="work_area_id_pos">20</TD><TD PORT="work_area_id_size">1</TD><TD>u1</TD><TD PORT="work_area_id_type">work_area_id</TD></TR>
+				<TR><TD PORT="reserved2_pos">21</TD><TD PORT="reserved2_size">2</TD><TD></TD><TD PORT="reserved2_type">reserved2</TD></TR>
+				<TR><TD PORT="set_fields_flag_pos">23</TD><TD PORT="set_fields_flag_size">1</TD><TD>u1</TD><TD PORT="set_fields_flag_type">set_fields_flag</TD></TR>
+				<TR><TD PORT="reserved3_pos">24</TD><TD PORT="reserved3_size">8</TD><TD></TD><TD PORT="reserved3_type">reserved3</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__header1 {
+			label="Dbf::Header1";
+			graph[style=dotted];
+
+			header1__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">1</TD><TD>u1</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="last_update_y_pos">1</TD><TD PORT="last_update_y_size">1</TD><TD>u1</TD><TD PORT="last_update_y_type">last_update_y</TD></TR>
+				<TR><TD PORT="last_update_m_pos">2</TD><TD PORT="last_update_m_size">1</TD><TD>u1</TD><TD PORT="last_update_m_type">last_update_m</TD></TR>
+				<TR><TD PORT="last_update_d_pos">3</TD><TD PORT="last_update_d_size">1</TD><TD>u1</TD><TD PORT="last_update_d_type">last_update_d</TD></TR>
+				<TR><TD PORT="num_records_pos">4</TD><TD PORT="num_records_size">4</TD><TD>u4le</TD><TD PORT="num_records_type">num_records</TD></TR>
+				<TR><TD PORT="header_size_pos">8</TD><TD PORT="header_size_size">2</TD><TD>u2le</TD><TD PORT="header_size_type">header_size</TD></TR>
+				<TR><TD PORT="record_size_pos">10</TD><TD PORT="record_size_size">2</TD><TD>u2le</TD><TD PORT="record_size_type">record_size</TD></TR>
+			</TABLE>>];
+			header1__inst__dbase_level [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>dbase_level</TD><TD>(version &amp; 7)</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__header_dbase_3 {
+			label="Dbf::HeaderDbase3";
+			graph[style=dotted];
+
+			header_dbase_3__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="reserved1_pos">0</TD><TD PORT="reserved1_size">3</TD><TD></TD><TD PORT="reserved1_type">reserved1</TD></TR>
+				<TR><TD PORT="reserved2_pos">3</TD><TD PORT="reserved2_size">13</TD><TD></TD><TD PORT="reserved2_type">reserved2</TD></TR>
+				<TR><TD PORT="reserved3_pos">16</TD><TD PORT="reserved3_size">4</TD><TD></TD><TD PORT="reserved3_type">reserved3</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__header_dbase_7 {
+			label="Dbf::HeaderDbase7";
+			graph[style=dotted];
+
+			header_dbase_7__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="reserved1_pos">0</TD><TD PORT="reserved1_size">2</TD><TD>00 00</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+				<TR><TD PORT="has_incomplete_transaction_pos">2</TD><TD PORT="has_incomplete_transaction_size">1</TD><TD>u1</TD><TD PORT="has_incomplete_transaction_type">has_incomplete_transaction</TD></TR>
+				<TR><TD PORT="dbase_iv_encryption_pos">3</TD><TD PORT="dbase_iv_encryption_size">1</TD><TD>u1</TD><TD PORT="dbase_iv_encryption_type">dbase_iv_encryption</TD></TR>
+				<TR><TD PORT="reserved2_pos">4</TD><TD PORT="reserved2_size">12</TD><TD></TD><TD PORT="reserved2_type">reserved2</TD></TR>
+				<TR><TD PORT="production_mdx_pos">16</TD><TD PORT="production_mdx_size">1</TD><TD>u1</TD><TD PORT="production_mdx_type">production_mdx</TD></TR>
+				<TR><TD PORT="language_driver_id_pos">17</TD><TD PORT="language_driver_id_size">1</TD><TD>u1</TD><TD PORT="language_driver_id_type">language_driver_id</TD></TR>
+				<TR><TD PORT="reserved3_pos">18</TD><TD PORT="reserved3_size">2</TD><TD>00 00</TD><TD PORT="reserved3_type">reserved3</TD></TR>
+				<TR><TD PORT="language_driver_name_pos">20</TD><TD PORT="language_driver_name_size">32</TD><TD></TD><TD PORT="language_driver_name_type">language_driver_name</TD></TR>
+				<TR><TD PORT="reserved4_pos">52</TD><TD PORT="reserved4_size">4</TD><TD></TD><TD PORT="reserved4_type">reserved4</TD></TR>
+			</TABLE>>];
+		}
+	}
+	dbf__seq:header1_type -> header1__seq [style=bold];
+	header1__seq:header_size_type -> dbf__seq:header2_size [color="#404040"];
+	dbf__seq:header2_type -> header2__seq [style=bold];
+	header1__seq:record_size_type -> dbf__seq:records_size [color="#404040"];
+	header1__seq:num_records_type -> dbf__seq:records__repeat [color="#404040"];
+	header2__seq:header_dbase_3_type -> header_dbase_3__seq [style=bold];
+	header2__seq:header_dbase_7_type -> header_dbase_7__seq [style=bold];
+	header2__seq:fields_type -> field__seq [style=bold];
+	header1__seq:version_type -> header1__inst__dbase_level [color="#404040"];
+}

@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Kaitai Struct: declarative binary format parsing language</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">cramfs</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>cramfs:
+            
+            C# parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of cramfs
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="cramfs parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="cramfs parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="csharp.html" title="cramfs parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="cramfs parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="cramfs parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="cramfs parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="cramfs parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="cramfs parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="cramfs parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="cramfs parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="csharp">var Data = Cramfs.FromFile("path/to/local/file.cramfs");</code></pre>
+
+<p>Or parse structure from a byte array:</p>
+
+<pre><code class="csharp">byte[] SomeArray = new byte[] { ... };
+var Data = new Cramfs(new KaitaiStream(SomeArray));</code></pre>
+
+<p>After that, one can get various attributes from the structure by accessing properties like:</p>
+
+<pre><code class="csharp">Data.SuperBlock // => get super block</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C# source code to parse cramfs
+            
+        </h2>
+
+        
+
+        <h3>Cramfs.cs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/csharp/Cramfs.cs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+using System.Collections.Generic;
+
+namespace Kaitai
+{
+    public partial class Cramfs : KaitaiStruct
+    {
+        public static Cramfs FromFile(string fileName)
+        {
+            return new Cramfs(new KaitaiStream(fileName));
+        }
+
+        public Cramfs(KaitaiStream io, KaitaiStruct parent = null, Cramfs root = null) : base(io)
+        {
+            m_parent = parent;
+            m_root = root ?? this;
+            f_pageSize = false;
+            _read();
+        }
+        private void _read() {
+            _superBlock = new SuperBlockStruct(m_io, this, m_root);
+            }
+        public partial class SuperBlockStruct : KaitaiStruct
+        {
+            public static SuperBlockStruct FromFile(string fileName)
+            {
+                return new SuperBlockStruct(new KaitaiStream(fileName));
+            }
+
+            public SuperBlockStruct(KaitaiStream io, Cramfs parent = null, Cramfs root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                f_flagFsidV2 = false;
+                f_flagHoles = false;
+                f_flagWrongSignature = false;
+                f_flagSortedDirs = false;
+                f_flagShiftedRootOffset = false;
+                _read();
+            }
+            private void _read() {
+                _magic = m_io.EnsureFixedContents(new byte[] { 69, 61, 205, 40 });
+                _size = m_io.ReadU4le();
+                _flags = m_io.ReadU4le();
+                _future = m_io.ReadU4le();
+                _signature = m_io.EnsureFixedContents(new byte[] { 67, 111, 109, 112, 114, 101, 115, 115, 101, 100, 32, 82, 79, 77, 70, 83 });
+                _fsid = new Info(m_io, this, m_root);
+                _name = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytes(16));
+                _root = new Inode(m_io, this, m_root);
+                }
+            private bool f_flagFsidV2;
+            private int _flagFsidV2;
+            public int FlagFsidV2
+            {
+                get
+                {
+                    if (f_flagFsidV2)
+                        return _flagFsidV2;
+                    _flagFsidV2 = (int) (((Flags &gt;&gt; 0) &amp; 1));
+                    f_flagFsidV2 = true;
+                    return _flagFsidV2;
+                }
+            }
+            private bool f_flagHoles;
+            private int _flagHoles;
+            public int FlagHoles
+            {
+                get
+                {
+                    if (f_flagHoles)
+                        return _flagHoles;
+                    _flagHoles = (int) (((Flags &gt;&gt; 8) &amp; 1));
+                    f_flagHoles = true;
+                    return _flagHoles;
+                }
+            }
+            private bool f_flagWrongSignature;
+            private int _flagWrongSignature;
+            public int FlagWrongSignature
+            {
+                get
+                {
+                    if (f_flagWrongSignature)
+                        return _flagWrongSignature;
+                    _flagWrongSignature = (int) (((Flags &gt;&gt; 9) &amp; 1));
+                    f_flagWrongSignature = true;
+                    return _flagWrongSignature;
+                }
+            }
+            private bool f_flagSortedDirs;
+            private int _flagSortedDirs;
+            public int FlagSortedDirs
+            {
+                get
+                {
+                    if (f_flagSortedDirs)
+                        return _flagSortedDirs;
+                    _flagSortedDirs = (int) (((Flags &gt;&gt; 1) &amp; 1));
+                    f_flagSortedDirs = true;
+                    return _flagSortedDirs;
+                }
+            }
+            private bool f_flagShiftedRootOffset;
+            private int _flagShiftedRootOffset;
+            public int FlagShiftedRootOffset
+            {
+                get
+                {
+                    if (f_flagShiftedRootOffset)
+                        return _flagShiftedRootOffset;
+                    _flagShiftedRootOffset = (int) (((Flags &gt;&gt; 10) &amp; 1));
+                    f_flagShiftedRootOffset = true;
+                    return _flagShiftedRootOffset;
+                }
+            }
+            private byte[] _magic;
+            private uint _size;
+            private uint _flags;
+            private uint _future;
+            private byte[] _signature;
+            private Info _fsid;
+            private string _name;
+            private Inode _root;
+            private Cramfs m_root;
+            private Cramfs m_parent;
+            public byte[] Magic { get { return _magic; } }
+            public uint Size { get { return _size; } }
+            public uint Flags { get { return _flags; } }
+            public uint Future { get { return _future; } }
+            public byte[] Signature { get { return _signature; } }
+            public Info Fsid { get { return _fsid; } }
+            public string Name { get { return _name; } }
+            public Inode Root { get { return _root; } }
+            public Cramfs M_Root { get { return m_root; } }
+            public Cramfs M_Parent { get { return m_parent; } }
+        }
+        public partial class ChunkedDataInode : KaitaiStruct
+        {
+            public static ChunkedDataInode FromFile(string fileName)
+            {
+                return new ChunkedDataInode(new KaitaiStream(fileName));
+            }
+
+            public ChunkedDataInode(KaitaiStream io, Cramfs.Inode parent = null, Cramfs root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                _read();
+            }
+            private void _read() {
+                _blockEndIndex = new List&lt;uint&gt;((int) ((((M_Parent.Size + M_Root.PageSize) - 1) / M_Root.PageSize)));
+                for (var i = 0; i &lt; (((M_Parent.Size + M_Root.PageSize) - 1) / M_Root.PageSize); i++) {
+                    _blockEndIndex.Add(m_io.ReadU4le());
+                }
+                _rawBlocks = m_io.ReadBytesFull();
+                }
+            private List&lt;uint&gt; _blockEndIndex;
+            private byte[] _rawBlocks;
+            private Cramfs m_root;
+            private Cramfs.Inode m_parent;
+            public List&lt;uint&gt; BlockEndIndex { get { return _blockEndIndex; } }
+            public byte[] RawBlocks { get { return _rawBlocks; } }
+            public Cramfs M_Root { get { return m_root; } }
+            public Cramfs.Inode M_Parent { get { return m_parent; } }
+        }
+        public partial class Inode : KaitaiStruct
+        {
+            public static Inode FromFile(string fileName)
+            {
+                return new Inode(new KaitaiStream(fileName));
+            }
+
+            public enum FileType
+            {
+                Fifo = 1,
+                Chrdev = 2,
+                Dir = 4,
+                Blkdev = 6,
+                RegFile = 8,
+                Symlink = 10,
+                Socket = 12,
+            }
+
+            public Inode(KaitaiStream io, KaitaiStruct parent = null, Cramfs root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                f_attr = false;
+                f_asRegFile = false;
+                f_permU = false;
+                f_asSymlink = false;
+                f_permO = false;
+                f_size = false;
+                f_gid = false;
+                f_permG = false;
+                f_namelen = false;
+                f_asDir = false;
+                f_type = false;
+                f_offset = false;
+                _read();
+            }
+            private void _read() {
+                _mode = m_io.ReadU2le();
+                _uid = m_io.ReadU2le();
+                _sizeGid = m_io.ReadU4le();
+                _namelenOffset = m_io.ReadU4le();
+                _name = System.Text.Encoding.GetEncoding(&quot;utf-8&quot;).GetString(m_io.ReadBytes(Namelen));
+                }
+            private bool f_attr;
+            private int _attr;
+            public int Attr
+            {
+                get
+                {
+                    if (f_attr)
+                        return _attr;
+                    _attr = (int) (((Mode &gt;&gt; 9) &amp; 7));
+                    f_attr = true;
+                    return _attr;
+                }
+            }
+            private bool f_asRegFile;
+            private ChunkedDataInode _asRegFile;
+            public ChunkedDataInode AsRegFile
+            {
+                get
+                {
+                    if (f_asRegFile)
+                        return _asRegFile;
+                    KaitaiStream io = M_Root.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(Offset);
+                    _asRegFile = new ChunkedDataInode(io, this, m_root);
+                    io.Seek(_pos);
+                    f_asRegFile = true;
+                    return _asRegFile;
+                }
+            }
+            private bool f_permU;
+            private int _permU;
+            public int PermU
+            {
+                get
+                {
+                    if (f_permU)
+                        return _permU;
+                    _permU = (int) (((Mode &gt;&gt; 6) &amp; 7));
+                    f_permU = true;
+                    return _permU;
+                }
+            }
+            private bool f_asSymlink;
+            private ChunkedDataInode _asSymlink;
+            public ChunkedDataInode AsSymlink
+            {
+                get
+                {
+                    if (f_asSymlink)
+                        return _asSymlink;
+                    KaitaiStream io = M_Root.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(Offset);
+                    _asSymlink = new ChunkedDataInode(io, this, m_root);
+                    io.Seek(_pos);
+                    f_asSymlink = true;
+                    return _asSymlink;
+                }
+            }
+            private bool f_permO;
+            private int _permO;
+            public int PermO
+            {
+                get
+                {
+                    if (f_permO)
+                        return _permO;
+                    _permO = (int) ((Mode &amp; 7));
+                    f_permO = true;
+                    return _permO;
+                }
+            }
+            private bool f_size;
+            private int _size;
+            public int Size
+            {
+                get
+                {
+                    if (f_size)
+                        return _size;
+                    _size = (int) ((SizeGid &amp; 16777215));
+                    f_size = true;
+                    return _size;
+                }
+            }
+            private bool f_gid;
+            private int _gid;
+            public int Gid
+            {
+                get
+                {
+                    if (f_gid)
+                        return _gid;
+                    _gid = (int) ((SizeGid &gt;&gt; 24));
+                    f_gid = true;
+                    return _gid;
+                }
+            }
+            private bool f_permG;
+            private int _permG;
+            public int PermG
+            {
+                get
+                {
+                    if (f_permG)
+                        return _permG;
+                    _permG = (int) (((Mode &gt;&gt; 3) &amp; 7));
+                    f_permG = true;
+                    return _permG;
+                }
+            }
+            private bool f_namelen;
+            private int _namelen;
+            public int Namelen
+            {
+                get
+                {
+                    if (f_namelen)
+                        return _namelen;
+                    _namelen = (int) (((NamelenOffset &amp; 63) &lt;&lt; 2));
+                    f_namelen = true;
+                    return _namelen;
+                }
+            }
+            private bool f_asDir;
+            private DirInode _asDir;
+            public DirInode AsDir
+            {
+                get
+                {
+                    if (f_asDir)
+                        return _asDir;
+                    KaitaiStream io = M_Root.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(Offset);
+                    __raw_asDir = io.ReadBytes(Size);
+                    var io___raw_asDir = new KaitaiStream(__raw_asDir);
+                    _asDir = new DirInode(io___raw_asDir, this, m_root);
+                    io.Seek(_pos);
+                    f_asDir = true;
+                    return _asDir;
+                }
+            }
+            private bool f_type;
+            private FileType _type;
+            public FileType Type
+            {
+                get
+                {
+                    if (f_type)
+                        return _type;
+                    _type = (FileType) (((FileType) ((Mode &gt;&gt; 12) &amp; 15)));
+                    f_type = true;
+                    return _type;
+                }
+            }
+            private bool f_offset;
+            private int _offset;
+            public int Offset
+            {
+                get
+                {
+                    if (f_offset)
+                        return _offset;
+                    _offset = (int) ((((NamelenOffset &gt;&gt; 6) &amp; 67108863) &lt;&lt; 2));
+                    f_offset = true;
+                    return _offset;
+                }
+            }
+            private ushort _mode;
+            private ushort _uid;
+            private uint _sizeGid;
+            private uint _namelenOffset;
+            private string _name;
+            private Cramfs m_root;
+            private KaitaiStruct m_parent;
+            private byte[] __raw_asDir;
+            public ushort Mode { get { return _mode; } }
+            public ushort Uid { get { return _uid; } }
+            public uint SizeGid { get { return _sizeGid; } }
+            public uint NamelenOffset { get { return _namelenOffset; } }
+            public string Name { get { return _name; } }
+            public Cramfs M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+            public byte[] M_RawAsDir { get { return __raw_asDir; } }
+        }
+        public partial class DirInode : KaitaiStruct
+        {
+            public static DirInode FromFile(string fileName)
+            {
+                return new DirInode(new KaitaiStream(fileName));
+            }
+
+            public DirInode(KaitaiStream io, Cramfs.Inode parent = null, Cramfs root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                _read();
+            }
+            private void _read() {
+                if (M_Io.Size &gt; 0) {
+                    _children = new List&lt;Inode&gt;();
+                    while (!m_io.IsEof) {
+                        _children.Add(new Inode(m_io, this, m_root));
+                    }
+                }
+                }
+            private List&lt;Inode&gt; _children;
+            private Cramfs m_root;
+            private Cramfs.Inode m_parent;
+            public List&lt;Inode&gt; Children { get { return _children; } }
+            public Cramfs M_Root { get { return m_root; } }
+            public Cramfs.Inode M_Parent { get { return m_parent; } }
+        }
+        public partial class Info : KaitaiStruct
+        {
+            public static Info FromFile(string fileName)
+            {
+                return new Info(new KaitaiStream(fileName));
+            }
+
+            public Info(KaitaiStream io, Cramfs.SuperBlockStruct parent = null, Cramfs root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                _read();
+            }
+            private void _read() {
+                _crc = m_io.ReadU4le();
+                _edition = m_io.ReadU4le();
+                _blocks = m_io.ReadU4le();
+                _files = m_io.ReadU4le();
+                }
+            private uint _crc;
+            private uint _edition;
+            private uint _blocks;
+            private uint _files;
+            private Cramfs m_root;
+            private Cramfs.SuperBlockStruct m_parent;
+            public uint Crc { get { return _crc; } }
+            public uint Edition { get { return _edition; } }
+            public uint Blocks { get { return _blocks; } }
+            public uint Files { get { return _files; } }
+            public Cramfs M_Root { get { return m_root; } }
+            public Cramfs.SuperBlockStruct M_Parent { get { return m_parent; } }
+        }
+        private bool f_pageSize;
+        private int _pageSize;
+        public int PageSize
+        {
+            get
+            {
+                if (f_pageSize)
+                    return _pageSize;
+                _pageSize = (int) (4096);
+                f_pageSize = true;
+                return _pageSize;
+            }
+        }
+        private SuperBlockStruct _superBlock;
+        private Cramfs m_root;
+        private KaitaiStruct m_parent;
+        public SuperBlockStruct SuperBlock { get { return _superBlock; } }
+        public Cramfs M_Root { get { return m_root; } }
+        public KaitaiStruct M_Parent { get { return m_parent; } }
+    }
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

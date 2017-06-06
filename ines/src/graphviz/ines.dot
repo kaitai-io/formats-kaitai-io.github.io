@@ -1,0 +1,90 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__ines {
+		label="Ines";
+		graph[style=dotted];
+
+		ines__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">...</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="rom_pos">...</TD><TD PORT="rom_size">⇲</TD><TD></TD><TD PORT="rom_type">rom</TD></TR>
+		</TABLE>>];
+		ines__inst__mapper [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>mapper</TD><TD>(_root.header.f6.lower_nibble | (_root.header.f7.upper_nibble &lt;&lt; 4))</TD></TR>
+		</TABLE>>];
+		subgraph cluster__f7 {
+			label="Ines::F7";
+			graph[style=dotted];
+
+			f7__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="upper_nibble_pos">0</TD><TD PORT="upper_nibble_size">4b</TD><TD>b4</TD><TD PORT="upper_nibble_type">upper_nibble</TD></TR>
+				<TR><TD PORT="format_pos">0:4</TD><TD PORT="format_size">2b</TD><TD>b2</TD><TD PORT="format_type">format</TD></TR>
+				<TR><TD PORT="arcade_2_pos">0:6</TD><TD PORT="arcade_2_size">1b</TD><TD>BitsType1</TD><TD PORT="arcade_2_type">arcade_2</TD></TR>
+				<TR><TD PORT="arcade_1_pos">0:7</TD><TD PORT="arcade_1_size">1b</TD><TD>BitsType1</TD><TD PORT="arcade_1_type">arcade_1</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__f6 {
+			label="Ines::F6";
+			graph[style=dotted];
+
+			f6__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="lower_nibble_pos">0</TD><TD PORT="lower_nibble_size">4b</TD><TD>b4</TD><TD PORT="lower_nibble_type">lower_nibble</TD></TR>
+				<TR><TD PORT="ignore_mirror_pos">0:4</TD><TD PORT="ignore_mirror_size">1b</TD><TD>BitsType1</TD><TD PORT="ignore_mirror_type">ignore_mirror</TD></TR>
+				<TR><TD PORT="trainer_pos">0:5</TD><TD PORT="trainer_size">1b</TD><TD>BitsType1</TD><TD PORT="trainer_type">trainer</TD></TR>
+				<TR><TD PORT="has_battery_ram_pos">0:6</TD><TD PORT="has_battery_ram_size">1b</TD><TD>BitsType1</TD><TD PORT="has_battery_ram_type">has_battery_ram</TD></TR>
+				<TR><TD PORT="mirror_pos">0:7</TD><TD PORT="mirror_size">1b</TD><TD>BitsType1</TD><TD PORT="mirror_type">mirror</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__f10 {
+			label="Ines::F10";
+			graph[style=dotted];
+
+			f10__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="nothing1_pos">0</TD><TD PORT="nothing1_size">2b</TD><TD>b2</TD><TD PORT="nothing1_type">nothing1</TD></TR>
+				<TR><TD PORT="bus_conflict_pos">0:2</TD><TD PORT="bus_conflict_size">1b</TD><TD>BitsType1</TD><TD PORT="bus_conflict_type">bus_conflict</TD></TR>
+				<TR><TD PORT="prg_ram_pos">0:3</TD><TD PORT="prg_ram_size">1b</TD><TD>BitsType1</TD><TD PORT="prg_ram_type">prg_ram</TD></TR>
+				<TR><TD PORT="nothing2_pos">0:4</TD><TD PORT="nothing2_size">2b</TD><TD>b2</TD><TD PORT="nothing2_type">nothing2</TD></TR>
+				<TR><TD PORT="tv_system_pos">0:6</TD><TD PORT="tv_system_size">2b</TD><TD>b2</TD><TD PORT="tv_system_type">tv_system</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__f9 {
+			label="Ines::F9";
+			graph[style=dotted];
+
+			f9__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">7b</TD><TD>b7</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="tv_system_pos">0:7</TD><TD PORT="tv_system_size">1b</TD><TD>BitsType1</TD><TD PORT="tv_system_type">tv_system</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__header {
+			label="Ines::Header";
+			graph[style=dotted];
+
+			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>4E 45 53 1A</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="prg_rom_size_pos">4</TD><TD PORT="prg_rom_size_size">1</TD><TD>u1</TD><TD PORT="prg_rom_size_type">prg_rom_size</TD></TR>
+				<TR><TD PORT="chr_rom_size_pos">5</TD><TD PORT="chr_rom_size_size">1</TD><TD>u1</TD><TD PORT="chr_rom_size_type">chr_rom_size</TD></TR>
+				<TR><TD PORT="f6_pos">6</TD><TD PORT="f6_size">...</TD><TD>F6</TD><TD PORT="f6_type">f6</TD></TR>
+				<TR><TD PORT="f7_pos">...</TD><TD PORT="f7_size">...</TD><TD>F7</TD><TD PORT="f7_type">f7</TD></TR>
+				<TR><TD PORT="prg_ram_size_pos">...</TD><TD PORT="prg_ram_size_size">1</TD><TD>u1</TD><TD PORT="prg_ram_size_type">prg_ram_size</TD></TR>
+				<TR><TD PORT="f9_pos">...</TD><TD PORT="f9_size">...</TD><TD>F9</TD><TD PORT="f9_type">f9</TD></TR>
+				<TR><TD PORT="f10_pos">...</TD><TD PORT="f10_size">...</TD><TD>F10</TD><TD PORT="f10_type">f10</TD></TR>
+				<TR><TD PORT="zero_fill_pos">...</TD><TD PORT="zero_fill_size">4</TD><TD></TD><TD PORT="zero_fill_type">zero_fill</TD></TR>
+			</TABLE>>];
+		}
+	}
+	ines__seq:header_type -> header__seq [style=bold];
+	f6__seq:lower_nibble_type -> ines__inst__mapper [color="#404040"];
+	f7__seq:upper_nibble_type -> ines__inst__mapper [color="#404040"];
+	header__seq:f6_type -> f6__seq [style=bold];
+	header__seq:f7_type -> f7__seq [style=bold];
+	header__seq:f9_type -> f9__seq [style=bold];
+	header__seq:f10_type -> f10__seq [style=bold];
+}

@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Kaitai Struct: declarative binary format parsing language</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Executables and Byte-code</li>
+        <li class="active">.pyc file format of Python</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.pyc file format of Python:
+            
+            JavaScript parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Python interpreter runs .py files in 2 step process: first, it
+produces bytecode, which it then executes. Translation of .py source
+into bytecode is time-consuming, so Python dumps compiled bytecode
+into .pyc files, to be reused from cache at later time if possible.</p>
+<p>.pyc file is essentially a raw dump of <code>py_object</code> (see <code>body</code>) with
+a simple header prepended.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Python
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        pyc
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .pyc file format of Python
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".pyc file format of Python parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".pyc file format of Python parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title=".pyc file format of Python parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".pyc file format of Python parsing Java library">Java</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="javascript.html" title=".pyc file format of Python parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".pyc file format of Python parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".pyc file format of Python parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".pyc file format of Python parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".pyc file format of Python parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            JavaScript source code to parse .pyc file format of Python
+            
+        </h2>
+
+        
+
+        <h3>PythonPyc27.js</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/javascript/PythonPyc27.js" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+/**
+ * Python interpreter runs .py files in 2 step process: first, it
+ * produces bytecode, which it then executes. Translation of .py source
+ * into bytecode is time-consuming, so Python dumps compiled bytecode
+ * into .pyc files, to be reused from cache at later time if possible.
+ * 
+ * .pyc file is essentially a raw dump of `py_object` (see `body`) with
+ * a simple header prepended.
+ */
+
+var PythonPyc27 = (function() {
+  PythonPyc27.Version = Object.freeze({
+    V15: 20121,
+    V16: 50428,
+    V20: 50823,
+    V21: 60202,
+    V22: 60717,
+    V23_A0: 62011,
+    V23_A0B: 62021,
+    V24_A0: 62041,
+    V24_A3: 62051,
+    V24_B1: 62061,
+    V25_A0: 62071,
+    V25_A0B: 62081,
+    V25_A0C: 62091,
+    V25_A0D: 62092,
+    V25_B3: 62101,
+    V25_B3B: 62111,
+    V25_C1: 62121,
+    V25_C2: 62131,
+    V26_A0: 62151,
+    V26_A1: 62161,
+    V27_A0: 62171,
+    V27_A0B: 62181,
+    V27_A0C: 62191,
+    V27_A0D: 62201,
+    V27_A0E: 62211,
+
+    20121: &quot;V15&quot;,
+    50428: &quot;V16&quot;,
+    50823: &quot;V20&quot;,
+    60202: &quot;V21&quot;,
+    60717: &quot;V22&quot;,
+    62011: &quot;V23_A0&quot;,
+    62021: &quot;V23_A0B&quot;,
+    62041: &quot;V24_A0&quot;,
+    62051: &quot;V24_A3&quot;,
+    62061: &quot;V24_B1&quot;,
+    62071: &quot;V25_A0&quot;,
+    62081: &quot;V25_A0B&quot;,
+    62091: &quot;V25_A0C&quot;,
+    62092: &quot;V25_A0D&quot;,
+    62101: &quot;V25_B3&quot;,
+    62111: &quot;V25_B3B&quot;,
+    62121: &quot;V25_C1&quot;,
+    62131: &quot;V25_C2&quot;,
+    62151: &quot;V26_A0&quot;,
+    62161: &quot;V26_A1&quot;,
+    62171: &quot;V27_A0&quot;,
+    62181: &quot;V27_A0B&quot;,
+    62191: &quot;V27_A0C&quot;,
+    62201: &quot;V27_A0D&quot;,
+    62211: &quot;V27_A0E&quot;,
+  });
+
+  function PythonPyc27(_io, _parent, _root) {
+    this._io = _io;
+    this._parent = _parent;
+    this._root = _root || this;
+
+    this._read();
+  }
+  PythonPyc27.prototype._read = function() {
+    this.versionMagic = this._io.readU2le();
+    this.crlf = this._io.readU2le();
+    this.modificationTimestamp = this._io.readU4le();
+    this.body = new PyObject(this._io, this, this._root);
+  }
+
+  var CodeObject = PythonPyc27.CodeObject = (function() {
+    CodeObject.FlagsEnum = Object.freeze({
+      HAS_ARGS: 4,
+      HAS_KWARGS: 8,
+      GENERATOR: 32,
+
+      4: &quot;HAS_ARGS&quot;,
+      8: &quot;HAS_KWARGS&quot;,
+      32: &quot;GENERATOR&quot;,
+    });
+
+    function CodeObject(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    CodeObject.prototype._read = function() {
+      this.argCount = this._io.readU4le();
+      this.localCount = this._io.readU4le();
+      this.stackSize = this._io.readU4le();
+      this.flags = this._io.readU4le();
+      this.code = new Assembly(this._io, this, this._root);
+      this.consts = new PyObject(this._io, this, this._root);
+      this.names = new PyObject(this._io, this, this._root);
+      this.varNames = new PyObject(this._io, this, this._root);
+      this.freeVars = new PyObject(this._io, this, this._root);
+      this.cellVars = new PyObject(this._io, this, this._root);
+      this.filename = new PyObject(this._io, this, this._root);
+      this.name = new PyObject(this._io, this, this._root);
+      this.firstLineNo = this._io.readU4le();
+      this.lnotab = new PyObject(this._io, this, this._root);
+    }
+
+    return CodeObject;
+  })();
+
+  var Assembly = PythonPyc27.Assembly = (function() {
+    function Assembly(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Assembly.prototype._read = function() {
+      this.stringMagic = this._io.ensureFixedContents([115]);
+      this.length = this._io.readU4le();
+      this._raw_items = this._io.readBytes(this.length);
+      var _io__raw_items = new KaitaiStream(this._raw_items);
+      this.items = new OpArgs(_io__raw_items, this, this._root);
+    }
+
+    return Assembly;
+  })();
+
+  var OpArg = PythonPyc27.OpArg = (function() {
+    OpArg.OpCodeEnum = Object.freeze({
+      STOP_CODE: 0,
+      POP_TOP: 1,
+      ROT_TWO: 2,
+      ROT_THREE: 3,
+      DUP_TOP: 4,
+      ROT_FOUR: 5,
+      NOP: 9,
+      UNARY_POSITIVE: 10,
+      UNARY_NEGATIVE: 11,
+      UNARY_NOT: 12,
+      UNARY_CONVERT: 13,
+      UNARY_INVERT: 15,
+      BINARY_POWER: 19,
+      BINARY_MULTIPLY: 20,
+      BINARY_DIVIDE: 21,
+      BINARY_MODULO: 22,
+      BINARY_ADD: 23,
+      BINARY_SUBTRACT: 24,
+      BINARY_SUBSCR: 25,
+      BINARY_FLOOR_DIVIDE: 26,
+      BINARY_TRUE_DIVIDE: 27,
+      INPLACE_FLOOR_DIVIDE: 28,
+      INPLACE_TRUE_DIVIDE: 29,
+      SLICE_0: 30,
+      SLICE_1: 31,
+      SLICE_2: 32,
+      SLICE_3: 33,
+      STORE_SLICE_0: 40,
+      STORE_SLICE_1: 41,
+      STORE_SLICE_2: 42,
+      STORE_SLICE_3: 43,
+      DELETE_SLICE_0: 50,
+      DELETE_SLICE_1: 51,
+      DELETE_SLICE_2: 52,
+      DELETE_SLICE_3: 53,
+      STORE_MAP: 54,
+      INPLACE_ADD: 55,
+      INPLACE_SUBTRACT: 56,
+      INPLACE_MULTIPLY: 57,
+      INPLACE_DIVIDE: 58,
+      INPLACE_MODULO: 59,
+      STORE_SUBSCR: 60,
+      DELETE_SUBSCR: 61,
+      BINARY_LSHIFT: 62,
+      BINARY_RSHIFT: 63,
+      BINARY_AND: 64,
+      BINARY_XOR: 65,
+      BINARY_OR: 66,
+      INPLACE_POWER: 67,
+      GET_ITER: 68,
+      PRINT_EXPR: 70,
+      PRINT_ITEM: 71,
+      PRINT_NEWLINE: 72,
+      PRINT_ITEM_TO: 73,
+      PRINT_NEWLINE_TO: 74,
+      INPLACE_LSHIFT: 75,
+      INPLACE_RSHIFT: 76,
+      INPLACE_AND: 77,
+      INPLACE_XOR: 78,
+      INPLACE_OR: 79,
+      BREAK_LOOP: 80,
+      WITH_CLEANUP: 81,
+      LOAD_LOCALS: 82,
+      RETURN_VALUE: 83,
+      IMPORT_STAR: 84,
+      EXEC_STMT: 85,
+      YIELD_VALUE: 86,
+      POP_BLOCK: 87,
+      END_FINALLY: 88,
+      BUILD_CLASS: 89,
+      STORE_NAME: 90,
+      DELETE_NAME: 91,
+      UNPACK_SEQUENCE: 92,
+      FOR_ITER: 93,
+      LIST_APPEND: 94,
+      STORE_ATTR: 95,
+      DELETE_ATTR: 96,
+      STORE_GLOBAL: 97,
+      DELETE_GLOBAL: 98,
+      DUP_TOPX: 99,
+      LOAD_CONST: 100,
+      LOAD_NAME: 101,
+      BUILD_TUPLE: 102,
+      BUILD_LIST: 103,
+      BUILD_SET: 104,
+      BUILD_MAP: 105,
+      LOAD_ATTR: 106,
+      COMPARE_OP: 107,
+      IMPORT_NAME: 108,
+      IMPORT_FROM: 109,
+      JUMP_FORWARD: 110,
+      JUMP_IF_FALSE_OR_POP: 111,
+      JUMP_IF_TRUE_OR_POP: 112,
+      JUMP_ABSOLUTE: 113,
+      POP_JUMP_IF_FALSE: 114,
+      POP_JUMP_IF_TRUE: 115,
+      LOAD_GLOBAL: 116,
+      CONTINUE_LOOP: 119,
+      SETUP_LOOP: 120,
+      SETUP_EXCEPT: 121,
+      SETUP_FINALLY: 122,
+      LOAD_FAST: 124,
+      STORE_FAST: 125,
+      DELETE_FAST: 126,
+      RAISE_VARARGS: 130,
+      CALL_FUNCTION: 131,
+      MAKE_FUNCTION: 132,
+      BUILD_SLICE: 133,
+      MAKE_CLOSURE: 134,
+      LOAD_CLOSURE: 135,
+      LOAD_DEREF: 136,
+      STORE_DEREF: 137,
+      CALL_FUNCTION_VAR: 140,
+      CALL_FUNCTION_KW: 141,
+      CALL_FUNCTION_VAR_KW: 142,
+      SETUP_WITH: 143,
+      EXTENDED_ARG: 145,
+      SET_ADD: 146,
+      MAP_ADD: 147,
+
+      0: &quot;STOP_CODE&quot;,
+      1: &quot;POP_TOP&quot;,
+      2: &quot;ROT_TWO&quot;,
+      3: &quot;ROT_THREE&quot;,
+      4: &quot;DUP_TOP&quot;,
+      5: &quot;ROT_FOUR&quot;,
+      9: &quot;NOP&quot;,
+      10: &quot;UNARY_POSITIVE&quot;,
+      11: &quot;UNARY_NEGATIVE&quot;,
+      12: &quot;UNARY_NOT&quot;,
+      13: &quot;UNARY_CONVERT&quot;,
+      15: &quot;UNARY_INVERT&quot;,
+      19: &quot;BINARY_POWER&quot;,
+      20: &quot;BINARY_MULTIPLY&quot;,
+      21: &quot;BINARY_DIVIDE&quot;,
+      22: &quot;BINARY_MODULO&quot;,
+      23: &quot;BINARY_ADD&quot;,
+      24: &quot;BINARY_SUBTRACT&quot;,
+      25: &quot;BINARY_SUBSCR&quot;,
+      26: &quot;BINARY_FLOOR_DIVIDE&quot;,
+      27: &quot;BINARY_TRUE_DIVIDE&quot;,
+      28: &quot;INPLACE_FLOOR_DIVIDE&quot;,
+      29: &quot;INPLACE_TRUE_DIVIDE&quot;,
+      30: &quot;SLICE_0&quot;,
+      31: &quot;SLICE_1&quot;,
+      32: &quot;SLICE_2&quot;,
+      33: &quot;SLICE_3&quot;,
+      40: &quot;STORE_SLICE_0&quot;,
+      41: &quot;STORE_SLICE_1&quot;,
+      42: &quot;STORE_SLICE_2&quot;,
+      43: &quot;STORE_SLICE_3&quot;,
+      50: &quot;DELETE_SLICE_0&quot;,
+      51: &quot;DELETE_SLICE_1&quot;,
+      52: &quot;DELETE_SLICE_2&quot;,
+      53: &quot;DELETE_SLICE_3&quot;,
+      54: &quot;STORE_MAP&quot;,
+      55: &quot;INPLACE_ADD&quot;,
+      56: &quot;INPLACE_SUBTRACT&quot;,
+      57: &quot;INPLACE_MULTIPLY&quot;,
+      58: &quot;INPLACE_DIVIDE&quot;,
+      59: &quot;INPLACE_MODULO&quot;,
+      60: &quot;STORE_SUBSCR&quot;,
+      61: &quot;DELETE_SUBSCR&quot;,
+      62: &quot;BINARY_LSHIFT&quot;,
+      63: &quot;BINARY_RSHIFT&quot;,
+      64: &quot;BINARY_AND&quot;,
+      65: &quot;BINARY_XOR&quot;,
+      66: &quot;BINARY_OR&quot;,
+      67: &quot;INPLACE_POWER&quot;,
+      68: &quot;GET_ITER&quot;,
+      70: &quot;PRINT_EXPR&quot;,
+      71: &quot;PRINT_ITEM&quot;,
+      72: &quot;PRINT_NEWLINE&quot;,
+      73: &quot;PRINT_ITEM_TO&quot;,
+      74: &quot;PRINT_NEWLINE_TO&quot;,
+      75: &quot;INPLACE_LSHIFT&quot;,
+      76: &quot;INPLACE_RSHIFT&quot;,
+      77: &quot;INPLACE_AND&quot;,
+      78: &quot;INPLACE_XOR&quot;,
+      79: &quot;INPLACE_OR&quot;,
+      80: &quot;BREAK_LOOP&quot;,
+      81: &quot;WITH_CLEANUP&quot;,
+      82: &quot;LOAD_LOCALS&quot;,
+      83: &quot;RETURN_VALUE&quot;,
+      84: &quot;IMPORT_STAR&quot;,
+      85: &quot;EXEC_STMT&quot;,
+      86: &quot;YIELD_VALUE&quot;,
+      87: &quot;POP_BLOCK&quot;,
+      88: &quot;END_FINALLY&quot;,
+      89: &quot;BUILD_CLASS&quot;,
+      90: &quot;STORE_NAME&quot;,
+      91: &quot;DELETE_NAME&quot;,
+      92: &quot;UNPACK_SEQUENCE&quot;,
+      93: &quot;FOR_ITER&quot;,
+      94: &quot;LIST_APPEND&quot;,
+      95: &quot;STORE_ATTR&quot;,
+      96: &quot;DELETE_ATTR&quot;,
+      97: &quot;STORE_GLOBAL&quot;,
+      98: &quot;DELETE_GLOBAL&quot;,
+      99: &quot;DUP_TOPX&quot;,
+      100: &quot;LOAD_CONST&quot;,
+      101: &quot;LOAD_NAME&quot;,
+      102: &quot;BUILD_TUPLE&quot;,
+      103: &quot;BUILD_LIST&quot;,
+      104: &quot;BUILD_SET&quot;,
+      105: &quot;BUILD_MAP&quot;,
+      106: &quot;LOAD_ATTR&quot;,
+      107: &quot;COMPARE_OP&quot;,
+      108: &quot;IMPORT_NAME&quot;,
+      109: &quot;IMPORT_FROM&quot;,
+      110: &quot;JUMP_FORWARD&quot;,
+      111: &quot;JUMP_IF_FALSE_OR_POP&quot;,
+      112: &quot;JUMP_IF_TRUE_OR_POP&quot;,
+      113: &quot;JUMP_ABSOLUTE&quot;,
+      114: &quot;POP_JUMP_IF_FALSE&quot;,
+      115: &quot;POP_JUMP_IF_TRUE&quot;,
+      116: &quot;LOAD_GLOBAL&quot;,
+      119: &quot;CONTINUE_LOOP&quot;,
+      120: &quot;SETUP_LOOP&quot;,
+      121: &quot;SETUP_EXCEPT&quot;,
+      122: &quot;SETUP_FINALLY&quot;,
+      124: &quot;LOAD_FAST&quot;,
+      125: &quot;STORE_FAST&quot;,
+      126: &quot;DELETE_FAST&quot;,
+      130: &quot;RAISE_VARARGS&quot;,
+      131: &quot;CALL_FUNCTION&quot;,
+      132: &quot;MAKE_FUNCTION&quot;,
+      133: &quot;BUILD_SLICE&quot;,
+      134: &quot;MAKE_CLOSURE&quot;,
+      135: &quot;LOAD_CLOSURE&quot;,
+      136: &quot;LOAD_DEREF&quot;,
+      137: &quot;STORE_DEREF&quot;,
+      140: &quot;CALL_FUNCTION_VAR&quot;,
+      141: &quot;CALL_FUNCTION_KW&quot;,
+      142: &quot;CALL_FUNCTION_VAR_KW&quot;,
+      143: &quot;SETUP_WITH&quot;,
+      145: &quot;EXTENDED_ARG&quot;,
+      146: &quot;SET_ADD&quot;,
+      147: &quot;MAP_ADD&quot;,
+    });
+
+    function OpArg(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    OpArg.prototype._read = function() {
+      this.opCode = this._io.readU1();
+      if (this.opCode &gt;= PythonPyc27.OpArg.OpCodeEnum.STORE_NAME) {
+        this.arg = this._io.readU2le();
+      }
+    }
+
+    return OpArg;
+  })();
+
+  var PyObject = PythonPyc27.PyObject = (function() {
+    PyObject.ObjectType = Object.freeze({
+      TUPLE: 40,
+      PY_FALSE: 70,
+      NONE: 78,
+      STRING_REF: 82,
+      PY_TRUE: 84,
+      CODE_OBJECT: 99,
+      INT: 105,
+      STRING: 115,
+      INTERNED: 116,
+      UNICODE_STRING: 117,
+
+      40: &quot;TUPLE&quot;,
+      70: &quot;PY_FALSE&quot;,
+      78: &quot;NONE&quot;,
+      82: &quot;STRING_REF&quot;,
+      84: &quot;PY_TRUE&quot;,
+      99: &quot;CODE_OBJECT&quot;,
+      105: &quot;INT&quot;,
+      115: &quot;STRING&quot;,
+      116: &quot;INTERNED&quot;,
+      117: &quot;UNICODE_STRING&quot;,
+    });
+
+    function PyObject(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    PyObject.prototype._read = function() {
+      this.type = this._io.readU1();
+      switch (this.type) {
+      case PythonPyc27.PyObject.ObjectType.NONE:
+        this.value = new PyNone(this._io, this, this._root);
+        break;
+      case PythonPyc27.PyObject.ObjectType.CODE_OBJECT:
+        this.value = new CodeObject(this._io, this, this._root);
+        break;
+      case PythonPyc27.PyObject.ObjectType.INT:
+        this.value = this._io.readU4le();
+        break;
+      case PythonPyc27.PyObject.ObjectType.STRING_REF:
+        this.value = new StringRef(this._io, this, this._root);
+        break;
+      case PythonPyc27.PyObject.ObjectType.STRING:
+        this.value = new PyString(this._io, this, this._root);
+        break;
+      case PythonPyc27.PyObject.ObjectType.PY_FALSE:
+        this.value = new PyFalse(this._io, this, this._root);
+        break;
+      case PythonPyc27.PyObject.ObjectType.INTERNED:
+        this.value = new InternedString(this._io, this, this._root);
+        break;
+      case PythonPyc27.PyObject.ObjectType.TUPLE:
+        this.value = new Tuple(this._io, this, this._root);
+        break;
+      case PythonPyc27.PyObject.ObjectType.PY_TRUE:
+        this.value = new PyTrue(this._io, this, this._root);
+        break;
+      }
+    }
+
+    var PyNone = PyObject.PyNone = (function() {
+      function PyNone(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      PyNone.prototype._read = function() {
+      }
+
+      return PyNone;
+    })();
+
+    var PyFalse = PyObject.PyFalse = (function() {
+      function PyFalse(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      PyFalse.prototype._read = function() {
+      }
+
+      return PyFalse;
+    })();
+
+    var StringRef = PyObject.StringRef = (function() {
+      function StringRef(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      StringRef.prototype._read = function() {
+        this.internedListIndex = this._io.readU4le();
+      }
+
+      return StringRef;
+    })();
+
+    var PyTrue = PyObject.PyTrue = (function() {
+      function PyTrue(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      PyTrue.prototype._read = function() {
+      }
+
+      return PyTrue;
+    })();
+
+    var Tuple = PyObject.Tuple = (function() {
+      function Tuple(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      Tuple.prototype._read = function() {
+        this.count = this._io.readU4le();
+        this.items = new Array(this.count);
+        for (var i = 0; i &lt; this.count; i++) {
+          this.items[i] = new PyObject(this._io, this, this._root);
+        }
+      }
+
+      return Tuple;
+    })();
+
+    var UnicodeString = PyObject.UnicodeString = (function() {
+      function UnicodeString(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      UnicodeString.prototype._read = function() {
+        this.length = this._io.readU4le();
+        this.data = KaitaiStream.bytesToStr(this._io.readBytes(this.length), &quot;utf-8&quot;);
+      }
+
+      return UnicodeString;
+    })();
+
+    var InternedString = PyObject.InternedString = (function() {
+      function InternedString(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      InternedString.prototype._read = function() {
+        this.length = this._io.readU4le();
+        this.data = KaitaiStream.bytesToStr(this._io.readBytes(this.length), &quot;utf-8&quot;);
+      }
+
+      return InternedString;
+    })();
+
+    var PyString = PyObject.PyString = (function() {
+      function PyString(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      PyString.prototype._read = function() {
+        this.length = this._io.readU4le();
+        this.data = this._io.readBytes(this.length);
+      }
+
+      return PyString;
+    })();
+
+    return PyObject;
+  })();
+
+  var OpArgs = PythonPyc27.OpArgs = (function() {
+    function OpArgs(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    OpArgs.prototype._read = function() {
+      this.items = [];
+      while (!this._io.isEof()) {
+        this.items.push(new OpArg(this._io, this, this._root));
+      }
+    }
+
+    return OpArgs;
+  })();
+
+  return PythonPyc27;
+})();
+
+// Export for amd environments
+if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+  define(&#39;PythonPyc27&#39;, [], function() {
+    return PythonPyc27;
+  });
+}
+
+// Export for CommonJS
+if (typeof module === &#39;object&#39; &amp;&amp; module &amp;&amp; module.exports) {
+  module.exports = PythonPyc27;
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

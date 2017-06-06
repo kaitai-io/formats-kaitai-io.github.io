@@ -1,0 +1,84 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__bmp {
+		label="Bmp";
+		graph[style=dotted];
+
+		bmp__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="file_hdr_pos">0</TD><TD PORT="file_hdr_size">...</TD><TD>FileHeader</TD><TD PORT="file_hdr_type">file_hdr</TD></TR>
+			<TR><TD PORT="dib_hdr_pos">...</TD><TD PORT="dib_hdr_size">...</TD><TD>DibHeader</TD><TD PORT="dib_hdr_type">dib_hdr</TD></TR>
+		</TABLE>>];
+		bmp__inst__image [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="image_pos">file_hdr.bitmap_ofs</TD><TD PORT="image_size">⇲</TD><TD></TD><TD PORT="image_type">image</TD></TR>
+		</TABLE>>];
+		subgraph cluster__file_header {
+			label="Bmp::FileHeader";
+			graph[style=dotted];
+
+			file_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="file_type_pos">0</TD><TD PORT="file_type_size">2</TD><TD></TD><TD PORT="file_type_type">file_type</TD></TR>
+				<TR><TD PORT="file_size_pos">2</TD><TD PORT="file_size_size">4</TD><TD>u4le</TD><TD PORT="file_size_type">file_size</TD></TR>
+				<TR><TD PORT="reserved1_pos">6</TD><TD PORT="reserved1_size">2</TD><TD>u2le</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+				<TR><TD PORT="reserved2_pos">8</TD><TD PORT="reserved2_size">2</TD><TD>u2le</TD><TD PORT="reserved2_type">reserved2</TD></TR>
+				<TR><TD PORT="bitmap_ofs_pos">10</TD><TD PORT="bitmap_ofs_size">4</TD><TD>s4le</TD><TD PORT="bitmap_ofs_type">bitmap_ofs</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dib_header {
+			label="Bmp::DibHeader";
+			graph[style=dotted];
+
+			dib_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="dib_header_size_pos">0</TD><TD PORT="dib_header_size_size">4</TD><TD>s4le</TD><TD PORT="dib_header_size_type">dib_header_size</TD></TR>
+				<TR><TD PORT="bitmap_core_header_pos">4</TD><TD PORT="bitmap_core_header_size">(dib_header_size - 4)</TD><TD>BitmapCoreHeader</TD><TD PORT="bitmap_core_header_type">bitmap_core_header</TD></TR>
+				<TR><TD PORT="bitmap_info_header_pos">...</TD><TD PORT="bitmap_info_header_size">(dib_header_size - 4)</TD><TD>BitmapInfoHeader</TD><TD PORT="bitmap_info_header_type">bitmap_info_header</TD></TR>
+				<TR><TD PORT="bitmap_v5_header_pos">...</TD><TD PORT="bitmap_v5_header_size">(dib_header_size - 4)</TD><TD>BitmapCoreHeader</TD><TD PORT="bitmap_v5_header_type">bitmap_v5_header</TD></TR>
+				<TR><TD PORT="dib_header_body_pos">...</TD><TD PORT="dib_header_body_size">(dib_header_size - 4)</TD><TD></TD><TD PORT="dib_header_body_type">dib_header_body</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bitmap_core_header {
+			label="Bmp::BitmapCoreHeader";
+			graph[style=dotted];
+
+			bitmap_core_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="image_width_pos">0</TD><TD PORT="image_width_size">2</TD><TD>u2le</TD><TD PORT="image_width_type">image_width</TD></TR>
+				<TR><TD PORT="image_height_pos">2</TD><TD PORT="image_height_size">2</TD><TD>u2le</TD><TD PORT="image_height_type">image_height</TD></TR>
+				<TR><TD PORT="num_planes_pos">4</TD><TD PORT="num_planes_size">2</TD><TD>u2le</TD><TD PORT="num_planes_type">num_planes</TD></TR>
+				<TR><TD PORT="bits_per_pixel_pos">6</TD><TD PORT="bits_per_pixel_size">2</TD><TD>u2le</TD><TD PORT="bits_per_pixel_type">bits_per_pixel</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bitmap_info_header {
+			label="Bmp::BitmapInfoHeader";
+			graph[style=dotted];
+
+			bitmap_info_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="image_width_pos">0</TD><TD PORT="image_width_size">4</TD><TD>u4le</TD><TD PORT="image_width_type">image_width</TD></TR>
+				<TR><TD PORT="image_height_pos">4</TD><TD PORT="image_height_size">4</TD><TD>u4le</TD><TD PORT="image_height_type">image_height</TD></TR>
+				<TR><TD PORT="num_planes_pos">8</TD><TD PORT="num_planes_size">2</TD><TD>u2le</TD><TD PORT="num_planes_type">num_planes</TD></TR>
+				<TR><TD PORT="bits_per_pixel_pos">10</TD><TD PORT="bits_per_pixel_size">2</TD><TD>u2le</TD><TD PORT="bits_per_pixel_type">bits_per_pixel</TD></TR>
+				<TR><TD PORT="compression_pos">12</TD><TD PORT="compression_size">4</TD><TD>u4le</TD><TD PORT="compression_type">compression</TD></TR>
+				<TR><TD PORT="size_image_pos">16</TD><TD PORT="size_image_size">4</TD><TD>u4le</TD><TD PORT="size_image_type">size_image</TD></TR>
+				<TR><TD PORT="x_px_per_m_pos">20</TD><TD PORT="x_px_per_m_size">4</TD><TD>u4le</TD><TD PORT="x_px_per_m_type">x_px_per_m</TD></TR>
+				<TR><TD PORT="y_px_per_m_pos">24</TD><TD PORT="y_px_per_m_size">4</TD><TD>u4le</TD><TD PORT="y_px_per_m_type">y_px_per_m</TD></TR>
+				<TR><TD PORT="num_colors_used_pos">28</TD><TD PORT="num_colors_used_size">4</TD><TD>u4le</TD><TD PORT="num_colors_used_type">num_colors_used</TD></TR>
+				<TR><TD PORT="num_colors_important_pos">32</TD><TD PORT="num_colors_important_size">4</TD><TD>u4le</TD><TD PORT="num_colors_important_type">num_colors_important</TD></TR>
+			</TABLE>>];
+		}
+	}
+	bmp__seq:file_hdr_type -> file_header__seq [style=bold];
+	bmp__seq:dib_hdr_type -> dib_header__seq [style=bold];
+	file_header__seq:bitmap_ofs_type -> bmp__inst__image:image_pos [color="#404040"];
+	dib_header__seq:dib_header_size_type -> dib_header__seq:bitmap_core_header_size [color="#404040"];
+	dib_header__seq:bitmap_core_header_type -> bitmap_core_header__seq [style=bold];
+	dib_header__seq:dib_header_size_type -> dib_header__seq:bitmap_info_header_size [color="#404040"];
+	dib_header__seq:bitmap_info_header_type -> bitmap_info_header__seq [style=bold];
+	dib_header__seq:dib_header_size_type -> dib_header__seq:bitmap_v5_header_size [color="#404040"];
+	dib_header__seq:bitmap_v5_header_type -> bitmap_core_header__seq [style=bold];
+	dib_header__seq:dib_header_size_type -> dib_header__seq:dib_header_body_size [color="#404040"];
+}

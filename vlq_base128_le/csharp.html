@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Kaitai Struct: declarative binary format parsing language</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Commonly Used Data Types</li>
+        <li class="active">Variable length quantity, unsigned integer, base128, little-endian</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Variable length quantity, unsigned integer, base128, little-endian:
+            
+            C# parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A variable-length unsigned integer using base128 encoding. 1-byte groups
+consists of 1-bit flag of continuation and 7-bit value, and are ordered
+&quot;least significant group first&quot;, i.e. in &quot;little-endian&quot; manner.</p>
+<p>This particular encoding is specified and used in:</p>
+<ul>
+<li>DWARF debug file format, where it's dubbed &quot;unsigned LEB128&quot; or &quot;ULEB128&quot;.
+http://dwarfstd.org/doc/dwarf-2.0.0.pdf - page 139</li>
+<li>Google Protocol Buffers, where it's called &quot;Base 128 Varints&quot;.
+https://developers.google.com/protocol-buffers/docs/encoding?csw=1#varints</li>
+<li>Apache Lucene, where it's called &quot;VInt&quot;
+http://lucene.apache.org/core/3_5_0/fileformats.html#VInt</li>
+<li>Apache Avro uses this as a basis for integer encoding, adding ZigZag on
+top of it for signed ints
+http://avro.apache.org/docs/current/spec.html#binary_encode_primitive</li>
+</ul>
+<p>More information on this encoding is available at https://en.wikipedia.org/wiki/LEB128</p>
+<p>This particular implementation supports serialized values to up 8 bytes long.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.7
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Variable length quantity, unsigned integer, base128, little-endian
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Variable length quantity, unsigned integer, base128, little-endian parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="Variable length quantity, unsigned integer, base128, little-endian parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="csharp.html" title="Variable length quantity, unsigned integer, base128, little-endian parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Variable length quantity, unsigned integer, base128, little-endian parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Variable length quantity, unsigned integer, base128, little-endian parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Variable length quantity, unsigned integer, base128, little-endian parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Variable length quantity, unsigned integer, base128, little-endian parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Variable length quantity, unsigned integer, base128, little-endian parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Variable length quantity, unsigned integer, base128, little-endian parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Variable length quantity, unsigned integer, base128, little-endian parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="csharp">var Data = VlqBase128Le.FromFile("path/to/local/file.vlq_base128_le");</code></pre>
+
+<p>Or parse structure from a byte array:</p>
+
+<pre><code class="csharp">byte[] SomeArray = new byte[] { ... };
+var Data = new VlqBase128Le(new KaitaiStream(SomeArray));</code></pre>
+
+<p>After that, one can get various attributes from the structure by accessing properties like:</p>
+
+<pre><code class="csharp">Data.Value // => Resulting value as normal integer</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C# source code to parse Variable length quantity, unsigned integer, base128, little-endian
+            
+        </h2>
+
+        
+
+        <h3>VlqBase128Le.cs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/csharp/VlqBase128Le.cs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+using System.Collections.Generic;
+
+namespace Kaitai
+{
+
+    /// &lt;summary&gt;
+    /// A variable-length unsigned integer using base128 encoding. 1-byte groups
+    /// consists of 1-bit flag of continuation and 7-bit value, and are ordered
+    /// &amp;quot;least significant group first&amp;quot;, i.e. in &amp;quot;little-endian&amp;quot; manner.
+    /// 
+    /// This particular encoding is specified and used in:
+    /// 
+    /// * DWARF debug file format, where it&#39;s dubbed &amp;quot;unsigned LEB128&amp;quot; or &amp;quot;ULEB128&amp;quot;.
+    ///   http://dwarfstd.org/doc/dwarf-2.0.0.pdf - page 139
+    /// * Google Protocol Buffers, where it&#39;s called &amp;quot;Base 128 Varints&amp;quot;.
+    ///   https://developers.google.com/protocol-buffers/docs/encoding?csw=1#varints
+    /// * Apache Lucene, where it&#39;s called &amp;quot;VInt&amp;quot;
+    ///   http://lucene.apache.org/core/3_5_0/fileformats.html#VInt
+    /// * Apache Avro uses this as a basis for integer encoding, adding ZigZag on
+    ///   top of it for signed ints
+    ///   http://avro.apache.org/docs/current/spec.html#binary_encode_primitive
+    /// 
+    /// More information on this encoding is available at https://en.wikipedia.org/wiki/LEB128
+    /// 
+    /// This particular implementation supports serialized values to up 8 bytes long.
+    /// &lt;/summary&gt;
+    public partial class VlqBase128Le : KaitaiStruct
+    {
+        public static VlqBase128Le FromFile(string fileName)
+        {
+            return new VlqBase128Le(new KaitaiStream(fileName));
+        }
+
+        public VlqBase128Le(KaitaiStream io, KaitaiStruct parent = null, VlqBase128Le root = null) : base(io)
+        {
+            m_parent = parent;
+            m_root = root ?? this;
+            f_len = false;
+            f_value = false;
+            _read();
+        }
+        private void _read() {
+            _groups = new List&lt;Group&gt;();
+            {
+                Group M_;
+                do {
+                    M_ = new Group(m_io, this, m_root);
+                    _groups.Add(M_);
+                } while (!(!(M_.HasNext)));
+            }
+            }
+
+        /// &lt;summary&gt;
+        /// One byte group, clearly divided into 7-bit &amp;quot;value&amp;quot; and 1-bit &amp;quot;has continuation
+        /// in the next byte&amp;quot; flag.
+        /// &lt;/summary&gt;
+        public partial class Group : KaitaiStruct
+        {
+            public static Group FromFile(string fileName)
+            {
+                return new Group(new KaitaiStream(fileName));
+            }
+
+            public Group(KaitaiStream io, VlqBase128Le parent = null, VlqBase128Le root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                f_hasNext = false;
+                f_value = false;
+                _read();
+            }
+            private void _read() {
+                _b = m_io.ReadU1();
+                }
+            private bool f_hasNext;
+            private bool _hasNext;
+
+            /// &lt;summary&gt;
+            /// If true, then we have more bytes to read
+            /// &lt;/summary&gt;
+            public bool HasNext
+            {
+                get
+                {
+                    if (f_hasNext)
+                        return _hasNext;
+                    _hasNext = (bool) ((B &amp; 128) != 0);
+                    f_hasNext = true;
+                    return _hasNext;
+                }
+            }
+            private bool f_value;
+            private int _value;
+
+            /// &lt;summary&gt;
+            /// The 7-bit (base128) numeric value of this group
+            /// &lt;/summary&gt;
+            public int Value
+            {
+                get
+                {
+                    if (f_value)
+                        return _value;
+                    _value = (int) ((B &amp; 127));
+                    f_value = true;
+                    return _value;
+                }
+            }
+            private byte _b;
+            private VlqBase128Le m_root;
+            private VlqBase128Le m_parent;
+            public byte B { get { return _b; } }
+            public VlqBase128Le M_Root { get { return m_root; } }
+            public VlqBase128Le M_Parent { get { return m_parent; } }
+        }
+        private bool f_len;
+        private int _len;
+        public int Len
+        {
+            get
+            {
+                if (f_len)
+                    return _len;
+                _len = (int) (Groups.Count);
+                f_len = true;
+                return _len;
+            }
+        }
+        private bool f_value;
+        private int _value;
+
+        /// &lt;summary&gt;
+        /// Resulting value as normal integer
+        /// &lt;/summary&gt;
+        public int Value
+        {
+            get
+            {
+                if (f_value)
+                    return _value;
+                _value = (int) ((((((((Groups[0].Value + (Len &gt;= 2 ? (Groups[1].Value &lt;&lt; 7) : 0)) + (Len &gt;= 3 ? (Groups[2].Value &lt;&lt; 14) : 0)) + (Len &gt;= 4 ? (Groups[3].Value &lt;&lt; 21) : 0)) + (Len &gt;= 5 ? (Groups[4].Value &lt;&lt; 28) : 0)) + (Len &gt;= 6 ? (Groups[5].Value &lt;&lt; 35) : 0)) + (Len &gt;= 7 ? (Groups[6].Value &lt;&lt; 42) : 0)) + (Len &gt;= 8 ? (Groups[7].Value &lt;&lt; 49) : 0)));
+                f_value = true;
+                return _value;
+            }
+        }
+        private List&lt;Group&gt; _groups;
+        private VlqBase128Le m_root;
+        private KaitaiStruct m_parent;
+        public List&lt;Group&gt; Groups { get { return _groups; } }
+        public VlqBase128Le M_Root { get { return m_root; } }
+        public KaitaiStruct M_Parent { get { return m_parent; } }
+    }
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

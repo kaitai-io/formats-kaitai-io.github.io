@@ -1,0 +1,55 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__mbr_partition_table {
+		label="MbrPartitionTable";
+		graph[style=dotted];
+
+		mbr_partition_table__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="bootstrap_code_pos">0</TD><TD PORT="bootstrap_code_size">446</TD><TD></TD><TD PORT="bootstrap_code_type">bootstrap_code</TD></TR>
+			<TR><TD PORT="partitions_pos">446</TD><TD PORT="partitions_size">...</TD><TD>PartitionEntry</TD><TD PORT="partitions_type">partitions</TD></TR>
+			<TR><TD COLSPAN="4" PORT="partitions__repeat">repeat 4 times</TD></TR>
+			<TR><TD PORT="boot_signature_pos">...</TD><TD PORT="boot_signature_size">2</TD><TD>55 AA</TD><TD PORT="boot_signature_type">boot_signature</TD></TR>
+		</TABLE>>];
+		subgraph cluster__partition_entry {
+			label="MbrPartitionTable::PartitionEntry";
+			graph[style=dotted];
+
+			partition_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="status_pos">0</TD><TD PORT="status_size">1</TD><TD>u1</TD><TD PORT="status_type">status</TD></TR>
+				<TR><TD PORT="chs_start_pos">1</TD><TD PORT="chs_start_size">...</TD><TD>Chs</TD><TD PORT="chs_start_type">chs_start</TD></TR>
+				<TR><TD PORT="partition_type_pos">...</TD><TD PORT="partition_type_size">1</TD><TD>u1</TD><TD PORT="partition_type_type">partition_type</TD></TR>
+				<TR><TD PORT="chs_end_pos">...</TD><TD PORT="chs_end_size">...</TD><TD>Chs</TD><TD PORT="chs_end_type">chs_end</TD></TR>
+				<TR><TD PORT="lba_start_pos">...</TD><TD PORT="lba_start_size">4</TD><TD>u4le</TD><TD PORT="lba_start_type">lba_start</TD></TR>
+				<TR><TD PORT="num_sectors_pos">...</TD><TD PORT="num_sectors_size">4</TD><TD>u4le</TD><TD PORT="num_sectors_type">num_sectors</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__chs {
+			label="MbrPartitionTable::Chs";
+			graph[style=dotted];
+
+			chs__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="head_pos">0</TD><TD PORT="head_size">1</TD><TD>u1</TD><TD PORT="head_type">head</TD></TR>
+				<TR><TD PORT="b2_pos">1</TD><TD PORT="b2_size">1</TD><TD>u1</TD><TD PORT="b2_type">b2</TD></TR>
+				<TR><TD PORT="b3_pos">2</TD><TD PORT="b3_size">1</TD><TD>u1</TD><TD PORT="b3_type">b3</TD></TR>
+			</TABLE>>];
+			chs__inst__sector [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>sector</TD><TD>(b2 &amp; 63)</TD></TR>
+			</TABLE>>];
+			chs__inst__cylinder [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>cylinder</TD><TD>(b3 + ((b2 &amp; 192) &lt;&lt; 2))</TD></TR>
+			</TABLE>>];
+		}
+	}
+	mbr_partition_table__seq:partitions_type -> partition_entry__seq [style=bold];
+	partition_entry__seq:chs_start_type -> chs__seq [style=bold];
+	partition_entry__seq:chs_end_type -> chs__seq [style=bold];
+	chs__seq:b2_type -> chs__inst__sector [color="#404040"];
+	chs__seq:b3_type -> chs__inst__cylinder [color="#404040"];
+	chs__seq:b2_type -> chs__inst__cylinder [color="#404040"];
+}

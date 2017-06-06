@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Kaitai Struct: declarative binary format parsing language</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Image Files</li>
+        <li class="active">wmf</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>wmf:
+            
+            C# parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of wmf
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="wmf parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="wmf parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="csharp.html" title="wmf parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="wmf parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="wmf parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="wmf parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="wmf parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="wmf parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="wmf parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="wmf parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="csharp">var Data = Wmf.FromFile("path/to/local/file.wmf");</code></pre>
+
+<p>Or parse structure from a byte array:</p>
+
+<pre><code class="csharp">byte[] SomeArray = new byte[] { ... };
+var Data = new Wmf(new KaitaiStream(SomeArray));</code></pre>
+
+<p>After that, one can get various attributes from the structure by accessing properties like:</p>
+
+<pre><code class="csharp">Data.SpecialHdr // => get special hdr</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C# source code to parse wmf
+            
+        </h2>
+
+        
+
+        <h3>Wmf.cs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/csharp/Wmf.cs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+using System.Collections.Generic;
+
+namespace Kaitai
+{
+    public partial class Wmf : KaitaiStruct
+    {
+        public static Wmf FromFile(string fileName)
+        {
+            return new Wmf(new KaitaiStream(fileName));
+        }
+
+        public enum Func
+        {
+            Eof = 0,
+            Savedc = 30,
+            Realizepalette = 53,
+            Setpalentries = 55,
+            Createpalette = 247,
+            Setbkmode = 258,
+            Setmapmode = 259,
+            Setrop2 = 260,
+            Setrelabs = 261,
+            Setpolyfillmode = 262,
+            Setstretchbltmode = 263,
+            Settextcharextra = 264,
+            Restoredc = 295,
+            Invertregion = 298,
+            Paintregion = 299,
+            Selectclipregion = 300,
+            Selectobject = 301,
+            Settextalign = 302,
+            Resizepalette = 313,
+            Dibcreatepatternbrush = 322,
+            Setlayout = 329,
+            Deleteobject = 496,
+            Createpatternbrush = 505,
+            Setbkcolor = 513,
+            Settextcolor = 521,
+            Settextjustification = 522,
+            Setwindoworg = 523,
+            Setwindowext = 524,
+            Setviewportorg = 525,
+            Setviewportext = 526,
+            Offsetwindoworg = 527,
+            Offsetviewportorg = 529,
+            Lineto = 531,
+            Moveto = 532,
+            Offsetcliprgn = 544,
+            Fillregion = 552,
+            Setmapperflags = 561,
+            Selectpalette = 564,
+            Createpenindirect = 762,
+            Createfontindirect = 763,
+            Createbrushindirect = 764,
+            Polygon = 804,
+            Polyline = 805,
+            Scalewindowext = 1040,
+            Scaleviewportext = 1042,
+            Excludecliprect = 1045,
+            Intersectcliprect = 1046,
+            Ellipse = 1048,
+            Floodfill = 1049,
+            Rectangle = 1051,
+            Setpixel = 1055,
+            Frameregion = 1065,
+            Animatepalette = 1078,
+            Textout = 1313,
+            Polypolygon = 1336,
+            Extfloodfill = 1352,
+            Roundrect = 1564,
+            Patblt = 1565,
+            Escape = 1574,
+            Createregion = 1791,
+            Arc = 2071,
+            Pie = 2074,
+            Chord = 2096,
+            Bitblt = 2338,
+            Dibbitblt = 2368,
+            Exttextout = 2610,
+            Stretchblt = 2851,
+            Dibstretchblt = 2881,
+            Setdibtodev = 3379,
+            Stretchdib = 3907,
+        }
+
+        public Wmf(KaitaiStream io, KaitaiStruct parent = null, Wmf root = null) : base(io)
+        {
+            m_parent = parent;
+            m_root = root ?? this;
+            _read();
+        }
+        private void _read() {
+            _specialHdr = new SpecialHeader(m_io, this, m_root);
+            _header = new WmfHeader(m_io, this, m_root);
+            _records = new List&lt;Record&gt;();
+            {
+                Record M_;
+                do {
+                    M_ = new Record(m_io, this, m_root);
+                    _records.Add(M_);
+                } while (!(M_.Function == Func.Eof));
+            }
+            }
+        public partial class SpecialHeader : KaitaiStruct
+        {
+            public static SpecialHeader FromFile(string fileName)
+            {
+                return new SpecialHeader(new KaitaiStream(fileName));
+            }
+
+            public SpecialHeader(KaitaiStream io, Wmf parent = null, Wmf root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                _read();
+            }
+            private void _read() {
+                _magic = m_io.EnsureFixedContents(new byte[] { 215, 205, 198, 154 });
+                _handle = m_io.EnsureFixedContents(new byte[] { 0, 0 });
+                _left = m_io.ReadS2le();
+                _top = m_io.ReadS2le();
+                _right = m_io.ReadS2le();
+                _bottom = m_io.ReadS2le();
+                _inch = m_io.ReadU2le();
+                _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
+                _checksum = m_io.ReadU2le();
+                }
+            private byte[] _magic;
+            private byte[] _handle;
+            private short _left;
+            private short _top;
+            private short _right;
+            private short _bottom;
+            private ushort _inch;
+            private byte[] _reserved;
+            private ushort _checksum;
+            private Wmf m_root;
+            private Wmf m_parent;
+            public byte[] Magic { get { return _magic; } }
+            public byte[] Handle { get { return _handle; } }
+            public short Left { get { return _left; } }
+            public short Top { get { return _top; } }
+            public short Right { get { return _right; } }
+            public short Bottom { get { return _bottom; } }
+            public ushort Inch { get { return _inch; } }
+            public byte[] Reserved { get { return _reserved; } }
+            public ushort Checksum { get { return _checksum; } }
+            public Wmf M_Root { get { return m_root; } }
+            public Wmf M_Parent { get { return m_parent; } }
+        }
+        public partial class WmfHeader : KaitaiStruct
+        {
+            public static WmfHeader FromFile(string fileName)
+            {
+                return new WmfHeader(new KaitaiStream(fileName));
+            }
+
+            public enum MetafileType
+            {
+                MemoryMetafile = 1,
+                DiskMetafile = 2,
+            }
+
+            public WmfHeader(KaitaiStream io, Wmf parent = null, Wmf root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                _read();
+            }
+            private void _read() {
+                _type = ((MetafileType) m_io.ReadU2le());
+                _headerSize = m_io.ReadU2le();
+                _version = m_io.ReadU2le();
+                _size = m_io.ReadU4le();
+                _numberOfObjects = m_io.ReadU2le();
+                _maxRecord = m_io.ReadU4le();
+                _numberOfMembers = m_io.ReadU2le();
+                }
+            private MetafileType _type;
+            private ushort _headerSize;
+            private ushort _version;
+            private uint _size;
+            private ushort _numberOfObjects;
+            private uint _maxRecord;
+            private ushort _numberOfMembers;
+            private Wmf m_root;
+            private Wmf m_parent;
+            public MetafileType Type { get { return _type; } }
+            public ushort HeaderSize { get { return _headerSize; } }
+            public ushort Version { get { return _version; } }
+            public uint Size { get { return _size; } }
+            public ushort NumberOfObjects { get { return _numberOfObjects; } }
+            public uint MaxRecord { get { return _maxRecord; } }
+            public ushort NumberOfMembers { get { return _numberOfMembers; } }
+            public Wmf M_Root { get { return m_root; } }
+            public Wmf M_Parent { get { return m_parent; } }
+        }
+        public partial class Record : KaitaiStruct
+        {
+            public static Record FromFile(string fileName)
+            {
+                return new Record(new KaitaiStream(fileName));
+            }
+
+            public Record(KaitaiStream io, Wmf parent = null, Wmf root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                _read();
+            }
+            private void _read() {
+                _size = m_io.ReadU4le();
+                _function = ((Wmf.Func) m_io.ReadU2le());
+                _params = m_io.ReadBytes(((Size - 3) * 2));
+                }
+            private uint _size;
+            private Func _function;
+            private byte[] _params;
+            private Wmf m_root;
+            private Wmf m_parent;
+            public uint Size { get { return _size; } }
+            public Func Function { get { return _function; } }
+            public byte[] Params { get { return _params; } }
+            public Wmf M_Root { get { return m_root; } }
+            public Wmf M_Parent { get { return m_parent; } }
+        }
+        private SpecialHeader _specialHdr;
+        private WmfHeader _header;
+        private List&lt;Record&gt; _records;
+        private Wmf m_root;
+        private KaitaiStruct m_parent;
+        public SpecialHeader SpecialHdr { get { return _specialHdr; } }
+        public WmfHeader Header { get { return _header; } }
+        public List&lt;Record&gt; Records { get { return _records; } }
+        public Wmf M_Root { get { return m_root; } }
+        public KaitaiStruct M_Parent { get { return m_parent; } }
+    }
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

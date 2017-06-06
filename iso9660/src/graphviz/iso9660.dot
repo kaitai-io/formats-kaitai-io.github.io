@@ -1,0 +1,243 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__iso9660 {
+		label="Iso9660";
+		graph[style=dotted];
+
+		iso9660__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+		</TABLE>>];
+		iso9660__inst__sector_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>sector_size</TD><TD>2048</TD></TR>
+		</TABLE>>];
+		iso9660__inst__primary_vol_desc [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="primary_vol_desc_pos">(16 * sector_size)</TD><TD PORT="primary_vol_desc_size">...</TD><TD>VolDesc</TD><TD PORT="primary_vol_desc_type">primary_vol_desc</TD></TR>
+		</TABLE>>];
+		subgraph cluster__vol_desc_primary {
+			label="Iso9660::VolDescPrimary";
+			graph[style=dotted];
+
+			vol_desc_primary__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="unused1_pos">0</TD><TD PORT="unused1_size">1</TD><TD>00</TD><TD PORT="unused1_type">unused1</TD></TR>
+				<TR><TD PORT="system_id_pos">1</TD><TD PORT="system_id_size">32</TD><TD>str(UTF-8)</TD><TD PORT="system_id_type">system_id</TD></TR>
+				<TR><TD PORT="volume_id_pos">33</TD><TD PORT="volume_id_size">32</TD><TD>str(UTF-8)</TD><TD PORT="volume_id_type">volume_id</TD></TR>
+				<TR><TD PORT="unused2_pos">65</TD><TD PORT="unused2_size">8</TD><TD>00 00 00 00 00 00 00 00</TD><TD PORT="unused2_type">unused2</TD></TR>
+				<TR><TD PORT="vol_space_size_pos">73</TD><TD PORT="vol_space_size_size">...</TD><TD>U4bi</TD><TD PORT="vol_space_size_type">vol_space_size</TD></TR>
+				<TR><TD PORT="unused3_pos">...</TD><TD PORT="unused3_size">32</TD><TD>00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</TD><TD PORT="unused3_type">unused3</TD></TR>
+				<TR><TD PORT="vol_set_size_pos">...</TD><TD PORT="vol_set_size_size">...</TD><TD>U2bi</TD><TD PORT="vol_set_size_type">vol_set_size</TD></TR>
+				<TR><TD PORT="vol_seq_num_pos">...</TD><TD PORT="vol_seq_num_size">...</TD><TD>U2bi</TD><TD PORT="vol_seq_num_type">vol_seq_num</TD></TR>
+				<TR><TD PORT="logical_block_size_pos">...</TD><TD PORT="logical_block_size_size">...</TD><TD>U2bi</TD><TD PORT="logical_block_size_type">logical_block_size</TD></TR>
+				<TR><TD PORT="path_table_size_pos">...</TD><TD PORT="path_table_size_size">...</TD><TD>U4bi</TD><TD PORT="path_table_size_type">path_table_size</TD></TR>
+				<TR><TD PORT="lba_path_table_le_pos">...</TD><TD PORT="lba_path_table_le_size">4</TD><TD>u4le</TD><TD PORT="lba_path_table_le_type">lba_path_table_le</TD></TR>
+				<TR><TD PORT="lba_opt_path_table_le_pos">...</TD><TD PORT="lba_opt_path_table_le_size">4</TD><TD>u4le</TD><TD PORT="lba_opt_path_table_le_type">lba_opt_path_table_le</TD></TR>
+				<TR><TD PORT="lba_path_table_be_pos">...</TD><TD PORT="lba_path_table_be_size">4</TD><TD>u4be</TD><TD PORT="lba_path_table_be_type">lba_path_table_be</TD></TR>
+				<TR><TD PORT="lba_opt_path_table_be_pos">...</TD><TD PORT="lba_opt_path_table_be_size">4</TD><TD>u4be</TD><TD PORT="lba_opt_path_table_be_type">lba_opt_path_table_be</TD></TR>
+				<TR><TD PORT="root_dir_pos">...</TD><TD PORT="root_dir_size">34</TD><TD>DirEntry</TD><TD PORT="root_dir_type">root_dir</TD></TR>
+				<TR><TD PORT="vol_set_id_pos">...</TD><TD PORT="vol_set_id_size">128</TD><TD>str(UTF-8)</TD><TD PORT="vol_set_id_type">vol_set_id</TD></TR>
+				<TR><TD PORT="publisher_id_pos">...</TD><TD PORT="publisher_id_size">128</TD><TD>str(UTF-8)</TD><TD PORT="publisher_id_type">publisher_id</TD></TR>
+				<TR><TD PORT="data_preparer_id_pos">...</TD><TD PORT="data_preparer_id_size">128</TD><TD>str(UTF-8)</TD><TD PORT="data_preparer_id_type">data_preparer_id</TD></TR>
+				<TR><TD PORT="application_id_pos">...</TD><TD PORT="application_id_size">128</TD><TD>str(UTF-8)</TD><TD PORT="application_id_type">application_id</TD></TR>
+				<TR><TD PORT="copyright_file_id_pos">...</TD><TD PORT="copyright_file_id_size">38</TD><TD>str(UTF-8)</TD><TD PORT="copyright_file_id_type">copyright_file_id</TD></TR>
+				<TR><TD PORT="abstract_file_id_pos">...</TD><TD PORT="abstract_file_id_size">36</TD><TD>str(UTF-8)</TD><TD PORT="abstract_file_id_type">abstract_file_id</TD></TR>
+				<TR><TD PORT="bibliographic_file_id_pos">...</TD><TD PORT="bibliographic_file_id_size">37</TD><TD>str(UTF-8)</TD><TD PORT="bibliographic_file_id_type">bibliographic_file_id</TD></TR>
+				<TR><TD PORT="vol_create_datetime_pos">...</TD><TD PORT="vol_create_datetime_size">...</TD><TD>DecDatetime</TD><TD PORT="vol_create_datetime_type">vol_create_datetime</TD></TR>
+				<TR><TD PORT="vol_mod_datetime_pos">...</TD><TD PORT="vol_mod_datetime_size">...</TD><TD>DecDatetime</TD><TD PORT="vol_mod_datetime_type">vol_mod_datetime</TD></TR>
+				<TR><TD PORT="vol_expire_datetime_pos">...</TD><TD PORT="vol_expire_datetime_size">...</TD><TD>DecDatetime</TD><TD PORT="vol_expire_datetime_type">vol_expire_datetime</TD></TR>
+				<TR><TD PORT="vol_effective_datetime_pos">...</TD><TD PORT="vol_effective_datetime_size">...</TD><TD>DecDatetime</TD><TD PORT="vol_effective_datetime_type">vol_effective_datetime</TD></TR>
+				<TR><TD PORT="file_structure_version_pos">...</TD><TD PORT="file_structure_version_size">1</TD><TD>u1</TD><TD PORT="file_structure_version_type">file_structure_version</TD></TR>
+				<TR><TD PORT="unused4_pos">...</TD><TD PORT="unused4_size">1</TD><TD>u1</TD><TD PORT="unused4_type">unused4</TD></TR>
+				<TR><TD PORT="application_area_pos">...</TD><TD PORT="application_area_size">512</TD><TD></TD><TD PORT="application_area_type">application_area</TD></TR>
+			</TABLE>>];
+			vol_desc_primary__inst__path_table [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="path_table_pos">(lba_path_table_le * _root.sector_size)</TD><TD PORT="path_table_size">path_table_size.le</TD><TD>PathTableLe</TD><TD PORT="path_table_type">path_table</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__vol_desc_boot_record {
+			label="Iso9660::VolDescBootRecord";
+			graph[style=dotted];
+
+			vol_desc_boot_record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="boot_system_id_pos">0</TD><TD PORT="boot_system_id_size">32</TD><TD>str(UTF-8)</TD><TD PORT="boot_system_id_type">boot_system_id</TD></TR>
+				<TR><TD PORT="boot_id_pos">32</TD><TD PORT="boot_id_size">32</TD><TD>str(UTF-8)</TD><TD PORT="boot_id_type">boot_id</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__datetime {
+			label="Iso9660::Datetime";
+			graph[style=dotted];
+
+			datetime__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="year_pos">0</TD><TD PORT="year_size">1</TD><TD>u1</TD><TD PORT="year_type">year</TD></TR>
+				<TR><TD PORT="month_pos">1</TD><TD PORT="month_size">1</TD><TD>u1</TD><TD PORT="month_type">month</TD></TR>
+				<TR><TD PORT="day_pos">2</TD><TD PORT="day_size">1</TD><TD>u1</TD><TD PORT="day_type">day</TD></TR>
+				<TR><TD PORT="hour_pos">3</TD><TD PORT="hour_size">1</TD><TD>u1</TD><TD PORT="hour_type">hour</TD></TR>
+				<TR><TD PORT="minute_pos">4</TD><TD PORT="minute_size">1</TD><TD>u1</TD><TD PORT="minute_type">minute</TD></TR>
+				<TR><TD PORT="sec_pos">5</TD><TD PORT="sec_size">1</TD><TD>u1</TD><TD PORT="sec_type">sec</TD></TR>
+				<TR><TD PORT="timezone_pos">6</TD><TD PORT="timezone_size">1</TD><TD>u1</TD><TD PORT="timezone_type">timezone</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dir_entry {
+			label="Iso9660::DirEntry";
+			graph[style=dotted];
+
+			dir_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">1</TD><TD>u1</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="body_pos">1</TD><TD PORT="body_size">(len - 1)</TD><TD>DirEntryBody</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__vol_desc {
+			label="Iso9660::VolDesc";
+			graph[style=dotted];
+
+			vol_desc__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">1</TD><TD>u1</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="magic_pos">1</TD><TD PORT="magic_size">5</TD><TD>43 44 30 30 31</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="version_pos">6</TD><TD PORT="version_size">1</TD><TD>u1</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="vol_desc_boot_record_pos">7</TD><TD PORT="vol_desc_boot_record_size">...</TD><TD>VolDescBootRecord</TD><TD PORT="vol_desc_boot_record_type">vol_desc_boot_record</TD></TR>
+				<TR><TD PORT="vol_desc_primary_pos">...</TD><TD PORT="vol_desc_primary_size">...</TD><TD>VolDescPrimary</TD><TD PORT="vol_desc_primary_type">vol_desc_primary</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__path_table_entry_le {
+			label="Iso9660::PathTableEntryLe";
+			graph[style=dotted];
+
+			path_table_entry_le__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_dir_name_pos">0</TD><TD PORT="len_dir_name_size">1</TD><TD>u1</TD><TD PORT="len_dir_name_type">len_dir_name</TD></TR>
+				<TR><TD PORT="len_ext_attr_rec_pos">1</TD><TD PORT="len_ext_attr_rec_size">1</TD><TD>u1</TD><TD PORT="len_ext_attr_rec_type">len_ext_attr_rec</TD></TR>
+				<TR><TD PORT="lba_extent_pos">2</TD><TD PORT="lba_extent_size">4</TD><TD>u4le</TD><TD PORT="lba_extent_type">lba_extent</TD></TR>
+				<TR><TD PORT="parent_dir_idx_pos">6</TD><TD PORT="parent_dir_idx_size">2</TD><TD>u2le</TD><TD PORT="parent_dir_idx_type">parent_dir_idx</TD></TR>
+				<TR><TD PORT="dir_name_pos">8</TD><TD PORT="dir_name_size">len_dir_name</TD><TD>str(UTF-8)</TD><TD PORT="dir_name_type">dir_name</TD></TR>
+				<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">1</TD><TD>u1</TD><TD PORT="padding_type">padding</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dir_entries {
+			label="Iso9660::DirEntries";
+			graph[style=dotted];
+
+			dir_entries__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>DirEntry</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat until _.len == 0</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__u4bi {
+			label="Iso9660::U4bi";
+			graph[style=dotted];
+
+			u4bi__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="le_pos">0</TD><TD PORT="le_size">4</TD><TD>u4le</TD><TD PORT="le_type">le</TD></TR>
+				<TR><TD PORT="be_pos">4</TD><TD PORT="be_size">4</TD><TD>u4be</TD><TD PORT="be_type">be</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__u2bi {
+			label="Iso9660::U2bi";
+			graph[style=dotted];
+
+			u2bi__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="le_pos">0</TD><TD PORT="le_size">2</TD><TD>u2le</TD><TD PORT="le_type">le</TD></TR>
+				<TR><TD PORT="be_pos">2</TD><TD PORT="be_size">2</TD><TD>u2be</TD><TD PORT="be_type">be</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__path_table_le {
+			label="Iso9660::PathTableLe";
+			graph[style=dotted];
+
+			path_table_le__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>PathTableEntryLe</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dec_datetime {
+			label="Iso9660::DecDatetime";
+			graph[style=dotted];
+
+			dec_datetime__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="year_pos">0</TD><TD PORT="year_size">4</TD><TD>str(ASCII)</TD><TD PORT="year_type">year</TD></TR>
+				<TR><TD PORT="month_pos">4</TD><TD PORT="month_size">2</TD><TD>str(ASCII)</TD><TD PORT="month_type">month</TD></TR>
+				<TR><TD PORT="day_pos">6</TD><TD PORT="day_size">2</TD><TD>str(ASCII)</TD><TD PORT="day_type">day</TD></TR>
+				<TR><TD PORT="hour_pos">8</TD><TD PORT="hour_size">2</TD><TD>str(ASCII)</TD><TD PORT="hour_type">hour</TD></TR>
+				<TR><TD PORT="minute_pos">10</TD><TD PORT="minute_size">2</TD><TD>str(ASCII)</TD><TD PORT="minute_type">minute</TD></TR>
+				<TR><TD PORT="sec_pos">12</TD><TD PORT="sec_size">2</TD><TD>str(ASCII)</TD><TD PORT="sec_type">sec</TD></TR>
+				<TR><TD PORT="sec_hundreds_pos">14</TD><TD PORT="sec_hundreds_size">2</TD><TD>str(ASCII)</TD><TD PORT="sec_hundreds_type">sec_hundreds</TD></TR>
+				<TR><TD PORT="timezone_pos">16</TD><TD PORT="timezone_size">1</TD><TD>u1</TD><TD PORT="timezone_type">timezone</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dir_entry_body {
+			label="Iso9660::DirEntryBody";
+			graph[style=dotted];
+
+			dir_entry_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_ext_attr_rec_pos">0</TD><TD PORT="len_ext_attr_rec_size">1</TD><TD>u1</TD><TD PORT="len_ext_attr_rec_type">len_ext_attr_rec</TD></TR>
+				<TR><TD PORT="lba_extent_pos">1</TD><TD PORT="lba_extent_size">...</TD><TD>U4bi</TD><TD PORT="lba_extent_type">lba_extent</TD></TR>
+				<TR><TD PORT="size_extent_pos">...</TD><TD PORT="size_extent_size">...</TD><TD>U4bi</TD><TD PORT="size_extent_type">size_extent</TD></TR>
+				<TR><TD PORT="datetime_pos">...</TD><TD PORT="datetime_size">...</TD><TD>Datetime</TD><TD PORT="datetime_type">datetime</TD></TR>
+				<TR><TD PORT="file_flags_pos">...</TD><TD PORT="file_flags_size">1</TD><TD>u1</TD><TD PORT="file_flags_type">file_flags</TD></TR>
+				<TR><TD PORT="file_unit_size_pos">...</TD><TD PORT="file_unit_size_size">1</TD><TD>u1</TD><TD PORT="file_unit_size_type">file_unit_size</TD></TR>
+				<TR><TD PORT="interleave_gap_size_pos">...</TD><TD PORT="interleave_gap_size_size">1</TD><TD>u1</TD><TD PORT="interleave_gap_size_type">interleave_gap_size</TD></TR>
+				<TR><TD PORT="vol_seq_num_pos">...</TD><TD PORT="vol_seq_num_size">...</TD><TD>U2bi</TD><TD PORT="vol_seq_num_type">vol_seq_num</TD></TR>
+				<TR><TD PORT="len_file_name_pos">...</TD><TD PORT="len_file_name_size">1</TD><TD>u1</TD><TD PORT="len_file_name_type">len_file_name</TD></TR>
+				<TR><TD PORT="file_name_pos">...</TD><TD PORT="file_name_size">len_file_name</TD><TD>str(UTF-8)</TD><TD PORT="file_name_type">file_name</TD></TR>
+				<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">1</TD><TD>u1</TD><TD PORT="padding_type">padding</TD></TR>
+				<TR><TD PORT="rest_pos">...</TD><TD PORT="rest_size">⇲</TD><TD></TD><TD PORT="rest_type">rest</TD></TR>
+			</TABLE>>];
+			dir_entry_body__inst__extent_as_dir [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="extent_as_dir_pos">(lba_extent.le * _root.sector_size)</TD><TD PORT="extent_as_dir_size">size_extent.le</TD><TD>DirEntries</TD><TD PORT="extent_as_dir_type">extent_as_dir</TD></TR>
+			</TABLE>>];
+			dir_entry_body__inst__extent_as_file [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="extent_as_file_pos">(lba_extent.le * _root.sector_size)</TD><TD PORT="extent_as_file_size">size_extent.le</TD><TD></TD><TD PORT="extent_as_file_type">extent_as_file</TD></TR>
+			</TABLE>>];
+		}
+	}
+	iso9660__inst__sector_size:sector_size_type -> iso9660__inst__primary_vol_desc:primary_vol_desc_pos [color="#404040"];
+	iso9660__inst__primary_vol_desc:primary_vol_desc_type -> vol_desc__seq [style=bold];
+	vol_desc_primary__seq:vol_space_size_type -> u4bi__seq [style=bold];
+	vol_desc_primary__seq:vol_set_size_type -> u2bi__seq [style=bold];
+	vol_desc_primary__seq:vol_seq_num_type -> u2bi__seq [style=bold];
+	vol_desc_primary__seq:logical_block_size_type -> u2bi__seq [style=bold];
+	vol_desc_primary__seq:path_table_size_type -> u4bi__seq [style=bold];
+	vol_desc_primary__seq:root_dir_type -> dir_entry__seq [style=bold];
+	vol_desc_primary__seq:vol_create_datetime_type -> dec_datetime__seq [style=bold];
+	vol_desc_primary__seq:vol_mod_datetime_type -> dec_datetime__seq [style=bold];
+	vol_desc_primary__seq:vol_expire_datetime_type -> dec_datetime__seq [style=bold];
+	vol_desc_primary__seq:vol_effective_datetime_type -> dec_datetime__seq [style=bold];
+	vol_desc_primary__seq:lba_path_table_le_type -> vol_desc_primary__inst__path_table:path_table_pos [color="#404040"];
+	iso9660__inst__sector_size:sector_size_type -> vol_desc_primary__inst__path_table:path_table_pos [color="#404040"];
+	u4bi__seq:le_type -> vol_desc_primary__inst__path_table:path_table_size [color="#404040"];
+	vol_desc_primary__inst__path_table:path_table_type -> path_table_le__seq [style=bold];
+	dir_entry__seq:len_type -> dir_entry__seq:body_size [color="#404040"];
+	dir_entry__seq:body_type -> dir_entry_body__seq [style=bold];
+	vol_desc__seq:vol_desc_boot_record_type -> vol_desc_boot_record__seq [style=bold];
+	vol_desc__seq:vol_desc_primary_type -> vol_desc_primary__seq [style=bold];
+	path_table_entry_le__seq:len_dir_name_type -> path_table_entry_le__seq:dir_name_size [color="#404040"];
+	dir_entries__seq:entries_type -> dir_entry__seq [style=bold];
+	dir_entry__seq:len_type -> dir_entries__seq:entries__repeat [color="#404040"];
+	path_table_le__seq:entries_type -> path_table_entry_le__seq [style=bold];
+	dir_entry_body__seq:lba_extent_type -> u4bi__seq [style=bold];
+	dir_entry_body__seq:size_extent_type -> u4bi__seq [style=bold];
+	dir_entry_body__seq:datetime_type -> datetime__seq [style=bold];
+	dir_entry_body__seq:vol_seq_num_type -> u2bi__seq [style=bold];
+	dir_entry_body__seq:len_file_name_type -> dir_entry_body__seq:file_name_size [color="#404040"];
+	u4bi__seq:le_type -> dir_entry_body__inst__extent_as_dir:extent_as_dir_pos [color="#404040"];
+	iso9660__inst__sector_size:sector_size_type -> dir_entry_body__inst__extent_as_dir:extent_as_dir_pos [color="#404040"];
+	u4bi__seq:le_type -> dir_entry_body__inst__extent_as_dir:extent_as_dir_size [color="#404040"];
+	dir_entry_body__inst__extent_as_dir:extent_as_dir_type -> dir_entries__seq [style=bold];
+	u4bi__seq:le_type -> dir_entry_body__inst__extent_as_file:extent_as_file_pos [color="#404040"];
+	iso9660__inst__sector_size:sector_size_type -> dir_entry_body__inst__extent_as_file:extent_as_file_pos [color="#404040"];
+	u4bi__seq:le_type -> dir_entry_body__inst__extent_as_file:extent_as_file_size [color="#404040"];
+}

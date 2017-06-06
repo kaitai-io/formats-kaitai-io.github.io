@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Kaitai Struct: declarative binary format parsing language</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">cramfs</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>cramfs:
+            
+            Java parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of cramfs
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="cramfs parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="cramfs parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="cramfs parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="cramfs parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="java.html" title="cramfs parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="cramfs parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="cramfs parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="cramfs parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="cramfs parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="cramfs parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="java">Cramfs data = Cramfs.fromFile("path/to/local/file.cramfs");</code></pre>
+
+<p>Or parse structure from a byte array:</p>
+
+<pre><code class="java">byte[] someArray = new byte[] { ... };
+Cramfs data = new Cramfs(new KaitaiStream(someArray));</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="java">data.superBlock() // => get super block</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Java source code to parse cramfs
+            
+        </h2>
+
+        
+
+        <h3>Cramfs.java</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/java/Cramfs.java" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+import io.kaitai.struct.KaitaiStruct;
+import io.kaitai.struct.KaitaiStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+
+public class Cramfs extends KaitaiStruct {
+    public static Cramfs fromFile(String fileName) throws IOException {
+        return new Cramfs(new KaitaiStream(fileName));
+    }
+
+    public Cramfs(KaitaiStream _io) {
+        super(_io);
+        this._root = this;
+        _init();
+    }
+
+    public Cramfs(KaitaiStream _io, KaitaiStruct _parent) {
+        super(_io);
+        this._parent = _parent;
+        this._root = this;
+        _init();
+    }
+
+    public Cramfs(KaitaiStream _io, KaitaiStruct _parent, Cramfs _root) {
+        super(_io);
+        this._parent = _parent;
+        this._root = _root;
+        _init();
+    }
+
+    private void _init() {
+        _read();
+    }
+    private void _read() {
+        this.superBlock = new SuperBlockStruct(this._io, this, _root);
+    }
+    public static class SuperBlockStruct extends KaitaiStruct {
+        public static SuperBlockStruct fromFile(String fileName) throws IOException {
+            return new SuperBlockStruct(new KaitaiStream(fileName));
+        }
+
+        public SuperBlockStruct(KaitaiStream _io) {
+            super(_io);
+            _init();
+        }
+
+        public SuperBlockStruct(KaitaiStream _io, Cramfs _parent) {
+            super(_io);
+            this._parent = _parent;
+            _init();
+        }
+
+        public SuperBlockStruct(KaitaiStream _io, Cramfs _parent, Cramfs _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _init();
+        }
+
+        private void _init() {
+            _read();
+        }
+        private void _read() {
+            this.magic = this._io.ensureFixedContents(new byte[] { 69, 61, -51, 40 });
+            this.size = this._io.readU4le();
+            this.flags = this._io.readU4le();
+            this.future = this._io.readU4le();
+            this.signature = this._io.ensureFixedContents(new byte[] { 67, 111, 109, 112, 114, 101, 115, 115, 101, 100, 32, 82, 79, 77, 70, 83 });
+            this.fsid = new Info(this._io, this, _root);
+            this.name = new String(this._io.readBytes(16), Charset.forName(&quot;ASCII&quot;));
+            this.root = new Inode(this._io, this, _root);
+        }
+        private Integer flagFsidV2;
+        public Integer flagFsidV2() {
+            if (this.flagFsidV2 != null)
+                return this.flagFsidV2;
+            int _tmp = (int) (((flags() &gt;&gt; 0) &amp; 1));
+            this.flagFsidV2 = _tmp;
+            return this.flagFsidV2;
+        }
+        private Integer flagHoles;
+        public Integer flagHoles() {
+            if (this.flagHoles != null)
+                return this.flagHoles;
+            int _tmp = (int) (((flags() &gt;&gt; 8) &amp; 1));
+            this.flagHoles = _tmp;
+            return this.flagHoles;
+        }
+        private Integer flagWrongSignature;
+        public Integer flagWrongSignature() {
+            if (this.flagWrongSignature != null)
+                return this.flagWrongSignature;
+            int _tmp = (int) (((flags() &gt;&gt; 9) &amp; 1));
+            this.flagWrongSignature = _tmp;
+            return this.flagWrongSignature;
+        }
+        private Integer flagSortedDirs;
+        public Integer flagSortedDirs() {
+            if (this.flagSortedDirs != null)
+                return this.flagSortedDirs;
+            int _tmp = (int) (((flags() &gt;&gt; 1) &amp; 1));
+            this.flagSortedDirs = _tmp;
+            return this.flagSortedDirs;
+        }
+        private Integer flagShiftedRootOffset;
+        public Integer flagShiftedRootOffset() {
+            if (this.flagShiftedRootOffset != null)
+                return this.flagShiftedRootOffset;
+            int _tmp = (int) (((flags() &gt;&gt; 10) &amp; 1));
+            this.flagShiftedRootOffset = _tmp;
+            return this.flagShiftedRootOffset;
+        }
+        private byte[] magic;
+        private long size;
+        private long flags;
+        private long future;
+        private byte[] signature;
+        private Info fsid;
+        private String name;
+        private Inode root;
+        private Cramfs _root;
+        private Cramfs _parent;
+        public byte[] magic() { return magic; }
+        public long size() { return size; }
+        public long flags() { return flags; }
+        public long future() { return future; }
+        public byte[] signature() { return signature; }
+        public Info fsid() { return fsid; }
+        public String name() { return name; }
+        public Inode root() { return root; }
+        public Cramfs _root() { return _root; }
+        public Cramfs _parent() { return _parent; }
+    }
+    public static class ChunkedDataInode extends KaitaiStruct {
+        public static ChunkedDataInode fromFile(String fileName) throws IOException {
+            return new ChunkedDataInode(new KaitaiStream(fileName));
+        }
+
+        public ChunkedDataInode(KaitaiStream _io) {
+            super(_io);
+            _init();
+        }
+
+        public ChunkedDataInode(KaitaiStream _io, Cramfs.Inode _parent) {
+            super(_io);
+            this._parent = _parent;
+            _init();
+        }
+
+        public ChunkedDataInode(KaitaiStream _io, Cramfs.Inode _parent, Cramfs _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _init();
+        }
+
+        private void _init() {
+            _read();
+        }
+        private void _read() {
+            blockEndIndex = new ArrayList&lt;Long&gt;((int) ((((_parent().size() + _root.pageSize()) - 1) / _root.pageSize())));
+            for (int i = 0; i &lt; (((_parent().size() + _root.pageSize()) - 1) / _root.pageSize()); i++) {
+                this.blockEndIndex.add(this._io.readU4le());
+            }
+            this.rawBlocks = this._io.readBytesFull();
+        }
+        private ArrayList&lt;Long&gt; blockEndIndex;
+        private byte[] rawBlocks;
+        private Cramfs _root;
+        private Cramfs.Inode _parent;
+        public ArrayList&lt;Long&gt; blockEndIndex() { return blockEndIndex; }
+        public byte[] rawBlocks() { return rawBlocks; }
+        public Cramfs _root() { return _root; }
+        public Cramfs.Inode _parent() { return _parent; }
+    }
+    public static class Inode extends KaitaiStruct {
+        public static Inode fromFile(String fileName) throws IOException {
+            return new Inode(new KaitaiStream(fileName));
+        }
+
+        public enum FileType {
+            FIFO(1),
+            CHRDEV(2),
+            DIR(4),
+            BLKDEV(6),
+            REG_FILE(8),
+            SYMLINK(10),
+            SOCKET(12);
+
+            private final long id;
+            FileType(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map&lt;Long, FileType&gt; byId = new HashMap&lt;Long, FileType&gt;(7);
+            static {
+                for (FileType e : FileType.values())
+                    byId.put(e.id(), e);
+            }
+            public static FileType byId(long id) { return byId.get(id); }
+        }
+
+        public Inode(KaitaiStream _io) {
+            super(_io);
+            _init();
+        }
+
+        public Inode(KaitaiStream _io, KaitaiStruct _parent) {
+            super(_io);
+            this._parent = _parent;
+            _init();
+        }
+
+        public Inode(KaitaiStream _io, KaitaiStruct _parent, Cramfs _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _init();
+        }
+
+        private void _init() {
+            _read();
+        }
+        private void _read() {
+            this.mode = this._io.readU2le();
+            this.uid = this._io.readU2le();
+            this.sizeGid = this._io.readU4le();
+            this.namelenOffset = this._io.readU4le();
+            this.name = new String(this._io.readBytes(namelen()), Charset.forName(&quot;utf-8&quot;));
+        }
+        private Integer attr;
+        public Integer attr() {
+            if (this.attr != null)
+                return this.attr;
+            int _tmp = (int) (((mode() &gt;&gt; 9) &amp; 7));
+            this.attr = _tmp;
+            return this.attr;
+        }
+        private ChunkedDataInode asRegFile;
+        public ChunkedDataInode asRegFile() {
+            if (this.asRegFile != null)
+                return this.asRegFile;
+            KaitaiStream io = _root._io();
+            long _pos = io.pos();
+            io.seek(offset());
+            this.asRegFile = new ChunkedDataInode(io, this, _root);
+            io.seek(_pos);
+            return this.asRegFile;
+        }
+        private Integer permU;
+        public Integer permU() {
+            if (this.permU != null)
+                return this.permU;
+            int _tmp = (int) (((mode() &gt;&gt; 6) &amp; 7));
+            this.permU = _tmp;
+            return this.permU;
+        }
+        private ChunkedDataInode asSymlink;
+        public ChunkedDataInode asSymlink() {
+            if (this.asSymlink != null)
+                return this.asSymlink;
+            KaitaiStream io = _root._io();
+            long _pos = io.pos();
+            io.seek(offset());
+            this.asSymlink = new ChunkedDataInode(io, this, _root);
+            io.seek(_pos);
+            return this.asSymlink;
+        }
+        private Integer permO;
+        public Integer permO() {
+            if (this.permO != null)
+                return this.permO;
+            int _tmp = (int) ((mode() &amp; 7));
+            this.permO = _tmp;
+            return this.permO;
+        }
+        private Integer size;
+        public Integer size() {
+            if (this.size != null)
+                return this.size;
+            int _tmp = (int) ((sizeGid() &amp; 16777215));
+            this.size = _tmp;
+            return this.size;
+        }
+        private Integer gid;
+        public Integer gid() {
+            if (this.gid != null)
+                return this.gid;
+            int _tmp = (int) ((sizeGid() &gt;&gt; 24));
+            this.gid = _tmp;
+            return this.gid;
+        }
+        private Integer permG;
+        public Integer permG() {
+            if (this.permG != null)
+                return this.permG;
+            int _tmp = (int) (((mode() &gt;&gt; 3) &amp; 7));
+            this.permG = _tmp;
+            return this.permG;
+        }
+        private Integer namelen;
+        public Integer namelen() {
+            if (this.namelen != null)
+                return this.namelen;
+            int _tmp = (int) (((namelenOffset() &amp; 63) &lt;&lt; 2));
+            this.namelen = _tmp;
+            return this.namelen;
+        }
+        private DirInode asDir;
+        public DirInode asDir() {
+            if (this.asDir != null)
+                return this.asDir;
+            KaitaiStream io = _root._io();
+            long _pos = io.pos();
+            io.seek(offset());
+            this._raw_asDir = io.readBytes(size());
+            KaitaiStream _io__raw_asDir = new KaitaiStream(_raw_asDir);
+            this.asDir = new DirInode(_io__raw_asDir, this, _root);
+            io.seek(_pos);
+            return this.asDir;
+        }
+        private FileType type;
+        public FileType type() {
+            if (this.type != null)
+                return this.type;
+            this.type = FileType.byId(((mode() &gt;&gt; 12) &amp; 15));
+            return this.type;
+        }
+        private Integer offset;
+        public Integer offset() {
+            if (this.offset != null)
+                return this.offset;
+            int _tmp = (int) ((((namelenOffset() &gt;&gt; 6) &amp; 67108863) &lt;&lt; 2));
+            this.offset = _tmp;
+            return this.offset;
+        }
+        private int mode;
+        private int uid;
+        private long sizeGid;
+        private long namelenOffset;
+        private String name;
+        private Cramfs _root;
+        private KaitaiStruct _parent;
+        private byte[] _raw_asDir;
+        public int mode() { return mode; }
+        public int uid() { return uid; }
+        public long sizeGid() { return sizeGid; }
+        public long namelenOffset() { return namelenOffset; }
+        public String name() { return name; }
+        public Cramfs _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+        public byte[] _raw_asDir() { return _raw_asDir; }
+    }
+    public static class DirInode extends KaitaiStruct {
+        public static DirInode fromFile(String fileName) throws IOException {
+            return new DirInode(new KaitaiStream(fileName));
+        }
+
+        public DirInode(KaitaiStream _io) {
+            super(_io);
+            _init();
+        }
+
+        public DirInode(KaitaiStream _io, Cramfs.Inode _parent) {
+            super(_io);
+            this._parent = _parent;
+            _init();
+        }
+
+        public DirInode(KaitaiStream _io, Cramfs.Inode _parent, Cramfs _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _init();
+        }
+
+        private void _init() {
+            _read();
+        }
+        private void _read() {
+            if (_io().size() &gt; 0) {
+                this.children = new ArrayList&lt;Inode&gt;();
+                while (!this._io.isEof()) {
+                    this.children.add(new Inode(this._io, this, _root));
+                }
+            }
+        }
+        private ArrayList&lt;Inode&gt; children;
+        private Cramfs _root;
+        private Cramfs.Inode _parent;
+        public ArrayList&lt;Inode&gt; children() { return children; }
+        public Cramfs _root() { return _root; }
+        public Cramfs.Inode _parent() { return _parent; }
+    }
+    public static class Info extends KaitaiStruct {
+        public static Info fromFile(String fileName) throws IOException {
+            return new Info(new KaitaiStream(fileName));
+        }
+
+        public Info(KaitaiStream _io) {
+            super(_io);
+            _init();
+        }
+
+        public Info(KaitaiStream _io, Cramfs.SuperBlockStruct _parent) {
+            super(_io);
+            this._parent = _parent;
+            _init();
+        }
+
+        public Info(KaitaiStream _io, Cramfs.SuperBlockStruct _parent, Cramfs _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _init();
+        }
+
+        private void _init() {
+            _read();
+        }
+        private void _read() {
+            this.crc = this._io.readU4le();
+            this.edition = this._io.readU4le();
+            this.blocks = this._io.readU4le();
+            this.files = this._io.readU4le();
+        }
+        private long crc;
+        private long edition;
+        private long blocks;
+        private long files;
+        private Cramfs _root;
+        private Cramfs.SuperBlockStruct _parent;
+        public long crc() { return crc; }
+        public long edition() { return edition; }
+        public long blocks() { return blocks; }
+        public long files() { return files; }
+        public Cramfs _root() { return _root; }
+        public Cramfs.SuperBlockStruct _parent() { return _parent; }
+    }
+    private Integer pageSize;
+    public Integer pageSize() {
+        if (this.pageSize != null)
+            return this.pageSize;
+        int _tmp = (int) (4096);
+        this.pageSize = _tmp;
+        return this.pageSize;
+    }
+    private SuperBlockStruct superBlock;
+    private Cramfs _root;
+    private KaitaiStruct _parent;
+    public SuperBlockStruct superBlock() { return superBlock; }
+    public Cramfs _root() { return _root; }
+    public KaitaiStruct _parent() { return _parent; }
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

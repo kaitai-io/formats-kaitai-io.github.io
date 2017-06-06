@@ -1,0 +1,45 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__glibc_utmp {
+		label="GlibcUtmp";
+		graph[style=dotted];
+
+		glibc_utmp__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="records_pos">0</TD><TD PORT="records_size">384</TD><TD>Record</TD><TD PORT="records_type">records</TD></TR>
+			<TR><TD COLSPAN="4" PORT="records__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__record {
+			label="GlibcUtmp::Record";
+			graph[style=dotted];
+
+			record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ut_type_pos">0</TD><TD PORT="ut_type_size">4</TD><TD>s4le→EntryType</TD><TD PORT="ut_type_type">ut_type</TD></TR>
+				<TR><TD PORT="pid_pos">4</TD><TD PORT="pid_size">4</TD><TD>u4le</TD><TD PORT="pid_type">pid</TD></TR>
+				<TR><TD PORT="line_pos">8</TD><TD PORT="line_size">32</TD><TD>str(UTF-8)</TD><TD PORT="line_type">line</TD></TR>
+				<TR><TD PORT="id_pos">40</TD><TD PORT="id_size">4</TD><TD>str(UTF-8)</TD><TD PORT="id_type">id</TD></TR>
+				<TR><TD PORT="user_pos">44</TD><TD PORT="user_size">32</TD><TD>str(UTF-8)</TD><TD PORT="user_type">user</TD></TR>
+				<TR><TD PORT="host_pos">76</TD><TD PORT="host_size">256</TD><TD>str(UTF-8)</TD><TD PORT="host_type">host</TD></TR>
+				<TR><TD PORT="exit_pos">332</TD><TD PORT="exit_size">4</TD><TD>u4le</TD><TD PORT="exit_type">exit</TD></TR>
+				<TR><TD PORT="session_pos">336</TD><TD PORT="session_size">4</TD><TD>s4le</TD><TD PORT="session_type">session</TD></TR>
+				<TR><TD PORT="tv_pos">340</TD><TD PORT="tv_size">...</TD><TD>Timeval</TD><TD PORT="tv_type">tv</TD></TR>
+				<TR><TD PORT="addr_v6_pos">...</TD><TD PORT="addr_v6_size">16</TD><TD></TD><TD PORT="addr_v6_type">addr_v6</TD></TR>
+				<TR><TD PORT="reserved_pos">...</TD><TD PORT="reserved_size">20</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__timeval {
+			label="GlibcUtmp::Timeval";
+			graph[style=dotted];
+
+			timeval__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="sec_pos">0</TD><TD PORT="sec_size">4</TD><TD>s4le</TD><TD PORT="sec_type">sec</TD></TR>
+				<TR><TD PORT="usec_pos">4</TD><TD PORT="usec_size">4</TD><TD>s4le</TD><TD PORT="usec_type">usec</TD></TR>
+			</TABLE>>];
+		}
+	}
+	glibc_utmp__seq:records_type -> record__seq [style=bold];
+	record__seq:tv_type -> timeval__seq [style=bold];
+}

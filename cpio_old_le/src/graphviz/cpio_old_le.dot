@@ -1,0 +1,70 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__cpio_old_le {
+		label="CpioOldLe";
+		graph[style=dotted];
+
+		cpio_old_le__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="files_pos">0</TD><TD PORT="files_size">...</TD><TD>File</TD><TD PORT="files_type">files</TD></TR>
+			<TR><TD COLSPAN="4" PORT="files__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__file {
+			label="CpioOldLe::File";
+			graph[style=dotted];
+
+			file__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">...</TD><TD>FileHeader</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="path_name_pos">...</TD><TD PORT="path_name_size">(header.path_name_size - 1)</TD><TD></TD><TD PORT="path_name_type">path_name</TD></TR>
+				<TR><TD PORT="string_terminator_pos">...</TD><TD PORT="string_terminator_size">1</TD><TD>00</TD><TD PORT="string_terminator_type">string_terminator</TD></TR>
+				<TR><TD PORT="path_name_padding_pos">...</TD><TD PORT="path_name_padding_size">1</TD><TD>00</TD><TD PORT="path_name_padding_type">path_name_padding</TD></TR>
+				<TR><TD PORT="file_data_pos">...</TD><TD PORT="file_data_size">header.file_size.value</TD><TD></TD><TD PORT="file_data_type">file_data</TD></TR>
+				<TR><TD PORT="file_data_padding_pos">...</TD><TD PORT="file_data_padding_size">1</TD><TD>00</TD><TD PORT="file_data_padding_type">file_data_padding</TD></TR>
+				<TR><TD PORT="end_of_file_padding_pos">...</TD><TD PORT="end_of_file_padding_size">⇲</TD><TD></TD><TD PORT="end_of_file_padding_type">end_of_file_padding</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__file_header {
+			label="CpioOldLe::FileHeader";
+			graph[style=dotted];
+
+			file_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">2</TD><TD>C7 71</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="device_number_pos">2</TD><TD PORT="device_number_size">2</TD><TD>u2le</TD><TD PORT="device_number_type">device_number</TD></TR>
+				<TR><TD PORT="inode_number_pos">4</TD><TD PORT="inode_number_size">2</TD><TD>u2le</TD><TD PORT="inode_number_type">inode_number</TD></TR>
+				<TR><TD PORT="mode_pos">6</TD><TD PORT="mode_size">2</TD><TD>u2le</TD><TD PORT="mode_type">mode</TD></TR>
+				<TR><TD PORT="user_id_pos">8</TD><TD PORT="user_id_size">2</TD><TD>u2le</TD><TD PORT="user_id_type">user_id</TD></TR>
+				<TR><TD PORT="group_id_pos">10</TD><TD PORT="group_id_size">2</TD><TD>u2le</TD><TD PORT="group_id_type">group_id</TD></TR>
+				<TR><TD PORT="number_of_links_pos">12</TD><TD PORT="number_of_links_size">2</TD><TD>u2le</TD><TD PORT="number_of_links_type">number_of_links</TD></TR>
+				<TR><TD PORT="r_device_number_pos">14</TD><TD PORT="r_device_number_size">2</TD><TD>u2le</TD><TD PORT="r_device_number_type">r_device_number</TD></TR>
+				<TR><TD PORT="modification_time_pos">16</TD><TD PORT="modification_time_size">...</TD><TD>FourByteUnsignedInteger</TD><TD PORT="modification_time_type">modification_time</TD></TR>
+				<TR><TD PORT="path_name_size_pos">...</TD><TD PORT="path_name_size_size">2</TD><TD>u2le</TD><TD PORT="path_name_size_type">path_name_size</TD></TR>
+				<TR><TD PORT="file_size_pos">...</TD><TD PORT="file_size_size">...</TD><TD>FourByteUnsignedInteger</TD><TD PORT="file_size_type">file_size</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__four_byte_unsigned_integer {
+			label="CpioOldLe::FourByteUnsignedInteger";
+			graph[style=dotted];
+
+			four_byte_unsigned_integer__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="most_significant_bits_pos">0</TD><TD PORT="most_significant_bits_size">2</TD><TD>u2le</TD><TD PORT="most_significant_bits_type">most_significant_bits</TD></TR>
+				<TR><TD PORT="least_significant_bits_pos">2</TD><TD PORT="least_significant_bits_size">2</TD><TD>u2le</TD><TD PORT="least_significant_bits_type">least_significant_bits</TD></TR>
+			</TABLE>>];
+			four_byte_unsigned_integer__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>value</TD><TD>(least_significant_bits + (most_significant_bits &lt;&lt; 16))</TD></TR>
+			</TABLE>>];
+		}
+	}
+	cpio_old_le__seq:files_type -> file__seq [style=bold];
+	file__seq:header_type -> file_header__seq [style=bold];
+	file_header__seq:path_name_size_type -> file__seq:path_name_size [color="#404040"];
+	four_byte_unsigned_integer__inst__value:value_type -> file__seq:file_data_size [color="#404040"];
+	file_header__seq:modification_time_type -> four_byte_unsigned_integer__seq [style=bold];
+	file_header__seq:file_size_type -> four_byte_unsigned_integer__seq [style=bold];
+	four_byte_unsigned_integer__seq:least_significant_bits_type -> four_byte_unsigned_integer__inst__value [color="#404040"];
+	four_byte_unsigned_integer__seq:most_significant_bits_type -> four_byte_unsigned_integer__inst__value [color="#404040"];
+}
