@@ -14,8 +14,8 @@
 #endif
 class tcp_segment_t;
 class udp_datagram_t;
-class icmp_packet_t;
 class ipv6_packet_t;
+class icmp_packet_t;
 
 class ipv4_packet_t : public kaitai::kstruct {
 
