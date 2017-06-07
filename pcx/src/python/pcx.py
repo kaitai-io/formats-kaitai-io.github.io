@@ -20,6 +20,10 @@ class Pcx(KaitaiStruct):
         self.hdr = self._root.Header(io, self, self._root)
 
     class Header(KaitaiStruct):
+        """
+        .. seealso::
+           - "ZSoft .PCX FILE HEADER FORMAT" - http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent

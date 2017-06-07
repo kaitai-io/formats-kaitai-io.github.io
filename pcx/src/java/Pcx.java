@@ -37,6 +37,10 @@ public class Pcx extends KaitaiStruct {
         KaitaiStream _io__raw_hdr = new KaitaiStream(_raw_hdr);
         this.hdr = new Header(_io__raw_hdr, this, _root);
     }
+
+    /**
+     * @see <a href="http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "ZSoft .PCX FILE HEADER FORMAT"</a>
+     */
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
             return new Header(new KaitaiStream(fileName));

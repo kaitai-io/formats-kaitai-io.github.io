@@ -18,6 +18,9 @@ class Pcx extends \Kaitai\Struct\Struct {
     public function _raw_hdr() { return $this->_m__raw_hdr; }
 }
 
+/**
+ */
+
 namespace \Pcx;
 
 class Header extends \Kaitai\Struct\Struct {

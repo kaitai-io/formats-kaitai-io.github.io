@@ -22,6 +22,10 @@ namespace Kaitai
             var io___raw_hdr = new KaitaiStream(__raw_hdr);
             _hdr = new Header(io___raw_hdr, this, m_root);
             }
+
+        /// <remarks>
+        /// Reference: <a href="http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "ZSoft .PCX FILE HEADER FORMAT"</a>
+        /// </remarks>
         public partial class Header : KaitaiStruct
         {
             public static Header FromFile(string fileName)

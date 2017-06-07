@@ -1,5 +1,25 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * GIF (Graphics Interchange Format) is an image file format, developed
+ * in 1987. It became popular in 1990s as one of the main image formats
+ * used in World Wide Web.
+ * 
+ * GIF format allows encoding of palette-based images up to 256 colors
+ * (each of the colors can be chosen from a 24-bit RGB
+ * colorspace). Image data stream uses LZW (Lempel–Ziv–Welch) lossless
+ * compression.
+ * 
+ * Over the years, several version of the format were published and
+ * several extensions to it were made, namely, a popular Netscape
+ * extension that allows to store several images in one file, switching
+ * between them, which produces crude form of animation.
+ * 
+ * Structurally, format consists of several mandatory headers and then
+ * a stream of blocks follows. Blocks can carry additional
+ * metainformation or image data.
+ */
+
 var Gif = (function() {
   Gif.BlockType = Object.freeze({
     EXTENSION: 33,
@@ -42,6 +62,10 @@ var Gif = (function() {
     }
   }
 
+  /**
+   * @see {@link https://www.w3.org/Graphics/GIF/spec-gif89a.txt|- section 22}
+   */
+
   var ImageData = Gif.ImageData = (function() {
     function ImageData(_io, _parent, _root) {
       this._io = _io;
@@ -74,6 +98,10 @@ var Gif = (function() {
 
     return ColorTableEntry;
   })();
+
+  /**
+   * @see {@link https://www.w3.org/Graphics/GIF/spec-gif89a.txt|- section 18}
+   */
 
   var LogicalScreenDescriptorStruct = Gif.LogicalScreenDescriptorStruct = (function() {
     function LogicalScreenDescriptorStruct(_io, _parent, _root) {
@@ -190,6 +218,10 @@ var Gif = (function() {
     return Block;
   })();
 
+  /**
+   * @see {@link https://www.w3.org/Graphics/GIF/spec-gif89a.txt|- section 19}
+   */
+
   var ColorTable = Gif.ColorTable = (function() {
     function ColorTable(_io, _parent, _root) {
       this._io = _io;
@@ -208,6 +240,10 @@ var Gif = (function() {
     return ColorTable;
   })();
 
+  /**
+   * @see {@link https://www.w3.org/Graphics/GIF/spec-gif89a.txt|- section 17}
+   */
+
   var Header = Gif.Header = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
@@ -223,6 +259,10 @@ var Gif = (function() {
 
     return Header;
   })();
+
+  /**
+   * @see {@link https://www.w3.org/Graphics/GIF/spec-gif89a.txt|- section 23}
+   */
 
   var ExtGraphicControl = Gif.ExtGraphicControl = (function() {
     function ExtGraphicControl(_io, _parent, _root) {
@@ -342,6 +382,10 @@ var Gif = (function() {
 
     return Extension;
   })();
+
+  /**
+   * @see {@link https://www.w3.org/Graphics/GIF/spec-gif89a.txt|- section 18}
+   */
 
   return Gif;
 })();

@@ -16,6 +16,9 @@ class Pcx < Kaitai::Struct::Struct
     io = Kaitai::Struct::Stream.new(@_raw_hdr)
     @hdr = Header.new(io, self, @_root)
   end
+
+  ##
+  # @see http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt - "ZSoft .PCX FILE HEADER FORMAT"
   class Header < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

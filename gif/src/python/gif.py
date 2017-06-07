@@ -10,6 +10,24 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 class Gif(KaitaiStruct):
+    """GIF (Graphics Interchange Format) is an image file format, developed
+    in 1987. It became popular in 1990s as one of the main image formats
+    used in World Wide Web.
+    
+    GIF format allows encoding of palette-based images up to 256 colors
+    (each of the colors can be chosen from a 24-bit RGB
+    colorspace). Image data stream uses LZW (Lempel–Ziv–Welch) lossless
+    compression.
+    
+    Over the years, several version of the format were published and
+    several extensions to it were made, namely, a popular Netscape
+    extension that allows to store several images in one file, switching
+    between them, which produces crude form of animation.
+    
+    Structurally, format consists of several mandatory headers and then
+    a stream of blocks follows. Blocks can carry additional
+    metainformation or image data.
+    """
 
     class BlockType(Enum):
         extension = 33
@@ -40,6 +58,10 @@ class Gif(KaitaiStruct):
 
 
     class ImageData(KaitaiStruct):
+        """
+        .. seealso::
+           - section 22 - https://www.w3.org/Graphics/GIF/spec-gif89a.txt
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -65,6 +87,10 @@ class Gif(KaitaiStruct):
 
 
     class LogicalScreenDescriptorStruct(KaitaiStruct):
+        """
+        .. seealso::
+           - section 18 - https://www.w3.org/Graphics/GIF/spec-gif89a.txt
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -165,6 +191,10 @@ class Gif(KaitaiStruct):
 
 
     class ColorTable(KaitaiStruct):
+        """
+        .. seealso::
+           - section 19 - https://www.w3.org/Graphics/GIF/spec-gif89a.txt
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -179,6 +209,10 @@ class Gif(KaitaiStruct):
 
 
     class Header(KaitaiStruct):
+        """
+        .. seealso::
+           - section 17 - https://www.w3.org/Graphics/GIF/spec-gif89a.txt
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -191,6 +225,10 @@ class Gif(KaitaiStruct):
 
 
     class ExtGraphicControl(KaitaiStruct):
+        """
+        .. seealso::
+           - section 23 - https://www.w3.org/Graphics/GIF/spec-gif89a.txt
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent

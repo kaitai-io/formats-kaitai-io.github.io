@@ -112,6 +112,16 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
                 </div>
             </div>
         </div>
@@ -191,16 +201,16 @@ section#format-index .row {
 
 
 
-<pre><code class="csharp">var Data = Pcx.FromFile("path/to/local/file.pcx");</code></pre>
+<pre><code class="csharp">var data = Pcx.FromFile("path/to/local/file.pcx");</code></pre>
 
 <p>Or parse structure from a byte array:</p>
 
-<pre><code class="csharp">byte[] SomeArray = new byte[] { ... };
-var Data = new Pcx(new KaitaiStream(SomeArray));</code></pre>
+<pre><code class="csharp">byte[] someArray = new byte[] { ... };
+var data = new Pcx(new KaitaiStream(someArray));</code></pre>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
-<pre><code class="csharp">Data.Hdr // => get hdr</code></pre>
+<pre><code class="csharp">data.Hdr // => get hdr</code></pre>
 
     </div>
 </section>
@@ -251,6 +261,10 @@ namespace Kaitai
             var io___raw_hdr = new KaitaiStream(__raw_hdr);
             _hdr = new Header(io___raw_hdr, this, m_root);
             }
+
+        /// &lt;remarks&gt;
+        /// Reference: &lt;a href=&quot;http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt&quot;&gt;- &quot;ZSoft .PCX FILE HEADER FORMAT&quot;&lt;/a&gt;
+        /// &lt;/remarks&gt;
         public partial class Header : KaitaiStruct
         {
             public static Header FromFile(string fileName)

@@ -8,6 +8,26 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
+
+/**
+ * GIF (Graphics Interchange Format) is an image file format, developed
+ * in 1987. It became popular in 1990s as one of the main image formats
+ * used in World Wide Web.
+ * 
+ * GIF format allows encoding of palette-based images up to 256 colors
+ * (each of the colors can be chosen from a 24-bit RGB
+ * colorspace). Image data stream uses LZW (Lempel–Ziv–Welch) lossless
+ * compression.
+ * 
+ * Over the years, several version of the format were published and
+ * several extensions to it were made, namely, a popular Netscape
+ * extension that allows to store several images in one file, switching
+ * between them, which produces crude form of animation.
+ * 
+ * Structurally, format consists of several mandatory headers and then
+ * a stream of blocks follows. Blocks can carry additional
+ * metainformation or image data.
+ */
 public class Gif extends KaitaiStruct {
     public static Gif fromFile(String fileName) throws IOException {
         return new Gif(new KaitaiStream(fileName));
@@ -81,6 +101,10 @@ public class Gif extends KaitaiStruct {
             this.blocks.add(new Block(this._io, this, _root));
         }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 22</a>
+     */
     public static class ImageData extends KaitaiStruct {
         public static ImageData fromFile(String fileName) throws IOException {
             return new ImageData(new KaitaiStream(fileName));
@@ -162,6 +186,10 @@ public class Gif extends KaitaiStruct {
         public Gif _root() { return _root; }
         public Gif.ColorTable _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 18</a>
+     */
     public static class LogicalScreenDescriptorStruct extends KaitaiStruct {
         public static LogicalScreenDescriptorStruct fromFile(String fileName) throws IOException {
             return new LogicalScreenDescriptorStruct(new KaitaiStream(fileName));
@@ -366,6 +394,10 @@ public class Gif extends KaitaiStruct {
         public Gif _root() { return _root; }
         public Gif _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 19</a>
+     */
     public static class ColorTable extends KaitaiStruct {
         public static ColorTable fromFile(String fileName) throws IOException {
             return new ColorTable(new KaitaiStream(fileName));
@@ -405,6 +437,10 @@ public class Gif extends KaitaiStruct {
         public Gif _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 17</a>
+     */
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
             return new Header(new KaitaiStream(fileName));
@@ -444,6 +480,10 @@ public class Gif extends KaitaiStruct {
         public Gif _root() { return _root; }
         public Gif _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 23</a>
+     */
     public static class ExtGraphicControl extends KaitaiStruct {
         public static ExtGraphicControl fromFile(String fileName) throws IOException {
             return new ExtGraphicControl(new KaitaiStream(fileName));
@@ -701,6 +741,10 @@ public class Gif extends KaitaiStruct {
     private byte[] _raw_globalColorTable;
     public Header hdr() { return hdr; }
     public LogicalScreenDescriptorStruct logicalScreenDescriptor() { return logicalScreenDescriptor; }
+
+    /**
+     * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 18</a>
+     */
     public ColorTable globalColorTable() { return globalColorTable; }
     public ArrayList<Block> blocks() { return blocks; }
     public Gif _root() { return _root; }

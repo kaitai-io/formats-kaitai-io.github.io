@@ -4,6 +4,26 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// GIF (Graphics Interchange Format) is an image file format, developed
+    /// in 1987. It became popular in 1990s as one of the main image formats
+    /// used in World Wide Web.
+    /// 
+    /// GIF format allows encoding of palette-based images up to 256 colors
+    /// (each of the colors can be chosen from a 24-bit RGB
+    /// colorspace). Image data stream uses LZW (Lempel–Ziv–Welch) lossless
+    /// compression.
+    /// 
+    /// Over the years, several version of the format were published and
+    /// several extensions to it were made, namely, a popular Netscape
+    /// extension that allows to store several images in one file, switching
+    /// between them, which produces crude form of animation.
+    /// 
+    /// Structurally, format consists of several mandatory headers and then
+    /// a stream of blocks follows. Blocks can carry additional
+    /// metainformation or image data.
+    /// </summary>
     public partial class Gif : KaitaiStruct
     {
         public static Gif FromFile(string fileName)
@@ -44,6 +64,10 @@ namespace Kaitai
                 _blocks.Add(new Block(m_io, this, m_root));
             }
             }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 22</a>
+        /// </remarks>
         public partial class ImageData : KaitaiStruct
         {
             public static ImageData FromFile(string fileName)
@@ -99,6 +123,10 @@ namespace Kaitai
             public Gif M_Root { get { return m_root; } }
             public Gif.ColorTable M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 18</a>
+        /// </remarks>
         public partial class LogicalScreenDescriptorStruct : KaitaiStruct
         {
             public static LogicalScreenDescriptorStruct FromFile(string fileName)
@@ -300,6 +328,10 @@ namespace Kaitai
             public Gif M_Root { get { return m_root; } }
             public Gif M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 19</a>
+        /// </remarks>
         public partial class ColorTable : KaitaiStruct
         {
             public static ColorTable FromFile(string fileName)
@@ -326,6 +358,10 @@ namespace Kaitai
             public Gif M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 17</a>
+        /// </remarks>
         public partial class Header : KaitaiStruct
         {
             public static Header FromFile(string fileName)
@@ -352,6 +388,10 @@ namespace Kaitai
             public Gif M_Root { get { return m_root; } }
             public Gif M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 23</a>
+        /// </remarks>
         public partial class ExtGraphicControl : KaitaiStruct
         {
             public static ExtGraphicControl FromFile(string fileName)
@@ -556,6 +596,10 @@ namespace Kaitai
         private byte[] __raw_globalColorTable;
         public Header Hdr { get { return _hdr; } }
         public LogicalScreenDescriptorStruct LogicalScreenDescriptor { get { return _logicalScreenDescriptor; } }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 18</a>
+        /// </remarks>
         public ColorTable GlobalColorTable { get { return _globalColorTable; } }
         public List<Block> Blocks { get { return _blocks; } }
         public Gif M_Root { get { return m_root; } }

@@ -21,6 +21,10 @@ public:
     void _read();
     ~pcx_t();
 
+    /**
+     * \sa - "ZSoft .PCX FILE HEADER FORMAT"
+     */
+
     class header_t : public kaitai::kstruct {
 
     public:

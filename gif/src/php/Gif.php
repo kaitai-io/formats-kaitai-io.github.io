@@ -1,6 +1,26 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * GIF (Graphics Interchange Format) is an image file format, developed
+ * in 1987. It became popular in 1990s as one of the main image formats
+ * used in World Wide Web.
+ * 
+ * GIF format allows encoding of palette-based images up to 256 colors
+ * (each of the colors can be chosen from a 24-bit RGB
+ * colorspace). Image data stream uses LZW (Lempel–Ziv–Welch) lossless
+ * compression.
+ * 
+ * Over the years, several version of the format were published and
+ * several extensions to it were made, namely, a popular Netscape
+ * extension that allows to store several images in one file, switching
+ * between them, which produces crude form of animation.
+ * 
+ * Structurally, format consists of several mandatory headers and then
+ * a stream of blocks follows. Blocks can carry additional
+ * metainformation or image data.
+ */
+
 class Gif extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Gif $root = null) {
         parent::__construct($io, $parent, $root);
@@ -27,10 +47,16 @@ class Gif extends \Kaitai\Struct\Struct {
     protected $_m__raw_globalColorTable;
     public function hdr() { return $this->_m_hdr; }
     public function logicalScreenDescriptor() { return $this->_m_logicalScreenDescriptor; }
+
+    /**
+     */
     public function globalColorTable() { return $this->_m_globalColorTable; }
     public function blocks() { return $this->_m_blocks; }
     public function _raw_globalColorTable() { return $this->_m__raw_globalColorTable; }
 }
+
+/**
+ */
 
 namespace \Gif;
 
@@ -70,6 +96,9 @@ class ColorTableEntry extends \Kaitai\Struct\Struct {
     public function green() { return $this->_m_green; }
     public function blue() { return $this->_m_blue; }
 }
+
+/**
+ */
 
 namespace \Gif;
 
@@ -204,6 +233,9 @@ class Block extends \Kaitai\Struct\Struct {
     public function body() { return $this->_m_body; }
 }
 
+/**
+ */
+
 namespace \Gif;
 
 class ColorTable extends \Kaitai\Struct\Struct {
@@ -222,6 +254,9 @@ class ColorTable extends \Kaitai\Struct\Struct {
     public function entries() { return $this->_m_entries; }
 }
 
+/**
+ */
+
 namespace \Gif;
 
 class Header extends \Kaitai\Struct\Struct {
@@ -239,6 +274,9 @@ class Header extends \Kaitai\Struct\Struct {
     public function magic() { return $this->_m_magic; }
     public function version() { return $this->_m_version; }
 }
+
+/**
+ */
 
 namespace \Gif;
 

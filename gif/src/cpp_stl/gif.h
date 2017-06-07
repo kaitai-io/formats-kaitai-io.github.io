@@ -13,6 +13,26 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 
+/**
+ * GIF (Graphics Interchange Format) is an image file format, developed
+ * in 1987. It became popular in 1990s as one of the main image formats
+ * used in World Wide Web.
+ * 
+ * GIF format allows encoding of palette-based images up to 256 colors
+ * (each of the colors can be chosen from a 24-bit RGB
+ * colorspace). Image data stream uses LZW (Lempel–Ziv–Welch) lossless
+ * compression.
+ * 
+ * Over the years, several version of the format were published and
+ * several extensions to it were made, namely, a popular Netscape
+ * extension that allows to store several images in one file, switching
+ * between them, which produces crude form of animation.
+ * 
+ * Structurally, format consists of several mandatory headers and then
+ * a stream of blocks follows. Blocks can carry additional
+ * metainformation or image data.
+ */
+
 class gif_t : public kaitai::kstruct {
 
 public:
@@ -44,6 +64,10 @@ public:
     gif_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, gif_t* p_root = 0);
     void _read();
     ~gif_t();
+
+    /**
+     * \sa - section 22
+     */
 
     class image_data_t : public kaitai::kstruct {
 
@@ -88,6 +112,10 @@ public:
         gif_t* _root() const { return m__root; }
         gif_t::color_table_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa - section 18
+     */
 
     class logical_screen_descriptor_struct_t : public kaitai::kstruct {
 
@@ -220,6 +248,10 @@ public:
         gif_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa - section 19
+     */
+
     class color_table_t : public kaitai::kstruct {
 
     public:
@@ -238,6 +270,10 @@ public:
         gif_t* _root() const { return m__root; }
         kaitai::kstruct* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa - section 17
+     */
 
     class header_t : public kaitai::kstruct {
 
@@ -259,6 +295,10 @@ public:
         gif_t* _root() const { return m__root; }
         gif_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa - section 23
+     */
 
     class ext_graphic_control_t : public kaitai::kstruct {
 
@@ -402,6 +442,10 @@ private:
 public:
     header_t* hdr() const { return m_hdr; }
     logical_screen_descriptor_struct_t* logical_screen_descriptor() const { return m_logical_screen_descriptor; }
+
+    /**
+     * \sa - section 18
+     */
     color_table_t* global_color_table() const { return m_global_color_table; }
     std::vector<block_t*>* blocks() const { return m_blocks; }
     gif_t* _root() const { return m__root; }

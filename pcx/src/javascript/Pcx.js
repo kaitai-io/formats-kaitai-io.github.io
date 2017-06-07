@@ -14,6 +14,10 @@ var Pcx = (function() {
     this.hdr = new Header(_io__raw_hdr, this, this._root);
   }
 
+  /**
+   * @see {@link http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt|- "ZSoft .PCX FILE HEADER FORMAT"}
+   */
+
   var Header = Pcx.Header = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;

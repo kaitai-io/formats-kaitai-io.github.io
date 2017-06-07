@@ -6,6 +6,25 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# GIF (Graphics Interchange Format) is an image file format, developed
+# in 1987. It became popular in 1990s as one of the main image formats
+# used in World Wide Web.
+# 
+# GIF format allows encoding of palette-based images up to 256 colors
+# (each of the colors can be chosen from a 24-bit RGB
+# colorspace). Image data stream uses LZW (Lempel–Ziv–Welch) lossless
+# compression.
+# 
+# Over the years, several version of the format were published and
+# several extensions to it were made, namely, a popular Netscape
+# extension that allows to store several images in one file, switching
+# between them, which produces crude form of animation.
+# 
+# Structurally, format consists of several mandatory headers and then
+# a stream of blocks follows. Blocks can carry additional
+# metainformation or image data.
 class Gif < Kaitai::Struct::Struct
 
   BLOCK_TYPE = {
@@ -38,6 +57,9 @@ class Gif < Kaitai::Struct::Struct
       @blocks << Block.new(@_io, self, @_root)
     end
   end
+
+  ##
+  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 22
   class ImageData < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -64,6 +86,9 @@ class Gif < Kaitai::Struct::Struct
     attr_reader :green
     attr_reader :blue
   end
+
+  ##
+  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 18
   class LogicalScreenDescriptorStruct < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -156,6 +181,9 @@ class Gif < Kaitai::Struct::Struct
     attr_reader :block_type
     attr_reader :body
   end
+
+  ##
+  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 19
   class ColorTable < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -169,6 +197,9 @@ class Gif < Kaitai::Struct::Struct
     end
     attr_reader :entries
   end
+
+  ##
+  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 17
   class Header < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -181,6 +212,9 @@ class Gif < Kaitai::Struct::Struct
     attr_reader :magic
     attr_reader :version
   end
+
+  ##
+  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 23
   class ExtGraphicControl < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -274,6 +308,9 @@ class Gif < Kaitai::Struct::Struct
   end
   attr_reader :hdr
   attr_reader :logical_screen_descriptor
+
+  ##
+  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 18
   attr_reader :global_color_table
   attr_reader :blocks
   attr_reader :_raw_global_color_table
