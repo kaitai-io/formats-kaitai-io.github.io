@@ -259,6 +259,13 @@ namespace Kaitai
             public Id3v23 M_Root { get { return m_root; } }
             public Id3v23.Tag M_Parent { get { return m_parent; } }
         }
+
+        /// <summary>
+        /// ID3v2 extended header
+        /// </summary>
+        /// <remarks>
+        /// Reference: Section 3.2. ID3v2 extended header
+        /// </remarks>
         public partial class HeaderEx : KaitaiStruct
         {
             public static HeaderEx FromFile(string fileName)
@@ -319,6 +326,13 @@ namespace Kaitai
             public Id3v23 M_Root { get { return m_root; } }
             public Id3v23.Tag M_Parent { get { return m_parent; } }
         }
+
+        /// <summary>
+        /// ID3v2 fixed header
+        /// </summary>
+        /// <remarks>
+        /// Reference: Section 3.1. ID3v2 header
+        /// </remarks>
         public partial class Header : KaitaiStruct
         {
             public static Header FromFile(string fileName)

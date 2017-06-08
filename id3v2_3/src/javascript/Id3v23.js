@@ -150,6 +150,11 @@ var Id3v23 = (function() {
     return Frame;
   })();
 
+  /**
+   * ID3v2 extended header
+   * @see Section 3.2. ID3v2 extended header
+   */
+
   var HeaderEx = Id3v23.HeaderEx = (function() {
     function HeaderEx(_io, _parent, _root) {
       this._io = _io;
@@ -185,6 +190,11 @@ var Id3v23 = (function() {
 
     return HeaderEx;
   })();
+
+  /**
+   * ID3v2 fixed header
+   * @see Section 3.1. ID3v2 header
+   */
 
   var Header = Id3v23.Header = (function() {
     function Header(_io, _parent, _root) {

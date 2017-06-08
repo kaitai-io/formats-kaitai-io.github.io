@@ -1,5 +1,15 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
+ * tag is appended to the end of file and spans exactly 128 bytes.
+ * 
+ * This type is supposed to be used on full .mp3 files, seeking to
+ * proper position automatically. If you're interesting in parsing only
+ * the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
+ * @see {@link http://id3.org/ID3v1|Source}
+ */
+
 var Id3v11 = (function() {
   function Id3v11(_io, _parent, _root) {
     this._io = _io;
@@ -10,6 +20,18 @@ var Id3v11 = (function() {
   }
   Id3v11.prototype._read = function() {
   }
+
+  /**
+   * ID3v1.1 tag itself, a fixed size 128 byte structure. Contains
+   * several metadata fields as fixed-size strings.
+   * 
+   * Note that string encoding is not specified by standard, so real
+   * encoding used would vary a lot from one implementation to
+   * another. Most Windows-based applications tend to use "ANSI"
+   * (i.e. locale-dependent encoding, usually one byte per
+   * character). Some embedded applications allow selection of
+   * charset.
+   */
 
   var Id3V11Tag = Id3v11.Id3V11Tag = (function() {
     Id3V11Tag.GenreEnum = Object.freeze({
@@ -284,6 +306,26 @@ var Id3v11 = (function() {
       this.comment = this._io.readBytes(30);
       this.genre = this._io.readU1();
     }
+
+    /**
+     * Song title
+     */
+
+    /**
+     * Artist name
+     */
+
+    /**
+     * Album title
+     */
+
+    /**
+     * Year of release
+     */
+
+    /**
+     * Arbitary comment
+     */
 
     return Id3V11Tag;
   })();

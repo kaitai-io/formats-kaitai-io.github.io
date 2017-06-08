@@ -208,6 +208,11 @@ public:
         id3v2_3_t::tag_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * ID3v2 extended header
+     * \sa Section 3.2. ID3v2 extended header
+     */
+
     class header_ex_t : public kaitai::kstruct {
 
     public:
@@ -260,6 +265,11 @@ public:
         id3v2_3_t* _root() const { return m__root; }
         id3v2_3_t::tag_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * ID3v2 fixed header
+     * \sa Section 3.1. ID3v2 header
+     */
 
     class header_t : public kaitai::kstruct {
 

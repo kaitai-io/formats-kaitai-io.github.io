@@ -12,6 +12,16 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 
+/**
+ * ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
+ * tag is appended to the end of file and spans exactly 128 bytes.
+ * 
+ * This type is supposed to be used on full .mp3 files, seeking to
+ * proper position automatically. If you're interesting in parsing only
+ * the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
+ * \sa Source
+ */
+
 class id3v1_1_t : public kaitai::kstruct {
 
 public:
@@ -20,6 +30,18 @@ public:
     id3v1_1_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, id3v1_1_t* p_root = 0);
     void _read();
     ~id3v1_1_t();
+
+    /**
+     * ID3v1.1 tag itself, a fixed size 128 byte structure. Contains
+     * several metadata fields as fixed-size strings.
+     * 
+     * Note that string encoding is not specified by standard, so real
+     * encoding used would vary a lot from one implementation to
+     * another. Most Windows-based applications tend to use "ANSI"
+     * (i.e. locale-dependent encoding, usually one byte per
+     * character). Some embedded applications allow selection of
+     * charset.
+     */
 
     class id3_v1_1_tag_t : public kaitai::kstruct {
 
@@ -171,10 +193,30 @@ public:
 
     public:
         std::string magic() const { return m_magic; }
+
+        /**
+         * Song title
+         */
         std::string title() const { return m_title; }
+
+        /**
+         * Artist name
+         */
         std::string artist() const { return m_artist; }
+
+        /**
+         * Album title
+         */
         std::string album() const { return m_album; }
+
+        /**
+         * Year of release
+         */
         std::string year() const { return m_year; }
+
+        /**
+         * Arbitary comment
+         */
         std::string comment() const { return m_comment; }
         genre_enum_t genre() const { return m_genre; }
         id3v1_1_t* _root() const { return m__root; }

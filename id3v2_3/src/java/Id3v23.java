@@ -336,6 +336,11 @@ public class Id3v23 extends KaitaiStruct {
         public Id3v23 _root() { return _root; }
         public Id3v23.Tag _parent() { return _parent; }
     }
+
+    /**
+     * ID3v2 extended header
+     * @see "Section 3.2. ID3v2 extended header"
+     */
     public static class HeaderEx extends KaitaiStruct {
         public static HeaderEx fromFile(String fileName) throws IOException {
             return new HeaderEx(new KaitaiStream(fileName));
@@ -422,6 +427,11 @@ public class Id3v23 extends KaitaiStruct {
         public Id3v23 _root() { return _root; }
         public Id3v23.Tag _parent() { return _parent; }
     }
+
+    /**
+     * ID3v2 fixed header
+     * @see "Section 3.1. ID3v2 header"
+     */
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
             return new Header(new KaitaiStream(fileName));

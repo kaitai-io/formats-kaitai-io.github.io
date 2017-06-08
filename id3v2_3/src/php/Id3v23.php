@@ -181,6 +181,10 @@ class Flags extends \Kaitai\Struct\Struct {
     public function reserved2() { return $this->_m_reserved2; }
 }
 
+/**
+ * ID3v2 extended header
+ */
+
 namespace \Id3v23;
 
 class HeaderEx extends \Kaitai\Struct\Struct {
@@ -224,6 +228,10 @@ class FlagsEx extends \Kaitai\Struct\Struct {
     public function flagCrc() { return $this->_m_flagCrc; }
     public function reserved() { return $this->_m_reserved; }
 }
+
+/**
+ * ID3v2 fixed header
+ */
 
 namespace \Id3v23;
 

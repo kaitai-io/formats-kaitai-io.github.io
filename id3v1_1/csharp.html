@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Kaitai Struct: declarative binary format parsing language</title>
+  <title>id3v1_1: C# parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -98,10 +98,25 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p></p>
+                <p><p>ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
+tag is appended to the end of file and spans exactly 128 bytes.</p>
+<p>This type is supposed to be used on full .mp3 files, seeking to
+proper position automatically. If you're interesting in parsing only
+the tag itself, please use <code>id3v1_1::id3_v1_1_tag</code> subtype.</p>
+</p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
                     
                     
                     
@@ -226,6 +241,18 @@ var data = new Id3v11(new KaitaiStream(someArray));</code></pre>
 
 namespace Kaitai
 {
+
+    /// &lt;summary&gt;
+    /// ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
+    /// tag is appended to the end of file and spans exactly 128 bytes.
+    /// 
+    /// This type is supposed to be used on full .mp3 files, seeking to
+    /// proper position automatically. If you&#39;re interesting in parsing only
+    /// the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;
+    /// Reference: &lt;a href=&quot;http://id3.org/ID3v1&quot;&gt;Source&lt;/a&gt;
+    /// &lt;/remarks&gt;
     public partial class Id3v11 : KaitaiStruct
     {
         public static Id3v11 FromFile(string fileName)
@@ -242,6 +269,18 @@ namespace Kaitai
         }
         private void _read() {
             }
+
+        /// &lt;summary&gt;
+        /// ID3v1.1 tag itself, a fixed size 128 byte structure. Contains
+        /// several metadata fields as fixed-size strings.
+        /// 
+        /// Note that string encoding is not specified by standard, so real
+        /// encoding used would vary a lot from one implementation to
+        /// another. Most Windows-based applications tend to use &amp;quot;ANSI&amp;quot;
+        /// (i.e. locale-dependent encoding, usually one byte per
+        /// character). Some embedded applications allow selection of
+        /// charset.
+        /// &lt;/summary&gt;
         public partial class Id3V11Tag : KaitaiStruct
         {
             public static Id3V11Tag FromFile(string fileName)
@@ -404,10 +443,30 @@ namespace Kaitai
             private Id3v11 m_root;
             private Id3v11 m_parent;
             public byte[] Magic { get { return _magic; } }
+
+            /// &lt;summary&gt;
+            /// Song title
+            /// &lt;/summary&gt;
             public byte[] Title { get { return _title; } }
+
+            /// &lt;summary&gt;
+            /// Artist name
+            /// &lt;/summary&gt;
             public byte[] Artist { get { return _artist; } }
+
+            /// &lt;summary&gt;
+            /// Album title
+            /// &lt;/summary&gt;
             public byte[] Album { get { return _album; } }
+
+            /// &lt;summary&gt;
+            /// Year of release
+            /// &lt;/summary&gt;
             public string Year { get { return _year; } }
+
+            /// &lt;summary&gt;
+            /// Arbitary comment
+            /// &lt;/summary&gt;
             public byte[] Comment { get { return _comment; } }
             public GenreEnum Genre { get { return _genre; } }
             public Id3v11 M_Root { get { return m_root; } }

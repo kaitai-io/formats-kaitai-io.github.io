@@ -4,6 +4,18 @@
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
+    /// tag is appended to the end of file and spans exactly 128 bytes.
+    /// 
+    /// This type is supposed to be used on full .mp3 files, seeking to
+    /// proper position automatically. If you're interesting in parsing only
+    /// the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
+    /// </summary>
+    /// <remarks>
+    /// Reference: <a href="http://id3.org/ID3v1">Source</a>
+    /// </remarks>
     public partial class Id3v11 : KaitaiStruct
     {
         public static Id3v11 FromFile(string fileName)
@@ -20,6 +32,18 @@ namespace Kaitai
         }
         private void _read() {
             }
+
+        /// <summary>
+        /// ID3v1.1 tag itself, a fixed size 128 byte structure. Contains
+        /// several metadata fields as fixed-size strings.
+        /// 
+        /// Note that string encoding is not specified by standard, so real
+        /// encoding used would vary a lot from one implementation to
+        /// another. Most Windows-based applications tend to use &quot;ANSI&quot;
+        /// (i.e. locale-dependent encoding, usually one byte per
+        /// character). Some embedded applications allow selection of
+        /// charset.
+        /// </summary>
         public partial class Id3V11Tag : KaitaiStruct
         {
             public static Id3V11Tag FromFile(string fileName)
@@ -182,10 +206,30 @@ namespace Kaitai
             private Id3v11 m_root;
             private Id3v11 m_parent;
             public byte[] Magic { get { return _magic; } }
+
+            /// <summary>
+            /// Song title
+            /// </summary>
             public byte[] Title { get { return _title; } }
+
+            /// <summary>
+            /// Artist name
+            /// </summary>
             public byte[] Artist { get { return _artist; } }
+
+            /// <summary>
+            /// Album title
+            /// </summary>
             public byte[] Album { get { return _album; } }
+
+            /// <summary>
+            /// Year of release
+            /// </summary>
             public string Year { get { return _year; } }
+
+            /// <summary>
+            /// Arbitary comment
+            /// </summary>
             public byte[] Comment { get { return _comment; } }
             public GenreEnum Genre { get { return _genre; } }
             public Id3v11 M_Root { get { return m_root; } }

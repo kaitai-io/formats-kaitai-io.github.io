@@ -7,6 +7,16 @@ import java.util.Map;
 import java.util.HashMap;
 import java.nio.charset.Charset;
 
+
+/**
+ * ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
+ * tag is appended to the end of file and spans exactly 128 bytes.
+ * 
+ * This type is supposed to be used on full .mp3 files, seeking to
+ * proper position automatically. If you're interesting in parsing only
+ * the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
+ * @see <a href="http://id3.org/ID3v1">Source</a>
+ */
 public class Id3v11 extends KaitaiStruct {
     public static Id3v11 fromFile(String fileName) throws IOException {
         return new Id3v11(new KaitaiStream(fileName));
@@ -37,6 +47,18 @@ public class Id3v11 extends KaitaiStruct {
     }
     private void _read() {
     }
+
+    /**
+     * ID3v1.1 tag itself, a fixed size 128 byte structure. Contains
+     * several metadata fields as fixed-size strings.
+     * 
+     * Note that string encoding is not specified by standard, so real
+     * encoding used would vary a lot from one implementation to
+     * another. Most Windows-based applications tend to use "ANSI"
+     * (i.e. locale-dependent encoding, usually one byte per
+     * character). Some embedded applications allow selection of
+     * charset.
+     */
     public static class Id3V11Tag extends KaitaiStruct {
         public static Id3V11Tag fromFile(String fileName) throws IOException {
             return new Id3V11Tag(new KaitaiStream(fileName));
@@ -221,10 +243,30 @@ public class Id3v11 extends KaitaiStruct {
         private Id3v11 _root;
         private Id3v11 _parent;
         public byte[] magic() { return magic; }
+
+        /**
+         * Song title
+         */
         public byte[] title() { return title; }
+
+        /**
+         * Artist name
+         */
         public byte[] artist() { return artist; }
+
+        /**
+         * Album title
+         */
         public byte[] album() { return album; }
+
+        /**
+         * Year of release
+         */
         public String year() { return year; }
+
+        /**
+         * Arbitary comment
+         */
         public byte[] comment() { return comment; }
         public GenreEnum genre() { return genre; }
         public Id3v11 _root() { return _root; }

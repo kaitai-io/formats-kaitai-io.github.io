@@ -6,6 +6,15 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
+# tag is appended to the end of file and spans exactly 128 bytes.
+# 
+# This type is supposed to be used on full .mp3 files, seeking to
+# proper position automatically. If you're interesting in parsing only
+# the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
+# @see http://id3.org/ID3v1 Source
 class Id3v11 < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -13,6 +22,17 @@ class Id3v11 < Kaitai::Struct::Struct
   end
   def _read
   end
+
+  ##
+  # ID3v1.1 tag itself, a fixed size 128 byte structure. Contains
+  # several metadata fields as fixed-size strings.
+  # 
+  # Note that string encoding is not specified by standard, so real
+  # encoding used would vary a lot from one implementation to
+  # another. Most Windows-based applications tend to use "ANSI"
+  # (i.e. locale-dependent encoding, usually one byte per
+  # character). Some embedded applications allow selection of
+  # charset.
   class Id3V11Tag < Kaitai::Struct::Struct
 
     GENRE_ENUM = {
@@ -158,10 +178,25 @@ class Id3v11 < Kaitai::Struct::Struct
       @genre = Kaitai::Struct::Stream::resolve_enum(GENRE_ENUM, @_io.read_u1)
     end
     attr_reader :magic
+
+    ##
+    # Song title
     attr_reader :title
+
+    ##
+    # Artist name
     attr_reader :artist
+
+    ##
+    # Album title
     attr_reader :album
+
+    ##
+    # Year of release
     attr_reader :year
+
+    ##
+    # Arbitary comment
     attr_reader :comment
     attr_reader :genre
   end

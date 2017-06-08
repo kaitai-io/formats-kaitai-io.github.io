@@ -129,6 +129,10 @@ class Id3v23 < Kaitai::Struct::Struct
     attr_reader :flags
     attr_reader :data
   end
+
+  ##
+  # ID3v2 extended header
+  # @see '' Section 3.2. ID3v2 extended header
   class HeaderEx < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -159,6 +163,10 @@ class Id3v23 < Kaitai::Struct::Struct
     attr_reader :padding_size
     attr_reader :crc
   end
+
+  ##
+  # ID3v2 fixed header
+  # @see '' Section 3.1. ID3v2 header
   class Header < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

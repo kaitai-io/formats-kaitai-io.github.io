@@ -10,6 +10,16 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 class Id3v11(KaitaiStruct):
+    """ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
+    tag is appended to the end of file and spans exactly 128 bytes.
+    
+    This type is supposed to be used on full .mp3 files, seeking to
+    proper position automatically. If you're interesting in parsing only
+    the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
+    
+    .. seealso::
+       Source - http://id3.org/ID3v1
+    """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -20,6 +30,16 @@ class Id3v11(KaitaiStruct):
         pass
 
     class Id3V11Tag(KaitaiStruct):
+        """ID3v1.1 tag itself, a fixed size 128 byte structure. Contains
+        several metadata fields as fixed-size strings.
+        
+        Note that string encoding is not specified by standard, so real
+        encoding used would vary a lot from one implementation to
+        another. Most Windows-based applications tend to use "ANSI"
+        (i.e. locale-dependent encoding, usually one byte per
+        character). Some embedded applications allow selection of
+        charset.
+        """
 
         class GenreEnum(Enum):
             blues = 0

@@ -134,6 +134,11 @@ class Id3v23(KaitaiStruct):
 
 
     class HeaderEx(KaitaiStruct):
+        """ID3v2 extended header.
+        
+        .. seealso::
+           Section 3.2. ID3v2 extended header
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -162,6 +167,11 @@ class Id3v23(KaitaiStruct):
 
 
     class Header(KaitaiStruct):
+        """ID3v2 fixed header.
+        
+        .. seealso::
+           Section 3.1. ID3v2 header
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent

@@ -1,6 +1,15 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
+ * tag is appended to the end of file and spans exactly 128 bytes.
+ * 
+ * This type is supposed to be used on full .mp3 files, seeking to
+ * proper position automatically. If you're interesting in parsing only
+ * the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
+ */
+
 class Id3v11 extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Id3v11 $root = null) {
         parent::__construct($io, $parent, $root);
@@ -20,6 +29,18 @@ class Id3v11 extends \Kaitai\Struct\Struct {
         return $this->_m_id3v1Tag;
     }
 }
+
+/**
+ * ID3v1.1 tag itself, a fixed size 128 byte structure. Contains
+ * several metadata fields as fixed-size strings.
+ * 
+ * Note that string encoding is not specified by standard, so real
+ * encoding used would vary a lot from one implementation to
+ * another. Most Windows-based applications tend to use "ANSI"
+ * (i.e. locale-dependent encoding, usually one byte per
+ * character). Some embedded applications allow selection of
+ * charset.
+ */
 
 namespace \Id3v11;
 
@@ -46,10 +67,30 @@ class Id3V11Tag extends \Kaitai\Struct\Struct {
     protected $_m_comment;
     protected $_m_genre;
     public function magic() { return $this->_m_magic; }
+
+    /**
+     * Song title
+     */
     public function title() { return $this->_m_title; }
+
+    /**
+     * Artist name
+     */
     public function artist() { return $this->_m_artist; }
+
+    /**
+     * Album title
+     */
     public function album() { return $this->_m_album; }
+
+    /**
+     * Year of release
+     */
     public function year() { return $this->_m_year; }
+
+    /**
+     * Arbitary comment
+     */
     public function comment() { return $this->_m_comment; }
     public function genre() { return $this->_m_genre; }
 }
