@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>fallout_dat format spec for Kaitai Struct</title>
+  <title>fallout_dat: JavaScript parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -92,7 +92,7 @@ section#format-index .row {
     <div class="container">
         <h1>fallout_dat:
             
-            format specification
+            JavaScript parsing library
             
         </h1>
 
@@ -138,7 +138,7 @@ section#format-index .row {
             <ul class="nav nav-pills">
                 
                 
-                <li class="active">
+                <li>
                 
                 <a href="index.html" title="fallout_dat parsing Overview library">Overview</a></li>
                 
@@ -163,7 +163,7 @@ section#format-index .row {
                 <a href="java.html" title="fallout_dat parsing Java library">Java</a></li>
                 
                 
-                <li>
+                <li class="active">
                 
                 <a href="javascript.html" title="fallout_dat parsing JavaScript library">JavaScript</a></li>
                 
@@ -192,87 +192,149 @@ section#format-index .row {
         </div>
     </div>
 </section>
-<section id="format-diagram" class="format">
-    <div class="container">
-        <h2>Block diagram</h2>
-        <a href="fallout_dat.svg">
-            <img class="diagram-img" src="fallout_dat.svg" />
-        </a>
-    </div>
-</section>
 
-<section id="format-ksy" class="format">
+
+<section id="format-lang" class="format">
     <div class="container">
-        <h2>Format specification in Kaitai Struct YAML</h2>
+        <h2>
+            
+            JavaScript source code to parse fallout_dat
+            
+        </h2>
+
         
-        <pre><code class="yaml">meta:
-  id: fallout_dat
-  endian: be
-  application: Fallout
-  license: CC0-1.0
-seq:
-  - id: folder_count
-    type: u4
-  - id: unknown1
-    type: u4
-  - id: unknown2
-    type: u4
-  - id: timestamp
-    type: u4
-  - id: folder_names
-    type: pstr
-    repeat: expr
-    repeat-expr: folder_count
-  - id: folders
-    type: folder
-    repeat: expr
-    repeat-expr: folder_count
-types:
-  pstr:
-    seq:
-      - id: size
-        type: u1
-      - id: str
-        type: str
-        size: size
-        encoding: ASCII
-  folder:
-    seq:
-      - id: file_count
-        type: u4
-      - id: unknown
-        type: u4
-      - id: flags
-        type: u4
-      - id: timestamp
-        type: u4
-      - id: files
-        type: file
-        repeat: expr
-        repeat-expr: file_count
-  file:
-    seq:
-      - id: name
-        type: pstr
-      - id: flags
-        type: u4
-        enum: compression
-      - id: offset
-        type: u4
-      - id: size_unpacked
-        type: u4
-      - id: size_packed
-        type: u4
-    instances:
-      contents:
-        io: _root._io
-        pos: offset
-        size: "(flags == compression::none) ? size_unpacked : size_packed"
-enums:
-  compression:
-    32: none
-    64: lzss
+
+        <h3>FalloutDat.js</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/javascript/FalloutDat.js" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+var FalloutDat = (function() {
+  FalloutDat.Compression = Object.freeze({
+    NONE: 32,
+    LZSS: 64,
+
+    32: &quot;NONE&quot;,
+    64: &quot;LZSS&quot;,
+  });
+
+  function FalloutDat(_io, _parent, _root) {
+    this._io = _io;
+    this._parent = _parent;
+    this._root = _root || this;
+
+    this._read();
+  }
+  FalloutDat.prototype._read = function() {
+    this.folderCount = this._io.readU4be();
+    this.unknown1 = this._io.readU4be();
+    this.unknown2 = this._io.readU4be();
+    this.timestamp = this._io.readU4be();
+    this.folderNames = new Array(this.folderCount);
+    for (var i = 0; i &lt; this.folderCount; i++) {
+      this.folderNames[i] = new Pstr(this._io, this, this._root);
+    }
+    this.folders = new Array(this.folderCount);
+    for (var i = 0; i &lt; this.folderCount; i++) {
+      this.folders[i] = new Folder(this._io, this, this._root);
+    }
+  }
+
+  var Pstr = FalloutDat.Pstr = (function() {
+    function Pstr(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Pstr.prototype._read = function() {
+      this.size = this._io.readU1();
+      this.str = KaitaiStream.bytesToStr(this._io.readBytes(this.size), &quot;ASCII&quot;);
+    }
+
+    return Pstr;
+  })();
+
+  var Folder = FalloutDat.Folder = (function() {
+    function Folder(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Folder.prototype._read = function() {
+      this.fileCount = this._io.readU4be();
+      this.unknown = this._io.readU4be();
+      this.flags = this._io.readU4be();
+      this.timestamp = this._io.readU4be();
+      this.files = new Array(this.fileCount);
+      for (var i = 0; i &lt; this.fileCount; i++) {
+        this.files[i] = new File(this._io, this, this._root);
+      }
+    }
+
+    return Folder;
+  })();
+
+  var File = FalloutDat.File = (function() {
+    function File(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    File.prototype._read = function() {
+      this.name = new Pstr(this._io, this, this._root);
+      this.flags = this._io.readU4be();
+      this.offset = this._io.readU4be();
+      this.sizeUnpacked = this._io.readU4be();
+      this.sizePacked = this._io.readU4be();
+    }
+    Object.defineProperty(File.prototype, &#39;contents&#39;, {
+      get: function() {
+        if (this._m_contents !== undefined)
+          return this._m_contents;
+        var io = this._root._io;
+        var _pos = io.pos;
+        io.seek(this.offset);
+        this._m_contents = io.readBytes((this.flags == FalloutDat.Compression.NONE ? this.sizeUnpacked : this.sizePacked));
+        io.seek(_pos);
+        return this._m_contents;
+      }
+    });
+
+    return File;
+  })();
+
+  return FalloutDat;
+})();
+
+// Export for amd environments
+if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+  define(&#39;FalloutDat&#39;, [], function() {
+    return FalloutDat;
+  });
+}
+
+// Export for CommonJS
+if (typeof module === &#39;object&#39; &amp;&amp; module &amp;&amp; module.exports) {
+  module.exports = FalloutDat;
+}
 </code></pre>
+            
+        </div>
+        
     </div>
 </section>
 

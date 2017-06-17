@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>fallout_dat format spec for Kaitai Struct</title>
+  <title>fallout_dat: Perl parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -92,7 +92,7 @@ section#format-index .row {
     <div class="container">
         <h1>fallout_dat:
             
-            format specification
+            Perl parsing library
             
         </h1>
 
@@ -138,7 +138,7 @@ section#format-index .row {
             <ul class="nav nav-pills">
                 
                 
-                <li class="active">
+                <li>
                 
                 <a href="index.html" title="fallout_dat parsing Overview library">Overview</a></li>
                 
@@ -168,7 +168,7 @@ section#format-index .row {
                 <a href="javascript.html" title="fallout_dat parsing JavaScript library">JavaScript</a></li>
                 
                 
-                <li>
+                <li class="active">
                 
                 <a href="perl.html" title="fallout_dat parsing Perl library">Perl</a></li>
                 
@@ -192,87 +192,303 @@ section#format-index .row {
         </div>
     </div>
 </section>
-<section id="format-diagram" class="format">
-    <div class="container">
-        <h2>Block diagram</h2>
-        <a href="fallout_dat.svg">
-            <img class="diagram-img" src="fallout_dat.svg" />
-        </a>
-    </div>
-</section>
 
-<section id="format-ksy" class="format">
+
+<section id="format-lang" class="format">
     <div class="container">
-        <h2>Format specification in Kaitai Struct YAML</h2>
+        <h2>
+            
+            Perl source code to parse fallout_dat
+            
+        </h2>
+
         
-        <pre><code class="yaml">meta:
-  id: fallout_dat
-  endian: be
-  application: Fallout
-  license: CC0-1.0
-seq:
-  - id: folder_count
-    type: u4
-  - id: unknown1
-    type: u4
-  - id: unknown2
-    type: u4
-  - id: timestamp
-    type: u4
-  - id: folder_names
-    type: pstr
-    repeat: expr
-    repeat-expr: folder_count
-  - id: folders
-    type: folder
-    repeat: expr
-    repeat-expr: folder_count
-types:
-  pstr:
-    seq:
-      - id: size
-        type: u1
-      - id: str
-        type: str
-        size: size
-        encoding: ASCII
-  folder:
-    seq:
-      - id: file_count
-        type: u4
-      - id: unknown
-        type: u4
-      - id: flags
-        type: u4
-      - id: timestamp
-        type: u4
-      - id: files
-        type: file
-        repeat: expr
-        repeat-expr: file_count
-  file:
-    seq:
-      - id: name
-        type: pstr
-      - id: flags
-        type: u4
-        enum: compression
-      - id: offset
-        type: u4
-      - id: size_unpacked
-        type: u4
-      - id: size_packed
-        type: u4
-    instances:
-      contents:
-        io: _root._io
-        pos: offset
-        size: "(flags == compression::none) ? size_unpacked : size_packed"
-enums:
-  compression:
-    32: none
-    64: lzss
+
+        <h3>FalloutDat.pm</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/perl/FalloutDat.pm" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="perl"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+use strict;
+use warnings;
+use IO::KaitaiStruct 0.007_000;
+use Encode;
+
+########################################################################
+package FalloutDat;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $COMPRESSION_NONE = 32;
+our $COMPRESSION_LZSS = 64;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{folder_count} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{unknown1} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{unknown2} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{timestamp} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{folder_names} = ();
+    my $n_folder_names = $self-&gt;folder_count();
+    for (my $i = 0; $i &lt; $n_folder_names; $i++) {
+        $self-&gt;{folder_names}[$i] = FalloutDat::Pstr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    $self-&gt;{folders} = ();
+    my $n_folders = $self-&gt;folder_count();
+    for (my $i = 0; $i &lt; $n_folders; $i++) {
+        $self-&gt;{folders}[$i] = FalloutDat::Folder-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub folder_count {
+    my ($self) = @_;
+    return $self-&gt;{folder_count};
+}
+
+sub unknown1 {
+    my ($self) = @_;
+    return $self-&gt;{unknown1};
+}
+
+sub unknown2 {
+    my ($self) = @_;
+    return $self-&gt;{unknown2};
+}
+
+sub timestamp {
+    my ($self) = @_;
+    return $self-&gt;{timestamp};
+}
+
+sub folder_names {
+    my ($self) = @_;
+    return $self-&gt;{folder_names};
+}
+
+sub folders {
+    my ($self) = @_;
+    return $self-&gt;{folders};
+}
+
+########################################################################
+package FalloutDat::Pstr;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{size} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{str} = Encode::decode(&quot;ASCII&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;size()));
+}
+
+sub size {
+    my ($self) = @_;
+    return $self-&gt;{size};
+}
+
+sub str {
+    my ($self) = @_;
+    return $self-&gt;{str};
+}
+
+########################################################################
+package FalloutDat::Folder;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{file_count} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{unknown} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{flags} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{timestamp} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{files} = ();
+    my $n_files = $self-&gt;file_count();
+    for (my $i = 0; $i &lt; $n_files; $i++) {
+        $self-&gt;{files}[$i] = FalloutDat::File-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub file_count {
+    my ($self) = @_;
+    return $self-&gt;{file_count};
+}
+
+sub unknown {
+    my ($self) = @_;
+    return $self-&gt;{unknown};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self-&gt;{flags};
+}
+
+sub timestamp {
+    my ($self) = @_;
+    return $self-&gt;{timestamp};
+}
+
+sub files {
+    my ($self) = @_;
+    return $self-&gt;{files};
+}
+
+########################################################################
+package FalloutDat::File;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{name} = FalloutDat::Pstr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{flags} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{offset} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{size_unpacked} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{size_packed} = $self-&gt;{_io}-&gt;read_u4be();
+}
+
+sub contents {
+    my ($self) = @_;
+    return $self-&gt;{contents} if ($self-&gt;{contents});
+    my $io = $self-&gt;_root()-&gt;_io();
+    my $_pos = $io-&gt;pos();
+    $io-&gt;seek($self-&gt;offset());
+    $self-&gt;{contents} = $io-&gt;read_bytes(($self-&gt;flags() == $COMPRESSION_NONE ? $self-&gt;size_unpacked() : $self-&gt;size_packed()));
+    $io-&gt;seek($_pos);
+    return $self-&gt;{contents};
+}
+
+sub name {
+    my ($self) = @_;
+    return $self-&gt;{name};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self-&gt;{flags};
+}
+
+sub offset {
+    my ($self) = @_;
+    return $self-&gt;{offset};
+}
+
+sub size_unpacked {
+    my ($self) = @_;
+    return $self-&gt;{size_unpacked};
+}
+
+sub size_packed {
+    my ($self) = @_;
+    return $self-&gt;{size_packed};
+}
+
+1;
 </code></pre>
+            
+        </div>
+        
     </div>
 </section>
 

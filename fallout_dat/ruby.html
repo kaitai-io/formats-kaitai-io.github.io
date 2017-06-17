@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>fallout_dat format spec for Kaitai Struct</title>
+  <title>fallout_dat: Ruby parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -92,7 +92,7 @@ section#format-index .row {
     <div class="container">
         <h1>fallout_dat:
             
-            format specification
+            Ruby parsing library
             
         </h1>
 
@@ -138,7 +138,7 @@ section#format-index .row {
             <ul class="nav nav-pills">
                 
                 
-                <li class="active">
+                <li>
                 
                 <a href="index.html" title="fallout_dat parsing Overview library">Overview</a></li>
                 
@@ -183,7 +183,7 @@ section#format-index .row {
                 <a href="python.html" title="fallout_dat parsing Python library">Python</a></li>
                 
                 
-                <li>
+                <li class="active">
                 
                 <a href="ruby.html" title="fallout_dat parsing Ruby library">Ruby</a></li>
                 
@@ -192,87 +192,155 @@ section#format-index .row {
         </div>
     </div>
 </section>
-<section id="format-diagram" class="format">
+
+<section id="format-usage" class="format">
     <div class="container">
-        <h2>Block diagram</h2>
-        <a href="fallout_dat.svg">
-            <img class="diagram-img" src="fallout_dat.svg" />
-        </a>
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="ruby">data = FalloutDat.from_file("path/to/local/file.fallout_dat")</code></pre>
+
+<p>Or parse structure from a string of bytes:</p>
+
+<pre><code class="ruby">bytes = "\x00\x01\x02..."
+data = FalloutDat.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="ruby">data.folderCount // => get folder count</code></pre>
+
     </div>
 </section>
 
-<section id="format-ksy" class="format">
+
+<section id="format-lang" class="format">
     <div class="container">
-        <h2>Format specification in Kaitai Struct YAML</h2>
+        <h2>
+            
+            Ruby source code to parse fallout_dat
+            
+        </h2>
+
         
-        <pre><code class="yaml">meta:
-  id: fallout_dat
-  endian: be
-  application: Fallout
-  license: CC0-1.0
-seq:
-  - id: folder_count
-    type: u4
-  - id: unknown1
-    type: u4
-  - id: unknown2
-    type: u4
-  - id: timestamp
-    type: u4
-  - id: folder_names
-    type: pstr
-    repeat: expr
-    repeat-expr: folder_count
-  - id: folders
-    type: folder
-    repeat: expr
-    repeat-expr: folder_count
-types:
-  pstr:
-    seq:
-      - id: size
-        type: u1
-      - id: str
-        type: str
-        size: size
-        encoding: ASCII
-  folder:
-    seq:
-      - id: file_count
-        type: u4
-      - id: unknown
-        type: u4
-      - id: flags
-        type: u4
-      - id: timestamp
-        type: u4
-      - id: files
-        type: file
-        repeat: expr
-        repeat-expr: file_count
-  file:
-    seq:
-      - id: name
-        type: pstr
-      - id: flags
-        type: u4
-        enum: compression
-      - id: offset
-        type: u4
-      - id: size_unpacked
-        type: u4
-      - id: size_packed
-        type: u4
-    instances:
-      contents:
-        io: _root._io
-        pos: offset
-        size: "(flags == compression::none) ? size_unpacked : size_packed"
-enums:
-  compression:
-    32: none
-    64: lzss
+
+        <h3>fallout_dat.rb</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/ruby/fallout_dat.rb" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+require &#39;kaitai/struct/struct&#39;
+
+unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
+  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
+end
+
+class FalloutDat &lt; Kaitai::Struct::Struct
+
+  COMPRESSION = {
+    32 =&gt; :compression_none,
+    64 =&gt; :compression_lzss,
+  }
+  I__COMPRESSION = COMPRESSION.invert
+  def initialize(_io, _parent = nil, _root = self)
+    super(_io, _parent, _root)
+    _read
+  end
+  def _read
+    @folder_count = @_io.read_u4be
+    @unknown1 = @_io.read_u4be
+    @unknown2 = @_io.read_u4be
+    @timestamp = @_io.read_u4be
+    @folder_names = Array.new(folder_count)
+    (folder_count).times { |i|
+      @folder_names[i] = Pstr.new(@_io, self, @_root)
+    }
+    @folders = Array.new(folder_count)
+    (folder_count).times { |i|
+      @folders[i] = Folder.new(@_io, self, @_root)
+    }
+  end
+  class Pstr &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+    def _read
+      @size = @_io.read_u1
+      @str = (@_io.read_bytes(size)).force_encoding(&quot;ASCII&quot;)
+    end
+    attr_reader :size
+    attr_reader :str
+  end
+  class Folder &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+    def _read
+      @file_count = @_io.read_u4be
+      @unknown = @_io.read_u4be
+      @flags = @_io.read_u4be
+      @timestamp = @_io.read_u4be
+      @files = Array.new(file_count)
+      (file_count).times { |i|
+        @files[i] = File.new(@_io, self, @_root)
+      }
+    end
+    attr_reader :file_count
+    attr_reader :unknown
+    attr_reader :flags
+    attr_reader :timestamp
+    attr_reader :files
+  end
+  class File &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+    def _read
+      @name = Pstr.new(@_io, self, @_root)
+      @flags = Kaitai::Struct::Stream::resolve_enum(COMPRESSION, @_io.read_u4be)
+      @offset = @_io.read_u4be
+      @size_unpacked = @_io.read_u4be
+      @size_packed = @_io.read_u4be
+    end
+    def contents
+      return @contents unless @contents.nil?
+      io = _root._io
+      _pos = io.pos
+      io.seek(offset)
+      @contents = io.read_bytes((flags == :compression_none ? size_unpacked : size_packed))
+      io.seek(_pos)
+      @contents
+    end
+    attr_reader :name
+    attr_reader :flags
+    attr_reader :offset
+    attr_reader :size_unpacked
+    attr_reader :size_packed
+  end
+  attr_reader :folder_count
+  attr_reader :unknown1
+  attr_reader :unknown2
+  attr_reader :timestamp
+  attr_reader :folder_names
+  attr_reader :folders
+end
 </code></pre>
+            
+        </div>
+        
     </div>
 </section>
 

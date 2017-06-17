@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>fallout_dat format spec for Kaitai Struct</title>
+  <title>fallout_dat: C# parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -92,7 +92,7 @@ section#format-index .row {
     <div class="container">
         <h1>fallout_dat:
             
-            format specification
+            C# parsing library
             
         </h1>
 
@@ -138,7 +138,7 @@ section#format-index .row {
             <ul class="nav nav-pills">
                 
                 
-                <li class="active">
+                <li>
                 
                 <a href="index.html" title="fallout_dat parsing Overview library">Overview</a></li>
                 
@@ -148,7 +148,7 @@ section#format-index .row {
                 <a href="cpp_stl.html" title="fallout_dat parsing C++/STL library">C++/STL</a></li>
                 
                 
-                <li>
+                <li class="active">
                 
                 <a href="csharp.html" title="fallout_dat parsing C# library">C#</a></li>
                 
@@ -192,87 +192,229 @@ section#format-index .row {
         </div>
     </div>
 </section>
-<section id="format-diagram" class="format">
+
+<section id="format-usage" class="format">
     <div class="container">
-        <h2>Block diagram</h2>
-        <a href="fallout_dat.svg">
-            <img class="diagram-img" src="fallout_dat.svg" />
-        </a>
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="csharp">var data = FalloutDat.FromFile("path/to/local/file.fallout_dat");</code></pre>
+
+<p>Or parse structure from a byte array:</p>
+
+<pre><code class="csharp">byte[] someArray = new byte[] { ... };
+var data = new FalloutDat(new KaitaiStream(someArray));</code></pre>
+
+<p>After that, one can get various attributes from the structure by accessing properties like:</p>
+
+<pre><code class="csharp">data.FolderCount // => get folder count</code></pre>
+
     </div>
 </section>
 
-<section id="format-ksy" class="format">
+
+<section id="format-lang" class="format">
     <div class="container">
-        <h2>Format specification in Kaitai Struct YAML</h2>
+        <h2>
+            
+            C# source code to parse fallout_dat
+            
+        </h2>
+
         
-        <pre><code class="yaml">meta:
-  id: fallout_dat
-  endian: be
-  application: Fallout
-  license: CC0-1.0
-seq:
-  - id: folder_count
-    type: u4
-  - id: unknown1
-    type: u4
-  - id: unknown2
-    type: u4
-  - id: timestamp
-    type: u4
-  - id: folder_names
-    type: pstr
-    repeat: expr
-    repeat-expr: folder_count
-  - id: folders
-    type: folder
-    repeat: expr
-    repeat-expr: folder_count
-types:
-  pstr:
-    seq:
-      - id: size
-        type: u1
-      - id: str
-        type: str
-        size: size
-        encoding: ASCII
-  folder:
-    seq:
-      - id: file_count
-        type: u4
-      - id: unknown
-        type: u4
-      - id: flags
-        type: u4
-      - id: timestamp
-        type: u4
-      - id: files
-        type: file
-        repeat: expr
-        repeat-expr: file_count
-  file:
-    seq:
-      - id: name
-        type: pstr
-      - id: flags
-        type: u4
-        enum: compression
-      - id: offset
-        type: u4
-      - id: size_unpacked
-        type: u4
-      - id: size_packed
-        type: u4
-    instances:
-      contents:
-        io: _root._io
-        pos: offset
-        size: "(flags == compression::none) ? size_unpacked : size_packed"
-enums:
-  compression:
-    32: none
-    64: lzss
+
+        <h3>FalloutDat.cs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/csharp/FalloutDat.cs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+using System.Collections.Generic;
+
+namespace Kaitai
+{
+    public partial class FalloutDat : KaitaiStruct
+    {
+        public static FalloutDat FromFile(string fileName)
+        {
+            return new FalloutDat(new KaitaiStream(fileName));
+        }
+
+        public enum Compression
+        {
+            None = 32,
+            Lzss = 64,
+        }
+
+        public FalloutDat(KaitaiStream io, KaitaiStruct parent = null, FalloutDat root = null) : base(io)
+        {
+            m_parent = parent;
+            m_root = root ?? this;
+            _read();
+        }
+        private void _read() {
+            _folderCount = m_io.ReadU4be();
+            _unknown1 = m_io.ReadU4be();
+            _unknown2 = m_io.ReadU4be();
+            _timestamp = m_io.ReadU4be();
+            _folderNames = new List&lt;Pstr&gt;((int) (FolderCount));
+            for (var i = 0; i &lt; FolderCount; i++) {
+                _folderNames.Add(new Pstr(m_io, this, m_root));
+            }
+            _folders = new List&lt;Folder&gt;((int) (FolderCount));
+            for (var i = 0; i &lt; FolderCount; i++) {
+                _folders.Add(new Folder(m_io, this, m_root));
+            }
+            }
+        public partial class Pstr : KaitaiStruct
+        {
+            public static Pstr FromFile(string fileName)
+            {
+                return new Pstr(new KaitaiStream(fileName));
+            }
+
+            public Pstr(KaitaiStream io, KaitaiStruct parent = null, FalloutDat root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                _read();
+            }
+            private void _read() {
+                _size = m_io.ReadU1();
+                _str = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytes(Size));
+                }
+            private byte _size;
+            private string _str;
+            private FalloutDat m_root;
+            private KaitaiStruct m_parent;
+            public byte Size { get { return _size; } }
+            public string Str { get { return _str; } }
+            public FalloutDat M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class Folder : KaitaiStruct
+        {
+            public static Folder FromFile(string fileName)
+            {
+                return new Folder(new KaitaiStream(fileName));
+            }
+
+            public Folder(KaitaiStream io, FalloutDat parent = null, FalloutDat root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                _read();
+            }
+            private void _read() {
+                _fileCount = m_io.ReadU4be();
+                _unknown = m_io.ReadU4be();
+                _flags = m_io.ReadU4be();
+                _timestamp = m_io.ReadU4be();
+                _files = new List&lt;File&gt;((int) (FileCount));
+                for (var i = 0; i &lt; FileCount; i++) {
+                    _files.Add(new File(m_io, this, m_root));
+                }
+                }
+            private uint _fileCount;
+            private uint _unknown;
+            private uint _flags;
+            private uint _timestamp;
+            private List&lt;File&gt; _files;
+            private FalloutDat m_root;
+            private FalloutDat m_parent;
+            public uint FileCount { get { return _fileCount; } }
+            public uint Unknown { get { return _unknown; } }
+            public uint Flags { get { return _flags; } }
+            public uint Timestamp { get { return _timestamp; } }
+            public List&lt;File&gt; Files { get { return _files; } }
+            public FalloutDat M_Root { get { return m_root; } }
+            public FalloutDat M_Parent { get { return m_parent; } }
+        }
+        public partial class File : KaitaiStruct
+        {
+            public static File FromFile(string fileName)
+            {
+                return new File(new KaitaiStream(fileName));
+            }
+
+            public File(KaitaiStream io, FalloutDat.Folder parent = null, FalloutDat root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                f_contents = false;
+                _read();
+            }
+            private void _read() {
+                _name = new Pstr(m_io, this, m_root);
+                _flags = ((FalloutDat.Compression) m_io.ReadU4be());
+                _offset = m_io.ReadU4be();
+                _sizeUnpacked = m_io.ReadU4be();
+                _sizePacked = m_io.ReadU4be();
+                }
+            private bool f_contents;
+            private byte[] _contents;
+            public byte[] Contents
+            {
+                get
+                {
+                    if (f_contents)
+                        return _contents;
+                    KaitaiStream io = M_Root.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(Offset);
+                    _contents = io.ReadBytes((Flags == FalloutDat.Compression.None ? SizeUnpacked : SizePacked));
+                    io.Seek(_pos);
+                    f_contents = true;
+                    return _contents;
+                }
+            }
+            private Pstr _name;
+            private Compression _flags;
+            private uint _offset;
+            private uint _sizeUnpacked;
+            private uint _sizePacked;
+            private FalloutDat m_root;
+            private FalloutDat.Folder m_parent;
+            public Pstr Name { get { return _name; } }
+            public Compression Flags { get { return _flags; } }
+            public uint Offset { get { return _offset; } }
+            public uint SizeUnpacked { get { return _sizeUnpacked; } }
+            public uint SizePacked { get { return _sizePacked; } }
+            public FalloutDat M_Root { get { return m_root; } }
+            public FalloutDat.Folder M_Parent { get { return m_parent; } }
+        }
+        private uint _folderCount;
+        private uint _unknown1;
+        private uint _unknown2;
+        private uint _timestamp;
+        private List&lt;Pstr&gt; _folderNames;
+        private List&lt;Folder&gt; _folders;
+        private FalloutDat m_root;
+        private KaitaiStruct m_parent;
+        public uint FolderCount { get { return _folderCount; } }
+        public uint Unknown1 { get { return _unknown1; } }
+        public uint Unknown2 { get { return _unknown2; } }
+        public uint Timestamp { get { return _timestamp; } }
+        public List&lt;Pstr&gt; FolderNames { get { return _folderNames; } }
+        public List&lt;Folder&gt; Folders { get { return _folders; } }
+        public FalloutDat M_Root { get { return m_root; } }
+        public KaitaiStruct M_Parent { get { return m_parent; } }
+    }
+}
 </code></pre>
+            
+        </div>
+        
     </div>
 </section>
 

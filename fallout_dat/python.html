@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>fallout_dat format spec for Kaitai Struct</title>
+  <title>fallout_dat: Python parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -92,7 +92,7 @@ section#format-index .row {
     <div class="container">
         <h1>fallout_dat:
             
-            format specification
+            Python parsing library
             
         </h1>
 
@@ -138,7 +138,7 @@ section#format-index .row {
             <ul class="nav nav-pills">
                 
                 
-                <li class="active">
+                <li>
                 
                 <a href="index.html" title="fallout_dat parsing Overview library">Overview</a></li>
                 
@@ -178,7 +178,7 @@ section#format-index .row {
                 <a href="php.html" title="fallout_dat parsing PHP library">PHP</a></li>
                 
                 
-                <li>
+                <li class="active">
                 
                 <a href="python.html" title="fallout_dat parsing Python library">Python</a></li>
                 
@@ -192,87 +192,126 @@ section#format-index .row {
         </div>
     </div>
 </section>
-<section id="format-diagram" class="format">
-    <div class="container">
-        <h2>Block diagram</h2>
-        <a href="fallout_dat.svg">
-            <img class="diagram-img" src="fallout_dat.svg" />
-        </a>
-    </div>
-</section>
 
-<section id="format-ksy" class="format">
+
+<section id="format-lang" class="format">
     <div class="container">
-        <h2>Format specification in Kaitai Struct YAML</h2>
+        <h2>
+            
+            Python source code to parse fallout_dat
+            
+        </h2>
+
         
-        <pre><code class="yaml">meta:
-  id: fallout_dat
-  endian: be
-  application: Fallout
-  license: CC0-1.0
-seq:
-  - id: folder_count
-    type: u4
-  - id: unknown1
-    type: u4
-  - id: unknown2
-    type: u4
-  - id: timestamp
-    type: u4
-  - id: folder_names
-    type: pstr
-    repeat: expr
-    repeat-expr: folder_count
-  - id: folders
-    type: folder
-    repeat: expr
-    repeat-expr: folder_count
-types:
-  pstr:
-    seq:
-      - id: size
-        type: u1
-      - id: str
-        type: str
-        size: size
-        encoding: ASCII
-  folder:
-    seq:
-      - id: file_count
-        type: u4
-      - id: unknown
-        type: u4
-      - id: flags
-        type: u4
-      - id: timestamp
-        type: u4
-      - id: files
-        type: file
-        repeat: expr
-        repeat-expr: file_count
-  file:
-    seq:
-      - id: name
-        type: pstr
-      - id: flags
-        type: u4
-        enum: compression
-      - id: offset
-        type: u4
-      - id: size_unpacked
-        type: u4
-      - id: size_packed
-        type: u4
-    instances:
-      contents:
-        io: _root._io
-        pos: offset
-        size: "(flags == compression::none) ? size_unpacked : size_packed"
-enums:
-  compression:
-    32: none
-    64: lzss
+
+        <h3>fallout_dat.py</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/python/fallout_dat.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+from pkg_resources import parse_version
+from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+from enum import Enum
+
+
+if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
+    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
+
+class FalloutDat(KaitaiStruct):
+
+    class Compression(Enum):
+        none = 32
+        lzss = 64
+    def __init__(self, _io, _parent=None, _root=None):
+        self._io = _io
+        self._parent = _parent
+        self._root = _root if _root else self
+        self._read()
+
+    def _read(self):
+        self.folder_count = self._io.read_u4be()
+        self.unknown1 = self._io.read_u4be()
+        self.unknown2 = self._io.read_u4be()
+        self.timestamp = self._io.read_u4be()
+        self.folder_names = [None] * (self.folder_count)
+        for i in range(self.folder_count):
+            self.folder_names[i] = self._root.Pstr(self._io, self, self._root)
+
+        self.folders = [None] * (self.folder_count)
+        for i in range(self.folder_count):
+            self.folders[i] = self._root.Folder(self._io, self, self._root)
+
+
+    class Pstr(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.size = self._io.read_u1()
+            self.str = (self._io.read_bytes(self.size)).decode(u&quot;ASCII&quot;)
+
+
+    class Folder(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.file_count = self._io.read_u4be()
+            self.unknown = self._io.read_u4be()
+            self.flags = self._io.read_u4be()
+            self.timestamp = self._io.read_u4be()
+            self.files = [None] * (self.file_count)
+            for i in range(self.file_count):
+                self.files[i] = self._root.File(self._io, self, self._root)
+
+
+
+    class File(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.name = self._root.Pstr(self._io, self, self._root)
+            self.flags = self._root.Compression(self._io.read_u4be())
+            self.offset = self._io.read_u4be()
+            self.size_unpacked = self._io.read_u4be()
+            self.size_packed = self._io.read_u4be()
+
+        @property
+        def contents(self):
+            if hasattr(self, &#39;_m_contents&#39;):
+                return self._m_contents if hasattr(self, &#39;_m_contents&#39;) else None
+
+            io = self._root._io
+            _pos = io.pos()
+            io.seek(self.offset)
+            self._m_contents = io.read_bytes((self.size_unpacked if self.flags == self._root.Compression.none else self.size_packed))
+            io.seek(_pos)
+            return self._m_contents if hasattr(self, &#39;_m_contents&#39;) else None
+
+
+
 </code></pre>
+            
+        </div>
+        
     </div>
 </section>
 
