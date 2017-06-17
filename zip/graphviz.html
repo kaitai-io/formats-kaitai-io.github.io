@@ -237,6 +237,85 @@ section#format-index .row {
 				&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;header.compressed_size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
+		subgraph cluster__extra_field {
+			label=&quot;Zip::ExtraField&quot;;
+			graph[style=dotted];
+
+			extra_field__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;code_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;code_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le→ExtraCodes&lt;/TD&gt;&lt;TD PORT=&quot;code_type&quot;&gt;code&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;size_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;size_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;size_type&quot;&gt;size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (code)&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+extra_field__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:extra_codes_ntfs&lt;/TD&gt;&lt;TD PORT=&quot;case0&quot;&gt;Ntfs&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:extra_codes_extended_timestamp&lt;/TD&gt;&lt;TD PORT=&quot;case1&quot;&gt;ExtendedTimestamp&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:extra_codes_infozip_unix_var_size&lt;/TD&gt;&lt;TD PORT=&quot;case2&quot;&gt;InfozipUnixVarSize&lt;/TD&gt;&lt;/TR&gt;
+&lt;/TABLE&gt;&gt;];
+			subgraph cluster__ntfs {
+				label=&quot;Zip::ExtraField::Ntfs&quot;;
+				graph[style=dotted];
+
+				ntfs__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;reserved_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;reserved_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;reserved_type&quot;&gt;reserved&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;attributes_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;attributes_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Attribute&lt;/TD&gt;&lt;TD PORT=&quot;attributes_type&quot;&gt;attributes&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;attributes__repeat&quot;&gt;repeat to end of stream&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+				subgraph cluster__attribute {
+					label=&quot;Zip::ExtraField::Ntfs::Attribute&quot;;
+					graph[style=dotted];
+
+					attribute__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+						&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+						&lt;TR&gt;&lt;TD PORT=&quot;tag_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;tag_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;tag_type&quot;&gt;tag&lt;/TD&gt;&lt;/TR&gt;
+						&lt;TR&gt;&lt;TD PORT=&quot;size_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;size_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;size_type&quot;&gt;size&lt;/TD&gt;&lt;/TR&gt;
+						&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (tag)&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
+					&lt;/TABLE&gt;&gt;];
+attribute__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;case0&quot;&gt;Attribute1&lt;/TD&gt;&lt;/TR&gt;
+&lt;/TABLE&gt;&gt;];
+				}
+				subgraph cluster__attribute_1 {
+					label=&quot;Zip::ExtraField::Ntfs::Attribute1&quot;;
+					graph[style=dotted];
+
+					attribute_1__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+						&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+						&lt;TR&gt;&lt;TD PORT=&quot;last_mod_time_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;last_mod_time_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;u8le&lt;/TD&gt;&lt;TD PORT=&quot;last_mod_time_type&quot;&gt;last_mod_time&lt;/TD&gt;&lt;/TR&gt;
+						&lt;TR&gt;&lt;TD PORT=&quot;last_access_time_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;last_access_time_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;u8le&lt;/TD&gt;&lt;TD PORT=&quot;last_access_time_type&quot;&gt;last_access_time&lt;/TD&gt;&lt;/TR&gt;
+						&lt;TR&gt;&lt;TD PORT=&quot;creation_time_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;creation_time_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;u8le&lt;/TD&gt;&lt;TD PORT=&quot;creation_time_type&quot;&gt;creation_time&lt;/TD&gt;&lt;/TR&gt;
+					&lt;/TABLE&gt;&gt;];
+				}
+			}
+			subgraph cluster__extended_timestamp {
+				label=&quot;Zip::ExtraField::ExtendedTimestamp&quot;;
+				graph[style=dotted];
+
+				extended_timestamp__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;flags_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;flags_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;flags_type&quot;&gt;flags&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;mod_time_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;mod_time_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;mod_time_type&quot;&gt;mod_time&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;access_time_pos&quot;&gt;5&lt;/TD&gt;&lt;TD PORT=&quot;access_time_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;access_time_type&quot;&gt;access_time&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;create_time_pos&quot;&gt;9&lt;/TD&gt;&lt;TD PORT=&quot;create_time_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;create_time_type&quot;&gt;create_time&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+			}
+			subgraph cluster__infozip_unix_var_size {
+				label=&quot;Zip::ExtraField::InfozipUnixVarSize&quot;;
+				graph[style=dotted];
+
+				infozip_unix_var_size__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;version_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;version_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;version_type&quot;&gt;version&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;uid_size_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;uid_size_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;uid_size_type&quot;&gt;uid_size&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;uid_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;uid_size&quot;&gt;uid_size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;uid_type&quot;&gt;uid&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;gid_size_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;gid_size_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;gid_size_type&quot;&gt;gid_size&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;gid_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;gid_size&quot;&gt;gid_size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;gid_type&quot;&gt;gid&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+			}
+		}
 		subgraph cluster__central_dir_entry {
 			label=&quot;Zip::CentralDirEntry&quot;;
 			graph[style=dotted];
@@ -246,7 +325,7 @@ section#format-index .row {
 				&lt;TR&gt;&lt;TD PORT=&quot;version_made_by_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;version_made_by_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;version_made_by_type&quot;&gt;version_made_by&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;version_needed_to_extract_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;version_needed_to_extract_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;version_needed_to_extract_type&quot;&gt;version_needed_to_extract&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;flags_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;flags_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;flags_type&quot;&gt;flags&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;compression_method_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;compression_method_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;compression_method_type&quot;&gt;compression_method&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;compression_method_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;compression_method_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le→Compression&lt;/TD&gt;&lt;TD PORT=&quot;compression_method_type&quot;&gt;compression_method&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;last_mod_file_time_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;last_mod_file_time_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;last_mod_file_time_type&quot;&gt;last_mod_file_time&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;last_mod_file_date_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;last_mod_file_date_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;last_mod_file_date_type&quot;&gt;last_mod_file_date&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;crc32_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;crc32_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;crc32_type&quot;&gt;crc32&lt;/TD&gt;&lt;/TR&gt;
@@ -260,8 +339,12 @@ section#format-index .row {
 				&lt;TR&gt;&lt;TD PORT=&quot;ext_file_attr_pos&quot;&gt;34&lt;/TD&gt;&lt;TD PORT=&quot;ext_file_attr_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;ext_file_attr_type&quot;&gt;ext_file_attr&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;local_header_offset_pos&quot;&gt;38&lt;/TD&gt;&lt;TD PORT=&quot;local_header_offset_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;s4le&lt;/TD&gt;&lt;TD PORT=&quot;local_header_offset_type&quot;&gt;local_header_offset&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;file_name_pos&quot;&gt;42&lt;/TD&gt;&lt;TD PORT=&quot;file_name_size&quot;&gt;file_name_len&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;file_name_type&quot;&gt;file_name&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;extra_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;extra_size&quot;&gt;extra_len&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;extra_type&quot;&gt;extra&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;extra_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;extra_size&quot;&gt;extra_len&lt;/TD&gt;&lt;TD&gt;Extras&lt;/TD&gt;&lt;TD PORT=&quot;extra_type&quot;&gt;extra&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;comment_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;comment_size&quot;&gt;comment_len&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;comment_type&quot;&gt;comment&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			central_dir_entry__inst__local_header [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;local_header_pos&quot;&gt;local_header_offset&lt;/TD&gt;&lt;TD PORT=&quot;local_header_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;PkSection&lt;/TD&gt;&lt;TD PORT=&quot;local_header_type&quot;&gt;local_header&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
 		subgraph cluster__pk_section {
@@ -281,6 +364,16 @@ pk_section__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER
 	&lt;TR&gt;&lt;TD&gt;1541&lt;/TD&gt;&lt;TD PORT=&quot;case2&quot;&gt;EndOfCentralDir&lt;/TD&gt;&lt;/TR&gt;
 &lt;/TABLE&gt;&gt;];
 		}
+		subgraph cluster__extras {
+			label=&quot;Zip::Extras&quot;;
+			graph[style=dotted];
+
+			extras__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;entries_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;entries_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;ExtraField&lt;/TD&gt;&lt;TD PORT=&quot;entries_type&quot;&gt;entries&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;entries__repeat&quot;&gt;repeat to end of stream&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
 		subgraph cluster__local_file_header {
 			label=&quot;Zip::LocalFileHeader&quot;;
 			graph[style=dotted];
@@ -289,7 +382,7 @@ pk_section__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;version_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;version_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;version_type&quot;&gt;version&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;flags_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;flags_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;flags_type&quot;&gt;flags&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;compression_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;compression_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le→Compression&lt;/TD&gt;&lt;TD PORT=&quot;compression_type&quot;&gt;compression&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;compression_method_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;compression_method_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le→Compression&lt;/TD&gt;&lt;TD PORT=&quot;compression_method_type&quot;&gt;compression_method&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;file_mod_time_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;file_mod_time_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;file_mod_time_type&quot;&gt;file_mod_time&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;file_mod_date_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;file_mod_date_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;file_mod_date_type&quot;&gt;file_mod_date&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;crc32_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;crc32_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;crc32_type&quot;&gt;crc32&lt;/TD&gt;&lt;/TR&gt;
@@ -298,7 +391,7 @@ pk_section__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER
 				&lt;TR&gt;&lt;TD PORT=&quot;file_name_len_pos&quot;&gt;22&lt;/TD&gt;&lt;TD PORT=&quot;file_name_len_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;file_name_len_type&quot;&gt;file_name_len&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;extra_len_pos&quot;&gt;24&lt;/TD&gt;&lt;TD PORT=&quot;extra_len_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;extra_len_type&quot;&gt;extra_len&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;file_name_pos&quot;&gt;26&lt;/TD&gt;&lt;TD PORT=&quot;file_name_size&quot;&gt;file_name_len&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;file_name_type&quot;&gt;file_name&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;extra_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;extra_size&quot;&gt;extra_len&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;extra_type&quot;&gt;extra&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;extra_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;extra_size&quot;&gt;extra_len&lt;/TD&gt;&lt;TD&gt;Extras&lt;/TD&gt;&lt;TD PORT=&quot;extra_type&quot;&gt;extra&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
 		subgraph cluster__end_of_central_dir {
@@ -321,16 +414,32 @@ pk_section__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER
 	zip__seq:sections_type -&gt; pk_section__seq [style=bold];
 	local_file__seq:header_type -&gt; local_file_header__seq [style=bold];
 	local_file_header__seq:compressed_size_type -&gt; local_file__seq:body_size [color=&quot;#404040&quot;];
+	extra_field__seq:body_type -&gt; extra_field__seq_body_switch [style=bold];
+	extra_field__seq_body_switch:case0 -&gt; ntfs__seq [style=bold];
+	extra_field__seq_body_switch:case1 -&gt; extended_timestamp__seq [style=bold];
+	extra_field__seq_body_switch:case2 -&gt; infozip_unix_var_size__seq [style=bold];
+	extra_field__seq:code_type -&gt; extra_field__seq:body_type [color=&quot;#404040&quot;];
+	ntfs__seq:attributes_type -&gt; attribute__seq [style=bold];
+	attribute__seq:body_type -&gt; attribute__seq_body_switch [style=bold];
+	attribute__seq_body_switch:case0 -&gt; attribute_1__seq [style=bold];
+	attribute__seq:tag_type -&gt; attribute__seq:body_type [color=&quot;#404040&quot;];
+	infozip_unix_var_size__seq:uid_size_type -&gt; infozip_unix_var_size__seq:uid_size [color=&quot;#404040&quot;];
+	infozip_unix_var_size__seq:gid_size_type -&gt; infozip_unix_var_size__seq:gid_size [color=&quot;#404040&quot;];
 	central_dir_entry__seq:file_name_len_type -&gt; central_dir_entry__seq:file_name_size [color=&quot;#404040&quot;];
 	central_dir_entry__seq:extra_len_type -&gt; central_dir_entry__seq:extra_size [color=&quot;#404040&quot;];
+	central_dir_entry__seq:extra_type -&gt; extras__seq [style=bold];
 	central_dir_entry__seq:comment_len_type -&gt; central_dir_entry__seq:comment_size [color=&quot;#404040&quot;];
+	central_dir_entry__seq:local_header_offset_type -&gt; central_dir_entry__inst__local_header:local_header_pos [color=&quot;#404040&quot;];
+	central_dir_entry__inst__local_header:local_header_type -&gt; pk_section__seq [style=bold];
 	pk_section__seq:body_type -&gt; pk_section__seq_body_switch [style=bold];
 	pk_section__seq_body_switch:case0 -&gt; central_dir_entry__seq [style=bold];
 	pk_section__seq_body_switch:case1 -&gt; local_file__seq [style=bold];
 	pk_section__seq_body_switch:case2 -&gt; end_of_central_dir__seq [style=bold];
 	pk_section__seq:section_type_type -&gt; pk_section__seq:body_type [color=&quot;#404040&quot;];
+	extras__seq:entries_type -&gt; extra_field__seq [style=bold];
 	local_file_header__seq:file_name_len_type -&gt; local_file_header__seq:file_name_size [color=&quot;#404040&quot;];
 	local_file_header__seq:extra_len_type -&gt; local_file_header__seq:extra_size [color=&quot;#404040&quot;];
+	local_file_header__seq:extra_type -&gt; extras__seq [style=bold];
 	end_of_central_dir__seq:comment_len_type -&gt; end_of_central_dir__seq:comment_size [color=&quot;#404040&quot;];
 }
 </code></pre>

@@ -252,6 +252,27 @@ our $COMPRESSION_IBM_TERSE = 18;
 our $COMPRESSION_IBM_LZ77_Z = 19;
 our $COMPRESSION_PPMD = 98;
 
+our $EXTRA_CODES_ZIP64 = 1;
+our $EXTRA_CODES_AV_INFO = 7;
+our $EXTRA_CODES_OS2 = 9;
+our $EXTRA_CODES_NTFS = 10;
+our $EXTRA_CODES_OPENVMS = 12;
+our $EXTRA_CODES_PKWARE_UNIX = 13;
+our $EXTRA_CODES_FILE_STREAM_AND_FORK_DESCRIPTORS = 14;
+our $EXTRA_CODES_PATCH_DESCRIPTOR = 15;
+our $EXTRA_CODES_PKCS7 = 20;
+our $EXTRA_CODES_X509_CERT_ID_AND_SIGNATURE_FOR_FILE = 21;
+our $EXTRA_CODES_X509_CERT_ID_FOR_CENTRAL_DIR = 22;
+our $EXTRA_CODES_STRONG_ENCRYPTION_HEADER = 23;
+our $EXTRA_CODES_RECORD_MANAGEMENT_CONTROLS = 24;
+our $EXTRA_CODES_PKCS7_ENC_RECIP_CERT_LIST = 25;
+our $EXTRA_CODES_IBM_S390_UNCOMP = 101;
+our $EXTRA_CODES_IBM_S390_COMP = 102;
+our $EXTRA_CODES_POSZIP_4690 = 18064;
+our $EXTRA_CODES_EXTENDED_TIMESTAMP = 21589;
+our $EXTRA_CODES_INFOZIP_UNIX = 30805;
+our $EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE = 30837;
+
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
     my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
@@ -324,6 +345,361 @@ sub body {
 }
 
 ########################################################################
+package Zip::ExtraField;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{code} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{size} = $self-&gt;{_io}-&gt;read_u2le();
+    my $_on = $self-&gt;code();
+    if ($_on == $EXTRA_CODES_NTFS) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = Zip::ExtraField::Ntfs-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $EXTRA_CODES_EXTENDED_TIMESTAMP) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = Zip::ExtraField::ExtendedTimestamp-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = Zip::ExtraField::InfozipUnixVarSize-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    else {
+        $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
+    }
+}
+
+sub code {
+    my ($self) = @_;
+    return $self-&gt;{code};
+}
+
+sub size {
+    my ($self) = @_;
+    return $self-&gt;{size};
+}
+
+sub body {
+    my ($self) = @_;
+    return $self-&gt;{body};
+}
+
+sub _raw_body {
+    my ($self) = @_;
+    return $self-&gt;{_raw_body};
+}
+
+########################################################################
+package Zip::ExtraField::Ntfs;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{reserved} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{attributes} = ();
+    while (!$self-&gt;{_io}-&gt;is_eof()) {
+        push @{$self-&gt;{attributes}}, Zip::ExtraField::Ntfs::Attribute-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self-&gt;{reserved};
+}
+
+sub attributes {
+    my ($self) = @_;
+    return $self-&gt;{attributes};
+}
+
+########################################################################
+package Zip::ExtraField::Ntfs::Attribute;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{tag} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{size} = $self-&gt;{_io}-&gt;read_u2le();
+    my $_on = $self-&gt;tag();
+    if ($_on == 1) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = Zip::ExtraField::Ntfs::Attribute1-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    else {
+        $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
+    }
+}
+
+sub tag {
+    my ($self) = @_;
+    return $self-&gt;{tag};
+}
+
+sub size {
+    my ($self) = @_;
+    return $self-&gt;{size};
+}
+
+sub body {
+    my ($self) = @_;
+    return $self-&gt;{body};
+}
+
+sub _raw_body {
+    my ($self) = @_;
+    return $self-&gt;{_raw_body};
+}
+
+########################################################################
+package Zip::ExtraField::Ntfs::Attribute1;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{last_mod_time} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{last_access_time} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{creation_time} = $self-&gt;{_io}-&gt;read_u8le();
+}
+
+sub last_mod_time {
+    my ($self) = @_;
+    return $self-&gt;{last_mod_time};
+}
+
+sub last_access_time {
+    my ($self) = @_;
+    return $self-&gt;{last_access_time};
+}
+
+sub creation_time {
+    my ($self) = @_;
+    return $self-&gt;{creation_time};
+}
+
+########################################################################
+package Zip::ExtraField::ExtendedTimestamp;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{flags} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{mod_time} = $self-&gt;{_io}-&gt;read_u4le();
+    if (!($self-&gt;_io()-&gt;is_eof())) {
+        $self-&gt;{access_time} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+    if (!($self-&gt;_io()-&gt;is_eof())) {
+        $self-&gt;{create_time} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self-&gt;{flags};
+}
+
+sub mod_time {
+    my ($self) = @_;
+    return $self-&gt;{mod_time};
+}
+
+sub access_time {
+    my ($self) = @_;
+    return $self-&gt;{access_time};
+}
+
+sub create_time {
+    my ($self) = @_;
+    return $self-&gt;{create_time};
+}
+
+########################################################################
+package Zip::ExtraField::InfozipUnixVarSize;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{version} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{uid_size} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{uid} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;uid_size());
+    $self-&gt;{gid_size} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{gid} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;gid_size());
+}
+
+sub version {
+    my ($self) = @_;
+    return $self-&gt;{version};
+}
+
+sub uid_size {
+    my ($self) = @_;
+    return $self-&gt;{uid_size};
+}
+
+sub uid {
+    my ($self) = @_;
+    return $self-&gt;{uid};
+}
+
+sub gid_size {
+    my ($self) = @_;
+    return $self-&gt;{gid_size};
+}
+
+sub gid {
+    my ($self) = @_;
+    return $self-&gt;{gid};
+}
+
+########################################################################
 package Zip::CentralDirEntry;
 
 our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
@@ -370,8 +746,20 @@ sub _read {
     $self-&gt;{ext_file_attr} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{local_header_offset} = $self-&gt;{_io}-&gt;read_s4le();
     $self-&gt;{file_name} = Encode::decode(&quot;UTF-8&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;file_name_len()));
-    $self-&gt;{extra} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;extra_len());
+    $self-&gt;{_raw_extra} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;extra_len());
+    my $io__raw_extra = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_extra});
+    $self-&gt;{extra} = Zip::Extras-&gt;new($io__raw_extra, $self, $self-&gt;{_root});
     $self-&gt;{comment} = Encode::decode(&quot;UTF-8&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;comment_len()));
+}
+
+sub local_header {
+    my ($self) = @_;
+    return $self-&gt;{local_header} if ($self-&gt;{local_header});
+    my $_pos = $self-&gt;{_io}-&gt;pos();
+    $self-&gt;{_io}-&gt;seek($self-&gt;local_header_offset());
+    $self-&gt;{local_header} = Zip::PkSection-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{_io}-&gt;seek($_pos);
+    return $self-&gt;{local_header};
 }
 
 sub version_made_by {
@@ -469,6 +857,11 @@ sub comment {
     return $self-&gt;{comment};
 }
 
+sub _raw_extra {
+    my ($self) = @_;
+    return $self-&gt;{_raw_extra};
+}
+
 ########################################################################
 package Zip::PkSection;
 
@@ -529,6 +922,47 @@ sub body {
 }
 
 ########################################################################
+package Zip::Extras;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{entries} = ();
+    while (!$self-&gt;{_io}-&gt;is_eof()) {
+        push @{$self-&gt;{entries}}, Zip::ExtraField-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self-&gt;{entries};
+}
+
+########################################################################
 package Zip::LocalFileHeader;
 
 our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
@@ -560,7 +994,7 @@ sub _read {
 
     $self-&gt;{version} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{flags} = $self-&gt;{_io}-&gt;read_u2le();
-    $self-&gt;{compression} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{compression_method} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{file_mod_time} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{file_mod_date} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{crc32} = $self-&gt;{_io}-&gt;read_u4le();
@@ -569,7 +1003,9 @@ sub _read {
     $self-&gt;{file_name_len} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{extra_len} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{file_name} = Encode::decode(&quot;UTF-8&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;file_name_len()));
-    $self-&gt;{extra} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;extra_len());
+    $self-&gt;{_raw_extra} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;extra_len());
+    my $io__raw_extra = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_extra});
+    $self-&gt;{extra} = Zip::Extras-&gt;new($io__raw_extra, $self, $self-&gt;{_root});
 }
 
 sub version {
@@ -582,9 +1018,9 @@ sub flags {
     return $self-&gt;{flags};
 }
 
-sub compression {
+sub compression_method {
     my ($self) = @_;
-    return $self-&gt;{compression};
+    return $self-&gt;{compression_method};
 }
 
 sub file_mod_time {
@@ -630,6 +1066,11 @@ sub file_name {
 sub extra {
     my ($self) = @_;
     return $self-&gt;{extra};
+}
+
+sub _raw_extra {
+    my ($self) = @_;
+    return $self-&gt;{_raw_extra};
 }
 
 ########################################################################

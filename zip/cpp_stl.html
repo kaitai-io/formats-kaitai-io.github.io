@@ -281,12 +281,18 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
 #error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
 #endif
 
+/**
+ * \sa Source
+ */
+
 class zip_t : public kaitai::kstruct {
 
 public:
     class local_file_t;
+    class extra_field_t;
     class central_dir_entry_t;
     class pk_section_t;
+    class extras_t;
     class local_file_header_t;
     class end_of_central_dir_t;
 
@@ -306,6 +312,29 @@ public:
         COMPRESSION_IBM_TERSE = 18,
         COMPRESSION_IBM_LZ77_Z = 19,
         COMPRESSION_PPMD = 98
+    };
+
+    enum extra_codes_t {
+        EXTRA_CODES_ZIP64 = 1,
+        EXTRA_CODES_AV_INFO = 7,
+        EXTRA_CODES_OS2 = 9,
+        EXTRA_CODES_NTFS = 10,
+        EXTRA_CODES_OPENVMS = 12,
+        EXTRA_CODES_PKWARE_UNIX = 13,
+        EXTRA_CODES_FILE_STREAM_AND_FORK_DESCRIPTORS = 14,
+        EXTRA_CODES_PATCH_DESCRIPTOR = 15,
+        EXTRA_CODES_PKCS7 = 20,
+        EXTRA_CODES_X509_CERT_ID_AND_SIGNATURE_FOR_FILE = 21,
+        EXTRA_CODES_X509_CERT_ID_FOR_CENTRAL_DIR = 22,
+        EXTRA_CODES_STRONG_ENCRYPTION_HEADER = 23,
+        EXTRA_CODES_RECORD_MANAGEMENT_CONTROLS = 24,
+        EXTRA_CODES_PKCS7_ENC_RECIP_CERT_LIST = 25,
+        EXTRA_CODES_IBM_S390_UNCOMP = 101,
+        EXTRA_CODES_IBM_S390_COMP = 102,
+        EXTRA_CODES_POSZIP_4690 = 18064,
+        EXTRA_CODES_EXTENDED_TIMESTAMP = 21589,
+        EXTRA_CODES_INFOZIP_UNIX = 30805,
+        EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE = 30837
     };
 
     zip_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, zip_t* p_root = 0);
@@ -333,6 +362,209 @@ public:
         zip_t::pk_section_t* _parent() const { return m__parent; }
     };
 
+    class extra_field_t : public kaitai::kstruct {
+
+    public:
+        class ntfs_t;
+        class extended_timestamp_t;
+        class infozip_unix_var_size_t;
+
+        extra_field_t(kaitai::kstream* p_io, zip_t::extras_t* p_parent = 0, zip_t* p_root = 0);
+        void _read();
+        ~extra_field_t();
+
+        /**
+         * \sa Source
+         */
+
+        class ntfs_t : public kaitai::kstruct {
+
+        public:
+            class attribute_t;
+            class attribute_1_t;
+
+            ntfs_t(kaitai::kstream* p_io, zip_t::extra_field_t* p_parent = 0, zip_t* p_root = 0);
+            void _read();
+            ~ntfs_t();
+
+            class attribute_t : public kaitai::kstruct {
+
+            public:
+
+                attribute_t(kaitai::kstream* p_io, zip_t::extra_field_t::ntfs_t* p_parent = 0, zip_t* p_root = 0);
+                void _read();
+                ~attribute_t();
+
+            private:
+                uint16_t m_tag;
+                uint16_t m_size;
+                attribute_1_t* m_body;
+                zip_t* m__root;
+                zip_t::extra_field_t::ntfs_t* m__parent;
+                std::string m__raw_body;
+                kaitai::kstream* m__io__raw_body;
+
+            public:
+                uint16_t tag() const { return m_tag; }
+                uint16_t size() const { return m_size; }
+                attribute_1_t* body() const { return m_body; }
+                zip_t* _root() const { return m__root; }
+                zip_t::extra_field_t::ntfs_t* _parent() const { return m__parent; }
+                std::string _raw_body() const { return m__raw_body; }
+                kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
+            };
+
+            class attribute_1_t : public kaitai::kstruct {
+
+            public:
+
+                attribute_1_t(kaitai::kstream* p_io, zip_t::extra_field_t::ntfs_t::attribute_t* p_parent = 0, zip_t* p_root = 0);
+                void _read();
+                ~attribute_1_t();
+
+            private:
+                uint64_t m_last_mod_time;
+                uint64_t m_last_access_time;
+                uint64_t m_creation_time;
+                zip_t* m__root;
+                zip_t::extra_field_t::ntfs_t::attribute_t* m__parent;
+
+            public:
+                uint64_t last_mod_time() const { return m_last_mod_time; }
+                uint64_t last_access_time() const { return m_last_access_time; }
+                uint64_t creation_time() const { return m_creation_time; }
+                zip_t* _root() const { return m__root; }
+                zip_t::extra_field_t::ntfs_t::attribute_t* _parent() const { return m__parent; }
+            };
+
+        private:
+            uint32_t m_reserved;
+            std::vector&lt;attribute_t*&gt;* m_attributes;
+            zip_t* m__root;
+            zip_t::extra_field_t* m__parent;
+
+        public:
+            uint32_t reserved() const { return m_reserved; }
+            std::vector&lt;attribute_t*&gt;* attributes() const { return m_attributes; }
+            zip_t* _root() const { return m__root; }
+            zip_t::extra_field_t* _parent() const { return m__parent; }
+        };
+
+        /**
+         * \sa Source
+         */
+
+        class extended_timestamp_t : public kaitai::kstruct {
+
+        public:
+
+            extended_timestamp_t(kaitai::kstream* p_io, zip_t::extra_field_t* p_parent = 0, zip_t* p_root = 0);
+            void _read();
+            ~extended_timestamp_t();
+
+        private:
+            uint8_t m_flags;
+            uint32_t m_mod_time;
+            uint32_t m_access_time;
+            bool n_access_time;
+
+        public:
+            bool _is_null_access_time() { access_time(); return n_access_time; };
+
+        private:
+            uint32_t m_create_time;
+            bool n_create_time;
+
+        public:
+            bool _is_null_create_time() { create_time(); return n_create_time; };
+
+        private:
+            zip_t* m__root;
+            zip_t::extra_field_t* m__parent;
+
+        public:
+            uint8_t flags() const { return m_flags; }
+            uint32_t mod_time() const { return m_mod_time; }
+            uint32_t access_time() const { return m_access_time; }
+            uint32_t create_time() const { return m_create_time; }
+            zip_t* _root() const { return m__root; }
+            zip_t::extra_field_t* _parent() const { return m__parent; }
+        };
+
+        /**
+         * \sa Source
+         */
+
+        class infozip_unix_var_size_t : public kaitai::kstruct {
+
+        public:
+
+            infozip_unix_var_size_t(kaitai::kstream* p_io, zip_t::extra_field_t* p_parent = 0, zip_t* p_root = 0);
+            void _read();
+            ~infozip_unix_var_size_t();
+
+        private:
+            uint8_t m_version;
+            uint8_t m_uid_size;
+            std::string m_uid;
+            uint8_t m_gid_size;
+            std::string m_gid;
+            zip_t* m__root;
+            zip_t::extra_field_t* m__parent;
+
+        public:
+
+            /**
+             * Version of this extra field, currently 1
+             */
+            uint8_t version() const { return m_version; }
+
+            /**
+             * Size of UID field
+             */
+            uint8_t uid_size() const { return m_uid_size; }
+
+            /**
+             * UID (User ID) for a file
+             */
+            std::string uid() const { return m_uid; }
+
+            /**
+             * Size of GID field
+             */
+            uint8_t gid_size() const { return m_gid_size; }
+
+            /**
+             * GID (Group ID) for a file
+             */
+            std::string gid() const { return m_gid; }
+            zip_t* _root() const { return m__root; }
+            zip_t::extra_field_t* _parent() const { return m__parent; }
+        };
+
+    private:
+        extra_codes_t m_code;
+        uint16_t m_size;
+        kaitai::kstruct* m_body;
+        zip_t* m__root;
+        zip_t::extras_t* m__parent;
+        std::string m__raw_body;
+        kaitai::kstream* m__io__raw_body;
+
+    public:
+        extra_codes_t code() const { return m_code; }
+        uint16_t size() const { return m_size; }
+        kaitai::kstruct* body() const { return m_body; }
+        zip_t* _root() const { return m__root; }
+        zip_t::extras_t* _parent() const { return m__parent; }
+        std::string _raw_body() const { return m__raw_body; }
+        kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
+    };
+
+    /**
+     * \sa - 4.3.12
+     */
+
     class central_dir_entry_t : public kaitai::kstruct {
 
     public:
@@ -342,10 +574,17 @@ public:
         ~central_dir_entry_t();
 
     private:
+        bool f_local_header;
+        pk_section_t* m_local_header;
+
+    public:
+        pk_section_t* local_header();
+
+    private:
         uint16_t m_version_made_by;
         uint16_t m_version_needed_to_extract;
         uint16_t m_flags;
-        uint16_t m_compression_method;
+        compression_t m_compression_method;
         uint16_t m_last_mod_file_time;
         uint16_t m_last_mod_file_date;
         uint32_t m_crc32;
@@ -359,16 +598,18 @@ public:
         uint32_t m_ext_file_attr;
         int32_t m_local_header_offset;
         std::string m_file_name;
-        std::string m_extra;
+        extras_t* m_extra;
         std::string m_comment;
         zip_t* m__root;
         zip_t::pk_section_t* m__parent;
+        std::string m__raw_extra;
+        kaitai::kstream* m__io__raw_extra;
 
     public:
         uint16_t version_made_by() const { return m_version_made_by; }
         uint16_t version_needed_to_extract() const { return m_version_needed_to_extract; }
         uint16_t flags() const { return m_flags; }
-        uint16_t compression_method() const { return m_compression_method; }
+        compression_t compression_method() const { return m_compression_method; }
         uint16_t last_mod_file_time() const { return m_last_mod_file_time; }
         uint16_t last_mod_file_date() const { return m_last_mod_file_date; }
         uint32_t crc32() const { return m_crc32; }
@@ -382,17 +623,19 @@ public:
         uint32_t ext_file_attr() const { return m_ext_file_attr; }
         int32_t local_header_offset() const { return m_local_header_offset; }
         std::string file_name() const { return m_file_name; }
-        std::string extra() const { return m_extra; }
+        extras_t* extra() const { return m_extra; }
         std::string comment() const { return m_comment; }
         zip_t* _root() const { return m__root; }
         zip_t::pk_section_t* _parent() const { return m__parent; }
+        std::string _raw_extra() const { return m__raw_extra; }
+        kaitai::kstream* _io__raw_extra() const { return m__io__raw_extra; }
     };
 
     class pk_section_t : public kaitai::kstruct {
 
     public:
 
-        pk_section_t(kaitai::kstream* p_io, zip_t* p_parent = 0, zip_t* p_root = 0);
+        pk_section_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, zip_t* p_root = 0);
         void _read();
         ~pk_section_t();
 
@@ -401,14 +644,33 @@ public:
         uint16_t m_section_type;
         kaitai::kstruct* m_body;
         zip_t* m__root;
-        zip_t* m__parent;
+        kaitai::kstruct* m__parent;
 
     public:
         std::string magic() const { return m_magic; }
         uint16_t section_type() const { return m_section_type; }
         kaitai::kstruct* body() const { return m_body; }
         zip_t* _root() const { return m__root; }
-        zip_t* _parent() const { return m__parent; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
+    class extras_t : public kaitai::kstruct {
+
+    public:
+
+        extras_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, zip_t* p_root = 0);
+        void _read();
+        ~extras_t();
+
+    private:
+        std::vector&lt;extra_field_t*&gt;* m_entries;
+        zip_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        std::vector&lt;extra_field_t*&gt;* entries() const { return m_entries; }
+        zip_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
     };
 
     class local_file_header_t : public kaitai::kstruct {
@@ -422,7 +684,7 @@ public:
     private:
         uint16_t m_version;
         uint16_t m_flags;
-        compression_t m_compression;
+        compression_t m_compression_method;
         uint16_t m_file_mod_time;
         uint16_t m_file_mod_date;
         uint32_t m_crc32;
@@ -431,14 +693,16 @@ public:
         uint16_t m_file_name_len;
         uint16_t m_extra_len;
         std::string m_file_name;
-        std::string m_extra;
+        extras_t* m_extra;
         zip_t* m__root;
         zip_t::local_file_t* m__parent;
+        std::string m__raw_extra;
+        kaitai::kstream* m__io__raw_extra;
 
     public:
         uint16_t version() const { return m_version; }
         uint16_t flags() const { return m_flags; }
-        compression_t compression() const { return m_compression; }
+        compression_t compression_method() const { return m_compression_method; }
         uint16_t file_mod_time() const { return m_file_mod_time; }
         uint16_t file_mod_date() const { return m_file_mod_date; }
         uint32_t crc32() const { return m_crc32; }
@@ -447,9 +711,11 @@ public:
         uint16_t file_name_len() const { return m_file_name_len; }
         uint16_t extra_len() const { return m_extra_len; }
         std::string file_name() const { return m_file_name; }
-        std::string extra() const { return m_extra; }
+        extras_t* extra() const { return m_extra; }
         zip_t* _root() const { return m__root; }
         zip_t::local_file_t* _parent() const { return m__parent; }
+        std::string _raw_extra() const { return m__raw_extra; }
+        kaitai::kstream* _io__raw_extra() const { return m__io__raw_extra; }
     };
 
     class end_of_central_dir_t : public kaitai::kstruct {
@@ -554,9 +820,145 @@ zip_t::local_file_t::~local_file_t() {
     delete m_header;
 }
 
+zip_t::extra_field_t::extra_field_t(kaitai::kstream *p_io, zip_t::extras_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void zip_t::extra_field_t::_read() {
+    m_code = static_cast&lt;zip_t::extra_codes_t&gt;(m__io-&gt;read_u2le());
+    m_size = m__io-&gt;read_u2le();
+    switch (code()) {
+    case EXTRA_CODES_NTFS:
+        m__raw_body = m__io-&gt;read_bytes(size());
+        m__io__raw_body = new kaitai::kstream(m__raw_body);
+        m_body = new ntfs_t(m__io__raw_body, this, m__root);
+        break;
+    case EXTRA_CODES_EXTENDED_TIMESTAMP:
+        m__raw_body = m__io-&gt;read_bytes(size());
+        m__io__raw_body = new kaitai::kstream(m__raw_body);
+        m_body = new extended_timestamp_t(m__io__raw_body, this, m__root);
+        break;
+    case EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE:
+        m__raw_body = m__io-&gt;read_bytes(size());
+        m__io__raw_body = new kaitai::kstream(m__raw_body);
+        m_body = new infozip_unix_var_size_t(m__io__raw_body, this, m__root);
+        break;
+    default:
+        m__raw_body = m__io-&gt;read_bytes(size());
+        break;
+    }
+}
+
+zip_t::extra_field_t::~extra_field_t() {
+}
+
+zip_t::extra_field_t::ntfs_t::ntfs_t(kaitai::kstream *p_io, zip_t::extra_field_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void zip_t::extra_field_t::ntfs_t::_read() {
+    m_reserved = m__io-&gt;read_u4le();
+    m_attributes = new std::vector&lt;attribute_t*&gt;();
+    while (!m__io-&gt;is_eof()) {
+        m_attributes-&gt;push_back(new attribute_t(m__io, this, m__root));
+    }
+}
+
+zip_t::extra_field_t::ntfs_t::~ntfs_t() {
+    for (std::vector&lt;attribute_t*&gt;::iterator it = m_attributes-&gt;begin(); it != m_attributes-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_attributes;
+}
+
+zip_t::extra_field_t::ntfs_t::attribute_t::attribute_t(kaitai::kstream *p_io, zip_t::extra_field_t::ntfs_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void zip_t::extra_field_t::ntfs_t::attribute_t::_read() {
+    m_tag = m__io-&gt;read_u2le();
+    m_size = m__io-&gt;read_u2le();
+    switch (tag()) {
+    case 1:
+        m__raw_body = m__io-&gt;read_bytes(size());
+        m__io__raw_body = new kaitai::kstream(m__raw_body);
+        m_body = new attribute_1_t(m__io__raw_body, this, m__root);
+        break;
+    default:
+        m__raw_body = m__io-&gt;read_bytes(size());
+        break;
+    }
+}
+
+zip_t::extra_field_t::ntfs_t::attribute_t::~attribute_t() {
+}
+
+zip_t::extra_field_t::ntfs_t::attribute_1_t::attribute_1_t(kaitai::kstream *p_io, zip_t::extra_field_t::ntfs_t::attribute_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void zip_t::extra_field_t::ntfs_t::attribute_1_t::_read() {
+    m_last_mod_time = m__io-&gt;read_u8le();
+    m_last_access_time = m__io-&gt;read_u8le();
+    m_creation_time = m__io-&gt;read_u8le();
+}
+
+zip_t::extra_field_t::ntfs_t::attribute_1_t::~attribute_1_t() {
+}
+
+zip_t::extra_field_t::extended_timestamp_t::extended_timestamp_t(kaitai::kstream *p_io, zip_t::extra_field_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void zip_t::extra_field_t::extended_timestamp_t::_read() {
+    m_flags = m__io-&gt;read_u1();
+    m_mod_time = m__io-&gt;read_u4le();
+    n_access_time = true;
+    if (!(_io()-&gt;is_eof())) {
+        n_access_time = false;
+        m_access_time = m__io-&gt;read_u4le();
+    }
+    n_create_time = true;
+    if (!(_io()-&gt;is_eof())) {
+        n_create_time = false;
+        m_create_time = m__io-&gt;read_u4le();
+    }
+}
+
+zip_t::extra_field_t::extended_timestamp_t::~extended_timestamp_t() {
+}
+
+zip_t::extra_field_t::infozip_unix_var_size_t::infozip_unix_var_size_t(kaitai::kstream *p_io, zip_t::extra_field_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void zip_t::extra_field_t::infozip_unix_var_size_t::_read() {
+    m_version = m__io-&gt;read_u1();
+    m_uid_size = m__io-&gt;read_u1();
+    m_uid = m__io-&gt;read_bytes(uid_size());
+    m_gid_size = m__io-&gt;read_u1();
+    m_gid = m__io-&gt;read_bytes(gid_size());
+}
+
+zip_t::extra_field_t::infozip_unix_var_size_t::~infozip_unix_var_size_t() {
+}
+
 zip_t::central_dir_entry_t::central_dir_entry_t(kaitai::kstream *p_io, zip_t::pk_section_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
     m__parent = p_parent;
     m__root = p_root;
+    f_local_header = false;
     _read();
 }
 
@@ -564,7 +966,7 @@ void zip_t::central_dir_entry_t::_read() {
     m_version_made_by = m__io-&gt;read_u2le();
     m_version_needed_to_extract = m__io-&gt;read_u2le();
     m_flags = m__io-&gt;read_u2le();
-    m_compression_method = m__io-&gt;read_u2le();
+    m_compression_method = static_cast&lt;zip_t::compression_t&gt;(m__io-&gt;read_u2le());
     m_last_mod_file_time = m__io-&gt;read_u2le();
     m_last_mod_file_date = m__io-&gt;read_u2le();
     m_crc32 = m__io-&gt;read_u4le();
@@ -578,14 +980,32 @@ void zip_t::central_dir_entry_t::_read() {
     m_ext_file_attr = m__io-&gt;read_u4le();
     m_local_header_offset = m__io-&gt;read_s4le();
     m_file_name = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(file_name_len()), std::string(&quot;UTF-8&quot;));
-    m_extra = m__io-&gt;read_bytes(extra_len());
+    m__raw_extra = m__io-&gt;read_bytes(extra_len());
+    m__io__raw_extra = new kaitai::kstream(m__raw_extra);
+    m_extra = new extras_t(m__io__raw_extra, this, m__root);
     m_comment = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(comment_len()), std::string(&quot;UTF-8&quot;));
 }
 
 zip_t::central_dir_entry_t::~central_dir_entry_t() {
+    delete m__io__raw_extra;
+    delete m_extra;
+    if (f_local_header) {
+        delete m_local_header;
+    }
 }
 
-zip_t::pk_section_t::pk_section_t(kaitai::kstream *p_io, zip_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
+zip_t::pk_section_t* zip_t::central_dir_entry_t::local_header() {
+    if (f_local_header)
+        return m_local_header;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(local_header_offset());
+    m_local_header = new pk_section_t(m__io, this, m__root);
+    m__io-&gt;seek(_pos);
+    f_local_header = true;
+    return m_local_header;
+}
+
+zip_t::pk_section_t::pk_section_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
     m__parent = p_parent;
     m__root = p_root;
     _read();
@@ -610,6 +1030,26 @@ void zip_t::pk_section_t::_read() {
 zip_t::pk_section_t::~pk_section_t() {
 }
 
+zip_t::extras_t::extras_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void zip_t::extras_t::_read() {
+    m_entries = new std::vector&lt;extra_field_t*&gt;();
+    while (!m__io-&gt;is_eof()) {
+        m_entries-&gt;push_back(new extra_field_t(m__io, this, m__root));
+    }
+}
+
+zip_t::extras_t::~extras_t() {
+    for (std::vector&lt;extra_field_t*&gt;::iterator it = m_entries-&gt;begin(); it != m_entries-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_entries;
+}
+
 zip_t::local_file_header_t::local_file_header_t(kaitai::kstream *p_io, zip_t::local_file_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
     m__parent = p_parent;
     m__root = p_root;
@@ -619,7 +1059,7 @@ zip_t::local_file_header_t::local_file_header_t(kaitai::kstream *p_io, zip_t::lo
 void zip_t::local_file_header_t::_read() {
     m_version = m__io-&gt;read_u2le();
     m_flags = m__io-&gt;read_u2le();
-    m_compression = static_cast&lt;zip_t::compression_t&gt;(m__io-&gt;read_u2le());
+    m_compression_method = static_cast&lt;zip_t::compression_t&gt;(m__io-&gt;read_u2le());
     m_file_mod_time = m__io-&gt;read_u2le();
     m_file_mod_date = m__io-&gt;read_u2le();
     m_crc32 = m__io-&gt;read_u4le();
@@ -628,10 +1068,14 @@ void zip_t::local_file_header_t::_read() {
     m_file_name_len = m__io-&gt;read_u2le();
     m_extra_len = m__io-&gt;read_u2le();
     m_file_name = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(file_name_len()), std::string(&quot;UTF-8&quot;));
-    m_extra = m__io-&gt;read_bytes(extra_len());
+    m__raw_extra = m__io-&gt;read_bytes(extra_len());
+    m__io__raw_extra = new kaitai::kstream(m__raw_extra);
+    m_extra = new extras_t(m__io__raw_extra, this, m__root);
 }
 
 zip_t::local_file_header_t::~local_file_header_t() {
+    delete m__io__raw_extra;
+    delete m_extra;
 }
 
 zip_t::end_of_central_dir_t::end_of_central_dir_t(kaitai::kstream *p_io, zip_t::pk_section_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {

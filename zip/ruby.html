@@ -245,6 +245,9 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7
   raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
 end
 
+
+##
+# @see https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT Source
 class Zip &lt; Kaitai::Struct::Struct
 
   COMPRESSION = {
@@ -265,6 +268,30 @@ class Zip &lt; Kaitai::Struct::Struct
     98 =&gt; :compression_ppmd,
   }
   I__COMPRESSION = COMPRESSION.invert
+
+  EXTRA_CODES = {
+    1 =&gt; :extra_codes_zip64,
+    7 =&gt; :extra_codes_av_info,
+    9 =&gt; :extra_codes_os2,
+    10 =&gt; :extra_codes_ntfs,
+    12 =&gt; :extra_codes_openvms,
+    13 =&gt; :extra_codes_pkware_unix,
+    14 =&gt; :extra_codes_file_stream_and_fork_descriptors,
+    15 =&gt; :extra_codes_patch_descriptor,
+    20 =&gt; :extra_codes_pkcs7,
+    21 =&gt; :extra_codes_x509_cert_id_and_signature_for_file,
+    22 =&gt; :extra_codes_x509_cert_id_for_central_dir,
+    23 =&gt; :extra_codes_strong_encryption_header,
+    24 =&gt; :extra_codes_record_management_controls,
+    25 =&gt; :extra_codes_pkcs7_enc_recip_cert_list,
+    101 =&gt; :extra_codes_ibm_s390_uncomp,
+    102 =&gt; :extra_codes_ibm_s390_comp,
+    18064 =&gt; :extra_codes_poszip_4690,
+    21589 =&gt; :extra_codes_extended_timestamp,
+    30805 =&gt; :extra_codes_infozip_unix,
+    30837 =&gt; :extra_codes_infozip_unix_var_size,
+  }
+  I__EXTRA_CODES = EXTRA_CODES.invert
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
     _read
@@ -287,6 +314,152 @@ class Zip &lt; Kaitai::Struct::Struct
     attr_reader :header
     attr_reader :body
   end
+  class ExtraField &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+    def _read
+      @code = Kaitai::Struct::Stream::resolve_enum(EXTRA_CODES, @_io.read_u2le)
+      @size = @_io.read_u2le
+      case code
+      when :extra_codes_ntfs
+        @_raw_body = @_io.read_bytes(size)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Ntfs.new(io, self, @_root)
+      when :extra_codes_extended_timestamp
+        @_raw_body = @_io.read_bytes(size)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = ExtendedTimestamp.new(io, self, @_root)
+      when :extra_codes_infozip_unix_var_size
+        @_raw_body = @_io.read_bytes(size)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = InfozipUnixVarSize.new(io, self, @_root)
+      else
+        @body = @_io.read_bytes(size)
+      end
+    end
+
+    ##
+    # @see https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191 Source
+    class Ntfs &lt; Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+      def _read
+        @reserved = @_io.read_u4le
+        @attributes = []
+        while not @_io.eof?
+          @attributes &lt;&lt; Attribute.new(@_io, self, @_root)
+        end
+      end
+      class Attribute &lt; Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = self)
+          super(_io, _parent, _root)
+          _read
+        end
+        def _read
+          @tag = @_io.read_u2le
+          @size = @_io.read_u2le
+          case tag
+          when 1
+            @_raw_body = @_io.read_bytes(size)
+            io = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = Attribute1.new(io, self, @_root)
+          else
+            @body = @_io.read_bytes(size)
+          end
+        end
+        attr_reader :tag
+        attr_reader :size
+        attr_reader :body
+        attr_reader :_raw_body
+      end
+      class Attribute1 &lt; Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = self)
+          super(_io, _parent, _root)
+          _read
+        end
+        def _read
+          @last_mod_time = @_io.read_u8le
+          @last_access_time = @_io.read_u8le
+          @creation_time = @_io.read_u8le
+        end
+        attr_reader :last_mod_time
+        attr_reader :last_access_time
+        attr_reader :creation_time
+      end
+      attr_reader :reserved
+      attr_reader :attributes
+    end
+
+    ##
+    # @see https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817 Source
+    class ExtendedTimestamp &lt; Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+      def _read
+        @flags = @_io.read_u1
+        @mod_time = @_io.read_u4le
+        if !(_io.eof?)
+          @access_time = @_io.read_u4le
+        end
+        if !(_io.eof?)
+          @create_time = @_io.read_u4le
+        end
+      end
+      attr_reader :flags
+      attr_reader :mod_time
+      attr_reader :access_time
+      attr_reader :create_time
+    end
+
+    ##
+    # @see https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339 Source
+    class InfozipUnixVarSize &lt; Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+      def _read
+        @version = @_io.read_u1
+        @uid_size = @_io.read_u1
+        @uid = @_io.read_bytes(uid_size)
+        @gid_size = @_io.read_u1
+        @gid = @_io.read_bytes(gid_size)
+      end
+
+      ##
+      # Version of this extra field, currently 1
+      attr_reader :version
+
+      ##
+      # Size of UID field
+      attr_reader :uid_size
+
+      ##
+      # UID (User ID) for a file
+      attr_reader :uid
+
+      ##
+      # Size of GID field
+      attr_reader :gid_size
+
+      ##
+      # GID (Group ID) for a file
+      attr_reader :gid
+    end
+    attr_reader :code
+    attr_reader :size
+    attr_reader :body
+    attr_reader :_raw_body
+  end
+
+  ##
+  # @see https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT - 4.3.12
   class CentralDirEntry &lt; Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -296,7 +469,7 @@ class Zip &lt; Kaitai::Struct::Struct
       @version_made_by = @_io.read_u2le
       @version_needed_to_extract = @_io.read_u2le
       @flags = @_io.read_u2le
-      @compression_method = @_io.read_u2le
+      @compression_method = Kaitai::Struct::Stream::resolve_enum(COMPRESSION, @_io.read_u2le)
       @last_mod_file_time = @_io.read_u2le
       @last_mod_file_date = @_io.read_u2le
       @crc32 = @_io.read_u4le
@@ -310,8 +483,18 @@ class Zip &lt; Kaitai::Struct::Struct
       @ext_file_attr = @_io.read_u4le
       @local_header_offset = @_io.read_s4le
       @file_name = (@_io.read_bytes(file_name_len)).force_encoding(&quot;UTF-8&quot;)
-      @extra = @_io.read_bytes(extra_len)
+      @_raw_extra = @_io.read_bytes(extra_len)
+      io = Kaitai::Struct::Stream.new(@_raw_extra)
+      @extra = Extras.new(io, self, @_root)
       @comment = (@_io.read_bytes(comment_len)).force_encoding(&quot;UTF-8&quot;)
+    end
+    def local_header
+      return @local_header unless @local_header.nil?
+      _pos = @_io.pos
+      @_io.seek(local_header_offset)
+      @local_header = PkSection.new(@_io, self, @_root)
+      @_io.seek(_pos)
+      @local_header
     end
     attr_reader :version_made_by
     attr_reader :version_needed_to_extract
@@ -332,6 +515,7 @@ class Zip &lt; Kaitai::Struct::Struct
     attr_reader :file_name
     attr_reader :extra
     attr_reader :comment
+    attr_reader :_raw_extra
   end
   class PkSection &lt; Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -354,6 +538,19 @@ class Zip &lt; Kaitai::Struct::Struct
     attr_reader :section_type
     attr_reader :body
   end
+  class Extras &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+    def _read
+      @entries = []
+      while not @_io.eof?
+        @entries &lt;&lt; ExtraField.new(@_io, self, @_root)
+      end
+    end
+    attr_reader :entries
+  end
   class LocalFileHeader &lt; Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -362,7 +559,7 @@ class Zip &lt; Kaitai::Struct::Struct
     def _read
       @version = @_io.read_u2le
       @flags = @_io.read_u2le
-      @compression = Kaitai::Struct::Stream::resolve_enum(COMPRESSION, @_io.read_u2le)
+      @compression_method = Kaitai::Struct::Stream::resolve_enum(COMPRESSION, @_io.read_u2le)
       @file_mod_time = @_io.read_u2le
       @file_mod_date = @_io.read_u2le
       @crc32 = @_io.read_u4le
@@ -371,11 +568,13 @@ class Zip &lt; Kaitai::Struct::Struct
       @file_name_len = @_io.read_u2le
       @extra_len = @_io.read_u2le
       @file_name = (@_io.read_bytes(file_name_len)).force_encoding(&quot;UTF-8&quot;)
-      @extra = @_io.read_bytes(extra_len)
+      @_raw_extra = @_io.read_bytes(extra_len)
+      io = Kaitai::Struct::Stream.new(@_raw_extra)
+      @extra = Extras.new(io, self, @_root)
     end
     attr_reader :version
     attr_reader :flags
-    attr_reader :compression
+    attr_reader :compression_method
     attr_reader :file_mod_time
     attr_reader :file_mod_date
     attr_reader :crc32
@@ -385,6 +584,7 @@ class Zip &lt; Kaitai::Struct::Struct
     attr_reader :extra_len
     attr_reader :file_name
     attr_reader :extra
+    attr_reader :_raw_extra
   end
   class EndOfCentralDir &lt; Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)

@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
+
+/**
+ * @see <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">Source</a>
+ */
 public class Zip extends KaitaiStruct {
     public static Zip fromFile(String fileName) throws IOException {
         return new Zip(new KaitaiStream(fileName));
@@ -39,6 +43,39 @@ public class Zip extends KaitaiStruct {
                 byId.put(e.id(), e);
         }
         public static Compression byId(long id) { return byId.get(id); }
+    }
+
+    public enum ExtraCodes {
+        ZIP64(1),
+        AV_INFO(7),
+        OS2(9),
+        NTFS(10),
+        OPENVMS(12),
+        PKWARE_UNIX(13),
+        FILE_STREAM_AND_FORK_DESCRIPTORS(14),
+        PATCH_DESCRIPTOR(15),
+        PKCS7(20),
+        X509_CERT_ID_AND_SIGNATURE_FOR_FILE(21),
+        X509_CERT_ID_FOR_CENTRAL_DIR(22),
+        STRONG_ENCRYPTION_HEADER(23),
+        RECORD_MANAGEMENT_CONTROLS(24),
+        PKCS7_ENC_RECIP_CERT_LIST(25),
+        IBM_S390_UNCOMP(101),
+        IBM_S390_COMP(102),
+        POSZIP_4690(18064),
+        EXTENDED_TIMESTAMP(21589),
+        INFOZIP_UNIX(30805),
+        INFOZIP_UNIX_VAR_SIZE(30837);
+
+        private final long id;
+        ExtraCodes(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, ExtraCodes> byId = new HashMap<Long, ExtraCodes>(20);
+        static {
+            for (ExtraCodes e : ExtraCodes.values())
+                byId.put(e.id(), e);
+        }
+        public static ExtraCodes byId(long id) { return byId.get(id); }
     }
 
     public Zip(KaitaiStream _io) {
@@ -109,6 +146,345 @@ public class Zip extends KaitaiStruct {
         public Zip _root() { return _root; }
         public Zip.PkSection _parent() { return _parent; }
     }
+    public static class ExtraField extends KaitaiStruct {
+        public static ExtraField fromFile(String fileName) throws IOException {
+            return new ExtraField(new KaitaiStream(fileName));
+        }
+
+        public ExtraField(KaitaiStream _io) {
+            super(_io);
+            _init();
+        }
+
+        public ExtraField(KaitaiStream _io, Zip.Extras _parent) {
+            super(_io);
+            this._parent = _parent;
+            _init();
+        }
+
+        public ExtraField(KaitaiStream _io, Zip.Extras _parent, Zip _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _init();
+        }
+
+        private void _init() {
+            _read();
+        }
+        private void _read() {
+            this.code = Zip.ExtraCodes.byId(this._io.readU2le());
+            this.size = this._io.readU2le();
+            switch (code()) {
+            case NTFS: {
+                this._raw_body = this._io.readBytes(size());
+                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                this.body = new Ntfs(_io__raw_body, this, _root);
+                break;
+            }
+            case EXTENDED_TIMESTAMP: {
+                this._raw_body = this._io.readBytes(size());
+                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                this.body = new ExtendedTimestamp(_io__raw_body, this, _root);
+                break;
+            }
+            case INFOZIP_UNIX_VAR_SIZE: {
+                this._raw_body = this._io.readBytes(size());
+                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                this.body = new InfozipUnixVarSize(_io__raw_body, this, _root);
+                break;
+            }
+            default: {
+                this.body = this._io.readBytes(size());
+                break;
+            }
+            }
+        }
+
+        /**
+         * @see <a href="https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191">Source</a>
+         */
+        public static class Ntfs extends KaitaiStruct {
+            public static Ntfs fromFile(String fileName) throws IOException {
+                return new Ntfs(new KaitaiStream(fileName));
+            }
+
+            public Ntfs(KaitaiStream _io) {
+                super(_io);
+                _init();
+            }
+
+            public Ntfs(KaitaiStream _io, Zip.ExtraField _parent) {
+                super(_io);
+                this._parent = _parent;
+                _init();
+            }
+
+            public Ntfs(KaitaiStream _io, Zip.ExtraField _parent, Zip _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _init();
+            }
+
+            private void _init() {
+                _read();
+            }
+            private void _read() {
+                this.reserved = this._io.readU4le();
+                this.attributes = new ArrayList<Attribute>();
+                while (!this._io.isEof()) {
+                    this.attributes.add(new Attribute(this._io, this, _root));
+                }
+            }
+            public static class Attribute extends KaitaiStruct {
+                public static Attribute fromFile(String fileName) throws IOException {
+                    return new Attribute(new KaitaiStream(fileName));
+                }
+
+                public Attribute(KaitaiStream _io) {
+                    super(_io);
+                    _init();
+                }
+
+                public Attribute(KaitaiStream _io, Zip.ExtraField.Ntfs _parent) {
+                    super(_io);
+                    this._parent = _parent;
+                    _init();
+                }
+
+                public Attribute(KaitaiStream _io, Zip.ExtraField.Ntfs _parent, Zip _root) {
+                    super(_io);
+                    this._parent = _parent;
+                    this._root = _root;
+                    _init();
+                }
+
+                private void _init() {
+                    _read();
+                }
+                private void _read() {
+                    this.tag = this._io.readU2le();
+                    this.size = this._io.readU2le();
+                    switch (tag()) {
+                    case 1: {
+                        this._raw_body = this._io.readBytes(size());
+                        KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                        this.body = new Attribute1(_io__raw_body, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.body = this._io.readBytes(size());
+                        break;
+                    }
+                    }
+                }
+                private int tag;
+                private int size;
+                private Object body;
+                private Zip _root;
+                private Zip.ExtraField.Ntfs _parent;
+                private byte[] _raw_body;
+                public int tag() { return tag; }
+                public int size() { return size; }
+                public Object body() { return body; }
+                public Zip _root() { return _root; }
+                public Zip.ExtraField.Ntfs _parent() { return _parent; }
+                public byte[] _raw_body() { return _raw_body; }
+            }
+            public static class Attribute1 extends KaitaiStruct {
+                public static Attribute1 fromFile(String fileName) throws IOException {
+                    return new Attribute1(new KaitaiStream(fileName));
+                }
+
+                public Attribute1(KaitaiStream _io) {
+                    super(_io);
+                    _init();
+                }
+
+                public Attribute1(KaitaiStream _io, Zip.ExtraField.Ntfs.Attribute _parent) {
+                    super(_io);
+                    this._parent = _parent;
+                    _init();
+                }
+
+                public Attribute1(KaitaiStream _io, Zip.ExtraField.Ntfs.Attribute _parent, Zip _root) {
+                    super(_io);
+                    this._parent = _parent;
+                    this._root = _root;
+                    _init();
+                }
+
+                private void _init() {
+                    _read();
+                }
+                private void _read() {
+                    this.lastModTime = this._io.readU8le();
+                    this.lastAccessTime = this._io.readU8le();
+                    this.creationTime = this._io.readU8le();
+                }
+                private long lastModTime;
+                private long lastAccessTime;
+                private long creationTime;
+                private Zip _root;
+                private Zip.ExtraField.Ntfs.Attribute _parent;
+                public long lastModTime() { return lastModTime; }
+                public long lastAccessTime() { return lastAccessTime; }
+                public long creationTime() { return creationTime; }
+                public Zip _root() { return _root; }
+                public Zip.ExtraField.Ntfs.Attribute _parent() { return _parent; }
+            }
+            private long reserved;
+            private ArrayList<Attribute> attributes;
+            private Zip _root;
+            private Zip.ExtraField _parent;
+            public long reserved() { return reserved; }
+            public ArrayList<Attribute> attributes() { return attributes; }
+            public Zip _root() { return _root; }
+            public Zip.ExtraField _parent() { return _parent; }
+        }
+
+        /**
+         * @see <a href="https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817">Source</a>
+         */
+        public static class ExtendedTimestamp extends KaitaiStruct {
+            public static ExtendedTimestamp fromFile(String fileName) throws IOException {
+                return new ExtendedTimestamp(new KaitaiStream(fileName));
+            }
+
+            public ExtendedTimestamp(KaitaiStream _io) {
+                super(_io);
+                _init();
+            }
+
+            public ExtendedTimestamp(KaitaiStream _io, Zip.ExtraField _parent) {
+                super(_io);
+                this._parent = _parent;
+                _init();
+            }
+
+            public ExtendedTimestamp(KaitaiStream _io, Zip.ExtraField _parent, Zip _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _init();
+            }
+
+            private void _init() {
+                _read();
+            }
+            private void _read() {
+                this.flags = this._io.readU1();
+                this.modTime = this._io.readU4le();
+                if (!(_io().isEof())) {
+                    this.accessTime = this._io.readU4le();
+                }
+                if (!(_io().isEof())) {
+                    this.createTime = this._io.readU4le();
+                }
+            }
+            private int flags;
+            private long modTime;
+            private Long accessTime;
+            private Long createTime;
+            private Zip _root;
+            private Zip.ExtraField _parent;
+            public int flags() { return flags; }
+            public long modTime() { return modTime; }
+            public Long accessTime() { return accessTime; }
+            public Long createTime() { return createTime; }
+            public Zip _root() { return _root; }
+            public Zip.ExtraField _parent() { return _parent; }
+        }
+
+        /**
+         * @see <a href="https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339">Source</a>
+         */
+        public static class InfozipUnixVarSize extends KaitaiStruct {
+            public static InfozipUnixVarSize fromFile(String fileName) throws IOException {
+                return new InfozipUnixVarSize(new KaitaiStream(fileName));
+            }
+
+            public InfozipUnixVarSize(KaitaiStream _io) {
+                super(_io);
+                _init();
+            }
+
+            public InfozipUnixVarSize(KaitaiStream _io, Zip.ExtraField _parent) {
+                super(_io);
+                this._parent = _parent;
+                _init();
+            }
+
+            public InfozipUnixVarSize(KaitaiStream _io, Zip.ExtraField _parent, Zip _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _init();
+            }
+
+            private void _init() {
+                _read();
+            }
+            private void _read() {
+                this.version = this._io.readU1();
+                this.uidSize = this._io.readU1();
+                this.uid = this._io.readBytes(uidSize());
+                this.gidSize = this._io.readU1();
+                this.gid = this._io.readBytes(gidSize());
+            }
+            private int version;
+            private int uidSize;
+            private byte[] uid;
+            private int gidSize;
+            private byte[] gid;
+            private Zip _root;
+            private Zip.ExtraField _parent;
+
+            /**
+             * Version of this extra field, currently 1
+             */
+            public int version() { return version; }
+
+            /**
+             * Size of UID field
+             */
+            public int uidSize() { return uidSize; }
+
+            /**
+             * UID (User ID) for a file
+             */
+            public byte[] uid() { return uid; }
+
+            /**
+             * Size of GID field
+             */
+            public int gidSize() { return gidSize; }
+
+            /**
+             * GID (Group ID) for a file
+             */
+            public byte[] gid() { return gid; }
+            public Zip _root() { return _root; }
+            public Zip.ExtraField _parent() { return _parent; }
+        }
+        private ExtraCodes code;
+        private int size;
+        private Object body;
+        private Zip _root;
+        private Zip.Extras _parent;
+        private byte[] _raw_body;
+        public ExtraCodes code() { return code; }
+        public int size() { return size; }
+        public Object body() { return body; }
+        public Zip _root() { return _root; }
+        public Zip.Extras _parent() { return _parent; }
+        public byte[] _raw_body() { return _raw_body; }
+    }
+
+    /**
+     * @see <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">- 4.3.12</a>
+     */
     public static class CentralDirEntry extends KaitaiStruct {
         public static CentralDirEntry fromFile(String fileName) throws IOException {
             return new CentralDirEntry(new KaitaiStream(fileName));
@@ -139,7 +515,7 @@ public class Zip extends KaitaiStruct {
             this.versionMadeBy = this._io.readU2le();
             this.versionNeededToExtract = this._io.readU2le();
             this.flags = this._io.readU2le();
-            this.compressionMethod = this._io.readU2le();
+            this.compressionMethod = Zip.Compression.byId(this._io.readU2le());
             this.lastModFileTime = this._io.readU2le();
             this.lastModFileDate = this._io.readU2le();
             this.crc32 = this._io.readU4le();
@@ -153,13 +529,25 @@ public class Zip extends KaitaiStruct {
             this.extFileAttr = this._io.readU4le();
             this.localHeaderOffset = this._io.readS4le();
             this.fileName = new String(this._io.readBytes(fileNameLen()), Charset.forName("UTF-8"));
-            this.extra = this._io.readBytes(extraLen());
+            this._raw_extra = this._io.readBytes(extraLen());
+            KaitaiStream _io__raw_extra = new KaitaiStream(_raw_extra);
+            this.extra = new Extras(_io__raw_extra, this, _root);
             this.comment = new String(this._io.readBytes(commentLen()), Charset.forName("UTF-8"));
+        }
+        private PkSection localHeader;
+        public PkSection localHeader() {
+            if (this.localHeader != null)
+                return this.localHeader;
+            long _pos = this._io.pos();
+            this._io.seek(localHeaderOffset());
+            this.localHeader = new PkSection(this._io, this, _root);
+            this._io.seek(_pos);
+            return this.localHeader;
         }
         private int versionMadeBy;
         private int versionNeededToExtract;
         private int flags;
-        private int compressionMethod;
+        private Compression compressionMethod;
         private int lastModFileTime;
         private int lastModFileDate;
         private long crc32;
@@ -173,14 +561,15 @@ public class Zip extends KaitaiStruct {
         private long extFileAttr;
         private int localHeaderOffset;
         private String fileName;
-        private byte[] extra;
+        private Extras extra;
         private String comment;
         private Zip _root;
         private Zip.PkSection _parent;
+        private byte[] _raw_extra;
         public int versionMadeBy() { return versionMadeBy; }
         public int versionNeededToExtract() { return versionNeededToExtract; }
         public int flags() { return flags; }
-        public int compressionMethod() { return compressionMethod; }
+        public Compression compressionMethod() { return compressionMethod; }
         public int lastModFileTime() { return lastModFileTime; }
         public int lastModFileDate() { return lastModFileDate; }
         public long crc32() { return crc32; }
@@ -194,10 +583,11 @@ public class Zip extends KaitaiStruct {
         public long extFileAttr() { return extFileAttr; }
         public int localHeaderOffset() { return localHeaderOffset; }
         public String fileName() { return fileName; }
-        public byte[] extra() { return extra; }
+        public Extras extra() { return extra; }
         public String comment() { return comment; }
         public Zip _root() { return _root; }
         public Zip.PkSection _parent() { return _parent; }
+        public byte[] _raw_extra() { return _raw_extra; }
     }
     public static class PkSection extends KaitaiStruct {
         public static PkSection fromFile(String fileName) throws IOException {
@@ -209,13 +599,13 @@ public class Zip extends KaitaiStruct {
             _init();
         }
 
-        public PkSection(KaitaiStream _io, Zip _parent) {
+        public PkSection(KaitaiStream _io, KaitaiStruct _parent) {
             super(_io);
             this._parent = _parent;
             _init();
         }
 
-        public PkSection(KaitaiStream _io, Zip _parent, Zip _root) {
+        public PkSection(KaitaiStream _io, KaitaiStruct _parent, Zip _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -247,12 +637,51 @@ public class Zip extends KaitaiStruct {
         private int sectionType;
         private KaitaiStruct body;
         private Zip _root;
-        private Zip _parent;
+        private KaitaiStruct _parent;
         public byte[] magic() { return magic; }
         public int sectionType() { return sectionType; }
         public KaitaiStruct body() { return body; }
         public Zip _root() { return _root; }
-        public Zip _parent() { return _parent; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
+    public static class Extras extends KaitaiStruct {
+        public static Extras fromFile(String fileName) throws IOException {
+            return new Extras(new KaitaiStream(fileName));
+        }
+
+        public Extras(KaitaiStream _io) {
+            super(_io);
+            _init();
+        }
+
+        public Extras(KaitaiStream _io, KaitaiStruct _parent) {
+            super(_io);
+            this._parent = _parent;
+            _init();
+        }
+
+        public Extras(KaitaiStream _io, KaitaiStruct _parent, Zip _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _init();
+        }
+
+        private void _init() {
+            _read();
+        }
+        private void _read() {
+            this.entries = new ArrayList<ExtraField>();
+            while (!this._io.isEof()) {
+                this.entries.add(new ExtraField(this._io, this, _root));
+            }
+        }
+        private ArrayList<ExtraField> entries;
+        private Zip _root;
+        private KaitaiStruct _parent;
+        public ArrayList<ExtraField> entries() { return entries; }
+        public Zip _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
     }
     public static class LocalFileHeader extends KaitaiStruct {
         public static LocalFileHeader fromFile(String fileName) throws IOException {
@@ -283,7 +712,7 @@ public class Zip extends KaitaiStruct {
         private void _read() {
             this.version = this._io.readU2le();
             this.flags = this._io.readU2le();
-            this.compression = Zip.Compression.byId(this._io.readU2le());
+            this.compressionMethod = Zip.Compression.byId(this._io.readU2le());
             this.fileModTime = this._io.readU2le();
             this.fileModDate = this._io.readU2le();
             this.crc32 = this._io.readU4le();
@@ -292,11 +721,13 @@ public class Zip extends KaitaiStruct {
             this.fileNameLen = this._io.readU2le();
             this.extraLen = this._io.readU2le();
             this.fileName = new String(this._io.readBytes(fileNameLen()), Charset.forName("UTF-8"));
-            this.extra = this._io.readBytes(extraLen());
+            this._raw_extra = this._io.readBytes(extraLen());
+            KaitaiStream _io__raw_extra = new KaitaiStream(_raw_extra);
+            this.extra = new Extras(_io__raw_extra, this, _root);
         }
         private int version;
         private int flags;
-        private Compression compression;
+        private Compression compressionMethod;
         private int fileModTime;
         private int fileModDate;
         private long crc32;
@@ -305,12 +736,13 @@ public class Zip extends KaitaiStruct {
         private int fileNameLen;
         private int extraLen;
         private String fileName;
-        private byte[] extra;
+        private Extras extra;
         private Zip _root;
         private Zip.LocalFile _parent;
+        private byte[] _raw_extra;
         public int version() { return version; }
         public int flags() { return flags; }
-        public Compression compression() { return compression; }
+        public Compression compressionMethod() { return compressionMethod; }
         public int fileModTime() { return fileModTime; }
         public int fileModDate() { return fileModDate; }
         public long crc32() { return crc32; }
@@ -319,9 +751,10 @@ public class Zip extends KaitaiStruct {
         public int fileNameLen() { return fileNameLen; }
         public int extraLen() { return extraLen; }
         public String fileName() { return fileName; }
-        public byte[] extra() { return extra; }
+        public Extras extra() { return extra; }
         public Zip _root() { return _root; }
         public Zip.LocalFile _parent() { return _parent; }
+        public byte[] _raw_extra() { return _raw_extra; }
     }
     public static class EndOfCentralDir extends KaitaiStruct {
         public static EndOfCentralDir fromFile(String fileName) throws IOException {
