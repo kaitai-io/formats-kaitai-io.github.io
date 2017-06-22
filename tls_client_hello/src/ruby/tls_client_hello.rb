@@ -83,7 +83,7 @@ class TlsClientHello < Kaitai::Struct::Struct
       @len = @_io.read_u2be
       @cipher_suites = Array.new((len / 2))
       ((len / 2)).times { |i|
-        @cipher_suites[i] = CipherSuite.new(@_io, self, @_root)
+        @cipher_suites[i] = @_io.read_u2be
       }
     end
     attr_reader :len
@@ -142,16 +142,6 @@ class TlsClientHello < Kaitai::Struct::Struct
     end
     attr_reader :major
     attr_reader :minor
-  end
-  class CipherSuite < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-    def _read
-      @cipher_suite = @_io.read_u2be
-    end
-    attr_reader :cipher_suite
   end
   class Protocol < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)

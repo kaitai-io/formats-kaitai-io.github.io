@@ -152,17 +152,17 @@ namespace Kaitai
             }
             private void _read() {
                 _len = m_io.ReadU2be();
-                _cipherSuites = new List<CipherSuite>((int) ((Len / 2)));
+                _cipherSuites = new List<ushort>((int) ((Len / 2)));
                 for (var i = 0; i < (Len / 2); i++) {
-                    _cipherSuites.Add(new CipherSuite(m_io, this, m_root));
+                    _cipherSuites.Add(m_io.ReadU2be());
                 }
                 }
             private ushort _len;
-            private List<CipherSuite> _cipherSuites;
+            private List<ushort> _cipherSuites;
             private TlsClientHello m_root;
             private TlsClientHello m_parent;
             public ushort Len { get { return _len; } }
-            public List<CipherSuite> CipherSuites { get { return _cipherSuites; } }
+            public List<ushort> CipherSuites { get { return _cipherSuites; } }
             public TlsClientHello M_Root { get { return m_root; } }
             public TlsClientHello M_Parent { get { return m_parent; } }
         }
@@ -275,29 +275,6 @@ namespace Kaitai
             public byte Minor { get { return _minor; } }
             public TlsClientHello M_Root { get { return m_root; } }
             public TlsClientHello M_Parent { get { return m_parent; } }
-        }
-        public partial class CipherSuite : KaitaiStruct
-        {
-            public static CipherSuite FromFile(string fileName)
-            {
-                return new CipherSuite(new KaitaiStream(fileName));
-            }
-
-            public CipherSuite(KaitaiStream io, TlsClientHello.CipherSuites parent = null, TlsClientHello root = null) : base(io)
-            {
-                m_parent = parent;
-                m_root = root;
-                _read();
-            }
-            private void _read() {
-                _cipherSuite = m_io.ReadU2be();
-                }
-            private ushort _cipherSuite;
-            private TlsClientHello m_root;
-            private TlsClientHello.CipherSuites m_parent;
-            public ushort CipherSuite { get { return _cipherSuite; } }
-            public TlsClientHello M_Root { get { return m_root; } }
-            public TlsClientHello.CipherSuites M_Parent { get { return m_parent; } }
         }
         public partial class Protocol : KaitaiStruct
         {

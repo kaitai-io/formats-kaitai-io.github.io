@@ -63,7 +63,7 @@ digraph {
 			cipher_suites__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">2</TD><TD>u2be</TD><TD PORT="len_type">len</TD></TR>
-				<TR><TD PORT="cipher_suites_pos">2</TD><TD PORT="cipher_suites_size">...</TD><TD>CipherSuite</TD><TD PORT="cipher_suites_type">cipher_suites</TD></TR>
+				<TR><TD PORT="cipher_suites_pos">2</TD><TD PORT="cipher_suites_size">2</TD><TD>u2be</TD><TD PORT="cipher_suites_type">cipher_suites</TD></TR>
 				<TR><TD COLSPAN="4" PORT="cipher_suites__repeat">repeat (len / 2) times</TD></TR>
 			</TABLE>>];
 		}
@@ -109,15 +109,6 @@ digraph {
 				<TR><TD PORT="minor_pos">1</TD><TD PORT="minor_size">1</TD><TD>u1</TD><TD PORT="minor_type">minor</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__cipher_suite {
-			label="TlsClientHello::CipherSuite";
-			graph[style=dotted];
-
-			cipher_suite__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="cipher_suite_pos">0</TD><TD PORT="cipher_suite_size">2</TD><TD>u2be</TD><TD PORT="cipher_suite_type">cipher_suite</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__protocol {
 			label="TlsClientHello::Protocol";
 			graph[style=dotted];
@@ -154,7 +145,6 @@ extension__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING=
 	server_name__seq:length_type -> server_name__seq:host_name_size [color="#404040"];
 	session_id__seq:len_type -> session_id__seq:sid_size [color="#404040"];
 	sni__seq:server_names_type -> server_name__seq [style=bold];
-	cipher_suites__seq:cipher_suites_type -> cipher_suite__seq [style=bold];
 	cipher_suites__seq:len_type -> cipher_suites__seq:cipher_suites__repeat [color="#404040"];
 	compression_methods__seq:len_type -> compression_methods__seq:compression_methods_size [color="#404040"];
 	alpn__seq:alpn_protocols_type -> protocol__seq [style=bold];

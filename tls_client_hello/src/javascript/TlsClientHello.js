@@ -99,7 +99,7 @@ var TlsClientHello = (function() {
       this.len = this._io.readU2be();
       this.cipherSuites = new Array(Math.floor(this.len / 2));
       for (var i = 0; i < Math.floor(this.len / 2); i++) {
-        this.cipherSuites[i] = new CipherSuite(this._io, this, this._root);
+        this.cipherSuites[i] = this._io.readU2be();
       }
     }
 
@@ -174,21 +174,6 @@ var TlsClientHello = (function() {
     }
 
     return Version;
-  })();
-
-  var CipherSuite = TlsClientHello.CipherSuite = (function() {
-    function CipherSuite(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    CipherSuite.prototype._read = function() {
-      this.cipherSuite = this._io.readU2be();
-    }
-
-    return CipherSuite;
   })();
 
   var Protocol = TlsClientHello.Protocol = (function() {

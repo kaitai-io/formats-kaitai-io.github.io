@@ -503,7 +503,7 @@ sub _read {
     $self-&gt;{cipher_suites} = ();
     my $n_cipher_suites = int($self-&gt;len() / 2);
     for (my $i = 0; $i &lt; $n_cipher_suites; $i++) {
-        $self-&gt;{cipher_suites}[$i] = TlsClientHello::CipherSuite-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+        $self-&gt;{cipher_suites}[$i] = $self-&gt;{_io}-&gt;read_u2be();
     }
 }
 
@@ -697,44 +697,6 @@ sub major {
 sub minor {
     my ($self) = @_;
     return $self-&gt;{minor};
-}
-
-########################################################################
-package TlsClientHello::CipherSuite;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{cipher_suite} = $self-&gt;{_io}-&gt;read_u2be();
-}
-
-sub cipher_suite {
-    my ($self) = @_;
-    return $self-&gt;{cipher_suite};
 }
 
 ########################################################################

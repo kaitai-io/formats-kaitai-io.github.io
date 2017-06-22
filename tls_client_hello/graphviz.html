@@ -273,7 +273,7 @@ section#format-index .row {
 			cipher_suites__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;len_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2be&lt;/TD&gt;&lt;TD PORT=&quot;len_type&quot;&gt;len&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;cipher_suites_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;cipher_suites_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;CipherSuite&lt;/TD&gt;&lt;TD PORT=&quot;cipher_suites_type&quot;&gt;cipher_suites&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;cipher_suites_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;cipher_suites_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2be&lt;/TD&gt;&lt;TD PORT=&quot;cipher_suites_type&quot;&gt;cipher_suites&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;cipher_suites__repeat&quot;&gt;repeat (len / 2) times&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
@@ -319,15 +319,6 @@ section#format-index .row {
 				&lt;TR&gt;&lt;TD PORT=&quot;minor_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;minor_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;minor_type&quot;&gt;minor&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
-		subgraph cluster__cipher_suite {
-			label=&quot;TlsClientHello::CipherSuite&quot;;
-			graph[style=dotted];
-
-			cipher_suite__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
-				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;cipher_suite_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;cipher_suite_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2be&lt;/TD&gt;&lt;TD PORT=&quot;cipher_suite_type&quot;&gt;cipher_suite&lt;/TD&gt;&lt;/TR&gt;
-			&lt;/TABLE&gt;&gt;];
-		}
 		subgraph cluster__protocol {
 			label=&quot;TlsClientHello::Protocol&quot;;
 			graph[style=dotted];
@@ -364,7 +355,6 @@ extension__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=
 	server_name__seq:length_type -&gt; server_name__seq:host_name_size [color=&quot;#404040&quot;];
 	session_id__seq:len_type -&gt; session_id__seq:sid_size [color=&quot;#404040&quot;];
 	sni__seq:server_names_type -&gt; server_name__seq [style=bold];
-	cipher_suites__seq:cipher_suites_type -&gt; cipher_suite__seq [style=bold];
 	cipher_suites__seq:len_type -&gt; cipher_suites__seq:cipher_suites__repeat [color=&quot;#404040&quot;];
 	compression_methods__seq:len_type -&gt; compression_methods__seq:compression_methods_size [color=&quot;#404040&quot;];
 	alpn__seq:alpn_protocols_type -&gt; protocol__seq [style=bold];

@@ -87,7 +87,7 @@ class TlsClientHello(KaitaiStruct):
             self.len = self._io.read_u2be()
             self.cipher_suites = [None] * (self.len // 2)
             for i in range(self.len // 2):
-                self.cipher_suites[i] = self._root.CipherSuite(self._io, self, self._root)
+                self.cipher_suites[i] = self._io.read_u2be()
 
 
 
@@ -143,17 +143,6 @@ class TlsClientHello(KaitaiStruct):
         def _read(self):
             self.major = self._io.read_u1()
             self.minor = self._io.read_u1()
-
-
-    class CipherSuite(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.cipher_suite = self._io.read_u2be()
 
 
     class Protocol(KaitaiStruct):

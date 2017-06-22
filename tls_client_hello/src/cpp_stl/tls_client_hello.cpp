@@ -107,17 +107,14 @@ tls_client_hello_t::cipher_suites_t::cipher_suites_t(kaitai::kstream *p_io, tls_
 void tls_client_hello_t::cipher_suites_t::_read() {
     m_len = m__io->read_u2be();
     int l_cipher_suites = (len() / 2);
-    m_cipher_suites = new std::vector<cipher_suite_t*>();
+    m_cipher_suites = new std::vector<uint16_t>();
     m_cipher_suites->reserve(l_cipher_suites);
     for (int i = 0; i < l_cipher_suites; i++) {
-        m_cipher_suites->push_back(new cipher_suite_t(m__io, this, m__root));
+        m_cipher_suites->push_back(m__io->read_u2be());
     }
 }
 
 tls_client_hello_t::cipher_suites_t::~cipher_suites_t() {
-    for (std::vector<cipher_suite_t*>::iterator it = m_cipher_suites->begin(); it != m_cipher_suites->end(); ++it) {
-        delete *it;
-    }
     delete m_cipher_suites;
 }
 
@@ -189,19 +186,6 @@ void tls_client_hello_t::version_t::_read() {
 }
 
 tls_client_hello_t::version_t::~version_t() {
-}
-
-tls_client_hello_t::cipher_suite_t::cipher_suite_t(kaitai::kstream *p_io, tls_client_hello_t::cipher_suites_t* p_parent, tls_client_hello_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
-    _read();
-}
-
-void tls_client_hello_t::cipher_suite_t::_read() {
-    m_cipher_suite = m__io->read_u2be();
-}
-
-tls_client_hello_t::cipher_suite_t::~cipher_suite_t() {
 }
 
 tls_client_hello_t::protocol_t::protocol_t(kaitai::kstream *p_io, tls_client_hello_t::alpn_t* p_parent, tls_client_hello_t *p_root) : kaitai::kstruct(p_io) {

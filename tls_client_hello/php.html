@@ -332,7 +332,7 @@ class CipherSuites extends \Kaitai\Struct\Struct {
         $this-&gt;_m_cipherSuites = [];
         $n = intval($this-&gt;len() / 2);
         for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_cipherSuites[] = new \TlsClientHello\CipherSuite($this-&gt;_io, $this, $this-&gt;_root);
+            $this-&gt;_m_cipherSuites[] = $this-&gt;_io-&gt;readU2be();
         }
     }
     protected $_m_len;
@@ -417,21 +417,6 @@ class Version extends \Kaitai\Struct\Struct {
     protected $_m_minor;
     public function major() { return $this-&gt;_m_major; }
     public function minor() { return $this-&gt;_m_minor; }
-}
-
-namespace \TlsClientHello;
-
-class CipherSuite extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \TlsClientHello\CipherSuites $parent = null, \TlsClientHello $root = null) {
-        parent::__construct($io, $parent, $root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_cipherSuite = $this-&gt;_io-&gt;readU2be();
-    }
-    protected $_m_cipherSuite;
-    public function cipherSuite() { return $this-&gt;_m_cipherSuite; }
 }
 
 namespace \TlsClientHello;

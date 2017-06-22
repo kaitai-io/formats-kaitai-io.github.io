@@ -233,17 +233,17 @@ public class TlsClientHello extends KaitaiStruct {
         }
         private void _read() {
             this.len = this._io.readU2be();
-            cipherSuites = new ArrayList<CipherSuite>((int) ((len() / 2)));
+            cipherSuites = new ArrayList<Integer>((int) ((len() / 2)));
             for (int i = 0; i < (len() / 2); i++) {
-                this.cipherSuites.add(new CipherSuite(this._io, this, _root));
+                this.cipherSuites.add(this._io.readU2be());
             }
         }
         private int len;
-        private ArrayList<CipherSuite> cipherSuites;
+        private ArrayList<Integer> cipherSuites;
         private TlsClientHello _root;
         private TlsClientHello _parent;
         public int len() { return len; }
-        public ArrayList<CipherSuite> cipherSuites() { return cipherSuites; }
+        public ArrayList<Integer> cipherSuites() { return cipherSuites; }
         public TlsClientHello _root() { return _root; }
         public TlsClientHello _parent() { return _parent; }
     }
@@ -408,42 +408,6 @@ public class TlsClientHello extends KaitaiStruct {
         public int minor() { return minor; }
         public TlsClientHello _root() { return _root; }
         public TlsClientHello _parent() { return _parent; }
-    }
-    public static class CipherSuite extends KaitaiStruct {
-        public static CipherSuite fromFile(String fileName) throws IOException {
-            return new CipherSuite(new KaitaiStream(fileName));
-        }
-
-        public CipherSuite(KaitaiStream _io) {
-            super(_io);
-            _init();
-        }
-
-        public CipherSuite(KaitaiStream _io, TlsClientHello.CipherSuites _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
-        }
-
-        public CipherSuite(KaitaiStream _io, TlsClientHello.CipherSuites _parent, TlsClientHello _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _init();
-        }
-
-        private void _init() {
-            _read();
-        }
-        private void _read() {
-            this.cipherSuite = this._io.readU2be();
-        }
-        private int cipherSuite;
-        private TlsClientHello _root;
-        private TlsClientHello.CipherSuites _parent;
-        public int cipherSuite() { return cipherSuite; }
-        public TlsClientHello _root() { return _root; }
-        public TlsClientHello.CipherSuites _parent() { return _parent; }
     }
     public static class Protocol extends KaitaiStruct {
         public static Protocol fromFile(String fileName) throws IOException {
