@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>doom_wad: C# parsing library</title>
+  <title>.wad file format of id Tech 1: C# parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Game Data Files</li>
-        <li class="active">doom_wad</li>
+        <li class="active">.wad file format of id Tech 1</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>doom_wad:
+        <h1>.wad file format of id Tech 1:
             
             C# parsing library
             
@@ -111,6 +111,23 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        wad
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
                     
                 </div>
             </div>
@@ -119,7 +136,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of doom_wad
+            This page hosts a formal specification of .wad file format of id Tech 1
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -130,52 +147,52 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="index.html" title="doom_wad parsing Overview library">Overview</a></li>
+                <a href="index.html" title=".wad file format of id Tech 1 parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="doom_wad parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title=".wad file format of id Tech 1 parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="csharp.html" title="doom_wad parsing C# library">C#</a></li>
+                <a href="csharp.html" title=".wad file format of id Tech 1 parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="doom_wad parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title=".wad file format of id Tech 1 parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="doom_wad parsing Java library">Java</a></li>
+                <a href="java.html" title=".wad file format of id Tech 1 parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title="doom_wad parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title=".wad file format of id Tech 1 parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title="doom_wad parsing Perl library">Perl</a></li>
+                <a href="perl.html" title=".wad file format of id Tech 1 parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="doom_wad parsing PHP library">PHP</a></li>
+                <a href="php.html" title=".wad file format of id Tech 1 parsing PHP library">PHP</a></li>
                 
                 
                 <li>
                 
-                <a href="python.html" title="doom_wad parsing Python library">Python</a></li>
+                <a href="python.html" title=".wad file format of id Tech 1 parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title="doom_wad parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title=".wad file format of id Tech 1 parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -191,7 +208,7 @@ section#format-index .row {
 
 
 
-<pre><code class="csharp">var data = DoomWad.FromFile("path/to/local/file.doom_wad");</code></pre>
+<pre><code class="csharp">var data = DoomWad.FromFile("path/to/local/file.wad");</code></pre>
 
 <p>Or parse structure from a byte array:</p>
 
@@ -210,7 +227,7 @@ var data = new DoomWad(new KaitaiStream(someArray));</code></pre>
     <div class="container">
         <h2>
             
-            C# source code to parse doom_wad
+            C# source code to parse .wad file format of id Tech 1
             
         </h2>
 
@@ -304,6 +321,193 @@ namespace Kaitai
             public DoomWad M_Root { get { return m_root; } }
             public DoomWad.Vertexes M_Parent { get { return m_parent; } }
         }
+
+        /// &lt;summary&gt;
+        /// Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
+        /// combine wall patches to make wall textures. This essentially
+        /// provides a very simple form of image compression, allowing
+        /// certain elements (&amp;quot;patches&amp;quot;) to be reused / recombined on
+        /// different textures for more variety in the game.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        /// Reference: &lt;a href=&quot;http://doom.wikia.com/wiki/TEXTURE1&quot;&gt;Source&lt;/a&gt;
+        /// &lt;/remarks&gt;
+        public partial class Texture12 : KaitaiStruct
+        {
+            public static Texture12 FromFile(string fileName)
+            {
+                return new Texture12(new KaitaiStream(fileName));
+            }
+
+            public Texture12(KaitaiStream io, DoomWad.IndexEntry parent = null, DoomWad root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                _read();
+            }
+            private void _read() {
+                _numTextures = m_io.ReadS4le();
+                _textures = new List&lt;TextureIndex&gt;((int) (NumTextures));
+                for (var i = 0; i &lt; NumTextures; i++) {
+                    _textures.Add(new TextureIndex(m_io, this, m_root));
+                }
+                }
+            public partial class TextureIndex : KaitaiStruct
+            {
+                public static TextureIndex FromFile(string fileName)
+                {
+                    return new TextureIndex(new KaitaiStream(fileName));
+                }
+
+                public TextureIndex(KaitaiStream io, DoomWad.Texture12 parent = null, DoomWad root = null) : base(io)
+                {
+                    m_parent = parent;
+                    m_root = root;
+                    f_body = false;
+                    _read();
+                }
+                private void _read() {
+                    _offset = m_io.ReadS4le();
+                    }
+                private bool f_body;
+                private TextureBody _body;
+                public TextureBody Body
+                {
+                    get
+                    {
+                        if (f_body)
+                            return _body;
+                        long _pos = m_io.Pos;
+                        m_io.Seek(Offset);
+                        _body = new TextureBody(m_io, this, m_root);
+                        m_io.Seek(_pos);
+                        f_body = true;
+                        return _body;
+                    }
+                }
+                private int _offset;
+                private DoomWad m_root;
+                private DoomWad.Texture12 m_parent;
+                public int Offset { get { return _offset; } }
+                public DoomWad M_Root { get { return m_root; } }
+                public DoomWad.Texture12 M_Parent { get { return m_parent; } }
+            }
+            public partial class TextureBody : KaitaiStruct
+            {
+                public static TextureBody FromFile(string fileName)
+                {
+                    return new TextureBody(new KaitaiStream(fileName));
+                }
+
+                public TextureBody(KaitaiStream io, DoomWad.Texture12.TextureIndex parent = null, DoomWad root = null) : base(io)
+                {
+                    m_parent = parent;
+                    m_root = root;
+                    _read();
+                }
+                private void _read() {
+                    _name = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 0));
+                    _masked = m_io.ReadU4le();
+                    _width = m_io.ReadU2le();
+                    _height = m_io.ReadU2le();
+                    _columnDirectory = m_io.ReadU4le();
+                    _numPatches = m_io.ReadU2le();
+                    _patches = new List&lt;Patch&gt;((int) (NumPatches));
+                    for (var i = 0; i &lt; NumPatches; i++) {
+                        _patches.Add(new Patch(m_io, this, m_root));
+                    }
+                    }
+                private string _name;
+                private uint _masked;
+                private ushort _width;
+                private ushort _height;
+                private uint _columnDirectory;
+                private ushort _numPatches;
+                private List&lt;Patch&gt; _patches;
+                private DoomWad m_root;
+                private DoomWad.Texture12.TextureIndex m_parent;
+
+                /// &lt;summary&gt;
+                /// Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid
+                /// &lt;/summary&gt;
+                public string Name { get { return _name; } }
+                public uint Masked { get { return _masked; } }
+                public ushort Width { get { return _width; } }
+                public ushort Height { get { return _height; } }
+
+                /// &lt;summary&gt;
+                /// Obsolete, ignored by all DOOM versions
+                /// &lt;/summary&gt;
+                public uint ColumnDirectory { get { return _columnDirectory; } }
+
+                /// &lt;summary&gt;
+                /// Number of patches that are used in a texture
+                /// &lt;/summary&gt;
+                public ushort NumPatches { get { return _numPatches; } }
+                public List&lt;Patch&gt; Patches { get { return _patches; } }
+                public DoomWad M_Root { get { return m_root; } }
+                public DoomWad.Texture12.TextureIndex M_Parent { get { return m_parent; } }
+            }
+            public partial class Patch : KaitaiStruct
+            {
+                public static Patch FromFile(string fileName)
+                {
+                    return new Patch(new KaitaiStream(fileName));
+                }
+
+                public Patch(KaitaiStream io, DoomWad.Texture12.TextureBody parent = null, DoomWad root = null) : base(io)
+                {
+                    m_parent = parent;
+                    m_root = root;
+                    _read();
+                }
+                private void _read() {
+                    _originX = m_io.ReadS2le();
+                    _originY = m_io.ReadS2le();
+                    _patchId = m_io.ReadU2le();
+                    _stepDir = m_io.ReadU2le();
+                    _colormap = m_io.ReadU2le();
+                    }
+                private short _originX;
+                private short _originY;
+                private ushort _patchId;
+                private ushort _stepDir;
+                private ushort _colormap;
+                private DoomWad m_root;
+                private DoomWad.Texture12.TextureBody m_parent;
+
+                /// &lt;summary&gt;
+                /// X offset to draw a patch at (pixels from left boundary of a texture)
+                /// &lt;/summary&gt;
+                public short OriginX { get { return _originX; } }
+
+                /// &lt;summary&gt;
+                /// Y offset to draw a patch at (pixels from upper boundary of a texture)
+                /// &lt;/summary&gt;
+                public short OriginY { get { return _originY; } }
+
+                /// &lt;summary&gt;
+                /// Identifier of a patch (as listed in PNAMES lump) to draw
+                /// &lt;/summary&gt;
+                public ushort PatchId { get { return _patchId; } }
+                public ushort StepDir { get { return _stepDir; } }
+                public ushort Colormap { get { return _colormap; } }
+                public DoomWad M_Root { get { return m_root; } }
+                public DoomWad.Texture12.TextureBody M_Parent { get { return m_parent; } }
+            }
+            private int _numTextures;
+            private List&lt;TextureIndex&gt; _textures;
+            private DoomWad m_root;
+            private DoomWad.IndexEntry m_parent;
+
+            /// &lt;summary&gt;
+            /// Number of wall textures
+            /// &lt;/summary&gt;
+            public int NumTextures { get { return _numTextures; } }
+            public List&lt;TextureIndex&gt; Textures { get { return _textures; } }
+            public DoomWad M_Root { get { return m_root; } }
+            public DoomWad.IndexEntry M_Parent { get { return m_parent; } }
+        }
         public partial class Linedef : KaitaiStruct
         {
             public static Linedef FromFile(string fileName)
@@ -344,6 +548,43 @@ namespace Kaitai
             public ushort SidedefLeftIdx { get { return _sidedefLeftIdx; } }
             public DoomWad M_Root { get { return m_root; } }
             public DoomWad.Linedefs M_Parent { get { return m_parent; } }
+        }
+
+        /// &lt;remarks&gt;
+        /// Reference: &lt;a href=&quot;http://doom.wikia.com/wiki/PNAMES&quot;&gt;Source&lt;/a&gt;
+        /// &lt;/remarks&gt;
+        public partial class Pnames : KaitaiStruct
+        {
+            public static Pnames FromFile(string fileName)
+            {
+                return new Pnames(new KaitaiStream(fileName));
+            }
+
+            public Pnames(KaitaiStream io, DoomWad.IndexEntry parent = null, DoomWad root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                _read();
+            }
+            private void _read() {
+                _numPatches = m_io.ReadU4le();
+                _names = new List&lt;string&gt;((int) (NumPatches));
+                for (var i = 0; i &lt; NumPatches; i++) {
+                    _names.Add(System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 0)));
+                }
+                }
+            private uint _numPatches;
+            private List&lt;string&gt; _names;
+            private DoomWad m_root;
+            private DoomWad.IndexEntry m_parent;
+
+            /// &lt;summary&gt;
+            /// Number of patches registered in this global game directory
+            /// &lt;/summary&gt;
+            public uint NumPatches { get { return _numPatches; } }
+            public List&lt;string&gt; Names { get { return _names; } }
+            public DoomWad M_Root { get { return m_root; } }
+            public DoomWad.IndexEntry M_Parent { get { return m_parent; } }
         }
         public partial class Thing : KaitaiStruct
         {
@@ -445,13 +686,16 @@ namespace Kaitai
             public string CeilFlat { get { return _ceilFlat; } }
 
             /// &lt;summary&gt;
-            /// Light level of the sector [0..255]. Original engine uses COLORMAP to render lighting, so only 32 actual levels are available (i.e. 0..7, 8..15, etc).
+            /// Light level of the sector [0..255]. Original engine uses
+            /// COLORMAP to render lighting, so only 32 actual levels are
+            /// available (i.e. 0..7, 8..15, etc).
             /// &lt;/summary&gt;
             public short Light { get { return _light; } }
             public SpecialSector SpecialType { get { return _specialType; } }
 
             /// &lt;summary&gt;
-            /// Tag number. When the linedef with the same tag number is activated, some effect will be triggered in this sector.
+            /// Tag number. When the linedef with the same tag number is
+            /// activated, some effect will be triggered in this sector.
             /// &lt;/summary&gt;
             public ushort Tag { get { return _tag; } }
             public DoomWad M_Root { get { return m_root; } }
@@ -590,7 +834,7 @@ namespace Kaitai
             private void _read() {
                 _offset = m_io.ReadS4le();
                 _size = m_io.ReadS4le();
-                _name = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytes(8));
+                _name = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 0));
                 }
             private bool f_contents;
             private object _contents;
@@ -604,10 +848,16 @@ namespace Kaitai
                     long _pos = io.Pos;
                     io.Seek(Offset);
                     switch (Name) {
-                    case &quot;SECTORS\0&quot;: {
+                    case &quot;SECTORS&quot;: {
                         __raw_contents = io.ReadBytes(Size);
                         var io___raw_contents = new KaitaiStream(__raw_contents);
                         _contents = new Sectors(io___raw_contents, this, m_root);
+                        break;
+                    }
+                    case &quot;TEXTURE1&quot;: {
+                        __raw_contents = io.ReadBytes(Size);
+                        var io___raw_contents = new KaitaiStream(__raw_contents);
+                        _contents = new Texture12(io___raw_contents, this, m_root);
                         break;
                     }
                     case &quot;VERTEXES&quot;: {
@@ -622,7 +872,19 @@ namespace Kaitai
                         _contents = new Blockmap(io___raw_contents, this, m_root);
                         break;
                     }
-                    case &quot;THINGS\0\0&quot;: {
+                    case &quot;PNAMES&quot;: {
+                        __raw_contents = io.ReadBytes(Size);
+                        var io___raw_contents = new KaitaiStream(__raw_contents);
+                        _contents = new Pnames(io___raw_contents, this, m_root);
+                        break;
+                    }
+                    case &quot;TEXTURE2&quot;: {
+                        __raw_contents = io.ReadBytes(Size);
+                        var io___raw_contents = new KaitaiStream(__raw_contents);
+                        _contents = new Texture12(io___raw_contents, this, m_root);
+                        break;
+                    }
+                    case &quot;THINGS&quot;: {
                         __raw_contents = io.ReadBytes(Size);
                         var io___raw_contents = new KaitaiStream(__raw_contents);
                         _contents = new Things(io___raw_contents, this, m_root);

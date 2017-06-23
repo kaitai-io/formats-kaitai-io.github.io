@@ -48,6 +48,131 @@ var DoomWad = (function() {
     return Vertex;
   })();
 
+  /**
+   * Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
+   * combine wall patches to make wall textures. This essentially
+   * provides a very simple form of image compression, allowing
+   * certain elements ("patches") to be reused / recombined on
+   * different textures for more variety in the game.
+   * @see {@link http://doom.wikia.com/wiki/TEXTURE1|Source}
+   */
+
+  var Texture12 = DoomWad.Texture12 = (function() {
+    function Texture12(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Texture12.prototype._read = function() {
+      this.numTextures = this._io.readS4le();
+      this.textures = new Array(this.numTextures);
+      for (var i = 0; i < this.numTextures; i++) {
+        this.textures[i] = new TextureIndex(this._io, this, this._root);
+      }
+    }
+
+    var TextureIndex = Texture12.TextureIndex = (function() {
+      function TextureIndex(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      TextureIndex.prototype._read = function() {
+        this.offset = this._io.readS4le();
+      }
+      Object.defineProperty(TextureIndex.prototype, 'body', {
+        get: function() {
+          if (this._m_body !== undefined)
+            return this._m_body;
+          var _pos = this._io.pos;
+          this._io.seek(this.offset);
+          this._m_body = new TextureBody(this._io, this, this._root);
+          this._io.seek(_pos);
+          return this._m_body;
+        }
+      });
+
+      return TextureIndex;
+    })();
+
+    var TextureBody = Texture12.TextureBody = (function() {
+      function TextureBody(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      TextureBody.prototype._read = function() {
+        this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), "ASCII");
+        this.masked = this._io.readU4le();
+        this.width = this._io.readU2le();
+        this.height = this._io.readU2le();
+        this.columnDirectory = this._io.readU4le();
+        this.numPatches = this._io.readU2le();
+        this.patches = new Array(this.numPatches);
+        for (var i = 0; i < this.numPatches; i++) {
+          this.patches[i] = new Patch(this._io, this, this._root);
+        }
+      }
+
+      /**
+       * Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid
+       */
+
+      /**
+       * Obsolete, ignored by all DOOM versions
+       */
+
+      /**
+       * Number of patches that are used in a texture
+       */
+
+      return TextureBody;
+    })();
+
+    var Patch = Texture12.Patch = (function() {
+      function Patch(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      Patch.prototype._read = function() {
+        this.originX = this._io.readS2le();
+        this.originY = this._io.readS2le();
+        this.patchId = this._io.readU2le();
+        this.stepDir = this._io.readU2le();
+        this.colormap = this._io.readU2le();
+      }
+
+      /**
+       * X offset to draw a patch at (pixels from left boundary of a texture)
+       */
+
+      /**
+       * Y offset to draw a patch at (pixels from upper boundary of a texture)
+       */
+
+      /**
+       * Identifier of a patch (as listed in PNAMES lump) to draw
+       */
+
+      return Patch;
+    })();
+
+    /**
+     * Number of wall textures
+     */
+
+    return Texture12;
+  })();
+
   var Linedef = DoomWad.Linedef = (function() {
     function Linedef(_io, _parent, _root) {
       this._io = _io;
@@ -67,6 +192,33 @@ var DoomWad = (function() {
     }
 
     return Linedef;
+  })();
+
+  /**
+   * @see {@link http://doom.wikia.com/wiki/PNAMES|Source}
+   */
+
+  var Pnames = DoomWad.Pnames = (function() {
+    function Pnames(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Pnames.prototype._read = function() {
+      this.numPatches = this._io.readU4le();
+      this.names = new Array(this.numPatches);
+      for (var i = 0; i < this.numPatches; i++) {
+        this.names[i] = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), "ASCII");
+      }
+    }
+
+    /**
+     * Number of patches registered in this global game directory
+     */
+
+    return Pnames;
   })();
 
   var Thing = DoomWad.Thing = (function() {
@@ -159,11 +311,14 @@ var DoomWad = (function() {
     }
 
     /**
-     * Light level of the sector [0..255]. Original engine uses COLORMAP to render lighting, so only 32 actual levels are available (i.e. 0..7, 8..15, etc).
+     * Light level of the sector [0..255]. Original engine uses
+     * COLORMAP to render lighting, so only 32 actual levels are
+     * available (i.e. 0..7, 8..15, etc).
      */
 
     /**
-     * Tag number. When the linedef with the same tag number is activated, some effect will be triggered in this sector.
+     * Tag number. When the linedef with the same tag number is
+     * activated, some effect will be triggered in this sector.
      */
 
     return Sector;
@@ -254,7 +409,7 @@ var DoomWad = (function() {
     IndexEntry.prototype._read = function() {
       this.offset = this._io.readS4le();
       this.size = this._io.readS4le();
-      this.name = KaitaiStream.bytesToStr(this._io.readBytes(8), "ASCII");
+      this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), "ASCII");
     }
     Object.defineProperty(IndexEntry.prototype, 'contents', {
       get: function() {
@@ -264,10 +419,15 @@ var DoomWad = (function() {
         var _pos = io.pos;
         io.seek(this.offset);
         switch (this.name) {
-        case "SECTORS\000":
+        case "SECTORS":
           this._raw__m_contents = io.readBytes(this.size);
           var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
           this._m_contents = new Sectors(_io__raw__m_contents, this, this._root);
+          break;
+        case "TEXTURE1":
+          this._raw__m_contents = io.readBytes(this.size);
+          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
+          this._m_contents = new Texture12(_io__raw__m_contents, this, this._root);
           break;
         case "VERTEXES":
           this._raw__m_contents = io.readBytes(this.size);
@@ -279,7 +439,17 @@ var DoomWad = (function() {
           var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
           this._m_contents = new Blockmap(_io__raw__m_contents, this, this._root);
           break;
-        case "THINGS\000\000":
+        case "PNAMES":
+          this._raw__m_contents = io.readBytes(this.size);
+          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
+          this._m_contents = new Pnames(_io__raw__m_contents, this, this._root);
+          break;
+        case "TEXTURE2":
+          this._raw__m_contents = io.readBytes(this.size);
+          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
+          this._m_contents = new Texture12(_io__raw__m_contents, this, this._root);
+          break;
+        case "THINGS":
           this._raw__m_contents = io.readBytes(this.size);
           var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
           this._m_contents = new Things(_io__raw__m_contents, this, this._root);

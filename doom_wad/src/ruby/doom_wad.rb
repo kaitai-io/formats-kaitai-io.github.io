@@ -41,6 +41,111 @@ class DoomWad < Kaitai::Struct::Struct
     attr_reader :x
     attr_reader :y
   end
+
+  ##
+  # Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
+  # combine wall patches to make wall textures. This essentially
+  # provides a very simple form of image compression, allowing
+  # certain elements ("patches") to be reused / recombined on
+  # different textures for more variety in the game.
+  # @see http://doom.wikia.com/wiki/TEXTURE1 Source
+  class Texture12 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+    def _read
+      @num_textures = @_io.read_s4le
+      @textures = Array.new(num_textures)
+      (num_textures).times { |i|
+        @textures[i] = TextureIndex.new(@_io, self, @_root)
+      }
+    end
+    class TextureIndex < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+      def _read
+        @offset = @_io.read_s4le
+      end
+      def body
+        return @body unless @body.nil?
+        _pos = @_io.pos
+        @_io.seek(offset)
+        @body = TextureBody.new(@_io, self, @_root)
+        @_io.seek(_pos)
+        @body
+      end
+      attr_reader :offset
+    end
+    class TextureBody < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+      def _read
+        @name = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 0)).force_encoding("ASCII")
+        @masked = @_io.read_u4le
+        @width = @_io.read_u2le
+        @height = @_io.read_u2le
+        @column_directory = @_io.read_u4le
+        @num_patches = @_io.read_u2le
+        @patches = Array.new(num_patches)
+        (num_patches).times { |i|
+          @patches[i] = Patch.new(@_io, self, @_root)
+        }
+      end
+
+      ##
+      # Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid
+      attr_reader :name
+      attr_reader :masked
+      attr_reader :width
+      attr_reader :height
+
+      ##
+      # Obsolete, ignored by all DOOM versions
+      attr_reader :column_directory
+
+      ##
+      # Number of patches that are used in a texture
+      attr_reader :num_patches
+      attr_reader :patches
+    end
+    class Patch < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+      def _read
+        @origin_x = @_io.read_s2le
+        @origin_y = @_io.read_s2le
+        @patch_id = @_io.read_u2le
+        @step_dir = @_io.read_u2le
+        @colormap = @_io.read_u2le
+      end
+
+      ##
+      # X offset to draw a patch at (pixels from left boundary of a texture)
+      attr_reader :origin_x
+
+      ##
+      # Y offset to draw a patch at (pixels from upper boundary of a texture)
+      attr_reader :origin_y
+
+      ##
+      # Identifier of a patch (as listed in PNAMES lump) to draw
+      attr_reader :patch_id
+      attr_reader :step_dir
+      attr_reader :colormap
+    end
+
+    ##
+    # Number of wall textures
+    attr_reader :num_textures
+    attr_reader :textures
+  end
   class Linedef < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -62,6 +167,27 @@ class DoomWad < Kaitai::Struct::Struct
     attr_reader :sector_tag
     attr_reader :sidedef_right_idx
     attr_reader :sidedef_left_idx
+  end
+
+  ##
+  # @see http://doom.wikia.com/wiki/PNAMES Source
+  class Pnames < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+    def _read
+      @num_patches = @_io.read_u4le
+      @names = Array.new(num_patches)
+      (num_patches).times { |i|
+        @names[i] = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 0)).force_encoding("ASCII")
+      }
+    end
+
+    ##
+    # Number of patches registered in this global game directory
+    attr_reader :num_patches
+    attr_reader :names
   end
   class Thing < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -129,12 +255,15 @@ class DoomWad < Kaitai::Struct::Struct
     attr_reader :ceil_flat
 
     ##
-    # Light level of the sector [0..255]. Original engine uses COLORMAP to render lighting, so only 32 actual levels are available (i.e. 0..7, 8..15, etc).
+    # Light level of the sector [0..255]. Original engine uses
+    # COLORMAP to render lighting, so only 32 actual levels are
+    # available (i.e. 0..7, 8..15, etc).
     attr_reader :light
     attr_reader :special_type
 
     ##
-    # Tag number. When the linedef with the same tag number is activated, some effect will be triggered in this sector.
+    # Tag number. When the linedef with the same tag number is
+    # activated, some effect will be triggered in this sector.
     attr_reader :tag
   end
   class Vertexes < Kaitai::Struct::Struct
@@ -204,7 +333,7 @@ class DoomWad < Kaitai::Struct::Struct
     def _read
       @offset = @_io.read_s4le
       @size = @_io.read_s4le
-      @name = (@_io.read_bytes(8)).force_encoding("ASCII")
+      @name = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 0)).force_encoding("ASCII")
     end
     def contents
       return @contents unless @contents.nil?
@@ -212,10 +341,14 @@ class DoomWad < Kaitai::Struct::Struct
       _pos = io.pos
       io.seek(offset)
       case name
-      when "SECTORS\000"
+      when "SECTORS"
         @_raw_contents = io.read_bytes(size)
         io = Kaitai::Struct::Stream.new(@_raw_contents)
         @contents = Sectors.new(io, self, @_root)
+      when "TEXTURE1"
+        @_raw_contents = io.read_bytes(size)
+        io = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = Texture12.new(io, self, @_root)
       when "VERTEXES"
         @_raw_contents = io.read_bytes(size)
         io = Kaitai::Struct::Stream.new(@_raw_contents)
@@ -224,7 +357,15 @@ class DoomWad < Kaitai::Struct::Struct
         @_raw_contents = io.read_bytes(size)
         io = Kaitai::Struct::Stream.new(@_raw_contents)
         @contents = Blockmap.new(io, self, @_root)
-      when "THINGS\000\000"
+      when "PNAMES"
+        @_raw_contents = io.read_bytes(size)
+        io = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = Pnames.new(io, self, @_root)
+      when "TEXTURE2"
+        @_raw_contents = io.read_bytes(size)
+        io = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = Texture12.new(io, self, @_root)
+      when "THINGS"
         @_raw_contents = io.read_bytes(size)
         io = Kaitai::Struct::Stream.new(@_raw_contents)
         @contents = Things.new(io, self, @_root)

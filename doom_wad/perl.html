@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>doom_wad: Perl parsing library</title>
+  <title>.wad file format of id Tech 1: Perl parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Game Data Files</li>
-        <li class="active">doom_wad</li>
+        <li class="active">.wad file format of id Tech 1</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>doom_wad:
+        <h1>.wad file format of id Tech 1:
             
             Perl parsing library
             
@@ -111,6 +111,23 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        wad
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
                     
                 </div>
             </div>
@@ -119,7 +136,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of doom_wad
+            This page hosts a formal specification of .wad file format of id Tech 1
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -130,52 +147,52 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="index.html" title="doom_wad parsing Overview library">Overview</a></li>
+                <a href="index.html" title=".wad file format of id Tech 1 parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="doom_wad parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title=".wad file format of id Tech 1 parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="doom_wad parsing C# library">C#</a></li>
+                <a href="csharp.html" title=".wad file format of id Tech 1 parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="doom_wad parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title=".wad file format of id Tech 1 parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="doom_wad parsing Java library">Java</a></li>
+                <a href="java.html" title=".wad file format of id Tech 1 parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title="doom_wad parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title=".wad file format of id Tech 1 parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="perl.html" title="doom_wad parsing Perl library">Perl</a></li>
+                <a href="perl.html" title=".wad file format of id Tech 1 parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="doom_wad parsing PHP library">PHP</a></li>
+                <a href="php.html" title=".wad file format of id Tech 1 parsing PHP library">PHP</a></li>
                 
                 
                 <li>
                 
-                <a href="python.html" title="doom_wad parsing Python library">Python</a></li>
+                <a href="python.html" title=".wad file format of id Tech 1 parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title="doom_wad parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title=".wad file format of id Tech 1 parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -188,7 +205,7 @@ section#format-index .row {
     <div class="container">
         <h2>
             
-            Perl source code to parse doom_wad
+            Perl source code to parse .wad file format of id Tech 1
             
         </h2>
 
@@ -362,6 +379,242 @@ sub y {
 }
 
 ########################################################################
+package DoomWad::Texture12;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{num_textures} = $self-&gt;{_io}-&gt;read_s4le();
+    $self-&gt;{textures} = ();
+    my $n_textures = $self-&gt;num_textures();
+    for (my $i = 0; $i &lt; $n_textures; $i++) {
+        $self-&gt;{textures}[$i] = DoomWad::Texture12::TextureIndex-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub num_textures {
+    my ($self) = @_;
+    return $self-&gt;{num_textures};
+}
+
+sub textures {
+    my ($self) = @_;
+    return $self-&gt;{textures};
+}
+
+########################################################################
+package DoomWad::Texture12::TextureIndex;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{offset} = $self-&gt;{_io}-&gt;read_s4le();
+}
+
+sub body {
+    my ($self) = @_;
+    return $self-&gt;{body} if ($self-&gt;{body});
+    my $_pos = $self-&gt;{_io}-&gt;pos();
+    $self-&gt;{_io}-&gt;seek($self-&gt;offset());
+    $self-&gt;{body} = DoomWad::Texture12::TextureBody-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{_io}-&gt;seek($_pos);
+    return $self-&gt;{body};
+}
+
+sub offset {
+    my ($self) = @_;
+    return $self-&gt;{offset};
+}
+
+########################################################################
+package DoomWad::Texture12::TextureBody;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{name} = Encode::decode(&quot;ASCII&quot;, IO::KaitaiStruct::Stream::bytes_strip_right($self-&gt;{_io}-&gt;read_bytes(8), 0));
+    $self-&gt;{masked} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{width} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{height} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{column_directory} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{num_patches} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{patches} = ();
+    my $n_patches = $self-&gt;num_patches();
+    for (my $i = 0; $i &lt; $n_patches; $i++) {
+        $self-&gt;{patches}[$i] = DoomWad::Texture12::Patch-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub name {
+    my ($self) = @_;
+    return $self-&gt;{name};
+}
+
+sub masked {
+    my ($self) = @_;
+    return $self-&gt;{masked};
+}
+
+sub width {
+    my ($self) = @_;
+    return $self-&gt;{width};
+}
+
+sub height {
+    my ($self) = @_;
+    return $self-&gt;{height};
+}
+
+sub column_directory {
+    my ($self) = @_;
+    return $self-&gt;{column_directory};
+}
+
+sub num_patches {
+    my ($self) = @_;
+    return $self-&gt;{num_patches};
+}
+
+sub patches {
+    my ($self) = @_;
+    return $self-&gt;{patches};
+}
+
+########################################################################
+package DoomWad::Texture12::Patch;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{origin_x} = $self-&gt;{_io}-&gt;read_s2le();
+    $self-&gt;{origin_y} = $self-&gt;{_io}-&gt;read_s2le();
+    $self-&gt;{patch_id} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{step_dir} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{colormap} = $self-&gt;{_io}-&gt;read_u2le();
+}
+
+sub origin_x {
+    my ($self) = @_;
+    return $self-&gt;{origin_x};
+}
+
+sub origin_y {
+    my ($self) = @_;
+    return $self-&gt;{origin_y};
+}
+
+sub patch_id {
+    my ($self) = @_;
+    return $self-&gt;{patch_id};
+}
+
+sub step_dir {
+    my ($self) = @_;
+    return $self-&gt;{step_dir};
+}
+
+sub colormap {
+    my ($self) = @_;
+    return $self-&gt;{colormap};
+}
+
+########################################################################
 package DoomWad::Linedef;
 
 our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
@@ -433,6 +686,54 @@ sub sidedef_right_idx {
 sub sidedef_left_idx {
     my ($self) = @_;
     return $self-&gt;{sidedef_left_idx};
+}
+
+########################################################################
+package DoomWad::Pnames;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{num_patches} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{names} = ();
+    my $n_names = $self-&gt;num_patches();
+    for (my $i = 0; $i &lt; $n_names; $i++) {
+        $self-&gt;{names}[$i] = Encode::decode(&quot;ASCII&quot;, IO::KaitaiStruct::Stream::bytes_strip_right($self-&gt;{_io}-&gt;read_bytes(8), 0));
+    }
+}
+
+sub num_patches {
+    my ($self) = @_;
+    return $self-&gt;{num_patches};
+}
+
+sub names {
+    my ($self) = @_;
+    return $self-&gt;{names};
 }
 
 ########################################################################
@@ -819,7 +1120,7 @@ sub _read {
 
     $self-&gt;{offset} = $self-&gt;{_io}-&gt;read_s4le();
     $self-&gt;{size} = $self-&gt;{_io}-&gt;read_s4le();
-    $self-&gt;{name} = Encode::decode(&quot;ASCII&quot;, $self-&gt;{_io}-&gt;read_bytes(8));
+    $self-&gt;{name} = Encode::decode(&quot;ASCII&quot;, IO::KaitaiStruct::Stream::bytes_strip_right($self-&gt;{_io}-&gt;read_bytes(8), 0));
 }
 
 sub contents {
@@ -829,10 +1130,15 @@ sub contents {
     my $_pos = $io-&gt;pos();
     $io-&gt;seek($self-&gt;offset());
     my $_on = $self-&gt;name();
-    if ($_on eq &quot;SECTORS\000&quot;) {
+    if ($_on eq &quot;SECTORS&quot;) {
         $self-&gt;{_raw_contents} = $io-&gt;read_bytes($self-&gt;size());
         my $io__raw_contents = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_contents});
         $self-&gt;{contents} = DoomWad::Sectors-&gt;new($io__raw_contents, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;TEXTURE1&quot;) {
+        $self-&gt;{_raw_contents} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_contents = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_contents});
+        $self-&gt;{contents} = DoomWad::Texture12-&gt;new($io__raw_contents, $self, $self-&gt;{_root});
     }
     elsif ($_on eq &quot;VERTEXES&quot;) {
         $self-&gt;{_raw_contents} = $io-&gt;read_bytes($self-&gt;size());
@@ -844,7 +1150,17 @@ sub contents {
         my $io__raw_contents = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_contents});
         $self-&gt;{contents} = DoomWad::Blockmap-&gt;new($io__raw_contents, $self, $self-&gt;{_root});
     }
-    elsif ($_on eq &quot;THINGS\000\000&quot;) {
+    elsif ($_on eq &quot;PNAMES&quot;) {
+        $self-&gt;{_raw_contents} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_contents = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_contents});
+        $self-&gt;{contents} = DoomWad::Pnames-&gt;new($io__raw_contents, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;TEXTURE2&quot;) {
+        $self-&gt;{_raw_contents} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_contents = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_contents});
+        $self-&gt;{contents} = DoomWad::Texture12-&gt;new($io__raw_contents, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;THINGS&quot;) {
         $self-&gt;{_raw_contents} = $io-&gt;read_bytes($self-&gt;size());
         my $io__raw_contents = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_contents});
         $self-&gt;{contents} = DoomWad::Things-&gt;new($io__raw_contents, $self, $self-&gt;{_root});

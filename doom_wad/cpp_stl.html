@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>doom_wad: C++/STL parsing library</title>
+  <title>.wad file format of id Tech 1: C++/STL parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Game Data Files</li>
-        <li class="active">doom_wad</li>
+        <li class="active">.wad file format of id Tech 1</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>doom_wad:
+        <h1>.wad file format of id Tech 1:
             
             C++/STL parsing library
             
@@ -111,6 +111,23 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        wad
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
                     
                 </div>
             </div>
@@ -119,7 +136,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of doom_wad
+            This page hosts a formal specification of .wad file format of id Tech 1
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -130,52 +147,52 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="index.html" title="doom_wad parsing Overview library">Overview</a></li>
+                <a href="index.html" title=".wad file format of id Tech 1 parsing Overview library">Overview</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="cpp_stl.html" title="doom_wad parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title=".wad file format of id Tech 1 parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="doom_wad parsing C# library">C#</a></li>
+                <a href="csharp.html" title=".wad file format of id Tech 1 parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="doom_wad parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title=".wad file format of id Tech 1 parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="doom_wad parsing Java library">Java</a></li>
+                <a href="java.html" title=".wad file format of id Tech 1 parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title="doom_wad parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title=".wad file format of id Tech 1 parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title="doom_wad parsing Perl library">Perl</a></li>
+                <a href="perl.html" title=".wad file format of id Tech 1 parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="doom_wad parsing PHP library">PHP</a></li>
+                <a href="php.html" title=".wad file format of id Tech 1 parsing PHP library">PHP</a></li>
                 
                 
                 <li>
                 
-                <a href="python.html" title="doom_wad parsing Python library">Python</a></li>
+                <a href="python.html" title=".wad file format of id Tech 1 parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title="doom_wad parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title=".wad file format of id Tech 1 parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -198,7 +215,7 @@ section#format-index .row {
 
 <pre><code class="cpp">#include &lt;fstream&gt;
 
-std::ifstream is("path/to/local/file.doom_wad", std::ifstream::binary);</code></pre></li>
+std::ifstream is("path/to/local/file.wad", std::ifstream::binary);</code></pre></li>
 
             <li>Or one can prepare a stream for reading from existing <code>std::string str</code>:
 
@@ -239,7 +256,7 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
     <div class="container">
         <h2>
             
-            C++/STL source code to parse doom_wad
+            C++/STL source code to parse .wad file format of id Tech 1
             
         </h2>
 
@@ -276,7 +293,9 @@ class doom_wad_t : public kaitai::kstruct {
 public:
     class sectors_t;
     class vertex_t;
+    class texture12_t;
     class linedef_t;
+    class pnames_t;
     class thing_t;
     class sector_t;
     class vertexes_t;
@@ -331,6 +350,151 @@ public:
         doom_wad_t::vertexes_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
+     * combine wall patches to make wall textures. This essentially
+     * provides a very simple form of image compression, allowing
+     * certain elements (&quot;patches&quot;) to be reused / recombined on
+     * different textures for more variety in the game.
+     * \sa Source
+     */
+
+    class texture12_t : public kaitai::kstruct {
+
+    public:
+        class texture_index_t;
+        class texture_body_t;
+        class patch_t;
+
+        texture12_t(kaitai::kstream* p_io, doom_wad_t::index_entry_t* p_parent = 0, doom_wad_t* p_root = 0);
+        void _read();
+        ~texture12_t();
+
+        class texture_index_t : public kaitai::kstruct {
+
+        public:
+
+            texture_index_t(kaitai::kstream* p_io, doom_wad_t::texture12_t* p_parent = 0, doom_wad_t* p_root = 0);
+            void _read();
+            ~texture_index_t();
+
+        private:
+            bool f_body;
+            texture_body_t* m_body;
+
+        public:
+            texture_body_t* body();
+
+        private:
+            int32_t m_offset;
+            doom_wad_t* m__root;
+            doom_wad_t::texture12_t* m__parent;
+
+        public:
+            int32_t offset() const { return m_offset; }
+            doom_wad_t* _root() const { return m__root; }
+            doom_wad_t::texture12_t* _parent() const { return m__parent; }
+        };
+
+        class texture_body_t : public kaitai::kstruct {
+
+        public:
+
+            texture_body_t(kaitai::kstream* p_io, doom_wad_t::texture12_t::texture_index_t* p_parent = 0, doom_wad_t* p_root = 0);
+            void _read();
+            ~texture_body_t();
+
+        private:
+            std::string m_name;
+            uint32_t m_masked;
+            uint16_t m_width;
+            uint16_t m_height;
+            uint32_t m_column_directory;
+            uint16_t m_num_patches;
+            std::vector&lt;patch_t*&gt;* m_patches;
+            doom_wad_t* m__root;
+            doom_wad_t::texture12_t::texture_index_t* m__parent;
+
+        public:
+
+            /**
+             * Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid
+             */
+            std::string name() const { return m_name; }
+            uint32_t masked() const { return m_masked; }
+            uint16_t width() const { return m_width; }
+            uint16_t height() const { return m_height; }
+
+            /**
+             * Obsolete, ignored by all DOOM versions
+             */
+            uint32_t column_directory() const { return m_column_directory; }
+
+            /**
+             * Number of patches that are used in a texture
+             */
+            uint16_t num_patches() const { return m_num_patches; }
+            std::vector&lt;patch_t*&gt;* patches() const { return m_patches; }
+            doom_wad_t* _root() const { return m__root; }
+            doom_wad_t::texture12_t::texture_index_t* _parent() const { return m__parent; }
+        };
+
+        class patch_t : public kaitai::kstruct {
+
+        public:
+
+            patch_t(kaitai::kstream* p_io, doom_wad_t::texture12_t::texture_body_t* p_parent = 0, doom_wad_t* p_root = 0);
+            void _read();
+            ~patch_t();
+
+        private:
+            int16_t m_origin_x;
+            int16_t m_origin_y;
+            uint16_t m_patch_id;
+            uint16_t m_step_dir;
+            uint16_t m_colormap;
+            doom_wad_t* m__root;
+            doom_wad_t::texture12_t::texture_body_t* m__parent;
+
+        public:
+
+            /**
+             * X offset to draw a patch at (pixels from left boundary of a texture)
+             */
+            int16_t origin_x() const { return m_origin_x; }
+
+            /**
+             * Y offset to draw a patch at (pixels from upper boundary of a texture)
+             */
+            int16_t origin_y() const { return m_origin_y; }
+
+            /**
+             * Identifier of a patch (as listed in PNAMES lump) to draw
+             */
+            uint16_t patch_id() const { return m_patch_id; }
+            uint16_t step_dir() const { return m_step_dir; }
+            uint16_t colormap() const { return m_colormap; }
+            doom_wad_t* _root() const { return m__root; }
+            doom_wad_t::texture12_t::texture_body_t* _parent() const { return m__parent; }
+        };
+
+    private:
+        int32_t m_num_textures;
+        std::vector&lt;texture_index_t*&gt;* m_textures;
+        doom_wad_t* m__root;
+        doom_wad_t::index_entry_t* m__parent;
+
+    public:
+
+        /**
+         * Number of wall textures
+         */
+        int32_t num_textures() const { return m_num_textures; }
+        std::vector&lt;texture_index_t*&gt;* textures() const { return m_textures; }
+        doom_wad_t* _root() const { return m__root; }
+        doom_wad_t::index_entry_t* _parent() const { return m__parent; }
+    };
+
     class linedef_t : public kaitai::kstruct {
 
     public:
@@ -360,6 +524,35 @@ public:
         uint16_t sidedef_left_idx() const { return m_sidedef_left_idx; }
         doom_wad_t* _root() const { return m__root; }
         doom_wad_t::linedefs_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa Source
+     */
+
+    class pnames_t : public kaitai::kstruct {
+
+    public:
+
+        pnames_t(kaitai::kstream* p_io, doom_wad_t::index_entry_t* p_parent = 0, doom_wad_t* p_root = 0);
+        void _read();
+        ~pnames_t();
+
+    private:
+        uint32_t m_num_patches;
+        std::vector&lt;std::string&gt;* m_names;
+        doom_wad_t* m__root;
+        doom_wad_t::index_entry_t* m__parent;
+
+    public:
+
+        /**
+         * Number of patches registered in this global game directory
+         */
+        uint32_t num_patches() const { return m_num_patches; }
+        std::vector&lt;std::string&gt;* names() const { return m_names; }
+        doom_wad_t* _root() const { return m__root; }
+        doom_wad_t::index_entry_t* _parent() const { return m__parent; }
     };
 
     class thing_t : public kaitai::kstruct {
@@ -442,13 +635,16 @@ public:
         std::string ceil_flat() const { return m_ceil_flat; }
 
         /**
-         * Light level of the sector [0..255]. Original engine uses COLORMAP to render lighting, so only 32 actual levels are available (i.e. 0..7, 8..15, etc).
+         * Light level of the sector [0..255]. Original engine uses
+         * COLORMAP to render lighting, so only 32 actual levels are
+         * available (i.e. 0..7, 8..15, etc).
          */
         int16_t light() const { return m_light; }
         special_sector_t special_type() const { return m_special_type; }
 
         /**
-         * Tag number. When the linedef with the same tag number is activated, some effect will be triggered in this sector.
+         * Tag number. When the linedef with the same tag number is
+         * activated, some effect will be triggered in this sector.
          */
         uint16_t tag() const { return m_tag; }
         doom_wad_t* _root() const { return m__root; }
@@ -783,6 +979,102 @@ void doom_wad_t::vertex_t::_read() {
 doom_wad_t::vertex_t::~vertex_t() {
 }
 
+doom_wad_t::texture12_t::texture12_t(kaitai::kstream *p_io, doom_wad_t::index_entry_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void doom_wad_t::texture12_t::_read() {
+    m_num_textures = m__io-&gt;read_s4le();
+    int l_textures = num_textures();
+    m_textures = new std::vector&lt;texture_index_t*&gt;();
+    m_textures-&gt;reserve(l_textures);
+    for (int i = 0; i &lt; l_textures; i++) {
+        m_textures-&gt;push_back(new texture_index_t(m__io, this, m__root));
+    }
+}
+
+doom_wad_t::texture12_t::~texture12_t() {
+    for (std::vector&lt;texture_index_t*&gt;::iterator it = m_textures-&gt;begin(); it != m_textures-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_textures;
+}
+
+doom_wad_t::texture12_t::texture_index_t::texture_index_t(kaitai::kstream *p_io, doom_wad_t::texture12_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    f_body = false;
+    _read();
+}
+
+void doom_wad_t::texture12_t::texture_index_t::_read() {
+    m_offset = m__io-&gt;read_s4le();
+}
+
+doom_wad_t::texture12_t::texture_index_t::~texture_index_t() {
+    if (f_body) {
+        delete m_body;
+    }
+}
+
+doom_wad_t::texture12_t::texture_body_t* doom_wad_t::texture12_t::texture_index_t::body() {
+    if (f_body)
+        return m_body;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(offset());
+    m_body = new texture_body_t(m__io, this, m__root);
+    m__io-&gt;seek(_pos);
+    f_body = true;
+    return m_body;
+}
+
+doom_wad_t::texture12_t::texture_body_t::texture_body_t(kaitai::kstream *p_io, doom_wad_t::texture12_t::texture_index_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void doom_wad_t::texture12_t::texture_body_t::_read() {
+    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io-&gt;read_bytes(8), 0), std::string(&quot;ASCII&quot;));
+    m_masked = m__io-&gt;read_u4le();
+    m_width = m__io-&gt;read_u2le();
+    m_height = m__io-&gt;read_u2le();
+    m_column_directory = m__io-&gt;read_u4le();
+    m_num_patches = m__io-&gt;read_u2le();
+    int l_patches = num_patches();
+    m_patches = new std::vector&lt;patch_t*&gt;();
+    m_patches-&gt;reserve(l_patches);
+    for (int i = 0; i &lt; l_patches; i++) {
+        m_patches-&gt;push_back(new patch_t(m__io, this, m__root));
+    }
+}
+
+doom_wad_t::texture12_t::texture_body_t::~texture_body_t() {
+    for (std::vector&lt;patch_t*&gt;::iterator it = m_patches-&gt;begin(); it != m_patches-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_patches;
+}
+
+doom_wad_t::texture12_t::patch_t::patch_t(kaitai::kstream *p_io, doom_wad_t::texture12_t::texture_body_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void doom_wad_t::texture12_t::patch_t::_read() {
+    m_origin_x = m__io-&gt;read_s2le();
+    m_origin_y = m__io-&gt;read_s2le();
+    m_patch_id = m__io-&gt;read_u2le();
+    m_step_dir = m__io-&gt;read_u2le();
+    m_colormap = m__io-&gt;read_u2le();
+}
+
+doom_wad_t::texture12_t::patch_t::~patch_t() {
+}
+
 doom_wad_t::linedef_t::linedef_t(kaitai::kstream *p_io, doom_wad_t::linedefs_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
     m__parent = p_parent;
     m__root = p_root;
@@ -800,6 +1092,26 @@ void doom_wad_t::linedef_t::_read() {
 }
 
 doom_wad_t::linedef_t::~linedef_t() {
+}
+
+doom_wad_t::pnames_t::pnames_t(kaitai::kstream *p_io, doom_wad_t::index_entry_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void doom_wad_t::pnames_t::_read() {
+    m_num_patches = m__io-&gt;read_u4le();
+    int l_names = num_patches();
+    m_names = new std::vector&lt;std::string&gt;();
+    m_names-&gt;reserve(l_names);
+    for (int i = 0; i &lt; l_names; i++) {
+        m_names-&gt;push_back(kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io-&gt;read_bytes(8), 0), std::string(&quot;ASCII&quot;)));
+    }
+}
+
+doom_wad_t::pnames_t::~pnames_t() {
+    delete m_names;
 }
 
 doom_wad_t::thing_t::thing_t(kaitai::kstream *p_io, doom_wad_t::things_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
@@ -926,7 +1238,7 @@ doom_wad_t::index_entry_t::index_entry_t(kaitai::kstream *p_io, doom_wad_t* p_pa
 void doom_wad_t::index_entry_t::_read() {
     m_offset = m__io-&gt;read_s4le();
     m_size = m__io-&gt;read_s4le();
-    m_name = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(8), std::string(&quot;ASCII&quot;));
+    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io-&gt;read_bytes(8), 0), std::string(&quot;ASCII&quot;));
 }
 
 doom_wad_t::index_entry_t::~index_entry_t() {
@@ -940,10 +1252,15 @@ kaitai::kstruct* doom_wad_t::index_entry_t::contents() {
     io-&gt;seek(offset());
     {
         std::string on = name();
-        if (on == std::string(&quot;SECTORS\000&quot;, 8)) {
+        if (on == std::string(&quot;SECTORS&quot;)) {
             m__raw_contents = io-&gt;read_bytes(size());
             m__io__raw_contents = new kaitai::kstream(m__raw_contents);
             m_contents = new sectors_t(m__io__raw_contents, this, m__root);
+        }
+        else if (on == std::string(&quot;TEXTURE1&quot;)) {
+            m__raw_contents = io-&gt;read_bytes(size());
+            m__io__raw_contents = new kaitai::kstream(m__raw_contents);
+            m_contents = new texture12_t(m__io__raw_contents, this, m__root);
         }
         else if (on == std::string(&quot;VERTEXES&quot;)) {
             m__raw_contents = io-&gt;read_bytes(size());
@@ -955,7 +1272,17 @@ kaitai::kstruct* doom_wad_t::index_entry_t::contents() {
             m__io__raw_contents = new kaitai::kstream(m__raw_contents);
             m_contents = new blockmap_t(m__io__raw_contents, this, m__root);
         }
-        else if (on == std::string(&quot;THINGS\000\000&quot;, 8)) {
+        else if (on == std::string(&quot;PNAMES&quot;)) {
+            m__raw_contents = io-&gt;read_bytes(size());
+            m__io__raw_contents = new kaitai::kstream(m__raw_contents);
+            m_contents = new pnames_t(m__io__raw_contents, this, m__root);
+        }
+        else if (on == std::string(&quot;TEXTURE2&quot;)) {
+            m__raw_contents = io-&gt;read_bytes(size());
+            m__io__raw_contents = new kaitai::kstream(m__raw_contents);
+            m_contents = new texture12_t(m__io__raw_contents, this, m__root);
+        }
+        else if (on == std::string(&quot;THINGS&quot;)) {
             m__raw_contents = io-&gt;read_bytes(size());
             m__io__raw_contents = new kaitai::kstream(m__raw_contents);
             m_contents = new things_t(m__io__raw_contents, this, m__root);

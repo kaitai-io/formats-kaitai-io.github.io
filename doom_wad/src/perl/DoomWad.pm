@@ -155,6 +155,242 @@ sub y {
 }
 
 ########################################################################
+package DoomWad::Texture12;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{num_textures} = $self->{_io}->read_s4le();
+    $self->{textures} = ();
+    my $n_textures = $self->num_textures();
+    for (my $i = 0; $i < $n_textures; $i++) {
+        $self->{textures}[$i] = DoomWad::Texture12::TextureIndex->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub num_textures {
+    my ($self) = @_;
+    return $self->{num_textures};
+}
+
+sub textures {
+    my ($self) = @_;
+    return $self->{textures};
+}
+
+########################################################################
+package DoomWad::Texture12::TextureIndex;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{offset} = $self->{_io}->read_s4le();
+}
+
+sub body {
+    my ($self) = @_;
+    return $self->{body} if ($self->{body});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek($self->offset());
+    $self->{body} = DoomWad::Texture12::TextureBody->new($self->{_io}, $self, $self->{_root});
+    $self->{_io}->seek($_pos);
+    return $self->{body};
+}
+
+sub offset {
+    my ($self) = @_;
+    return $self->{offset};
+}
+
+########################################################################
+package DoomWad::Texture12::TextureBody;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{name} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_strip_right($self->{_io}->read_bytes(8), 0));
+    $self->{masked} = $self->{_io}->read_u4le();
+    $self->{width} = $self->{_io}->read_u2le();
+    $self->{height} = $self->{_io}->read_u2le();
+    $self->{column_directory} = $self->{_io}->read_u4le();
+    $self->{num_patches} = $self->{_io}->read_u2le();
+    $self->{patches} = ();
+    my $n_patches = $self->num_patches();
+    for (my $i = 0; $i < $n_patches; $i++) {
+        $self->{patches}[$i] = DoomWad::Texture12::Patch->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub name {
+    my ($self) = @_;
+    return $self->{name};
+}
+
+sub masked {
+    my ($self) = @_;
+    return $self->{masked};
+}
+
+sub width {
+    my ($self) = @_;
+    return $self->{width};
+}
+
+sub height {
+    my ($self) = @_;
+    return $self->{height};
+}
+
+sub column_directory {
+    my ($self) = @_;
+    return $self->{column_directory};
+}
+
+sub num_patches {
+    my ($self) = @_;
+    return $self->{num_patches};
+}
+
+sub patches {
+    my ($self) = @_;
+    return $self->{patches};
+}
+
+########################################################################
+package DoomWad::Texture12::Patch;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{origin_x} = $self->{_io}->read_s2le();
+    $self->{origin_y} = $self->{_io}->read_s2le();
+    $self->{patch_id} = $self->{_io}->read_u2le();
+    $self->{step_dir} = $self->{_io}->read_u2le();
+    $self->{colormap} = $self->{_io}->read_u2le();
+}
+
+sub origin_x {
+    my ($self) = @_;
+    return $self->{origin_x};
+}
+
+sub origin_y {
+    my ($self) = @_;
+    return $self->{origin_y};
+}
+
+sub patch_id {
+    my ($self) = @_;
+    return $self->{patch_id};
+}
+
+sub step_dir {
+    my ($self) = @_;
+    return $self->{step_dir};
+}
+
+sub colormap {
+    my ($self) = @_;
+    return $self->{colormap};
+}
+
+########################################################################
 package DoomWad::Linedef;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -226,6 +462,54 @@ sub sidedef_right_idx {
 sub sidedef_left_idx {
     my ($self) = @_;
     return $self->{sidedef_left_idx};
+}
+
+########################################################################
+package DoomWad::Pnames;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{num_patches} = $self->{_io}->read_u4le();
+    $self->{names} = ();
+    my $n_names = $self->num_patches();
+    for (my $i = 0; $i < $n_names; $i++) {
+        $self->{names}[$i] = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_strip_right($self->{_io}->read_bytes(8), 0));
+    }
+}
+
+sub num_patches {
+    my ($self) = @_;
+    return $self->{num_patches};
+}
+
+sub names {
+    my ($self) = @_;
+    return $self->{names};
 }
 
 ########################################################################
@@ -612,7 +896,7 @@ sub _read {
 
     $self->{offset} = $self->{_io}->read_s4le();
     $self->{size} = $self->{_io}->read_s4le();
-    $self->{name} = Encode::decode("ASCII", $self->{_io}->read_bytes(8));
+    $self->{name} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_strip_right($self->{_io}->read_bytes(8), 0));
 }
 
 sub contents {
@@ -622,10 +906,15 @@ sub contents {
     my $_pos = $io->pos();
     $io->seek($self->offset());
     my $_on = $self->name();
-    if ($_on eq "SECTORS\000") {
+    if ($_on eq "SECTORS") {
         $self->{_raw_contents} = $io->read_bytes($self->size());
         my $io__raw_contents = IO::KaitaiStruct::Stream->new($self->{_raw_contents});
         $self->{contents} = DoomWad::Sectors->new($io__raw_contents, $self, $self->{_root});
+    }
+    elsif ($_on eq "TEXTURE1") {
+        $self->{_raw_contents} = $io->read_bytes($self->size());
+        my $io__raw_contents = IO::KaitaiStruct::Stream->new($self->{_raw_contents});
+        $self->{contents} = DoomWad::Texture12->new($io__raw_contents, $self, $self->{_root});
     }
     elsif ($_on eq "VERTEXES") {
         $self->{_raw_contents} = $io->read_bytes($self->size());
@@ -637,7 +926,17 @@ sub contents {
         my $io__raw_contents = IO::KaitaiStruct::Stream->new($self->{_raw_contents});
         $self->{contents} = DoomWad::Blockmap->new($io__raw_contents, $self, $self->{_root});
     }
-    elsif ($_on eq "THINGS\000\000") {
+    elsif ($_on eq "PNAMES") {
+        $self->{_raw_contents} = $io->read_bytes($self->size());
+        my $io__raw_contents = IO::KaitaiStruct::Stream->new($self->{_raw_contents});
+        $self->{contents} = DoomWad::Pnames->new($io__raw_contents, $self, $self->{_root});
+    }
+    elsif ($_on eq "TEXTURE2") {
+        $self->{_raw_contents} = $io->read_bytes($self->size());
+        my $io__raw_contents = IO::KaitaiStruct::Stream->new($self->{_raw_contents});
+        $self->{contents} = DoomWad::Texture12->new($io__raw_contents, $self, $self->{_root});
+    }
+    elsif ($_on eq "THINGS") {
         $self->{_raw_contents} = $io->read_bytes($self->size());
         my $io__raw_contents = IO::KaitaiStruct::Stream->new($self->{_raw_contents});
         $self->{contents} = DoomWad::Things->new($io__raw_contents, $self, $self->{_root});

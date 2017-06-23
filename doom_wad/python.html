@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>doom_wad: Python parsing library</title>
+  <title>.wad file format of id Tech 1: Python parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Game Data Files</li>
-        <li class="active">doom_wad</li>
+        <li class="active">.wad file format of id Tech 1</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>doom_wad:
+        <h1>.wad file format of id Tech 1:
             
             Python parsing library
             
@@ -111,6 +111,23 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        wad
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
                     
                 </div>
             </div>
@@ -119,7 +136,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of doom_wad
+            This page hosts a formal specification of .wad file format of id Tech 1
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -130,56 +147,80 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="index.html" title="doom_wad parsing Overview library">Overview</a></li>
+                <a href="index.html" title=".wad file format of id Tech 1 parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="doom_wad parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title=".wad file format of id Tech 1 parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="doom_wad parsing C# library">C#</a></li>
+                <a href="csharp.html" title=".wad file format of id Tech 1 parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="doom_wad parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title=".wad file format of id Tech 1 parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="doom_wad parsing Java library">Java</a></li>
+                <a href="java.html" title=".wad file format of id Tech 1 parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title="doom_wad parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title=".wad file format of id Tech 1 parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title="doom_wad parsing Perl library">Perl</a></li>
+                <a href="perl.html" title=".wad file format of id Tech 1 parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="doom_wad parsing PHP library">PHP</a></li>
+                <a href="php.html" title=".wad file format of id Tech 1 parsing PHP library">PHP</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="python.html" title="doom_wad parsing Python library">Python</a></li>
+                <a href="python.html" title=".wad file format of id Tech 1 parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title="doom_wad parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title=".wad file format of id Tech 1 parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
         </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="python">data = DoomWad.from_file("path/to/local/file.wad")</code></pre>
+
+<p>Or parse structure from a bytes:</p>
+
+<pre><code class="python">from kaitaistruct import KaitaiStream
+
+raw = b"\x00\x01\x02..."
+data = DoomWad(KaitaiStream(raw))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="python">data.numIndexEntries # => Number of entries in the lump index</code></pre>
+
     </div>
 </section>
 
@@ -188,7 +229,7 @@ section#format-index .row {
     <div class="container">
         <h2>
             
-            Python source code to parse doom_wad
+            Python source code to parse .wad file format of id Tech 1
             
         </h2>
 
@@ -253,6 +294,87 @@ class DoomWad(KaitaiStruct):
             self.y = self._io.read_s2le()
 
 
+    class Texture12(KaitaiStruct):
+        &quot;&quot;&quot;Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
+        combine wall patches to make wall textures. This essentially
+        provides a very simple form of image compression, allowing
+        certain elements (&quot;patches&quot;) to be reused / recombined on
+        different textures for more variety in the game.
+        
+        .. seealso::
+           Source - http://doom.wikia.com/wiki/TEXTURE1
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.num_textures = self._io.read_s4le()
+            self.textures = [None] * (self.num_textures)
+            for i in range(self.num_textures):
+                self.textures[i] = self._root.Texture12.TextureIndex(self._io, self, self._root)
+
+
+        class TextureIndex(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.offset = self._io.read_s4le()
+
+            @property
+            def body(self):
+                if hasattr(self, &#39;_m_body&#39;):
+                    return self._m_body if hasattr(self, &#39;_m_body&#39;) else None
+
+                _pos = self._io.pos()
+                self._io.seek(self.offset)
+                self._m_body = self._root.Texture12.TextureBody(self._io, self, self._root)
+                self._io.seek(_pos)
+                return self._m_body if hasattr(self, &#39;_m_body&#39;) else None
+
+
+        class TextureBody(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.name = (KaitaiStream.bytes_strip_right(self._io.read_bytes(8), 0)).decode(u&quot;ASCII&quot;)
+                self.masked = self._io.read_u4le()
+                self.width = self._io.read_u2le()
+                self.height = self._io.read_u2le()
+                self.column_directory = self._io.read_u4le()
+                self.num_patches = self._io.read_u2le()
+                self.patches = [None] * (self.num_patches)
+                for i in range(self.num_patches):
+                    self.patches[i] = self._root.Texture12.Patch(self._io, self, self._root)
+
+
+
+        class Patch(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.origin_x = self._io.read_s2le()
+                self.origin_y = self._io.read_s2le()
+                self.patch_id = self._io.read_u2le()
+                self.step_dir = self._io.read_u2le()
+                self.colormap = self._io.read_u2le()
+
+
+
     class Linedef(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -268,6 +390,25 @@ class DoomWad(KaitaiStruct):
             self.sector_tag = self._io.read_u2le()
             self.sidedef_right_idx = self._io.read_u2le()
             self.sidedef_left_idx = self._io.read_u2le()
+
+
+    class Pnames(KaitaiStruct):
+        &quot;&quot;&quot;
+        .. seealso::
+           Source - http://doom.wikia.com/wiki/PNAMES
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.num_patches = self._io.read_u4le()
+            self.names = [None] * (self.num_patches)
+            for i in range(self.num_patches):
+                self.names[i] = (KaitaiStream.bytes_strip_right(self._io.read_bytes(8), 0)).decode(u&quot;ASCII&quot;)
+
 
 
     class Thing(KaitaiStruct):
@@ -396,7 +537,7 @@ class DoomWad(KaitaiStruct):
         def _read(self):
             self.offset = self._io.read_s4le()
             self.size = self._io.read_s4le()
-            self.name = (self._io.read_bytes(8)).decode(u&quot;ASCII&quot;)
+            self.name = (KaitaiStream.bytes_strip_right(self._io.read_bytes(8), 0)).decode(u&quot;ASCII&quot;)
 
         @property
         def contents(self):
@@ -407,10 +548,14 @@ class DoomWad(KaitaiStruct):
             _pos = io.pos()
             io.seek(self.offset)
             _on = self.name
-            if _on == u&quot;SECTORS\000&quot;:
+            if _on == u&quot;SECTORS&quot;:
                 self._raw__m_contents = io.read_bytes(self.size)
                 io = KaitaiStream(BytesIO(self._raw__m_contents))
                 self._m_contents = self._root.Sectors(io, self, self._root)
+            elif _on == u&quot;TEXTURE1&quot;:
+                self._raw__m_contents = io.read_bytes(self.size)
+                io = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = self._root.Texture12(io, self, self._root)
             elif _on == u&quot;VERTEXES&quot;:
                 self._raw__m_contents = io.read_bytes(self.size)
                 io = KaitaiStream(BytesIO(self._raw__m_contents))
@@ -419,7 +564,15 @@ class DoomWad(KaitaiStruct):
                 self._raw__m_contents = io.read_bytes(self.size)
                 io = KaitaiStream(BytesIO(self._raw__m_contents))
                 self._m_contents = self._root.Blockmap(io, self, self._root)
-            elif _on == u&quot;THINGS\000\000&quot;:
+            elif _on == u&quot;PNAMES&quot;:
+                self._raw__m_contents = io.read_bytes(self.size)
+                io = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = self._root.Pnames(io, self, self._root)
+            elif _on == u&quot;TEXTURE2&quot;:
+                self._raw__m_contents = io.read_bytes(self.size)
+                io = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = self._root.Texture12(io, self, self._root)
+            elif _on == u&quot;THINGS&quot;:
                 self._raw__m_contents = io.read_bytes(self.size)
                 io = KaitaiStream(BytesIO(self._raw__m_contents))
                 self._m_contents = self._root.Things(io, self, self._root)

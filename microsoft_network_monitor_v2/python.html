@@ -207,6 +207,30 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
     </div>
 </section>
 
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="python">data = MicrosoftNetworkMonitorV2.from_file("path/to/local/file.cap")</code></pre>
+
+<p>Or parse structure from a bytes:</p>
+
+<pre><code class="python">from kaitaistruct import KaitaiStream
+
+raw = b"\x00\x01\x02..."
+data = MicrosoftNetworkMonitorV2(KaitaiStream(raw))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="python">data.versionMinor # => Format version (minor), BCDdata.frameTable # => Index that is used to access individual captured frames</code></pre>
+
+    </div>
+</section>
+
 
 <section id="format-lang" class="format">
     <div class="container">

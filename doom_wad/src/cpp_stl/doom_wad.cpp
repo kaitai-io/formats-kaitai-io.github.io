@@ -58,6 +58,102 @@ void doom_wad_t::vertex_t::_read() {
 doom_wad_t::vertex_t::~vertex_t() {
 }
 
+doom_wad_t::texture12_t::texture12_t(kaitai::kstream *p_io, doom_wad_t::index_entry_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void doom_wad_t::texture12_t::_read() {
+    m_num_textures = m__io->read_s4le();
+    int l_textures = num_textures();
+    m_textures = new std::vector<texture_index_t*>();
+    m_textures->reserve(l_textures);
+    for (int i = 0; i < l_textures; i++) {
+        m_textures->push_back(new texture_index_t(m__io, this, m__root));
+    }
+}
+
+doom_wad_t::texture12_t::~texture12_t() {
+    for (std::vector<texture_index_t*>::iterator it = m_textures->begin(); it != m_textures->end(); ++it) {
+        delete *it;
+    }
+    delete m_textures;
+}
+
+doom_wad_t::texture12_t::texture_index_t::texture_index_t(kaitai::kstream *p_io, doom_wad_t::texture12_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    f_body = false;
+    _read();
+}
+
+void doom_wad_t::texture12_t::texture_index_t::_read() {
+    m_offset = m__io->read_s4le();
+}
+
+doom_wad_t::texture12_t::texture_index_t::~texture_index_t() {
+    if (f_body) {
+        delete m_body;
+    }
+}
+
+doom_wad_t::texture12_t::texture_body_t* doom_wad_t::texture12_t::texture_index_t::body() {
+    if (f_body)
+        return m_body;
+    std::streampos _pos = m__io->pos();
+    m__io->seek(offset());
+    m_body = new texture_body_t(m__io, this, m__root);
+    m__io->seek(_pos);
+    f_body = true;
+    return m_body;
+}
+
+doom_wad_t::texture12_t::texture_body_t::texture_body_t(kaitai::kstream *p_io, doom_wad_t::texture12_t::texture_index_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void doom_wad_t::texture12_t::texture_body_t::_read() {
+    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io->read_bytes(8), 0), std::string("ASCII"));
+    m_masked = m__io->read_u4le();
+    m_width = m__io->read_u2le();
+    m_height = m__io->read_u2le();
+    m_column_directory = m__io->read_u4le();
+    m_num_patches = m__io->read_u2le();
+    int l_patches = num_patches();
+    m_patches = new std::vector<patch_t*>();
+    m_patches->reserve(l_patches);
+    for (int i = 0; i < l_patches; i++) {
+        m_patches->push_back(new patch_t(m__io, this, m__root));
+    }
+}
+
+doom_wad_t::texture12_t::texture_body_t::~texture_body_t() {
+    for (std::vector<patch_t*>::iterator it = m_patches->begin(); it != m_patches->end(); ++it) {
+        delete *it;
+    }
+    delete m_patches;
+}
+
+doom_wad_t::texture12_t::patch_t::patch_t(kaitai::kstream *p_io, doom_wad_t::texture12_t::texture_body_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void doom_wad_t::texture12_t::patch_t::_read() {
+    m_origin_x = m__io->read_s2le();
+    m_origin_y = m__io->read_s2le();
+    m_patch_id = m__io->read_u2le();
+    m_step_dir = m__io->read_u2le();
+    m_colormap = m__io->read_u2le();
+}
+
+doom_wad_t::texture12_t::patch_t::~patch_t() {
+}
+
 doom_wad_t::linedef_t::linedef_t(kaitai::kstream *p_io, doom_wad_t::linedefs_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
     m__parent = p_parent;
     m__root = p_root;
@@ -75,6 +171,26 @@ void doom_wad_t::linedef_t::_read() {
 }
 
 doom_wad_t::linedef_t::~linedef_t() {
+}
+
+doom_wad_t::pnames_t::pnames_t(kaitai::kstream *p_io, doom_wad_t::index_entry_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void doom_wad_t::pnames_t::_read() {
+    m_num_patches = m__io->read_u4le();
+    int l_names = num_patches();
+    m_names = new std::vector<std::string>();
+    m_names->reserve(l_names);
+    for (int i = 0; i < l_names; i++) {
+        m_names->push_back(kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io->read_bytes(8), 0), std::string("ASCII")));
+    }
+}
+
+doom_wad_t::pnames_t::~pnames_t() {
+    delete m_names;
 }
 
 doom_wad_t::thing_t::thing_t(kaitai::kstream *p_io, doom_wad_t::things_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
@@ -201,7 +317,7 @@ doom_wad_t::index_entry_t::index_entry_t(kaitai::kstream *p_io, doom_wad_t* p_pa
 void doom_wad_t::index_entry_t::_read() {
     m_offset = m__io->read_s4le();
     m_size = m__io->read_s4le();
-    m_name = kaitai::kstream::bytes_to_str(m__io->read_bytes(8), std::string("ASCII"));
+    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io->read_bytes(8), 0), std::string("ASCII"));
 }
 
 doom_wad_t::index_entry_t::~index_entry_t() {
@@ -215,10 +331,15 @@ kaitai::kstruct* doom_wad_t::index_entry_t::contents() {
     io->seek(offset());
     {
         std::string on = name();
-        if (on == std::string("SECTORS\000", 8)) {
+        if (on == std::string("SECTORS")) {
             m__raw_contents = io->read_bytes(size());
             m__io__raw_contents = new kaitai::kstream(m__raw_contents);
             m_contents = new sectors_t(m__io__raw_contents, this, m__root);
+        }
+        else if (on == std::string("TEXTURE1")) {
+            m__raw_contents = io->read_bytes(size());
+            m__io__raw_contents = new kaitai::kstream(m__raw_contents);
+            m_contents = new texture12_t(m__io__raw_contents, this, m__root);
         }
         else if (on == std::string("VERTEXES")) {
             m__raw_contents = io->read_bytes(size());
@@ -230,7 +351,17 @@ kaitai::kstruct* doom_wad_t::index_entry_t::contents() {
             m__io__raw_contents = new kaitai::kstream(m__raw_contents);
             m_contents = new blockmap_t(m__io__raw_contents, this, m__root);
         }
-        else if (on == std::string("THINGS\000\000", 8)) {
+        else if (on == std::string("PNAMES")) {
+            m__raw_contents = io->read_bytes(size());
+            m__io__raw_contents = new kaitai::kstream(m__raw_contents);
+            m_contents = new pnames_t(m__io__raw_contents, this, m__root);
+        }
+        else if (on == std::string("TEXTURE2")) {
+            m__raw_contents = io->read_bytes(size());
+            m__io__raw_contents = new kaitai::kstream(m__raw_contents);
+            m_contents = new texture12_t(m__io__raw_contents, this, m__root);
+        }
+        else if (on == std::string("THINGS")) {
             m__raw_contents = io->read_bytes(size());
             m__io__raw_contents = new kaitai::kstream(m__raw_contents);
             m_contents = new things_t(m__io__raw_contents, this, m__root);

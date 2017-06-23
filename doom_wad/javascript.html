@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>doom_wad: JavaScript parsing library</title>
+  <title>.wad file format of id Tech 1: JavaScript parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Game Data Files</li>
-        <li class="active">doom_wad</li>
+        <li class="active">.wad file format of id Tech 1</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>doom_wad:
+        <h1>.wad file format of id Tech 1:
             
             JavaScript parsing library
             
@@ -111,6 +111,23 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        wad
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
                     
                 </div>
             </div>
@@ -119,7 +136,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of doom_wad
+            This page hosts a formal specification of .wad file format of id Tech 1
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -130,52 +147,52 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="index.html" title="doom_wad parsing Overview library">Overview</a></li>
+                <a href="index.html" title=".wad file format of id Tech 1 parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="doom_wad parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title=".wad file format of id Tech 1 parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="doom_wad parsing C# library">C#</a></li>
+                <a href="csharp.html" title=".wad file format of id Tech 1 parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="doom_wad parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title=".wad file format of id Tech 1 parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="doom_wad parsing Java library">Java</a></li>
+                <a href="java.html" title=".wad file format of id Tech 1 parsing Java library">Java</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="javascript.html" title="doom_wad parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title=".wad file format of id Tech 1 parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title="doom_wad parsing Perl library">Perl</a></li>
+                <a href="perl.html" title=".wad file format of id Tech 1 parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="doom_wad parsing PHP library">PHP</a></li>
+                <a href="php.html" title=".wad file format of id Tech 1 parsing PHP library">PHP</a></li>
                 
                 
                 <li>
                 
-                <a href="python.html" title="doom_wad parsing Python library">Python</a></li>
+                <a href="python.html" title=".wad file format of id Tech 1 parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title="doom_wad parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title=".wad file format of id Tech 1 parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -188,7 +205,7 @@ section#format-index .row {
     <div class="container">
         <h2>
             
-            JavaScript source code to parse doom_wad
+            JavaScript source code to parse .wad file format of id Tech 1
             
         </h2>
 
@@ -255,6 +272,131 @@ var DoomWad = (function() {
     return Vertex;
   })();
 
+  /**
+   * Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
+   * combine wall patches to make wall textures. This essentially
+   * provides a very simple form of image compression, allowing
+   * certain elements (&quot;patches&quot;) to be reused / recombined on
+   * different textures for more variety in the game.
+   * @see {@link http://doom.wikia.com/wiki/TEXTURE1|Source}
+   */
+
+  var Texture12 = DoomWad.Texture12 = (function() {
+    function Texture12(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Texture12.prototype._read = function() {
+      this.numTextures = this._io.readS4le();
+      this.textures = new Array(this.numTextures);
+      for (var i = 0; i &lt; this.numTextures; i++) {
+        this.textures[i] = new TextureIndex(this._io, this, this._root);
+      }
+    }
+
+    var TextureIndex = Texture12.TextureIndex = (function() {
+      function TextureIndex(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      TextureIndex.prototype._read = function() {
+        this.offset = this._io.readS4le();
+      }
+      Object.defineProperty(TextureIndex.prototype, &#39;body&#39;, {
+        get: function() {
+          if (this._m_body !== undefined)
+            return this._m_body;
+          var _pos = this._io.pos;
+          this._io.seek(this.offset);
+          this._m_body = new TextureBody(this._io, this, this._root);
+          this._io.seek(_pos);
+          return this._m_body;
+        }
+      });
+
+      return TextureIndex;
+    })();
+
+    var TextureBody = Texture12.TextureBody = (function() {
+      function TextureBody(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      TextureBody.prototype._read = function() {
+        this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), &quot;ASCII&quot;);
+        this.masked = this._io.readU4le();
+        this.width = this._io.readU2le();
+        this.height = this._io.readU2le();
+        this.columnDirectory = this._io.readU4le();
+        this.numPatches = this._io.readU2le();
+        this.patches = new Array(this.numPatches);
+        for (var i = 0; i &lt; this.numPatches; i++) {
+          this.patches[i] = new Patch(this._io, this, this._root);
+        }
+      }
+
+      /**
+       * Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid
+       */
+
+      /**
+       * Obsolete, ignored by all DOOM versions
+       */
+
+      /**
+       * Number of patches that are used in a texture
+       */
+
+      return TextureBody;
+    })();
+
+    var Patch = Texture12.Patch = (function() {
+      function Patch(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      Patch.prototype._read = function() {
+        this.originX = this._io.readS2le();
+        this.originY = this._io.readS2le();
+        this.patchId = this._io.readU2le();
+        this.stepDir = this._io.readU2le();
+        this.colormap = this._io.readU2le();
+      }
+
+      /**
+       * X offset to draw a patch at (pixels from left boundary of a texture)
+       */
+
+      /**
+       * Y offset to draw a patch at (pixels from upper boundary of a texture)
+       */
+
+      /**
+       * Identifier of a patch (as listed in PNAMES lump) to draw
+       */
+
+      return Patch;
+    })();
+
+    /**
+     * Number of wall textures
+     */
+
+    return Texture12;
+  })();
+
   var Linedef = DoomWad.Linedef = (function() {
     function Linedef(_io, _parent, _root) {
       this._io = _io;
@@ -274,6 +416,33 @@ var DoomWad = (function() {
     }
 
     return Linedef;
+  })();
+
+  /**
+   * @see {@link http://doom.wikia.com/wiki/PNAMES|Source}
+   */
+
+  var Pnames = DoomWad.Pnames = (function() {
+    function Pnames(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Pnames.prototype._read = function() {
+      this.numPatches = this._io.readU4le();
+      this.names = new Array(this.numPatches);
+      for (var i = 0; i &lt; this.numPatches; i++) {
+        this.names[i] = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), &quot;ASCII&quot;);
+      }
+    }
+
+    /**
+     * Number of patches registered in this global game directory
+     */
+
+    return Pnames;
   })();
 
   var Thing = DoomWad.Thing = (function() {
@@ -366,11 +535,14 @@ var DoomWad = (function() {
     }
 
     /**
-     * Light level of the sector [0..255]. Original engine uses COLORMAP to render lighting, so only 32 actual levels are available (i.e. 0..7, 8..15, etc).
+     * Light level of the sector [0..255]. Original engine uses
+     * COLORMAP to render lighting, so only 32 actual levels are
+     * available (i.e. 0..7, 8..15, etc).
      */
 
     /**
-     * Tag number. When the linedef with the same tag number is activated, some effect will be triggered in this sector.
+     * Tag number. When the linedef with the same tag number is
+     * activated, some effect will be triggered in this sector.
      */
 
     return Sector;
@@ -461,7 +633,7 @@ var DoomWad = (function() {
     IndexEntry.prototype._read = function() {
       this.offset = this._io.readS4le();
       this.size = this._io.readS4le();
-      this.name = KaitaiStream.bytesToStr(this._io.readBytes(8), &quot;ASCII&quot;);
+      this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), &quot;ASCII&quot;);
     }
     Object.defineProperty(IndexEntry.prototype, &#39;contents&#39;, {
       get: function() {
@@ -471,10 +643,15 @@ var DoomWad = (function() {
         var _pos = io.pos;
         io.seek(this.offset);
         switch (this.name) {
-        case &quot;SECTORS\000&quot;:
+        case &quot;SECTORS&quot;:
           this._raw__m_contents = io.readBytes(this.size);
           var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
           this._m_contents = new Sectors(_io__raw__m_contents, this, this._root);
+          break;
+        case &quot;TEXTURE1&quot;:
+          this._raw__m_contents = io.readBytes(this.size);
+          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
+          this._m_contents = new Texture12(_io__raw__m_contents, this, this._root);
           break;
         case &quot;VERTEXES&quot;:
           this._raw__m_contents = io.readBytes(this.size);
@@ -486,7 +663,17 @@ var DoomWad = (function() {
           var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
           this._m_contents = new Blockmap(_io__raw__m_contents, this, this._root);
           break;
-        case &quot;THINGS\000\000&quot;:
+        case &quot;PNAMES&quot;:
+          this._raw__m_contents = io.readBytes(this.size);
+          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
+          this._m_contents = new Pnames(_io__raw__m_contents, this, this._root);
+          break;
+        case &quot;TEXTURE2&quot;:
+          this._raw__m_contents = io.readBytes(this.size);
+          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
+          this._m_contents = new Texture12(_io__raw__m_contents, this, this._root);
+          break;
+        case &quot;THINGS&quot;:
           this._raw__m_contents = io.readBytes(this.size);
           var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
           this._m_contents = new Things(_io__raw__m_contents, this, this._root);

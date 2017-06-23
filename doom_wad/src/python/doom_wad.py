@@ -46,6 +46,87 @@ class DoomWad(KaitaiStruct):
             self.y = self._io.read_s2le()
 
 
+    class Texture12(KaitaiStruct):
+        """Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
+        combine wall patches to make wall textures. This essentially
+        provides a very simple form of image compression, allowing
+        certain elements ("patches") to be reused / recombined on
+        different textures for more variety in the game.
+        
+        .. seealso::
+           Source - http://doom.wikia.com/wiki/TEXTURE1
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.num_textures = self._io.read_s4le()
+            self.textures = [None] * (self.num_textures)
+            for i in range(self.num_textures):
+                self.textures[i] = self._root.Texture12.TextureIndex(self._io, self, self._root)
+
+
+        class TextureIndex(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.offset = self._io.read_s4le()
+
+            @property
+            def body(self):
+                if hasattr(self, '_m_body'):
+                    return self._m_body if hasattr(self, '_m_body') else None
+
+                _pos = self._io.pos()
+                self._io.seek(self.offset)
+                self._m_body = self._root.Texture12.TextureBody(self._io, self, self._root)
+                self._io.seek(_pos)
+                return self._m_body if hasattr(self, '_m_body') else None
+
+
+        class TextureBody(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.name = (KaitaiStream.bytes_strip_right(self._io.read_bytes(8), 0)).decode(u"ASCII")
+                self.masked = self._io.read_u4le()
+                self.width = self._io.read_u2le()
+                self.height = self._io.read_u2le()
+                self.column_directory = self._io.read_u4le()
+                self.num_patches = self._io.read_u2le()
+                self.patches = [None] * (self.num_patches)
+                for i in range(self.num_patches):
+                    self.patches[i] = self._root.Texture12.Patch(self._io, self, self._root)
+
+
+
+        class Patch(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.origin_x = self._io.read_s2le()
+                self.origin_y = self._io.read_s2le()
+                self.patch_id = self._io.read_u2le()
+                self.step_dir = self._io.read_u2le()
+                self.colormap = self._io.read_u2le()
+
+
+
     class Linedef(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -61,6 +142,25 @@ class DoomWad(KaitaiStruct):
             self.sector_tag = self._io.read_u2le()
             self.sidedef_right_idx = self._io.read_u2le()
             self.sidedef_left_idx = self._io.read_u2le()
+
+
+    class Pnames(KaitaiStruct):
+        """
+        .. seealso::
+           Source - http://doom.wikia.com/wiki/PNAMES
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.num_patches = self._io.read_u4le()
+            self.names = [None] * (self.num_patches)
+            for i in range(self.num_patches):
+                self.names[i] = (KaitaiStream.bytes_strip_right(self._io.read_bytes(8), 0)).decode(u"ASCII")
+
 
 
     class Thing(KaitaiStruct):
@@ -189,7 +289,7 @@ class DoomWad(KaitaiStruct):
         def _read(self):
             self.offset = self._io.read_s4le()
             self.size = self._io.read_s4le()
-            self.name = (self._io.read_bytes(8)).decode(u"ASCII")
+            self.name = (KaitaiStream.bytes_strip_right(self._io.read_bytes(8), 0)).decode(u"ASCII")
 
         @property
         def contents(self):
@@ -200,10 +300,14 @@ class DoomWad(KaitaiStruct):
             _pos = io.pos()
             io.seek(self.offset)
             _on = self.name
-            if _on == u"SECTORS\000":
+            if _on == u"SECTORS":
                 self._raw__m_contents = io.read_bytes(self.size)
                 io = KaitaiStream(BytesIO(self._raw__m_contents))
                 self._m_contents = self._root.Sectors(io, self, self._root)
+            elif _on == u"TEXTURE1":
+                self._raw__m_contents = io.read_bytes(self.size)
+                io = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = self._root.Texture12(io, self, self._root)
             elif _on == u"VERTEXES":
                 self._raw__m_contents = io.read_bytes(self.size)
                 io = KaitaiStream(BytesIO(self._raw__m_contents))
@@ -212,7 +316,15 @@ class DoomWad(KaitaiStruct):
                 self._raw__m_contents = io.read_bytes(self.size)
                 io = KaitaiStream(BytesIO(self._raw__m_contents))
                 self._m_contents = self._root.Blockmap(io, self, self._root)
-            elif _on == u"THINGS\000\000":
+            elif _on == u"PNAMES":
+                self._raw__m_contents = io.read_bytes(self.size)
+                io = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = self._root.Pnames(io, self, self._root)
+            elif _on == u"TEXTURE2":
+                self._raw__m_contents = io.read_bytes(self.size)
+                io = KaitaiStream(BytesIO(self._raw__m_contents))
+                self._m_contents = self._root.Texture12(io, self, self._root)
+            elif _on == u"THINGS":
                 self._raw__m_contents = io.read_bytes(self.size)
                 io = KaitaiStream(BytesIO(self._raw__m_contents))
                 self._m_contents = self._root.Things(io, self, self._root)

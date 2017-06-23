@@ -78,6 +78,153 @@ class Vertex extends \Kaitai\Struct\Struct {
     public function y() { return $this->_m_y; }
 }
 
+/**
+ * Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
+ * combine wall patches to make wall textures. This essentially
+ * provides a very simple form of image compression, allowing
+ * certain elements ("patches") to be reused / recombined on
+ * different textures for more variety in the game.
+ */
+
+namespace \DoomWad;
+
+class Texture12 extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\IndexEntry $parent = null, \DoomWad $root = null) {
+        parent::__construct($io, $parent, $root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_numTextures = $this->_io->readS4le();
+        $this->_m_textures = [];
+        $n = $this->numTextures();
+        for ($i = 0; $i < $n; $i++) {
+            $this->_m_textures[] = new \DoomWad\Texture12\TextureIndex($this->_io, $this, $this->_root);
+        }
+    }
+    protected $_m_numTextures;
+    protected $_m_textures;
+
+    /**
+     * Number of wall textures
+     */
+    public function numTextures() { return $this->_m_numTextures; }
+    public function textures() { return $this->_m_textures; }
+}
+
+namespace \DoomWad\Texture12;
+
+class TextureIndex extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\Texture12 $parent = null, \DoomWad $root = null) {
+        parent::__construct($io, $parent, $root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_offset = $this->_io->readS4le();
+    }
+    protected $_m_body;
+    public function body() {
+        if ($this->_m_body !== null)
+            return $this->_m_body;
+        $_pos = $this->_io->pos();
+        $this->_io->seek($this->offset());
+        $this->_m_body = new \DoomWad\Texture12\TextureBody($this->_io, $this, $this->_root);
+        $this->_io->seek($_pos);
+        return $this->_m_body;
+    }
+    protected $_m_offset;
+    public function offset() { return $this->_m_offset; }
+}
+
+namespace \DoomWad\Texture12;
+
+class TextureBody extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\Texture12\TextureIndex $parent = null, \DoomWad $root = null) {
+        parent::__construct($io, $parent, $root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesStripRight($this->_io->readBytes(8), 0), "ASCII");
+        $this->_m_masked = $this->_io->readU4le();
+        $this->_m_width = $this->_io->readU2le();
+        $this->_m_height = $this->_io->readU2le();
+        $this->_m_columnDirectory = $this->_io->readU4le();
+        $this->_m_numPatches = $this->_io->readU2le();
+        $this->_m_patches = [];
+        $n = $this->numPatches();
+        for ($i = 0; $i < $n; $i++) {
+            $this->_m_patches[] = new \DoomWad\Texture12\Patch($this->_io, $this, $this->_root);
+        }
+    }
+    protected $_m_name;
+    protected $_m_masked;
+    protected $_m_width;
+    protected $_m_height;
+    protected $_m_columnDirectory;
+    protected $_m_numPatches;
+    protected $_m_patches;
+
+    /**
+     * Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid
+     */
+    public function name() { return $this->_m_name; }
+    public function masked() { return $this->_m_masked; }
+    public function width() { return $this->_m_width; }
+    public function height() { return $this->_m_height; }
+
+    /**
+     * Obsolete, ignored by all DOOM versions
+     */
+    public function columnDirectory() { return $this->_m_columnDirectory; }
+
+    /**
+     * Number of patches that are used in a texture
+     */
+    public function numPatches() { return $this->_m_numPatches; }
+    public function patches() { return $this->_m_patches; }
+}
+
+namespace \DoomWad\Texture12;
+
+class Patch extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\Texture12\TextureBody $parent = null, \DoomWad $root = null) {
+        parent::__construct($io, $parent, $root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_originX = $this->_io->readS2le();
+        $this->_m_originY = $this->_io->readS2le();
+        $this->_m_patchId = $this->_io->readU2le();
+        $this->_m_stepDir = $this->_io->readU2le();
+        $this->_m_colormap = $this->_io->readU2le();
+    }
+    protected $_m_originX;
+    protected $_m_originY;
+    protected $_m_patchId;
+    protected $_m_stepDir;
+    protected $_m_colormap;
+
+    /**
+     * X offset to draw a patch at (pixels from left boundary of a texture)
+     */
+    public function originX() { return $this->_m_originX; }
+
+    /**
+     * Y offset to draw a patch at (pixels from upper boundary of a texture)
+     */
+    public function originY() { return $this->_m_originY; }
+
+    /**
+     * Identifier of a patch (as listed in PNAMES lump) to draw
+     */
+    public function patchId() { return $this->_m_patchId; }
+    public function stepDir() { return $this->_m_stepDir; }
+    public function colormap() { return $this->_m_colormap; }
+}
+
 namespace \DoomWad;
 
 class Linedef extends \Kaitai\Struct\Struct {
@@ -109,6 +256,35 @@ class Linedef extends \Kaitai\Struct\Struct {
     public function sectorTag() { return $this->_m_sectorTag; }
     public function sidedefRightIdx() { return $this->_m_sidedefRightIdx; }
     public function sidedefLeftIdx() { return $this->_m_sidedefLeftIdx; }
+}
+
+/**
+ */
+
+namespace \DoomWad;
+
+class Pnames extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\IndexEntry $parent = null, \DoomWad $root = null) {
+        parent::__construct($io, $parent, $root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_numPatches = $this->_io->readU4le();
+        $this->_m_names = [];
+        $n = $this->numPatches();
+        for ($i = 0; $i < $n; $i++) {
+            $this->_m_names[] = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesStripRight($this->_io->readBytes(8), 0), "ASCII");
+        }
+    }
+    protected $_m_numPatches;
+    protected $_m_names;
+
+    /**
+     * Number of patches registered in this global game directory
+     */
+    public function numPatches() { return $this->_m_numPatches; }
+    public function names() { return $this->_m_names; }
 }
 
 namespace \DoomWad;
@@ -168,13 +344,16 @@ class Sector extends \Kaitai\Struct\Struct {
     public function ceilFlat() { return $this->_m_ceilFlat; }
 
     /**
-     * Light level of the sector [0..255]. Original engine uses COLORMAP to render lighting, so only 32 actual levels are available (i.e. 0..7, 8..15, etc).
+     * Light level of the sector [0..255]. Original engine uses
+     * COLORMAP to render lighting, so only 32 actual levels are
+     * available (i.e. 0..7, 8..15, etc).
      */
     public function light() { return $this->_m_light; }
     public function specialType() { return $this->_m_specialType; }
 
     /**
-     * Tag number. When the linedef with the same tag number is activated, some effect will be triggered in this sector.
+     * Tag number. When the linedef with the same tag number is
+     * activated, some effect will be triggered in this sector.
      */
     public function tag() { return $this->_m_tag; }
 }
@@ -303,7 +482,7 @@ class IndexEntry extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_offset = $this->_io->readS4le();
         $this->_m_size = $this->_io->readS4le();
-        $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(8), "ASCII");
+        $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesStripRight($this->_io->readBytes(8), 0), "ASCII");
     }
     protected $_m_contents;
     public function contents() {
@@ -313,10 +492,15 @@ class IndexEntry extends \Kaitai\Struct\Struct {
         $_pos = $io->pos();
         $io->seek($this->offset());
         switch ($this->name()) {
-            case "SECTORS\000":
+            case "SECTORS":
                 $this->_m__raw_contents = $io->readBytes($this->size());
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
                 $this->_m_contents = new \DoomWad\Sectors($io, $this, $this->_root);
+                break;
+            case "TEXTURE1":
+                $this->_m__raw_contents = $io->readBytes($this->size());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
+                $this->_m_contents = new \DoomWad\Texture12($io, $this, $this->_root);
                 break;
             case "VERTEXES":
                 $this->_m__raw_contents = $io->readBytes($this->size());
@@ -328,7 +512,17 @@ class IndexEntry extends \Kaitai\Struct\Struct {
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
                 $this->_m_contents = new \DoomWad\Blockmap($io, $this, $this->_root);
                 break;
-            case "THINGS\000\000":
+            case "PNAMES":
+                $this->_m__raw_contents = $io->readBytes($this->size());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
+                $this->_m_contents = new \DoomWad\Pnames($io, $this, $this->_root);
+                break;
+            case "TEXTURE2":
+                $this->_m__raw_contents = $io->readBytes($this->size());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
+                $this->_m_contents = new \DoomWad\Texture12($io, $this, $this->_root);
+                break;
+            case "THINGS":
                 $this->_m__raw_contents = $io->readBytes($this->size());
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_contents);
                 $this->_m_contents = new \DoomWad\Things($io, $this, $this->_root);

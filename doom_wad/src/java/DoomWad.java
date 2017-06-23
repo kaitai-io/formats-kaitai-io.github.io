@@ -119,6 +119,236 @@ public class DoomWad extends KaitaiStruct {
         public DoomWad _root() { return _root; }
         public DoomWad.Vertexes _parent() { return _parent; }
     }
+
+    /**
+     * Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
+     * combine wall patches to make wall textures. This essentially
+     * provides a very simple form of image compression, allowing
+     * certain elements ("patches") to be reused / recombined on
+     * different textures for more variety in the game.
+     * @see <a href="http://doom.wikia.com/wiki/TEXTURE1">Source</a>
+     */
+    public static class Texture12 extends KaitaiStruct {
+        public static Texture12 fromFile(String fileName) throws IOException {
+            return new Texture12(new KaitaiStream(fileName));
+        }
+
+        public Texture12(KaitaiStream _io) {
+            super(_io);
+            _init();
+        }
+
+        public Texture12(KaitaiStream _io, DoomWad.IndexEntry _parent) {
+            super(_io);
+            this._parent = _parent;
+            _init();
+        }
+
+        public Texture12(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _init();
+        }
+
+        private void _init() {
+            _read();
+        }
+        private void _read() {
+            this.numTextures = this._io.readS4le();
+            textures = new ArrayList<TextureIndex>((int) (numTextures()));
+            for (int i = 0; i < numTextures(); i++) {
+                this.textures.add(new TextureIndex(this._io, this, _root));
+            }
+        }
+        public static class TextureIndex extends KaitaiStruct {
+            public static TextureIndex fromFile(String fileName) throws IOException {
+                return new TextureIndex(new KaitaiStream(fileName));
+            }
+
+            public TextureIndex(KaitaiStream _io) {
+                super(_io);
+                _init();
+            }
+
+            public TextureIndex(KaitaiStream _io, DoomWad.Texture12 _parent) {
+                super(_io);
+                this._parent = _parent;
+                _init();
+            }
+
+            public TextureIndex(KaitaiStream _io, DoomWad.Texture12 _parent, DoomWad _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _init();
+            }
+
+            private void _init() {
+                _read();
+            }
+            private void _read() {
+                this.offset = this._io.readS4le();
+            }
+            private TextureBody body;
+            public TextureBody body() {
+                if (this.body != null)
+                    return this.body;
+                long _pos = this._io.pos();
+                this._io.seek(offset());
+                this.body = new TextureBody(this._io, this, _root);
+                this._io.seek(_pos);
+                return this.body;
+            }
+            private int offset;
+            private DoomWad _root;
+            private DoomWad.Texture12 _parent;
+            public int offset() { return offset; }
+            public DoomWad _root() { return _root; }
+            public DoomWad.Texture12 _parent() { return _parent; }
+        }
+        public static class TextureBody extends KaitaiStruct {
+            public static TextureBody fromFile(String fileName) throws IOException {
+                return new TextureBody(new KaitaiStream(fileName));
+            }
+
+            public TextureBody(KaitaiStream _io) {
+                super(_io);
+                _init();
+            }
+
+            public TextureBody(KaitaiStream _io, DoomWad.Texture12.TextureIndex _parent) {
+                super(_io);
+                this._parent = _parent;
+                _init();
+            }
+
+            public TextureBody(KaitaiStream _io, DoomWad.Texture12.TextureIndex _parent, DoomWad _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _init();
+            }
+
+            private void _init() {
+                _read();
+            }
+            private void _read() {
+                this.name = new String(KaitaiStream.bytesStripRight(this._io.readBytes(8), (byte) 0), Charset.forName("ASCII"));
+                this.masked = this._io.readU4le();
+                this.width = this._io.readU2le();
+                this.height = this._io.readU2le();
+                this.columnDirectory = this._io.readU4le();
+                this.numPatches = this._io.readU2le();
+                patches = new ArrayList<Patch>((int) (numPatches()));
+                for (int i = 0; i < numPatches(); i++) {
+                    this.patches.add(new Patch(this._io, this, _root));
+                }
+            }
+            private String name;
+            private long masked;
+            private int width;
+            private int height;
+            private long columnDirectory;
+            private int numPatches;
+            private ArrayList<Patch> patches;
+            private DoomWad _root;
+            private DoomWad.Texture12.TextureIndex _parent;
+
+            /**
+             * Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid
+             */
+            public String name() { return name; }
+            public long masked() { return masked; }
+            public int width() { return width; }
+            public int height() { return height; }
+
+            /**
+             * Obsolete, ignored by all DOOM versions
+             */
+            public long columnDirectory() { return columnDirectory; }
+
+            /**
+             * Number of patches that are used in a texture
+             */
+            public int numPatches() { return numPatches; }
+            public ArrayList<Patch> patches() { return patches; }
+            public DoomWad _root() { return _root; }
+            public DoomWad.Texture12.TextureIndex _parent() { return _parent; }
+        }
+        public static class Patch extends KaitaiStruct {
+            public static Patch fromFile(String fileName) throws IOException {
+                return new Patch(new KaitaiStream(fileName));
+            }
+
+            public Patch(KaitaiStream _io) {
+                super(_io);
+                _init();
+            }
+
+            public Patch(KaitaiStream _io, DoomWad.Texture12.TextureBody _parent) {
+                super(_io);
+                this._parent = _parent;
+                _init();
+            }
+
+            public Patch(KaitaiStream _io, DoomWad.Texture12.TextureBody _parent, DoomWad _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _init();
+            }
+
+            private void _init() {
+                _read();
+            }
+            private void _read() {
+                this.originX = this._io.readS2le();
+                this.originY = this._io.readS2le();
+                this.patchId = this._io.readU2le();
+                this.stepDir = this._io.readU2le();
+                this.colormap = this._io.readU2le();
+            }
+            private short originX;
+            private short originY;
+            private int patchId;
+            private int stepDir;
+            private int colormap;
+            private DoomWad _root;
+            private DoomWad.Texture12.TextureBody _parent;
+
+            /**
+             * X offset to draw a patch at (pixels from left boundary of a texture)
+             */
+            public short originX() { return originX; }
+
+            /**
+             * Y offset to draw a patch at (pixels from upper boundary of a texture)
+             */
+            public short originY() { return originY; }
+
+            /**
+             * Identifier of a patch (as listed in PNAMES lump) to draw
+             */
+            public int patchId() { return patchId; }
+            public int stepDir() { return stepDir; }
+            public int colormap() { return colormap; }
+            public DoomWad _root() { return _root; }
+            public DoomWad.Texture12.TextureBody _parent() { return _parent; }
+        }
+        private int numTextures;
+        private ArrayList<TextureIndex> textures;
+        private DoomWad _root;
+        private DoomWad.IndexEntry _parent;
+
+        /**
+         * Number of wall textures
+         */
+        public int numTextures() { return numTextures; }
+        public ArrayList<TextureIndex> textures() { return textures; }
+        public DoomWad _root() { return _root; }
+        public DoomWad.IndexEntry _parent() { return _parent; }
+    }
     public static class Linedef extends KaitaiStruct {
         public static Linedef fromFile(String fileName) throws IOException {
             return new Linedef(new KaitaiStream(fileName));
@@ -172,6 +402,56 @@ public class DoomWad extends KaitaiStruct {
         public int sidedefLeftIdx() { return sidedefLeftIdx; }
         public DoomWad _root() { return _root; }
         public DoomWad.Linedefs _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="http://doom.wikia.com/wiki/PNAMES">Source</a>
+     */
+    public static class Pnames extends KaitaiStruct {
+        public static Pnames fromFile(String fileName) throws IOException {
+            return new Pnames(new KaitaiStream(fileName));
+        }
+
+        public Pnames(KaitaiStream _io) {
+            super(_io);
+            _init();
+        }
+
+        public Pnames(KaitaiStream _io, DoomWad.IndexEntry _parent) {
+            super(_io);
+            this._parent = _parent;
+            _init();
+        }
+
+        public Pnames(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _init();
+        }
+
+        private void _init() {
+            _read();
+        }
+        private void _read() {
+            this.numPatches = this._io.readU4le();
+            names = new ArrayList<String>((int) (numPatches()));
+            for (int i = 0; i < numPatches(); i++) {
+                this.names.add(new String(KaitaiStream.bytesStripRight(this._io.readBytes(8), (byte) 0), Charset.forName("ASCII")));
+            }
+        }
+        private long numPatches;
+        private ArrayList<String> names;
+        private DoomWad _root;
+        private DoomWad.IndexEntry _parent;
+
+        /**
+         * Number of patches registered in this global game directory
+         */
+        public long numPatches() { return numPatches; }
+        public ArrayList<String> names() { return names; }
+        public DoomWad _root() { return _root; }
+        public DoomWad.IndexEntry _parent() { return _parent; }
     }
     public static class Thing extends KaitaiStruct {
         public static Thing fromFile(String fileName) throws IOException {
@@ -308,13 +588,16 @@ public class DoomWad extends KaitaiStruct {
         public String ceilFlat() { return ceilFlat; }
 
         /**
-         * Light level of the sector [0..255]. Original engine uses COLORMAP to render lighting, so only 32 actual levels are available (i.e. 0..7, 8..15, etc).
+         * Light level of the sector [0..255]. Original engine uses
+         * COLORMAP to render lighting, so only 32 actual levels are
+         * available (i.e. 0..7, 8..15, etc).
          */
         public short light() { return light; }
         public SpecialSector specialType() { return specialType; }
 
         /**
-         * Tag number. When the linedef with the same tag number is activated, some effect will be triggered in this sector.
+         * Tag number. When the linedef with the same tag number is
+         * activated, some effect will be triggered in this sector.
          */
         public int tag() { return tag; }
         public DoomWad _root() { return _root; }
@@ -517,7 +800,7 @@ public class DoomWad extends KaitaiStruct {
         private void _read() {
             this.offset = this._io.readS4le();
             this.size = this._io.readS4le();
-            this.name = new String(this._io.readBytes(8), Charset.forName("ASCII"));
+            this.name = new String(KaitaiStream.bytesStripRight(this._io.readBytes(8), (byte) 0), Charset.forName("ASCII"));
         }
         private Object contents;
         public Object contents() {
@@ -527,10 +810,16 @@ public class DoomWad extends KaitaiStruct {
             long _pos = io.pos();
             io.seek(offset());
             switch (name()) {
-            case "SECTORS\000": {
+            case "SECTORS": {
                 this._raw_contents = io.readBytes(size());
                 KaitaiStream _io__raw_contents = new KaitaiStream(_raw_contents);
                 this.contents = new Sectors(_io__raw_contents, this, _root);
+                break;
+            }
+            case "TEXTURE1": {
+                this._raw_contents = io.readBytes(size());
+                KaitaiStream _io__raw_contents = new KaitaiStream(_raw_contents);
+                this.contents = new Texture12(_io__raw_contents, this, _root);
                 break;
             }
             case "VERTEXES": {
@@ -545,7 +834,19 @@ public class DoomWad extends KaitaiStruct {
                 this.contents = new Blockmap(_io__raw_contents, this, _root);
                 break;
             }
-            case "THINGS\000\000": {
+            case "PNAMES": {
+                this._raw_contents = io.readBytes(size());
+                KaitaiStream _io__raw_contents = new KaitaiStream(_raw_contents);
+                this.contents = new Pnames(_io__raw_contents, this, _root);
+                break;
+            }
+            case "TEXTURE2": {
+                this._raw_contents = io.readBytes(size());
+                KaitaiStream _io__raw_contents = new KaitaiStream(_raw_contents);
+                this.contents = new Texture12(_io__raw_contents, this, _root);
+                break;
+            }
+            case "THINGS": {
                 this._raw_contents = io.readBytes(size());
                 KaitaiStream _io__raw_contents = new KaitaiStream(_raw_contents);
                 this.contents = new Things(_io__raw_contents, this, _root);

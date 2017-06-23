@@ -36,6 +36,59 @@ digraph {
 				<TR><TD PORT="y_pos">2</TD><TD PORT="y_size">2</TD><TD>s2le</TD><TD PORT="y_type">y</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__texture12 {
+			label="DoomWad::Texture12";
+			graph[style=dotted];
+
+			texture12__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_textures_pos">0</TD><TD PORT="num_textures_size">4</TD><TD>s4le</TD><TD PORT="num_textures_type">num_textures</TD></TR>
+				<TR><TD PORT="textures_pos">4</TD><TD PORT="textures_size">...</TD><TD>TextureIndex</TD><TD PORT="textures_type">textures</TD></TR>
+				<TR><TD COLSPAN="4" PORT="textures__repeat">repeat num_textures times</TD></TR>
+			</TABLE>>];
+			subgraph cluster__texture_index {
+				label="DoomWad::Texture12::TextureIndex";
+				graph[style=dotted];
+
+				texture_index__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="offset_pos">0</TD><TD PORT="offset_size">4</TD><TD>s4le</TD><TD PORT="offset_type">offset</TD></TR>
+				</TABLE>>];
+				texture_index__inst__body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="body_pos">offset</TD><TD PORT="body_size">...</TD><TD>TextureBody</TD><TD PORT="body_type">body</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__texture_body {
+				label="DoomWad::Texture12::TextureBody";
+				graph[style=dotted];
+
+				texture_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">8</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
+					<TR><TD PORT="masked_pos">8</TD><TD PORT="masked_size">4</TD><TD>u4le</TD><TD PORT="masked_type">masked</TD></TR>
+					<TR><TD PORT="width_pos">12</TD><TD PORT="width_size">2</TD><TD>u2le</TD><TD PORT="width_type">width</TD></TR>
+					<TR><TD PORT="height_pos">14</TD><TD PORT="height_size">2</TD><TD>u2le</TD><TD PORT="height_type">height</TD></TR>
+					<TR><TD PORT="column_directory_pos">16</TD><TD PORT="column_directory_size">4</TD><TD>u4le</TD><TD PORT="column_directory_type">column_directory</TD></TR>
+					<TR><TD PORT="num_patches_pos">20</TD><TD PORT="num_patches_size">2</TD><TD>u2le</TD><TD PORT="num_patches_type">num_patches</TD></TR>
+					<TR><TD PORT="patches_pos">22</TD><TD PORT="patches_size">...</TD><TD>Patch</TD><TD PORT="patches_type">patches</TD></TR>
+					<TR><TD COLSPAN="4" PORT="patches__repeat">repeat num_patches times</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__patch {
+				label="DoomWad::Texture12::Patch";
+				graph[style=dotted];
+
+				patch__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="origin_x_pos">0</TD><TD PORT="origin_x_size">2</TD><TD>s2le</TD><TD PORT="origin_x_type">origin_x</TD></TR>
+					<TR><TD PORT="origin_y_pos">2</TD><TD PORT="origin_y_size">2</TD><TD>s2le</TD><TD PORT="origin_y_type">origin_y</TD></TR>
+					<TR><TD PORT="patch_id_pos">4</TD><TD PORT="patch_id_size">2</TD><TD>u2le</TD><TD PORT="patch_id_type">patch_id</TD></TR>
+					<TR><TD PORT="step_dir_pos">6</TD><TD PORT="step_dir_size">2</TD><TD>u2le</TD><TD PORT="step_dir_type">step_dir</TD></TR>
+					<TR><TD PORT="colormap_pos">8</TD><TD PORT="colormap_size">2</TD><TD>u2le</TD><TD PORT="colormap_type">colormap</TD></TR>
+				</TABLE>>];
+			}
+		}
 		subgraph cluster__linedef {
 			label="DoomWad::Linedef";
 			graph[style=dotted];
@@ -49,6 +102,17 @@ digraph {
 				<TR><TD PORT="sector_tag_pos">8</TD><TD PORT="sector_tag_size">2</TD><TD>u2le</TD><TD PORT="sector_tag_type">sector_tag</TD></TR>
 				<TR><TD PORT="sidedef_right_idx_pos">10</TD><TD PORT="sidedef_right_idx_size">2</TD><TD>u2le</TD><TD PORT="sidedef_right_idx_type">sidedef_right_idx</TD></TR>
 				<TR><TD PORT="sidedef_left_idx_pos">12</TD><TD PORT="sidedef_left_idx_size">2</TD><TD>u2le</TD><TD PORT="sidedef_left_idx_type">sidedef_left_idx</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__pnames {
+			label="DoomWad::Pnames";
+			graph[style=dotted];
+
+			pnames__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_patches_pos">0</TD><TD PORT="num_patches_size">4</TD><TD>u4le</TD><TD PORT="num_patches_type">num_patches</TD></TR>
+				<TR><TD PORT="names_pos">4</TD><TD PORT="names_size">8</TD><TD>str(ASCII)</TD><TD PORT="names_type">names</TD></TR>
+				<TR><TD COLSPAN="4" PORT="names__repeat">repeat num_patches times</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__thing {
@@ -139,12 +203,15 @@ digraph {
 			</TABLE>>];
 index_entry__inst__contents_contents_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>&quot;SECTORS\000&quot;</TD><TD PORT="case0">Sectors</TD></TR>
-	<TR><TD>&quot;VERTEXES&quot;</TD><TD PORT="case1">Vertexes</TD></TR>
-	<TR><TD>&quot;BLOCKMAP&quot;</TD><TD PORT="case2">Blockmap</TD></TR>
-	<TR><TD>&quot;THINGS\000\000&quot;</TD><TD PORT="case3">Things</TD></TR>
-	<TR><TD>&quot;LINEDEFS&quot;</TD><TD PORT="case4">Linedefs</TD></TR>
-	<TR><TD>&quot;SIDEDEFS&quot;</TD><TD PORT="case5">Sidedefs</TD></TR>
+	<TR><TD>&quot;SECTORS&quot;</TD><TD PORT="case0">Sectors</TD></TR>
+	<TR><TD>&quot;TEXTURE1&quot;</TD><TD PORT="case1">Texture12</TD></TR>
+	<TR><TD>&quot;VERTEXES&quot;</TD><TD PORT="case2">Vertexes</TD></TR>
+	<TR><TD>&quot;BLOCKMAP&quot;</TD><TD PORT="case3">Blockmap</TD></TR>
+	<TR><TD>&quot;PNAMES&quot;</TD><TD PORT="case4">Pnames</TD></TR>
+	<TR><TD>&quot;TEXTURE2&quot;</TD><TD PORT="case5">Texture12</TD></TR>
+	<TR><TD>&quot;THINGS&quot;</TD><TD PORT="case6">Things</TD></TR>
+	<TR><TD>&quot;LINEDEFS&quot;</TD><TD PORT="case7">Linedefs</TD></TR>
+	<TR><TD>&quot;SIDEDEFS&quot;</TD><TD PORT="case8">Sidedefs</TD></TR>
 </TABLE>>];
 		}
 		subgraph cluster__sidedefs {
@@ -190,17 +257,27 @@ index_entry__inst__contents_contents_switch [label=<<TABLE BORDER="0" CELLBORDER
 	doom_wad__inst__index:index_type -> index_entry__seq [style=bold];
 	doom_wad__seq:num_index_entries_type -> doom_wad__inst__index:index__repeat [color="#404040"];
 	sectors__seq:entries_type -> sector__seq [style=bold];
+	texture12__seq:textures_type -> texture_index__seq [style=bold];
+	texture12__seq:num_textures_type -> texture12__seq:textures__repeat [color="#404040"];
+	texture_index__seq:offset_type -> texture_index__inst__body:body_pos [color="#404040"];
+	texture_index__inst__body:body_type -> texture_body__seq [style=bold];
+	texture_body__seq:patches_type -> patch__seq [style=bold];
+	texture_body__seq:num_patches_type -> texture_body__seq:patches__repeat [color="#404040"];
+	pnames__seq:num_patches_type -> pnames__seq:names__repeat [color="#404040"];
 	vertexes__seq:entries_type -> vertex__seq [style=bold];
 	things__seq:entries_type -> thing__seq [style=bold];
 	linedefs__seq:entries_type -> linedef__seq [style=bold];
 	index_entry__seq:offset_type -> index_entry__inst__contents:contents_pos [color="#404040"];
 	index_entry__inst__contents:contents_type -> index_entry__inst__contents_contents_switch [style=bold];
 	index_entry__inst__contents_contents_switch:case0 -> sectors__seq [style=bold];
-	index_entry__inst__contents_contents_switch:case1 -> vertexes__seq [style=bold];
-	index_entry__inst__contents_contents_switch:case2 -> blockmap__seq [style=bold];
-	index_entry__inst__contents_contents_switch:case3 -> things__seq [style=bold];
-	index_entry__inst__contents_contents_switch:case4 -> linedefs__seq [style=bold];
-	index_entry__inst__contents_contents_switch:case5 -> sidedefs__seq [style=bold];
+	index_entry__inst__contents_contents_switch:case1 -> texture12__seq [style=bold];
+	index_entry__inst__contents_contents_switch:case2 -> vertexes__seq [style=bold];
+	index_entry__inst__contents_contents_switch:case3 -> blockmap__seq [style=bold];
+	index_entry__inst__contents_contents_switch:case4 -> pnames__seq [style=bold];
+	index_entry__inst__contents_contents_switch:case5 -> texture12__seq [style=bold];
+	index_entry__inst__contents_contents_switch:case6 -> things__seq [style=bold];
+	index_entry__inst__contents_contents_switch:case7 -> linedefs__seq [style=bold];
+	index_entry__inst__contents_contents_switch:case8 -> sidedefs__seq [style=bold];
 	index_entry__seq:name_type -> index_entry__inst__contents:contents_type [color="#404040"];
 	sidedefs__seq:entries_type -> sidedef__seq [style=bold];
 	blockmap__seq:linedefs_in_block_type -> blocklist__seq [style=bold];

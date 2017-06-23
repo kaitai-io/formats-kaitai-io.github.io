@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>doom_wad: Ruby parsing library</title>
+  <title>.wad file format of id Tech 1: Ruby parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Game Data Files</li>
-        <li class="active">doom_wad</li>
+        <li class="active">.wad file format of id Tech 1</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>doom_wad:
+        <h1>.wad file format of id Tech 1:
             
             Ruby parsing library
             
@@ -111,6 +111,23 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        wad
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
                     
                 </div>
             </div>
@@ -119,7 +136,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of doom_wad
+            This page hosts a formal specification of .wad file format of id Tech 1
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -130,52 +147,52 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="index.html" title="doom_wad parsing Overview library">Overview</a></li>
+                <a href="index.html" title=".wad file format of id Tech 1 parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="doom_wad parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title=".wad file format of id Tech 1 parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="doom_wad parsing C# library">C#</a></li>
+                <a href="csharp.html" title=".wad file format of id Tech 1 parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="doom_wad parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title=".wad file format of id Tech 1 parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="doom_wad parsing Java library">Java</a></li>
+                <a href="java.html" title=".wad file format of id Tech 1 parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title="doom_wad parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title=".wad file format of id Tech 1 parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title="doom_wad parsing Perl library">Perl</a></li>
+                <a href="perl.html" title=".wad file format of id Tech 1 parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="doom_wad parsing PHP library">PHP</a></li>
+                <a href="php.html" title=".wad file format of id Tech 1 parsing PHP library">PHP</a></li>
                 
                 
                 <li>
                 
-                <a href="python.html" title="doom_wad parsing Python library">Python</a></li>
+                <a href="python.html" title=".wad file format of id Tech 1 parsing Python library">Python</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="ruby.html" title="doom_wad parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title=".wad file format of id Tech 1 parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -191,7 +208,7 @@ section#format-index .row {
 
 
 
-<pre><code class="ruby">data = DoomWad.from_file("path/to/local/file.doom_wad")</code></pre>
+<pre><code class="ruby">data = DoomWad.from_file("path/to/local/file.wad")</code></pre>
 
 <p>Or parse structure from a string of bytes:</p>
 
@@ -200,7 +217,7 @@ data = DoomWad.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="ruby">data.numIndexEntries // => Number of entries in the lump index</code></pre>
+<pre><code class="ruby">data.numIndexEntries # => Number of entries in the lump index</code></pre>
 
     </div>
 </section>
@@ -210,7 +227,7 @@ data = DoomWad.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
     <div class="container">
         <h2>
             
-            Ruby source code to parse doom_wad
+            Ruby source code to parse .wad file format of id Tech 1
             
         </h2>
 
@@ -270,6 +287,111 @@ class DoomWad &lt; Kaitai::Struct::Struct
     attr_reader :x
     attr_reader :y
   end
+
+  ##
+  # Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
+  # combine wall patches to make wall textures. This essentially
+  # provides a very simple form of image compression, allowing
+  # certain elements (&quot;patches&quot;) to be reused / recombined on
+  # different textures for more variety in the game.
+  # @see http://doom.wikia.com/wiki/TEXTURE1 Source
+  class Texture12 &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+    def _read
+      @num_textures = @_io.read_s4le
+      @textures = Array.new(num_textures)
+      (num_textures).times { |i|
+        @textures[i] = TextureIndex.new(@_io, self, @_root)
+      }
+    end
+    class TextureIndex &lt; Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+      def _read
+        @offset = @_io.read_s4le
+      end
+      def body
+        return @body unless @body.nil?
+        _pos = @_io.pos
+        @_io.seek(offset)
+        @body = TextureBody.new(@_io, self, @_root)
+        @_io.seek(_pos)
+        @body
+      end
+      attr_reader :offset
+    end
+    class TextureBody &lt; Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+      def _read
+        @name = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 0)).force_encoding(&quot;ASCII&quot;)
+        @masked = @_io.read_u4le
+        @width = @_io.read_u2le
+        @height = @_io.read_u2le
+        @column_directory = @_io.read_u4le
+        @num_patches = @_io.read_u2le
+        @patches = Array.new(num_patches)
+        (num_patches).times { |i|
+          @patches[i] = Patch.new(@_io, self, @_root)
+        }
+      end
+
+      ##
+      # Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid
+      attr_reader :name
+      attr_reader :masked
+      attr_reader :width
+      attr_reader :height
+
+      ##
+      # Obsolete, ignored by all DOOM versions
+      attr_reader :column_directory
+
+      ##
+      # Number of patches that are used in a texture
+      attr_reader :num_patches
+      attr_reader :patches
+    end
+    class Patch &lt; Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+      def _read
+        @origin_x = @_io.read_s2le
+        @origin_y = @_io.read_s2le
+        @patch_id = @_io.read_u2le
+        @step_dir = @_io.read_u2le
+        @colormap = @_io.read_u2le
+      end
+
+      ##
+      # X offset to draw a patch at (pixels from left boundary of a texture)
+      attr_reader :origin_x
+
+      ##
+      # Y offset to draw a patch at (pixels from upper boundary of a texture)
+      attr_reader :origin_y
+
+      ##
+      # Identifier of a patch (as listed in PNAMES lump) to draw
+      attr_reader :patch_id
+      attr_reader :step_dir
+      attr_reader :colormap
+    end
+
+    ##
+    # Number of wall textures
+    attr_reader :num_textures
+    attr_reader :textures
+  end
   class Linedef &lt; Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -291,6 +413,27 @@ class DoomWad &lt; Kaitai::Struct::Struct
     attr_reader :sector_tag
     attr_reader :sidedef_right_idx
     attr_reader :sidedef_left_idx
+  end
+
+  ##
+  # @see http://doom.wikia.com/wiki/PNAMES Source
+  class Pnames &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+    def _read
+      @num_patches = @_io.read_u4le
+      @names = Array.new(num_patches)
+      (num_patches).times { |i|
+        @names[i] = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 0)).force_encoding(&quot;ASCII&quot;)
+      }
+    end
+
+    ##
+    # Number of patches registered in this global game directory
+    attr_reader :num_patches
+    attr_reader :names
   end
   class Thing &lt; Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -358,12 +501,15 @@ class DoomWad &lt; Kaitai::Struct::Struct
     attr_reader :ceil_flat
 
     ##
-    # Light level of the sector [0..255]. Original engine uses COLORMAP to render lighting, so only 32 actual levels are available (i.e. 0..7, 8..15, etc).
+    # Light level of the sector [0..255]. Original engine uses
+    # COLORMAP to render lighting, so only 32 actual levels are
+    # available (i.e. 0..7, 8..15, etc).
     attr_reader :light
     attr_reader :special_type
 
     ##
-    # Tag number. When the linedef with the same tag number is activated, some effect will be triggered in this sector.
+    # Tag number. When the linedef with the same tag number is
+    # activated, some effect will be triggered in this sector.
     attr_reader :tag
   end
   class Vertexes &lt; Kaitai::Struct::Struct
@@ -433,7 +579,7 @@ class DoomWad &lt; Kaitai::Struct::Struct
     def _read
       @offset = @_io.read_s4le
       @size = @_io.read_s4le
-      @name = (@_io.read_bytes(8)).force_encoding(&quot;ASCII&quot;)
+      @name = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 0)).force_encoding(&quot;ASCII&quot;)
     end
     def contents
       return @contents unless @contents.nil?
@@ -441,10 +587,14 @@ class DoomWad &lt; Kaitai::Struct::Struct
       _pos = io.pos
       io.seek(offset)
       case name
-      when &quot;SECTORS\000&quot;
+      when &quot;SECTORS&quot;
         @_raw_contents = io.read_bytes(size)
         io = Kaitai::Struct::Stream.new(@_raw_contents)
         @contents = Sectors.new(io, self, @_root)
+      when &quot;TEXTURE1&quot;
+        @_raw_contents = io.read_bytes(size)
+        io = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = Texture12.new(io, self, @_root)
       when &quot;VERTEXES&quot;
         @_raw_contents = io.read_bytes(size)
         io = Kaitai::Struct::Stream.new(@_raw_contents)
@@ -453,7 +603,15 @@ class DoomWad &lt; Kaitai::Struct::Struct
         @_raw_contents = io.read_bytes(size)
         io = Kaitai::Struct::Stream.new(@_raw_contents)
         @contents = Blockmap.new(io, self, @_root)
-      when &quot;THINGS\000\000&quot;
+      when &quot;PNAMES&quot;
+        @_raw_contents = io.read_bytes(size)
+        io = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = Pnames.new(io, self, @_root)
+      when &quot;TEXTURE2&quot;
+        @_raw_contents = io.read_bytes(size)
+        io = Kaitai::Struct::Stream.new(@_raw_contents)
+        @contents = Texture12.new(io, self, @_root)
+      when &quot;THINGS&quot;
         @_raw_contents = io.read_bytes(size)
         io = Kaitai::Struct::Stream.new(@_raw_contents)
         @contents = Things.new(io, self, @_root)

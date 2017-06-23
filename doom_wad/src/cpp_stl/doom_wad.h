@@ -18,7 +18,9 @@ class doom_wad_t : public kaitai::kstruct {
 public:
     class sectors_t;
     class vertex_t;
+    class texture12_t;
     class linedef_t;
+    class pnames_t;
     class thing_t;
     class sector_t;
     class vertexes_t;
@@ -73,6 +75,151 @@ public:
         doom_wad_t::vertexes_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
+     * combine wall patches to make wall textures. This essentially
+     * provides a very simple form of image compression, allowing
+     * certain elements ("patches") to be reused / recombined on
+     * different textures for more variety in the game.
+     * \sa Source
+     */
+
+    class texture12_t : public kaitai::kstruct {
+
+    public:
+        class texture_index_t;
+        class texture_body_t;
+        class patch_t;
+
+        texture12_t(kaitai::kstream* p_io, doom_wad_t::index_entry_t* p_parent = 0, doom_wad_t* p_root = 0);
+        void _read();
+        ~texture12_t();
+
+        class texture_index_t : public kaitai::kstruct {
+
+        public:
+
+            texture_index_t(kaitai::kstream* p_io, doom_wad_t::texture12_t* p_parent = 0, doom_wad_t* p_root = 0);
+            void _read();
+            ~texture_index_t();
+
+        private:
+            bool f_body;
+            texture_body_t* m_body;
+
+        public:
+            texture_body_t* body();
+
+        private:
+            int32_t m_offset;
+            doom_wad_t* m__root;
+            doom_wad_t::texture12_t* m__parent;
+
+        public:
+            int32_t offset() const { return m_offset; }
+            doom_wad_t* _root() const { return m__root; }
+            doom_wad_t::texture12_t* _parent() const { return m__parent; }
+        };
+
+        class texture_body_t : public kaitai::kstruct {
+
+        public:
+
+            texture_body_t(kaitai::kstream* p_io, doom_wad_t::texture12_t::texture_index_t* p_parent = 0, doom_wad_t* p_root = 0);
+            void _read();
+            ~texture_body_t();
+
+        private:
+            std::string m_name;
+            uint32_t m_masked;
+            uint16_t m_width;
+            uint16_t m_height;
+            uint32_t m_column_directory;
+            uint16_t m_num_patches;
+            std::vector<patch_t*>* m_patches;
+            doom_wad_t* m__root;
+            doom_wad_t::texture12_t::texture_index_t* m__parent;
+
+        public:
+
+            /**
+             * Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid
+             */
+            std::string name() const { return m_name; }
+            uint32_t masked() const { return m_masked; }
+            uint16_t width() const { return m_width; }
+            uint16_t height() const { return m_height; }
+
+            /**
+             * Obsolete, ignored by all DOOM versions
+             */
+            uint32_t column_directory() const { return m_column_directory; }
+
+            /**
+             * Number of patches that are used in a texture
+             */
+            uint16_t num_patches() const { return m_num_patches; }
+            std::vector<patch_t*>* patches() const { return m_patches; }
+            doom_wad_t* _root() const { return m__root; }
+            doom_wad_t::texture12_t::texture_index_t* _parent() const { return m__parent; }
+        };
+
+        class patch_t : public kaitai::kstruct {
+
+        public:
+
+            patch_t(kaitai::kstream* p_io, doom_wad_t::texture12_t::texture_body_t* p_parent = 0, doom_wad_t* p_root = 0);
+            void _read();
+            ~patch_t();
+
+        private:
+            int16_t m_origin_x;
+            int16_t m_origin_y;
+            uint16_t m_patch_id;
+            uint16_t m_step_dir;
+            uint16_t m_colormap;
+            doom_wad_t* m__root;
+            doom_wad_t::texture12_t::texture_body_t* m__parent;
+
+        public:
+
+            /**
+             * X offset to draw a patch at (pixels from left boundary of a texture)
+             */
+            int16_t origin_x() const { return m_origin_x; }
+
+            /**
+             * Y offset to draw a patch at (pixels from upper boundary of a texture)
+             */
+            int16_t origin_y() const { return m_origin_y; }
+
+            /**
+             * Identifier of a patch (as listed in PNAMES lump) to draw
+             */
+            uint16_t patch_id() const { return m_patch_id; }
+            uint16_t step_dir() const { return m_step_dir; }
+            uint16_t colormap() const { return m_colormap; }
+            doom_wad_t* _root() const { return m__root; }
+            doom_wad_t::texture12_t::texture_body_t* _parent() const { return m__parent; }
+        };
+
+    private:
+        int32_t m_num_textures;
+        std::vector<texture_index_t*>* m_textures;
+        doom_wad_t* m__root;
+        doom_wad_t::index_entry_t* m__parent;
+
+    public:
+
+        /**
+         * Number of wall textures
+         */
+        int32_t num_textures() const { return m_num_textures; }
+        std::vector<texture_index_t*>* textures() const { return m_textures; }
+        doom_wad_t* _root() const { return m__root; }
+        doom_wad_t::index_entry_t* _parent() const { return m__parent; }
+    };
+
     class linedef_t : public kaitai::kstruct {
 
     public:
@@ -102,6 +249,35 @@ public:
         uint16_t sidedef_left_idx() const { return m_sidedef_left_idx; }
         doom_wad_t* _root() const { return m__root; }
         doom_wad_t::linedefs_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa Source
+     */
+
+    class pnames_t : public kaitai::kstruct {
+
+    public:
+
+        pnames_t(kaitai::kstream* p_io, doom_wad_t::index_entry_t* p_parent = 0, doom_wad_t* p_root = 0);
+        void _read();
+        ~pnames_t();
+
+    private:
+        uint32_t m_num_patches;
+        std::vector<std::string>* m_names;
+        doom_wad_t* m__root;
+        doom_wad_t::index_entry_t* m__parent;
+
+    public:
+
+        /**
+         * Number of patches registered in this global game directory
+         */
+        uint32_t num_patches() const { return m_num_patches; }
+        std::vector<std::string>* names() const { return m_names; }
+        doom_wad_t* _root() const { return m__root; }
+        doom_wad_t::index_entry_t* _parent() const { return m__parent; }
     };
 
     class thing_t : public kaitai::kstruct {
@@ -184,13 +360,16 @@ public:
         std::string ceil_flat() const { return m_ceil_flat; }
 
         /**
-         * Light level of the sector [0..255]. Original engine uses COLORMAP to render lighting, so only 32 actual levels are available (i.e. 0..7, 8..15, etc).
+         * Light level of the sector [0..255]. Original engine uses
+         * COLORMAP to render lighting, so only 32 actual levels are
+         * available (i.e. 0..7, 8..15, etc).
          */
         int16_t light() const { return m_light; }
         special_sector_t special_type() const { return m_special_type; }
 
         /**
-         * Tag number. When the linedef with the same tag number is activated, some effect will be triggered in this sector.
+         * Tag number. When the linedef with the same tag number is
+         * activated, some effect will be triggered in this sector.
          */
         uint16_t tag() const { return m_tag; }
         doom_wad_t* _root() const { return m__root; }
