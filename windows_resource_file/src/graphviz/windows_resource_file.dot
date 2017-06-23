@@ -1,0 +1,76 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__windows_resource_file {
+		label="WindowsResourceFile";
+		graph[style=dotted];
+
+		windows_resource_file__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="resources_pos">0</TD><TD PORT="resources_size">...</TD><TD>Resource</TD><TD PORT="resources_type">resources</TD></TR>
+			<TR><TD COLSPAN="4" PORT="resources__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__resource {
+			label="WindowsResourceFile::Resource";
+			graph[style=dotted];
+
+			resource__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="value_size_pos">0</TD><TD PORT="value_size_size">4</TD><TD>u4le</TD><TD PORT="value_size_type">value_size</TD></TR>
+				<TR><TD PORT="header_size_pos">4</TD><TD PORT="header_size_size">4</TD><TD>u4le</TD><TD PORT="header_size_type">header_size</TD></TR>
+				<TR><TD PORT="type_pos">8</TD><TD PORT="type_size">...</TD><TD>UnicodeOrId</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="name_pos">...</TD><TD PORT="name_size">...</TD><TD>UnicodeOrId</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="padding1_pos">...</TD><TD PORT="padding1_size">((4 - _io.pos) % 4)</TD><TD></TD><TD PORT="padding1_type">padding1</TD></TR>
+				<TR><TD PORT="format_version_pos">...</TD><TD PORT="format_version_size">4</TD><TD>u4le</TD><TD PORT="format_version_type">format_version</TD></TR>
+				<TR><TD PORT="flags_pos">...</TD><TD PORT="flags_size">2</TD><TD>u2le</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="language_pos">...</TD><TD PORT="language_size">2</TD><TD>u2le</TD><TD PORT="language_type">language</TD></TR>
+				<TR><TD PORT="value_version_pos">...</TD><TD PORT="value_version_size">4</TD><TD>u4le</TD><TD PORT="value_version_type">value_version</TD></TR>
+				<TR><TD PORT="characteristics_pos">...</TD><TD PORT="characteristics_size">4</TD><TD>u4le</TD><TD PORT="characteristics_type">characteristics</TD></TR>
+				<TR><TD PORT="value_pos">...</TD><TD PORT="value_size">value_size</TD><TD></TD><TD PORT="value_type">value</TD></TR>
+				<TR><TD PORT="padding2_pos">...</TD><TD PORT="padding2_size">((4 - _io.pos) % 4)</TD><TD></TD><TD PORT="padding2_type">padding2</TD></TR>
+			</TABLE>>];
+			resource__inst__type_as_predef [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>type_as_predef</TD><TD>Kaitai::Struct::Stream::resolve_enum(PREDEF_TYPES, type.as_numeric)</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__unicode_or_id {
+			label="WindowsResourceFile::UnicodeOrId";
+			graph[style=dotted];
+
+			unicode_or_id__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="first_pos">0</TD><TD PORT="first_size">2</TD><TD>u2le</TD><TD PORT="first_type">first</TD></TR>
+				<TR><TD PORT="as_numeric_pos">2</TD><TD PORT="as_numeric_size">2</TD><TD>u2le</TD><TD PORT="as_numeric_type">as_numeric</TD></TR>
+				<TR><TD PORT="rest_pos">4</TD><TD PORT="rest_size">2</TD><TD>u2le</TD><TD PORT="rest_type">rest</TD></TR>
+				<TR><TD COLSPAN="4" PORT="rest__repeat">repeat until _ == 0</TD></TR>
+				<TR><TD PORT="noop_pos">6</TD><TD PORT="noop_size">0</TD><TD></TD><TD PORT="noop_type">noop</TD></TR>
+			</TABLE>>];
+			unicode_or_id__inst__save_pos1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>save_pos1</TD><TD>_io.pos</TD></TR>
+			</TABLE>>];
+			unicode_or_id__inst__save_pos2 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>save_pos2</TD><TD>_io.pos</TD></TR>
+			</TABLE>>];
+			unicode_or_id__inst__is_string [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_string</TD><TD>first != 65535</TD></TR>
+			</TABLE>>];
+			unicode_or_id__inst__as_string [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="as_string_pos">save_pos1</TD><TD PORT="as_string_size">((save_pos2 - save_pos1) - 2)</TD><TD>str(UTF-16LE)</TD><TD PORT="as_string_type">as_string</TD></TR>
+			</TABLE>>];
+		}
+	}
+	windows_resource_file__seq:resources_type -> resource__seq [style=bold];
+	resource__seq:type_type -> unicode_or_id__seq [style=bold];
+	resource__seq:name_type -> unicode_or_id__seq [style=bold];
+	resource__seq:value_size_type -> resource__seq:value_size [color="#404040"];
+	unicode_or_id__seq:as_numeric_type -> resource__inst__type_as_predef [color="#404040"];
+	unicode_or_id__seq:first_type -> unicode_or_id__inst__is_string [color="#404040"];
+	unicode_or_id__inst__save_pos1:save_pos1_type -> unicode_or_id__inst__as_string:as_string_pos [color="#404040"];
+	unicode_or_id__inst__save_pos2:save_pos2_type -> unicode_or_id__inst__as_string:as_string_size [color="#404040"];
+	unicode_or_id__inst__save_pos1:save_pos1_type -> unicode_or_id__inst__as_string:as_string_size [color="#404040"];
+}
