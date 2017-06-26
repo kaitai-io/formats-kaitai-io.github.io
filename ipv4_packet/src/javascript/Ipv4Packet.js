@@ -1,9 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 if (typeof require === 'function')
-  var IcmpPacket = require('./IcmpPacket.js');
-
-if (typeof require === 'function')
   var TcpSegment = require('./TcpSegment.js');
 
 if (typeof require === 'function')
@@ -11,6 +8,9 @@ if (typeof require === 'function')
 
 if (typeof require === 'function')
   var Ipv6Packet = require('./Ipv6Packet.js');
+
+if (typeof require === 'function')
+  var IcmpPacket = require('./IcmpPacket.js');
 
 var Ipv4Packet = (function() {
   Ipv4Packet.ProtocolEnum = Object.freeze({
