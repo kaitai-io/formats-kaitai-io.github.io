@@ -171,6 +171,144 @@ namespace Kaitai
             }
             }
             }
+        public partial class PacketPpiFields : KaitaiStruct
+        {
+            public static PacketPpiFields FromFile(string fileName)
+            {
+                return new PacketPpiFields(new KaitaiStream(fileName));
+            }
+
+            public PacketPpiFields(KaitaiStream io, PacketPpi parent = null, PacketPpi root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                _read();
+            }
+            private void _read() {
+                _entries = new List<PacketPpiField>();
+                while (!m_io.IsEof) {
+                    _entries.Add(new PacketPpiField(m_io, this, m_root));
+                }
+                }
+            private List<PacketPpiField> _entries;
+            private PacketPpi m_root;
+            private PacketPpi m_parent;
+            public List<PacketPpiField> Entries { get { return _entries; } }
+            public PacketPpi M_Root { get { return m_root; } }
+            public PacketPpi M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
+        /// </remarks>
+        public partial class Radio80211nMacExtBody : KaitaiStruct
+        {
+            public static Radio80211nMacExtBody FromFile(string fileName)
+            {
+                return new Radio80211nMacExtBody(new KaitaiStream(fileName));
+            }
+
+            public Radio80211nMacExtBody(KaitaiStream io, PacketPpi.PacketPpiField parent = null, PacketPpi root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                _read();
+            }
+            private void _read() {
+                _flags = new MacFlags(m_io, this, m_root);
+                _aMpduId = m_io.ReadU4le();
+                _numDelimiters = m_io.ReadU1();
+                _reserved = m_io.ReadBytes(3);
+                }
+            private MacFlags _flags;
+            private uint _aMpduId;
+            private byte _numDelimiters;
+            private byte[] _reserved;
+            private PacketPpi m_root;
+            private PacketPpi.PacketPpiField m_parent;
+            public MacFlags Flags { get { return _flags; } }
+            public uint AMpduId { get { return _aMpduId; } }
+            public byte NumDelimiters { get { return _numDelimiters; } }
+            public byte[] Reserved { get { return _reserved; } }
+            public PacketPpi M_Root { get { return m_root; } }
+            public PacketPpi.PacketPpiField M_Parent { get { return m_parent; } }
+        }
+        public partial class MacFlags : KaitaiStruct
+        {
+            public static MacFlags FromFile(string fileName)
+            {
+                return new MacFlags(new KaitaiStream(fileName));
+            }
+
+            public MacFlags(KaitaiStream io, KaitaiStruct parent = null, PacketPpi root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                _read();
+            }
+            private void _read() {
+                _unused1 = m_io.ReadBitsInt(1) != 0;
+                _aggregateDelimiter = m_io.ReadBitsInt(1) != 0;
+                _moreAggregates = m_io.ReadBitsInt(1) != 0;
+                _aggregate = m_io.ReadBitsInt(1) != 0;
+                _dupRx = m_io.ReadBitsInt(1) != 0;
+                _rxShortGuard = m_io.ReadBitsInt(1) != 0;
+                _isHt40 = m_io.ReadBitsInt(1) != 0;
+                _greenfield = m_io.ReadBitsInt(1) != 0;
+                m_io.AlignToByte();
+                _unused2 = m_io.ReadBytes(3);
+                }
+            private bool _unused1;
+            private bool _aggregateDelimiter;
+            private bool _moreAggregates;
+            private bool _aggregate;
+            private bool _dupRx;
+            private bool _rxShortGuard;
+            private bool _isHt40;
+            private bool _greenfield;
+            private byte[] _unused2;
+            private PacketPpi m_root;
+            private KaitaiStruct m_parent;
+            public bool Unused1 { get { return _unused1; } }
+
+            /// <summary>
+            /// Aggregate delimiter CRC error after this frame
+            /// </summary>
+            public bool AggregateDelimiter { get { return _aggregateDelimiter; } }
+
+            /// <summary>
+            /// More aggregates
+            /// </summary>
+            public bool MoreAggregates { get { return _moreAggregates; } }
+
+            /// <summary>
+            /// Aggregate
+            /// </summary>
+            public bool Aggregate { get { return _aggregate; } }
+
+            /// <summary>
+            /// Duplicate RX
+            /// </summary>
+            public bool DupRx { get { return _dupRx; } }
+
+            /// <summary>
+            /// RX short guard interval (SGI)
+            /// </summary>
+            public bool RxShortGuard { get { return _rxShortGuard; } }
+
+            /// <summary>
+            /// true = HT40, false = HT20
+            /// </summary>
+            public bool IsHt40 { get { return _isHt40; } }
+
+            /// <summary>
+            /// Greenfield
+            /// </summary>
+            public bool Greenfield { get { return _greenfield; } }
+            public byte[] Unused2 { get { return _unused2; } }
+            public PacketPpi M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
 
         /// <remarks>
         /// Reference: <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
@@ -206,78 +344,6 @@ namespace Kaitai
             public Linktype PphDlt { get { return _pphDlt; } }
             public PacketPpi M_Root { get { return m_root; } }
             public PacketPpi M_Parent { get { return m_parent; } }
-        }
-        public partial class PacketPpiFields : KaitaiStruct
-        {
-            public static PacketPpiFields FromFile(string fileName)
-            {
-                return new PacketPpiFields(new KaitaiStream(fileName));
-            }
-
-            public PacketPpiFields(KaitaiStream io, PacketPpi parent = null, PacketPpi root = null) : base(io)
-            {
-                m_parent = parent;
-                m_root = root;
-                _read();
-            }
-            private void _read() {
-                _entries = new List<PacketPpiField>();
-                while (!m_io.IsEof) {
-                    _entries.Add(new PacketPpiField(m_io, this, m_root));
-                }
-                }
-            private List<PacketPpiField> _entries;
-            private PacketPpi m_root;
-            private PacketPpi m_parent;
-            public List<PacketPpiField> Entries { get { return _entries; } }
-            public PacketPpi M_Root { get { return m_root; } }
-            public PacketPpi M_Parent { get { return m_parent; } }
-        }
-
-        /// <remarks>
-        /// Reference: <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
-        /// </remarks>
-        public partial class PacketPpiField : KaitaiStruct
-        {
-            public static PacketPpiField FromFile(string fileName)
-            {
-                return new PacketPpiField(new KaitaiStream(fileName));
-            }
-
-            public PacketPpiField(KaitaiStream io, PacketPpi.PacketPpiFields parent = null, PacketPpi root = null) : base(io)
-            {
-                m_parent = parent;
-                m_root = root;
-                _read();
-            }
-            private void _read() {
-                _pfhType = ((PacketPpi.PfhType) m_io.ReadU2le());
-                _pfhDatalen = m_io.ReadU2le();
-                switch (PfhType) {
-                case PacketPpi.PfhType.Radio80211Common: {
-                    __raw_body = m_io.ReadBytes(PfhDatalen);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new Radio80211CommonBody(io___raw_body, this, m_root);
-                    break;
-                }
-                default: {
-                    _body = m_io.ReadBytes(PfhDatalen);
-                    break;
-                }
-                }
-                }
-            private PfhType _pfhType;
-            private ushort _pfhDatalen;
-            private object _body;
-            private PacketPpi m_root;
-            private PacketPpi.PacketPpiFields m_parent;
-            private byte[] __raw_body;
-            public PfhType PfhType { get { return _pfhType; } }
-            public ushort PfhDatalen { get { return _pfhDatalen; } }
-            public object Body { get { return _body; } }
-            public PacketPpi M_Root { get { return m_root; } }
-            public PacketPpi.PacketPpiFields M_Parent { get { return m_parent; } }
-            public byte[] M_RawBody { get { return __raw_body; } }
         }
 
         /// <remarks>
@@ -327,6 +393,285 @@ namespace Kaitai
             public byte FhssPattern { get { return _fhssPattern; } }
             public sbyte DbmAntsignal { get { return _dbmAntsignal; } }
             public sbyte DbmAntnoise { get { return _dbmAntnoise; } }
+            public PacketPpi M_Root { get { return m_root; } }
+            public PacketPpi.PacketPpiField M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
+        /// </remarks>
+        public partial class PacketPpiField : KaitaiStruct
+        {
+            public static PacketPpiField FromFile(string fileName)
+            {
+                return new PacketPpiField(new KaitaiStream(fileName));
+            }
+
+            public PacketPpiField(KaitaiStream io, PacketPpi.PacketPpiFields parent = null, PacketPpi root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                _read();
+            }
+            private void _read() {
+                _pfhType = ((PacketPpi.PfhType) m_io.ReadU2le());
+                _pfhDatalen = m_io.ReadU2le();
+                switch (PfhType) {
+                case PacketPpi.PfhType.Radio80211Common: {
+                    __raw_body = m_io.ReadBytes(PfhDatalen);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new Radio80211CommonBody(io___raw_body, this, m_root);
+                    break;
+                }
+                case PacketPpi.PfhType.Radio80211nMacExt: {
+                    __raw_body = m_io.ReadBytes(PfhDatalen);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new Radio80211nMacExtBody(io___raw_body, this, m_root);
+                    break;
+                }
+                case PacketPpi.PfhType.Radio80211nMacPhyExt: {
+                    __raw_body = m_io.ReadBytes(PfhDatalen);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new Radio80211nMacPhyExtBody(io___raw_body, this, m_root);
+                    break;
+                }
+                default: {
+                    _body = m_io.ReadBytes(PfhDatalen);
+                    break;
+                }
+                }
+                }
+            private PfhType _pfhType;
+            private ushort _pfhDatalen;
+            private object _body;
+            private PacketPpi m_root;
+            private PacketPpi.PacketPpiFields m_parent;
+            private byte[] __raw_body;
+            public PfhType PfhType { get { return _pfhType; } }
+            public ushort PfhDatalen { get { return _pfhDatalen; } }
+            public object Body { get { return _body; } }
+            public PacketPpi M_Root { get { return m_root; } }
+            public PacketPpi.PacketPpiFields M_Parent { get { return m_parent; } }
+            public byte[] M_RawBody { get { return __raw_body; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.4</a>
+        /// </remarks>
+        public partial class Radio80211nMacPhyExtBody : KaitaiStruct
+        {
+            public static Radio80211nMacPhyExtBody FromFile(string fileName)
+            {
+                return new Radio80211nMacPhyExtBody(new KaitaiStream(fileName));
+            }
+
+            public Radio80211nMacPhyExtBody(KaitaiStream io, PacketPpi.PacketPpiField parent = null, PacketPpi root = null) : base(io)
+            {
+                m_parent = parent;
+                m_root = root;
+                _read();
+            }
+            private void _read() {
+                _flags = new MacFlags(m_io, this, m_root);
+                _aMpduId = m_io.ReadU4le();
+                _numDelimiters = m_io.ReadU1();
+                _mcs = m_io.ReadU1();
+                _numStreams = m_io.ReadU1();
+                _rssiCombined = m_io.ReadU1();
+                _rssiAntCtl = new List<byte>((int) (4));
+                for (var i = 0; i < 4; i++) {
+                    _rssiAntCtl.Add(m_io.ReadU1());
+                }
+                _rssiAntExt = new List<byte>((int) (4));
+                for (var i = 0; i < 4; i++) {
+                    _rssiAntExt.Add(m_io.ReadU1());
+                }
+                _extChannelFreq = m_io.ReadU2le();
+                _extChannelFlags = new ChannelFlags(m_io, this, m_root);
+                _rfSignalNoise = new List<SignalNoise>((int) (4));
+                for (var i = 0; i < 4; i++) {
+                    _rfSignalNoise.Add(new SignalNoise(m_io, this, m_root));
+                }
+                _evm = new List<uint>((int) (4));
+                for (var i = 0; i < 4; i++) {
+                    _evm.Add(m_io.ReadU4le());
+                }
+                }
+            public partial class ChannelFlags : KaitaiStruct
+            {
+                public static ChannelFlags FromFile(string fileName)
+                {
+                    return new ChannelFlags(new KaitaiStream(fileName));
+                }
+
+                public ChannelFlags(KaitaiStream io, PacketPpi.Radio80211nMacPhyExtBody parent = null, PacketPpi root = null) : base(io)
+                {
+                    m_parent = parent;
+                    m_root = root;
+                    _read();
+                }
+                private void _read() {
+                    _spectrum2ghz = m_io.ReadBitsInt(1) != 0;
+                    _ofdm = m_io.ReadBitsInt(1) != 0;
+                    _cck = m_io.ReadBitsInt(1) != 0;
+                    _turbo = m_io.ReadBitsInt(1) != 0;
+                    _unused = m_io.ReadBitsInt(8);
+                    _gfsk = m_io.ReadBitsInt(1) != 0;
+                    _dynCckOfdm = m_io.ReadBitsInt(1) != 0;
+                    _onlyPassiveScan = m_io.ReadBitsInt(1) != 0;
+                    _spectrum5ghz = m_io.ReadBitsInt(1) != 0;
+                    }
+                private bool _spectrum2ghz;
+                private bool _ofdm;
+                private bool _cck;
+                private bool _turbo;
+                private ulong _unused;
+                private bool _gfsk;
+                private bool _dynCckOfdm;
+                private bool _onlyPassiveScan;
+                private bool _spectrum5ghz;
+                private PacketPpi m_root;
+                private PacketPpi.Radio80211nMacPhyExtBody m_parent;
+
+                /// <summary>
+                /// 2 GHz spectrum
+                /// </summary>
+                public bool Spectrum2ghz { get { return _spectrum2ghz; } }
+
+                /// <summary>
+                /// OFDM (Orthogonal Frequency-Division Multiplexing)
+                /// </summary>
+                public bool Ofdm { get { return _ofdm; } }
+
+                /// <summary>
+                /// CCK (Complementary Code Keying)
+                /// </summary>
+                public bool Cck { get { return _cck; } }
+                public bool Turbo { get { return _turbo; } }
+                public ulong Unused { get { return _unused; } }
+
+                /// <summary>
+                /// Gaussian Frequency Shift Keying
+                /// </summary>
+                public bool Gfsk { get { return _gfsk; } }
+
+                /// <summary>
+                /// Dynamic CCK-OFDM
+                /// </summary>
+                public bool DynCckOfdm { get { return _dynCckOfdm; } }
+
+                /// <summary>
+                /// Only passive scan allowed
+                /// </summary>
+                public bool OnlyPassiveScan { get { return _onlyPassiveScan; } }
+
+                /// <summary>
+                /// 5 GHz spectrum
+                /// </summary>
+                public bool Spectrum5ghz { get { return _spectrum5ghz; } }
+                public PacketPpi M_Root { get { return m_root; } }
+                public PacketPpi.Radio80211nMacPhyExtBody M_Parent { get { return m_parent; } }
+            }
+
+            /// <summary>
+            /// RF signal + noise pair at a single antenna
+            /// </summary>
+            public partial class SignalNoise : KaitaiStruct
+            {
+                public static SignalNoise FromFile(string fileName)
+                {
+                    return new SignalNoise(new KaitaiStream(fileName));
+                }
+
+                public SignalNoise(KaitaiStream io, PacketPpi.Radio80211nMacPhyExtBody parent = null, PacketPpi root = null) : base(io)
+                {
+                    m_parent = parent;
+                    m_root = root;
+                    _read();
+                }
+                private void _read() {
+                    _signal = m_io.ReadS1();
+                    _noise = m_io.ReadS1();
+                    }
+                private sbyte _signal;
+                private sbyte _noise;
+                private PacketPpi m_root;
+                private PacketPpi.Radio80211nMacPhyExtBody m_parent;
+
+                /// <summary>
+                /// RF signal, dBm
+                /// </summary>
+                public sbyte Signal { get { return _signal; } }
+
+                /// <summary>
+                /// RF noise, dBm
+                /// </summary>
+                public sbyte Noise { get { return _noise; } }
+                public PacketPpi M_Root { get { return m_root; } }
+                public PacketPpi.Radio80211nMacPhyExtBody M_Parent { get { return m_parent; } }
+            }
+            private MacFlags _flags;
+            private uint _aMpduId;
+            private byte _numDelimiters;
+            private byte _mcs;
+            private byte _numStreams;
+            private byte _rssiCombined;
+            private List<byte> _rssiAntCtl;
+            private List<byte> _rssiAntExt;
+            private ushort _extChannelFreq;
+            private ChannelFlags _extChannelFlags;
+            private List<SignalNoise> _rfSignalNoise;
+            private List<uint> _evm;
+            private PacketPpi m_root;
+            private PacketPpi.PacketPpiField m_parent;
+            public MacFlags Flags { get { return _flags; } }
+            public uint AMpduId { get { return _aMpduId; } }
+            public byte NumDelimiters { get { return _numDelimiters; } }
+
+            /// <summary>
+            /// Modulation Coding Scheme (MCS)
+            /// </summary>
+            public byte Mcs { get { return _mcs; } }
+
+            /// <summary>
+            /// Number of spatial streams (0 = unknown)
+            /// </summary>
+            public byte NumStreams { get { return _numStreams; } }
+
+            /// <summary>
+            /// RSSI (Received Signal Strength Indication), combined from all active antennas / channels
+            /// </summary>
+            public byte RssiCombined { get { return _rssiCombined; } }
+
+            /// <summary>
+            /// RSSI (Received Signal Strength Indication) for antennas 0-3, control channel
+            /// </summary>
+            public List<byte> RssiAntCtl { get { return _rssiAntCtl; } }
+
+            /// <summary>
+            /// RSSI (Received Signal Strength Indication) for antennas 0-3, extension channel
+            /// </summary>
+            public List<byte> RssiAntExt { get { return _rssiAntExt; } }
+
+            /// <summary>
+            /// Extension channel frequency (MHz)
+            /// </summary>
+            public ushort ExtChannelFreq { get { return _extChannelFreq; } }
+
+            /// <summary>
+            /// Extension channel flags
+            /// </summary>
+            public ChannelFlags ExtChannelFlags { get { return _extChannelFlags; } }
+
+            /// <summary>
+            /// Signal + noise values for antennas 0-3
+            /// </summary>
+            public List<SignalNoise> RfSignalNoise { get { return _rfSignalNoise; } }
+
+            /// <summary>
+            /// EVM (Error Vector Magnitude) for chains 0-3
+            /// </summary>
+            public List<uint> Evm { get { return _evm; } }
             public PacketPpi M_Root { get { return m_root; } }
             public PacketPpi.PacketPpiField M_Parent { get { return m_parent; } }
         }

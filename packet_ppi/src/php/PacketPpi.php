@@ -51,6 +51,116 @@ class PacketPpi extends \Kaitai\Struct\Struct {
 
 namespace \PacketPpi;
 
+class PacketPpiFields extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi $parent = null, \PacketPpi $root = null) {
+        parent::__construct($io, $parent, $root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_entries = [];
+        while (!$this->_io->isEof()) {
+            $this->_m_entries[] = new \PacketPpi\PacketPpiField($this->_io, $this, $this->_root);
+        }
+    }
+    protected $_m_entries;
+    public function entries() { return $this->_m_entries; }
+}
+
+namespace \PacketPpi;
+
+class Radio80211nMacExtBody extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi\PacketPpiField $parent = null, \PacketPpi $root = null) {
+        parent::__construct($io, $parent, $root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_flags = new \PacketPpi\MacFlags($this->_io, $this, $this->_root);
+        $this->_m_aMpduId = $this->_io->readU4le();
+        $this->_m_numDelimiters = $this->_io->readU1();
+        $this->_m_reserved = $this->_io->readBytes(3);
+    }
+    protected $_m_flags;
+    protected $_m_aMpduId;
+    protected $_m_numDelimiters;
+    protected $_m_reserved;
+    public function flags() { return $this->_m_flags; }
+    public function aMpduId() { return $this->_m_aMpduId; }
+    public function numDelimiters() { return $this->_m_numDelimiters; }
+    public function reserved() { return $this->_m_reserved; }
+}
+
+namespace \PacketPpi;
+
+class MacFlags extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \PacketPpi $root = null) {
+        parent::__construct($io, $parent, $root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_unused1 = $this->_io->readBitsInt(1) != 0;
+        $this->_m_aggregateDelimiter = $this->_io->readBitsInt(1) != 0;
+        $this->_m_moreAggregates = $this->_io->readBitsInt(1) != 0;
+        $this->_m_aggregate = $this->_io->readBitsInt(1) != 0;
+        $this->_m_dupRx = $this->_io->readBitsInt(1) != 0;
+        $this->_m_rxShortGuard = $this->_io->readBitsInt(1) != 0;
+        $this->_m_isHt40 = $this->_io->readBitsInt(1) != 0;
+        $this->_m_greenfield = $this->_io->readBitsInt(1) != 0;
+        $this->_io->alignToByte();
+        $this->_m_unused2 = $this->_io->readBytes(3);
+    }
+    protected $_m_unused1;
+    protected $_m_aggregateDelimiter;
+    protected $_m_moreAggregates;
+    protected $_m_aggregate;
+    protected $_m_dupRx;
+    protected $_m_rxShortGuard;
+    protected $_m_isHt40;
+    protected $_m_greenfield;
+    protected $_m_unused2;
+    public function unused1() { return $this->_m_unused1; }
+
+    /**
+     * Aggregate delimiter CRC error after this frame
+     */
+    public function aggregateDelimiter() { return $this->_m_aggregateDelimiter; }
+
+    /**
+     * More aggregates
+     */
+    public function moreAggregates() { return $this->_m_moreAggregates; }
+
+    /**
+     * Aggregate
+     */
+    public function aggregate() { return $this->_m_aggregate; }
+
+    /**
+     * Duplicate RX
+     */
+    public function dupRx() { return $this->_m_dupRx; }
+
+    /**
+     * RX short guard interval (SGI)
+     */
+    public function rxShortGuard() { return $this->_m_rxShortGuard; }
+
+    /**
+     * true = HT40, false = HT20
+     */
+    public function isHt40() { return $this->_m_isHt40; }
+
+    /**
+     * Greenfield
+     */
+    public function greenfield() { return $this->_m_greenfield; }
+    public function unused2() { return $this->_m_unused2; }
+}
+
+namespace \PacketPpi;
+
 class PacketPpiHeader extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi $parent = null, \PacketPpi $root = null) {
         parent::__construct($io, $parent, $root);
@@ -71,56 +181,6 @@ class PacketPpiHeader extends \Kaitai\Struct\Struct {
     public function pphFlags() { return $this->_m_pphFlags; }
     public function pphLen() { return $this->_m_pphLen; }
     public function pphDlt() { return $this->_m_pphDlt; }
-}
-
-namespace \PacketPpi;
-
-class PacketPpiFields extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi $parent = null, \PacketPpi $root = null) {
-        parent::__construct($io, $parent, $root);
-        $this->_read();
-    }
-
-    private function _read() {
-        $this->_m_entries = [];
-        while (!$this->_io->isEof()) {
-            $this->_m_entries[] = new \PacketPpi\PacketPpiField($this->_io, $this, $this->_root);
-        }
-    }
-    protected $_m_entries;
-    public function entries() { return $this->_m_entries; }
-}
-
-namespace \PacketPpi;
-
-class PacketPpiField extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi\PacketPpiFields $parent = null, \PacketPpi $root = null) {
-        parent::__construct($io, $parent, $root);
-        $this->_read();
-    }
-
-    private function _read() {
-        $this->_m_pfhType = $this->_io->readU2le();
-        $this->_m_pfhDatalen = $this->_io->readU2le();
-        switch ($this->pfhType()) {
-            case \PacketPpi\PfhType::RADIO_802_11_COMMON:
-                $this->_m__raw_body = $this->_io->readBytes($this->pfhDatalen());
-                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \PacketPpi\Radio80211CommonBody($io, $this, $this->_root);
-                break;
-            default:
-                $this->_m_body = $this->_io->readBytes($this->pfhDatalen());
-                break;
-        }
-    }
-    protected $_m_pfhType;
-    protected $_m_pfhDatalen;
-    protected $_m_body;
-    protected $_m__raw_body;
-    public function pfhType() { return $this->_m_pfhType; }
-    public function pfhDatalen() { return $this->_m_pfhDatalen; }
-    public function body() { return $this->_m_body; }
-    public function _raw_body() { return $this->_m__raw_body; }
 }
 
 namespace \PacketPpi;
@@ -160,6 +220,245 @@ class Radio80211CommonBody extends \Kaitai\Struct\Struct {
     public function fhssPattern() { return $this->_m_fhssPattern; }
     public function dbmAntsignal() { return $this->_m_dbmAntsignal; }
     public function dbmAntnoise() { return $this->_m_dbmAntnoise; }
+}
+
+namespace \PacketPpi;
+
+class PacketPpiField extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi\PacketPpiFields $parent = null, \PacketPpi $root = null) {
+        parent::__construct($io, $parent, $root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_pfhType = $this->_io->readU2le();
+        $this->_m_pfhDatalen = $this->_io->readU2le();
+        switch ($this->pfhType()) {
+            case \PacketPpi\PfhType::RADIO_802_11_COMMON:
+                $this->_m__raw_body = $this->_io->readBytes($this->pfhDatalen());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \PacketPpi\Radio80211CommonBody($io, $this, $this->_root);
+                break;
+            case \PacketPpi\PfhType::RADIO_802_11N_MAC_EXT:
+                $this->_m__raw_body = $this->_io->readBytes($this->pfhDatalen());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \PacketPpi\Radio80211nMacExtBody($io, $this, $this->_root);
+                break;
+            case \PacketPpi\PfhType::RADIO_802_11N_MAC_PHY_EXT:
+                $this->_m__raw_body = $this->_io->readBytes($this->pfhDatalen());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \PacketPpi\Radio80211nMacPhyExtBody($io, $this, $this->_root);
+                break;
+            default:
+                $this->_m_body = $this->_io->readBytes($this->pfhDatalen());
+                break;
+        }
+    }
+    protected $_m_pfhType;
+    protected $_m_pfhDatalen;
+    protected $_m_body;
+    protected $_m__raw_body;
+    public function pfhType() { return $this->_m_pfhType; }
+    public function pfhDatalen() { return $this->_m_pfhDatalen; }
+    public function body() { return $this->_m_body; }
+    public function _raw_body() { return $this->_m__raw_body; }
+}
+
+namespace \PacketPpi;
+
+class Radio80211nMacPhyExtBody extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi\PacketPpiField $parent = null, \PacketPpi $root = null) {
+        parent::__construct($io, $parent, $root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_flags = new \PacketPpi\MacFlags($this->_io, $this, $this->_root);
+        $this->_m_aMpduId = $this->_io->readU4le();
+        $this->_m_numDelimiters = $this->_io->readU1();
+        $this->_m_mcs = $this->_io->readU1();
+        $this->_m_numStreams = $this->_io->readU1();
+        $this->_m_rssiCombined = $this->_io->readU1();
+        $this->_m_rssiAntCtl = [];
+        $n = 4;
+        for ($i = 0; $i < $n; $i++) {
+            $this->_m_rssiAntCtl[] = $this->_io->readU1();
+        }
+        $this->_m_rssiAntExt = [];
+        $n = 4;
+        for ($i = 0; $i < $n; $i++) {
+            $this->_m_rssiAntExt[] = $this->_io->readU1();
+        }
+        $this->_m_extChannelFreq = $this->_io->readU2le();
+        $this->_m_extChannelFlags = new \PacketPpi\Radio80211nMacPhyExtBody\ChannelFlags($this->_io, $this, $this->_root);
+        $this->_m_rfSignalNoise = [];
+        $n = 4;
+        for ($i = 0; $i < $n; $i++) {
+            $this->_m_rfSignalNoise[] = new \PacketPpi\Radio80211nMacPhyExtBody\SignalNoise($this->_io, $this, $this->_root);
+        }
+        $this->_m_evm = [];
+        $n = 4;
+        for ($i = 0; $i < $n; $i++) {
+            $this->_m_evm[] = $this->_io->readU4le();
+        }
+    }
+    protected $_m_flags;
+    protected $_m_aMpduId;
+    protected $_m_numDelimiters;
+    protected $_m_mcs;
+    protected $_m_numStreams;
+    protected $_m_rssiCombined;
+    protected $_m_rssiAntCtl;
+    protected $_m_rssiAntExt;
+    protected $_m_extChannelFreq;
+    protected $_m_extChannelFlags;
+    protected $_m_rfSignalNoise;
+    protected $_m_evm;
+    public function flags() { return $this->_m_flags; }
+    public function aMpduId() { return $this->_m_aMpduId; }
+    public function numDelimiters() { return $this->_m_numDelimiters; }
+
+    /**
+     * Modulation Coding Scheme (MCS)
+     */
+    public function mcs() { return $this->_m_mcs; }
+
+    /**
+     * Number of spatial streams (0 = unknown)
+     */
+    public function numStreams() { return $this->_m_numStreams; }
+
+    /**
+     * RSSI (Received Signal Strength Indication), combined from all active antennas / channels
+     */
+    public function rssiCombined() { return $this->_m_rssiCombined; }
+
+    /**
+     * RSSI (Received Signal Strength Indication) for antennas 0-3, control channel
+     */
+    public function rssiAntCtl() { return $this->_m_rssiAntCtl; }
+
+    /**
+     * RSSI (Received Signal Strength Indication) for antennas 0-3, extension channel
+     */
+    public function rssiAntExt() { return $this->_m_rssiAntExt; }
+
+    /**
+     * Extension channel frequency (MHz)
+     */
+    public function extChannelFreq() { return $this->_m_extChannelFreq; }
+
+    /**
+     * Extension channel flags
+     */
+    public function extChannelFlags() { return $this->_m_extChannelFlags; }
+
+    /**
+     * Signal + noise values for antennas 0-3
+     */
+    public function rfSignalNoise() { return $this->_m_rfSignalNoise; }
+
+    /**
+     * EVM (Error Vector Magnitude) for chains 0-3
+     */
+    public function evm() { return $this->_m_evm; }
+}
+
+namespace \PacketPpi\Radio80211nMacPhyExtBody;
+
+class ChannelFlags extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi\Radio80211nMacPhyExtBody $parent = null, \PacketPpi $root = null) {
+        parent::__construct($io, $parent, $root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_spectrum2ghz = $this->_io->readBitsInt(1) != 0;
+        $this->_m_ofdm = $this->_io->readBitsInt(1) != 0;
+        $this->_m_cck = $this->_io->readBitsInt(1) != 0;
+        $this->_m_turbo = $this->_io->readBitsInt(1) != 0;
+        $this->_m_unused = $this->_io->readBitsInt(8);
+        $this->_m_gfsk = $this->_io->readBitsInt(1) != 0;
+        $this->_m_dynCckOfdm = $this->_io->readBitsInt(1) != 0;
+        $this->_m_onlyPassiveScan = $this->_io->readBitsInt(1) != 0;
+        $this->_m_spectrum5ghz = $this->_io->readBitsInt(1) != 0;
+    }
+    protected $_m_spectrum2ghz;
+    protected $_m_ofdm;
+    protected $_m_cck;
+    protected $_m_turbo;
+    protected $_m_unused;
+    protected $_m_gfsk;
+    protected $_m_dynCckOfdm;
+    protected $_m_onlyPassiveScan;
+    protected $_m_spectrum5ghz;
+
+    /**
+     * 2 GHz spectrum
+     */
+    public function spectrum2ghz() { return $this->_m_spectrum2ghz; }
+
+    /**
+     * OFDM (Orthogonal Frequency-Division Multiplexing)
+     */
+    public function ofdm() { return $this->_m_ofdm; }
+
+    /**
+     * CCK (Complementary Code Keying)
+     */
+    public function cck() { return $this->_m_cck; }
+    public function turbo() { return $this->_m_turbo; }
+    public function unused() { return $this->_m_unused; }
+
+    /**
+     * Gaussian Frequency Shift Keying
+     */
+    public function gfsk() { return $this->_m_gfsk; }
+
+    /**
+     * Dynamic CCK-OFDM
+     */
+    public function dynCckOfdm() { return $this->_m_dynCckOfdm; }
+
+    /**
+     * Only passive scan allowed
+     */
+    public function onlyPassiveScan() { return $this->_m_onlyPassiveScan; }
+
+    /**
+     * 5 GHz spectrum
+     */
+    public function spectrum5ghz() { return $this->_m_spectrum5ghz; }
+}
+
+/**
+ * RF signal + noise pair at a single antenna
+ */
+
+namespace \PacketPpi\Radio80211nMacPhyExtBody;
+
+class SignalNoise extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi\Radio80211nMacPhyExtBody $parent = null, \PacketPpi $root = null) {
+        parent::__construct($io, $parent, $root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_signal = $this->_io->readS1();
+        $this->_m_noise = $this->_io->readS1();
+    }
+    protected $_m_signal;
+    protected $_m_noise;
+
+    /**
+     * RF signal, dBm
+     */
+    public function signal() { return $this->_m_signal; }
+
+    /**
+     * RF noise, dBm
+     */
+    public function noise() { return $this->_m_noise; }
 }
 
 namespace \PacketPpi;

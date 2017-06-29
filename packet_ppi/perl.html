@@ -408,6 +408,190 @@ sub _raw_body {
 }
 
 ########################################################################
+package PacketPpi::PacketPpiFields;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{entries} = ();
+    while (!$self-&gt;{_io}-&gt;is_eof()) {
+        push @{$self-&gt;{entries}}, PacketPpi::PacketPpiField-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self-&gt;{entries};
+}
+
+########################################################################
+package PacketPpi::Radio80211nMacExtBody;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{flags} = PacketPpi::MacFlags-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{a_mpdu_id} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{num_delimiters} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{reserved} = $self-&gt;{_io}-&gt;read_bytes(3);
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self-&gt;{flags};
+}
+
+sub a_mpdu_id {
+    my ($self) = @_;
+    return $self-&gt;{a_mpdu_id};
+}
+
+sub num_delimiters {
+    my ($self) = @_;
+    return $self-&gt;{num_delimiters};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self-&gt;{reserved};
+}
+
+########################################################################
+package PacketPpi::MacFlags;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{unused1} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{aggregate_delimiter} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{more_aggregates} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{aggregate} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{dup_rx} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{rx_short_guard} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{is_ht_40} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{greenfield} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{_io}-&gt;align_to_byte();
+    $self-&gt;{unused2} = $self-&gt;{_io}-&gt;read_bytes(3);
+}
+
+sub unused1 {
+    my ($self) = @_;
+    return $self-&gt;{unused1};
+}
+
+sub aggregate_delimiter {
+    my ($self) = @_;
+    return $self-&gt;{aggregate_delimiter};
+}
+
+sub more_aggregates {
+    my ($self) = @_;
+    return $self-&gt;{more_aggregates};
+}
+
+sub aggregate {
+    my ($self) = @_;
+    return $self-&gt;{aggregate};
+}
+
+sub dup_rx {
+    my ($self) = @_;
+    return $self-&gt;{dup_rx};
+}
+
+sub rx_short_guard {
+    my ($self) = @_;
+    return $self-&gt;{rx_short_guard};
+}
+
+sub is_ht_40 {
+    my ($self) = @_;
+    return $self-&gt;{is_ht_40};
+}
+
+sub greenfield {
+    my ($self) = @_;
+    return $self-&gt;{greenfield};
+}
+
+sub unused2 {
+    my ($self) = @_;
+    return $self-&gt;{unused2};
+}
+
+########################################################################
 package PacketPpi::PacketPpiHeader;
 
 our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
@@ -461,110 +645,6 @@ sub pph_len {
 sub pph_dlt {
     my ($self) = @_;
     return $self-&gt;{pph_dlt};
-}
-
-########################################################################
-package PacketPpi::PacketPpiFields;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{entries} = ();
-    while (!$self-&gt;{_io}-&gt;is_eof()) {
-        push @{$self-&gt;{entries}}, PacketPpi::PacketPpiField-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-}
-
-sub entries {
-    my ($self) = @_;
-    return $self-&gt;{entries};
-}
-
-########################################################################
-package PacketPpi::PacketPpiField;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{pfh_type} = $self-&gt;{_io}-&gt;read_u2le();
-    $self-&gt;{pfh_datalen} = $self-&gt;{_io}-&gt;read_u2le();
-    my $_on = $self-&gt;pfh_type();
-    if ($_on == $PFH_TYPE_RADIO_802_11_COMMON) {
-        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;pfh_datalen());
-        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
-        $self-&gt;{body} = PacketPpi::Radio80211CommonBody-&gt;new($io__raw_body, $self, $self-&gt;{_root});
-    }
-    else {
-        $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;pfh_datalen());
-    }
-}
-
-sub pfh_type {
-    my ($self) = @_;
-    return $self-&gt;{pfh_type};
-}
-
-sub pfh_datalen {
-    my ($self) = @_;
-    return $self-&gt;{pfh_datalen};
-}
-
-sub body {
-    my ($self) = @_;
-    return $self-&gt;{body};
-}
-
-sub _raw_body {
-    my ($self) = @_;
-    return $self-&gt;{_raw_body};
 }
 
 ########################################################################
@@ -651,6 +731,329 @@ sub dbm_antsignal {
 sub dbm_antnoise {
     my ($self) = @_;
     return $self-&gt;{dbm_antnoise};
+}
+
+########################################################################
+package PacketPpi::PacketPpiField;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{pfh_type} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{pfh_datalen} = $self-&gt;{_io}-&gt;read_u2le();
+    my $_on = $self-&gt;pfh_type();
+    if ($_on == $PFH_TYPE_RADIO_802_11_COMMON) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;pfh_datalen());
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = PacketPpi::Radio80211CommonBody-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $PFH_TYPE_RADIO_802_11N_MAC_EXT) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;pfh_datalen());
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = PacketPpi::Radio80211nMacExtBody-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;pfh_datalen());
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = PacketPpi::Radio80211nMacPhyExtBody-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    else {
+        $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;pfh_datalen());
+    }
+}
+
+sub pfh_type {
+    my ($self) = @_;
+    return $self-&gt;{pfh_type};
+}
+
+sub pfh_datalen {
+    my ($self) = @_;
+    return $self-&gt;{pfh_datalen};
+}
+
+sub body {
+    my ($self) = @_;
+    return $self-&gt;{body};
+}
+
+sub _raw_body {
+    my ($self) = @_;
+    return $self-&gt;{_raw_body};
+}
+
+########################################################################
+package PacketPpi::Radio80211nMacPhyExtBody;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{flags} = PacketPpi::MacFlags-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{a_mpdu_id} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{num_delimiters} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{mcs} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{num_streams} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{rssi_combined} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{rssi_ant_ctl} = ();
+    my $n_rssi_ant_ctl = 4;
+    for (my $i = 0; $i &lt; $n_rssi_ant_ctl; $i++) {
+        $self-&gt;{rssi_ant_ctl}[$i] = $self-&gt;{_io}-&gt;read_u1();
+    }
+    $self-&gt;{rssi_ant_ext} = ();
+    my $n_rssi_ant_ext = 4;
+    for (my $i = 0; $i &lt; $n_rssi_ant_ext; $i++) {
+        $self-&gt;{rssi_ant_ext}[$i] = $self-&gt;{_io}-&gt;read_u1();
+    }
+    $self-&gt;{ext_channel_freq} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{ext_channel_flags} = PacketPpi::Radio80211nMacPhyExtBody::ChannelFlags-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{rf_signal_noise} = ();
+    my $n_rf_signal_noise = 4;
+    for (my $i = 0; $i &lt; $n_rf_signal_noise; $i++) {
+        $self-&gt;{rf_signal_noise}[$i] = PacketPpi::Radio80211nMacPhyExtBody::SignalNoise-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    $self-&gt;{evm} = ();
+    my $n_evm = 4;
+    for (my $i = 0; $i &lt; $n_evm; $i++) {
+        $self-&gt;{evm}[$i] = $self-&gt;{_io}-&gt;read_u4le();
+    }
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self-&gt;{flags};
+}
+
+sub a_mpdu_id {
+    my ($self) = @_;
+    return $self-&gt;{a_mpdu_id};
+}
+
+sub num_delimiters {
+    my ($self) = @_;
+    return $self-&gt;{num_delimiters};
+}
+
+sub mcs {
+    my ($self) = @_;
+    return $self-&gt;{mcs};
+}
+
+sub num_streams {
+    my ($self) = @_;
+    return $self-&gt;{num_streams};
+}
+
+sub rssi_combined {
+    my ($self) = @_;
+    return $self-&gt;{rssi_combined};
+}
+
+sub rssi_ant_ctl {
+    my ($self) = @_;
+    return $self-&gt;{rssi_ant_ctl};
+}
+
+sub rssi_ant_ext {
+    my ($self) = @_;
+    return $self-&gt;{rssi_ant_ext};
+}
+
+sub ext_channel_freq {
+    my ($self) = @_;
+    return $self-&gt;{ext_channel_freq};
+}
+
+sub ext_channel_flags {
+    my ($self) = @_;
+    return $self-&gt;{ext_channel_flags};
+}
+
+sub rf_signal_noise {
+    my ($self) = @_;
+    return $self-&gt;{rf_signal_noise};
+}
+
+sub evm {
+    my ($self) = @_;
+    return $self-&gt;{evm};
+}
+
+########################################################################
+package PacketPpi::Radio80211nMacPhyExtBody::ChannelFlags;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{spectrum_2ghz} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{ofdm} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{cck} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{turbo} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{unused} = $self-&gt;{_io}-&gt;read_bits_int(8);
+    $self-&gt;{gfsk} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{dyn_cck_ofdm} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{only_passive_scan} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{spectrum_5ghz} = $self-&gt;{_io}-&gt;read_bits_int(1);
+}
+
+sub spectrum_2ghz {
+    my ($self) = @_;
+    return $self-&gt;{spectrum_2ghz};
+}
+
+sub ofdm {
+    my ($self) = @_;
+    return $self-&gt;{ofdm};
+}
+
+sub cck {
+    my ($self) = @_;
+    return $self-&gt;{cck};
+}
+
+sub turbo {
+    my ($self) = @_;
+    return $self-&gt;{turbo};
+}
+
+sub unused {
+    my ($self) = @_;
+    return $self-&gt;{unused};
+}
+
+sub gfsk {
+    my ($self) = @_;
+    return $self-&gt;{gfsk};
+}
+
+sub dyn_cck_ofdm {
+    my ($self) = @_;
+    return $self-&gt;{dyn_cck_ofdm};
+}
+
+sub only_passive_scan {
+    my ($self) = @_;
+    return $self-&gt;{only_passive_scan};
+}
+
+sub spectrum_5ghz {
+    my ($self) = @_;
+    return $self-&gt;{spectrum_5ghz};
+}
+
+########################################################################
+package PacketPpi::Radio80211nMacPhyExtBody::SignalNoise;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{signal} = $self-&gt;{_io}-&gt;read_s1();
+    $self-&gt;{noise} = $self-&gt;{_io}-&gt;read_s1();
+}
+
+sub signal {
+    my ($self) = @_;
+    return $self-&gt;{signal};
+}
+
+sub noise {
+    my ($self) = @_;
+    return $self-&gt;{noise};
 }
 
 1;

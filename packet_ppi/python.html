@@ -396,6 +396,58 @@ class PacketPpi(KaitaiStruct):
         else:
             self.body = self._io.read_bytes_full()
 
+    class PacketPpiFields(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.entries = []
+            while not self._io.is_eof():
+                self.entries.append(self._root.PacketPpiField(self._io, self, self._root))
+
+
+
+    class Radio80211nMacExtBody(KaitaiStruct):
+        &quot;&quot;&quot;
+        .. seealso::
+           PPI header format spec, section 4.1.3 - https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.flags = self._root.MacFlags(self._io, self, self._root)
+            self.a_mpdu_id = self._io.read_u4le()
+            self.num_delimiters = self._io.read_u1()
+            self.reserved = self._io.read_bytes(3)
+
+
+    class MacFlags(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.unused1 = self._io.read_bits_int(1) != 0
+            self.aggregate_delimiter = self._io.read_bits_int(1) != 0
+            self.more_aggregates = self._io.read_bits_int(1) != 0
+            self.aggregate = self._io.read_bits_int(1) != 0
+            self.dup_rx = self._io.read_bits_int(1) != 0
+            self.rx_short_guard = self._io.read_bits_int(1) != 0
+            self.is_ht_40 = self._io.read_bits_int(1) != 0
+            self.greenfield = self._io.read_bits_int(1) != 0
+            self._io.align_to_byte()
+            self.unused2 = self._io.read_bytes(3)
+
+
     class PacketPpiHeader(KaitaiStruct):
         &quot;&quot;&quot;
         .. seealso::
@@ -412,43 +464,6 @@ class PacketPpi(KaitaiStruct):
             self.pph_flags = self._io.read_u1()
             self.pph_len = self._io.read_u2le()
             self.pph_dlt = self._root.Linktype(self._io.read_u4le())
-
-
-    class PacketPpiFields(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.entries = []
-            while not self._io.is_eof():
-                self.entries.append(self._root.PacketPpiField(self._io, self, self._root))
-
-
-
-    class PacketPpiField(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           PPI header format spec, section 3.1 - https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.pfh_type = self._root.PfhType(self._io.read_u2le())
-            self.pfh_datalen = self._io.read_u2le()
-            _on = self.pfh_type
-            if _on == self._root.PfhType.radio_802_11_common:
-                self._raw_body = self._io.read_bytes(self.pfh_datalen)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.Radio80211CommonBody(io, self, self._root)
-            else:
-                self.body = self._io.read_bytes(self.pfh_datalen)
 
 
     class Radio80211CommonBody(KaitaiStruct):
@@ -472,6 +487,107 @@ class PacketPpi(KaitaiStruct):
             self.fhss_pattern = self._io.read_u1()
             self.dbm_antsignal = self._io.read_s1()
             self.dbm_antnoise = self._io.read_s1()
+
+
+    class PacketPpiField(KaitaiStruct):
+        &quot;&quot;&quot;
+        .. seealso::
+           PPI header format spec, section 3.1 - https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.pfh_type = self._root.PfhType(self._io.read_u2le())
+            self.pfh_datalen = self._io.read_u2le()
+            _on = self.pfh_type
+            if _on == self._root.PfhType.radio_802_11_common:
+                self._raw_body = self._io.read_bytes(self.pfh_datalen)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.Radio80211CommonBody(io, self, self._root)
+            elif _on == self._root.PfhType.radio_802_11n_mac_ext:
+                self._raw_body = self._io.read_bytes(self.pfh_datalen)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.Radio80211nMacExtBody(io, self, self._root)
+            elif _on == self._root.PfhType.radio_802_11n_mac_phy_ext:
+                self._raw_body = self._io.read_bytes(self.pfh_datalen)
+                io = KaitaiStream(BytesIO(self._raw_body))
+                self.body = self._root.Radio80211nMacPhyExtBody(io, self, self._root)
+            else:
+                self.body = self._io.read_bytes(self.pfh_datalen)
+
+
+    class Radio80211nMacPhyExtBody(KaitaiStruct):
+        &quot;&quot;&quot;
+        .. seealso::
+           PPI header format spec, section 4.1.4 - https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.flags = self._root.MacFlags(self._io, self, self._root)
+            self.a_mpdu_id = self._io.read_u4le()
+            self.num_delimiters = self._io.read_u1()
+            self.mcs = self._io.read_u1()
+            self.num_streams = self._io.read_u1()
+            self.rssi_combined = self._io.read_u1()
+            self.rssi_ant_ctl = [None] * (4)
+            for i in range(4):
+                self.rssi_ant_ctl[i] = self._io.read_u1()
+
+            self.rssi_ant_ext = [None] * (4)
+            for i in range(4):
+                self.rssi_ant_ext[i] = self._io.read_u1()
+
+            self.ext_channel_freq = self._io.read_u2le()
+            self.ext_channel_flags = self._root.Radio80211nMacPhyExtBody.ChannelFlags(self._io, self, self._root)
+            self.rf_signal_noise = [None] * (4)
+            for i in range(4):
+                self.rf_signal_noise[i] = self._root.Radio80211nMacPhyExtBody.SignalNoise(self._io, self, self._root)
+
+            self.evm = [None] * (4)
+            for i in range(4):
+                self.evm[i] = self._io.read_u4le()
+
+
+        class ChannelFlags(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.spectrum_2ghz = self._io.read_bits_int(1) != 0
+                self.ofdm = self._io.read_bits_int(1) != 0
+                self.cck = self._io.read_bits_int(1) != 0
+                self.turbo = self._io.read_bits_int(1) != 0
+                self.unused = self._io.read_bits_int(8)
+                self.gfsk = self._io.read_bits_int(1) != 0
+                self.dyn_cck_ofdm = self._io.read_bits_int(1) != 0
+                self.only_passive_scan = self._io.read_bits_int(1) != 0
+                self.spectrum_5ghz = self._io.read_bits_int(1) != 0
+
+
+        class SignalNoise(KaitaiStruct):
+            &quot;&quot;&quot;RF signal + noise pair at a single antenna.&quot;&quot;&quot;
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.signal = self._io.read_s1()
+                self.noise = self._io.read_s1()
+
 
 
 

@@ -16,6 +16,45 @@ packet_ppi__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 	<TR><TD>:linktype_ppi</TD><TD PORT="case0">PacketPpi</TD></TR>
 	<TR><TD>:linktype_ethernet</TD><TD PORT="case1">EthernetFrame</TD></TR>
 </TABLE>>];
+		subgraph cluster__packet_ppi_fields {
+			label="PacketPpi::PacketPpiFields";
+			graph[style=dotted];
+
+			packet_ppi_fields__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>PacketPpiField</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__radio_802_11n_mac_ext_body {
+			label="PacketPpi::Radio80211nMacExtBody";
+			graph[style=dotted];
+
+			radio_802_11n_mac_ext_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="flags_pos">0</TD><TD PORT="flags_size">...</TD><TD>MacFlags</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="a_mpdu_id_pos">...</TD><TD PORT="a_mpdu_id_size">4</TD><TD>u4le</TD><TD PORT="a_mpdu_id_type">a_mpdu_id</TD></TR>
+				<TR><TD PORT="num_delimiters_pos">...</TD><TD PORT="num_delimiters_size">1</TD><TD>u1</TD><TD PORT="num_delimiters_type">num_delimiters</TD></TR>
+				<TR><TD PORT="reserved_pos">...</TD><TD PORT="reserved_size">3</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__mac_flags {
+			label="PacketPpi::MacFlags";
+			graph[style=dotted];
+
+			mac_flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="unused1_pos">0</TD><TD PORT="unused1_size">1b</TD><TD>BitsType1</TD><TD PORT="unused1_type">unused1</TD></TR>
+				<TR><TD PORT="aggregate_delimiter_pos">0:1</TD><TD PORT="aggregate_delimiter_size">1b</TD><TD>BitsType1</TD><TD PORT="aggregate_delimiter_type">aggregate_delimiter</TD></TR>
+				<TR><TD PORT="more_aggregates_pos">0:2</TD><TD PORT="more_aggregates_size">1b</TD><TD>BitsType1</TD><TD PORT="more_aggregates_type">more_aggregates</TD></TR>
+				<TR><TD PORT="aggregate_pos">0:3</TD><TD PORT="aggregate_size">1b</TD><TD>BitsType1</TD><TD PORT="aggregate_type">aggregate</TD></TR>
+				<TR><TD PORT="dup_rx_pos">0:4</TD><TD PORT="dup_rx_size">1b</TD><TD>BitsType1</TD><TD PORT="dup_rx_type">dup_rx</TD></TR>
+				<TR><TD PORT="rx_short_guard_pos">0:5</TD><TD PORT="rx_short_guard_size">1b</TD><TD>BitsType1</TD><TD PORT="rx_short_guard_type">rx_short_guard</TD></TR>
+				<TR><TD PORT="is_ht_40_pos">0:6</TD><TD PORT="is_ht_40_size">1b</TD><TD>BitsType1</TD><TD PORT="is_ht_40_type">is_ht_40</TD></TR>
+				<TR><TD PORT="greenfield_pos">0:7</TD><TD PORT="greenfield_size">1b</TD><TD>BitsType1</TD><TD PORT="greenfield_type">greenfield</TD></TR>
+				<TR><TD PORT="unused2_pos">1</TD><TD PORT="unused2_size">3</TD><TD></TD><TD PORT="unused2_type">unused2</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__packet_ppi_header {
 			label="PacketPpi::PacketPpiHeader";
 			graph[style=dotted];
@@ -27,31 +66,6 @@ packet_ppi__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 				<TR><TD PORT="pph_len_pos">2</TD><TD PORT="pph_len_size">2</TD><TD>u2le</TD><TD PORT="pph_len_type">pph_len</TD></TR>
 				<TR><TD PORT="pph_dlt_pos">4</TD><TD PORT="pph_dlt_size">4</TD><TD>u4le→Linktype</TD><TD PORT="pph_dlt_type">pph_dlt</TD></TR>
 			</TABLE>>];
-		}
-		subgraph cluster__packet_ppi_fields {
-			label="PacketPpi::PacketPpiFields";
-			graph[style=dotted];
-
-			packet_ppi_fields__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>PacketPpiField</TD><TD PORT="entries_type">entries</TD></TR>
-				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__packet_ppi_field {
-			label="PacketPpi::PacketPpiField";
-			graph[style=dotted];
-
-			packet_ppi_field__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="pfh_type_pos">0</TD><TD PORT="pfh_type_size">2</TD><TD>u2le→PfhType</TD><TD PORT="pfh_type_type">pfh_type</TD></TR>
-				<TR><TD PORT="pfh_datalen_pos">2</TD><TD PORT="pfh_datalen_size">2</TD><TD>u2le</TD><TD PORT="pfh_datalen_type">pfh_datalen</TD></TR>
-				<TR><TD PORT="body_pos">4</TD><TD PORT="body_size">...</TD><TD>switch (pfh_type)</TD><TD PORT="body_type">body</TD></TR>
-			</TABLE>>];
-packet_ppi_field__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:pfh_type_radio_802_11_common</TD><TD PORT="case0">Radio80211CommonBody</TD></TR>
-</TABLE>>];
 		}
 		subgraph cluster__radio_802_11_common_body {
 			label="PacketPpi::Radio80211CommonBody";
@@ -70,6 +84,74 @@ packet_ppi_field__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLS
 				<TR><TD PORT="dbm_antnoise_pos">19</TD><TD PORT="dbm_antnoise_size">1</TD><TD>s1</TD><TD PORT="dbm_antnoise_type">dbm_antnoise</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__packet_ppi_field {
+			label="PacketPpi::PacketPpiField";
+			graph[style=dotted];
+
+			packet_ppi_field__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="pfh_type_pos">0</TD><TD PORT="pfh_type_size">2</TD><TD>u2le→PfhType</TD><TD PORT="pfh_type_type">pfh_type</TD></TR>
+				<TR><TD PORT="pfh_datalen_pos">2</TD><TD PORT="pfh_datalen_size">2</TD><TD>u2le</TD><TD PORT="pfh_datalen_type">pfh_datalen</TD></TR>
+				<TR><TD PORT="body_pos">4</TD><TD PORT="body_size">...</TD><TD>switch (pfh_type)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+packet_ppi_field__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:pfh_type_radio_802_11_common</TD><TD PORT="case0">Radio80211CommonBody</TD></TR>
+	<TR><TD>:pfh_type_radio_802_11n_mac_ext</TD><TD PORT="case1">Radio80211nMacExtBody</TD></TR>
+	<TR><TD>:pfh_type_radio_802_11n_mac_phy_ext</TD><TD PORT="case2">Radio80211nMacPhyExtBody</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__radio_802_11n_mac_phy_ext_body {
+			label="PacketPpi::Radio80211nMacPhyExtBody";
+			graph[style=dotted];
+
+			radio_802_11n_mac_phy_ext_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="flags_pos">0</TD><TD PORT="flags_size">...</TD><TD>MacFlags</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="a_mpdu_id_pos">...</TD><TD PORT="a_mpdu_id_size">4</TD><TD>u4le</TD><TD PORT="a_mpdu_id_type">a_mpdu_id</TD></TR>
+				<TR><TD PORT="num_delimiters_pos">...</TD><TD PORT="num_delimiters_size">1</TD><TD>u1</TD><TD PORT="num_delimiters_type">num_delimiters</TD></TR>
+				<TR><TD PORT="mcs_pos">...</TD><TD PORT="mcs_size">1</TD><TD>u1</TD><TD PORT="mcs_type">mcs</TD></TR>
+				<TR><TD PORT="num_streams_pos">...</TD><TD PORT="num_streams_size">1</TD><TD>u1</TD><TD PORT="num_streams_type">num_streams</TD></TR>
+				<TR><TD PORT="rssi_combined_pos">...</TD><TD PORT="rssi_combined_size">1</TD><TD>u1</TD><TD PORT="rssi_combined_type">rssi_combined</TD></TR>
+				<TR><TD PORT="rssi_ant_ctl_pos">...</TD><TD PORT="rssi_ant_ctl_size">1</TD><TD>u1</TD><TD PORT="rssi_ant_ctl_type">rssi_ant_ctl</TD></TR>
+				<TR><TD COLSPAN="4" PORT="rssi_ant_ctl__repeat">repeat 4 times</TD></TR>
+				<TR><TD PORT="rssi_ant_ext_pos">...</TD><TD PORT="rssi_ant_ext_size">1</TD><TD>u1</TD><TD PORT="rssi_ant_ext_type">rssi_ant_ext</TD></TR>
+				<TR><TD COLSPAN="4" PORT="rssi_ant_ext__repeat">repeat 4 times</TD></TR>
+				<TR><TD PORT="ext_channel_freq_pos">...</TD><TD PORT="ext_channel_freq_size">2</TD><TD>u2le</TD><TD PORT="ext_channel_freq_type">ext_channel_freq</TD></TR>
+				<TR><TD PORT="ext_channel_flags_pos">...</TD><TD PORT="ext_channel_flags_size">...</TD><TD>ChannelFlags</TD><TD PORT="ext_channel_flags_type">ext_channel_flags</TD></TR>
+				<TR><TD PORT="rf_signal_noise_pos">...</TD><TD PORT="rf_signal_noise_size">...</TD><TD>SignalNoise</TD><TD PORT="rf_signal_noise_type">rf_signal_noise</TD></TR>
+				<TR><TD COLSPAN="4" PORT="rf_signal_noise__repeat">repeat 4 times</TD></TR>
+				<TR><TD PORT="evm_pos">...</TD><TD PORT="evm_size">4</TD><TD>u4le</TD><TD PORT="evm_type">evm</TD></TR>
+				<TR><TD COLSPAN="4" PORT="evm__repeat">repeat 4 times</TD></TR>
+			</TABLE>>];
+			subgraph cluster__channel_flags {
+				label="PacketPpi::Radio80211nMacPhyExtBody::ChannelFlags";
+				graph[style=dotted];
+
+				channel_flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="spectrum_2ghz_pos">0</TD><TD PORT="spectrum_2ghz_size">1b</TD><TD>BitsType1</TD><TD PORT="spectrum_2ghz_type">spectrum_2ghz</TD></TR>
+					<TR><TD PORT="ofdm_pos">0:1</TD><TD PORT="ofdm_size">1b</TD><TD>BitsType1</TD><TD PORT="ofdm_type">ofdm</TD></TR>
+					<TR><TD PORT="cck_pos">0:2</TD><TD PORT="cck_size">1b</TD><TD>BitsType1</TD><TD PORT="cck_type">cck</TD></TR>
+					<TR><TD PORT="turbo_pos">0:3</TD><TD PORT="turbo_size">1b</TD><TD>BitsType1</TD><TD PORT="turbo_type">turbo</TD></TR>
+					<TR><TD PORT="unused_pos">0:4</TD><TD PORT="unused_size">8b</TD><TD>b8</TD><TD PORT="unused_type">unused</TD></TR>
+					<TR><TD PORT="gfsk_pos">1:4</TD><TD PORT="gfsk_size">1b</TD><TD>BitsType1</TD><TD PORT="gfsk_type">gfsk</TD></TR>
+					<TR><TD PORT="dyn_cck_ofdm_pos">1:5</TD><TD PORT="dyn_cck_ofdm_size">1b</TD><TD>BitsType1</TD><TD PORT="dyn_cck_ofdm_type">dyn_cck_ofdm</TD></TR>
+					<TR><TD PORT="only_passive_scan_pos">1:6</TD><TD PORT="only_passive_scan_size">1b</TD><TD>BitsType1</TD><TD PORT="only_passive_scan_type">only_passive_scan</TD></TR>
+					<TR><TD PORT="spectrum_5ghz_pos">1:7</TD><TD PORT="spectrum_5ghz_size">1b</TD><TD>BitsType1</TD><TD PORT="spectrum_5ghz_type">spectrum_5ghz</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__signal_noise {
+				label="PacketPpi::Radio80211nMacPhyExtBody::SignalNoise";
+				graph[style=dotted];
+
+				signal_noise__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="signal_pos">0</TD><TD PORT="signal_size">1</TD><TD>s1</TD><TD PORT="signal_type">signal</TD></TR>
+					<TR><TD PORT="noise_pos">1</TD><TD PORT="noise_size">1</TD><TD>s1</TD><TD PORT="noise_type">noise</TD></TR>
+				</TABLE>>];
+			}
+		}
 	}
 	packet_ppi__seq:header_type -> packet_ppi_header__seq [style=bold];
 	packet_ppi_header__seq:pph_len_type -> packet_ppi__seq:fields_size [color="#404040"];
@@ -79,7 +161,13 @@ packet_ppi_field__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLS
 	packet_ppi__seq_body_switch:case1 -> ethernet_frame__seq [style=bold];
 	packet_ppi_header__seq:pph_dlt_type -> packet_ppi__seq:body_type [color="#404040"];
 	packet_ppi_fields__seq:entries_type -> packet_ppi_field__seq [style=bold];
+	radio_802_11n_mac_ext_body__seq:flags_type -> mac_flags__seq [style=bold];
 	packet_ppi_field__seq:body_type -> packet_ppi_field__seq_body_switch [style=bold];
 	packet_ppi_field__seq_body_switch:case0 -> radio_802_11_common_body__seq [style=bold];
+	packet_ppi_field__seq_body_switch:case1 -> radio_802_11n_mac_ext_body__seq [style=bold];
+	packet_ppi_field__seq_body_switch:case2 -> radio_802_11n_mac_phy_ext_body__seq [style=bold];
 	packet_ppi_field__seq:pfh_type_type -> packet_ppi_field__seq:body_type [color="#404040"];
+	radio_802_11n_mac_phy_ext_body__seq:flags_type -> mac_flags__seq [style=bold];
+	radio_802_11n_mac_phy_ext_body__seq:ext_channel_flags_type -> channel_flags__seq [style=bold];
+	radio_802_11n_mac_phy_ext_body__seq:rf_signal_noise_type -> signal_noise__seq [style=bold];
 }

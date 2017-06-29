@@ -196,6 +196,162 @@ public class PacketPpi extends KaitaiStruct {
         }
         }
     }
+    public static class PacketPpiFields extends KaitaiStruct {
+        public static PacketPpiFields fromFile(String fileName) throws IOException {
+            return new PacketPpiFields(new KaitaiStream(fileName));
+        }
+
+        public PacketPpiFields(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PacketPpiFields(KaitaiStream _io, PacketPpi _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PacketPpiFields(KaitaiStream _io, PacketPpi _parent, PacketPpi _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.entries = new ArrayList<PacketPpiField>();
+            while (!this._io.isEof()) {
+                this.entries.add(new PacketPpiField(this._io, this, _root));
+            }
+        }
+        private ArrayList<PacketPpiField> entries;
+        private PacketPpi _root;
+        private PacketPpi _parent;
+        public ArrayList<PacketPpiField> entries() { return entries; }
+        public PacketPpi _root() { return _root; }
+        public PacketPpi _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
+     */
+    public static class Radio80211nMacExtBody extends KaitaiStruct {
+        public static Radio80211nMacExtBody fromFile(String fileName) throws IOException {
+            return new Radio80211nMacExtBody(new KaitaiStream(fileName));
+        }
+
+        public Radio80211nMacExtBody(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Radio80211nMacExtBody(KaitaiStream _io, PacketPpi.PacketPpiField _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Radio80211nMacExtBody(KaitaiStream _io, PacketPpi.PacketPpiField _parent, PacketPpi _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.flags = new MacFlags(this._io, this, _root);
+            this.aMpduId = this._io.readU4le();
+            this.numDelimiters = this._io.readU1();
+            this.reserved = this._io.readBytes(3);
+        }
+        private MacFlags flags;
+        private long aMpduId;
+        private int numDelimiters;
+        private byte[] reserved;
+        private PacketPpi _root;
+        private PacketPpi.PacketPpiField _parent;
+        public MacFlags flags() { return flags; }
+        public long aMpduId() { return aMpduId; }
+        public int numDelimiters() { return numDelimiters; }
+        public byte[] reserved() { return reserved; }
+        public PacketPpi _root() { return _root; }
+        public PacketPpi.PacketPpiField _parent() { return _parent; }
+    }
+    public static class MacFlags extends KaitaiStruct {
+        public static MacFlags fromFile(String fileName) throws IOException {
+            return new MacFlags(new KaitaiStream(fileName));
+        }
+
+        public MacFlags(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MacFlags(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MacFlags(KaitaiStream _io, KaitaiStruct _parent, PacketPpi _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.unused1 = this._io.readBitsInt(1) != 0;
+            this.aggregateDelimiter = this._io.readBitsInt(1) != 0;
+            this.moreAggregates = this._io.readBitsInt(1) != 0;
+            this.aggregate = this._io.readBitsInt(1) != 0;
+            this.dupRx = this._io.readBitsInt(1) != 0;
+            this.rxShortGuard = this._io.readBitsInt(1) != 0;
+            this.isHt40 = this._io.readBitsInt(1) != 0;
+            this.greenfield = this._io.readBitsInt(1) != 0;
+            this._io.alignToByte();
+            this.unused2 = this._io.readBytes(3);
+        }
+        private boolean unused1;
+        private boolean aggregateDelimiter;
+        private boolean moreAggregates;
+        private boolean aggregate;
+        private boolean dupRx;
+        private boolean rxShortGuard;
+        private boolean isHt40;
+        private boolean greenfield;
+        private byte[] unused2;
+        private PacketPpi _root;
+        private KaitaiStruct _parent;
+        public boolean unused1() { return unused1; }
+
+        /**
+         * Aggregate delimiter CRC error after this frame
+         */
+        public boolean aggregateDelimiter() { return aggregateDelimiter; }
+
+        /**
+         * More aggregates
+         */
+        public boolean moreAggregates() { return moreAggregates; }
+
+        /**
+         * Aggregate
+         */
+        public boolean aggregate() { return aggregate; }
+
+        /**
+         * Duplicate RX
+         */
+        public boolean dupRx() { return dupRx; }
+
+        /**
+         * RX short guard interval (SGI)
+         */
+        public boolean rxShortGuard() { return rxShortGuard; }
+
+        /**
+         * true = HT40, false = HT20
+         */
+        public boolean isHt40() { return isHt40; }
+
+        /**
+         * Greenfield
+         */
+        public boolean greenfield() { return greenfield; }
+        public byte[] unused2() { return unused2; }
+        public PacketPpi _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
 
     /**
      * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
@@ -237,90 +393,6 @@ public class PacketPpi extends KaitaiStruct {
         public Linktype pphDlt() { return pphDlt; }
         public PacketPpi _root() { return _root; }
         public PacketPpi _parent() { return _parent; }
-    }
-    public static class PacketPpiFields extends KaitaiStruct {
-        public static PacketPpiFields fromFile(String fileName) throws IOException {
-            return new PacketPpiFields(new KaitaiStream(fileName));
-        }
-
-        public PacketPpiFields(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PacketPpiFields(KaitaiStream _io, PacketPpi _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PacketPpiFields(KaitaiStream _io, PacketPpi _parent, PacketPpi _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new ArrayList<PacketPpiField>();
-            while (!this._io.isEof()) {
-                this.entries.add(new PacketPpiField(this._io, this, _root));
-            }
-        }
-        private ArrayList<PacketPpiField> entries;
-        private PacketPpi _root;
-        private PacketPpi _parent;
-        public ArrayList<PacketPpiField> entries() { return entries; }
-        public PacketPpi _root() { return _root; }
-        public PacketPpi _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
-     */
-    public static class PacketPpiField extends KaitaiStruct {
-        public static PacketPpiField fromFile(String fileName) throws IOException {
-            return new PacketPpiField(new KaitaiStream(fileName));
-        }
-
-        public PacketPpiField(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PacketPpiField(KaitaiStream _io, PacketPpi.PacketPpiFields _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PacketPpiField(KaitaiStream _io, PacketPpi.PacketPpiFields _parent, PacketPpi _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.pfhType = PacketPpi.PfhType.byId(this._io.readU2le());
-            this.pfhDatalen = this._io.readU2le();
-            switch (pfhType()) {
-            case RADIO_802_11_COMMON: {
-                this._raw_body = this._io.readBytes(pfhDatalen());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
-                this.body = new Radio80211CommonBody(_io__raw_body, this, _root);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes(pfhDatalen());
-                break;
-            }
-            }
-        }
-        private PfhType pfhType;
-        private int pfhDatalen;
-        private Object body;
-        private PacketPpi _root;
-        private PacketPpi.PacketPpiFields _parent;
-        private byte[] _raw_body;
-        public PfhType pfhType() { return pfhType; }
-        public int pfhDatalen() { return pfhDatalen; }
-        public Object body() { return body; }
-        public PacketPpi _root() { return _root; }
-        public PacketPpi.PacketPpiFields _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
     }
 
     /**
@@ -376,6 +448,309 @@ public class PacketPpi extends KaitaiStruct {
         public int fhssPattern() { return fhssPattern; }
         public byte dbmAntsignal() { return dbmAntsignal; }
         public byte dbmAntnoise() { return dbmAntnoise; }
+        public PacketPpi _root() { return _root; }
+        public PacketPpi.PacketPpiField _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
+     */
+    public static class PacketPpiField extends KaitaiStruct {
+        public static PacketPpiField fromFile(String fileName) throws IOException {
+            return new PacketPpiField(new KaitaiStream(fileName));
+        }
+
+        public PacketPpiField(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PacketPpiField(KaitaiStream _io, PacketPpi.PacketPpiFields _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PacketPpiField(KaitaiStream _io, PacketPpi.PacketPpiFields _parent, PacketPpi _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.pfhType = PacketPpi.PfhType.byId(this._io.readU2le());
+            this.pfhDatalen = this._io.readU2le();
+            switch (pfhType()) {
+            case RADIO_802_11_COMMON: {
+                this._raw_body = this._io.readBytes(pfhDatalen());
+                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                this.body = new Radio80211CommonBody(_io__raw_body, this, _root);
+                break;
+            }
+            case RADIO_802_11N_MAC_EXT: {
+                this._raw_body = this._io.readBytes(pfhDatalen());
+                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                this.body = new Radio80211nMacExtBody(_io__raw_body, this, _root);
+                break;
+            }
+            case RADIO_802_11N_MAC_PHY_EXT: {
+                this._raw_body = this._io.readBytes(pfhDatalen());
+                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                this.body = new Radio80211nMacPhyExtBody(_io__raw_body, this, _root);
+                break;
+            }
+            default: {
+                this.body = this._io.readBytes(pfhDatalen());
+                break;
+            }
+            }
+        }
+        private PfhType pfhType;
+        private int pfhDatalen;
+        private Object body;
+        private PacketPpi _root;
+        private PacketPpi.PacketPpiFields _parent;
+        private byte[] _raw_body;
+        public PfhType pfhType() { return pfhType; }
+        public int pfhDatalen() { return pfhDatalen; }
+        public Object body() { return body; }
+        public PacketPpi _root() { return _root; }
+        public PacketPpi.PacketPpiFields _parent() { return _parent; }
+        public byte[] _raw_body() { return _raw_body; }
+    }
+
+    /**
+     * @see <a href="https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.4</a>
+     */
+    public static class Radio80211nMacPhyExtBody extends KaitaiStruct {
+        public static Radio80211nMacPhyExtBody fromFile(String fileName) throws IOException {
+            return new Radio80211nMacPhyExtBody(new KaitaiStream(fileName));
+        }
+
+        public Radio80211nMacPhyExtBody(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Radio80211nMacPhyExtBody(KaitaiStream _io, PacketPpi.PacketPpiField _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Radio80211nMacPhyExtBody(KaitaiStream _io, PacketPpi.PacketPpiField _parent, PacketPpi _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.flags = new MacFlags(this._io, this, _root);
+            this.aMpduId = this._io.readU4le();
+            this.numDelimiters = this._io.readU1();
+            this.mcs = this._io.readU1();
+            this.numStreams = this._io.readU1();
+            this.rssiCombined = this._io.readU1();
+            rssiAntCtl = new ArrayList<Integer>((int) (4));
+            for (int i = 0; i < 4; i++) {
+                this.rssiAntCtl.add(this._io.readU1());
+            }
+            rssiAntExt = new ArrayList<Integer>((int) (4));
+            for (int i = 0; i < 4; i++) {
+                this.rssiAntExt.add(this._io.readU1());
+            }
+            this.extChannelFreq = this._io.readU2le();
+            this.extChannelFlags = new ChannelFlags(this._io, this, _root);
+            rfSignalNoise = new ArrayList<SignalNoise>((int) (4));
+            for (int i = 0; i < 4; i++) {
+                this.rfSignalNoise.add(new SignalNoise(this._io, this, _root));
+            }
+            evm = new ArrayList<Long>((int) (4));
+            for (int i = 0; i < 4; i++) {
+                this.evm.add(this._io.readU4le());
+            }
+        }
+        public static class ChannelFlags extends KaitaiStruct {
+            public static ChannelFlags fromFile(String fileName) throws IOException {
+                return new ChannelFlags(new KaitaiStream(fileName));
+            }
+
+            public ChannelFlags(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public ChannelFlags(KaitaiStream _io, PacketPpi.Radio80211nMacPhyExtBody _parent) {
+                this(_io, _parent, null);
+            }
+
+            public ChannelFlags(KaitaiStream _io, PacketPpi.Radio80211nMacPhyExtBody _parent, PacketPpi _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.spectrum2ghz = this._io.readBitsInt(1) != 0;
+                this.ofdm = this._io.readBitsInt(1) != 0;
+                this.cck = this._io.readBitsInt(1) != 0;
+                this.turbo = this._io.readBitsInt(1) != 0;
+                this.unused = this._io.readBitsInt(8);
+                this.gfsk = this._io.readBitsInt(1) != 0;
+                this.dynCckOfdm = this._io.readBitsInt(1) != 0;
+                this.onlyPassiveScan = this._io.readBitsInt(1) != 0;
+                this.spectrum5ghz = this._io.readBitsInt(1) != 0;
+            }
+            private boolean spectrum2ghz;
+            private boolean ofdm;
+            private boolean cck;
+            private boolean turbo;
+            private long unused;
+            private boolean gfsk;
+            private boolean dynCckOfdm;
+            private boolean onlyPassiveScan;
+            private boolean spectrum5ghz;
+            private PacketPpi _root;
+            private PacketPpi.Radio80211nMacPhyExtBody _parent;
+
+            /**
+             * 2 GHz spectrum
+             */
+            public boolean spectrum2ghz() { return spectrum2ghz; }
+
+            /**
+             * OFDM (Orthogonal Frequency-Division Multiplexing)
+             */
+            public boolean ofdm() { return ofdm; }
+
+            /**
+             * CCK (Complementary Code Keying)
+             */
+            public boolean cck() { return cck; }
+            public boolean turbo() { return turbo; }
+            public long unused() { return unused; }
+
+            /**
+             * Gaussian Frequency Shift Keying
+             */
+            public boolean gfsk() { return gfsk; }
+
+            /**
+             * Dynamic CCK-OFDM
+             */
+            public boolean dynCckOfdm() { return dynCckOfdm; }
+
+            /**
+             * Only passive scan allowed
+             */
+            public boolean onlyPassiveScan() { return onlyPassiveScan; }
+
+            /**
+             * 5 GHz spectrum
+             */
+            public boolean spectrum5ghz() { return spectrum5ghz; }
+            public PacketPpi _root() { return _root; }
+            public PacketPpi.Radio80211nMacPhyExtBody _parent() { return _parent; }
+        }
+
+        /**
+         * RF signal + noise pair at a single antenna
+         */
+        public static class SignalNoise extends KaitaiStruct {
+            public static SignalNoise fromFile(String fileName) throws IOException {
+                return new SignalNoise(new KaitaiStream(fileName));
+            }
+
+            public SignalNoise(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public SignalNoise(KaitaiStream _io, PacketPpi.Radio80211nMacPhyExtBody _parent) {
+                this(_io, _parent, null);
+            }
+
+            public SignalNoise(KaitaiStream _io, PacketPpi.Radio80211nMacPhyExtBody _parent, PacketPpi _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.signal = this._io.readS1();
+                this.noise = this._io.readS1();
+            }
+            private byte signal;
+            private byte noise;
+            private PacketPpi _root;
+            private PacketPpi.Radio80211nMacPhyExtBody _parent;
+
+            /**
+             * RF signal, dBm
+             */
+            public byte signal() { return signal; }
+
+            /**
+             * RF noise, dBm
+             */
+            public byte noise() { return noise; }
+            public PacketPpi _root() { return _root; }
+            public PacketPpi.Radio80211nMacPhyExtBody _parent() { return _parent; }
+        }
+        private MacFlags flags;
+        private long aMpduId;
+        private int numDelimiters;
+        private int mcs;
+        private int numStreams;
+        private int rssiCombined;
+        private ArrayList<Integer> rssiAntCtl;
+        private ArrayList<Integer> rssiAntExt;
+        private int extChannelFreq;
+        private ChannelFlags extChannelFlags;
+        private ArrayList<SignalNoise> rfSignalNoise;
+        private ArrayList<Long> evm;
+        private PacketPpi _root;
+        private PacketPpi.PacketPpiField _parent;
+        public MacFlags flags() { return flags; }
+        public long aMpduId() { return aMpduId; }
+        public int numDelimiters() { return numDelimiters; }
+
+        /**
+         * Modulation Coding Scheme (MCS)
+         */
+        public int mcs() { return mcs; }
+
+        /**
+         * Number of spatial streams (0 = unknown)
+         */
+        public int numStreams() { return numStreams; }
+
+        /**
+         * RSSI (Received Signal Strength Indication), combined from all active antennas / channels
+         */
+        public int rssiCombined() { return rssiCombined; }
+
+        /**
+         * RSSI (Received Signal Strength Indication) for antennas 0-3, control channel
+         */
+        public ArrayList<Integer> rssiAntCtl() { return rssiAntCtl; }
+
+        /**
+         * RSSI (Received Signal Strength Indication) for antennas 0-3, extension channel
+         */
+        public ArrayList<Integer> rssiAntExt() { return rssiAntExt; }
+
+        /**
+         * Extension channel frequency (MHz)
+         */
+        public int extChannelFreq() { return extChannelFreq; }
+
+        /**
+         * Extension channel flags
+         */
+        public ChannelFlags extChannelFlags() { return extChannelFlags; }
+
+        /**
+         * Signal + noise values for antennas 0-3
+         */
+        public ArrayList<SignalNoise> rfSignalNoise() { return rfSignalNoise; }
+
+        /**
+         * EVM (Error Vector Magnitude) for chains 0-3
+         */
+        public ArrayList<Long> evm() { return evm; }
         public PacketPpi _root() { return _root; }
         public PacketPpi.PacketPpiField _parent() { return _parent; }
     }

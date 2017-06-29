@@ -158,6 +158,92 @@ class PacketPpi < Kaitai::Struct::Struct
     end
     self
   end
+  class PacketPpiFields < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @entries = []
+      while not @_io.eof?
+        @entries << PacketPpiField.new(@_io, self, @_root)
+      end
+      self
+    end
+    attr_reader :entries
+  end
+
+  ##
+  # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.3
+  class Radio80211nMacExtBody < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @flags = MacFlags.new(@_io, self, @_root)
+      @a_mpdu_id = @_io.read_u4le
+      @num_delimiters = @_io.read_u1
+      @reserved = @_io.read_bytes(3)
+      self
+    end
+    attr_reader :flags
+    attr_reader :a_mpdu_id
+    attr_reader :num_delimiters
+    attr_reader :reserved
+  end
+  class MacFlags < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @unused1 = @_io.read_bits_int(1) != 0
+      @aggregate_delimiter = @_io.read_bits_int(1) != 0
+      @more_aggregates = @_io.read_bits_int(1) != 0
+      @aggregate = @_io.read_bits_int(1) != 0
+      @dup_rx = @_io.read_bits_int(1) != 0
+      @rx_short_guard = @_io.read_bits_int(1) != 0
+      @is_ht_40 = @_io.read_bits_int(1) != 0
+      @greenfield = @_io.read_bits_int(1) != 0
+      @_io.align_to_byte
+      @unused2 = @_io.read_bytes(3)
+      self
+    end
+    attr_reader :unused1
+
+    ##
+    # Aggregate delimiter CRC error after this frame
+    attr_reader :aggregate_delimiter
+
+    ##
+    # More aggregates
+    attr_reader :more_aggregates
+
+    ##
+    # Aggregate
+    attr_reader :aggregate
+
+    ##
+    # Duplicate RX
+    attr_reader :dup_rx
+
+    ##
+    # RX short guard interval (SGI)
+    attr_reader :rx_short_guard
+
+    ##
+    # true = HT40, false = HT20
+    attr_reader :is_ht_40
+
+    ##
+    # Greenfield
+    attr_reader :greenfield
+    attr_reader :unused2
+  end
 
   ##
   # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
@@ -178,48 +264,6 @@ class PacketPpi < Kaitai::Struct::Struct
     attr_reader :pph_flags
     attr_reader :pph_len
     attr_reader :pph_dlt
-  end
-  class PacketPpiFields < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @entries = []
-      while not @_io.eof?
-        @entries << PacketPpiField.new(@_io, self, @_root)
-      end
-      self
-    end
-    attr_reader :entries
-  end
-
-  ##
-  # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
-  class PacketPpiField < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @pfh_type = Kaitai::Struct::Stream::resolve_enum(PFH_TYPE, @_io.read_u2le)
-      @pfh_datalen = @_io.read_u2le
-      case pfh_type
-      when :pfh_type_radio_802_11_common
-        @_raw_body = @_io.read_bytes(pfh_datalen)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Radio80211CommonBody.new(io, self, @_root)
-      else
-        @body = @_io.read_bytes(pfh_datalen)
-      end
-      self
-    end
-    attr_reader :pfh_type
-    attr_reader :pfh_datalen
-    attr_reader :body
-    attr_reader :_raw_body
   end
 
   ##
@@ -251,6 +295,189 @@ class PacketPpi < Kaitai::Struct::Struct
     attr_reader :fhss_pattern
     attr_reader :dbm_antsignal
     attr_reader :dbm_antnoise
+  end
+
+  ##
+  # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
+  class PacketPpiField < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @pfh_type = Kaitai::Struct::Stream::resolve_enum(PFH_TYPE, @_io.read_u2le)
+      @pfh_datalen = @_io.read_u2le
+      case pfh_type
+      when :pfh_type_radio_802_11_common
+        @_raw_body = @_io.read_bytes(pfh_datalen)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Radio80211CommonBody.new(io, self, @_root)
+      when :pfh_type_radio_802_11n_mac_ext
+        @_raw_body = @_io.read_bytes(pfh_datalen)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Radio80211nMacExtBody.new(io, self, @_root)
+      when :pfh_type_radio_802_11n_mac_phy_ext
+        @_raw_body = @_io.read_bytes(pfh_datalen)
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Radio80211nMacPhyExtBody.new(io, self, @_root)
+      else
+        @body = @_io.read_bytes(pfh_datalen)
+      end
+      self
+    end
+    attr_reader :pfh_type
+    attr_reader :pfh_datalen
+    attr_reader :body
+    attr_reader :_raw_body
+  end
+
+  ##
+  # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.4
+  class Radio80211nMacPhyExtBody < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @flags = MacFlags.new(@_io, self, @_root)
+      @a_mpdu_id = @_io.read_u4le
+      @num_delimiters = @_io.read_u1
+      @mcs = @_io.read_u1
+      @num_streams = @_io.read_u1
+      @rssi_combined = @_io.read_u1
+      @rssi_ant_ctl = Array.new(4)
+      (4).times { |i|
+        @rssi_ant_ctl[i] = @_io.read_u1
+      }
+      @rssi_ant_ext = Array.new(4)
+      (4).times { |i|
+        @rssi_ant_ext[i] = @_io.read_u1
+      }
+      @ext_channel_freq = @_io.read_u2le
+      @ext_channel_flags = ChannelFlags.new(@_io, self, @_root)
+      @rf_signal_noise = Array.new(4)
+      (4).times { |i|
+        @rf_signal_noise[i] = SignalNoise.new(@_io, self, @_root)
+      }
+      @evm = Array.new(4)
+      (4).times { |i|
+        @evm[i] = @_io.read_u4le
+      }
+      self
+    end
+    class ChannelFlags < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @spectrum_2ghz = @_io.read_bits_int(1) != 0
+        @ofdm = @_io.read_bits_int(1) != 0
+        @cck = @_io.read_bits_int(1) != 0
+        @turbo = @_io.read_bits_int(1) != 0
+        @unused = @_io.read_bits_int(8)
+        @gfsk = @_io.read_bits_int(1) != 0
+        @dyn_cck_ofdm = @_io.read_bits_int(1) != 0
+        @only_passive_scan = @_io.read_bits_int(1) != 0
+        @spectrum_5ghz = @_io.read_bits_int(1) != 0
+        self
+      end
+
+      ##
+      # 2 GHz spectrum
+      attr_reader :spectrum_2ghz
+
+      ##
+      # OFDM (Orthogonal Frequency-Division Multiplexing)
+      attr_reader :ofdm
+
+      ##
+      # CCK (Complementary Code Keying)
+      attr_reader :cck
+      attr_reader :turbo
+      attr_reader :unused
+
+      ##
+      # Gaussian Frequency Shift Keying
+      attr_reader :gfsk
+
+      ##
+      # Dynamic CCK-OFDM
+      attr_reader :dyn_cck_ofdm
+
+      ##
+      # Only passive scan allowed
+      attr_reader :only_passive_scan
+
+      ##
+      # 5 GHz spectrum
+      attr_reader :spectrum_5ghz
+    end
+
+    ##
+    # RF signal + noise pair at a single antenna
+    class SignalNoise < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @signal = @_io.read_s1
+        @noise = @_io.read_s1
+        self
+      end
+
+      ##
+      # RF signal, dBm
+      attr_reader :signal
+
+      ##
+      # RF noise, dBm
+      attr_reader :noise
+    end
+    attr_reader :flags
+    attr_reader :a_mpdu_id
+    attr_reader :num_delimiters
+
+    ##
+    # Modulation Coding Scheme (MCS)
+    attr_reader :mcs
+
+    ##
+    # Number of spatial streams (0 = unknown)
+    attr_reader :num_streams
+
+    ##
+    # RSSI (Received Signal Strength Indication), combined from all active antennas / channels
+    attr_reader :rssi_combined
+
+    ##
+    # RSSI (Received Signal Strength Indication) for antennas 0-3, control channel
+    attr_reader :rssi_ant_ctl
+
+    ##
+    # RSSI (Received Signal Strength Indication) for antennas 0-3, extension channel
+    attr_reader :rssi_ant_ext
+
+    ##
+    # Extension channel frequency (MHz)
+    attr_reader :ext_channel_freq
+
+    ##
+    # Extension channel flags
+    attr_reader :ext_channel_flags
+
+    ##
+    # Signal + noise values for antennas 0-3
+    attr_reader :rf_signal_noise
+
+    ##
+    # EVM (Error Vector Magnitude) for chains 0-3
+    attr_reader :evm
   end
   attr_reader :header
   attr_reader :fields

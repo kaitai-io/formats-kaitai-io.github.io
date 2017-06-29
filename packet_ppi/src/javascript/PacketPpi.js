@@ -271,6 +271,98 @@ var PacketPpi = (function() {
     }
   }
 
+  var PacketPpiFields = PacketPpi.PacketPpiFields = (function() {
+    function PacketPpiFields(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    PacketPpiFields.prototype._read = function() {
+      this.entries = [];
+      while (!this._io.isEof()) {
+        this.entries.push(new PacketPpiField(this._io, this, this._root));
+      }
+    }
+
+    return PacketPpiFields;
+  })();
+
+  /**
+   * @see {@link https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.3}
+   */
+
+  var Radio80211nMacExtBody = PacketPpi.Radio80211nMacExtBody = (function() {
+    function Radio80211nMacExtBody(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Radio80211nMacExtBody.prototype._read = function() {
+      this.flags = new MacFlags(this._io, this, this._root);
+      this.aMpduId = this._io.readU4le();
+      this.numDelimiters = this._io.readU1();
+      this.reserved = this._io.readBytes(3);
+    }
+
+    return Radio80211nMacExtBody;
+  })();
+
+  var MacFlags = PacketPpi.MacFlags = (function() {
+    function MacFlags(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    MacFlags.prototype._read = function() {
+      this.unused1 = this._io.readBitsInt(1) != 0;
+      this.aggregateDelimiter = this._io.readBitsInt(1) != 0;
+      this.moreAggregates = this._io.readBitsInt(1) != 0;
+      this.aggregate = this._io.readBitsInt(1) != 0;
+      this.dupRx = this._io.readBitsInt(1) != 0;
+      this.rxShortGuard = this._io.readBitsInt(1) != 0;
+      this.isHt40 = this._io.readBitsInt(1) != 0;
+      this.greenfield = this._io.readBitsInt(1) != 0;
+      this._io.alignToByte();
+      this.unused2 = this._io.readBytes(3);
+    }
+
+    /**
+     * Aggregate delimiter CRC error after this frame
+     */
+
+    /**
+     * More aggregates
+     */
+
+    /**
+     * Aggregate
+     */
+
+    /**
+     * Duplicate RX
+     */
+
+    /**
+     * RX short guard interval (SGI)
+     */
+
+    /**
+     * true = HT40, false = HT20
+     */
+
+    /**
+     * Greenfield
+     */
+
+    return MacFlags;
+  })();
+
   /**
    * @see {@link https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 3.1}
    */
@@ -291,54 +383,6 @@ var PacketPpi = (function() {
     }
 
     return PacketPpiHeader;
-  })();
-
-  var PacketPpiFields = PacketPpi.PacketPpiFields = (function() {
-    function PacketPpiFields(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PacketPpiFields.prototype._read = function() {
-      this.entries = [];
-      while (!this._io.isEof()) {
-        this.entries.push(new PacketPpiField(this._io, this, this._root));
-      }
-    }
-
-    return PacketPpiFields;
-  })();
-
-  /**
-   * @see {@link https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 3.1}
-   */
-
-  var PacketPpiField = PacketPpi.PacketPpiField = (function() {
-    function PacketPpiField(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PacketPpiField.prototype._read = function() {
-      this.pfhType = this._io.readU2le();
-      this.pfhDatalen = this._io.readU2le();
-      switch (this.pfhType) {
-      case PacketPpi.PfhType.RADIO_802_11_COMMON:
-        this._raw_body = this._io.readBytes(this.pfhDatalen);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new Radio80211CommonBody(_io__raw_body, this, this._root);
-        break;
-      default:
-        this.body = this._io.readBytes(this.pfhDatalen);
-        break;
-      }
-    }
-
-    return PacketPpiField;
   })();
 
   /**
@@ -366,6 +410,203 @@ var PacketPpi = (function() {
     }
 
     return Radio80211CommonBody;
+  })();
+
+  /**
+   * @see {@link https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 3.1}
+   */
+
+  var PacketPpiField = PacketPpi.PacketPpiField = (function() {
+    function PacketPpiField(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    PacketPpiField.prototype._read = function() {
+      this.pfhType = this._io.readU2le();
+      this.pfhDatalen = this._io.readU2le();
+      switch (this.pfhType) {
+      case PacketPpi.PfhType.RADIO_802_11_COMMON:
+        this._raw_body = this._io.readBytes(this.pfhDatalen);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new Radio80211CommonBody(_io__raw_body, this, this._root);
+        break;
+      case PacketPpi.PfhType.RADIO_802_11N_MAC_EXT:
+        this._raw_body = this._io.readBytes(this.pfhDatalen);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new Radio80211nMacExtBody(_io__raw_body, this, this._root);
+        break;
+      case PacketPpi.PfhType.RADIO_802_11N_MAC_PHY_EXT:
+        this._raw_body = this._io.readBytes(this.pfhDatalen);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new Radio80211nMacPhyExtBody(_io__raw_body, this, this._root);
+        break;
+      default:
+        this.body = this._io.readBytes(this.pfhDatalen);
+        break;
+      }
+    }
+
+    return PacketPpiField;
+  })();
+
+  /**
+   * @see {@link https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.4}
+   */
+
+  var Radio80211nMacPhyExtBody = PacketPpi.Radio80211nMacPhyExtBody = (function() {
+    function Radio80211nMacPhyExtBody(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Radio80211nMacPhyExtBody.prototype._read = function() {
+      this.flags = new MacFlags(this._io, this, this._root);
+      this.aMpduId = this._io.readU4le();
+      this.numDelimiters = this._io.readU1();
+      this.mcs = this._io.readU1();
+      this.numStreams = this._io.readU1();
+      this.rssiCombined = this._io.readU1();
+      this.rssiAntCtl = new Array(4);
+      for (var i = 0; i < 4; i++) {
+        this.rssiAntCtl[i] = this._io.readU1();
+      }
+      this.rssiAntExt = new Array(4);
+      for (var i = 0; i < 4; i++) {
+        this.rssiAntExt[i] = this._io.readU1();
+      }
+      this.extChannelFreq = this._io.readU2le();
+      this.extChannelFlags = new ChannelFlags(this._io, this, this._root);
+      this.rfSignalNoise = new Array(4);
+      for (var i = 0; i < 4; i++) {
+        this.rfSignalNoise[i] = new SignalNoise(this._io, this, this._root);
+      }
+      this.evm = new Array(4);
+      for (var i = 0; i < 4; i++) {
+        this.evm[i] = this._io.readU4le();
+      }
+    }
+
+    var ChannelFlags = Radio80211nMacPhyExtBody.ChannelFlags = (function() {
+      function ChannelFlags(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      ChannelFlags.prototype._read = function() {
+        this.spectrum2ghz = this._io.readBitsInt(1) != 0;
+        this.ofdm = this._io.readBitsInt(1) != 0;
+        this.cck = this._io.readBitsInt(1) != 0;
+        this.turbo = this._io.readBitsInt(1) != 0;
+        this.unused = this._io.readBitsInt(8);
+        this.gfsk = this._io.readBitsInt(1) != 0;
+        this.dynCckOfdm = this._io.readBitsInt(1) != 0;
+        this.onlyPassiveScan = this._io.readBitsInt(1) != 0;
+        this.spectrum5ghz = this._io.readBitsInt(1) != 0;
+      }
+
+      /**
+       * 2 GHz spectrum
+       */
+
+      /**
+       * OFDM (Orthogonal Frequency-Division Multiplexing)
+       */
+
+      /**
+       * CCK (Complementary Code Keying)
+       */
+
+      /**
+       * Gaussian Frequency Shift Keying
+       */
+
+      /**
+       * Dynamic CCK-OFDM
+       */
+
+      /**
+       * Only passive scan allowed
+       */
+
+      /**
+       * 5 GHz spectrum
+       */
+
+      return ChannelFlags;
+    })();
+
+    /**
+     * RF signal + noise pair at a single antenna
+     */
+
+    var SignalNoise = Radio80211nMacPhyExtBody.SignalNoise = (function() {
+      function SignalNoise(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      SignalNoise.prototype._read = function() {
+        this.signal = this._io.readS1();
+        this.noise = this._io.readS1();
+      }
+
+      /**
+       * RF signal, dBm
+       */
+
+      /**
+       * RF noise, dBm
+       */
+
+      return SignalNoise;
+    })();
+
+    /**
+     * Modulation Coding Scheme (MCS)
+     */
+
+    /**
+     * Number of spatial streams (0 = unknown)
+     */
+
+    /**
+     * RSSI (Received Signal Strength Indication), combined from all active antennas / channels
+     */
+
+    /**
+     * RSSI (Received Signal Strength Indication) for antennas 0-3, control channel
+     */
+
+    /**
+     * RSSI (Received Signal Strength Indication) for antennas 0-3, extension channel
+     */
+
+    /**
+     * Extension channel frequency (MHz)
+     */
+
+    /**
+     * Extension channel flags
+     */
+
+    /**
+     * Signal + noise values for antennas 0-3
+     */
+
+    /**
+     * EVM (Error Vector Magnitude) for chains 0-3
+     */
+
+    return Radio80211nMacPhyExtBody;
   })();
 
   return PacketPpi;
