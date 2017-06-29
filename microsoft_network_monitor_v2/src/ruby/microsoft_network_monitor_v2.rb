@@ -129,6 +129,7 @@ class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @signature = @_io.ensure_fixed_contents([71, 77, 66, 85].pack('C*'))
     @version_minor = @_io.read_u1
@@ -147,17 +148,20 @@ class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
     @network_info_len = @_io.read_u4le
     @conversation_stats_ofs = @_io.read_u4le
     @conversation_stats_len = @_io.read_u4le
+    self
   end
   class FrameIndex < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       while not @_io.eof?
         @entries << FrameIndexEntry.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :entries
   end
@@ -170,8 +174,10 @@ class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @ofs = @_io.read_u4le
+      self
     end
 
     ##
@@ -200,6 +206,7 @@ class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @ts_delta = @_io.read_u8le
       @orig_len = @_io.read_u4le
@@ -212,6 +219,7 @@ class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
       else
         @body = @_io.read_bytes(inc_len)
       end
+      self
     end
 
     ##

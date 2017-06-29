@@ -187,26 +187,17 @@ public class Elf extends KaitaiStruct {
     }
 
     public Elf(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Elf(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Elf(KaitaiStream _io, KaitaiStruct _parent, Elf _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -226,24 +217,20 @@ public class Elf extends KaitaiStruct {
         private Boolean _is_le;
 
         public EndianElf(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public EndianElf(KaitaiStream _io, Elf _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public EndianElf(KaitaiStream _io, Elf _parent, Elf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
+            _read();
         }
-
-        private void _init() {
+        private void _read() {
             switch (_root.endian()) {
             case LE: {
                 boolean _tmp = (boolean) (true);
@@ -350,38 +337,16 @@ public class Elf extends KaitaiStruct {
             this.sectionNamesIdx = this._io.readU2be();
         }
         public static class ProgramHeader extends KaitaiStruct {
-            public static ProgramHeader fromFile(String fileName) throws IOException {
-                return new ProgramHeader(new KaitaiStream(fileName));
-            }
             private Boolean _is_le;
-
-            public ProgramHeader(KaitaiStream _io) {
-                super(_io);
-                _init();
-            }
-
-            public ProgramHeader(KaitaiStream _io, Elf.EndianElf _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
-            }
-
-            public ProgramHeader(KaitaiStream _io, Elf.EndianElf _parent, Elf _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _init();
-            }
 
             public ProgramHeader(KaitaiStream _io, Elf.EndianElf _parent, Elf _root, boolean _is_le) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
                 this._is_le = _is_le;
-                _init();
+                _read();
             }
-
-            private void _init() {
+            private void _read() {
 
                 if (_is_le == null) {
                     throw new KaitaiStream.UndecidedEndiannessError();
@@ -553,38 +518,16 @@ public class Elf extends KaitaiStruct {
             public Elf.EndianElf _parent() { return _parent; }
         }
         public static class SectionHeader extends KaitaiStruct {
-            public static SectionHeader fromFile(String fileName) throws IOException {
-                return new SectionHeader(new KaitaiStream(fileName));
-            }
             private Boolean _is_le;
-
-            public SectionHeader(KaitaiStream _io) {
-                super(_io);
-                _init();
-            }
-
-            public SectionHeader(KaitaiStream _io, Elf.EndianElf _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
-            }
-
-            public SectionHeader(KaitaiStream _io, Elf.EndianElf _parent, Elf _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _init();
-            }
 
             public SectionHeader(KaitaiStream _io, Elf.EndianElf _parent, Elf _root, boolean _is_le) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
                 this._is_le = _is_le;
-                _init();
+                _read();
             }
-
-            private void _init() {
+            private void _read() {
 
                 if (_is_le == null) {
                     throw new KaitaiStream.UndecidedEndiannessError();
@@ -782,38 +725,16 @@ public class Elf extends KaitaiStruct {
             public Elf.EndianElf _parent() { return _parent; }
         }
         public static class StringsStruct extends KaitaiStruct {
-            public static StringsStruct fromFile(String fileName) throws IOException {
-                return new StringsStruct(new KaitaiStream(fileName));
-            }
             private Boolean _is_le;
-
-            public StringsStruct(KaitaiStream _io) {
-                super(_io);
-                _init();
-            }
-
-            public StringsStruct(KaitaiStream _io, Elf.EndianElf _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
-            }
-
-            public StringsStruct(KaitaiStream _io, Elf.EndianElf _parent, Elf _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _init();
-            }
 
             public StringsStruct(KaitaiStream _io, Elf.EndianElf _parent, Elf _root, boolean _is_le) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
                 this._is_le = _is_le;
-                _init();
+                _read();
             }
-
-            private void _init() {
+            private void _read() {
 
                 if (_is_le == null) {
                     throw new KaitaiStream.UndecidedEndiannessError();

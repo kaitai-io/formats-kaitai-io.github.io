@@ -14,26 +14,17 @@ public class Ext2 extends KaitaiStruct {
     }
 
     public Ext2(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Ext2(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Ext2(KaitaiStream _io, KaitaiStruct _parent, Ext2 _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -75,24 +66,17 @@ public class Ext2 extends KaitaiStruct {
         }
 
         public SuperBlockStruct(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SuperBlockStruct(KaitaiStream _io, Ext2.BlockGroup _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SuperBlockStruct(KaitaiStream _io, Ext2.BlockGroup _parent, Ext2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -280,24 +264,17 @@ public class Ext2 extends KaitaiStruct {
         }
 
         public DirEntry(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DirEntry(KaitaiStream _io, Ext2.Dir _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DirEntry(KaitaiStream _io, Ext2.Dir _parent, Ext2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -338,24 +315,17 @@ public class Ext2 extends KaitaiStruct {
         }
 
         public Inode(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Inode(KaitaiStream _io, Ext2.Bgd _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Inode(KaitaiStream _io, Ext2.Bgd _parent, Ext2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -439,24 +409,17 @@ public class Ext2 extends KaitaiStruct {
         }
 
         public BlockPtr(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BlockPtr(KaitaiStream _io, Ext2.Inode _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BlockPtr(KaitaiStream _io, Ext2.Inode _parent, Ext2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -489,24 +452,17 @@ public class Ext2 extends KaitaiStruct {
         }
 
         public Dir(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Dir(KaitaiStream _io, Ext2.Inode _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Dir(KaitaiStream _io, Ext2.Inode _parent, Ext2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -528,24 +484,17 @@ public class Ext2 extends KaitaiStruct {
         }
 
         public BlockGroup(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BlockGroup(KaitaiStream _io, Ext2 _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BlockGroup(KaitaiStream _io, Ext2 _parent, Ext2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -574,24 +523,17 @@ public class Ext2 extends KaitaiStruct {
         }
 
         public Bgd(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Bgd(KaitaiStream _io, Ext2.BlockGroup _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Bgd(KaitaiStream _io, Ext2.BlockGroup _parent, Ext2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -661,24 +603,17 @@ public class Ext2 extends KaitaiStruct {
         }
 
         public RawBlock(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public RawBlock(KaitaiStream _io, Ext2.BlockPtr _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public RawBlock(KaitaiStream _io, Ext2.BlockPtr _parent, Ext2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

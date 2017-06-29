@@ -172,17 +172,20 @@ class Code6502 < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @operations = []
     while not @_io.eof?
       @operations << Operation.new(@_io, self, @_root)
     end
+    self
   end
   class Operation < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @code = Kaitai::Struct::Stream::resolve_enum(OPCODE, @_io.read_u1)
       case code
@@ -431,6 +434,7 @@ class Code6502 < Kaitai::Struct::Struct
       when :opcode_cpx_zpg
         @args = @_io.read_u1
       end
+      self
     end
     attr_reader :code
     attr_reader :args

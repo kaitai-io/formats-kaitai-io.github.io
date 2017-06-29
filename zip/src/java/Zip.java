@@ -79,26 +79,17 @@ public class Zip extends KaitaiStruct {
     }
 
     public Zip(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Zip(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Zip(KaitaiStream _io, KaitaiStruct _parent, Zip _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -113,24 +104,17 @@ public class Zip extends KaitaiStruct {
         }
 
         public LocalFile(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public LocalFile(KaitaiStream _io, Zip.PkSection _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public LocalFile(KaitaiStream _io, Zip.PkSection _parent, Zip _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -152,24 +136,17 @@ public class Zip extends KaitaiStruct {
         }
 
         public ExtraField(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ExtraField(KaitaiStream _io, Zip.Extras _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ExtraField(KaitaiStream _io, Zip.Extras _parent, Zip _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -210,24 +187,17 @@ public class Zip extends KaitaiStruct {
             }
 
             public Ntfs(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Ntfs(KaitaiStream _io, Zip.ExtraField _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Ntfs(KaitaiStream _io, Zip.ExtraField _parent, Zip _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -243,24 +213,17 @@ public class Zip extends KaitaiStruct {
                 }
 
                 public Attribute(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public Attribute(KaitaiStream _io, Zip.ExtraField.Ntfs _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public Attribute(KaitaiStream _io, Zip.ExtraField.Ntfs _parent, Zip _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -298,24 +261,17 @@ public class Zip extends KaitaiStruct {
                 }
 
                 public Attribute1(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public Attribute1(KaitaiStream _io, Zip.ExtraField.Ntfs.Attribute _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public Attribute1(KaitaiStream _io, Zip.ExtraField.Ntfs.Attribute _parent, Zip _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -353,24 +309,17 @@ public class Zip extends KaitaiStruct {
             }
 
             public ExtendedTimestamp(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public ExtendedTimestamp(KaitaiStream _io, Zip.ExtraField _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public ExtendedTimestamp(KaitaiStream _io, Zip.ExtraField _parent, Zip _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -406,24 +355,17 @@ public class Zip extends KaitaiStruct {
             }
 
             public InfozipUnixVarSize(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public InfozipUnixVarSize(KaitaiStream _io, Zip.ExtraField _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public InfozipUnixVarSize(KaitaiStream _io, Zip.ExtraField _parent, Zip _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -491,24 +433,17 @@ public class Zip extends KaitaiStruct {
         }
 
         public CentralDirEntry(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public CentralDirEntry(KaitaiStream _io, Zip.PkSection _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public CentralDirEntry(KaitaiStream _io, Zip.PkSection _parent, Zip _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -595,24 +530,17 @@ public class Zip extends KaitaiStruct {
         }
 
         public PkSection(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PkSection(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PkSection(KaitaiStream _io, KaitaiStruct _parent, Zip _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -650,24 +578,17 @@ public class Zip extends KaitaiStruct {
         }
 
         public Extras(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Extras(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Extras(KaitaiStream _io, KaitaiStruct _parent, Zip _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -689,24 +610,17 @@ public class Zip extends KaitaiStruct {
         }
 
         public LocalFileHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public LocalFileHeader(KaitaiStream _io, Zip.LocalFile _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public LocalFileHeader(KaitaiStream _io, Zip.LocalFile _parent, Zip _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -762,24 +676,17 @@ public class Zip extends KaitaiStruct {
         }
 
         public EndOfCentralDir(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public EndOfCentralDir(KaitaiStream _io, Zip.PkSection _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public EndOfCentralDir(KaitaiStream _io, Zip.PkSection _parent, Zip _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

@@ -11,6 +11,7 @@ class MbrPartitionTable < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @bootstrap_code = @_io.read_bytes(446)
     @partitions = Array.new(4)
@@ -18,12 +19,14 @@ class MbrPartitionTable < Kaitai::Struct::Struct
       @partitions[i] = PartitionEntry.new(@_io, self, @_root)
     }
     @boot_signature = @_io.ensure_fixed_contents([85, 170].pack('C*'))
+    self
   end
   class PartitionEntry < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @status = @_io.read_u1
       @chs_start = Chs.new(@_io, self, @_root)
@@ -31,6 +34,7 @@ class MbrPartitionTable < Kaitai::Struct::Struct
       @chs_end = Chs.new(@_io, self, @_root)
       @lba_start = @_io.read_u4le
       @num_sectors = @_io.read_u4le
+      self
     end
     attr_reader :status
     attr_reader :chs_start
@@ -44,10 +48,12 @@ class MbrPartitionTable < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @head = @_io.read_u1
       @b2 = @_io.read_u1
       @b3 = @_io.read_u1
+      self
     end
     def sector
       return @sector unless @sector.nil?

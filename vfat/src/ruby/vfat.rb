@@ -11,8 +11,10 @@ class Vfat < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @boot_sector = BootSector.new(@_io, self, @_root)
+    self
   end
 
   ##
@@ -22,6 +24,7 @@ class Vfat < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @ls_per_fat = @_io.read_u4le
       @has_active_fat = @_io.read_bits_int(1) != 0
@@ -40,6 +43,7 @@ class Vfat < Kaitai::Struct::Struct
       @volume_id = @_io.read_bytes(4)
       @partition_volume_label = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(11), 32)).force_encoding("ASCII")
       @fs_type_str = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 32)).force_encoding("ASCII")
+      self
     end
 
     ##
@@ -113,6 +117,7 @@ class Vfat < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @jmp_instruction = @_io.read_bytes(3)
       @oem_name = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 32)).force_encoding("ASCII")
@@ -123,6 +128,7 @@ class Vfat < Kaitai::Struct::Struct
       if is_fat32
         @ebpb_fat32 = ExtBiosParamBlockFat32.new(@_io, self, @_root)
       end
+      self
     end
 
     ##
@@ -201,6 +207,7 @@ class Vfat < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @bytes_per_ls = @_io.read_u2le
       @ls_per_clus = @_io.read_u1
@@ -214,6 +221,7 @@ class Vfat < Kaitai::Struct::Struct
       @num_heads = @_io.read_u2le
       @num_hidden_sectors = @_io.read_u4le
       @total_ls_4 = @_io.read_u4le
+      self
     end
 
     ##
@@ -285,6 +293,7 @@ class Vfat < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @file_name = @_io.read_bytes(11)
       @attribute = @_io.read_u1
@@ -293,6 +302,7 @@ class Vfat < Kaitai::Struct::Struct
       @date = @_io.read_u2le
       @start_clus = @_io.read_u2le
       @file_size = @_io.read_u4le
+      self
     end
     attr_reader :file_name
     attr_reader :attribute
@@ -307,11 +317,13 @@ class Vfat < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @records = Array.new(_root.boot_sector.bpb.max_root_dir_rec)
       (_root.boot_sector.bpb.max_root_dir_rec).times { |i|
         @records[i] = RootDirectoryRec.new(@_io, self, @_root)
       }
+      self
     end
     attr_reader :records
   end
@@ -324,6 +336,7 @@ class Vfat < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @phys_drive_num = @_io.read_u1
       @reserved1 = @_io.read_u1
@@ -331,6 +344,7 @@ class Vfat < Kaitai::Struct::Struct
       @volume_id = @_io.read_bytes(4)
       @partition_volume_label = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(11), 32)).force_encoding("ASCII")
       @fs_type_str = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 32)).force_encoding("ASCII")
+      self
     end
 
     ##

@@ -85,6 +85,7 @@ class Wmf < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @special_hdr = SpecialHeader.new(@_io, self, @_root)
     @header = WmfHeader.new(@_io, self, @_root)
@@ -93,12 +94,14 @@ class Wmf < Kaitai::Struct::Struct
       _ = Record.new(@_io, self, @_root)
       @records << _
     end until _.function == :func_eof
+    self
   end
   class SpecialHeader < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = @_io.ensure_fixed_contents([215, 205, 198, 154].pack('C*'))
       @handle = @_io.ensure_fixed_contents([0, 0].pack('C*'))
@@ -109,6 +112,7 @@ class Wmf < Kaitai::Struct::Struct
       @inch = @_io.read_u2le
       @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
       @checksum = @_io.read_u2le
+      self
     end
     attr_reader :magic
     attr_reader :handle
@@ -131,6 +135,7 @@ class Wmf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @type = Kaitai::Struct::Stream::resolve_enum(METAFILE_TYPE, @_io.read_u2le)
       @header_size = @_io.read_u2le
@@ -139,6 +144,7 @@ class Wmf < Kaitai::Struct::Struct
       @number_of_objects = @_io.read_u2le
       @max_record = @_io.read_u4le
       @number_of_members = @_io.read_u2le
+      self
     end
     attr_reader :type
     attr_reader :header_size
@@ -153,10 +159,12 @@ class Wmf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @size = @_io.read_u4le
       @function = Kaitai::Struct::Stream::resolve_enum(FUNC, @_io.read_u2le)
       @params = @_io.read_bytes(((size - 3) * 2))
+      self
     end
     attr_reader :size
     attr_reader :function

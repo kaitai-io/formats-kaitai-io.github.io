@@ -10,26 +10,17 @@ public class Ipv6Packet extends KaitaiStruct {
     }
 
     public Ipv6Packet(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Ipv6Packet(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Ipv6Packet(KaitaiStream _io, KaitaiStruct _parent, Ipv6Packet _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -72,24 +63,17 @@ public class Ipv6Packet extends KaitaiStruct {
         }
 
         public NoNextHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public NoNextHeader(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public NoNextHeader(KaitaiStream _io, KaitaiStruct _parent, Ipv6Packet _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -105,24 +89,17 @@ public class Ipv6Packet extends KaitaiStruct {
         }
 
         public OptionHopByHop(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public OptionHopByHop(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public OptionHopByHop(KaitaiStream _io, KaitaiStruct _parent, Ipv6Packet _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

@@ -44,26 +44,17 @@ public class BlenderBlend extends KaitaiStruct {
     }
 
     public BlenderBlend(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public BlenderBlend(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public BlenderBlend(KaitaiStream _io, KaitaiStruct _parent, BlenderBlend _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -79,24 +70,17 @@ public class BlenderBlend extends KaitaiStruct {
         }
 
         public Header(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Header(KaitaiStream _io, BlenderBlend _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Header(KaitaiStream _io, BlenderBlend _parent, BlenderBlend _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -148,24 +132,17 @@ public class BlenderBlend extends KaitaiStruct {
         }
 
         public FileBlock(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public FileBlock(KaitaiStream _io, BlenderBlend _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public FileBlock(KaitaiStream _io, BlenderBlend _parent, BlenderBlend _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

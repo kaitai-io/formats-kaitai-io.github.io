@@ -46,26 +46,17 @@ public class Asn1Der extends KaitaiStruct {
     }
 
     public Asn1Der(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Asn1Der(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Asn1Der(KaitaiStream _io, KaitaiStruct _parent, Asn1Der _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -114,24 +105,17 @@ public class Asn1Der extends KaitaiStruct {
         }
 
         public LenEncoded(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public LenEncoded(KaitaiStream _io, Asn1Der _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public LenEncoded(KaitaiStream _io, Asn1Der _parent, Asn1Der _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -163,24 +147,17 @@ public class Asn1Der extends KaitaiStruct {
         }
 
         public BodySequence(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BodySequence(KaitaiStream _io, Asn1Der _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BodySequence(KaitaiStream _io, Asn1Der _parent, Asn1Der _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -202,24 +179,17 @@ public class Asn1Der extends KaitaiStruct {
         }
 
         public BodyUtf8string(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BodyUtf8string(KaitaiStream _io, Asn1Der _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BodyUtf8string(KaitaiStream _io, Asn1Der _parent, Asn1Der _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -238,24 +208,17 @@ public class Asn1Der extends KaitaiStruct {
         }
 
         public BodyPrintableString(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BodyPrintableString(KaitaiStream _io, Asn1Der _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BodyPrintableString(KaitaiStream _io, Asn1Der _parent, Asn1Der _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

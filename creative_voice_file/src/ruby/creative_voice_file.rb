@@ -50,6 +50,7 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @magic = @_io.ensure_fixed_contents([67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26].pack('C*'))
     @header_size = @_io.read_u2le
@@ -59,6 +60,7 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
     while not @_io.eof?
       @blocks << Block.new(@_io, self, @_root)
     end
+    self
   end
 
   ##
@@ -68,8 +70,10 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @marker_id = @_io.read_u2le
+      self
     end
 
     ##
@@ -84,9 +88,11 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @duration_samples = @_io.read_u2le
       @freq_div = @_io.read_u1
+      self
     end
     def sample_rate
       return @sample_rate unless @sample_rate.nil?
@@ -118,6 +124,7 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @sample_rate = @_io.read_u4le
       @bits_per_sample = @_io.read_u1
@@ -125,6 +132,7 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
       @codec = Kaitai::Struct::Stream::resolve_enum(CODECS, @_io.read_u2le)
       @reserved = @_io.read_bytes(4)
       @wave = @_io.read_bytes_full
+      self
     end
     attr_reader :sample_rate
     attr_reader :bits_per_sample
@@ -138,6 +146,7 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @block_type = Kaitai::Struct::Stream::resolve_enum(BLOCK_TYPES, @_io.read_u1)
       if block_type != :block_types_terminator
@@ -176,6 +185,7 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
           @body = @_io.read_bytes(body_size)
         end
       end
+      self
     end
 
     ##
@@ -209,8 +219,10 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @repeat_count_1 = @_io.read_u2le
+      self
     end
 
     ##
@@ -225,10 +237,12 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @freq_div = @_io.read_u1
       @codec = Kaitai::Struct::Stream::resolve_enum(CODECS, @_io.read_u1)
       @wave = @_io.read_bytes_full
+      self
     end
     def sample_rate
       return @sample_rate unless @sample_rate.nil?
@@ -250,10 +264,12 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @freq_div = @_io.read_u2le
       @codec = Kaitai::Struct::Stream::resolve_enum(CODECS, @_io.read_u1)
       @num_channels_1 = @_io.read_u1
+      self
     end
 
     ##

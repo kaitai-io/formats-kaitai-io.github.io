@@ -1,9 +1,6 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-/**
- */
-
 class RenderwareBinaryStream extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \RenderwareBinaryStream $root = null) {
         parent::__construct($io, $parent, $root);
@@ -62,9 +59,6 @@ class RenderwareBinaryStream extends \Kaitai\Struct\Struct {
     public function _raw_body() { return $this->_m__raw_body; }
 }
 
-/**
- */
-
 namespace \RenderwareBinaryStream;
 
 class StructClump extends \Kaitai\Struct\Struct {
@@ -89,9 +83,6 @@ class StructClump extends \Kaitai\Struct\Struct {
     public function numLights() { return $this->_m_numLights; }
     public function numCameras() { return $this->_m_numCameras; }
 }
-
-/**
- */
 
 namespace \RenderwareBinaryStream;
 
@@ -199,9 +190,6 @@ class GeometryNonNative extends \Kaitai\Struct\Struct {
     public function triangles() { return $this->_m_triangles; }
 }
 
-/**
- */
-
 namespace \RenderwareBinaryStream;
 
 class StructGeometryList extends \Kaitai\Struct\Struct {
@@ -304,9 +292,6 @@ class MorphTarget extends \Kaitai\Struct\Struct {
     public function normals() { return $this->_m_normals; }
 }
 
-/**
- */
-
 namespace \RenderwareBinaryStream;
 
 class SurfaceProperties extends \Kaitai\Struct\Struct {
@@ -327,9 +312,6 @@ class SurfaceProperties extends \Kaitai\Struct\Struct {
     public function specular() { return $this->_m_specular; }
     public function diffuse() { return $this->_m_diffuse; }
 }
-
-/**
- */
 
 namespace \RenderwareBinaryStream;
 
@@ -353,9 +335,6 @@ class StructFrameList extends \Kaitai\Struct\Struct {
     public function frames() { return $this->_m_frames; }
 }
 
-/**
- */
-
 namespace \RenderwareBinaryStream;
 
 class Matrix extends \Kaitai\Struct\Struct {
@@ -374,9 +353,6 @@ class Matrix extends \Kaitai\Struct\Struct {
     protected $_m_entries;
     public function entries() { return $this->_m_entries; }
 }
-
-/**
- */
 
 namespace \RenderwareBinaryStream;
 
@@ -492,9 +468,6 @@ class Triangle extends \Kaitai\Struct\Struct {
     public function materialId() { return $this->_m_materialId; }
     public function vertex3() { return $this->_m_vertex3; }
 }
-
-/**
- */
 
 namespace \RenderwareBinaryStream;
 

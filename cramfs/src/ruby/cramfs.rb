@@ -11,14 +11,17 @@ class Cramfs < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @super_block = SuperBlockStruct.new(@_io, self, @_root)
+    self
   end
   class SuperBlockStruct < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = @_io.ensure_fixed_contents([69, 61, 205, 40].pack('C*'))
       @size = @_io.read_u4le
@@ -28,6 +31,7 @@ class Cramfs < Kaitai::Struct::Struct
       @fsid = Info.new(@_io, self, @_root)
       @name = (@_io.read_bytes(16)).force_encoding("ASCII")
       @root = Inode.new(@_io, self, @_root)
+      self
     end
     def flag_fsid_v2
       return @flag_fsid_v2 unless @flag_fsid_v2.nil?
@@ -68,12 +72,14 @@ class Cramfs < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @block_end_index = Array.new((((_parent.size + _root.page_size) - 1) / _root.page_size))
       ((((_parent.size + _root.page_size) - 1) / _root.page_size)).times { |i|
         @block_end_index[i] = @_io.read_u4le
       }
       @raw_blocks = @_io.read_bytes_full
+      self
     end
     attr_reader :block_end_index
     attr_reader :raw_blocks
@@ -94,12 +100,14 @@ class Cramfs < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @mode = @_io.read_u2le
       @uid = @_io.read_u2le
       @size_gid = @_io.read_u4le
       @namelen_offset = @_io.read_u4le
       @name = (@_io.read_bytes(namelen)).force_encoding("utf-8")
+      self
     end
     def attr
       return @attr unless @attr.nil?
@@ -187,6 +195,7 @@ class Cramfs < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       if _io.size > 0
         @children = []
@@ -194,6 +203,7 @@ class Cramfs < Kaitai::Struct::Struct
           @children << Inode.new(@_io, self, @_root)
         end
       end
+      self
     end
     attr_reader :children
   end
@@ -202,11 +212,13 @@ class Cramfs < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @crc = @_io.read_u4le
       @edition = @_io.read_u4le
       @blocks = @_io.read_u4le
       @files = @_io.read_u4le
+      self
     end
     attr_reader :crc
     attr_reader :edition

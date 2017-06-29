@@ -55,26 +55,17 @@ public class Tga extends KaitaiStruct {
     }
 
     public Tga(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Tga(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Tga(KaitaiStream _io, KaitaiStruct _parent, Tga _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -104,24 +95,17 @@ public class Tga extends KaitaiStruct {
         }
 
         public TgaFooter(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public TgaFooter(KaitaiStream _io, Tga _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public TgaFooter(KaitaiStream _io, Tga _parent, Tga _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -174,24 +158,17 @@ public class Tga extends KaitaiStruct {
         }
 
         public TgaExtArea(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public TgaExtArea(KaitaiStream _io, Tga.TgaFooter _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public TgaExtArea(KaitaiStream _io, Tga.TgaFooter _parent, Tga _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

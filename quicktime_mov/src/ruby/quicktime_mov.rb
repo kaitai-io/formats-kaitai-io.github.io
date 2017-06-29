@@ -149,14 +149,17 @@ class QuicktimeMov < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @atoms = AtomList.new(@_io, self, @_root)
+    self
   end
   class MvhdBody < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @version = @_io.read_u1
       @flags = @_io.read_bytes(3)
@@ -175,6 +178,7 @@ class QuicktimeMov < Kaitai::Struct::Struct
       @selection_duration = @_io.read_u4be
       @current_time = @_io.read_u4be
       @next_track_id = @_io.read_u4be
+      self
     end
 
     ##
@@ -238,6 +242,7 @@ class QuicktimeMov < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @major_brand = Kaitai::Struct::Stream::resolve_enum(BRAND, @_io.read_u4be)
       @minor_version = @_io.read_bytes(4)
@@ -245,6 +250,7 @@ class QuicktimeMov < Kaitai::Struct::Struct
       while not @_io.eof?
         @compatible_brands << Kaitai::Struct::Stream::resolve_enum(BRAND, @_io.read_u4be)
       end
+      self
     end
     attr_reader :major_brand
     attr_reader :minor_version
@@ -255,9 +261,11 @@ class QuicktimeMov < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @int_part = @_io.read_s2be
       @frac_part = @_io.read_u2be
+      self
     end
     attr_reader :int_part
     attr_reader :frac_part
@@ -267,9 +275,11 @@ class QuicktimeMov < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @int_part = @_io.read_s1
       @frac_part = @_io.read_u1
+      self
     end
     attr_reader :int_part
     attr_reader :frac_part
@@ -279,6 +289,7 @@ class QuicktimeMov < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @len32 = @_io.read_u4be
       @atom_type = Kaitai::Struct::Stream::resolve_enum(ATOM_TYPE, @_io.read_u4be)
@@ -333,6 +344,7 @@ class QuicktimeMov < Kaitai::Struct::Struct
       else
         @body = @_io.read_bytes(len)
       end
+      self
     end
     def len
       return @len unless @len.nil?
@@ -350,6 +362,7 @@ class QuicktimeMov < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @version = @_io.read_u1
       @flags = @_io.read_bytes(3)
@@ -366,6 +379,7 @@ class QuicktimeMov < Kaitai::Struct::Struct
       @matrix = @_io.read_bytes(36)
       @width = Fixed32.new(@_io, self, @_root)
       @height = Fixed32.new(@_io, self, @_root)
+      self
     end
     attr_reader :version
     attr_reader :flags
@@ -391,11 +405,13 @@ class QuicktimeMov < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @items = []
       while not @_io.eof?
         @items << Atom.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :items
   end

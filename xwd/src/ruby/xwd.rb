@@ -45,6 +45,7 @@ class Xwd < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @header_size = @_io.read_u4be
     @_raw_hdr = @_io.read_bytes((header_size - 4))
@@ -57,12 +58,14 @@ class Xwd < Kaitai::Struct::Struct
       io = Kaitai::Struct::Stream.new(@_raw_color_map[i])
       @color_map[i] = ColorMapEntry.new(io, self, @_root)
     }
+    self
   end
   class Header < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @file_version = @_io.read_u4be
       @pixmap_format = Kaitai::Struct::Stream::resolve_enum(PIXMAP_FORMAT, @_io.read_u4be)
@@ -89,6 +92,7 @@ class Xwd < Kaitai::Struct::Struct
       @window_y = @_io.read_s4be
       @window_border_width = @_io.read_u4be
       @creator = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
+      self
     end
 
     ##
@@ -196,6 +200,7 @@ class Xwd < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entry_number = @_io.read_u4be
       @red = @_io.read_u2be
@@ -203,6 +208,7 @@ class Xwd < Kaitai::Struct::Struct
       @blue = @_io.read_u2be
       @flags = @_io.read_u1
       @padding = @_io.read_u1
+      self
     end
 
     ##

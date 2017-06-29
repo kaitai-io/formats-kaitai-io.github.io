@@ -66,26 +66,17 @@ public class Gif extends KaitaiStruct {
     }
 
     public Gif(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Gif(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Gif(KaitaiStream _io, KaitaiStruct _parent, Gif _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -111,24 +102,17 @@ public class Gif extends KaitaiStruct {
         }
 
         public ImageData(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ImageData(KaitaiStream _io, Gif.LocalImageDescriptor _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ImageData(KaitaiStream _io, Gif.LocalImageDescriptor _parent, Gif _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -150,24 +134,17 @@ public class Gif extends KaitaiStruct {
         }
 
         public ColorTableEntry(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ColorTableEntry(KaitaiStream _io, Gif.ColorTable _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ColorTableEntry(KaitaiStream _io, Gif.ColorTable _parent, Gif _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -196,24 +173,17 @@ public class Gif extends KaitaiStruct {
         }
 
         public LogicalScreenDescriptorStruct(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public LogicalScreenDescriptorStruct(KaitaiStream _io, Gif _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public LogicalScreenDescriptorStruct(KaitaiStream _io, Gif _parent, Gif _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -260,24 +230,17 @@ public class Gif extends KaitaiStruct {
         }
 
         public LocalImageDescriptor(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public LocalImageDescriptor(KaitaiStream _io, Gif.Block _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public LocalImageDescriptor(KaitaiStream _io, Gif.Block _parent, Gif _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -352,24 +315,17 @@ public class Gif extends KaitaiStruct {
         }
 
         public Block(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Block(KaitaiStream _io, Gif _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Block(KaitaiStream _io, Gif _parent, Gif _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -404,24 +360,17 @@ public class Gif extends KaitaiStruct {
         }
 
         public ColorTable(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ColorTable(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ColorTable(KaitaiStream _io, KaitaiStruct _parent, Gif _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -447,24 +396,17 @@ public class Gif extends KaitaiStruct {
         }
 
         public Header(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Header(KaitaiStream _io, Gif _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Header(KaitaiStream _io, Gif _parent, Gif _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -490,24 +432,17 @@ public class Gif extends KaitaiStruct {
         }
 
         public ExtGraphicControl(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ExtGraphicControl(KaitaiStream _io, Gif.Extension _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ExtGraphicControl(KaitaiStream _io, Gif.Extension _parent, Gif _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -554,24 +489,17 @@ public class Gif extends KaitaiStruct {
         }
 
         public Subblock(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Subblock(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Subblock(KaitaiStream _io, KaitaiStruct _parent, Gif _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -593,24 +521,17 @@ public class Gif extends KaitaiStruct {
         }
 
         public ExtApplication(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ExtApplication(KaitaiStream _io, Gif.Extension _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ExtApplication(KaitaiStream _io, Gif.Extension _parent, Gif _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -639,24 +560,17 @@ public class Gif extends KaitaiStruct {
         }
 
         public Subblocks(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Subblocks(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Subblocks(KaitaiStream _io, KaitaiStruct _parent, Gif _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -682,24 +596,17 @@ public class Gif extends KaitaiStruct {
         }
 
         public Extension(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Extension(KaitaiStream _io, Gif.Block _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Extension(KaitaiStream _io, Gif.Block _parent, Gif _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

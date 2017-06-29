@@ -32,26 +32,17 @@ public class Jpeg extends KaitaiStruct {
     }
 
     public Jpeg(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Jpeg(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Jpeg(KaitaiStream _io, KaitaiStruct _parent, Jpeg _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -112,24 +103,17 @@ public class Jpeg extends KaitaiStruct {
         }
 
         public Segment(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Segment(KaitaiStream _io, Jpeg _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Segment(KaitaiStream _io, Jpeg _parent, Jpeg _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -197,24 +181,17 @@ public class Jpeg extends KaitaiStruct {
         }
 
         public SegmentSos(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SegmentSos(KaitaiStream _io, Jpeg.Segment _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SegmentSos(KaitaiStream _io, Jpeg.Segment _parent, Jpeg _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -233,24 +210,17 @@ public class Jpeg extends KaitaiStruct {
             }
 
             public Component(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Component(KaitaiStream _io, Jpeg.SegmentSos _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Component(KaitaiStream _io, Jpeg.SegmentSos _parent, Jpeg _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -311,24 +281,17 @@ public class Jpeg extends KaitaiStruct {
         }
 
         public SegmentApp1(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SegmentApp1(KaitaiStream _io, Jpeg.Segment _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SegmentApp1(KaitaiStream _io, Jpeg.Segment _parent, Jpeg _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -355,24 +318,17 @@ public class Jpeg extends KaitaiStruct {
         }
 
         public SegmentSof0(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SegmentSof0(KaitaiStream _io, Jpeg.Segment _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SegmentSof0(KaitaiStream _io, Jpeg.Segment _parent, Jpeg _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -391,24 +347,17 @@ public class Jpeg extends KaitaiStruct {
             }
 
             public Component(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Component(KaitaiStream _io, Jpeg.SegmentSof0 _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Component(KaitaiStream _io, Jpeg.SegmentSof0 _parent, Jpeg _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -468,24 +417,17 @@ public class Jpeg extends KaitaiStruct {
         }
 
         public ExifInJpeg(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ExifInJpeg(KaitaiStream _io, Jpeg.SegmentApp1 _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ExifInJpeg(KaitaiStream _io, Jpeg.SegmentApp1 _parent, Jpeg _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -527,24 +469,17 @@ public class Jpeg extends KaitaiStruct {
         }
 
         public SegmentApp0(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SegmentApp0(KaitaiStream _io, Jpeg.Segment _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SegmentApp0(KaitaiStream _io, Jpeg.Segment _parent, Jpeg _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

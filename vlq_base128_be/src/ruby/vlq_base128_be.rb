@@ -26,12 +26,14 @@ class VlqBase128Be < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @groups = []
     begin
       _ = Group.new(@_io, self, @_root)
       @groups << _
     end until !(_.has_next)
+    self
   end
 
   ##
@@ -42,8 +44,10 @@ class VlqBase128Be < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @b = @_io.read_u1
+      self
     end
 
     ##

@@ -12,26 +12,17 @@ public class Id3v24 extends KaitaiStruct {
     }
 
     public Id3v24(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Id3v24(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Id3v24(KaitaiStream _io, KaitaiStruct _parent, Id3v24 _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -43,24 +34,17 @@ public class Id3v24 extends KaitaiStruct {
         }
 
         public U1beSynchsafe(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public U1beSynchsafe(KaitaiStream _io, Id3v24.U2beSynchsafe _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public U1beSynchsafe(KaitaiStream _io, Id3v24.U2beSynchsafe _parent, Id3v24 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -82,24 +66,17 @@ public class Id3v24 extends KaitaiStruct {
         }
 
         public U2beSynchsafe(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public U2beSynchsafe(KaitaiStream _io, Id3v24.U4beSynchsafe _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public U2beSynchsafe(KaitaiStream _io, Id3v24.U4beSynchsafe _parent, Id3v24 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -129,24 +106,17 @@ public class Id3v24 extends KaitaiStruct {
         }
 
         public Tag(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Tag(KaitaiStream _io, Id3v24 _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Tag(KaitaiStream _io, Id3v24 _parent, Id3v24 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -190,24 +160,17 @@ public class Id3v24 extends KaitaiStruct {
         }
 
         public U4beSynchsafe(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public U4beSynchsafe(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public U4beSynchsafe(KaitaiStream _io, KaitaiStruct _parent, Id3v24 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -237,24 +200,17 @@ public class Id3v24 extends KaitaiStruct {
         }
 
         public Frame(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Frame(KaitaiStream _io, Id3v24.Tag _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Frame(KaitaiStream _io, Id3v24.Tag _parent, Id3v24 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -270,24 +226,17 @@ public class Id3v24 extends KaitaiStruct {
             }
 
             public FlagsStatus(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public FlagsStatus(KaitaiStream _io, Id3v24.Frame _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public FlagsStatus(KaitaiStream _io, Id3v24.Frame _parent, Id3v24 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -318,24 +267,17 @@ public class Id3v24 extends KaitaiStruct {
             }
 
             public FlagsFormat(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public FlagsFormat(KaitaiStream _io, Id3v24.Frame _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public FlagsFormat(KaitaiStream _io, Id3v24.Frame _parent, Id3v24 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -395,24 +337,17 @@ public class Id3v24 extends KaitaiStruct {
         }
 
         public HeaderEx(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public HeaderEx(KaitaiStream _io, Id3v24.Tag _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public HeaderEx(KaitaiStream _io, Id3v24.Tag _parent, Id3v24 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -426,24 +361,17 @@ public class Id3v24 extends KaitaiStruct {
             }
 
             public FlagsEx(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public FlagsEx(KaitaiStream _io, Id3v24.HeaderEx _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public FlagsEx(KaitaiStream _io, Id3v24.HeaderEx _parent, Id3v24 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -485,24 +413,17 @@ public class Id3v24 extends KaitaiStruct {
         }
 
         public Header(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Header(KaitaiStream _io, Id3v24.Tag _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Header(KaitaiStream _io, Id3v24.Tag _parent, Id3v24 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -518,24 +439,17 @@ public class Id3v24 extends KaitaiStruct {
             }
 
             public Flags(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Flags(KaitaiStream _io, Id3v24.Header _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Flags(KaitaiStream _io, Id3v24.Header _parent, Id3v24 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -581,24 +495,17 @@ public class Id3v24 extends KaitaiStruct {
         }
 
         public Padding(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Padding(KaitaiStream _io, Id3v24.Tag _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Padding(KaitaiStream _io, Id3v24.Tag _parent, Id3v24 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -617,24 +524,17 @@ public class Id3v24 extends KaitaiStruct {
         }
 
         public Footer(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Footer(KaitaiStream _io, Id3v24.Tag _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Footer(KaitaiStream _io, Id3v24.Tag _parent, Id3v24 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -650,24 +550,17 @@ public class Id3v24 extends KaitaiStruct {
             }
 
             public Flags(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Flags(KaitaiStream _io, Id3v24.Footer _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Flags(KaitaiStream _io, Id3v24.Footer _parent, Id3v24 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {

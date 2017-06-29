@@ -19,6 +19,7 @@ class PsxTim < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @magic = @_io.ensure_fixed_contents([16, 0, 0, 0].pack('C*'))
     @flags = @_io.read_u4le
@@ -26,12 +27,14 @@ class PsxTim < Kaitai::Struct::Struct
       @clut = Bitmap.new(@_io, self, @_root)
     end
     @img = Bitmap.new(@_io, self, @_root)
+    self
   end
   class Bitmap < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @len = @_io.read_u4le
       @origin_x = @_io.read_u2le
@@ -39,6 +42,7 @@ class PsxTim < Kaitai::Struct::Struct
       @width = @_io.read_u2le
       @height = @_io.read_u2le
       @body = @_io.read_bytes((len - 12))
+      self
     end
     attr_reader :len
     attr_reader :origin_x

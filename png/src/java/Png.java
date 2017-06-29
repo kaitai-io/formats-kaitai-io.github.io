@@ -47,26 +47,17 @@ public class Png extends KaitaiStruct {
     }
 
     public Png(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Png(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Png(KaitaiStream _io, KaitaiStruct _parent, Png _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -90,24 +81,17 @@ public class Png extends KaitaiStruct {
         }
 
         public Rgb(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Rgb(KaitaiStream _io, Png.PlteChunk _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Rgb(KaitaiStream _io, Png.PlteChunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -132,24 +116,17 @@ public class Png extends KaitaiStruct {
         }
 
         public Chunk(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Chunk(KaitaiStream _io, Png _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Chunk(KaitaiStream _io, Png _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -244,24 +221,17 @@ public class Png extends KaitaiStruct {
         }
 
         public BkgdIndexed(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BkgdIndexed(KaitaiStream _io, Png.BkgdChunk _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BkgdIndexed(KaitaiStream _io, Png.BkgdChunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -280,24 +250,17 @@ public class Png extends KaitaiStruct {
         }
 
         public Point(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Point(KaitaiStream _io, Png.ChrmChunk _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Point(KaitaiStream _io, Png.ChrmChunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -335,24 +298,17 @@ public class Png extends KaitaiStruct {
         }
 
         public BkgdGreyscale(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BkgdGreyscale(KaitaiStream _io, Png.BkgdChunk _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BkgdGreyscale(KaitaiStream _io, Png.BkgdChunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -371,24 +327,17 @@ public class Png extends KaitaiStruct {
         }
 
         public ChrmChunk(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ChrmChunk(KaitaiStream _io, Png.Chunk _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ChrmChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -416,24 +365,17 @@ public class Png extends KaitaiStruct {
         }
 
         public IhdrChunk(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public IhdrChunk(KaitaiStream _io, Png _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public IhdrChunk(KaitaiStream _io, Png _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -470,24 +412,17 @@ public class Png extends KaitaiStruct {
         }
 
         public PlteChunk(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PlteChunk(KaitaiStream _io, Png.Chunk _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PlteChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -526,24 +461,17 @@ public class Png extends KaitaiStruct {
         }
 
         public SrgbChunk(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SrgbChunk(KaitaiStream _io, Png.Chunk _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SrgbChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -562,24 +490,17 @@ public class Png extends KaitaiStruct {
         }
 
         public CompressedTextChunk(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public CompressedTextChunk(KaitaiStream _io, Png.Chunk _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public CompressedTextChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -607,24 +528,17 @@ public class Png extends KaitaiStruct {
         }
 
         public BkgdTruecolor(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BkgdTruecolor(KaitaiStream _io, Png.BkgdChunk _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BkgdTruecolor(KaitaiStream _io, Png.BkgdChunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -649,24 +563,17 @@ public class Png extends KaitaiStruct {
         }
 
         public GamaChunk(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public GamaChunk(KaitaiStream _io, Png.Chunk _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public GamaChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -693,24 +600,17 @@ public class Png extends KaitaiStruct {
         }
 
         public BkgdChunk(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BkgdChunk(KaitaiStream _io, Png.Chunk _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BkgdChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -750,24 +650,17 @@ public class Png extends KaitaiStruct {
         }
 
         public PhysChunk(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PhysChunk(KaitaiStream _io, Png.Chunk _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PhysChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -792,24 +685,17 @@ public class Png extends KaitaiStruct {
         }
 
         public InternationalTextChunk(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public InternationalTextChunk(KaitaiStream _io, Png.Chunk _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public InternationalTextChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -843,24 +729,17 @@ public class Png extends KaitaiStruct {
         }
 
         public TextChunk(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public TextChunk(KaitaiStream _io, Png.Chunk _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public TextChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -882,24 +761,17 @@ public class Png extends KaitaiStruct {
         }
 
         public TimeChunk(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public TimeChunk(KaitaiStream _io, Png.Chunk _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public TimeChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

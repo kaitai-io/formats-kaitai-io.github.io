@@ -190,7 +190,7 @@ var Bson = (function() {
       NUMBER_DECIMAL: 19,
       MAX_KEY: 127,
 
-      -1: "MIN_KEY",
+      "-1": "MIN_KEY",
       0: "END_OF_OBJECT",
       1: "NUMBER_DOUBLE",
       2: "STRING",

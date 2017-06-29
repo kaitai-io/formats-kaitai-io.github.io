@@ -85,26 +85,17 @@ public class Rar extends KaitaiStruct {
     }
 
     public Rar(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Rar(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Rar(KaitaiStream _io, KaitaiStruct _parent, Rar _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -129,24 +120,17 @@ public class Rar extends KaitaiStruct {
         }
 
         public BlockV5(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BlockV5(KaitaiStream _io, Rar _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BlockV5(KaitaiStream _io, Rar _parent, Rar _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -168,24 +152,17 @@ public class Rar extends KaitaiStruct {
         }
 
         public Block(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Block(KaitaiStream _io, Rar _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Block(KaitaiStream _io, Rar _parent, Rar _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -283,24 +260,17 @@ public class Rar extends KaitaiStruct {
         }
 
         public BlockFileHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BlockFileHeader(KaitaiStream _io, Rar.Block _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BlockFileHeader(KaitaiStream _io, Rar.Block _parent, Rar _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -395,24 +365,17 @@ public class Rar extends KaitaiStruct {
         }
 
         public MagicSignature(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MagicSignature(KaitaiStream _io, Rar _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MagicSignature(KaitaiStream _io, Rar _parent, Rar _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -452,24 +415,17 @@ public class Rar extends KaitaiStruct {
         }
 
         public DosTime(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DosTime(KaitaiStream _io, Rar.BlockFileHeader _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DosTime(KaitaiStream _io, Rar.BlockFileHeader _parent, Rar _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

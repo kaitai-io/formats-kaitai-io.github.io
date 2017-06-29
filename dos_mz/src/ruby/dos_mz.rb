@@ -21,6 +21,7 @@ class DosMz < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @hdr = MzHeader.new(@_io, self, @_root)
     @mz_header2 = @_io.read_bytes((hdr.relocations_ofs - 28))
@@ -29,12 +30,14 @@ class DosMz < Kaitai::Struct::Struct
       @relocations[i] = Relocation.new(@_io, self, @_root)
     }
     @body = @_io.read_bytes_full
+    self
   end
   class MzHeader < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = @_io.read_bytes(2)
       @last_page_extra_bytes = @_io.read_u2le
@@ -50,6 +53,7 @@ class DosMz < Kaitai::Struct::Struct
       @initial_cs = @_io.read_u2le
       @relocations_ofs = @_io.read_u2le
       @overlay_id = @_io.read_u2le
+      self
     end
     attr_reader :magic
     attr_reader :last_page_extra_bytes
@@ -71,9 +75,11 @@ class DosMz < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @ofs = @_io.read_u2le
       @seg = @_io.read_u2le
+      self
     end
     attr_reader :ofs
     attr_reader :seg

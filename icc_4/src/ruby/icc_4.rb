@@ -11,17 +11,21 @@ class Icc4 < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @header = ProfileHeader.new(@_io, self, @_root)
     @tag_table = TagTable.new(@_io, self, @_root)
+    self
   end
   class U8Fixed8Number < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @number = @_io.read_bytes(2)
+      self
     end
     attr_reader :number
   end
@@ -30,8 +34,10 @@ class Icc4 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @number = @_io.read_bytes(4)
+      self
     end
     attr_reader :number
   end
@@ -53,8 +59,10 @@ class Icc4 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @standard_illuminant_encoding = Kaitai::Struct::Stream::resolve_enum(STANDARD_ILLUMINANT_ENCODINGS, @_io.read_u4be)
+      self
     end
     attr_reader :standard_illuminant_encoding
   end
@@ -147,6 +155,7 @@ class Icc4 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @size = @_io.read_u4be
       @preferred_cmm_type = Kaitai::Struct::Stream::resolve_enum(CMM_SIGNATURES, @_io.read_u4be)
@@ -166,18 +175,21 @@ class Icc4 < Kaitai::Struct::Struct
       @creator = DeviceManufacturer.new(@_io, self, @_root)
       @identifier = @_io.read_bytes(16)
       @reserved_data = @_io.read_bytes(28)
+      self
     end
     class VersionField < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @major = @_io.ensure_fixed_contents([4].pack('C*'))
         @minor = @_io.read_bits_int(4)
         @bug_fix_level = @_io.read_bits_int(4)
         @_io.align_to_byte
         @reserved = @_io.ensure_fixed_contents([0, 0].pack('C*'))
+        self
       end
       attr_reader :major
       attr_reader :minor
@@ -189,10 +201,12 @@ class Icc4 < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @embedded_profile = @_io.read_bits_int(1) != 0
         @profile_can_be_used_independently_of_embedded_colour_data = @_io.read_bits_int(1) != 0
         @other_flags = @_io.read_bits_int(30)
+        self
       end
       attr_reader :embedded_profile
       attr_reader :profile_can_be_used_independently_of_embedded_colour_data
@@ -222,10 +236,12 @@ class Icc4 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x = @_io.read_bytes(4)
       @y = @_io.read_bytes(4)
       @z = @_io.read_bytes(4)
+      self
     end
     attr_reader :x
     attr_reader :y
@@ -236,6 +252,7 @@ class Icc4 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @year = @_io.read_u2be
       @month = @_io.read_u2be
@@ -243,6 +260,7 @@ class Icc4 < Kaitai::Struct::Struct
       @hour = @_io.read_u2be
       @minute = @_io.read_u2be
       @second = @_io.read_u2be
+      self
     end
     attr_reader :year
     attr_reader :month
@@ -256,10 +274,12 @@ class Icc4 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @number = @_io.read_u4be
       @reserved = @_io.ensure_fixed_contents([0, 0].pack('C*'))
       @measurement_value = S15Fixed16Number.new(@_io, self, @_root)
+      self
     end
     attr_reader :number
     attr_reader :reserved
@@ -270,8 +290,10 @@ class Icc4 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @number = @_io.read_bytes(2)
+      self
     end
     attr_reader :number
   end
@@ -280,12 +302,14 @@ class Icc4 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @tag_count = @_io.read_u4be
       @tags = Array.new(tag_count)
       (tag_count).times { |i|
         @tags[i] = TagDefinition.new(@_io, self, @_root)
       }
+      self
     end
     class TagDefinition < Kaitai::Struct::Struct
 
@@ -387,22 +411,26 @@ class Icc4 < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @tag_signature = Kaitai::Struct::Stream::resolve_enum(TAG_SIGNATURES, @_io.read_u4be)
         @offset_to_data_element = @_io.read_u4be
         @size_of_data_element = @_io.read_u4be
+        self
       end
       class BlueMatrixColumnTag < Kaitai::Struct::Struct
         def initialize(_io, _parent = nil, _root = self)
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_xyz_type
             @tag_data = XyzType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -412,12 +440,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_localized_unicode_type
             @tag_data = MultiLocalizedUnicodeType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -427,6 +457,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @vendor_specific_flag = @_io.read_u4be
@@ -446,12 +477,14 @@ class Icc4 < Kaitai::Struct::Struct
           (count_of_named_colours).times { |i|
             @named_colour_definitions[i] = NamedColourDefinition.new(@_io, self, @_root)
           }
+          self
         end
         class NamedColourDefinition < Kaitai::Struct::Struct
           def initialize(_io, _parent = nil, _root = self)
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @root_name = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
             @root_name_padding = Array.new((32 - root_name.size))
@@ -465,6 +498,7 @@ class Icc4 < Kaitai::Struct::Struct
                 @device_coordinates[i] = @_io.read_u2be
               }
             end
+            self
           end
           attr_reader :root_name
           attr_reader :root_name_padding
@@ -486,12 +520,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_viewing_conditions_type
             @tag_data = ViewingConditionsType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -501,6 +537,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
@@ -509,6 +546,7 @@ class Icc4 < Kaitai::Struct::Struct
           when :tag_type_signatures_parametric_curve_type
             @tag_data = ParametricCurveType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -518,6 +556,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @number_of_channels = @_io.read_u2be
@@ -527,6 +566,7 @@ class Icc4 < Kaitai::Struct::Struct
             @response_curve_structure_offsets[i] = @_io.read_u4be
           }
           @response_curve_structures = @_io.read_bytes_full
+          self
         end
         attr_reader :reserved
         attr_reader :number_of_channels
@@ -539,6 +579,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @number_of_entries = @_io.read_u4be
@@ -551,6 +592,7 @@ class Icc4 < Kaitai::Struct::Struct
           if number_of_entries == 1
             @curve_value = @_io.read_u1
           end
+          self
         end
         attr_reader :reserved
         attr_reader :number_of_entries
@@ -562,12 +604,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_signature_type
             @tag_data = SignatureType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -577,12 +621,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @values = []
           while not @_io.eof?
             @values << XyzNumber.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :reserved
         attr_reader :values
@@ -592,6 +638,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @number_of_input_channels = @_io.read_u1
@@ -607,6 +654,7 @@ class Icc4 < Kaitai::Struct::Struct
           @input_tables = @_io.read_bytes((256 * number_of_input_channels))
           @clut_values = @_io.read_bytes(((number_of_clut_grid_points ^ number_of_input_channels) * number_of_output_channels))
           @output_tables = @_io.read_bytes((256 * number_of_output_channels))
+          self
         end
         attr_reader :reserved
         attr_reader :number_of_input_channels
@@ -625,6 +673,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
@@ -635,6 +684,7 @@ class Icc4 < Kaitai::Struct::Struct
           when :tag_type_signatures_multi_function_b_to_a_table_type
             @tag_data = LutBToAType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -644,6 +694,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @number_of_input_channels = @_io.read_u1
@@ -655,6 +706,7 @@ class Icc4 < Kaitai::Struct::Struct
           @offset_to_clut = @_io.read_u4be
           @offset_to_first_a_curve = @_io.read_u4be
           @data = @_io.read_bytes_full
+          self
         end
         attr_reader :reserved
         attr_reader :number_of_input_channels
@@ -672,6 +724,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
@@ -682,6 +735,7 @@ class Icc4 < Kaitai::Struct::Struct
           when :tag_type_signatures_multi_function_b_to_a_table_type
             @tag_data = LutBToAType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -691,12 +745,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_xyz_type
             @tag_data = XyzType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -706,6 +762,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @number_of_input_channels = @_io.read_u1
@@ -721,6 +778,7 @@ class Icc4 < Kaitai::Struct::Struct
           @input_tables = @_io.read_bytes(((2 * number_of_input_channels) * number_of_input_table_entries))
           @clut_values = @_io.read_bytes(((2 * (number_of_clut_grid_points ^ number_of_input_channels)) * number_of_output_channels))
           @output_tables = @_io.read_bytes(((2 * number_of_output_channels) * number_of_output_table_entries))
+          self
         end
         attr_reader :reserved
         attr_reader :number_of_input_channels
@@ -739,12 +797,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_signature_type
             @tag_data = SignatureType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -754,12 +814,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @values = []
           while not @_io.eof?
             @values << U16Fixed16Number.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :reserved
         attr_reader :values
@@ -769,12 +831,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_colorant_table_type
             @tag_data = ColorantTableType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -784,12 +848,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_measurement_type
             @tag_data = MeasurementType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -799,12 +865,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_profile_sequence_desc_type
             @tag_data = ProfileSequenceDescType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -814,12 +882,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_signature_type
             @tag_data = SignatureType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -829,6 +899,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
@@ -839,6 +910,7 @@ class Icc4 < Kaitai::Struct::Struct
           when :tag_type_signatures_multi_function_a_to_b_table_type
             @tag_data = LutAToBType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -848,12 +920,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -863,12 +937,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_response_curve_set_16_type
             @tag_data = ResponseCurveSet16Type.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -878,12 +954,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_xyz_type
             @tag_data = XyzType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -893,12 +971,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_localized_unicode_type
             @tag_data = MultiLocalizedUnicodeType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -908,6 +988,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
@@ -918,6 +999,7 @@ class Icc4 < Kaitai::Struct::Struct
           when :tag_type_signatures_multi_function_b_to_a_table_type
             @tag_data = LutBToAType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -927,6 +1009,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
@@ -935,6 +1018,7 @@ class Icc4 < Kaitai::Struct::Struct
           when :tag_type_signatures_parametric_curve_type
             @tag_data = ParametricCurveType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -944,12 +1028,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -959,12 +1045,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -974,6 +1062,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
@@ -984,6 +1073,7 @@ class Icc4 < Kaitai::Struct::Struct
           when :tag_type_signatures_multi_function_b_to_a_table_type
             @tag_data = LutBToAType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1002,6 +1092,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @function_type = Kaitai::Struct::Stream::resolve_enum(PARAMETRIC_CURVE_TYPE_FUNCTIONS, @_io.read_u2be)
@@ -1018,17 +1109,20 @@ class Icc4 < Kaitai::Struct::Struct
           when :parametric_curve_type_functions_iec_61966_3
             @parameters = ParamsIec619663.new(@_io, self, @_root)
           end
+          self
         end
         class ParamsIec619663 < Kaitai::Struct::Struct
           def initialize(_io, _parent = nil, _root = self)
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @g = @_io.read_s4be
             @a = @_io.read_s4be
             @b = @_io.read_s4be
             @c = @_io.read_s4be
+            self
           end
           attr_reader :g
           attr_reader :a
@@ -1040,12 +1134,14 @@ class Icc4 < Kaitai::Struct::Struct
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @g = @_io.read_s4be
             @a = @_io.read_s4be
             @b = @_io.read_s4be
             @c = @_io.read_s4be
             @d = @_io.read_s4be
+            self
           end
           attr_reader :g
           attr_reader :a
@@ -1058,8 +1154,10 @@ class Icc4 < Kaitai::Struct::Struct
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @g = @_io.read_s4be
+            self
           end
           attr_reader :g
         end
@@ -1068,6 +1166,7 @@ class Icc4 < Kaitai::Struct::Struct
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @g = @_io.read_s4be
             @a = @_io.read_s4be
@@ -1076,6 +1175,7 @@ class Icc4 < Kaitai::Struct::Struct
             @d = @_io.read_s4be
             @e = @_io.read_s4be
             @f = @_io.read_s4be
+            self
           end
           attr_reader :g
           attr_reader :a
@@ -1090,10 +1190,12 @@ class Icc4 < Kaitai::Struct::Struct
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @g = @_io.read_s4be
             @a = @_io.read_s4be
             @b = @_io.read_s4be
+            self
           end
           attr_reader :g
           attr_reader :a
@@ -1109,12 +1211,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_chromaticity_type
             @tag_data = ChromaticityType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1124,12 +1228,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_s_15_fixed_16_array_type
             @tag_data = S15Fixed16ArrayType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1159,6 +1265,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @standard_observer_encoding = Kaitai::Struct::Stream::resolve_enum(STANDARD_OBSERVER_ENCODINGS, @_io.read_u4be)
@@ -1166,6 +1273,7 @@ class Icc4 < Kaitai::Struct::Struct
           @measurement_geometry_encoding = Kaitai::Struct::Stream::resolve_enum(MEASUREMENT_GEOMETRY_ENCODINGS, @_io.read_u4be)
           @measurement_flare_encoding = Kaitai::Struct::Stream::resolve_enum(MEASUREMENT_FLARE_ENCODINGS, @_io.read_u4be)
           @standard_illuminant_encoding = StandardIlluminantEncoding.new(@_io, self, @_root)
+          self
         end
         attr_reader :reserved
         attr_reader :standard_observer_encoding
@@ -1179,9 +1287,11 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @value = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes_full, 0, false)).force_encoding("ASCII")
+          self
         end
         attr_reader :reserved
         attr_reader :value
@@ -1191,6 +1301,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @number_of_structures = @_io.read_u4be
@@ -1202,15 +1313,18 @@ class Icc4 < Kaitai::Struct::Struct
           (number_of_structures).times { |i|
             @profile_identifiers[i] = ProfileIdentifier.new(@_io, self, @_root)
           }
+          self
         end
         class ProfileIdentifier < Kaitai::Struct::Struct
           def initialize(_io, _parent = nil, _root = self)
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @profile_id = @_io.read_bytes(16)
             @profile_description = MultiLocalizedUnicodeType.new(@_io, self, @_root)
+            self
           end
           attr_reader :profile_id
           attr_reader :profile_description
@@ -1225,6 +1339,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @count_of_colorants = @_io.read_u4be
@@ -1232,12 +1347,14 @@ class Icc4 < Kaitai::Struct::Struct
           (count_of_colorants).times { |i|
             @colorants[i] = Colorant.new(@_io, self, @_root)
           }
+          self
         end
         class Colorant < Kaitai::Struct::Struct
           def initialize(_io, _parent = nil, _root = self)
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @name = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
             @padding = Array.new((32 - name.size))
@@ -1245,6 +1362,7 @@ class Icc4 < Kaitai::Struct::Struct
               @padding = @_io.ensure_fixed_contents([0].pack('C*'))
             }
             @pcs_values = @_io.read_bytes(6)
+            self
           end
           attr_reader :name
           attr_reader :padding
@@ -1259,9 +1377,11 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @signature = (@_io.read_bytes(4)).force_encoding("ASCII")
+          self
         end
         attr_reader :reserved
         attr_reader :signature
@@ -1271,12 +1391,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_localized_unicode_type
             @tag_data = MultiLocalizedUnicodeType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1286,6 +1408,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
@@ -1298,6 +1421,7 @@ class Icc4 < Kaitai::Struct::Struct
           when :tag_type_signatures_multi_function_b_to_a_table_type
             @tag_data = LutBToAType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1307,9 +1431,11 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @date_and_time = DateTimeNumber.new(@_io, self, @_root)
+          self
         end
         attr_reader :reserved
         attr_reader :date_and_time
@@ -1319,12 +1445,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1334,6 +1462,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
@@ -1344,6 +1473,7 @@ class Icc4 < Kaitai::Struct::Struct
           when :tag_type_signatures_multi_function_b_to_a_table_type
             @tag_data = LutBToAType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1353,12 +1483,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_localized_unicode_type
             @tag_data = MultiLocalizedUnicodeType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1368,6 +1500,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @number_of_input_channels = @_io.read_u2be
@@ -1378,6 +1511,7 @@ class Icc4 < Kaitai::Struct::Struct
             @process_element_positions_table[i] = PositionNumber.new(@_io, self, @_root)
           }
           @data = @_io.read_bytes_full
+          self
         end
         attr_reader :reserved
         attr_reader :number_of_input_channels
@@ -1391,12 +1525,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @values = []
           while not @_io.eof?
             @values << @_io.read_u2be
           end
+          self
         end
         attr_reader :reserved
         attr_reader :values
@@ -1406,12 +1542,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_colorant_order_type
             @tag_data = ColorantOrderType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1427,8 +1565,10 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @data_flag = Kaitai::Struct::Stream::resolve_enum(DATA_TYPES, @_io.read_u4be)
+          self
         end
         attr_reader :data_flag
       end
@@ -1446,6 +1586,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @number_of_device_channels = @_io.read_u2be
@@ -1454,15 +1595,18 @@ class Icc4 < Kaitai::Struct::Struct
           (number_of_device_channels).times { |i|
             @ciexy_coordinates_per_channel[i] = CiexyCoordinateValues.new(@_io, self, @_root)
           }
+          self
         end
         class CiexyCoordinateValues < Kaitai::Struct::Struct
           def initialize(_io, _parent = nil, _root = self)
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @x_coordinate = @_io.read_u2be
             @y_coordinate = @_io.read_u2be
+            self
           end
           attr_reader :x_coordinate
           attr_reader :y_coordinate
@@ -1477,12 +1621,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_xyz_type
             @tag_data = XyzType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1492,12 +1638,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @values = []
           while not @_io.eof?
             @values << S15Fixed16Number.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :reserved
         attr_reader :values
@@ -1507,6 +1655,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @number_of_records = @_io.read_u4be
@@ -1515,17 +1664,20 @@ class Icc4 < Kaitai::Struct::Struct
           (number_of_records).times { |i|
             @records[i] = Record.new(@_io, self, @_root)
           }
+          self
         end
         class Record < Kaitai::Struct::Struct
           def initialize(_io, _parent = nil, _root = self)
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @language_code = @_io.read_u2be
             @country_code = @_io.read_u2be
             @string_length = @_io.read_u4be
             @string_offset = @_io.read_u4be
+            self
           end
           def string_data
             return @string_data unless @string_data.nil?
@@ -1550,6 +1702,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
@@ -1560,6 +1713,7 @@ class Icc4 < Kaitai::Struct::Struct
           when :tag_type_signatures_multi_function_a_to_b_table_type
             @tag_data = LutAToBType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1569,6 +1723,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
@@ -1579,6 +1734,7 @@ class Icc4 < Kaitai::Struct::Struct
           when :tag_type_signatures_multi_function_a_to_b_table_type
             @tag_data = LutAToBType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1588,12 +1744,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_signature_type
             @tag_data = SignatureType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1603,12 +1761,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_text_type
             @tag_data = TextType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1618,12 +1778,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_colorant_table_type
             @tag_data = ColorantTableType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1633,12 +1795,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_date_time_type
             @tag_data = DateTimeType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1648,12 +1812,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_named_color_2_type
             @tag_data = NamedColor2Type.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1663,12 +1829,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_localized_unicode_type
             @tag_data = MultiLocalizedUnicodeType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1678,12 +1846,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1693,6 +1863,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @number_of_description_structures = @_io.read_u4be
@@ -1700,12 +1871,14 @@ class Icc4 < Kaitai::Struct::Struct
           (number_of_description_structures).times { |i|
             @profile_descriptions[i] = ProfileDescription.new(@_io, self, @_root)
           }
+          self
         end
         class ProfileDescription < Kaitai::Struct::Struct
           def initialize(_io, _parent = nil, _root = self)
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @device_manufacturer = DeviceManufacturer.new(@_io, self, @_root)
             @device_model = (@_io.read_bytes(4)).force_encoding("ASCII")
@@ -1713,6 +1886,7 @@ class Icc4 < Kaitai::Struct::Struct
             @device_technology = TechnologyTag.new(@_io, self, @_root)
             @description_of_device_manufacturer = DeviceMfgDescTag.new(@_io, self, @_root)
             @description_of_device_model = DeviceModelDescTag.new(@_io, self, @_root)
+            self
           end
           attr_reader :device_manufacturer
           attr_reader :device_model
@@ -1730,12 +1904,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_profile_sequence_identifier_type
             @tag_data = ProfileSequenceIdentifierType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1745,12 +1921,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1760,6 +1938,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @count_of_colorants = @_io.read_u4be
@@ -1767,6 +1946,7 @@ class Icc4 < Kaitai::Struct::Struct
           (count_of_colorants).times { |i|
             @numbers_of_colorants_in_order_of_printing[i] = @_io.read_u1
           }
+          self
         end
         attr_reader :reserved
         attr_reader :count_of_colorants
@@ -1777,12 +1957,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1792,6 +1974,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
@@ -1800,6 +1983,7 @@ class Icc4 < Kaitai::Struct::Struct
           when :tag_type_signatures_parametric_curve_type
             @tag_data = ParametricCurveType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1809,11 +1993,13 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @un_normalized_ciexyz_values_for_illuminant = XyzNumber.new(@_io, self, @_root)
           @un_normalized_ciexyz_values_for_surround = XyzNumber.new(@_io, self, @_root)
           @illuminant_type = StandardIlluminantEncoding.new(@_io, self, @_root)
+          self
         end
         attr_reader :reserved
         attr_reader :un_normalized_ciexyz_values_for_illuminant
@@ -1825,6 +2011,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @number_of_input_channels = @_io.read_u1
@@ -1836,6 +2023,7 @@ class Icc4 < Kaitai::Struct::Struct
           @offset_to_clut = @_io.read_u4be
           @offset_to_first_a_curve = @_io.read_u4be
           @data = @_io.read_bytes_full
+          self
         end
         attr_reader :reserved
         attr_reader :number_of_input_channels
@@ -1853,6 +2041,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
@@ -1861,6 +2050,7 @@ class Icc4 < Kaitai::Struct::Struct
           when :tag_type_signatures_parametric_curve_type
             @tag_data = ParametricCurveType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1870,12 +2060,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @values = []
           while not @_io.eof?
             @values << @_io.read_u4be
           end
+          self
         end
         attr_reader :reserved
         attr_reader :values
@@ -1885,6 +2077,7 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
@@ -1895,6 +2088,7 @@ class Icc4 < Kaitai::Struct::Struct
           when :tag_type_signatures_multi_function_b_to_a_table_type
             @tag_data = LutBToAType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1904,12 +2098,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @values = []
           while not @_io.eof?
             @values << @_io.read_u1
           end
+          self
         end
         attr_reader :reserved
         attr_reader :values
@@ -1919,12 +2115,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_xyz_type
             @tag_data = XyzType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -1934,12 +2132,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @values = []
           while not @_io.eof?
             @values << @_io.read_u8be
           end
+          self
         end
         attr_reader :reserved
         attr_reader :values
@@ -1949,12 +2149,14 @@ class Icc4 < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag_type = Kaitai::Struct::Stream::resolve_enum(TAG_TYPE_SIGNATURES, @_io.read_u4be)
           case tag_type
           when :tag_type_signatures_multi_process_elements_type
             @tag_data = MultiProcessElementsType.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :tag_type
         attr_reader :tag_data
@@ -2203,6 +2405,7 @@ class Icc4 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @reflective_or_transparency = Kaitai::Struct::Stream::resolve_enum(DEVICE_ATTRIBUTES_REFLECTIVE_OR_TRANSPARENCY, @_io.read_bits_int(1))
       @glossy_or_matte = Kaitai::Struct::Stream::resolve_enum(DEVICE_ATTRIBUTES_GLOSSY_OR_MATTE, @_io.read_bits_int(1))
@@ -2210,6 +2413,7 @@ class Icc4 < Kaitai::Struct::Struct
       @colour_or_black_and_white_media = Kaitai::Struct::Stream::resolve_enum(DEVICE_ATTRIBUTES_COLOUR_OR_BLACK_AND_WHITE_MEDIA, @_io.read_bits_int(1))
       @reserved = @_io.read_bits_int(28)
       @vendor_specific = @_io.read_bits_int(32)
+      self
     end
     attr_reader :reflective_or_transparency
     attr_reader :glossy_or_matte
@@ -2490,8 +2694,10 @@ class Icc4 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @device_manufacturer = Kaitai::Struct::Stream::resolve_enum(DEVICE_MANUFACTURERS, @_io.read_u4be)
+      self
     end
     attr_reader :device_manufacturer
   end
@@ -2500,8 +2706,10 @@ class Icc4 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @number = @_io.read_bytes(4)
+      self
     end
     attr_reader :number
   end
@@ -2510,9 +2718,11 @@ class Icc4 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @offset_to_data_element = @_io.read_u4be
       @size_of_data_element = @_io.read_u4be
+      self
     end
     attr_reader :offset_to_data_element
     attr_reader :size_of_data_element

@@ -12,26 +12,17 @@ public class Dbf extends KaitaiStruct {
     }
 
     public Dbf(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Dbf(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Dbf(KaitaiStream _io, KaitaiStruct _parent, Dbf _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -50,24 +41,17 @@ public class Dbf extends KaitaiStruct {
         }
 
         public Header2(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Header2(KaitaiStream _io, Dbf _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Header2(KaitaiStream _io, Dbf _parent, Dbf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -99,24 +83,17 @@ public class Dbf extends KaitaiStruct {
         }
 
         public Field(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Field(KaitaiStream _io, Dbf.Header2 _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Field(KaitaiStream _io, Dbf.Header2 _parent, Dbf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -162,24 +139,17 @@ public class Dbf extends KaitaiStruct {
         }
 
         public Header1(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Header1(KaitaiStream _io, Dbf _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Header1(KaitaiStream _io, Dbf _parent, Dbf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -224,24 +194,17 @@ public class Dbf extends KaitaiStruct {
         }
 
         public HeaderDbase3(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public HeaderDbase3(KaitaiStream _io, Dbf.Header2 _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public HeaderDbase3(KaitaiStream _io, Dbf.Header2 _parent, Dbf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -266,24 +229,17 @@ public class Dbf extends KaitaiStruct {
         }
 
         public HeaderDbase7(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public HeaderDbase7(KaitaiStream _io, Dbf.Header2 _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public HeaderDbase7(KaitaiStream _io, Dbf.Header2 _parent, Dbf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

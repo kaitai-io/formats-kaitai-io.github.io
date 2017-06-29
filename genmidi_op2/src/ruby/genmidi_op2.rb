@@ -23,6 +23,7 @@ class GenmidiOp2 < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @magic = @_io.ensure_fixed_contents([35, 79, 80, 76, 95, 73, 73, 35].pack('C*'))
     @instruments = Array.new(175)
@@ -33,12 +34,14 @@ class GenmidiOp2 < Kaitai::Struct::Struct
     (175).times { |i|
       @instrument_names[i] = (Kaitai::Struct::Stream::bytes_terminate(Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(32), 0), 0, false)).force_encoding("ASCII")
     }
+    self
   end
   class InstrumentEntry < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @flags = @_io.read_u2le
       @finetune = @_io.read_u1
@@ -47,6 +50,7 @@ class GenmidiOp2 < Kaitai::Struct::Struct
       (2).times { |i|
         @instruments[i] = Instrument.new(@_io, self, @_root)
       }
+      self
     end
     attr_reader :flags
     attr_reader :finetune
@@ -61,12 +65,14 @@ class GenmidiOp2 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @op1 = OpSettings.new(@_io, self, @_root)
       @feedback = @_io.read_u1
       @op2 = OpSettings.new(@_io, self, @_root)
       @unused = @_io.read_u1
       @base_note = @_io.read_s2le
+      self
     end
     attr_reader :op1
 
@@ -88,6 +94,7 @@ class GenmidiOp2 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @trem_vibr = @_io.read_u1
       @att_dec = @_io.read_u1
@@ -95,6 +102,7 @@ class GenmidiOp2 < Kaitai::Struct::Struct
       @wave = @_io.read_u1
       @scale = @_io.read_u1
       @level = @_io.read_u1
+      self
     end
 
     ##

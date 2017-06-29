@@ -18,6 +18,7 @@ class Ico < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @magic = @_io.ensure_fixed_contents([0, 0, 1, 0].pack('C*'))
     @num_images = @_io.read_u2le
@@ -25,12 +26,14 @@ class Ico < Kaitai::Struct::Struct
     (num_images).times { |i|
       @images[i] = IconDirEntry.new(@_io, self, @_root)
     }
+    self
   end
   class IconDirEntry < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @width = @_io.read_u1
       @height = @_io.read_u1
@@ -40,6 +43,7 @@ class Ico < Kaitai::Struct::Struct
       @bpp = @_io.read_u2le
       @len_img = @_io.read_u4le
       @ofs_img = @_io.read_u4le
+      self
     end
 
     ##

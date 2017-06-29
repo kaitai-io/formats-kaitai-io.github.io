@@ -3,6 +3,13 @@
 if (typeof require === 'function')
   var EthernetFrame = require('./EthernetFrame.js');
 
+if (typeof require === 'function')
+  var PacketPpi = require('./PacketPpi.js');
+
+/**
+ * @see {@link http://wiki.wireshark.org/Development/LibpcapFileFormat|Source}
+ */
+
 var Pcap = (function() {
   Pcap.Linktype = Object.freeze({
     NULL_LINKTYPE: 0,
@@ -216,22 +223,6 @@ var Pcap = (function() {
     264: "ISO_14443",
   });
 
-  Pcap.PfhType = Object.freeze({
-    RADIO_802_11_COMMON: 2,
-    RADIO_802_11N_MAC_EXT: 3,
-    RADIO_802_11N_MAC_PHY_EXT: 4,
-    SPECTRUM_MAP: 5,
-    PROCESS_INFO: 6,
-    CAPTURE_INFO: 7,
-
-    2: "RADIO_802_11_COMMON",
-    3: "RADIO_802_11N_MAC_EXT",
-    4: "RADIO_802_11N_MAC_PHY_EXT",
-    5: "SPECTRUM_MAP",
-    6: "PROCESS_INFO",
-    7: "CAPTURE_INFO",
-  });
-
   function Pcap(_io, _parent, _root) {
     this._io = _io;
     this._parent = _parent;
@@ -247,42 +238,9 @@ var Pcap = (function() {
     }
   }
 
-  var PacketPpi = Pcap.PacketPpi = (function() {
-    function PacketPpi(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PacketPpi.prototype._read = function() {
-      this.header = new PacketPpiHeader(this._io, this, this._root);
-      this.fields = [];
-      while (!this._io.isEof()) {
-        this.fields.push(new PacketPpiField(this._io, this, this._root));
-      }
-    }
-
-    return PacketPpi;
-  })();
-
-  var PacketPpiHeader = Pcap.PacketPpiHeader = (function() {
-    function PacketPpiHeader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PacketPpiHeader.prototype._read = function() {
-      this.pphVersion = this._io.readU1();
-      this.pphFlags = this._io.readU1();
-      this.pphLen = this._io.readU2le();
-      this.pphDlt = this._io.readU4le();
-    }
-
-    return PacketPpiHeader;
-  })();
+  /**
+   * @see {@link https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header|Source}
+   */
 
   var Header = Pcap.Header = (function() {
     function Header(_io, _parent, _root) {
@@ -326,45 +284,9 @@ var Pcap = (function() {
     return Header;
   })();
 
-  var Radio80211CommonBody = Pcap.Radio80211CommonBody = (function() {
-    function Radio80211CommonBody(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Radio80211CommonBody.prototype._read = function() {
-      this.tsfTimer = this._io.readU8le();
-      this.flags = this._io.readU2le();
-      this.rate = this._io.readU2le();
-      this.channelFreq = this._io.readU2le();
-      this.channelFlags = this._io.readU2le();
-      this.fhssHopset = this._io.readU1();
-      this.fhssPattern = this._io.readU1();
-      this.dbmAntsignal = this._io.readS1();
-      this.dbmAntnoise = this._io.readS1();
-    }
-
-    return Radio80211CommonBody;
-  })();
-
-  var PacketPpiField = Pcap.PacketPpiField = (function() {
-    function PacketPpiField(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PacketPpiField.prototype._read = function() {
-      this.pfhType = this._io.readU2le();
-      this.pfhDatalen = this._io.readU2le();
-      this.body = this._io.readBytes(this.pfhDatalen);
-    }
-
-    return PacketPpiField;
-  })();
+  /**
+   * @see {@link https://wiki.wireshark.org/Development/LibpcapFileFormat#Record_.28Packet.29_Header|Source}
+   */
 
   var Packet = Pcap.Packet = (function() {
     function Packet(_io, _parent, _root) {
@@ -383,7 +305,7 @@ var Pcap = (function() {
       case Pcap.Linktype.PPI:
         this._raw_body = this._io.readBytes(this.inclLen);
         var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new PacketPpi(_io__raw_body, this, this._root);
+        this.body = new PacketPpi(_io__raw_body);
         break;
       case Pcap.Linktype.ETHERNET:
         this._raw_body = this._io.readBytes(this.inclLen);
@@ -402,6 +324,10 @@ var Pcap = (function() {
 
     /**
      * Length of the packet as it appeared on the network when it was captured.
+     */
+
+    /**
+     * @see {@link https://wiki.wireshark.org/Development/LibpcapFileFormat#Packet_Data|Source}
      */
 
     return Packet;

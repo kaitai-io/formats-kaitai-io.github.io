@@ -11,26 +11,17 @@ public class TlsClientHello extends KaitaiStruct {
     }
 
     public TlsClientHello(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public TlsClientHello(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public TlsClientHello(KaitaiStream _io, KaitaiStruct _parent, TlsClientHello _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -49,24 +40,17 @@ public class TlsClientHello extends KaitaiStruct {
         }
 
         public ServerName(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ServerName(KaitaiStream _io, TlsClientHello.Sni _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ServerName(KaitaiStream _io, TlsClientHello.Sni _parent, TlsClientHello _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -91,24 +75,17 @@ public class TlsClientHello extends KaitaiStruct {
         }
 
         public Random(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Random(KaitaiStream _io, TlsClientHello _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Random(KaitaiStream _io, TlsClientHello _parent, TlsClientHello _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -130,24 +107,17 @@ public class TlsClientHello extends KaitaiStruct {
         }
 
         public SessionId(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SessionId(KaitaiStream _io, TlsClientHello _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SessionId(KaitaiStream _io, TlsClientHello _parent, TlsClientHello _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -169,24 +139,17 @@ public class TlsClientHello extends KaitaiStruct {
         }
 
         public Sni(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Sni(KaitaiStream _io, TlsClientHello.Extension _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Sni(KaitaiStream _io, TlsClientHello.Extension _parent, TlsClientHello _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -211,24 +174,17 @@ public class TlsClientHello extends KaitaiStruct {
         }
 
         public CipherSuites(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public CipherSuites(KaitaiStream _io, TlsClientHello _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public CipherSuites(KaitaiStream _io, TlsClientHello _parent, TlsClientHello _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -253,24 +209,17 @@ public class TlsClientHello extends KaitaiStruct {
         }
 
         public CompressionMethods(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public CompressionMethods(KaitaiStream _io, TlsClientHello _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public CompressionMethods(KaitaiStream _io, TlsClientHello _parent, TlsClientHello _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -292,24 +241,17 @@ public class TlsClientHello extends KaitaiStruct {
         }
 
         public Alpn(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Alpn(KaitaiStream _io, TlsClientHello.Extension _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Alpn(KaitaiStream _io, TlsClientHello.Extension _parent, TlsClientHello _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -334,24 +276,17 @@ public class TlsClientHello extends KaitaiStruct {
         }
 
         public Extensions(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Extensions(KaitaiStream _io, TlsClientHello _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Extensions(KaitaiStream _io, TlsClientHello _parent, TlsClientHello _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -376,24 +311,17 @@ public class TlsClientHello extends KaitaiStruct {
         }
 
         public Version(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Version(KaitaiStream _io, TlsClientHello _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Version(KaitaiStream _io, TlsClientHello _parent, TlsClientHello _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -415,24 +343,17 @@ public class TlsClientHello extends KaitaiStruct {
         }
 
         public Protocol(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Protocol(KaitaiStream _io, TlsClientHello.Alpn _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Protocol(KaitaiStream _io, TlsClientHello.Alpn _parent, TlsClientHello _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -454,24 +375,17 @@ public class TlsClientHello extends KaitaiStruct {
         }
 
         public Extension(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Extension(KaitaiStream _io, TlsClientHello.Extensions _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Extension(KaitaiStream _io, TlsClientHello.Extensions _parent, TlsClientHello _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

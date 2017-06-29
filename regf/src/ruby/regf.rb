@@ -29,6 +29,7 @@ class Regf < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @header = FileHeader.new(@_io, self, @_root)
     @_raw_hive_bins = []
@@ -38,14 +39,17 @@ class Regf < Kaitai::Struct::Struct
       io = Kaitai::Struct::Stream.new(@_raw_hive_bins.last)
       @hive_bins << HiveBin.new(io, self, @_root)
     end
+    self
   end
   class Filetime < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @value = @_io.read_u8le
+      self
     end
     attr_reader :value
   end
@@ -54,12 +58,14 @@ class Regf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @header = HiveBinHeader.new(@_io, self, @_root)
       @cells = []
       while not @_io.eof?
         @cells << HiveBinCell.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :header
     attr_reader :cells
@@ -69,6 +75,7 @@ class Regf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @signature = @_io.ensure_fixed_contents([104, 98, 105, 110].pack('C*'))
       @offset = @_io.read_u4le
@@ -77,6 +84,7 @@ class Regf < Kaitai::Struct::Struct
       @unknown2 = @_io.read_u4le
       @timestamp = Filetime.new(@_io, self, @_root)
       @unknown4 = @_io.read_u4le
+      self
     end
     attr_reader :signature
 
@@ -110,6 +118,7 @@ class Regf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @cell_size_raw = @_io.read_s4le
       @identifier = (@_io.read_bytes(2)).force_encoding("ascii")
@@ -145,6 +154,7 @@ class Regf < Kaitai::Struct::Struct
       else
         @data = @_io.read_bytes(((cell_size - 2) - 4))
       end
+      self
     end
     class SubKeyListVk < Kaitai::Struct::Struct
 
@@ -172,6 +182,7 @@ class Regf < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @value_name_size = @_io.read_u2le
         @data_size = @_io.read_u4le
@@ -182,6 +193,7 @@ class Regf < Kaitai::Struct::Struct
         if flags == :vk_flags_value_comp_name
           @value_name = (@_io.read_bytes(value_name_size)).force_encoding("ascii")
         end
+        self
       end
       attr_reader :value_name_size
       attr_reader :data_size
@@ -196,21 +208,25 @@ class Regf < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @count = @_io.read_u2le
         @items = Array.new(count)
         (count).times { |i|
           @items[i] = Item.new(@_io, self, @_root)
         }
+        self
       end
       class Item < Kaitai::Struct::Struct
         def initialize(_io, _parent = nil, _root = self)
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @named_key_offset = @_io.read_u4le
           @hash_value = @_io.read_u4le
+          self
         end
         attr_reader :named_key_offset
         attr_reader :hash_value
@@ -223,11 +239,13 @@ class Regf < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @unknown1 = @_io.read_u2le
         @previous_security_key_offset = @_io.read_u4le
         @next_security_key_offset = @_io.read_u4le
         @reference_count = @_io.read_u4le
+        self
       end
       attr_reader :unknown1
       attr_reader :previous_security_key_offset
@@ -239,20 +257,24 @@ class Regf < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @count = @_io.read_u2le
         @items = Array.new(count)
         (count).times { |i|
           @items[i] = Item.new(@_io, self, @_root)
         }
+        self
       end
       class Item < Kaitai::Struct::Struct
         def initialize(_io, _parent = nil, _root = self)
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @named_key_offset = @_io.read_u4le
+          self
         end
         attr_reader :named_key_offset
       end
@@ -280,6 +302,7 @@ class Regf < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @flags = Kaitai::Struct::Stream::resolve_enum(NK_FLAGS, @_io.read_u2le)
         @last_key_written_date_and_time = Filetime.new(@_io, self, @_root)
@@ -301,6 +324,7 @@ class Regf < Kaitai::Struct::Struct
         @class_name_size = @_io.read_u2le
         @unknown_string_size = @_io.read_u4le
         @unknown_string = (@_io.read_bytes(unknown_string_size)).force_encoding("ascii")
+        self
       end
       attr_reader :flags
       attr_reader :last_key_written_date_and_time
@@ -328,20 +352,24 @@ class Regf < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @count = @_io.read_u2le
         @items = Array.new(count)
         (count).times { |i|
           @items[i] = Item.new(@_io, self, @_root)
         }
+        self
       end
       class Item < Kaitai::Struct::Struct
         def initialize(_io, _parent = nil, _root = self)
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @sub_key_list_offset = @_io.read_u4le
+          self
         end
         attr_reader :sub_key_list_offset
       end
@@ -379,6 +407,7 @@ class Regf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @signature = @_io.ensure_fixed_contents([114, 101, 103, 102].pack('C*'))
       @primary_sequence_number = @_io.read_u4le
@@ -397,6 +426,7 @@ class Regf < Kaitai::Struct::Struct
       @reserved = @_io.read_bytes(3576)
       @boot_type = @_io.read_u4le
       @boot_recover = @_io.read_u4le
+      self
     end
     attr_reader :signature
     attr_reader :primary_sequence_number

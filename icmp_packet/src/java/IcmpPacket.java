@@ -31,26 +31,17 @@ public class IcmpPacket extends KaitaiStruct {
     }
 
     public IcmpPacket(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public IcmpPacket(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public IcmpPacket(KaitaiStream _io, KaitaiStruct _parent, IcmpPacket _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -90,24 +81,17 @@ public class IcmpPacket extends KaitaiStruct {
         }
 
         public DestinationUnreachableMsg(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DestinationUnreachableMsg(KaitaiStream _io, IcmpPacket _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DestinationUnreachableMsg(KaitaiStream _io, IcmpPacket _parent, IcmpPacket _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -144,24 +128,17 @@ public class IcmpPacket extends KaitaiStruct {
         }
 
         public TimeExceededMsg(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public TimeExceededMsg(KaitaiStream _io, IcmpPacket _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public TimeExceededMsg(KaitaiStream _io, IcmpPacket _parent, IcmpPacket _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -183,24 +160,17 @@ public class IcmpPacket extends KaitaiStruct {
         }
 
         public EchoMsg(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public EchoMsg(KaitaiStream _io, IcmpPacket _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public EchoMsg(KaitaiStream _io, IcmpPacket _parent, IcmpPacket _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

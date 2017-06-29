@@ -17,6 +17,7 @@ class FalloutDat < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @folder_count = @_io.read_u4be
     @unknown1 = @_io.read_u4be
@@ -30,15 +31,18 @@ class FalloutDat < Kaitai::Struct::Struct
     (folder_count).times { |i|
       @folders[i] = Folder.new(@_io, self, @_root)
     }
+    self
   end
   class Pstr < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @size = @_io.read_u1
       @str = (@_io.read_bytes(size)).force_encoding("ASCII")
+      self
     end
     attr_reader :size
     attr_reader :str
@@ -48,6 +52,7 @@ class FalloutDat < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @file_count = @_io.read_u4be
       @unknown = @_io.read_u4be
@@ -57,6 +62,7 @@ class FalloutDat < Kaitai::Struct::Struct
       (file_count).times { |i|
         @files[i] = File.new(@_io, self, @_root)
       }
+      self
     end
     attr_reader :file_count
     attr_reader :unknown
@@ -69,12 +75,14 @@ class FalloutDat < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @name = Pstr.new(@_io, self, @_root)
       @flags = Kaitai::Struct::Stream::resolve_enum(COMPRESSION, @_io.read_u4be)
       @offset = @_io.read_u4be
       @size_unpacked = @_io.read_u4be
       @size_packed = @_io.read_u4be
+      self
     end
     def contents
       return @contents unless @contents.nil?

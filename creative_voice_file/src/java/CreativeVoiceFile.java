@@ -71,26 +71,17 @@ public class CreativeVoiceFile extends KaitaiStruct {
     }
 
     public CreativeVoiceFile(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public CreativeVoiceFile(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public CreativeVoiceFile(KaitaiStream _io, KaitaiStruct _parent, CreativeVoiceFile _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -113,24 +104,17 @@ public class CreativeVoiceFile extends KaitaiStruct {
         }
 
         public BlockMarker(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BlockMarker(KaitaiStream _io, CreativeVoiceFile.Block _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BlockMarker(KaitaiStream _io, CreativeVoiceFile.Block _parent, CreativeVoiceFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -157,24 +141,17 @@ public class CreativeVoiceFile extends KaitaiStruct {
         }
 
         public BlockSilence(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BlockSilence(KaitaiStream _io, CreativeVoiceFile.Block _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BlockSilence(KaitaiStream _io, CreativeVoiceFile.Block _parent, CreativeVoiceFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -228,24 +205,17 @@ public class CreativeVoiceFile extends KaitaiStruct {
         }
 
         public BlockSoundDataNew(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BlockSoundDataNew(KaitaiStream _io, CreativeVoiceFile.Block _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BlockSoundDataNew(KaitaiStream _io, CreativeVoiceFile.Block _parent, CreativeVoiceFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -279,24 +249,17 @@ public class CreativeVoiceFile extends KaitaiStruct {
         }
 
         public Block(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Block(KaitaiStream _io, CreativeVoiceFile _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Block(KaitaiStream _io, CreativeVoiceFile _parent, CreativeVoiceFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -401,24 +364,17 @@ public class CreativeVoiceFile extends KaitaiStruct {
         }
 
         public BlockRepeatStart(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BlockRepeatStart(KaitaiStream _io, CreativeVoiceFile.Block _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BlockRepeatStart(KaitaiStream _io, CreativeVoiceFile.Block _parent, CreativeVoiceFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -445,24 +401,17 @@ public class CreativeVoiceFile extends KaitaiStruct {
         }
 
         public BlockSoundData(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BlockSoundData(KaitaiStream _io, CreativeVoiceFile.Block _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BlockSoundData(KaitaiStream _io, CreativeVoiceFile.Block _parent, CreativeVoiceFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -503,24 +452,17 @@ public class CreativeVoiceFile extends KaitaiStruct {
         }
 
         public BlockExtraInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BlockExtraInfo(KaitaiStream _io, CreativeVoiceFile.Block _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BlockExtraInfo(KaitaiStream _io, CreativeVoiceFile.Block _parent, CreativeVoiceFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

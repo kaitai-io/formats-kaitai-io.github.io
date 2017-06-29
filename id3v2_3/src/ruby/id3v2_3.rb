@@ -11,17 +11,21 @@ class Id3v23 < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @tag = Tag.new(@_io, self, @_root)
+    self
   end
   class U1beSynchsafe < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @padding = @_io.read_bits_int(1) != 0
       @value = @_io.read_bits_int(7)
+      self
     end
     attr_reader :padding
     attr_reader :value
@@ -31,9 +35,11 @@ class Id3v23 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @byte0 = U1beSynchsafe.new(@_io, self, @_root)
       @byte1 = U1beSynchsafe.new(@_io, self, @_root)
+      self
     end
     def value
       return @value unless @value.nil?
@@ -48,6 +54,7 @@ class Id3v23 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @header = Header.new(@_io, self, @_root)
       if header.flags.flag_headerex
@@ -61,6 +68,7 @@ class Id3v23 < Kaitai::Struct::Struct
       if header.flags.flag_headerex
         @padding = @_io.read_bytes((header_ex.padding_size - _io.pos))
       end
+      self
     end
     attr_reader :header
     attr_reader :header_ex
@@ -72,9 +80,11 @@ class Id3v23 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @short0 = U2beSynchsafe.new(@_io, self, @_root)
       @short1 = U2beSynchsafe.new(@_io, self, @_root)
+      self
     end
     def value
       return @value unless @value.nil?
@@ -89,17 +99,20 @@ class Id3v23 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @id = (@_io.read_bytes(4)).force_encoding("ASCII")
       @size = @_io.read_u4be
       @flags = Flags.new(@_io, self, @_root)
       @data = @_io.read_bytes(size)
+      self
     end
     class Flags < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @flag_discard_alter_tag = @_io.read_bits_int(1) != 0
         @flag_discard_alter_file = @_io.read_bits_int(1) != 0
@@ -109,6 +122,7 @@ class Id3v23 < Kaitai::Struct::Struct
         @flag_encrypted = @_io.read_bits_int(1) != 0
         @flag_grouping = @_io.read_bits_int(1) != 0
         @reserved2 = @_io.read_bits_int(5)
+        self
       end
       attr_reader :flag_discard_alter_tag
       attr_reader :flag_discard_alter_file
@@ -138,6 +152,7 @@ class Id3v23 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @size = @_io.read_u4be
       @flags_ex = FlagsEx.new(@_io, self, @_root)
@@ -145,15 +160,18 @@ class Id3v23 < Kaitai::Struct::Struct
       if flags_ex.flag_crc
         @crc = @_io.read_u4be
       end
+      self
     end
     class FlagsEx < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @flag_crc = @_io.read_bits_int(1) != 0
         @reserved = @_io.read_bits_int(15)
+        self
       end
       attr_reader :flag_crc
       attr_reader :reserved
@@ -172,23 +190,27 @@ class Id3v23 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = @_io.ensure_fixed_contents([73, 68, 51].pack('C*'))
       @version_major = @_io.read_u1
       @version_revision = @_io.read_u1
       @flags = Flags.new(@_io, self, @_root)
       @size = U4beSynchsafe.new(@_io, self, @_root)
+      self
     end
     class Flags < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @flag_unsynchronization = @_io.read_bits_int(1) != 0
         @flag_headerex = @_io.read_bits_int(1) != 0
         @flag_experimental = @_io.read_bits_int(1) != 0
         @reserved = @_io.read_bits_int(5)
+        self
       end
       attr_reader :flag_unsynchronization
       attr_reader :flag_headerex

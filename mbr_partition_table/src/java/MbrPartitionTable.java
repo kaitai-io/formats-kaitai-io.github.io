@@ -11,26 +11,17 @@ public class MbrPartitionTable extends KaitaiStruct {
     }
 
     public MbrPartitionTable(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public MbrPartitionTable(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public MbrPartitionTable(KaitaiStream _io, KaitaiStruct _parent, MbrPartitionTable _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -47,24 +38,17 @@ public class MbrPartitionTable extends KaitaiStruct {
         }
 
         public PartitionEntry(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PartitionEntry(KaitaiStream _io, MbrPartitionTable _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PartitionEntry(KaitaiStream _io, MbrPartitionTable _parent, MbrPartitionTable _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -98,24 +82,17 @@ public class MbrPartitionTable extends KaitaiStruct {
         }
 
         public Chs(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Chs(KaitaiStream _io, MbrPartitionTable.PartitionEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Chs(KaitaiStream _io, MbrPartitionTable.PartitionEntry _parent, MbrPartitionTable _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

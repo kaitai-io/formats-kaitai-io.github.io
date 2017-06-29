@@ -34,6 +34,7 @@ class Asn1Der < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @type_tag = Kaitai::Struct::Stream::resolve_enum(TYPE_TAG, @_io.read_u1)
     @len = LenEncoded.new(@_io, self, @_root)
@@ -61,17 +62,20 @@ class Asn1Der < Kaitai::Struct::Struct
     else
       @body = @_io.read_bytes(len.result)
     end
+    self
   end
   class LenEncoded < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @b1 = @_io.read_u1
       if b1 == 130
         @int2 = @_io.read_u2be
       end
+      self
     end
     def result
       return @result unless @result.nil?
@@ -86,11 +90,13 @@ class Asn1Der < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       while not @_io.eof?
         @entries << Asn1Der.new(@_io)
       end
+      self
     end
     attr_reader :entries
   end
@@ -99,8 +105,10 @@ class Asn1Der < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @str = (@_io.read_bytes_full).force_encoding("UTF-8")
+      self
     end
     attr_reader :str
   end
@@ -109,8 +117,10 @@ class Asn1Der < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @str = (@_io.read_bytes_full).force_encoding("ASCII")
+      self
     end
     attr_reader :str
   end

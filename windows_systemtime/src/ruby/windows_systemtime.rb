@@ -15,6 +15,7 @@ class WindowsSystemtime < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @year = @_io.read_u2le
     @month = @_io.read_u2le
@@ -24,6 +25,7 @@ class WindowsSystemtime < Kaitai::Struct::Struct
     @min = @_io.read_u2le
     @sec = @_io.read_u2le
     @msec = @_io.read_u2le
+    self
   end
 
   ##

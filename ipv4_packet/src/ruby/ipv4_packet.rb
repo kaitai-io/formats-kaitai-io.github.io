@@ -159,6 +159,7 @@ class Ipv4Packet < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @b1 = @_io.read_u1
     @b2 = @_io.read_u1
@@ -193,17 +194,20 @@ class Ipv4Packet < Kaitai::Struct::Struct
     else
       @body = @_io.read_bytes((total_length - ihl_bytes))
     end
+    self
   end
   class Ipv4Options < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       while not @_io.eof?
         @entries << Ipv4Option.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :entries
   end
@@ -212,10 +216,12 @@ class Ipv4Packet < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @b1 = @_io.read_u1
       @len = @_io.read_u1
       @body = @_io.read_bytes((len > 2 ? (len - 2) : 0))
+      self
     end
     def copy
       return @copy unless @copy.nil?

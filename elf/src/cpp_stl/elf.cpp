@@ -32,6 +32,10 @@ elf_t::endian_elf_t::endian_elf_t(kaitai::kstream *p_io, elf_t* p_parent, elf_t 
     f_program_headers = false;
     f_section_headers = false;
     f_strings = false;
+    _read();
+}
+
+void elf_t::endian_elf_t::_read() {
     switch (_root()->endian()) {
     case ENDIAN_LE:
         m__is_le = true;
@@ -145,6 +149,10 @@ elf_t::endian_elf_t::program_header_t::program_header_t(kaitai::kstream *p_io, e
     m__parent = p_parent;
     m__root = p_root;
     m__is_le = p_is_le;
+    _read();
+}
+
+void elf_t::endian_elf_t::program_header_t::_read() {
 
     if (m__is_le == -1) {
         throw std::runtime_error("unable to decide on endianness");
@@ -288,6 +296,10 @@ elf_t::endian_elf_t::section_header_t::section_header_t(kaitai::kstream *p_io, e
     m__is_le = p_is_le;
     f_body = false;
     f_name = false;
+    _read();
+}
+
+void elf_t::endian_elf_t::section_header_t::_read() {
 
     if (m__is_le == -1) {
         throw std::runtime_error("unable to decide on endianness");
@@ -447,6 +459,10 @@ elf_t::endian_elf_t::strings_struct_t::strings_struct_t(kaitai::kstream *p_io, e
     m__parent = p_parent;
     m__root = p_root;
     m__is_le = p_is_le;
+    _read();
+}
+
+void elf_t::endian_elf_t::strings_struct_t::_read() {
 
     if (m__is_le == -1) {
         throw std::runtime_error("unable to decide on endianness");

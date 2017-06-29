@@ -13,26 +13,17 @@ public class StandardMidiFile extends KaitaiStruct {
     }
 
     public StandardMidiFile(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public StandardMidiFile(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public StandardMidiFile(KaitaiStream _io, KaitaiStruct _parent, StandardMidiFile _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -48,24 +39,17 @@ public class StandardMidiFile extends KaitaiStruct {
         }
 
         public TrackEvents(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public TrackEvents(KaitaiStream _io, StandardMidiFile.Track _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public TrackEvents(KaitaiStream _io, StandardMidiFile.Track _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -87,24 +71,17 @@ public class StandardMidiFile extends KaitaiStruct {
         }
 
         public TrackEvent(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public TrackEvent(KaitaiStream _io, StandardMidiFile.TrackEvents _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public TrackEvent(KaitaiStream _io, StandardMidiFile.TrackEvents _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -186,24 +163,17 @@ public class StandardMidiFile extends KaitaiStruct {
         }
 
         public PitchBendEvent(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PitchBendEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PitchBendEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -241,24 +211,17 @@ public class StandardMidiFile extends KaitaiStruct {
         }
 
         public ProgramChangeEvent(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ProgramChangeEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ProgramChangeEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -277,24 +240,17 @@ public class StandardMidiFile extends KaitaiStruct {
         }
 
         public NoteOnEvent(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public NoteOnEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public NoteOnEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -316,24 +272,17 @@ public class StandardMidiFile extends KaitaiStruct {
         }
 
         public PolyphonicPressureEvent(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PolyphonicPressureEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PolyphonicPressureEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -355,24 +304,17 @@ public class StandardMidiFile extends KaitaiStruct {
         }
 
         public Track(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Track(KaitaiStream _io, StandardMidiFile _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Track(KaitaiStream _io, StandardMidiFile _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -429,24 +371,17 @@ public class StandardMidiFile extends KaitaiStruct {
         }
 
         public MetaEventBody(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MetaEventBody(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MetaEventBody(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -471,24 +406,17 @@ public class StandardMidiFile extends KaitaiStruct {
         }
 
         public ControllerEvent(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ControllerEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ControllerEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -510,24 +438,17 @@ public class StandardMidiFile extends KaitaiStruct {
         }
 
         public Header(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Header(KaitaiStream _io, StandardMidiFile _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Header(KaitaiStream _io, StandardMidiFile _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -558,24 +479,17 @@ public class StandardMidiFile extends KaitaiStruct {
         }
 
         public SysexEventBody(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SysexEventBody(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SysexEventBody(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -597,24 +511,17 @@ public class StandardMidiFile extends KaitaiStruct {
         }
 
         public NoteOffEvent(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public NoteOffEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public NoteOffEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -636,24 +543,17 @@ public class StandardMidiFile extends KaitaiStruct {
         }
 
         public ChannelPressureEvent(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ChannelPressureEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ChannelPressureEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

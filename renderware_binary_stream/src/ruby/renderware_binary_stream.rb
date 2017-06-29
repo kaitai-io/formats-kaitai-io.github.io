@@ -185,6 +185,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @code = Kaitai::Struct::Stream::resolve_enum(SECTIONS, @_io.read_u4le)
     @size = @_io.read_u4le
@@ -217,6 +218,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
     else
       @body = @_io.read_bytes(size)
     end
+    self
   end
 
   ##
@@ -226,6 +228,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @num_atomics = @_io.read_u4le
       if _parent.version >= 208896
@@ -234,6 +237,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       if _parent.version >= 208896
         @num_cameras = @_io.read_u4le
       end
+      self
     end
     attr_reader :num_atomics
     attr_reader :num_lights
@@ -247,6 +251,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @format = @_io.read_u4le
       @num_triangles = @_io.read_u4le
@@ -262,6 +267,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       (num_morph_targets).times { |i|
         @morph_targets[i] = MorphTarget.new(@_io, self, @_root)
       }
+      self
     end
     def is_textured
       return @is_textured unless @is_textured.nil?
@@ -296,6 +302,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       if _parent.is_prelit
         @prelit_colors = Array.new(_parent.num_vertices)
@@ -313,6 +320,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       (_parent.num_triangles).times { |i|
         @triangles[i] = Triangle.new(@_io, self, @_root)
       }
+      self
     end
     attr_reader :prelit_colors
     attr_reader :tex_coords
@@ -326,8 +334,10 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @num_geometries = @_io.read_u4le
+      self
     end
     attr_reader :num_geometries
   end
@@ -336,11 +346,13 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @r = @_io.read_u1
       @g = @_io.read_u1
       @b = @_io.read_u1
       @a = @_io.read_u1
+      self
     end
     attr_reader :r
     attr_reader :g
@@ -352,11 +364,13 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x = @_io.read_f4le
       @y = @_io.read_f4le
       @z = @_io.read_f4le
       @radius = @_io.read_f4le
+      self
     end
     attr_reader :x
     attr_reader :y
@@ -368,6 +382,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @bounding_sphere = Sphere.new(@_io, self, @_root)
       @has_vertices = @_io.read_u4le
@@ -384,6 +399,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
           @normals[i] = Vector3d.new(@_io, self, @_root)
         }
       end
+      self
     end
     attr_reader :bounding_sphere
     attr_reader :has_vertices
@@ -399,10 +415,12 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @ambient = @_io.read_f4le
       @specular = @_io.read_f4le
       @diffuse = @_io.read_f4le
+      self
     end
     attr_reader :ambient
     attr_reader :specular
@@ -416,12 +434,14 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @num_frames = @_io.read_u4le
       @frames = Array.new(num_frames)
       (num_frames).times { |i|
         @frames[i] = Frame.new(@_io, self, @_root)
       }
+      self
     end
     attr_reader :num_frames
     attr_reader :frames
@@ -434,11 +454,13 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = Array.new(3)
       (3).times { |i|
         @entries[i] = Vector3d.new(@_io, self, @_root)
       }
+      self
     end
     attr_reader :entries
   end
@@ -450,10 +472,12 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x = @_io.read_f4le
       @y = @_io.read_f4le
       @z = @_io.read_f4le
+      self
     end
     attr_reader :x
     attr_reader :y
@@ -472,6 +496,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @code = @_io.ensure_fixed_contents([1, 0, 0, 0].pack('C*'))
       @header_size = @_io.read_u4le
@@ -504,6 +529,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       while not @_io.eof?
         @entries << RenderwareBinaryStream.new(@_io)
       end
+      self
     end
     attr_reader :code
     attr_reader :header_size
@@ -517,11 +543,13 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @vertex2 = @_io.read_u2le
       @vertex1 = @_io.read_u2le
       @material_id = @_io.read_u2le
       @vertex3 = @_io.read_u2le
+      self
     end
     attr_reader :vertex2
     attr_reader :vertex1
@@ -536,11 +564,13 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @rotation_matrix = Matrix.new(@_io, self, @_root)
       @position = Vector3d.new(@_io, self, @_root)
       @cur_frame_idx = @_io.read_s4le
       @matrix_creation_flags = @_io.read_u4le
+      self
     end
     attr_reader :rotation_matrix
     attr_reader :position
@@ -552,9 +582,11 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @u = @_io.read_f4le
       @v = @_io.read_f4le
+      self
     end
     attr_reader :u
     attr_reader :v
@@ -564,8 +596,10 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @num_textures = @_io.read_u4le
+      self
     end
     attr_reader :num_textures
   end

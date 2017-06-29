@@ -10,26 +10,17 @@ public class Ines extends KaitaiStruct {
     }
 
     public Ines(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Ines(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Ines(KaitaiStream _io, KaitaiStruct _parent, Ines _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -42,24 +33,17 @@ public class Ines extends KaitaiStruct {
         }
 
         public F7(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public F7(KaitaiStream _io, Ines.Header _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public F7(KaitaiStream _io, Ines.Header _parent, Ines _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -103,24 +87,17 @@ public class Ines extends KaitaiStruct {
         }
 
         public F6(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public F6(KaitaiStream _io, Ines.Header _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public F6(KaitaiStream _io, Ines.Header _parent, Ines _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -171,24 +148,17 @@ public class Ines extends KaitaiStruct {
         }
 
         public F10(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public F10(KaitaiStream _io, Ines.Header _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public F10(KaitaiStream _io, Ines.Header _parent, Ines _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -231,24 +201,17 @@ public class Ines extends KaitaiStruct {
         }
 
         public F9(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public F9(KaitaiStream _io, Ines.Header _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public F9(KaitaiStream _io, Ines.Header _parent, Ines _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -274,24 +237,17 @@ public class Ines extends KaitaiStruct {
         }
 
         public Header(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Header(KaitaiStream _io, Ines _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Header(KaitaiStream _io, Ines _parent, Ines _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

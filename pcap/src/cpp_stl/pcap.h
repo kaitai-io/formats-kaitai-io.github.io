@@ -13,15 +13,16 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 class ethernet_frame_t;
+class packet_ppi_t;
+
+/**
+ * \sa Source
+ */
 
 class pcap_t : public kaitai::kstruct {
 
 public:
-    class packet_ppi_t;
-    class packet_ppi_header_t;
     class header_t;
-    class radio_802_11_common_body_t;
-    class packet_ppi_field_t;
     class packet_t;
 
     enum linktype_t {
@@ -131,64 +132,13 @@ public:
         LINKTYPE_ISO_14443 = 264
     };
 
-    enum pfh_type_t {
-        PFH_TYPE_RADIO_802_11_COMMON = 2,
-        PFH_TYPE_RADIO_802_11N_MAC_EXT = 3,
-        PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT = 4,
-        PFH_TYPE_SPECTRUM_MAP = 5,
-        PFH_TYPE_PROCESS_INFO = 6,
-        PFH_TYPE_CAPTURE_INFO = 7
-    };
-
     pcap_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, pcap_t* p_root = 0);
     void _read();
     ~pcap_t();
 
-    class packet_ppi_t : public kaitai::kstruct {
-
-    public:
-
-        packet_ppi_t(kaitai::kstream* p_io, pcap_t::packet_t* p_parent = 0, pcap_t* p_root = 0);
-        void _read();
-        ~packet_ppi_t();
-
-    private:
-        packet_ppi_header_t* m_header;
-        std::vector<packet_ppi_field_t*>* m_fields;
-        pcap_t* m__root;
-        pcap_t::packet_t* m__parent;
-
-    public:
-        packet_ppi_header_t* header() const { return m_header; }
-        std::vector<packet_ppi_field_t*>* fields() const { return m_fields; }
-        pcap_t* _root() const { return m__root; }
-        pcap_t::packet_t* _parent() const { return m__parent; }
-    };
-
-    class packet_ppi_header_t : public kaitai::kstruct {
-
-    public:
-
-        packet_ppi_header_t(kaitai::kstream* p_io, pcap_t::packet_ppi_t* p_parent = 0, pcap_t* p_root = 0);
-        void _read();
-        ~packet_ppi_header_t();
-
-    private:
-        uint8_t m_pph_version;
-        uint8_t m_pph_flags;
-        uint16_t m_pph_len;
-        uint32_t m_pph_dlt;
-        pcap_t* m__root;
-        pcap_t::packet_ppi_t* m__parent;
-
-    public:
-        uint8_t pph_version() const { return m_pph_version; }
-        uint8_t pph_flags() const { return m_pph_flags; }
-        uint16_t pph_len() const { return m_pph_len; }
-        uint32_t pph_dlt() const { return m_pph_dlt; }
-        pcap_t* _root() const { return m__root; }
-        pcap_t::packet_ppi_t* _parent() const { return m__parent; }
-    };
+    /**
+     * \sa Source
+     */
 
     class header_t : public kaitai::kstruct {
 
@@ -242,63 +192,9 @@ public:
         pcap_t* _parent() const { return m__parent; }
     };
 
-    class radio_802_11_common_body_t : public kaitai::kstruct {
-
-    public:
-
-        radio_802_11_common_body_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, pcap_t* p_root = 0);
-        void _read();
-        ~radio_802_11_common_body_t();
-
-    private:
-        uint64_t m_tsf_timer;
-        uint16_t m_flags;
-        uint16_t m_rate;
-        uint16_t m_channel_freq;
-        uint16_t m_channel_flags;
-        uint8_t m_fhss_hopset;
-        uint8_t m_fhss_pattern;
-        int8_t m_dbm_antsignal;
-        int8_t m_dbm_antnoise;
-        pcap_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        uint64_t tsf_timer() const { return m_tsf_timer; }
-        uint16_t flags() const { return m_flags; }
-        uint16_t rate() const { return m_rate; }
-        uint16_t channel_freq() const { return m_channel_freq; }
-        uint16_t channel_flags() const { return m_channel_flags; }
-        uint8_t fhss_hopset() const { return m_fhss_hopset; }
-        uint8_t fhss_pattern() const { return m_fhss_pattern; }
-        int8_t dbm_antsignal() const { return m_dbm_antsignal; }
-        int8_t dbm_antnoise() const { return m_dbm_antnoise; }
-        pcap_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    class packet_ppi_field_t : public kaitai::kstruct {
-
-    public:
-
-        packet_ppi_field_t(kaitai::kstream* p_io, pcap_t::packet_ppi_t* p_parent = 0, pcap_t* p_root = 0);
-        void _read();
-        ~packet_ppi_field_t();
-
-    private:
-        uint16_t m_pfh_type;
-        uint16_t m_pfh_datalen;
-        std::string m_body;
-        pcap_t* m__root;
-        pcap_t::packet_ppi_t* m__parent;
-
-    public:
-        uint16_t pfh_type() const { return m_pfh_type; }
-        uint16_t pfh_datalen() const { return m_pfh_datalen; }
-        std::string body() const { return m_body; }
-        pcap_t* _root() const { return m__root; }
-        pcap_t::packet_ppi_t* _parent() const { return m__parent; }
-    };
+    /**
+     * \sa Source
+     */
 
     class packet_t : public kaitai::kstruct {
 
@@ -332,6 +228,10 @@ public:
          * Length of the packet as it appeared on the network when it was captured.
          */
         uint32_t orig_len() const { return m_orig_len; }
+
+        /**
+         * \sa Source
+         */
         kaitai::kstruct* body() const { return m_body; }
         pcap_t* _root() const { return m__root; }
         pcap_t* _parent() const { return m__parent; }

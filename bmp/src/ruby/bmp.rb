@@ -11,21 +11,25 @@ class Bmp < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @file_hdr = FileHeader.new(@_io, self, @_root)
     @dib_hdr = DibHeader.new(@_io, self, @_root)
+    self
   end
   class FileHeader < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @file_type = @_io.read_bytes(2)
       @file_size = @_io.read_u4le
       @reserved1 = @_io.read_u2le
       @reserved2 = @_io.read_u2le
       @bitmap_ofs = @_io.read_s4le
+      self
     end
     attr_reader :file_type
     attr_reader :file_size
@@ -38,6 +42,7 @@ class Bmp < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @dib_header_size = @_io.read_s4le
       if dib_header_size == 12
@@ -58,6 +63,7 @@ class Bmp < Kaitai::Struct::Struct
       if  ((dib_header_size != 12) && (dib_header_size != 40) && (dib_header_size != 124)) 
         @dib_header_body = @_io.read_bytes((dib_header_size - 4))
       end
+      self
     end
     attr_reader :dib_header_size
     attr_reader :bitmap_core_header
@@ -73,11 +79,13 @@ class Bmp < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @image_width = @_io.read_u2le
       @image_height = @_io.read_u2le
       @num_planes = @_io.read_u2le
       @bits_per_pixel = @_io.read_u2le
+      self
     end
     attr_reader :image_width
     attr_reader :image_height
@@ -89,6 +97,7 @@ class Bmp < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @image_width = @_io.read_u4le
       @image_height = @_io.read_u4le
@@ -100,6 +109,7 @@ class Bmp < Kaitai::Struct::Struct
       @y_px_per_m = @_io.read_u4le
       @num_colors_used = @_io.read_u4le
       @num_colors_important = @_io.read_u4le
+      self
     end
     attr_reader :image_width
     attr_reader :image_height

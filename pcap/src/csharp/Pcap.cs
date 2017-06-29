@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <remarks>
+    /// Reference: <a href="http://wiki.wireshark.org/Development/LibpcapFileFormat">Source</a>
+    /// </remarks>
     public partial class Pcap : KaitaiStruct
     {
         public static Pcap FromFile(string fileName)
@@ -119,16 +123,6 @@ namespace Kaitai
             Iso14443 = 264,
         }
 
-        public enum PfhType
-        {
-            Radio80211Common = 2,
-            Radio80211nMacExt = 3,
-            Radio80211nMacPhyExt = 4,
-            SpectrumMap = 5,
-            ProcessInfo = 6,
-            CaptureInfo = 7,
-        }
-
         public Pcap(KaitaiStream io, KaitaiStruct parent = null, Pcap root = null) : base(io)
         {
             m_parent = parent;
@@ -142,67 +136,10 @@ namespace Kaitai
                 _packets.Add(new Packet(m_io, this, m_root));
             }
             }
-        public partial class PacketPpi : KaitaiStruct
-        {
-            public static PacketPpi FromFile(string fileName)
-            {
-                return new PacketPpi(new KaitaiStream(fileName));
-            }
 
-            public PacketPpi(KaitaiStream io, Pcap.Packet parent = null, Pcap root = null) : base(io)
-            {
-                m_parent = parent;
-                m_root = root;
-                _read();
-            }
-            private void _read() {
-                _header = new PacketPpiHeader(m_io, this, m_root);
-                _fields = new List<PacketPpiField>();
-                while (!m_io.IsEof) {
-                    _fields.Add(new PacketPpiField(m_io, this, m_root));
-                }
-                }
-            private PacketPpiHeader _header;
-            private List<PacketPpiField> _fields;
-            private Pcap m_root;
-            private Pcap.Packet m_parent;
-            public PacketPpiHeader Header { get { return _header; } }
-            public List<PacketPpiField> Fields { get { return _fields; } }
-            public Pcap M_Root { get { return m_root; } }
-            public Pcap.Packet M_Parent { get { return m_parent; } }
-        }
-        public partial class PacketPpiHeader : KaitaiStruct
-        {
-            public static PacketPpiHeader FromFile(string fileName)
-            {
-                return new PacketPpiHeader(new KaitaiStream(fileName));
-            }
-
-            public PacketPpiHeader(KaitaiStream io, Pcap.PacketPpi parent = null, Pcap root = null) : base(io)
-            {
-                m_parent = parent;
-                m_root = root;
-                _read();
-            }
-            private void _read() {
-                _pphVersion = m_io.ReadU1();
-                _pphFlags = m_io.ReadU1();
-                _pphLen = m_io.ReadU2le();
-                _pphDlt = m_io.ReadU4le();
-                }
-            private byte _pphVersion;
-            private byte _pphFlags;
-            private ushort _pphLen;
-            private uint _pphDlt;
-            private Pcap m_root;
-            private Pcap.PacketPpi m_parent;
-            public byte PphVersion { get { return _pphVersion; } }
-            public byte PphFlags { get { return _pphFlags; } }
-            public ushort PphLen { get { return _pphLen; } }
-            public uint PphDlt { get { return _pphDlt; } }
-            public Pcap M_Root { get { return m_root; } }
-            public Pcap.PacketPpi M_Parent { get { return m_parent; } }
-        }
+        /// <remarks>
+        /// Reference: <a href="https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header">Source</a>
+        /// </remarks>
         public partial class Header : KaitaiStruct
         {
             public static Header FromFile(string fileName)
@@ -265,82 +202,10 @@ namespace Kaitai
             public Pcap M_Root { get { return m_root; } }
             public Pcap M_Parent { get { return m_parent; } }
         }
-        public partial class Radio80211CommonBody : KaitaiStruct
-        {
-            public static Radio80211CommonBody FromFile(string fileName)
-            {
-                return new Radio80211CommonBody(new KaitaiStream(fileName));
-            }
 
-            public Radio80211CommonBody(KaitaiStream io, KaitaiStruct parent = null, Pcap root = null) : base(io)
-            {
-                m_parent = parent;
-                m_root = root;
-                _read();
-            }
-            private void _read() {
-                _tsfTimer = m_io.ReadU8le();
-                _flags = m_io.ReadU2le();
-                _rate = m_io.ReadU2le();
-                _channelFreq = m_io.ReadU2le();
-                _channelFlags = m_io.ReadU2le();
-                _fhssHopset = m_io.ReadU1();
-                _fhssPattern = m_io.ReadU1();
-                _dbmAntsignal = m_io.ReadS1();
-                _dbmAntnoise = m_io.ReadS1();
-                }
-            private ulong _tsfTimer;
-            private ushort _flags;
-            private ushort _rate;
-            private ushort _channelFreq;
-            private ushort _channelFlags;
-            private byte _fhssHopset;
-            private byte _fhssPattern;
-            private sbyte _dbmAntsignal;
-            private sbyte _dbmAntnoise;
-            private Pcap m_root;
-            private KaitaiStruct m_parent;
-            public ulong TsfTimer { get { return _tsfTimer; } }
-            public ushort Flags { get { return _flags; } }
-            public ushort Rate { get { return _rate; } }
-            public ushort ChannelFreq { get { return _channelFreq; } }
-            public ushort ChannelFlags { get { return _channelFlags; } }
-            public byte FhssHopset { get { return _fhssHopset; } }
-            public byte FhssPattern { get { return _fhssPattern; } }
-            public sbyte DbmAntsignal { get { return _dbmAntsignal; } }
-            public sbyte DbmAntnoise { get { return _dbmAntnoise; } }
-            public Pcap M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        public partial class PacketPpiField : KaitaiStruct
-        {
-            public static PacketPpiField FromFile(string fileName)
-            {
-                return new PacketPpiField(new KaitaiStream(fileName));
-            }
-
-            public PacketPpiField(KaitaiStream io, Pcap.PacketPpi parent = null, Pcap root = null) : base(io)
-            {
-                m_parent = parent;
-                m_root = root;
-                _read();
-            }
-            private void _read() {
-                _pfhType = m_io.ReadU2le();
-                _pfhDatalen = m_io.ReadU2le();
-                _body = m_io.ReadBytes(PfhDatalen);
-                }
-            private ushort _pfhType;
-            private ushort _pfhDatalen;
-            private byte[] _body;
-            private Pcap m_root;
-            private Pcap.PacketPpi m_parent;
-            public ushort PfhType { get { return _pfhType; } }
-            public ushort PfhDatalen { get { return _pfhDatalen; } }
-            public byte[] Body { get { return _body; } }
-            public Pcap M_Root { get { return m_root; } }
-            public Pcap.PacketPpi M_Parent { get { return m_parent; } }
-        }
+        /// <remarks>
+        /// Reference: <a href="https://wiki.wireshark.org/Development/LibpcapFileFormat#Record_.28Packet.29_Header">Source</a>
+        /// </remarks>
         public partial class Packet : KaitaiStruct
         {
             public static Packet FromFile(string fileName)
@@ -363,7 +228,7 @@ namespace Kaitai
                 case Pcap.Linktype.Ppi: {
                     __raw_body = m_io.ReadBytes(InclLen);
                     var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new PacketPpi(io___raw_body, this, m_root);
+                    _body = new PacketPpi(io___raw_body);
                     break;
                 }
                 case Pcap.Linktype.Ethernet: {
@@ -398,6 +263,10 @@ namespace Kaitai
             /// Length of the packet as it appeared on the network when it was captured.
             /// </summary>
             public uint OrigLen { get { return _origLen; } }
+
+            /// <remarks>
+            /// Reference: <a href="https://wiki.wireshark.org/Development/LibpcapFileFormat#Packet_Data">Source</a>
+            /// </remarks>
             public object Body { get { return _body; } }
             public Pcap M_Root { get { return m_root; } }
             public Pcap M_Parent { get { return m_parent; } }

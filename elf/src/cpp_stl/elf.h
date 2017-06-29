@@ -138,6 +138,7 @@ public:
         int m__is_le;
 
     public:
+        void _read();
         void _read_le();
         void _read_be();
         ~endian_elf_t();
@@ -152,6 +153,7 @@ public:
             int m__is_le;
 
         public:
+            void _read();
             void _read_le();
             void _read_be();
             ~program_header_t();
@@ -205,6 +207,7 @@ public:
             int m__is_le;
 
         public:
+            void _read();
             void _read_le();
             void _read_be();
             ~section_header_t();
@@ -262,6 +265,7 @@ public:
             int m__is_le;
 
         public:
+            void _read();
             void _read_le();
             void _read_be();
             ~strings_struct_t();

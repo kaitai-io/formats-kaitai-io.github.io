@@ -12,26 +12,17 @@ public class CpioOldLe extends KaitaiStruct {
     }
 
     public CpioOldLe(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public CpioOldLe(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public CpioOldLe(KaitaiStream _io, KaitaiStruct _parent, CpioOldLe _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -46,24 +37,17 @@ public class CpioOldLe extends KaitaiStruct {
         }
 
         public File(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public File(KaitaiStream _io, CpioOldLe _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public File(KaitaiStream _io, CpioOldLe _parent, CpioOldLe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -106,24 +90,17 @@ public class CpioOldLe extends KaitaiStruct {
         }
 
         public FileHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public FileHeader(KaitaiStream _io, CpioOldLe.File _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public FileHeader(KaitaiStream _io, CpioOldLe.File _parent, CpioOldLe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -172,24 +149,17 @@ public class CpioOldLe extends KaitaiStruct {
         }
 
         public FourByteUnsignedInteger(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public FourByteUnsignedInteger(KaitaiStream _io, CpioOldLe.FileHeader _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public FourByteUnsignedInteger(KaitaiStream _io, CpioOldLe.FileHeader _parent, CpioOldLe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

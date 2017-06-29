@@ -96,26 +96,17 @@ public class Wmf extends KaitaiStruct {
     }
 
     public Wmf(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Wmf(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Wmf(KaitaiStream _io, KaitaiStruct _parent, Wmf _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -136,24 +127,17 @@ public class Wmf extends KaitaiStruct {
         }
 
         public SpecialHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SpecialHeader(KaitaiStream _io, Wmf _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SpecialHeader(KaitaiStream _io, Wmf _parent, Wmf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -211,24 +195,17 @@ public class Wmf extends KaitaiStruct {
         }
 
         public WmfHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public WmfHeader(KaitaiStream _io, Wmf _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public WmfHeader(KaitaiStream _io, Wmf _parent, Wmf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -265,24 +242,17 @@ public class Wmf extends KaitaiStruct {
         }
 
         public Record(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Record(KaitaiStream _io, Wmf _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Record(KaitaiStream _io, Wmf _parent, Wmf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

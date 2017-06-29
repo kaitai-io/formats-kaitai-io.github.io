@@ -20,7 +20,9 @@ class Id3v11 < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
+    self
   end
 
   ##
@@ -168,6 +170,7 @@ class Id3v11 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = @_io.ensure_fixed_contents([84, 65, 71].pack('C*'))
       @title = @_io.read_bytes(30)
@@ -176,6 +179,7 @@ class Id3v11 < Kaitai::Struct::Struct
       @year = (@_io.read_bytes(4)).force_encoding("ASCII")
       @comment = @_io.read_bytes(30)
       @genre = Kaitai::Struct::Stream::resolve_enum(GENRE_ENUM, @_io.read_u1)
+      self
     end
     attr_reader :magic
 

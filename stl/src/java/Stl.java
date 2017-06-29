@@ -11,26 +11,17 @@ public class Stl extends KaitaiStruct {
     }
 
     public Stl(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Stl(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Stl(KaitaiStream _io, KaitaiStruct _parent, Stl _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -47,24 +38,17 @@ public class Stl extends KaitaiStruct {
         }
 
         public Triangle(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Triangle(KaitaiStream _io, Stl _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Triangle(KaitaiStream _io, Stl _parent, Stl _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -89,24 +73,17 @@ public class Stl extends KaitaiStruct {
         }
 
         public Vec3d(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Vec3d(KaitaiStream _io, Stl.Triangle _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Vec3d(KaitaiStream _io, Stl.Triangle _parent, Stl _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

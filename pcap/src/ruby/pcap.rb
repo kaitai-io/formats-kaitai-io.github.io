@@ -6,6 +6,9 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# @see http://wiki.wireshark.org/Development/LibpcapFileFormat Source
 class Pcap < Kaitai::Struct::Struct
 
   LINKTYPE = {
@@ -115,63 +118,28 @@ class Pcap < Kaitai::Struct::Struct
     264 => :linktype_iso_14443,
   }
   I__LINKTYPE = LINKTYPE.invert
-
-  PFH_TYPE = {
-    2 => :pfh_type_radio_802_11_common,
-    3 => :pfh_type_radio_802_11n_mac_ext,
-    4 => :pfh_type_radio_802_11n_mac_phy_ext,
-    5 => :pfh_type_spectrum_map,
-    6 => :pfh_type_process_info,
-    7 => :pfh_type_capture_info,
-  }
-  I__PFH_TYPE = PFH_TYPE.invert
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @hdr = Header.new(@_io, self, @_root)
     @packets = []
     while not @_io.eof?
       @packets << Packet.new(@_io, self, @_root)
     end
+    self
   end
-  class PacketPpi < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-    def _read
-      @header = PacketPpiHeader.new(@_io, self, @_root)
-      @fields = []
-      while not @_io.eof?
-        @fields << PacketPpiField.new(@_io, self, @_root)
-      end
-    end
-    attr_reader :header
-    attr_reader :fields
-  end
-  class PacketPpiHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-    def _read
-      @pph_version = @_io.read_u1
-      @pph_flags = @_io.read_u1
-      @pph_len = @_io.read_u2le
-      @pph_dlt = @_io.read_u4le
-    end
-    attr_reader :pph_version
-    attr_reader :pph_flags
-    attr_reader :pph_len
-    attr_reader :pph_dlt
-  end
+
+  ##
+  # @see https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header Source
   class Header < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic_number = @_io.ensure_fixed_contents([212, 195, 178, 161].pack('C*'))
       @version_major = @_io.read_u2le
@@ -180,6 +148,7 @@ class Pcap < Kaitai::Struct::Struct
       @sigfigs = @_io.read_u4le
       @snaplen = @_io.read_u4le
       @network = Kaitai::Struct::Stream::resolve_enum(LINKTYPE, @_io.read_u4le)
+      self
     end
     attr_reader :magic_number
     attr_reader :version_major
@@ -206,51 +175,15 @@ class Pcap < Kaitai::Struct::Struct
     # the beginning of the packet.
     attr_reader :network
   end
-  class Radio80211CommonBody < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-    def _read
-      @tsf_timer = @_io.read_u8le
-      @flags = @_io.read_u2le
-      @rate = @_io.read_u2le
-      @channel_freq = @_io.read_u2le
-      @channel_flags = @_io.read_u2le
-      @fhss_hopset = @_io.read_u1
-      @fhss_pattern = @_io.read_u1
-      @dbm_antsignal = @_io.read_s1
-      @dbm_antnoise = @_io.read_s1
-    end
-    attr_reader :tsf_timer
-    attr_reader :flags
-    attr_reader :rate
-    attr_reader :channel_freq
-    attr_reader :channel_flags
-    attr_reader :fhss_hopset
-    attr_reader :fhss_pattern
-    attr_reader :dbm_antsignal
-    attr_reader :dbm_antnoise
-  end
-  class PacketPpiField < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-    def _read
-      @pfh_type = @_io.read_u2le
-      @pfh_datalen = @_io.read_u2le
-      @body = @_io.read_bytes(pfh_datalen)
-    end
-    attr_reader :pfh_type
-    attr_reader :pfh_datalen
-    attr_reader :body
-  end
+
+  ##
+  # @see https://wiki.wireshark.org/Development/LibpcapFileFormat#Record_.28Packet.29_Header Source
   class Packet < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @ts_sec = @_io.read_u4le
       @ts_usec = @_io.read_u4le
@@ -260,7 +193,7 @@ class Pcap < Kaitai::Struct::Struct
       when :linktype_ppi
         @_raw_body = @_io.read_bytes(incl_len)
         io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = PacketPpi.new(io, self, @_root)
+        @body = PacketPpi.new(io)
       when :linktype_ethernet
         @_raw_body = @_io.read_bytes(incl_len)
         io = Kaitai::Struct::Stream.new(@_raw_body)
@@ -268,6 +201,7 @@ class Pcap < Kaitai::Struct::Struct
       else
         @body = @_io.read_bytes(incl_len)
       end
+      self
     end
     attr_reader :ts_sec
     attr_reader :ts_usec
@@ -279,6 +213,9 @@ class Pcap < Kaitai::Struct::Struct
     ##
     # Length of the packet as it appeared on the network when it was captured.
     attr_reader :orig_len
+
+    ##
+    # @see https://wiki.wireshark.org/Development/LibpcapFileFormat#Packet_Data Source
     attr_reader :body
     attr_reader :_raw_body
   end

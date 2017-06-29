@@ -46,6 +46,7 @@ class Avi < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @magic1 = @_io.ensure_fixed_contents([82, 73, 70, 70].pack('C*'))
     @file_size = @_io.read_u4le
@@ -53,15 +54,18 @@ class Avi < Kaitai::Struct::Struct
     @_raw_data = @_io.read_bytes((file_size - 4))
     io = Kaitai::Struct::Stream.new(@_raw_data)
     @data = Blocks.new(io, self, @_root)
+    self
   end
   class ListBody < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @list_type = Kaitai::Struct::Stream::resolve_enum(CHUNK_TYPE, @_io.read_u4le)
       @data = Blocks.new(@_io, self, @_root)
+      self
     end
     attr_reader :list_type
     attr_reader :data
@@ -71,11 +75,13 @@ class Avi < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @left = @_io.read_s2le
       @top = @_io.read_s2le
       @right = @_io.read_s2le
       @bottom = @_io.read_s2le
+      self
     end
     attr_reader :left
     attr_reader :top
@@ -87,11 +93,13 @@ class Avi < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       while not @_io.eof?
         @entries << Block.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :entries
   end
@@ -104,6 +112,7 @@ class Avi < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @micro_sec_per_frame = @_io.read_u4le
       @max_bytes_per_sec = @_io.read_u4le
@@ -116,6 +125,7 @@ class Avi < Kaitai::Struct::Struct
       @width = @_io.read_u4le
       @height = @_io.read_u4le
       @reserved = @_io.read_bytes(16)
+      self
     end
     attr_reader :micro_sec_per_frame
     attr_reader :max_bytes_per_sec
@@ -134,6 +144,7 @@ class Avi < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @four_cc = Kaitai::Struct::Stream::resolve_enum(CHUNK_TYPE, @_io.read_u4le)
       @block_size = @_io.read_u4le
@@ -153,6 +164,7 @@ class Avi < Kaitai::Struct::Struct
       else
         @data = @_io.read_bytes(block_size)
       end
+      self
     end
     attr_reader :four_cc
     attr_reader :block_size
@@ -168,6 +180,7 @@ class Avi < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @fcc_type = Kaitai::Struct::Stream::resolve_enum(STREAM_TYPE, @_io.read_u4le)
       @fcc_handler = Kaitai::Struct::Stream::resolve_enum(HANDLER_TYPE, @_io.read_u4le)
@@ -183,6 +196,7 @@ class Avi < Kaitai::Struct::Struct
       @quality = @_io.read_u4le
       @sample_size = @_io.read_u4le
       @frame = Rect.new(@_io, self, @_root)
+      self
     end
 
     ##
@@ -213,7 +227,9 @@ class Avi < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
+      self
     end
   end
   attr_reader :magic1

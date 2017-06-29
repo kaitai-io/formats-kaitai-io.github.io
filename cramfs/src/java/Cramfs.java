@@ -14,26 +14,17 @@ public class Cramfs extends KaitaiStruct {
     }
 
     public Cramfs(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Cramfs(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Cramfs(KaitaiStream _io, KaitaiStruct _parent, Cramfs _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -45,24 +36,17 @@ public class Cramfs extends KaitaiStruct {
         }
 
         public SuperBlockStruct(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SuperBlockStruct(KaitaiStream _io, Cramfs _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SuperBlockStruct(KaitaiStream _io, Cramfs _parent, Cramfs _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -142,24 +126,17 @@ public class Cramfs extends KaitaiStruct {
         }
 
         public ChunkedDataInode(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ChunkedDataInode(KaitaiStream _io, Cramfs.Inode _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ChunkedDataInode(KaitaiStream _io, Cramfs.Inode _parent, Cramfs _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -204,24 +181,17 @@ public class Cramfs extends KaitaiStruct {
         }
 
         public Inode(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Inode(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Inode(KaitaiStream _io, KaitaiStruct _parent, Cramfs _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -360,24 +330,17 @@ public class Cramfs extends KaitaiStruct {
         }
 
         public DirInode(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DirInode(KaitaiStream _io, Cramfs.Inode _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DirInode(KaitaiStream _io, Cramfs.Inode _parent, Cramfs _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -401,24 +364,17 @@ public class Cramfs extends KaitaiStruct {
         }
 
         public Info(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Info(KaitaiStream _io, Cramfs.SuperBlockStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Info(KaitaiStream _io, Cramfs.SuperBlockStruct _parent, Cramfs _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

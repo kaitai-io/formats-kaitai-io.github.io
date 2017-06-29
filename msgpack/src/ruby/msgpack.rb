@@ -16,6 +16,7 @@ class Msgpack < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @b1 = @_io.read_u1
     case b1
@@ -78,15 +79,18 @@ class Msgpack < Kaitai::Struct::Struct
         @map_elements[i] = MapTuple.new(@_io, self, @_root)
       }
     end
+    self
   end
   class MapTuple < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @key = Msgpack.new(@_io)
       @value = Msgpack.new(@_io)
+      self
     end
     attr_reader :key
     attr_reader :value

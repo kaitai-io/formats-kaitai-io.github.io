@@ -12,26 +12,17 @@ public class QuakeMdl extends KaitaiStruct {
     }
 
     public QuakeMdl(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public QuakeMdl(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public QuakeMdl(KaitaiStream _io, KaitaiStruct _parent, QuakeMdl _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -59,24 +50,17 @@ public class QuakeMdl extends KaitaiStruct {
         }
 
         public MdlVertex(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MdlVertex(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MdlVertex(KaitaiStream _io, KaitaiStruct _parent, QuakeMdl _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -101,24 +85,17 @@ public class QuakeMdl extends KaitaiStruct {
         }
 
         public MdlTexcoord(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MdlTexcoord(KaitaiStream _io, QuakeMdl _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MdlTexcoord(KaitaiStream _io, QuakeMdl _parent, QuakeMdl _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -143,24 +120,17 @@ public class QuakeMdl extends KaitaiStruct {
         }
 
         public MdlHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MdlHeader(KaitaiStream _io, QuakeMdl _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MdlHeader(KaitaiStream _io, QuakeMdl _parent, QuakeMdl _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -237,24 +207,17 @@ public class QuakeMdl extends KaitaiStruct {
         }
 
         public MdlSkin(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MdlSkin(KaitaiStream _io, QuakeMdl _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MdlSkin(KaitaiStream _io, QuakeMdl _parent, QuakeMdl _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -299,24 +262,17 @@ public class QuakeMdl extends KaitaiStruct {
         }
 
         public MdlFrame(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MdlFrame(KaitaiStream _io, QuakeMdl _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MdlFrame(KaitaiStream _io, QuakeMdl _parent, QuakeMdl _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -367,24 +323,17 @@ public class QuakeMdl extends KaitaiStruct {
         }
 
         public MdlSimpleFrame(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MdlSimpleFrame(KaitaiStream _io, QuakeMdl.MdlFrame _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MdlSimpleFrame(KaitaiStream _io, QuakeMdl.MdlFrame _parent, QuakeMdl _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -415,24 +364,17 @@ public class QuakeMdl extends KaitaiStruct {
         }
 
         public MdlTriangle(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MdlTriangle(KaitaiStream _io, QuakeMdl _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MdlTriangle(KaitaiStream _io, QuakeMdl _parent, QuakeMdl _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -457,24 +399,17 @@ public class QuakeMdl extends KaitaiStruct {
         }
 
         public Vec3(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Vec3(KaitaiStream _io, QuakeMdl.MdlHeader _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Vec3(KaitaiStream _io, QuakeMdl.MdlHeader _parent, QuakeMdl _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

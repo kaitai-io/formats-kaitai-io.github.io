@@ -11,7 +11,9 @@ class Ext2 < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
+    self
   end
   class SuperBlockStruct < Kaitai::Struct::Struct
 
@@ -31,6 +33,7 @@ class Ext2 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @inodes_count = @_io.read_u4le
       @blocks_count = @_io.read_u4le
@@ -79,6 +82,7 @@ class Ext2 < Kaitai::Struct::Struct
         @hash_seed[i] = @_io.read_u4le
       }
       @def_hash_version = @_io.read_u1
+      self
     end
     def block_size
       return @block_size unless @block_size.nil?
@@ -152,6 +156,7 @@ class Ext2 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @inode_ptr = @_io.read_u4le
       @rec_len = @_io.read_u2le
@@ -159,6 +164,7 @@ class Ext2 < Kaitai::Struct::Struct
       @file_type = Kaitai::Struct::Stream::resolve_enum(FILE_TYPE_ENUM, @_io.read_u1)
       @name = (@_io.read_bytes(name_len)).force_encoding("UTF-8")
       @padding = @_io.read_bytes(((rec_len - name_len) - 8))
+      self
     end
     def inode
       return @inode unless @inode.nil?
@@ -177,6 +183,7 @@ class Ext2 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @mode = @_io.read_u2le
       @uid = @_io.read_u2le
@@ -199,6 +206,7 @@ class Ext2 < Kaitai::Struct::Struct
       @dir_acl = @_io.read_u4le
       @faddr = @_io.read_u4le
       @osd2 = @_io.read_bytes(12)
+      self
     end
     def as_dir
       return @as_dir unless @as_dir.nil?
@@ -233,8 +241,10 @@ class Ext2 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @ptr = @_io.read_u4le
+      self
     end
     def body
       return @body unless @body.nil?
@@ -254,11 +264,13 @@ class Ext2 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       while not @_io.eof?
         @entries << DirEntry.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :entries
   end
@@ -267,6 +279,7 @@ class Ext2 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @_raw_super_block = @_io.read_bytes(1024)
       io = Kaitai::Struct::Stream.new(@_raw_super_block)
@@ -275,6 +288,7 @@ class Ext2 < Kaitai::Struct::Struct
       (super_block.block_group_count).times { |i|
         @block_groups[i] = Bgd.new(@_io, self, @_root)
       }
+      self
     end
     attr_reader :super_block
     attr_reader :block_groups
@@ -285,6 +299,7 @@ class Ext2 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @block_bitmap_block = @_io.read_u4le
       @inode_bitmap_block = @_io.read_u4le
@@ -293,6 +308,7 @@ class Ext2 < Kaitai::Struct::Struct
       @free_inodes_count = @_io.read_u2le
       @used_dirs_count = @_io.read_u2le
       @pad_reserved = @_io.read_bytes((2 + 12))
+      self
     end
     def block_bitmap
       return @block_bitmap unless @block_bitmap.nil?
@@ -334,8 +350,10 @@ class Ext2 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @body = @_io.read_bytes(_root.bg1.super_block.block_size)
+      self
     end
     attr_reader :body
   end

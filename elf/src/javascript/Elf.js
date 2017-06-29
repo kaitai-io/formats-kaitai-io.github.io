@@ -217,6 +217,9 @@ var Elf = (function() {
       this._parent = _parent;
       this._root = _root || this;
 
+      this._read();
+    }
+    EndianElf.prototype._read = function() {
       switch (this._root.endian) {
       case Elf.Endian.LE:
         this._is_le = true;
@@ -314,6 +317,9 @@ var Elf = (function() {
         this._root = _root || this;
         this._is_le = _is_le;
 
+        this._read();
+      }
+      ProgramHeader.prototype._read = function() {
 
         if (this._is_le === true) {
           this._readLE();
@@ -448,6 +454,9 @@ var Elf = (function() {
         this._root = _root || this;
         this._is_le = _is_le;
 
+        this._read();
+      }
+      SectionHeader.prototype._read = function() {
 
         if (this._is_le === true) {
           this._readLE();
@@ -608,6 +617,9 @@ var Elf = (function() {
         this._root = _root || this;
         this._is_le = _is_le;
 
+        this._read();
+      }
+      StringsStruct.prototype._read = function() {
 
         if (this._is_le === true) {
           this._readLE();

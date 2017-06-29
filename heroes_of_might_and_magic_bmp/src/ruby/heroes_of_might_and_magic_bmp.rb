@@ -11,11 +11,13 @@ class HeroesOfMightAndMagicBmp < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @magic = @_io.read_u2le
     @width = @_io.read_u2le
     @height = @_io.read_u2le
     @data = @_io.read_bytes((width * height))
+    self
   end
   attr_reader :magic
   attr_reader :width

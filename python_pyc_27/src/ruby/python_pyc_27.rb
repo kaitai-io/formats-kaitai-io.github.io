@@ -49,11 +49,13 @@ class PythonPyc27 < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @version_magic = Kaitai::Struct::Stream::resolve_enum(VERSION, @_io.read_u2le)
     @crlf = @_io.read_u2le
     @modification_timestamp = @_io.read_u4le
     @body = PyObject.new(@_io, self, @_root)
+    self
   end
   class CodeObject < Kaitai::Struct::Struct
 
@@ -67,6 +69,7 @@ class PythonPyc27 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @arg_count = @_io.read_u4le
       @local_count = @_io.read_u4le
@@ -82,6 +85,7 @@ class PythonPyc27 < Kaitai::Struct::Struct
       @name = PyObject.new(@_io, self, @_root)
       @first_line_no = @_io.read_u4le
       @lnotab = PyObject.new(@_io, self, @_root)
+      self
     end
     attr_reader :arg_count
     attr_reader :local_count
@@ -103,12 +107,14 @@ class PythonPyc27 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @string_magic = @_io.ensure_fixed_contents([115].pack('C*'))
       @length = @_io.read_u4le
       @_raw_items = @_io.read_bytes(length)
       io = Kaitai::Struct::Stream.new(@_raw_items)
       @items = OpArgs.new(io, self, @_root)
+      self
     end
     attr_reader :string_magic
     attr_reader :length
@@ -243,11 +249,13 @@ class PythonPyc27 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @op_code = Kaitai::Struct::Stream::resolve_enum(OP_CODE_ENUM, @_io.read_u1)
       if I__OP_CODE_ENUM[op_code] >= I__OP_CODE_ENUM[:op_code_enum_store_name]
         @arg = @_io.read_u2le
       end
+      self
     end
     attr_reader :op_code
     attr_reader :arg
@@ -271,6 +279,7 @@ class PythonPyc27 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @type = Kaitai::Struct::Stream::resolve_enum(OBJECT_TYPE, @_io.read_u1)
       case type
@@ -293,13 +302,16 @@ class PythonPyc27 < Kaitai::Struct::Struct
       when :object_type_py_true
         @value = PyTrue.new(@_io, self, @_root)
       end
+      self
     end
     class PyNone < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
+        self
       end
     end
     class PyFalse < Kaitai::Struct::Struct
@@ -307,7 +319,9 @@ class PythonPyc27 < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
+        self
       end
     end
     class StringRef < Kaitai::Struct::Struct
@@ -315,8 +329,10 @@ class PythonPyc27 < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @interned_list_index = @_io.read_u4le
+        self
       end
       attr_reader :interned_list_index
     end
@@ -325,7 +341,9 @@ class PythonPyc27 < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
+        self
       end
     end
     class Tuple < Kaitai::Struct::Struct
@@ -333,12 +351,14 @@ class PythonPyc27 < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @count = @_io.read_u4le
         @items = Array.new(count)
         (count).times { |i|
           @items[i] = PyObject.new(@_io, self, @_root)
         }
+        self
       end
       attr_reader :count
       attr_reader :items
@@ -348,9 +368,11 @@ class PythonPyc27 < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @length = @_io.read_u4le
         @data = (@_io.read_bytes(length)).force_encoding("utf-8")
+        self
       end
       attr_reader :length
       attr_reader :data
@@ -360,9 +382,11 @@ class PythonPyc27 < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @length = @_io.read_u4le
         @data = (@_io.read_bytes(length)).force_encoding("utf-8")
+        self
       end
       attr_reader :length
       attr_reader :data
@@ -372,9 +396,11 @@ class PythonPyc27 < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @length = @_io.read_u4le
         @data = @_io.read_bytes(length)
+        self
       end
       attr_reader :length
       attr_reader :data
@@ -387,11 +413,13 @@ class PythonPyc27 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @items = []
       while not @_io.eof?
         @items << OpArg.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :items
   end

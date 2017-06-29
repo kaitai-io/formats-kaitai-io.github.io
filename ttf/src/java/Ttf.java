@@ -15,26 +15,17 @@ public class Ttf extends KaitaiStruct {
     }
 
     public Ttf(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Ttf(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Ttf(KaitaiStream _io, KaitaiStruct _parent, Ttf _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -50,24 +41,17 @@ public class Ttf extends KaitaiStruct {
         }
 
         public Post(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Post(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Post(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -90,24 +74,17 @@ public class Ttf extends KaitaiStruct {
             }
 
             public Format20(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Format20(KaitaiStream _io, Ttf.Post _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Format20(KaitaiStream _io, Ttf.Post _parent, Ttf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -131,24 +108,17 @@ public class Ttf extends KaitaiStruct {
                 }
 
                 public PascalString(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public PascalString(KaitaiStream _io, Ttf.Post.Format20 _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public PascalString(KaitaiStream _io, Ttf.Post.Format20 _parent, Ttf _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -208,24 +178,17 @@ public class Ttf extends KaitaiStruct {
         }
 
         public Name(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Name(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Name(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -243,24 +206,17 @@ public class Ttf extends KaitaiStruct {
             }
 
             public NameRecord(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public NameRecord(KaitaiStream _io, Ttf.Name _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public NameRecord(KaitaiStream _io, Ttf.Name _parent, Ttf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -363,24 +319,17 @@ public class Ttf extends KaitaiStruct {
         }
 
         public Head(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Head(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Head(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -447,24 +396,17 @@ public class Ttf extends KaitaiStruct {
         }
 
         public Prep(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Prep(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Prep(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -483,24 +425,17 @@ public class Ttf extends KaitaiStruct {
         }
 
         public Hhea(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Hhea(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Hhea(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -583,24 +518,17 @@ public class Ttf extends KaitaiStruct {
         }
 
         public Fpgm(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Fpgm(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Fpgm(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -619,24 +547,17 @@ public class Ttf extends KaitaiStruct {
         }
 
         public Kern(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Kern(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Kern(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -653,24 +574,17 @@ public class Ttf extends KaitaiStruct {
             }
 
             public Subtable(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Subtable(KaitaiStream _io, Ttf.Kern _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Subtable(KaitaiStream _io, Ttf.Kern _parent, Ttf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -693,24 +607,17 @@ public class Ttf extends KaitaiStruct {
                 }
 
                 public Format0(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public Format0(KaitaiStream _io, Ttf.Kern.Subtable _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public Format0(KaitaiStream _io, Ttf.Kern.Subtable _parent, Ttf _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -729,24 +636,17 @@ public class Ttf extends KaitaiStruct {
                     }
 
                     public KerningPair(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public KerningPair(KaitaiStream _io, Ttf.Kern.Subtable.Format0 _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public KerningPair(KaitaiStream _io, Ttf.Kern.Subtable.Format0 _parent, Ttf _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {
@@ -820,24 +720,17 @@ public class Ttf extends KaitaiStruct {
         }
 
         public DirTableEntry(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DirTableEntry(KaitaiStream _io, Ttf _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DirTableEntry(KaitaiStream _io, Ttf _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1039,24 +932,17 @@ public class Ttf extends KaitaiStruct {
         }
 
         public Os2(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Os2(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Os2(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1338,24 +1224,17 @@ public class Ttf extends KaitaiStruct {
             }
 
             public Panose(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Panose(KaitaiStream _io, Ttf.Os2 _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Panose(KaitaiStream _io, Ttf.Os2 _parent, Ttf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -1401,24 +1280,17 @@ public class Ttf extends KaitaiStruct {
             }
 
             public UnicodeRange(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public UnicodeRange(KaitaiStream _io, Ttf.Os2 _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public UnicodeRange(KaitaiStream _io, Ttf.Os2 _parent, Ttf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -1648,24 +1520,17 @@ public class Ttf extends KaitaiStruct {
             }
 
             public CodePageRange(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public CodePageRange(KaitaiStream _io, Ttf.Os2 _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public CodePageRange(KaitaiStream _io, Ttf.Os2 _parent, Ttf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -1954,24 +1819,17 @@ public class Ttf extends KaitaiStruct {
         }
 
         public Fixed(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Fixed(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Fixed(KaitaiStream _io, KaitaiStruct _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1993,24 +1851,17 @@ public class Ttf extends KaitaiStruct {
         }
 
         public Glyf(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Glyf(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Glyf(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -2029,24 +1880,17 @@ public class Ttf extends KaitaiStruct {
             }
 
             public SimpleGlyph(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public SimpleGlyph(KaitaiStream _io, Ttf.Glyf _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public SimpleGlyph(KaitaiStream _io, Ttf.Glyf _parent, Ttf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -2067,24 +1911,17 @@ public class Ttf extends KaitaiStruct {
                 }
 
                 public Flag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public Flag(KaitaiStream _io, Ttf.Glyf.SimpleGlyph _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public Flag(KaitaiStream _io, Ttf.Glyf.SimpleGlyph _parent, Ttf _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2169,24 +2006,17 @@ public class Ttf extends KaitaiStruct {
         }
 
         public Cvt(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Cvt(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Cvt(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -2208,24 +2038,17 @@ public class Ttf extends KaitaiStruct {
         }
 
         public Maxp(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Maxp(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Maxp(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -2346,24 +2169,17 @@ public class Ttf extends KaitaiStruct {
         }
 
         public OffsetTable(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public OffsetTable(KaitaiStream _io, Ttf _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public OffsetTable(KaitaiStream _io, Ttf _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -2398,24 +2214,17 @@ public class Ttf extends KaitaiStruct {
         }
 
         public Cmap(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Cmap(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Cmap(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -2432,24 +2241,17 @@ public class Ttf extends KaitaiStruct {
             }
 
             public SubtableHeader(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public SubtableHeader(KaitaiStream _io, Ttf.Cmap _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public SubtableHeader(KaitaiStream _io, Ttf.Cmap _parent, Ttf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -2502,24 +2304,17 @@ public class Ttf extends KaitaiStruct {
             }
 
             public Subtable(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Subtable(KaitaiStream _io, Ttf.Cmap.SubtableHeader _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Subtable(KaitaiStream _io, Ttf.Cmap.SubtableHeader _parent, Ttf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -2563,24 +2358,17 @@ public class Ttf extends KaitaiStruct {
                 }
 
                 public ByteEncodingTable(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ByteEncodingTable(KaitaiStream _io, Ttf.Cmap.Subtable _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ByteEncodingTable(KaitaiStream _io, Ttf.Cmap.Subtable _parent, Ttf _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2599,24 +2387,17 @@ public class Ttf extends KaitaiStruct {
                 }
 
                 public HighByteMappingThroughTable(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public HighByteMappingThroughTable(KaitaiStream _io, Ttf.Cmap.Subtable _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public HighByteMappingThroughTable(KaitaiStream _io, Ttf.Cmap.Subtable _parent, Ttf _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2638,24 +2419,17 @@ public class Ttf extends KaitaiStruct {
                 }
 
                 public SegmentMappingToDeltaValues(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public SegmentMappingToDeltaValues(KaitaiStream _io, Ttf.Cmap.Subtable _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public SegmentMappingToDeltaValues(KaitaiStream _io, Ttf.Cmap.Subtable _parent, Ttf _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2724,24 +2498,17 @@ public class Ttf extends KaitaiStruct {
                 }
 
                 public TrimmedTableMapping(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public TrimmedTableMapping(KaitaiStream _io, Ttf.Cmap.Subtable _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public TrimmedTableMapping(KaitaiStream _io, Ttf.Cmap.Subtable _parent, Ttf _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {

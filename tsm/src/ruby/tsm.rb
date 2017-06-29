@@ -21,17 +21,21 @@ class Tsm < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @header = Header.new(@_io, self, @_root)
+    self
   end
   class Header < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = @_io.ensure_fixed_contents([22, 209, 22, 209].pack('C*'))
       @version = @_io.read_u1
+      self
     end
     attr_reader :magic
     attr_reader :version
@@ -41,14 +45,17 @@ class Tsm < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @offset = @_io.read_u8be
+      self
     end
     class IndexHeader < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @key_len = @_io.read_u2be
         @key = (@_io.read_bytes(key_len)).force_encoding("UTF-8")
@@ -58,26 +65,31 @@ class Tsm < Kaitai::Struct::Struct
         (entry_count).times { |i|
           @index_entries[i] = IndexEntry.new(@_io, self, @_root)
         }
+        self
       end
       class IndexEntry < Kaitai::Struct::Struct
         def initialize(_io, _parent = nil, _root = self)
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @min_time = @_io.read_u8be
           @max_time = @_io.read_u8be
           @block_offset = @_io.read_u8be
           @block_size = @_io.read_u4be
+          self
         end
         class BlockEntry < Kaitai::Struct::Struct
           def initialize(_io, _parent = nil, _root = self)
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @crc32 = @_io.read_u4be
             @data = @_io.read_bytes((_parent.block_size - 4))
+            self
           end
           attr_reader :crc32
           attr_reader :data

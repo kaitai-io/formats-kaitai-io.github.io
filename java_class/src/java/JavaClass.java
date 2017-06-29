@@ -18,26 +18,17 @@ public class JavaClass extends KaitaiStruct {
     }
 
     public JavaClass(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public JavaClass(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public JavaClass(KaitaiStream _io, KaitaiStruct _parent, JavaClass _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -83,24 +74,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public FloatCpInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public FloatCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public FloatCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -123,24 +107,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public AttributeInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public AttributeInfo(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public AttributeInfo(KaitaiStream _io, KaitaiStruct _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -187,24 +164,17 @@ public class JavaClass extends KaitaiStruct {
             }
 
             public AttrBodyCode(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public AttrBodyCode(KaitaiStream _io, JavaClass.AttributeInfo _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public AttrBodyCode(KaitaiStream _io, JavaClass.AttributeInfo _parent, JavaClass _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -233,24 +203,17 @@ public class JavaClass extends KaitaiStruct {
                 }
 
                 public ExceptionEntry(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ExceptionEntry(KaitaiStream _io, JavaClass.AttributeInfo.AttrBodyCode _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ExceptionEntry(KaitaiStream _io, JavaClass.AttributeInfo.AttrBodyCode _parent, JavaClass _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -332,24 +295,17 @@ public class JavaClass extends KaitaiStruct {
             }
 
             public AttrBodyExceptions(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public AttrBodyExceptions(KaitaiStream _io, JavaClass.AttributeInfo _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public AttrBodyExceptions(KaitaiStream _io, JavaClass.AttributeInfo _parent, JavaClass _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -365,24 +321,17 @@ public class JavaClass extends KaitaiStruct {
                 }
 
                 public ExceptionTableEntry(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ExceptionTableEntry(KaitaiStream _io, JavaClass.AttributeInfo.AttrBodyExceptions _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ExceptionTableEntry(KaitaiStream _io, JavaClass.AttributeInfo.AttrBodyExceptions _parent, JavaClass _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -429,24 +378,17 @@ public class JavaClass extends KaitaiStruct {
             }
 
             public AttrBodySourceFile(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public AttrBodySourceFile(KaitaiStream _io, JavaClass.AttributeInfo _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public AttrBodySourceFile(KaitaiStream _io, JavaClass.AttributeInfo _parent, JavaClass _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -476,24 +418,17 @@ public class JavaClass extends KaitaiStruct {
             }
 
             public AttrBodyLineNumberTable(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public AttrBodyLineNumberTable(KaitaiStream _io, JavaClass.AttributeInfo _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public AttrBodyLineNumberTable(KaitaiStream _io, JavaClass.AttributeInfo _parent, JavaClass _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -509,24 +444,17 @@ public class JavaClass extends KaitaiStruct {
                 }
 
                 public LineNumberTableEntry(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public LineNumberTableEntry(KaitaiStream _io, JavaClass.AttributeInfo.AttrBodyLineNumberTable _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public LineNumberTableEntry(KaitaiStream _io, JavaClass.AttributeInfo.AttrBodyLineNumberTable _parent, JavaClass _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -581,24 +509,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public MethodRefCpInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MethodRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MethodRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -640,24 +561,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public FieldInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public FieldInfo(KaitaiStream _io, JavaClass _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public FieldInfo(KaitaiStream _io, JavaClass _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -702,24 +616,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public DoubleCpInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DoubleCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DoubleCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -742,24 +649,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public LongCpInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public LongCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public LongCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -782,24 +682,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public InvokeDynamicCpInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public InvokeDynamicCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public InvokeDynamicCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -847,24 +740,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public MethodHandleCpInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MethodHandleCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MethodHandleCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -890,24 +776,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public NameAndTypeCpInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public NameAndTypeCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public NameAndTypeCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -963,24 +842,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public Utf8CpInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Utf8CpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Utf8CpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1006,24 +878,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public StringCpInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public StringCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public StringCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1046,24 +911,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public MethodTypeCpInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MethodTypeCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MethodTypeCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1086,24 +944,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public InterfaceMethodRefCpInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public InterfaceMethodRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public InterfaceMethodRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1145,24 +996,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public ClassCpInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ClassCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ClassCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1227,24 +1071,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public ConstantPoolEntry(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ConstantPoolEntry(KaitaiStream _io, JavaClass _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ConstantPoolEntry(KaitaiStream _io, JavaClass _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1327,24 +1164,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public MethodInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MethodInfo(KaitaiStream _io, JavaClass _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MethodInfo(KaitaiStream _io, JavaClass _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1389,24 +1219,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public IntegerCpInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public IntegerCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public IntegerCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1429,24 +1252,17 @@ public class JavaClass extends KaitaiStruct {
         }
 
         public FieldRefCpInfo(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public FieldRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public FieldRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

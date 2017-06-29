@@ -246,14 +246,30 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7
 end
 
 class Pcx &lt; Kaitai::Struct::Struct
+
+  VERSIONS = {
+    0 =&gt; :versions_v2_5,
+    2 =&gt; :versions_v2_8_with_palette,
+    3 =&gt; :versions_v2_8_without_palette,
+    4 =&gt; :versions_paintbrush_for_windows,
+    5 =&gt; :versions_v3_0,
+  }
+  I__VERSIONS = VERSIONS.invert
+
+  ENCODINGS = {
+    1 =&gt; :encodings_rle,
+  }
+  I__ENCODINGS = ENCODINGS.invert
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @_raw_hdr = @_io.read_bytes(128)
     io = Kaitai::Struct::Stream.new(@_raw_hdr)
     @hdr = Header.new(io, self, @_root)
+    self
   end
 
   ##
@@ -263,10 +279,11 @@ class Pcx &lt; Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
-      @manufacturer = @_io.read_u1
-      @version = @_io.read_u1
-      @encoding = @_io.read_u1
+      @magic = @_io.ensure_fixed_contents([10].pack(&#39;C*&#39;))
+      @version = Kaitai::Struct::Stream::resolve_enum(VERSIONS, @_io.read_u1)
+      @encoding = Kaitai::Struct::Stream::resolve_enum(ENCODINGS, @_io.read_u1)
       @bits_per_pixel = @_io.read_u1
       @img_x_min = @_io.read_u2le
       @img_y_min = @_io.read_u2le
@@ -274,15 +291,23 @@ class Pcx &lt; Kaitai::Struct::Struct
       @img_y_max = @_io.read_u2le
       @hdpi = @_io.read_u2le
       @vdpi = @_io.read_u2le
-      @colormap = @_io.read_bytes(48)
-      @reserved = @_io.read_bytes(1)
+      @palette_16 = @_io.read_bytes(48)
+      @reserved = @_io.ensure_fixed_contents([0].pack(&#39;C*&#39;))
       @num_planes = @_io.read_u1
       @bytes_per_line = @_io.read_u2le
       @palette_info = @_io.read_u2le
       @h_screen_size = @_io.read_u2le
       @v_screen_size = @_io.read_u2le
+      self
     end
-    attr_reader :manufacturer
+
+    ##
+    # Technically, this field was supposed to be &quot;manufacturer&quot;
+    # mark to distinguish between various software vendors, and
+    # 0x0a was supposed to mean &quot;ZSoft&quot;, but everyone else ended
+    # up writing a 0x0a into this field, so that&#39;s what majority
+    # of modern software expects to have in this attribute.
+    attr_reader :magic
     attr_reader :version
     attr_reader :encoding
     attr_reader :bits_per_pixel
@@ -292,13 +317,59 @@ class Pcx &lt; Kaitai::Struct::Struct
     attr_reader :img_y_max
     attr_reader :hdpi
     attr_reader :vdpi
-    attr_reader :colormap
+    attr_reader :palette_16
     attr_reader :reserved
     attr_reader :num_planes
     attr_reader :bytes_per_line
     attr_reader :palette_info
     attr_reader :h_screen_size
     attr_reader :v_screen_size
+  end
+  class TPalette256 &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @magic = @_io.ensure_fixed_contents([12].pack(&#39;C*&#39;))
+      @colors = Array.new(256)
+      (256).times { |i|
+        @colors[i] = Rgb.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :magic
+    attr_reader :colors
+  end
+  class Rgb &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @r = @_io.read_u1
+      @g = @_io.read_u1
+      @b = @_io.read_u1
+      self
+    end
+    attr_reader :r
+    attr_reader :g
+    attr_reader :b
+  end
+
+  ##
+  # @see http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt - &quot;VGA 256 Color Palette Information&quot;
+  def palette_256
+    return @palette_256 unless @palette_256.nil?
+    if  ((hdr.version == :versions_v3_0) &amp;&amp; (hdr.bits_per_pixel == 8) &amp;&amp; (hdr.num_planes == 1)) 
+      _pos = @_io.pos
+      @_io.seek((_io.size - 769))
+      @palette_256 = TPalette256.new(@_io, self, @_root)
+      @_io.seek(_pos)
+    end
+    @palette_256
   end
   attr_reader :hdr
   attr_reader :_raw_hdr

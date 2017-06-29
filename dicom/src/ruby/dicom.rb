@@ -4051,21 +4051,25 @@ class Dicom < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @file_header = TFileHeader.new(@_io, self, @_root)
     @elements = []
     while not @_io.eof?
       @elements << TDataElementImplicit.new(@_io, self, @_root)
     end
+    self
   end
   class TFileHeader < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @preamble = @_io.read_bytes(128)
       @magic = @_io.ensure_fixed_contents([68, 73, 67, 77].pack('C*'))
+      self
     end
     attr_reader :preamble
     attr_reader :magic
@@ -4078,6 +4082,7 @@ class Dicom < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @tag_group = @_io.read_u2le
       @tag_elem = @_io.read_u2le
@@ -4109,6 +4114,7 @@ class Dicom < Kaitai::Struct::Struct
           @elements_implicit << TDataElementImplicit.new(@_io, self, @_root)
         end
       end
+      self
     end
     def is_forced_implicit
       return @is_forced_implicit unless @is_forced_implicit.nil?
@@ -4147,6 +4153,7 @@ class Dicom < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @tag_group = @_io.read_u2le
       @tag_elem = @_io.read_u2le
@@ -4178,6 +4185,7 @@ class Dicom < Kaitai::Struct::Struct
           @elements << TDataElementExplicit.new(@_io, self, @_root)
         end
       end
+      self
     end
     def tag
       return @tag unless @tag.nil?
@@ -4218,6 +4226,7 @@ class Dicom < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @tag_group = @_io.ensure_fixed_contents([254, 255].pack('C*'))
       @tag_elem = @_io.read_u2le
@@ -4232,6 +4241,7 @@ class Dicom < Kaitai::Struct::Struct
           @items << _
         end until  ((_.tag_group == 65534) && (_.tag_elem == 57357)) 
       end
+      self
     end
     attr_reader :tag_group
     attr_reader :tag_elem

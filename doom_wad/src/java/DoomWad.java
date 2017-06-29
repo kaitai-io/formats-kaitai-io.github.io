@@ -14,26 +14,17 @@ public class DoomWad extends KaitaiStruct {
     }
 
     public DoomWad(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public DoomWad(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public DoomWad(KaitaiStream _io, KaitaiStruct _parent, DoomWad _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -47,24 +38,17 @@ public class DoomWad extends KaitaiStruct {
         }
 
         public Sectors(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Sectors(KaitaiStream _io, DoomWad.IndexEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Sectors(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -86,24 +70,17 @@ public class DoomWad extends KaitaiStruct {
         }
 
         public Vertex(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Vertex(KaitaiStream _io, DoomWad.Vertexes _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Vertex(KaitaiStream _io, DoomWad.Vertexes _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -134,24 +111,17 @@ public class DoomWad extends KaitaiStruct {
         }
 
         public Texture12(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Texture12(KaitaiStream _io, DoomWad.IndexEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Texture12(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -167,24 +137,17 @@ public class DoomWad extends KaitaiStruct {
             }
 
             public TextureIndex(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public TextureIndex(KaitaiStream _io, DoomWad.Texture12 _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public TextureIndex(KaitaiStream _io, DoomWad.Texture12 _parent, DoomWad _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -213,24 +176,17 @@ public class DoomWad extends KaitaiStruct {
             }
 
             public TextureBody(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public TextureBody(KaitaiStream _io, DoomWad.Texture12.TextureIndex _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public TextureBody(KaitaiStream _io, DoomWad.Texture12.TextureIndex _parent, DoomWad _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -282,24 +238,17 @@ public class DoomWad extends KaitaiStruct {
             }
 
             public Patch(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Patch(KaitaiStream _io, DoomWad.Texture12.TextureBody _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Patch(KaitaiStream _io, DoomWad.Texture12.TextureBody _parent, DoomWad _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -355,24 +304,17 @@ public class DoomWad extends KaitaiStruct {
         }
 
         public Linedef(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Linedef(KaitaiStream _io, DoomWad.Linedefs _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Linedef(KaitaiStream _io, DoomWad.Linedefs _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -413,24 +355,17 @@ public class DoomWad extends KaitaiStruct {
         }
 
         public Pnames(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Pnames(KaitaiStream _io, DoomWad.IndexEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Pnames(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -459,24 +394,17 @@ public class DoomWad extends KaitaiStruct {
         }
 
         public Thing(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Thing(KaitaiStream _io, DoomWad.Things _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Thing(KaitaiStream _io, DoomWad.Things _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -544,24 +472,17 @@ public class DoomWad extends KaitaiStruct {
         }
 
         public Sector(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Sector(KaitaiStream _io, DoomWad.Sectors _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Sector(KaitaiStream _io, DoomWad.Sectors _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -609,24 +530,17 @@ public class DoomWad extends KaitaiStruct {
         }
 
         public Vertexes(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Vertexes(KaitaiStream _io, DoomWad.IndexEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Vertexes(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -648,24 +562,17 @@ public class DoomWad extends KaitaiStruct {
         }
 
         public Sidedef(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Sidedef(KaitaiStream _io, DoomWad.Sidedefs _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Sidedef(KaitaiStream _io, DoomWad.Sidedefs _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -699,24 +606,17 @@ public class DoomWad extends KaitaiStruct {
         }
 
         public Things(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Things(KaitaiStream _io, DoomWad.IndexEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Things(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -738,24 +638,17 @@ public class DoomWad extends KaitaiStruct {
         }
 
         public Linedefs(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Linedefs(KaitaiStream _io, DoomWad.IndexEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Linedefs(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -777,24 +670,17 @@ public class DoomWad extends KaitaiStruct {
         }
 
         public IndexEntry(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public IndexEntry(KaitaiStream _io, DoomWad _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public IndexEntry(KaitaiStream _io, DoomWad _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -891,24 +777,17 @@ public class DoomWad extends KaitaiStruct {
         }
 
         public Sidedefs(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Sidedefs(KaitaiStream _io, DoomWad.IndexEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Sidedefs(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -930,24 +809,17 @@ public class DoomWad extends KaitaiStruct {
         }
 
         public Blockmap(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Blockmap(KaitaiStream _io, DoomWad.IndexEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Blockmap(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -966,24 +838,17 @@ public class DoomWad extends KaitaiStruct {
             }
 
             public Blocklist(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Blocklist(KaitaiStream _io, DoomWad.Blockmap _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Blocklist(KaitaiStream _io, DoomWad.Blockmap _parent, DoomWad _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {

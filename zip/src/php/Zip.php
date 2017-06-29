@@ -1,9 +1,6 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-/**
- */
-
 class Zip extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Zip $root = null) {
         parent::__construct($io, $parent, $root);
@@ -80,9 +77,6 @@ class ExtraField extends \Kaitai\Struct\Struct {
     public function _raw_body() { return $this->_m__raw_body; }
 }
 
-/**
- */
-
 namespace \Zip\ExtraField;
 
 class Ntfs extends \Kaitai\Struct\Struct {
@@ -157,9 +151,6 @@ class Attribute1 extends \Kaitai\Struct\Struct {
     public function creationTime() { return $this->_m_creationTime; }
 }
 
-/**
- */
-
 namespace \Zip\ExtraField;
 
 class ExtendedTimestamp extends \Kaitai\Struct\Struct {
@@ -187,9 +178,6 @@ class ExtendedTimestamp extends \Kaitai\Struct\Struct {
     public function accessTime() { return $this->_m_accessTime; }
     public function createTime() { return $this->_m_createTime; }
 }
-
-/**
- */
 
 namespace \Zip\ExtraField;
 
@@ -237,9 +225,6 @@ class InfozipUnixVarSize extends \Kaitai\Struct\Struct {
      */
     public function gid() { return $this->_m_gid; }
 }
-
-/**
- */
 
 namespace \Zip;
 

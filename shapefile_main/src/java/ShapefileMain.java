@@ -59,26 +59,17 @@ public class ShapefileMain extends KaitaiStruct {
     }
 
     public ShapefileMain(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public ShapefileMain(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public ShapefileMain(KaitaiStream _io, KaitaiStruct _parent, ShapefileMain _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -94,24 +85,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public MultiPointM(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MultiPointM(KaitaiStream _io, ShapefileMain.RecordContents _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MultiPointM(KaitaiStream _io, ShapefileMain.RecordContents _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -148,24 +132,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public BoundingBoxXYZM(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BoundingBoxXYZM(KaitaiStream _io, ShapefileMain.FileHeader _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BoundingBoxXYZM(KaitaiStream _io, ShapefileMain.FileHeader _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -193,24 +170,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public Point(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Point(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Point(KaitaiStream _io, KaitaiStruct _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -232,24 +202,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public Polygon(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Polygon(KaitaiStream _io, ShapefileMain.RecordContents _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Polygon(KaitaiStream _io, ShapefileMain.RecordContents _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -286,24 +249,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public BoundsMinMax(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BoundsMinMax(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BoundsMinMax(KaitaiStream _io, KaitaiStruct _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -325,24 +281,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public PolyLine(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PolyLine(KaitaiStream _io, ShapefileMain.RecordContents _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PolyLine(KaitaiStream _io, ShapefileMain.RecordContents _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -379,24 +328,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public MultiPointZ(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MultiPointZ(KaitaiStream _io, ShapefileMain.RecordContents _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MultiPointZ(KaitaiStream _io, ShapefileMain.RecordContents _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -442,24 +384,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public PolyLineZ(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PolyLineZ(KaitaiStream _io, ShapefileMain.RecordContents _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PolyLineZ(KaitaiStream _io, ShapefileMain.RecordContents _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -514,24 +449,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public PolygonZ(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PolygonZ(KaitaiStream _io, ShapefileMain.RecordContents _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PolygonZ(KaitaiStream _io, ShapefileMain.RecordContents _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -586,24 +514,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public BoundingBoxXY(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BoundingBoxXY(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BoundingBoxXY(KaitaiStream _io, KaitaiStruct _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -625,24 +546,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public PointM(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PointM(KaitaiStream _io, ShapefileMain.RecordContents _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PointM(KaitaiStream _io, ShapefileMain.RecordContents _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -667,24 +581,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public PolygonM(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PolygonM(KaitaiStream _io, ShapefileMain.RecordContents _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PolygonM(KaitaiStream _io, ShapefileMain.RecordContents _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -730,24 +637,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public RecordHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public RecordHeader(KaitaiStream _io, ShapefileMain.Record _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public RecordHeader(KaitaiStream _io, ShapefileMain.Record _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -769,24 +669,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public MultiPoint(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MultiPoint(KaitaiStream _io, ShapefileMain.RecordContents _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MultiPoint(KaitaiStream _io, ShapefileMain.RecordContents _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -814,24 +707,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public FileHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public FileHeader(KaitaiStream _io, ShapefileMain _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public FileHeader(KaitaiStream _io, ShapefileMain _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -885,24 +771,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public PointZ(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PointZ(KaitaiStream _io, ShapefileMain.RecordContents _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PointZ(KaitaiStream _io, ShapefileMain.RecordContents _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -930,24 +809,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public Record(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Record(KaitaiStream _io, ShapefileMain _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Record(KaitaiStream _io, ShapefileMain _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -973,24 +845,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public RecordContents(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public RecordContents(KaitaiStream _io, ShapefileMain.Record _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public RecordContents(KaitaiStream _io, ShapefileMain.Record _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1067,24 +932,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public MultiPatch(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MultiPatch(KaitaiStream _io, ShapefileMain.RecordContents _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MultiPatch(KaitaiStream _io, ShapefileMain.RecordContents _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1145,24 +1003,17 @@ public class ShapefileMain extends KaitaiStruct {
         }
 
         public PolyLineM(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PolyLineM(KaitaiStream _io, ShapefileMain.RecordContents _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PolyLineM(KaitaiStream _io, ShapefileMain.RecordContents _parent, ShapefileMain _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

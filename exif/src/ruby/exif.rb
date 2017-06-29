@@ -11,6 +11,7 @@ class Exif < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @endianness = @_io.read_u2le
     case endianness
@@ -19,6 +20,7 @@ class Exif < Kaitai::Struct::Struct
     when 19789
       @body = ExifBe.new(@_io)
     end
+    self
   end
   attr_reader :endianness
   attr_reader :body

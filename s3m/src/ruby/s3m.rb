@@ -29,6 +29,7 @@ class S3m < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @song_name = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(28), 0, false)
     @magic1 = @_io.ensure_fixed_contents([26].pack('C*'))
@@ -70,17 +71,20 @@ class S3m < Kaitai::Struct::Struct
         @channel_pans[i] = ChannelPan.new(@_io, self, @_root)
       }
     end
+    self
   end
   class ChannelPan < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @reserved1 = @_io.read_bits_int(2)
       @has_custom_pan = @_io.read_bits_int(1) != 0
       @reserved2 = @_io.read_bits_int(1) != 0
       @pan = @_io.read_bits_int(4)
+      self
     end
     attr_reader :reserved1
 
@@ -97,6 +101,7 @@ class S3m < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @has_fx = @_io.read_bits_int(1) != 0
       @has_volume = @_io.read_bits_int(1) != 0
@@ -118,6 +123,7 @@ class S3m < Kaitai::Struct::Struct
       if has_fx
         @fx_value = @_io.read_u1
       end
+      self
     end
     attr_reader :has_fx
     attr_reader :has_volume
@@ -134,11 +140,13 @@ class S3m < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @cells = []
       while not @_io.eof?
         @cells << PatternCell.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :cells
   end
@@ -147,9 +155,11 @@ class S3m < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @is_disabled = @_io.read_bits_int(1) != 0
       @ch_type = @_io.read_bits_int(7)
+      self
     end
     attr_reader :is_disabled
 
@@ -165,9 +175,11 @@ class S3m < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @hi = @_io.read_u1
       @lo = @_io.read_u2le
+      self
     end
     def value
       return @value unless @value.nil?
@@ -182,11 +194,13 @@ class S3m < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @size = @_io.read_u2le
       @_raw_body = @_io.read_bytes((size - 2))
       io = Kaitai::Struct::Stream.new(@_raw_body)
       @body = PatternCells.new(io, self, @_root)
+      self
     end
     attr_reader :size
     attr_reader :body
@@ -197,8 +211,10 @@ class S3m < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @paraptr = @_io.read_u2le
+      self
     end
     def body
       return @body unless @body.nil?
@@ -215,8 +231,10 @@ class S3m < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @paraptr = @_io.read_u2le
+      self
     end
     def body
       return @body unless @body.nil?
@@ -244,6 +262,7 @@ class S3m < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @type = Kaitai::Struct::Stream::resolve_enum(INST_TYPES, @_io.read_u1)
       @filename = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(12), 0, false)
@@ -257,12 +276,14 @@ class S3m < Kaitai::Struct::Struct
       @reserved2 = @_io.read_bytes(12)
       @sample_name = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(28), 0, false)
       @magic = @_io.ensure_fixed_contents([83, 67, 82, 83].pack('C*'))
+      self
     end
     class Sampled < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @paraptr_sample = SwappedU3.new(@_io, self, @_root)
         @len_sample = @_io.read_u4le
@@ -272,6 +293,7 @@ class S3m < Kaitai::Struct::Struct
         @reserved1 = @_io.read_u1
         @is_packed = @_io.read_u1
         @flags = @_io.read_u1
+        self
       end
       def sample
         return @sample unless @sample.nil?
@@ -301,9 +323,11 @@ class S3m < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @reserved1 = @_io.ensure_fixed_contents([0, 0, 0].pack('C*'))
         @_unnamed1 = @_io.read_bytes(16)
+        self
       end
       attr_reader :reserved1
       attr_reader :_unnamed1

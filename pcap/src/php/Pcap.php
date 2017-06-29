@@ -22,51 +22,6 @@ class Pcap extends \Kaitai\Struct\Struct {
 
 namespace \Pcap;
 
-class PacketPpi extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Pcap\Packet $parent = null, \Pcap $root = null) {
-        parent::__construct($io, $parent, $root);
-        $this->_read();
-    }
-
-    private function _read() {
-        $this->_m_header = new \Pcap\PacketPpiHeader($this->_io, $this, $this->_root);
-        $this->_m_fields = [];
-        while (!$this->_io->isEof()) {
-            $this->_m_fields[] = new \Pcap\PacketPpiField($this->_io, $this, $this->_root);
-        }
-    }
-    protected $_m_header;
-    protected $_m_fields;
-    public function header() { return $this->_m_header; }
-    public function fields() { return $this->_m_fields; }
-}
-
-namespace \Pcap;
-
-class PacketPpiHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Pcap\PacketPpi $parent = null, \Pcap $root = null) {
-        parent::__construct($io, $parent, $root);
-        $this->_read();
-    }
-
-    private function _read() {
-        $this->_m_pphVersion = $this->_io->readU1();
-        $this->_m_pphFlags = $this->_io->readU1();
-        $this->_m_pphLen = $this->_io->readU2le();
-        $this->_m_pphDlt = $this->_io->readU4le();
-    }
-    protected $_m_pphVersion;
-    protected $_m_pphFlags;
-    protected $_m_pphLen;
-    protected $_m_pphDlt;
-    public function pphVersion() { return $this->_m_pphVersion; }
-    public function pphFlags() { return $this->_m_pphFlags; }
-    public function pphLen() { return $this->_m_pphLen; }
-    public function pphDlt() { return $this->_m_pphDlt; }
-}
-
-namespace \Pcap;
-
 class Header extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $io, \Pcap $parent = null, \Pcap $root = null) {
         parent::__construct($io, $parent, $root);
@@ -121,66 +76,6 @@ class Header extends \Kaitai\Struct\Struct {
 
 namespace \Pcap;
 
-class Radio80211CommonBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Pcap $root = null) {
-        parent::__construct($io, $parent, $root);
-        $this->_read();
-    }
-
-    private function _read() {
-        $this->_m_tsfTimer = $this->_io->readU8le();
-        $this->_m_flags = $this->_io->readU2le();
-        $this->_m_rate = $this->_io->readU2le();
-        $this->_m_channelFreq = $this->_io->readU2le();
-        $this->_m_channelFlags = $this->_io->readU2le();
-        $this->_m_fhssHopset = $this->_io->readU1();
-        $this->_m_fhssPattern = $this->_io->readU1();
-        $this->_m_dbmAntsignal = $this->_io->readS1();
-        $this->_m_dbmAntnoise = $this->_io->readS1();
-    }
-    protected $_m_tsfTimer;
-    protected $_m_flags;
-    protected $_m_rate;
-    protected $_m_channelFreq;
-    protected $_m_channelFlags;
-    protected $_m_fhssHopset;
-    protected $_m_fhssPattern;
-    protected $_m_dbmAntsignal;
-    protected $_m_dbmAntnoise;
-    public function tsfTimer() { return $this->_m_tsfTimer; }
-    public function flags() { return $this->_m_flags; }
-    public function rate() { return $this->_m_rate; }
-    public function channelFreq() { return $this->_m_channelFreq; }
-    public function channelFlags() { return $this->_m_channelFlags; }
-    public function fhssHopset() { return $this->_m_fhssHopset; }
-    public function fhssPattern() { return $this->_m_fhssPattern; }
-    public function dbmAntsignal() { return $this->_m_dbmAntsignal; }
-    public function dbmAntnoise() { return $this->_m_dbmAntnoise; }
-}
-
-namespace \Pcap;
-
-class PacketPpiField extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Pcap\PacketPpi $parent = null, \Pcap $root = null) {
-        parent::__construct($io, $parent, $root);
-        $this->_read();
-    }
-
-    private function _read() {
-        $this->_m_pfhType = $this->_io->readU2le();
-        $this->_m_pfhDatalen = $this->_io->readU2le();
-        $this->_m_body = $this->_io->readBytes($this->pfhDatalen());
-    }
-    protected $_m_pfhType;
-    protected $_m_pfhDatalen;
-    protected $_m_body;
-    public function pfhType() { return $this->_m_pfhType; }
-    public function pfhDatalen() { return $this->_m_pfhDatalen; }
-    public function body() { return $this->_m_body; }
-}
-
-namespace \Pcap;
-
 class Packet extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $io, \Pcap $parent = null, \Pcap $root = null) {
         parent::__construct($io, $parent, $root);
@@ -196,7 +91,7 @@ class Packet extends \Kaitai\Struct\Struct {
             case \Pcap\Linktype::PPI:
                 $this->_m__raw_body = $this->_io->readBytes($this->inclLen());
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                $this->_m_body = new \Pcap\PacketPpi($io, $this, $this->_root);
+                $this->_m_body = new \PacketPpi($io);
                 break;
             case \Pcap\Linktype::ETHERNET:
                 $this->_m__raw_body = $this->_io->readBytes($this->inclLen());
@@ -337,15 +232,4 @@ class Linktype {
     const ZWAVE_R3 = 262;
     const WATTSTOPPER_DLM = 263;
     const ISO_14443 = 264;
-}
-
-namespace \Pcap;
-
-class PfhType {
-    const RADIO_802_11_COMMON = 2;
-    const RADIO_802_11N_MAC_EXT = 3;
-    const RADIO_802_11N_MAC_PHY_EXT = 4;
-    const SPECTRUM_MAP = 5;
-    const PROCESS_INFO = 6;
-    const CAPTURE_INFO = 7;
 }

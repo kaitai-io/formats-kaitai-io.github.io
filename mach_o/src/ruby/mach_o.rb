@@ -154,6 +154,7 @@ class MachO < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @magic = Kaitai::Struct::Stream::resolve_enum(MAGIC_TYPE, @_io.read_u4be)
     @header = MachHeader.new(@_io, self, @_root)
@@ -161,15 +162,18 @@ class MachO < Kaitai::Struct::Struct
     (header.ncmds).times { |i|
       @load_commands[i] = LoadCommand.new(@_io, self, @_root)
     }
+    self
   end
   class RpathCommand < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @path_offset = @_io.read_u4le
       @path = (@_io.read_bytes_term(0, false, true, true)).force_encoding("utf-8")
+      self
     end
     attr_reader :path_offset
     attr_reader :path
@@ -179,6 +183,7 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @b1 = @_io.read_u1
       if (b1 & 128) != 0
@@ -208,6 +213,7 @@ class MachO < Kaitai::Struct::Struct
       if (b9 & 128) != 0
         @b10 = @_io.read_u1
       end
+      self
     end
     def value
       return @value unless @value.nil?
@@ -230,8 +236,10 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @version = @_io.read_u8le
+      self
     end
     attr_reader :version
   end
@@ -251,6 +259,7 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = Kaitai::Struct::Stream::resolve_enum(CS_MAGIC, @_io.read_u4be)
       @length = @_io.read_u4be
@@ -286,14 +295,17 @@ class MachO < Kaitai::Struct::Struct
       else
         @body = @_io.read_bytes((length - 8))
       end
+      self
     end
     class Entitlement < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @data = @_io.read_bytes_full
+        self
       end
       attr_reader :data
     end
@@ -302,6 +314,7 @@ class MachO < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @version = @_io.read_u4be
         @flags = @_io.read_u4be
@@ -321,6 +334,7 @@ class MachO < Kaitai::Struct::Struct
         if version >= 131584
           @team_id_offset = @_io.read_u4be
         end
+        self
       end
       def ident
         return @ident unless @ident.nil?
@@ -377,9 +391,11 @@ class MachO < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @type = Kaitai::Struct::Stream::resolve_enum(REQUIREMENT_TYPE, @_io.read_u4be)
         @offset = @_io.read_u4be
+        self
       end
       def value
         return @value unless @value.nil?
@@ -397,10 +413,12 @@ class MachO < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @length = @_io.read_u4be
         @value = @_io.read_bytes(length)
         @padding = @_io.read_bytes((4 - (length & 3)))
+        self
       end
       attr_reader :length
       attr_reader :value
@@ -411,12 +429,14 @@ class MachO < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @count = @_io.read_u4be
         @blobs = Array.new(count)
         (count).times { |i|
           @blobs[i] = BlobIndex.new(@_io, self, @_root)
         }
+        self
       end
       attr_reader :count
       attr_reader :blobs
@@ -453,6 +473,7 @@ class MachO < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @op = Kaitai::Struct::Stream::resolve_enum(OP_ENUM, @_io.read_u4be)
         case op
@@ -483,15 +504,18 @@ class MachO < Kaitai::Struct::Struct
         when :op_enum_cd_hash
           @data = Data.new(@_io, self, @_root)
         end
+        self
       end
       class InfoKeyFieldExpr < Kaitai::Struct::Struct
         def initialize(_io, _parent = nil, _root = self)
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @data = Data.new(@_io, self, @_root)
           @match = Match.new(@_io, self, @_root)
+          self
         end
         attr_reader :data
         attr_reader :match
@@ -501,8 +525,10 @@ class MachO < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @value = Kaitai::Struct::Stream::resolve_enum(CERT_SLOT, @_io.read_u4be)
+          self
         end
         attr_reader :value
       end
@@ -511,10 +537,12 @@ class MachO < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @cert_slot = Kaitai::Struct::Stream::resolve_enum(CERT_SLOT, @_io.read_u4be)
           @data = Data.new(@_io, self, @_root)
           @match = Match.new(@_io, self, @_root)
+          self
         end
         attr_reader :cert_slot
         attr_reader :data
@@ -525,8 +553,10 @@ class MachO < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @identifier = Data.new(@_io, self, @_root)
+          self
         end
         attr_reader :identifier
       end
@@ -535,10 +565,12 @@ class MachO < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @cert_slot = Kaitai::Struct::Stream::resolve_enum(CERT_SLOT, @_io.read_u4be)
           @data = Data.new(@_io, self, @_root)
           @match = Match.new(@_io, self, @_root)
+          self
         end
         attr_reader :cert_slot
         attr_reader :data
@@ -549,9 +581,11 @@ class MachO < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @cert_slot = Kaitai::Struct::Stream::resolve_enum(CERT_SLOT, @_io.read_u4be)
           @data = Data.new(@_io, self, @_root)
+          self
         end
         attr_reader :cert_slot
         attr_reader :data
@@ -561,7 +595,9 @@ class MachO < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
+          self
         end
         def value
           return @value unless @value.nil?
@@ -574,9 +610,11 @@ class MachO < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @data = Data.new(@_io, self, @_root)
           @match = Match.new(@_io, self, @_root)
+          self
         end
         attr_reader :data
         attr_reader :match
@@ -586,9 +624,11 @@ class MachO < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @left = Expr.new(@_io, self, @_root)
           @right = Expr.new(@_io, self, @_root)
+          self
         end
         attr_reader :left
         attr_reader :right
@@ -598,9 +638,11 @@ class MachO < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @left = Expr.new(@_io, self, @_root)
           @right = Expr.new(@_io, self, @_root)
+          self
         end
         attr_reader :left
         attr_reader :right
@@ -625,9 +667,11 @@ class MachO < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @type = Kaitai::Struct::Stream::resolve_enum(CSSLOT_TYPE, @_io.read_u4be)
         @offset = @_io.read_u4be
+        self
       end
       def blob
         return @blob unless @blob.nil?
@@ -662,11 +706,13 @@ class MachO < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @match_op = Kaitai::Struct::Stream::resolve_enum(OP, @_io.read_u4be)
         if match_op != :op_exists
           @data = Data.new(@_io, self, @_root)
         end
+        self
       end
       attr_reader :match_op
       attr_reader :data
@@ -676,9 +722,11 @@ class MachO < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @kind = @_io.read_u4be
         @expr = Expr.new(@_io, self, @_root)
+        self
       end
       attr_reader :kind
       attr_reader :expr
@@ -688,8 +736,10 @@ class MachO < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @data = @_io.read_bytes_full
+        self
       end
       attr_reader :data
     end
@@ -698,12 +748,14 @@ class MachO < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @count = @_io.read_u4be
         @items = Array.new(count)
         (count).times { |i|
           @items[i] = EntitlementsBlobIndex.new(@_io, self, @_root)
         }
+        self
       end
       attr_reader :count
       attr_reader :items
@@ -718,6 +770,7 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @segname = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(16), 0)).force_encoding("ascii")
       @vmaddr = @_io.read_u8le
@@ -732,12 +785,14 @@ class MachO < Kaitai::Struct::Struct
       (nsects).times { |i|
         @sections[i] = Section64.new(@_io, self, @_root)
       }
+      self
     end
     class Section64 < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @sect_name = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(16), 0)).force_encoding("ascii")
         @seg_name = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(16), 0)).force_encoding("ascii")
@@ -751,17 +806,20 @@ class MachO < Kaitai::Struct::Struct
         @reserved1 = @_io.read_u4le
         @reserved2 = @_io.read_u4le
         @reserved3 = @_io.read_u4le
+        self
       end
       class CfStringList < Kaitai::Struct::Struct
         def initialize(_io, _parent = nil, _root = self)
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @items = []
           while not @_io.eof?
             @items << CfString.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :items
       end
@@ -770,11 +828,13 @@ class MachO < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @isa = @_io.read_u8le
           @info = @_io.read_u8le
           @data = @_io.read_u8le
           @length = @_io.read_u8le
+          self
         end
         attr_reader :isa
         attr_reader :info
@@ -786,6 +846,7 @@ class MachO < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @length = @_io.read_u4le
           if length == 4294967295
@@ -802,17 +863,20 @@ class MachO < Kaitai::Struct::Struct
               @body = @_io.read_bytes((length - 4))
             end
           end
+          self
         end
         class CharChain < Kaitai::Struct::Struct
           def initialize(_io, _parent = nil, _root = self)
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @chr = @_io.read_u1
             if chr != 0
               @next = CharChain.new(@_io, self, @_root)
             end
+            self
           end
           attr_reader :chr
           attr_reader :next
@@ -822,6 +886,7 @@ class MachO < Kaitai::Struct::Struct
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @version = @_io.read_u1
             @aug_str = CharChain.new(@_io, self, @_root)
@@ -831,6 +896,7 @@ class MachO < Kaitai::Struct::Struct
             if aug_str.chr == 122
               @augmentation = AugmentationEntry.new(@_io, self, @_root)
             end
+            self
           end
           attr_reader :version
           attr_reader :aug_str
@@ -844,11 +910,13 @@ class MachO < Kaitai::Struct::Struct
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @length = Uleb128.new(@_io, self, @_root)
             if _parent.aug_str.next.chr == 82
               @fde_pointer_encoding = @_io.read_u1
             end
+            self
           end
           attr_reader :length
           attr_reader :fde_pointer_encoding
@@ -864,11 +932,13 @@ class MachO < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @items = []
           while not @_io.eof?
             @items << EhFrameItem.new(@_io, self, @_root)
           end
+          self
         end
         attr_reader :items
       end
@@ -877,11 +947,13 @@ class MachO < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @items = []
           while not @_io.eof?
             @items << @_io.read_u8le
           end
+          self
         end
         attr_reader :items
       end
@@ -890,11 +962,13 @@ class MachO < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @strings = []
           while not @_io.eof?
             @strings << (@_io.read_bytes_term(0, false, true, true)).force_encoding("ascii")
           end
+          self
         end
         attr_reader :strings
       end
@@ -1008,6 +1082,7 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @i_local_sym = @_io.read_u4le
       @n_local_sym = @_io.read_u4le
@@ -1027,6 +1102,7 @@ class MachO < Kaitai::Struct::Struct
       @n_ext_rel = @_io.read_u4le
       @loc_rel_off = @_io.read_u4le
       @n_loc_rel = @_io.read_u4le
+      self
     end
     def indirect_symbols
       return @indirect_symbols unless @indirect_symbols.nil?
@@ -1064,6 +1140,7 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @cputype = Kaitai::Struct::Stream::resolve_enum(CPU_TYPE, @_io.read_u4le)
       @cpusubtype = @_io.read_u4le
@@ -1074,6 +1151,7 @@ class MachO < Kaitai::Struct::Struct
       if  ((_root.magic == :magic_type_macho_be_x64) || (_root.magic == :magic_type_macho_le_x64)) 
         @reserved = @_io.read_u4le
       end
+      self
     end
     attr_reader :cputype
     attr_reader :cpusubtype
@@ -1088,9 +1166,11 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @data_off = @_io.read_u4le
       @data_size = @_io.read_u4le
+      self
     end
     attr_reader :data_off
     attr_reader :data_size
@@ -1100,11 +1180,13 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @p1 = @_io.read_u1
       @minor = @_io.read_u1
       @major = @_io.read_u1
       @release = @_io.read_u1
+      self
     end
     attr_reader :p1
     attr_reader :minor
@@ -1116,9 +1198,11 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @data_off = @_io.read_u4le
       @data_size = @_io.read_u4le
+      self
     end
     def code_signature
       return @code_signature unless @code_signature.nil?
@@ -1157,6 +1241,7 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @rebase_off = @_io.read_u4le
       @rebase_size = @_io.read_u4le
@@ -1168,12 +1253,14 @@ class MachO < Kaitai::Struct::Struct
       @lazy_bind_size = @_io.read_u4le
       @export_off = @_io.read_u4le
       @export_size = @_io.read_u4le
+      self
     end
     class BindItem < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @opcode_and_immediate = @_io.read_u1
         if  ((opcode == :bind_opcode_set_dylib_ordinal_uleb) || (opcode == :bind_opcode_set_append_sleb) || (opcode == :bind_opcode_set_segment_and_offset_uleb) || (opcode == :bind_opcode_add_address_uleb) || (opcode == :bind_opcode_do_bind_add_address_uleb) || (opcode == :bind_opcode_do_bind_uleb_times_skipping_uleb)) 
@@ -1185,6 +1272,7 @@ class MachO < Kaitai::Struct::Struct
         if opcode == :bind_opcode_set_symbol_trailing_flags_immediate
           @symbol = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ascii")
         end
+        self
       end
       def opcode
         return @opcode unless @opcode.nil?
@@ -1219,18 +1307,21 @@ class MachO < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @items = []
         begin
           _ = RebaseItem.new(@_io, self, @_root)
           @items << _
         end until _.opcode == :opcode_done
+        self
       end
       class RebaseItem < Kaitai::Struct::Struct
         def initialize(_io, _parent = nil, _root = self)
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @opcode_and_immediate = @_io.read_u1
           if  ((opcode == :opcode_set_segment_and_offset_uleb) || (opcode == :opcode_add_address_uleb) || (opcode == :opcode_do_rebase_uleb_times) || (opcode == :opcode_do_rebase_add_address_uleb) || (opcode == :opcode_do_rebase_uleb_times_skipping_uleb)) 
@@ -1239,6 +1330,7 @@ class MachO < Kaitai::Struct::Struct
           if opcode == :opcode_do_rebase_uleb_times_skipping_uleb
             @skip = Uleb128.new(@_io, self, @_root)
           end
+          self
         end
         def opcode
           return @opcode unless @opcode.nil?
@@ -1261,6 +1353,7 @@ class MachO < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @terminal_size = Uleb128.new(@_io, self, @_root)
         @children_count = @_io.read_u1
@@ -1269,15 +1362,18 @@ class MachO < Kaitai::Struct::Struct
           @children[i] = Child.new(@_io, self, @_root)
         }
         @terminal = @_io.read_bytes(terminal_size.value)
+        self
       end
       class Child < Kaitai::Struct::Struct
         def initialize(_io, _parent = nil, _root = self)
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @name = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ascii")
           @node_offset = Uleb128.new(@_io, self, @_root)
+          self
         end
         def value
           return @value unless @value.nil?
@@ -1300,12 +1396,14 @@ class MachO < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @items = []
         begin
           _ = BindItem.new(@_io, self, @_root)
           @items << _
         end until _.opcode == :bind_opcode_done
+        self
       end
       attr_reader :items
     end
@@ -1314,11 +1412,13 @@ class MachO < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @items = []
         while not @_io.eof?
           @items << BindItem.new(@_io, self, @_root)
         end
+        self
       end
       attr_reader :items
     end
@@ -1386,8 +1486,10 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @name = LcStr.new(@_io, self, @_root)
+      self
     end
     attr_reader :name
   end
@@ -1396,12 +1498,14 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @name_offset = @_io.read_u4le
       @timestamp = @_io.read_u4le
       @current_version = @_io.read_u4le
       @compatibility_version = @_io.read_u4le
       @name = (@_io.read_bytes_term(0, false, true, true)).force_encoding("utf-8")
+      self
     end
     attr_reader :name_offset
     attr_reader :timestamp
@@ -1414,9 +1518,11 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @length = @_io.read_u4le
       @value = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
+      self
     end
     attr_reader :length
     attr_reader :value
@@ -1426,6 +1532,7 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @type = Kaitai::Struct::Stream::resolve_enum(LOAD_COMMAND_TYPE, @_io.read_u4le)
       @size = @_io.read_u4le
@@ -1489,6 +1596,7 @@ class MachO < Kaitai::Struct::Struct
       else
         @body = @_io.read_bytes((size - 8))
       end
+      self
     end
     attr_reader :type
     attr_reader :size
@@ -1500,8 +1608,10 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @uuid = @_io.read_bytes(16)
+      self
     end
     attr_reader :uuid
   end
@@ -1510,17 +1620,20 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @sym_off = @_io.read_u4le
       @n_syms = @_io.read_u4le
       @str_off = @_io.read_u4le
       @str_size = @_io.read_u4le
+      self
     end
     class StrTable < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @unknown = @_io.read_u4le
         @items = []
@@ -1528,6 +1641,7 @@ class MachO < Kaitai::Struct::Struct
           _ = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ascii")
           @items << _
         end until _ == ""
+        self
       end
       attr_reader :unknown
       attr_reader :items
@@ -1537,12 +1651,14 @@ class MachO < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @un = @_io.read_u4le
         @type = @_io.read_u1
         @sect = @_io.read_u1
         @desc = @_io.read_u2le
         @value = @_io.read_u8le
+        self
       end
       attr_reader :un
       attr_reader :type
@@ -1584,9 +1700,11 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @version = Version.new(@_io, self, @_root)
       @reserved = Version.new(@_io, self, @_root)
+      self
     end
     attr_reader :version
     attr_reader :reserved
@@ -1596,9 +1714,11 @@ class MachO < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entry_off = @_io.read_u8le
       @stack_size = @_io.read_u8le
+      self
     end
     attr_reader :entry_off
     attr_reader :stack_size

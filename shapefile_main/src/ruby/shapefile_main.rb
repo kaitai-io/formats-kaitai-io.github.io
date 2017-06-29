@@ -39,18 +39,21 @@ class ShapefileMain < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @header = FileHeader.new(@_io, self, @_root)
     @records = []
     while not @_io.eof?
       @records << Record.new(@_io, self, @_root)
     end
+    self
   end
   class MultiPointM < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_points = @_io.read_s4le
@@ -63,6 +66,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       (number_of_points).times { |i|
         @m_values[i] = @_io.read_f8le
       }
+      self
     end
     attr_reader :bounding_box
     attr_reader :number_of_points
@@ -75,11 +79,13 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x = BoundsMinMax.new(@_io, self, @_root)
       @y = BoundsMinMax.new(@_io, self, @_root)
       @z = BoundsMinMax.new(@_io, self, @_root)
       @m = BoundsMinMax.new(@_io, self, @_root)
+      self
     end
     attr_reader :x
     attr_reader :y
@@ -91,9 +97,11 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x = @_io.read_f8le
       @y = @_io.read_f8le
+      self
     end
     attr_reader :x
     attr_reader :y
@@ -103,6 +111,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_parts = @_io.read_s4le
@@ -115,6 +124,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       (number_of_points).times { |i|
         @points[i] = Point.new(@_io, self, @_root)
       }
+      self
     end
     attr_reader :bounding_box
     attr_reader :number_of_parts
@@ -127,9 +137,11 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @min = @_io.read_f8le
       @max = @_io.read_f8le
+      self
     end
     attr_reader :min
     attr_reader :max
@@ -139,6 +151,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_parts = @_io.read_s4le
@@ -151,6 +164,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       (number_of_points).times { |i|
         @points[i] = Point.new(@_io, self, @_root)
       }
+      self
     end
     attr_reader :bounding_box
     attr_reader :number_of_parts
@@ -163,6 +177,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_points = @_io.read_s4le
@@ -180,6 +195,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       (number_of_points).times { |i|
         @m_values[i] = @_io.read_f8le
       }
+      self
     end
     attr_reader :bounding_box
     attr_reader :number_of_points
@@ -194,6 +210,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_parts = @_io.read_s4le
@@ -216,6 +233,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       (number_of_points).times { |i|
         @m_values[i] = @_io.read_f8le
       }
+      self
     end
     attr_reader :bounding_box
     attr_reader :number_of_parts
@@ -232,6 +250,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_parts = @_io.read_s4le
@@ -254,6 +273,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       (number_of_points).times { |i|
         @m_values[i] = @_io.read_f8le
       }
+      self
     end
     attr_reader :bounding_box
     attr_reader :number_of_parts
@@ -270,9 +290,11 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x = BoundsMinMax.new(@_io, self, @_root)
       @y = BoundsMinMax.new(@_io, self, @_root)
+      self
     end
     attr_reader :x
     attr_reader :y
@@ -282,10 +304,12 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x = @_io.read_f8le
       @y = @_io.read_f8le
       @m = @_io.read_f8le
+      self
     end
     attr_reader :x
     attr_reader :y
@@ -296,6 +320,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_parts = @_io.read_s4le
@@ -313,6 +338,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       (number_of_points).times { |i|
         @m_values[i] = @_io.read_f8le
       }
+      self
     end
     attr_reader :bounding_box
     attr_reader :number_of_parts
@@ -327,9 +353,11 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @record_number = @_io.read_s4be
       @content_length = @_io.read_s4be
+      self
     end
     attr_reader :record_number
     attr_reader :content_length
@@ -339,6 +367,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_points = @_io.read_s4le
@@ -346,6 +375,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       (number_of_points).times { |i|
         @points[i] = Point.new(@_io, self, @_root)
       }
+      self
     end
     attr_reader :bounding_box
     attr_reader :number_of_points
@@ -356,6 +386,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @file_code = @_io.ensure_fixed_contents([0, 0, 39, 10].pack('C*'))
       @unused_field_1 = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
@@ -367,6 +398,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       @version = @_io.ensure_fixed_contents([232, 3, 0, 0].pack('C*'))
       @shape_type = Kaitai::Struct::Stream::resolve_enum(SHAPE_TYPE, @_io.read_s4le)
       @bounding_box = BoundingBoxXYZM.new(@_io, self, @_root)
+      self
     end
 
     ##
@@ -390,11 +422,13 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x = @_io.read_f8le
       @y = @_io.read_f8le
       @z = @_io.read_f8le
       @m = @_io.read_f8le
+      self
     end
     attr_reader :x
     attr_reader :y
@@ -406,9 +440,11 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @header = RecordHeader.new(@_io, self, @_root)
       @contents = RecordContents.new(@_io, self, @_root)
+      self
     end
     attr_reader :header
 
@@ -421,6 +457,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @shape_type = Kaitai::Struct::Stream::resolve_enum(SHAPE_TYPE, @_io.read_s4le)
       if shape_type != :shape_type_null_shape
@@ -453,6 +490,7 @@ class ShapefileMain < Kaitai::Struct::Struct
           @shape_parameters = MultiPatch.new(@_io, self, @_root)
         end
       end
+      self
     end
     attr_reader :shape_type
     attr_reader :shape_parameters
@@ -462,6 +500,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_parts = @_io.read_s4le
@@ -488,6 +527,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       (number_of_points).times { |i|
         @m_values[i] = @_io.read_f8le
       }
+      self
     end
     attr_reader :bounding_box
     attr_reader :number_of_parts
@@ -505,6 +545,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_parts = @_io.read_s4le
@@ -522,6 +563,7 @@ class ShapefileMain < Kaitai::Struct::Struct
       (number_of_points).times { |i|
         @m_values[i] = @_io.read_f8le
       }
+      self
     end
     attr_reader :bounding_box
     attr_reader :number_of_parts

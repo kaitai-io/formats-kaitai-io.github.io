@@ -43,26 +43,17 @@ public class Specpr extends KaitaiStruct {
     }
 
     public Specpr(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Specpr(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Specpr(KaitaiStream _io, KaitaiStruct _parent, Specpr _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -77,24 +68,17 @@ public class Specpr extends KaitaiStruct {
         }
 
         public DataInitial(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DataInitial(KaitaiStream _io, Specpr.Record _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DataInitial(KaitaiStream _io, Specpr.Record _parent, Specpr _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -335,24 +319,17 @@ public class Specpr extends KaitaiStruct {
         }
 
         public CoarseTimestamp(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public CoarseTimestamp(KaitaiStream _io, Specpr.DataInitial _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public CoarseTimestamp(KaitaiStream _io, Specpr.DataInitial _parent, Specpr _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -383,24 +360,17 @@ public class Specpr extends KaitaiStruct {
         }
 
         public Icflag(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Icflag(KaitaiStream _io, Specpr.Record _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Icflag(KaitaiStream _io, Specpr.Record _parent, Specpr _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -481,24 +451,17 @@ public class Specpr extends KaitaiStruct {
         }
 
         public DataContinuation(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DataContinuation(KaitaiStream _io, Specpr.Record _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DataContinuation(KaitaiStream _io, Specpr.Record _parent, Specpr _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -524,24 +487,17 @@ public class Specpr extends KaitaiStruct {
         }
 
         public Identifiers(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Identifiers(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Identifiers(KaitaiStream _io, KaitaiStruct _parent, Specpr _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -571,24 +527,17 @@ public class Specpr extends KaitaiStruct {
         }
 
         public IllumAngle(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public IllumAngle(KaitaiStream _io, Specpr.DataInitial _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public IllumAngle(KaitaiStream _io, Specpr.DataInitial _parent, Specpr _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -635,24 +584,17 @@ public class Specpr extends KaitaiStruct {
         }
 
         public TextInitial(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public TextInitial(KaitaiStream _io, Specpr.Record _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public TextInitial(KaitaiStream _io, Specpr.Record _parent, Specpr _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -692,24 +634,17 @@ public class Specpr extends KaitaiStruct {
         }
 
         public Record(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Record(KaitaiStream _io, Specpr _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Record(KaitaiStream _io, Specpr _parent, Specpr _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -766,24 +701,17 @@ public class Specpr extends KaitaiStruct {
         }
 
         public TextContinuation(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public TextContinuation(KaitaiStream _io, Specpr.Record _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public TextContinuation(KaitaiStream _io, Specpr.Record _parent, Specpr _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

@@ -86,9 +86,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         }
     }
     protected $_m_isArray32;
-
-    /**
-     */
     public function isArray32() {
         if ($this->_m_isArray32 !== null)
             return $this->_m_isArray32;
@@ -114,9 +111,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_strLen;
     }
     protected $_m_isFixArray;
-
-    /**
-     */
     public function isFixArray() {
         if ($this->_m_isFixArray !== null)
             return $this->_m_isFixArray;
@@ -124,9 +118,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_isFixArray;
     }
     protected $_m_isMap;
-
-    /**
-     */
     public function isMap() {
         if ($this->_m_isMap !== null)
             return $this->_m_isMap;
@@ -134,9 +125,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_isMap;
     }
     protected $_m_isArray;
-
-    /**
-     */
     public function isArray() {
         if ($this->_m_isArray !== null)
             return $this->_m_isArray;
@@ -151,9 +139,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_isFloat;
     }
     protected $_m_isStr8;
-
-    /**
-     */
     public function isStr8() {
         if ($this->_m_isStr8 !== null)
             return $this->_m_isStr8;
@@ -161,9 +146,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_isStr8;
     }
     protected $_m_isFixMap;
-
-    /**
-     */
     public function isFixMap() {
         if ($this->_m_isFixMap !== null)
             return $this->_m_isFixMap;
@@ -185,9 +167,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_isBool;
     }
     protected $_m_isStr16;
-
-    /**
-     */
     public function isStr16() {
         if ($this->_m_isStr16 !== null)
             return $this->_m_isStr16;
@@ -195,9 +174,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_isStr16;
     }
     protected $_m_isFloat64;
-
-    /**
-     */
     public function isFloat64() {
         if ($this->_m_isFloat64 !== null)
             return $this->_m_isFloat64;
@@ -205,9 +181,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_isFloat64;
     }
     protected $_m_isMap16;
-
-    /**
-     */
     public function isMap16() {
         if ($this->_m_isMap16 !== null)
             return $this->_m_isMap16;
@@ -231,9 +204,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_posInt7Value;
     }
     protected $_m_isNil;
-
-    /**
-     */
     public function isNil() {
         if ($this->_m_isNil !== null)
             return $this->_m_isNil;
@@ -250,9 +220,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_floatValue;
     }
     protected $_m_numArrayElements;
-
-    /**
-     */
     public function numArrayElements() {
         if ($this->_m_numArrayElements !== null)
             return $this->_m_numArrayElements;
@@ -271,9 +238,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_negInt5Value;
     }
     protected $_m_boolValue;
-
-    /**
-     */
     public function boolValue() {
         if ($this->_m_boolValue !== null)
             return $this->_m_boolValue;
@@ -290,9 +254,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_isPosInt7;
     }
     protected $_m_isArray16;
-
-    /**
-     */
     public function isArray16() {
         if ($this->_m_isArray16 !== null)
             return $this->_m_isArray16;
@@ -307,9 +268,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_isStr;
     }
     protected $_m_isFixStr;
-
-    /**
-     */
     public function isFixStr() {
         if ($this->_m_isFixStr !== null)
             return $this->_m_isFixStr;
@@ -317,9 +275,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_isFixStr;
     }
     protected $_m_isStr32;
-
-    /**
-     */
     public function isStr32() {
         if ($this->_m_isStr32 !== null)
             return $this->_m_isStr32;
@@ -327,9 +282,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_isStr32;
     }
     protected $_m_numMapElements;
-
-    /**
-     */
     public function numMapElements() {
         if ($this->_m_numMapElements !== null)
             return $this->_m_numMapElements;
@@ -339,9 +291,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_numMapElements;
     }
     protected $_m_isFloat32;
-
-    /**
-     */
     public function isFloat32() {
         if ($this->_m_isFloat32 !== null)
             return $this->_m_isFloat32;
@@ -349,9 +298,6 @@ class Msgpack extends \Kaitai\Struct\Struct {
         return $this->_m_isFloat32;
     }
     protected $_m_isMap32;
-
-    /**
-     */
     public function isMap32() {
         if ($this->_m_isMap32 !== null)
             return $this->_m_isMap32;

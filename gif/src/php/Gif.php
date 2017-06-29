@@ -47,16 +47,10 @@ class Gif extends \Kaitai\Struct\Struct {
     protected $_m__raw_globalColorTable;
     public function hdr() { return $this->_m_hdr; }
     public function logicalScreenDescriptor() { return $this->_m_logicalScreenDescriptor; }
-
-    /**
-     */
     public function globalColorTable() { return $this->_m_globalColorTable; }
     public function blocks() { return $this->_m_blocks; }
     public function _raw_globalColorTable() { return $this->_m__raw_globalColorTable; }
 }
-
-/**
- */
 
 namespace \Gif;
 
@@ -96,9 +90,6 @@ class ColorTableEntry extends \Kaitai\Struct\Struct {
     public function green() { return $this->_m_green; }
     public function blue() { return $this->_m_blue; }
 }
-
-/**
- */
 
 namespace \Gif;
 
@@ -233,9 +224,6 @@ class Block extends \Kaitai\Struct\Struct {
     public function body() { return $this->_m_body; }
 }
 
-/**
- */
-
 namespace \Gif;
 
 class ColorTable extends \Kaitai\Struct\Struct {
@@ -254,9 +242,6 @@ class ColorTable extends \Kaitai\Struct\Struct {
     public function entries() { return $this->_m_entries; }
 }
 
-/**
- */
-
 namespace \Gif;
 
 class Header extends \Kaitai\Struct\Struct {
@@ -274,9 +259,6 @@ class Header extends \Kaitai\Struct\Struct {
     public function magic() { return $this->_m_magic; }
     public function version() { return $this->_m_version; }
 }
-
-/**
- */
 
 namespace \Gif;
 

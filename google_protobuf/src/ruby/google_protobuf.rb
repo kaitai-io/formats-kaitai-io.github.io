@@ -41,11 +41,13 @@ class GoogleProtobuf < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @pairs = []
     while not @_io.eof?
       @pairs << Pair.new(@_io, self, @_root)
     end
+    self
   end
 
   ##
@@ -65,6 +67,7 @@ class GoogleProtobuf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @key = VlqBase128Le.new(@_io)
       case wire_type
@@ -77,6 +80,7 @@ class GoogleProtobuf < Kaitai::Struct::Struct
       when :wire_types_bit_32
         @value = @_io.read_u4le
       end
+      self
     end
 
     ##
@@ -121,9 +125,11 @@ class GoogleProtobuf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @len = VlqBase128Le.new(@_io)
       @body = @_io.read_bytes(len.value)
+      self
     end
     attr_reader :len
     attr_reader :body

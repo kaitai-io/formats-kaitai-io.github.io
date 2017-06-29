@@ -11,6 +11,7 @@ class GranTurismoVol < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @magic = @_io.ensure_fixed_contents([71, 84, 70, 83, 0, 0, 0, 0].pack('C*'))
     @num_files = @_io.read_u2le
@@ -20,17 +21,20 @@ class GranTurismoVol < Kaitai::Struct::Struct
     (num_files).times { |i|
       @offsets[i] = @_io.read_u4le
     }
+    self
   end
   class FileInfo < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @timestamp = @_io.read_u4le
       @offset_idx = @_io.read_u2le
       @flags = @_io.read_u1
       @name = (Kaitai::Struct::Stream::bytes_terminate(Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(25), 0), 0, false)).force_encoding("ASCII")
+      self
     end
     def size
       return @size unless @size.nil?

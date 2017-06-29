@@ -27,6 +27,7 @@ class Png < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @magic = @_io.ensure_fixed_contents([137, 80, 78, 71, 13, 10, 26, 10].pack('C*'))
     @ihdr_len = @_io.ensure_fixed_contents([0, 0, 0, 13].pack('C*'))
@@ -38,16 +39,19 @@ class Png < Kaitai::Struct::Struct
       _ = Chunk.new(@_io, self, @_root)
       @chunks << _
     end until  ((_.type == "IEND") || (_io.eof?)) 
+    self
   end
   class Rgb < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @r = @_io.read_u1
       @g = @_io.read_u1
       @b = @_io.read_u1
+      self
     end
     attr_reader :r
     attr_reader :g
@@ -58,6 +62,7 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @len = @_io.read_u4be
       @type = (@_io.read_bytes(4)).force_encoding("UTF-8")
@@ -106,6 +111,7 @@ class Png < Kaitai::Struct::Struct
         @body = @_io.read_bytes(len)
       end
       @crc = @_io.read_bytes(4)
+      self
     end
     attr_reader :len
     attr_reader :type
@@ -118,8 +124,10 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @palette_index = @_io.read_u1
+      self
     end
     attr_reader :palette_index
   end
@@ -128,9 +136,11 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x_int = @_io.read_u4be
       @y_int = @_io.read_u4be
+      self
     end
     def x
       return @x unless @x.nil?
@@ -150,8 +160,10 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @value = @_io.read_u2be
+      self
     end
     attr_reader :value
   end
@@ -160,11 +172,13 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @white_point = Point.new(@_io, self, @_root)
       @red = Point.new(@_io, self, @_root)
       @green = Point.new(@_io, self, @_root)
       @blue = Point.new(@_io, self, @_root)
+      self
     end
     attr_reader :white_point
     attr_reader :red
@@ -176,6 +190,7 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @width = @_io.read_u4be
       @height = @_io.read_u4be
@@ -184,6 +199,7 @@ class Png < Kaitai::Struct::Struct
       @compression_method = @_io.read_u1
       @filter_method = @_io.read_u1
       @interlace_method = @_io.read_u1
+      self
     end
     attr_reader :width
     attr_reader :height
@@ -198,11 +214,13 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       while not @_io.eof?
         @entries << Rgb.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :entries
   end
@@ -219,8 +237,10 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @render_intent = Kaitai::Struct::Stream::resolve_enum(INTENT, @_io.read_u1)
+      self
     end
     attr_reader :render_intent
   end
@@ -229,11 +249,13 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
       @compression_method = @_io.read_u1
       @_raw_text_datastream = @_io.read_bytes_full
       @text_datastream = Zlib::Inflate.inflate(@_raw_text_datastream)
+      self
     end
     attr_reader :keyword
     attr_reader :compression_method
@@ -245,10 +267,12 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @red = @_io.read_u2be
       @green = @_io.read_u2be
       @blue = @_io.read_u2be
+      self
     end
     attr_reader :red
     attr_reader :green
@@ -259,8 +283,10 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @gamma_int = @_io.read_u4be
+      self
     end
     def gamma_ratio
       return @gamma_ratio unless @gamma_ratio.nil?
@@ -274,6 +300,7 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       case _root.ihdr.color_type
       when :color_type_greyscale_alpha
@@ -287,6 +314,7 @@ class Png < Kaitai::Struct::Struct
       when :color_type_truecolor
         @bkgd = BkgdTruecolor.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :bkgd
   end
@@ -295,10 +323,12 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @pixels_per_unit_x = @_io.read_u4be
       @pixels_per_unit_y = @_io.read_u4be
       @unit = Kaitai::Struct::Stream::resolve_enum(PHYS_UNIT, @_io.read_u1)
+      self
     end
     attr_reader :pixels_per_unit_x
     attr_reader :pixels_per_unit_y
@@ -309,6 +339,7 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
       @compression_flag = @_io.read_u1
@@ -316,6 +347,7 @@ class Png < Kaitai::Struct::Struct
       @language_tag = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
       @translated_keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
       @text = (@_io.read_bytes_full).force_encoding("UTF-8")
+      self
     end
     attr_reader :keyword
     attr_reader :compression_flag
@@ -329,9 +361,11 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("iso8859-1")
       @text = (@_io.read_bytes_full).force_encoding("iso8859-1")
+      self
     end
     attr_reader :keyword
     attr_reader :text
@@ -341,6 +375,7 @@ class Png < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @year = @_io.read_u2be
       @month = @_io.read_u1
@@ -348,6 +383,7 @@ class Png < Kaitai::Struct::Struct
       @hour = @_io.read_u1
       @minute = @_io.read_u1
       @second = @_io.read_u1
+      self
     end
     attr_reader :year
     attr_reader :month

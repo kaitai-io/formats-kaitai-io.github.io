@@ -272,6 +272,7 @@ class Tga &lt; Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @image_id_len = @_io.read_u1
     @color_map_type = Kaitai::Struct::Stream::resolve_enum(COLOR_MAP_ENUM, @_io.read_u1)
@@ -292,16 +293,19 @@ class Tga &lt; Kaitai::Struct::Struct
         @color_map[i] = @_io.read_bytes(((color_map_depth + 7) / 8))
       }
     end
+    self
   end
   class TgaFooter &lt; Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @ext_area_ofs = @_io.read_u4le
       @dev_dir_ofs = @_io.read_u4le
       @version_magic = @_io.read_bytes(18)
+      self
     end
     def is_valid
       return @is_valid unless @is_valid.nil?
@@ -333,6 +337,7 @@ class Tga &lt; Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @ext_area_size = @_io.read_u2le
       @author_name = (@_io.read_bytes(41)).force_encoding(&quot;ASCII&quot;)
@@ -352,6 +357,7 @@ class Tga &lt; Kaitai::Struct::Struct
       @postage_stamp_ofs = @_io.read_u4le
       @scan_line_ofs = @_io.read_u4le
       @attributes = @_io.read_u1
+      self
     end
 
     ##

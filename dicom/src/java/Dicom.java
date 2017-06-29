@@ -4065,26 +4065,17 @@ public class Dicom extends KaitaiStruct {
     }
 
     public Dicom(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Dicom(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Dicom(KaitaiStream _io, KaitaiStruct _parent, Dicom _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -4100,24 +4091,17 @@ public class Dicom extends KaitaiStruct {
         }
 
         public TFileHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public TFileHeader(KaitaiStream _io, Dicom _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public TFileHeader(KaitaiStream _io, Dicom _parent, Dicom _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -4143,24 +4127,17 @@ public class Dicom extends KaitaiStruct {
         }
 
         public TDataElementExplicit(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public TDataElementExplicit(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public TDataElementExplicit(KaitaiStream _io, KaitaiStruct _parent, Dicom _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -4263,24 +4240,17 @@ public class Dicom extends KaitaiStruct {
         }
 
         public TDataElementImplicit(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public TDataElementImplicit(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public TDataElementImplicit(KaitaiStream _io, KaitaiStruct _parent, Dicom _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -4387,24 +4357,17 @@ public class Dicom extends KaitaiStruct {
         }
 
         public SeqItem(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SeqItem(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SeqItem(KaitaiStream _io, KaitaiStruct _parent, Dicom _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

@@ -12,26 +12,17 @@ public class Vfat extends KaitaiStruct {
     }
 
     public Vfat(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Vfat(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Vfat(KaitaiStream _io, KaitaiStruct _parent, Vfat _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -47,24 +38,17 @@ public class Vfat extends KaitaiStruct {
         }
 
         public ExtBiosParamBlockFat32(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ExtBiosParamBlockFat32(KaitaiStream _io, Vfat.BootSector _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ExtBiosParamBlockFat32(KaitaiStream _io, Vfat.BootSector _parent, Vfat _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -188,24 +172,17 @@ public class Vfat extends KaitaiStruct {
         }
 
         public BootSector(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BootSector(KaitaiStream _io, Vfat _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BootSector(KaitaiStream _io, Vfat _parent, Vfat _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -336,24 +313,17 @@ public class Vfat extends KaitaiStruct {
         }
 
         public BiosParamBlock(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BiosParamBlock(KaitaiStream _io, Vfat.BootSector _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BiosParamBlock(KaitaiStream _io, Vfat.BootSector _parent, Vfat _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -469,24 +439,17 @@ public class Vfat extends KaitaiStruct {
         }
 
         public RootDirectoryRec(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public RootDirectoryRec(KaitaiStream _io, Vfat.RootDirectory _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public RootDirectoryRec(KaitaiStream _io, Vfat.RootDirectory _parent, Vfat _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -523,24 +486,17 @@ public class Vfat extends KaitaiStruct {
         }
 
         public RootDirectory(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public RootDirectory(KaitaiStream _io, Vfat _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public RootDirectory(KaitaiStream _io, Vfat _parent, Vfat _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -567,24 +523,17 @@ public class Vfat extends KaitaiStruct {
         }
 
         public ExtBiosParamBlockFat16(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ExtBiosParamBlockFat16(KaitaiStream _io, Vfat.BootSector _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ExtBiosParamBlockFat16(KaitaiStream _io, Vfat.BootSector _parent, Vfat _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

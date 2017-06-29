@@ -11,17 +11,20 @@ class CpioOldLe < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @files = []
     while not @_io.eof?
       @files << File.new(@_io, self, @_root)
     end
+    self
   end
   class File < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @header = FileHeader.new(@_io, self, @_root)
       @path_name = @_io.read_bytes((header.path_name_size - 1))
@@ -36,6 +39,7 @@ class CpioOldLe < Kaitai::Struct::Struct
       if  ((path_name == [84, 82, 65, 73, 76, 69, 82, 33, 33, 33].pack('C*')) && (header.file_size.value == 0)) 
         @end_of_file_padding = @_io.read_bytes_full
       end
+      self
     end
     attr_reader :header
     attr_reader :path_name
@@ -50,6 +54,7 @@ class CpioOldLe < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = @_io.ensure_fixed_contents([199, 113].pack('C*'))
       @device_number = @_io.read_u2le
@@ -62,6 +67,7 @@ class CpioOldLe < Kaitai::Struct::Struct
       @modification_time = FourByteUnsignedInteger.new(@_io, self, @_root)
       @path_name_size = @_io.read_u2le
       @file_size = FourByteUnsignedInteger.new(@_io, self, @_root)
+      self
     end
     attr_reader :magic
     attr_reader :device_number
@@ -80,9 +86,11 @@ class CpioOldLe < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @most_significant_bits = @_io.read_u2le
       @least_significant_bits = @_io.read_u2le
+      self
     end
     def value
       return @value unless @value.nil?

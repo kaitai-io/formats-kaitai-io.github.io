@@ -25,26 +25,17 @@ public class GenmidiOp2 extends KaitaiStruct {
     }
 
     public GenmidiOp2(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public GenmidiOp2(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public GenmidiOp2(KaitaiStream _io, KaitaiStruct _parent, GenmidiOp2 _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -64,24 +55,17 @@ public class GenmidiOp2 extends KaitaiStruct {
         }
 
         public InstrumentEntry(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public InstrumentEntry(KaitaiStream _io, GenmidiOp2 _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public InstrumentEntry(KaitaiStream _io, GenmidiOp2 _parent, GenmidiOp2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -116,24 +100,17 @@ public class GenmidiOp2 extends KaitaiStruct {
         }
 
         public Instrument(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Instrument(KaitaiStream _io, GenmidiOp2.InstrumentEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Instrument(KaitaiStream _io, GenmidiOp2.InstrumentEntry _parent, GenmidiOp2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -176,24 +153,17 @@ public class GenmidiOp2 extends KaitaiStruct {
         }
 
         public OpSettings(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public OpSettings(KaitaiStream _io, GenmidiOp2.Instrument _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public OpSettings(KaitaiStream _io, GenmidiOp2.Instrument _parent, GenmidiOp2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

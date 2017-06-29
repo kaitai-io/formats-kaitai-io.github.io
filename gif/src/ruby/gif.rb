@@ -44,6 +44,7 @@ class Gif < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @hdr = Header.new(@_io, self, @_root)
     @logical_screen_descriptor = LogicalScreenDescriptorStruct.new(@_io, self, @_root)
@@ -56,6 +57,7 @@ class Gif < Kaitai::Struct::Struct
     while not @_io.eof?
       @blocks << Block.new(@_io, self, @_root)
     end
+    self
   end
 
   ##
@@ -65,9 +67,11 @@ class Gif < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @lzw_min_code_size = @_io.read_u1
       @subblocks = Subblocks.new(@_io, self, @_root)
+      self
     end
     attr_reader :lzw_min_code_size
     attr_reader :subblocks
@@ -77,10 +81,12 @@ class Gif < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @red = @_io.read_u1
       @green = @_io.read_u1
       @blue = @_io.read_u1
+      self
     end
     attr_reader :red
     attr_reader :green
@@ -94,12 +100,14 @@ class Gif < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @screen_width = @_io.read_u2le
       @screen_height = @_io.read_u2le
       @flags = @_io.read_u1
       @bg_color_index = @_io.read_u1
       @pixel_aspect_ratio = @_io.read_u1
+      self
     end
     def has_color_table
       return @has_color_table unless @has_color_table.nil?
@@ -122,6 +130,7 @@ class Gif < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @left = @_io.read_u2le
       @top = @_io.read_u2le
@@ -134,6 +143,7 @@ class Gif < Kaitai::Struct::Struct
         @local_color_table = ColorTable.new(io, self, @_root)
       end
       @image_data = ImageData.new(@_io, self, @_root)
+      self
     end
     def has_color_table
       return @has_color_table unless @has_color_table.nil?
@@ -169,6 +179,7 @@ class Gif < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @block_type = Kaitai::Struct::Stream::resolve_enum(BLOCK_TYPE, @_io.read_u1)
       case block_type
@@ -177,6 +188,7 @@ class Gif < Kaitai::Struct::Struct
       when :block_type_local_image_descriptor
         @body = LocalImageDescriptor.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :block_type
     attr_reader :body
@@ -189,11 +201,13 @@ class Gif < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       while not @_io.eof?
         @entries << ColorTableEntry.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :entries
   end
@@ -205,9 +219,11 @@ class Gif < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = @_io.ensure_fixed_contents([71, 73, 70].pack('C*'))
       @version = (@_io.read_bytes(3)).force_encoding("ASCII")
+      self
     end
     attr_reader :magic
     attr_reader :version
@@ -220,12 +236,14 @@ class Gif < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @block_size = @_io.ensure_fixed_contents([4].pack('C*'))
       @flags = @_io.read_u1
       @delay_time = @_io.read_u2le
       @transparent_idx = @_io.read_u1
       @terminator = @_io.ensure_fixed_contents([0].pack('C*'))
+      self
     end
     def transparent_color_flag
       return @transparent_color_flag unless @transparent_color_flag.nil?
@@ -248,9 +266,11 @@ class Gif < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @num_bytes = @_io.read_u1
       @bytes = @_io.read_bytes(num_bytes)
+      self
     end
     attr_reader :num_bytes
     attr_reader :bytes
@@ -260,6 +280,7 @@ class Gif < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @application_id = Subblock.new(@_io, self, @_root)
       @subblocks = []
@@ -267,6 +288,7 @@ class Gif < Kaitai::Struct::Struct
         _ = Subblock.new(@_io, self, @_root)
         @subblocks << _
       end until _.num_bytes == 0
+      self
     end
     attr_reader :application_id
     attr_reader :subblocks
@@ -276,12 +298,14 @@ class Gif < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       begin
         _ = Subblock.new(@_io, self, @_root)
         @entries << _
       end until _.num_bytes == 0
+      self
     end
     attr_reader :entries
   end
@@ -290,6 +314,7 @@ class Gif < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @label = Kaitai::Struct::Stream::resolve_enum(EXTENSION_LABEL, @_io.read_u1)
       case label
@@ -302,6 +327,7 @@ class Gif < Kaitai::Struct::Struct
       else
         @body = Subblocks.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :label
     attr_reader :body

@@ -116,6 +116,10 @@ section#format-index .row {
                         <h3 class="panel-title">KS implementation details</h3>
                     </div>
                     
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
                     
                     <div class="panel-body">
                         Minimal Kaitai Struct required: 0.7
@@ -246,6 +250,10 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+
+/**
+ * @see &lt;a href=&quot;http://wiki.wireshark.org/Development/LibpcapFileFormat&quot;&gt;Source&lt;/a&gt;
+ */
 public class Pcap extends KaitaiStruct {
     public static Pcap fromFile(String fileName) throws IOException {
         return new Pcap(new KaitaiStream(fileName));
@@ -368,46 +376,18 @@ public class Pcap extends KaitaiStruct {
         public static Linktype byId(long id) { return byId.get(id); }
     }
 
-    public enum PfhType {
-        RADIO_802_11_COMMON(2),
-        RADIO_802_11N_MAC_EXT(3),
-        RADIO_802_11N_MAC_PHY_EXT(4),
-        SPECTRUM_MAP(5),
-        PROCESS_INFO(6),
-        CAPTURE_INFO(7);
-
-        private final long id;
-        PfhType(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, PfhType&gt; byId = new HashMap&lt;Long, PfhType&gt;(6);
-        static {
-            for (PfhType e : PfhType.values())
-                byId.put(e.id(), e);
-        }
-        public static PfhType byId(long id) { return byId.get(id); }
-    }
-
     public Pcap(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Pcap(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Pcap(KaitaiStream _io, KaitaiStruct _parent, Pcap _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -417,117 +397,27 @@ public class Pcap extends KaitaiStruct {
             this.packets.add(new Packet(this._io, this, _root));
         }
     }
-    public static class PacketPpi extends KaitaiStruct {
-        public static PacketPpi fromFile(String fileName) throws IOException {
-            return new PacketPpi(new KaitaiStream(fileName));
-        }
 
-        public PacketPpi(KaitaiStream _io) {
-            super(_io);
-            _init();
-        }
-
-        public PacketPpi(KaitaiStream _io, Pcap.Packet _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
-        }
-
-        public PacketPpi(KaitaiStream _io, Pcap.Packet _parent, Pcap _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _init();
-        }
-
-        private void _init() {
-            _read();
-        }
-        private void _read() {
-            this.header = new PacketPpiHeader(this._io, this, _root);
-            this.fields = new ArrayList&lt;PacketPpiField&gt;();
-            while (!this._io.isEof()) {
-                this.fields.add(new PacketPpiField(this._io, this, _root));
-            }
-        }
-        private PacketPpiHeader header;
-        private ArrayList&lt;PacketPpiField&gt; fields;
-        private Pcap _root;
-        private Pcap.Packet _parent;
-        public PacketPpiHeader header() { return header; }
-        public ArrayList&lt;PacketPpiField&gt; fields() { return fields; }
-        public Pcap _root() { return _root; }
-        public Pcap.Packet _parent() { return _parent; }
-    }
-    public static class PacketPpiHeader extends KaitaiStruct {
-        public static PacketPpiHeader fromFile(String fileName) throws IOException {
-            return new PacketPpiHeader(new KaitaiStream(fileName));
-        }
-
-        public PacketPpiHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
-        }
-
-        public PacketPpiHeader(KaitaiStream _io, Pcap.PacketPpi _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
-        }
-
-        public PacketPpiHeader(KaitaiStream _io, Pcap.PacketPpi _parent, Pcap _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _init();
-        }
-
-        private void _init() {
-            _read();
-        }
-        private void _read() {
-            this.pphVersion = this._io.readU1();
-            this.pphFlags = this._io.readU1();
-            this.pphLen = this._io.readU2le();
-            this.pphDlt = this._io.readU4le();
-        }
-        private int pphVersion;
-        private int pphFlags;
-        private int pphLen;
-        private long pphDlt;
-        private Pcap _root;
-        private Pcap.PacketPpi _parent;
-        public int pphVersion() { return pphVersion; }
-        public int pphFlags() { return pphFlags; }
-        public int pphLen() { return pphLen; }
-        public long pphDlt() { return pphDlt; }
-        public Pcap _root() { return _root; }
-        public Pcap.PacketPpi _parent() { return _parent; }
-    }
+    /**
+     * @see &lt;a href=&quot;https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header&quot;&gt;Source&lt;/a&gt;
+     */
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
             return new Header(new KaitaiStream(fileName));
         }
 
         public Header(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Header(KaitaiStream _io, Pcap _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Header(KaitaiStream _io, Pcap _parent, Pcap _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -579,132 +469,27 @@ public class Pcap extends KaitaiStruct {
         public Pcap _root() { return _root; }
         public Pcap _parent() { return _parent; }
     }
-    public static class Radio80211CommonBody extends KaitaiStruct {
-        public static Radio80211CommonBody fromFile(String fileName) throws IOException {
-            return new Radio80211CommonBody(new KaitaiStream(fileName));
-        }
 
-        public Radio80211CommonBody(KaitaiStream _io) {
-            super(_io);
-            _init();
-        }
-
-        public Radio80211CommonBody(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
-        }
-
-        public Radio80211CommonBody(KaitaiStream _io, KaitaiStruct _parent, Pcap _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _init();
-        }
-
-        private void _init() {
-            _read();
-        }
-        private void _read() {
-            this.tsfTimer = this._io.readU8le();
-            this.flags = this._io.readU2le();
-            this.rate = this._io.readU2le();
-            this.channelFreq = this._io.readU2le();
-            this.channelFlags = this._io.readU2le();
-            this.fhssHopset = this._io.readU1();
-            this.fhssPattern = this._io.readU1();
-            this.dbmAntsignal = this._io.readS1();
-            this.dbmAntnoise = this._io.readS1();
-        }
-        private long tsfTimer;
-        private int flags;
-        private int rate;
-        private int channelFreq;
-        private int channelFlags;
-        private int fhssHopset;
-        private int fhssPattern;
-        private byte dbmAntsignal;
-        private byte dbmAntnoise;
-        private Pcap _root;
-        private KaitaiStruct _parent;
-        public long tsfTimer() { return tsfTimer; }
-        public int flags() { return flags; }
-        public int rate() { return rate; }
-        public int channelFreq() { return channelFreq; }
-        public int channelFlags() { return channelFlags; }
-        public int fhssHopset() { return fhssHopset; }
-        public int fhssPattern() { return fhssPattern; }
-        public byte dbmAntsignal() { return dbmAntsignal; }
-        public byte dbmAntnoise() { return dbmAntnoise; }
-        public Pcap _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-    public static class PacketPpiField extends KaitaiStruct {
-        public static PacketPpiField fromFile(String fileName) throws IOException {
-            return new PacketPpiField(new KaitaiStream(fileName));
-        }
-
-        public PacketPpiField(KaitaiStream _io) {
-            super(_io);
-            _init();
-        }
-
-        public PacketPpiField(KaitaiStream _io, Pcap.PacketPpi _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
-        }
-
-        public PacketPpiField(KaitaiStream _io, Pcap.PacketPpi _parent, Pcap _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _init();
-        }
-
-        private void _init() {
-            _read();
-        }
-        private void _read() {
-            this.pfhType = this._io.readU2le();
-            this.pfhDatalen = this._io.readU2le();
-            this.body = this._io.readBytes(pfhDatalen());
-        }
-        private int pfhType;
-        private int pfhDatalen;
-        private byte[] body;
-        private Pcap _root;
-        private Pcap.PacketPpi _parent;
-        public int pfhType() { return pfhType; }
-        public int pfhDatalen() { return pfhDatalen; }
-        public byte[] body() { return body; }
-        public Pcap _root() { return _root; }
-        public Pcap.PacketPpi _parent() { return _parent; }
-    }
+    /**
+     * @see &lt;a href=&quot;https://wiki.wireshark.org/Development/LibpcapFileFormat#Record_.28Packet.29_Header&quot;&gt;Source&lt;/a&gt;
+     */
     public static class Packet extends KaitaiStruct {
         public static Packet fromFile(String fileName) throws IOException {
             return new Packet(new KaitaiStream(fileName));
         }
 
         public Packet(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Packet(KaitaiStream _io, Pcap _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Packet(KaitaiStream _io, Pcap _parent, Pcap _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -716,7 +501,7 @@ public class Pcap extends KaitaiStruct {
             case PPI: {
                 this._raw_body = this._io.readBytes(inclLen());
                 KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
-                this.body = new PacketPpi(_io__raw_body, this, _root);
+                this.body = new PacketPpi(_io__raw_body);
                 break;
             }
             case ETHERNET: {
@@ -751,6 +536,10 @@ public class Pcap extends KaitaiStruct {
          * Length of the packet as it appeared on the network when it was captured.
          */
         public long origLen() { return origLen; }
+
+        /**
+         * @see &lt;a href=&quot;https://wiki.wireshark.org/Development/LibpcapFileFormat#Packet_Data&quot;&gt;Source&lt;/a&gt;
+         */
         public Object body() { return body; }
         public Pcap _root() { return _root; }
         public Pcap _parent() { return _parent; }

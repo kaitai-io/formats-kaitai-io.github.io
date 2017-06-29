@@ -11,6 +11,7 @@ class Dbf < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @header1 = Header1.new(@_io, self, @_root)
     @_raw_header2 = @_io.read_bytes((header1.header_size - 12))
@@ -20,12 +21,14 @@ class Dbf < Kaitai::Struct::Struct
     (header1.num_records).times { |i|
       @records[i] = @_io.read_bytes(header1.record_size)
     }
+    self
   end
   class Header2 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       if _root.header1.dbase_level == 3
         @header_dbase_3 = HeaderDbase3.new(@_io, self, @_root)
@@ -37,6 +40,7 @@ class Dbf < Kaitai::Struct::Struct
       (11).times { |i|
         @fields[i] = Field.new(@_io, self, @_root)
       }
+      self
     end
     attr_reader :header_dbase_3
     attr_reader :header_dbase_7
@@ -47,6 +51,7 @@ class Dbf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @name = (@_io.read_bytes(11)).force_encoding("ASCII")
       @datatype = @_io.read_u1
@@ -58,6 +63,7 @@ class Dbf < Kaitai::Struct::Struct
       @reserved2 = @_io.read_bytes(2)
       @set_fields_flag = @_io.read_u1
       @reserved3 = @_io.read_bytes(8)
+      self
     end
     attr_reader :name
     attr_reader :datatype
@@ -75,6 +81,7 @@ class Dbf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @version = @_io.read_u1
       @last_update_y = @_io.read_u1
@@ -83,6 +90,7 @@ class Dbf < Kaitai::Struct::Struct
       @num_records = @_io.read_u4le
       @header_size = @_io.read_u2le
       @record_size = @_io.read_u2le
+      self
     end
     def dbase_level
       return @dbase_level unless @dbase_level.nil?
@@ -102,10 +110,12 @@ class Dbf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @reserved1 = @_io.read_bytes(3)
       @reserved2 = @_io.read_bytes(13)
       @reserved3 = @_io.read_bytes(4)
+      self
     end
     attr_reader :reserved1
     attr_reader :reserved2
@@ -116,6 +126,7 @@ class Dbf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @reserved1 = @_io.ensure_fixed_contents([0, 0].pack('C*'))
       @has_incomplete_transaction = @_io.read_u1
@@ -126,6 +137,7 @@ class Dbf < Kaitai::Struct::Struct
       @reserved3 = @_io.ensure_fixed_contents([0, 0].pack('C*'))
       @language_driver_name = @_io.read_bytes(32)
       @reserved4 = @_io.read_bytes(4)
+      self
     end
     attr_reader :reserved1
     attr_reader :has_incomplete_transaction

@@ -10,7 +10,12 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 from ethernet_frame import EthernetFrame
+from packet_ppi import PacketPpi
 class Pcap(KaitaiStruct):
+    """
+    .. seealso::
+       Source - http://wiki.wireshark.org/Development/LibpcapFileFormat
+    """
 
     class Linktype(Enum):
         null_linktype = 0
@@ -117,14 +122,6 @@ class Pcap(KaitaiStruct):
         zwave_r3 = 262
         wattstopper_dlm = 263
         iso_14443 = 264
-
-    class PfhType(Enum):
-        radio_802_11_common = 2
-        radio_802_11n_mac_ext = 3
-        radio_802_11n_mac_phy_ext = 4
-        spectrum_map = 5
-        process_info = 6
-        capture_info = 7
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -138,36 +135,11 @@ class Pcap(KaitaiStruct):
             self.packets.append(self._root.Packet(self._io, self, self._root))
 
 
-    class PacketPpi(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.header = self._root.PacketPpiHeader(self._io, self, self._root)
-            self.fields = []
-            while not self._io.is_eof():
-                self.fields.append(self._root.PacketPpiField(self._io, self, self._root))
-
-
-
-    class PacketPpiHeader(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.pph_version = self._io.read_u1()
-            self.pph_flags = self._io.read_u1()
-            self.pph_len = self._io.read_u2le()
-            self.pph_dlt = self._io.read_u4le()
-
-
     class Header(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -184,39 +156,11 @@ class Pcap(KaitaiStruct):
             self.network = self._root.Linktype(self._io.read_u4le())
 
 
-    class Radio80211CommonBody(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.tsf_timer = self._io.read_u8le()
-            self.flags = self._io.read_u2le()
-            self.rate = self._io.read_u2le()
-            self.channel_freq = self._io.read_u2le()
-            self.channel_flags = self._io.read_u2le()
-            self.fhss_hopset = self._io.read_u1()
-            self.fhss_pattern = self._io.read_u1()
-            self.dbm_antsignal = self._io.read_s1()
-            self.dbm_antnoise = self._io.read_s1()
-
-
-    class PacketPpiField(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.pfh_type = self._io.read_u2le()
-            self.pfh_datalen = self._io.read_u2le()
-            self.body = self._io.read_bytes(self.pfh_datalen)
-
-
     class Packet(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://wiki.wireshark.org/Development/LibpcapFileFormat#Record_.28Packet.29_Header
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -232,7 +176,7 @@ class Pcap(KaitaiStruct):
             if _on == self._root.Linktype.ppi:
                 self._raw_body = self._io.read_bytes(self.incl_len)
                 io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.PacketPpi(io, self, self._root)
+                self.body = PacketPpi(io)
             elif _on == self._root.Linktype.ethernet:
                 self._raw_body = self._io.read_bytes(self.incl_len)
                 io = KaitaiStream(BytesIO(self._raw_body))

@@ -229,14 +229,23 @@ class Pcx extends \Kaitai\Struct\Struct {
         $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_hdr);
         $this-&gt;_m_hdr = new \Pcx\Header($io, $this, $this-&gt;_root);
     }
+    protected $_m_palette256;
+    public function palette256() {
+        if ($this-&gt;_m_palette256 !== null)
+            return $this-&gt;_m_palette256;
+        if ( (($this-&gt;hdr()-&gt;version() == \Pcx\Versions::V3_0) &amp;&amp; ($this-&gt;hdr()-&gt;bitsPerPixel() == 8) &amp;&amp; ($this-&gt;hdr()-&gt;numPlanes() == 1)) ) {
+            $_pos = $this-&gt;_io-&gt;pos();
+            $this-&gt;_io-&gt;seek(($this-&gt;_io()-&gt;size() - 769));
+            $this-&gt;_m_palette256 = new \Pcx\TPalette256($this-&gt;_io, $this, $this-&gt;_root);
+            $this-&gt;_io-&gt;seek($_pos);
+        }
+        return $this-&gt;_m_palette256;
+    }
     protected $_m_hdr;
     protected $_m__raw_hdr;
     public function hdr() { return $this-&gt;_m_hdr; }
     public function _raw_hdr() { return $this-&gt;_m__raw_hdr; }
 }
-
-/**
- */
 
 namespace \Pcx;
 
@@ -247,7 +256,7 @@ class Header extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this-&gt;_m_manufacturer = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_magic = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x0A&quot;);
         $this-&gt;_m_version = $this-&gt;_io-&gt;readU1();
         $this-&gt;_m_encoding = $this-&gt;_io-&gt;readU1();
         $this-&gt;_m_bitsPerPixel = $this-&gt;_io-&gt;readU1();
@@ -257,15 +266,15 @@ class Header extends \Kaitai\Struct\Struct {
         $this-&gt;_m_imgYMax = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_hdpi = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_vdpi = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_colormap = $this-&gt;_io-&gt;readBytes(48);
-        $this-&gt;_m_reserved = $this-&gt;_io-&gt;readBytes(1);
+        $this-&gt;_m_palette16 = $this-&gt;_io-&gt;readBytes(48);
+        $this-&gt;_m_reserved = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00&quot;);
         $this-&gt;_m_numPlanes = $this-&gt;_io-&gt;readU1();
         $this-&gt;_m_bytesPerLine = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_paletteInfo = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_hScreenSize = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_vScreenSize = $this-&gt;_io-&gt;readU2le();
     }
-    protected $_m_manufacturer;
+    protected $_m_magic;
     protected $_m_version;
     protected $_m_encoding;
     protected $_m_bitsPerPixel;
@@ -275,14 +284,22 @@ class Header extends \Kaitai\Struct\Struct {
     protected $_m_imgYMax;
     protected $_m_hdpi;
     protected $_m_vdpi;
-    protected $_m_colormap;
+    protected $_m_palette16;
     protected $_m_reserved;
     protected $_m_numPlanes;
     protected $_m_bytesPerLine;
     protected $_m_paletteInfo;
     protected $_m_hScreenSize;
     protected $_m_vScreenSize;
-    public function manufacturer() { return $this-&gt;_m_manufacturer; }
+
+    /**
+     * Technically, this field was supposed to be &quot;manufacturer&quot;
+     * mark to distinguish between various software vendors, and
+     * 0x0a was supposed to mean &quot;ZSoft&quot;, but everyone else ended
+     * up writing a 0x0a into this field, so that&#39;s what majority
+     * of modern software expects to have in this attribute.
+     */
+    public function magic() { return $this-&gt;_m_magic; }
     public function version() { return $this-&gt;_m_version; }
     public function encoding() { return $this-&gt;_m_encoding; }
     public function bitsPerPixel() { return $this-&gt;_m_bitsPerPixel; }
@@ -292,13 +309,72 @@ class Header extends \Kaitai\Struct\Struct {
     public function imgYMax() { return $this-&gt;_m_imgYMax; }
     public function hdpi() { return $this-&gt;_m_hdpi; }
     public function vdpi() { return $this-&gt;_m_vdpi; }
-    public function colormap() { return $this-&gt;_m_colormap; }
+    public function palette16() { return $this-&gt;_m_palette16; }
     public function reserved() { return $this-&gt;_m_reserved; }
     public function numPlanes() { return $this-&gt;_m_numPlanes; }
     public function bytesPerLine() { return $this-&gt;_m_bytesPerLine; }
     public function paletteInfo() { return $this-&gt;_m_paletteInfo; }
     public function hScreenSize() { return $this-&gt;_m_hScreenSize; }
     public function vScreenSize() { return $this-&gt;_m_vScreenSize; }
+}
+
+namespace \Pcx;
+
+class TPalette256 extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $io, \Pcx $parent = null, \Pcx $root = null) {
+        parent::__construct($io, $parent, $root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_magic = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x0C&quot;);
+        $this-&gt;_m_colors = [];
+        $n = 256;
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_colors[] = new \Pcx\Rgb($this-&gt;_io, $this, $this-&gt;_root);
+        }
+    }
+    protected $_m_magic;
+    protected $_m_colors;
+    public function magic() { return $this-&gt;_m_magic; }
+    public function colors() { return $this-&gt;_m_colors; }
+}
+
+namespace \Pcx;
+
+class Rgb extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $io, \Pcx\TPalette256 $parent = null, \Pcx $root = null) {
+        parent::__construct($io, $parent, $root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_r = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_g = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_b = $this-&gt;_io-&gt;readU1();
+    }
+    protected $_m_r;
+    protected $_m_g;
+    protected $_m_b;
+    public function r() { return $this-&gt;_m_r; }
+    public function g() { return $this-&gt;_m_g; }
+    public function b() { return $this-&gt;_m_b; }
+}
+
+namespace \Pcx;
+
+class Versions {
+    const V2_5 = 0;
+    const V2_8_WITH_PALETTE = 2;
+    const V2_8_WITHOUT_PALETTE = 3;
+    const PAINTBRUSH_FOR_WINDOWS = 4;
+    const V3_0 = 5;
+}
+
+namespace \Pcx;
+
+class Encodings {
+    const RLE = 1;
 }
 </code></pre>
             

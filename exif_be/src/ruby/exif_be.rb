@@ -11,15 +11,18 @@ class ExifBe < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @version = @_io.read_u2be
     @ifd0_ofs = @_io.read_u4be
+    self
   end
   class Ifd < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @num_fields = @_io.read_u2be
       @fields = Array.new(num_fields)
@@ -27,6 +30,7 @@ class ExifBe < Kaitai::Struct::Struct
         @fields[i] = IfdField.new(@_io, self, @_root)
       }
       @next_ifd_ofs = @_io.read_u4be
+      self
     end
     def next_ifd
       return @next_ifd unless @next_ifd.nil?
@@ -518,11 +522,13 @@ class ExifBe < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @tag = Kaitai::Struct::Stream::resolve_enum(TAG_ENUM, @_io.read_u2be)
       @field_type = Kaitai::Struct::Stream::resolve_enum(FIELD_TYPE_ENUM, @_io.read_u2be)
       @length = @_io.read_u4be
       @ofs_or_data = @_io.read_u4be
+      self
     end
     def type_byte_length
       return @type_byte_length unless @type_byte_length.nil?

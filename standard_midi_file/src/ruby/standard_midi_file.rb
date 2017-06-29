@@ -11,23 +11,27 @@ class StandardMidiFile < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @hdr = Header.new(@_io, self, @_root)
     @tracks = Array.new(hdr.qty_tracks)
     (hdr.qty_tracks).times { |i|
       @tracks[i] = Track.new(@_io, self, @_root)
     }
+    self
   end
   class TrackEvents < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @event = []
       while not @_io.eof?
         @event << TrackEvent.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :event
   end
@@ -36,6 +40,7 @@ class StandardMidiFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @v_time = VlqBase128Be.new(@_io)
       @event_header = @_io.read_u1
@@ -61,6 +66,7 @@ class StandardMidiFile < Kaitai::Struct::Struct
       when 128
         @event_body = NoteOffEvent.new(@_io, self, @_root)
       end
+      self
     end
     def event_type
       return @event_type unless @event_type.nil?
@@ -85,9 +91,11 @@ class StandardMidiFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @b1 = @_io.read_u1
       @b2 = @_io.read_u1
+      self
     end
     def bend_value
       return @bend_value unless @bend_value.nil?
@@ -107,8 +115,10 @@ class StandardMidiFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @program = @_io.read_u1
+      self
     end
     attr_reader :program
   end
@@ -117,9 +127,11 @@ class StandardMidiFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @note = @_io.read_u1
       @velocity = @_io.read_u1
+      self
     end
     attr_reader :note
     attr_reader :velocity
@@ -129,9 +141,11 @@ class StandardMidiFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @note = @_io.read_u1
       @pressure = @_io.read_u1
+      self
     end
     attr_reader :note
     attr_reader :pressure
@@ -141,12 +155,14 @@ class StandardMidiFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = @_io.ensure_fixed_contents([77, 84, 114, 107].pack('C*'))
       @track_length = @_io.read_u4be
       @_raw_events = @_io.read_bytes(track_length)
       io = Kaitai::Struct::Stream.new(@_raw_events)
       @events = TrackEvents.new(io, self, @_root)
+      self
     end
     attr_reader :magic
     attr_reader :track_length
@@ -177,10 +193,12 @@ class StandardMidiFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @meta_type = Kaitai::Struct::Stream::resolve_enum(META_TYPE_ENUM, @_io.read_u1)
       @len = VlqBase128Be.new(@_io)
       @body = @_io.read_bytes(len.value)
+      self
     end
     attr_reader :meta_type
     attr_reader :len
@@ -191,9 +209,11 @@ class StandardMidiFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @controller = @_io.read_u1
       @value = @_io.read_u1
+      self
     end
     attr_reader :controller
     attr_reader :value
@@ -203,12 +223,14 @@ class StandardMidiFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = @_io.ensure_fixed_contents([77, 84, 104, 100].pack('C*'))
       @header_length = @_io.read_u4be
       @format = @_io.read_u2be
       @qty_tracks = @_io.read_u2be
       @division = @_io.read_s2be
+      self
     end
     attr_reader :magic
     attr_reader :header_length
@@ -221,9 +243,11 @@ class StandardMidiFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @len = VlqBase128Be.new(@_io)
       @data = @_io.read_bytes(len.value)
+      self
     end
     attr_reader :len
     attr_reader :data
@@ -233,9 +257,11 @@ class StandardMidiFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @note = @_io.read_u1
       @velocity = @_io.read_u1
+      self
     end
     attr_reader :note
     attr_reader :velocity
@@ -245,8 +271,10 @@ class StandardMidiFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @pressure = @_io.read_u1
+      self
     end
     attr_reader :pressure
   end

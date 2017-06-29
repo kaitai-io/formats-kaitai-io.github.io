@@ -14,26 +14,17 @@ public class MicrosoftCfb extends KaitaiStruct {
     }
 
     public MicrosoftCfb(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public MicrosoftCfb(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public MicrosoftCfb(KaitaiStream _io, KaitaiStruct _parent, MicrosoftCfb _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -45,24 +36,17 @@ public class MicrosoftCfb extends KaitaiStruct {
         }
 
         public CfbHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public CfbHeader(KaitaiStream _io, MicrosoftCfb _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public CfbHeader(KaitaiStream _io, MicrosoftCfb _parent, MicrosoftCfb _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -183,24 +167,17 @@ public class MicrosoftCfb extends KaitaiStruct {
         }
 
         public FatEntries(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public FatEntries(KaitaiStream _io, MicrosoftCfb _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public FatEntries(KaitaiStream _io, MicrosoftCfb _parent, MicrosoftCfb _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -254,24 +231,17 @@ public class MicrosoftCfb extends KaitaiStruct {
         }
 
         public DirEntry(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DirEntry(KaitaiStream _io, MicrosoftCfb _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DirEntry(KaitaiStream _io, MicrosoftCfb _parent, MicrosoftCfb _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

@@ -21,6 +21,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @mz1 = MzPlaceholder.new(@_io, self, @_root)
     @mz2 = @_io.read_bytes((mz1.header_size - 64))
@@ -33,6 +34,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
     (coff_hdr.number_of_sections).times { |i|
       @sections[i] = Section.new(@_io, self, @_root)
     }
+    self
   end
   class OptionalHeaderWindows < Kaitai::Struct::Struct
 
@@ -54,6 +56,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       if _parent.std.format == :pe_format_pe32
         @image_base_32 = @_io.read_u4le
@@ -101,6 +104,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
       end
       @loader_flags = @_io.read_u4le
       @number_of_rva_and_sizes = @_io.read_u4le
+      self
     end
     attr_reader :image_base_32
     attr_reader :image_base_64
@@ -134,6 +138,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @export_table = DataDir.new(@_io, self, @_root)
       @import_table = DataDir.new(@_io, self, @_root)
@@ -150,6 +155,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
       @iat = DataDir.new(@_io, self, @_root)
       @delay_import_descriptor = DataDir.new(@_io, self, @_root)
       @clr_runtime_header = DataDir.new(@_io, self, @_root)
+      self
     end
     attr_reader :export_table
     attr_reader :import_table
@@ -172,9 +178,11 @@ class MicrosoftPe < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @virtual_address = @_io.read_u4le
       @size = @_io.read_u4le
+      self
     end
     attr_reader :virtual_address
     attr_reader :size
@@ -184,10 +192,12 @@ class MicrosoftPe < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @std = OptionalHeaderStd.new(@_io, self, @_root)
       @windows = OptionalHeaderWindows.new(@_io, self, @_root)
       @data_dirs = OptionalHeaderDataDirs.new(@_io, self, @_root)
+      self
     end
     attr_reader :std
     attr_reader :windows
@@ -198,6 +208,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @name = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 0)).force_encoding("UTF-8")
       @virtual_size = @_io.read_u4le
@@ -209,6 +220,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
       @number_of_relocations = @_io.read_u2le
       @number_of_linenumbers = @_io.read_u2le
       @characteristics = @_io.read_u4le
+      self
     end
     def body
       return @body unless @body.nil?
@@ -234,10 +246,12 @@ class MicrosoftPe < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = @_io.ensure_fixed_contents([77, 90].pack('C*'))
       @data1 = @_io.read_bytes(58)
       @header_size = @_io.read_u4le
+      self
     end
     attr_reader :magic
     attr_reader :data1
@@ -248,6 +262,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @format = Kaitai::Struct::Stream::resolve_enum(PE_FORMAT, @_io.read_u2le)
       @major_linker_version = @_io.read_u1
@@ -260,6 +275,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
       if format == :pe_format_pe32
         @base_of_data = @_io.read_u4le
       end
+      self
     end
     attr_reader :format
     attr_reader :major_linker_version
@@ -307,6 +323,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @machine = Kaitai::Struct::Stream::resolve_enum(MACHINE_TYPE, @_io.read_u2le)
       @number_of_sections = @_io.read_u2le
@@ -315,6 +332,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
       @number_of_symbols = @_io.read_u4le
       @size_of_optional_header = @_io.read_u2le
       @characteristics = @_io.read_u2le
+      self
     end
     attr_reader :machine
     attr_reader :number_of_sections

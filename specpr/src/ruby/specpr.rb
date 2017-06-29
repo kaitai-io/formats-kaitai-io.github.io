@@ -30,17 +30,20 @@ class Specpr < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @records = []
     while not @_io.eof?
       @records << Record.new(@_io, self, @_root)
     end
+    self
   end
   class DataInitial < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @ids = Identifiers.new(@_io, self, @_root)
       @iscta = CoarseTimestamp.new(@_io, self, @_root)
@@ -80,6 +83,7 @@ class Specpr < Kaitai::Struct::Struct
       (256).times { |i|
         @data[i] = @_io.read_f4be
       }
+      self
     end
 
     ##
@@ -213,8 +217,10 @@ class Specpr < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @scaled_seconds = @_io.read_s4be
+      self
     end
     def seconds
       return @seconds unless @seconds.nil?
@@ -231,6 +237,7 @@ class Specpr < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @reserved = @_io.read_bits_int(26)
       @isctb_type = @_io.read_bits_int(1) != 0
@@ -239,6 +246,7 @@ class Specpr < Kaitai::Struct::Struct
       @errors = @_io.read_bits_int(1) != 0
       @text = @_io.read_bits_int(1) != 0
       @continuation = @_io.read_bits_int(1) != 0
+      self
     end
     def type
       return @type unless @type.nil?
@@ -289,11 +297,13 @@ class Specpr < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @cdata = Array.new(383)
       (383).times { |i|
         @cdata[i] = @_io.read_f4be
       }
+      self
     end
 
     ##
@@ -305,9 +315,11 @@ class Specpr < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @ititle = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(40), 32)).force_encoding("ascii")
       @usernm = (@_io.read_bytes(8)).force_encoding("ascii")
+      self
     end
 
     ##
@@ -323,8 +335,10 @@ class Specpr < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @angl = @_io.read_s4be
+      self
     end
     def seconds_total
       return @seconds_total unless @seconds_total.nil?
@@ -351,11 +365,13 @@ class Specpr < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @ids = Identifiers.new(@_io, self, @_root)
       @itxtpt = @_io.read_u4be
       @itxtch = @_io.read_s4be
       @itext = (@_io.read_bytes(1476)).force_encoding("ascii")
+      self
     end
     attr_reader :ids
 
@@ -376,6 +392,7 @@ class Specpr < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @icflag = Icflag.new(@_io, self, @_root)
       case icflag.type
@@ -398,6 +415,7 @@ class Specpr < Kaitai::Struct::Struct
       else
         @content = @_io.read_bytes((1536 - 4))
       end
+      self
     end
 
     ##
@@ -411,8 +429,10 @@ class Specpr < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @tdata = (@_io.read_bytes(1532)).force_encoding("ascii")
+      self
     end
 
     ##

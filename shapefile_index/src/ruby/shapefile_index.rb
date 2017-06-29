@@ -29,18 +29,21 @@ class ShapefileIndex < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @header = FileHeader.new(@_io, self, @_root)
     @records = []
     while not @_io.eof?
       @records << Record.new(@_io, self, @_root)
     end
+    self
   end
   class FileHeader < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @file_code = @_io.ensure_fixed_contents([0, 0, 39, 10].pack('C*'))
       @unused_field_1 = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
@@ -52,6 +55,7 @@ class ShapefileIndex < Kaitai::Struct::Struct
       @version = @_io.ensure_fixed_contents([232, 3, 0, 0].pack('C*'))
       @shape_type = Kaitai::Struct::Stream::resolve_enum(SHAPE_TYPE, @_io.read_s4le)
       @bounding_box = BoundingBoxXYZM.new(@_io, self, @_root)
+      self
     end
 
     ##
@@ -75,9 +79,11 @@ class ShapefileIndex < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @offset = @_io.read_s4be
       @content_length = @_io.read_s4be
+      self
     end
     attr_reader :offset
     attr_reader :content_length
@@ -87,11 +93,13 @@ class ShapefileIndex < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x = BoundsMinMax.new(@_io, self, @_root)
       @y = BoundsMinMax.new(@_io, self, @_root)
       @z = BoundsMinMax.new(@_io, self, @_root)
       @m = BoundsMinMax.new(@_io, self, @_root)
+      self
     end
     attr_reader :x
     attr_reader :y
@@ -103,9 +111,11 @@ class ShapefileIndex < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @min = @_io.read_f8be
       @max = @_io.read_f8be
+      self
     end
     attr_reader :min
     attr_reader :max

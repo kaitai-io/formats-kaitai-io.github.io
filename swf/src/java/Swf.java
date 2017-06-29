@@ -29,26 +29,17 @@ public class Swf extends KaitaiStruct {
     }
 
     public Swf(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Swf(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Swf(KaitaiStream _io, KaitaiStruct _parent, Swf _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -65,24 +56,17 @@ public class Swf extends KaitaiStruct {
         }
 
         public SwfBody(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SwfBody(KaitaiStream _io, Swf _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SwfBody(KaitaiStream _io, Swf _parent, Swf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -113,24 +97,17 @@ public class Swf extends KaitaiStruct {
         }
 
         public Rect(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Rect(KaitaiStream _io, Swf.SwfBody _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Rect(KaitaiStream _io, Swf.SwfBody _parent, Swf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -168,24 +145,17 @@ public class Swf extends KaitaiStruct {
         }
 
         public Tag(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Tag(KaitaiStream _io, Swf.SwfBody _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Tag(KaitaiStream _io, Swf.SwfBody _parent, Swf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -220,24 +190,17 @@ public class Swf extends KaitaiStruct {
         }
 
         public AbcTagBody(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public AbcTagBody(KaitaiStream _io, Swf.Tag _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public AbcTagBody(KaitaiStream _io, Swf.Tag _parent, Swf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -262,24 +225,17 @@ public class Swf extends KaitaiStruct {
         }
 
         public RecordHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public RecordHeader(KaitaiStream _io, Swf.Tag _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public RecordHeader(KaitaiStream _io, Swf.Tag _parent, Swf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

@@ -1,9 +1,6 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-/**
- */
-
 class MicrosoftPe extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \MicrosoftPe $root = null) {
         parent::__construct($io, $parent, $root);
@@ -375,9 +372,6 @@ class OptionalHeaderStd extends \Kaitai\Struct\Struct {
     public function baseOfCode() { return $this->_m_baseOfCode; }
     public function baseOfData() { return $this->_m_baseOfData; }
 }
-
-/**
- */
 
 namespace \MicrosoftPe;
 

@@ -11,18 +11,21 @@ class Ttf < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @offset_table = OffsetTable.new(@_io, self, @_root)
     @directory_table = Array.new(offset_table.num_tables)
     (offset_table.num_tables).times { |i|
       @directory_table[i] = DirTableEntry.new(@_io, self, @_root)
     }
+    self
   end
   class Post < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @format = Fixed.new(@_io, self, @_root)
       @italic_angle = Fixed.new(@_io, self, @_root)
@@ -36,12 +39,14 @@ class Ttf < Kaitai::Struct::Struct
       if  ((format.major == 2) && (format.minor == 0)) 
         @format20 = Format20.new(@_io, self, @_root)
       end
+      self
     end
     class Format20 < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @number_of_glyphs = @_io.read_u2be
         @glyph_name_index = Array.new(number_of_glyphs)
@@ -53,17 +58,20 @@ class Ttf < Kaitai::Struct::Struct
           _ = PascalString.new(@_io, self, @_root)
           @glyph_names << _
         end until _.length == 0
+        self
       end
       class PascalString < Kaitai::Struct::Struct
         def initialize(_io, _parent = nil, _root = self)
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @length = @_io.read_u1
           if length != 0
             @value = (@_io.read_bytes(length)).force_encoding("ascii")
           end
+          self
         end
         attr_reader :length
         attr_reader :value
@@ -88,6 +96,7 @@ class Ttf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @format_selector = @_io.read_u2be
       @name_record_count = @_io.read_u2be
@@ -96,12 +105,14 @@ class Ttf < Kaitai::Struct::Struct
       (name_record_count).times { |i|
         @name_records[i] = NameRecord.new(@_io, self, @_root)
       }
+      self
     end
     class NameRecord < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @platform_id = @_io.read_u2be
         @encoding_id = @_io.read_u2be
@@ -109,6 +120,7 @@ class Ttf < Kaitai::Struct::Struct
         @name_id = @_io.read_u2be
         @string_length = @_io.read_u2be
         @string_offset = @_io.read_u2be
+        self
       end
       def ascii_value
         return @ascii_value unless @ascii_value.nil?
@@ -161,6 +173,7 @@ class Ttf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @version = Fixed.new(@_io, self, @_root)
       @font_revision = Fixed.new(@_io, self, @_root)
@@ -179,6 +192,7 @@ class Ttf < Kaitai::Struct::Struct
       @font_direction_hint = Kaitai::Struct::Stream::resolve_enum(FONT_DIRECTION_HINT, @_io.read_s2be)
       @index_to_loc_format = @_io.read_s2be
       @glyph_data_format = @_io.read_s2be
+      self
     end
     attr_reader :version
     attr_reader :font_revision
@@ -203,8 +217,10 @@ class Ttf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @instructions = @_io.read_bytes_full
+      self
     end
     attr_reader :instructions
   end
@@ -213,6 +229,7 @@ class Ttf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @version = Fixed.new(@_io, self, @_root)
       @ascender = @_io.read_s2be
@@ -227,6 +244,7 @@ class Ttf < Kaitai::Struct::Struct
       @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*'))
       @metric_data_format = @_io.read_s2be
       @number_of_hmetrics = @_io.read_u2be
+      self
     end
     attr_reader :version
 
@@ -268,8 +286,10 @@ class Ttf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @instructions = @_io.read_bytes_full
+      self
     end
     attr_reader :instructions
   end
@@ -278,6 +298,7 @@ class Ttf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @version = @_io.read_u2be
       @subtable_count = @_io.read_u2be
@@ -285,12 +306,14 @@ class Ttf < Kaitai::Struct::Struct
       (subtable_count).times { |i|
         @subtables[i] = Subtable.new(@_io, self, @_root)
       }
+      self
     end
     class Subtable < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @version = @_io.read_u2be
         @length = @_io.read_u2be
@@ -304,12 +327,14 @@ class Ttf < Kaitai::Struct::Struct
         if format == 0
           @format0 = Format0.new(@_io, self, @_root)
         end
+        self
       end
       class Format0 < Kaitai::Struct::Struct
         def initialize(_io, _parent = nil, _root = self)
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @pair_count = @_io.read_u2be
           @search_range = @_io.read_u2be
@@ -319,16 +344,19 @@ class Ttf < Kaitai::Struct::Struct
           (pair_count).times { |i|
             @kerning_pairs[i] = KerningPair.new(@_io, self, @_root)
           }
+          self
         end
         class KerningPair < Kaitai::Struct::Struct
           def initialize(_io, _parent = nil, _root = self)
             super(_io, _parent, _root)
             _read
           end
+
           def _read
             @left = @_io.read_u2be
             @right = @_io.read_u2be
             @value = @_io.read_s2be
+            self
           end
           attr_reader :left
           attr_reader :right
@@ -359,11 +387,13 @@ class Ttf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @tag = (@_io.read_bytes(4)).force_encoding("ascii")
       @checksum = @_io.read_u4be
       @offset = @_io.read_u4be
       @length = @_io.read_u4be
+      self
     end
     def value
       return @value unless @value.nil?
@@ -483,6 +513,7 @@ class Ttf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @version = @_io.read_u2be
       @x_avg_char_width = @_io.read_s2be
@@ -512,6 +543,7 @@ class Ttf < Kaitai::Struct::Struct
       @win_ascent = @_io.read_u2be
       @win_descent = @_io.read_u2be
       @code_page_range = CodePageRange.new(@_io, self, @_root)
+      self
     end
     class Panose < Kaitai::Struct::Struct
 
@@ -671,6 +703,7 @@ class Ttf < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @family_type = Kaitai::Struct::Stream::resolve_enum(FAMILY_KIND, @_io.read_u1)
         @serif_style = Kaitai::Struct::Stream::resolve_enum(SERIF_STYLE, @_io.read_u1)
@@ -682,6 +715,7 @@ class Ttf < Kaitai::Struct::Struct
         @letter_form = Kaitai::Struct::Stream::resolve_enum(LETTER_FORM, @_io.read_u1)
         @midline = Kaitai::Struct::Stream::resolve_enum(MIDLINE, @_io.read_u1)
         @x_height = Kaitai::Struct::Stream::resolve_enum(X_HEIGHT, @_io.read_u1)
+        self
       end
       attr_reader :family_type
       attr_reader :serif_style
@@ -699,6 +733,7 @@ class Ttf < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @basic_latin = @_io.read_bits_int(1) != 0
         @latin_1_supplement = @_io.read_bits_int(1) != 0
@@ -772,6 +807,7 @@ class Ttf < Kaitai::Struct::Struct
         @specials = @_io.read_bits_int(1) != 0
         @_io.align_to_byte
         @reserved = @_io.read_bytes(7)
+        self
       end
       attr_reader :basic_latin
       attr_reader :latin_1_supplement
@@ -850,6 +886,7 @@ class Ttf < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @symbol_character_set = @_io.read_bits_int(1) != 0
         @oem_character_set = @_io.read_bits_int(1) != 0
@@ -887,6 +924,7 @@ class Ttf < Kaitai::Struct::Struct
         @cp866_ms_dos_russian = @_io.read_bits_int(1) != 0
         @cp869_ibm_greek = @_io.read_bits_int(1) != 0
         @reserved_for_oem = @_io.read_bits_int(16)
+        self
       end
       attr_reader :symbol_character_set
       attr_reader :oem_character_set
@@ -1037,9 +1075,11 @@ class Ttf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @major = @_io.read_u2be
       @minor = @_io.read_u2be
+      self
     end
     attr_reader :major
     attr_reader :minor
@@ -1049,6 +1089,7 @@ class Ttf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @number_of_contours = @_io.read_s2be
       @x_min = @_io.read_s2be
@@ -1058,12 +1099,14 @@ class Ttf < Kaitai::Struct::Struct
       if number_of_contours > 0
         @value = SimpleGlyph.new(@_io, self, @_root)
       end
+      self
     end
     class SimpleGlyph < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @end_pts_of_contours = Array.new(_parent.number_of_contours)
         (_parent.number_of_contours).times { |i|
@@ -1075,12 +1118,14 @@ class Ttf < Kaitai::Struct::Struct
         (point_count).times { |i|
           @flags[i] = Flag.new(@_io, self, @_root)
         }
+        self
       end
       class Flag < Kaitai::Struct::Struct
         def initialize(_io, _parent = nil, _root = self)
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @reserved = @_io.read_bits_int(2)
           @y_is_same = @_io.read_bits_int(1) != 0
@@ -1093,6 +1138,7 @@ class Ttf < Kaitai::Struct::Struct
           if repeat
             @repeat_value = @_io.read_u1
           end
+          self
         end
         attr_reader :reserved
         attr_reader :y_is_same
@@ -1128,11 +1174,13 @@ class Ttf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @fwords = []
       while not @_io.eof?
         @fwords << @_io.read_s2be
       end
+      self
     end
     attr_reader :fwords
   end
@@ -1141,6 +1189,7 @@ class Ttf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @table_version_number = Fixed.new(@_io, self, @_root)
       @num_glyphs = @_io.read_u2be
@@ -1157,6 +1206,7 @@ class Ttf < Kaitai::Struct::Struct
       @max_size_of_instructions = @_io.read_u2be
       @max_component_elements = @_io.read_u2be
       @max_component_depth = @_io.read_u2be
+      self
     end
 
     ##
@@ -1224,12 +1274,14 @@ class Ttf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @sfnt_version = Fixed.new(@_io, self, @_root)
       @num_tables = @_io.read_u2be
       @search_range = @_io.read_u2be
       @entry_selector = @_io.read_u2be
       @range_shift = @_io.read_u2be
+      self
     end
     attr_reader :sfnt_version
     attr_reader :num_tables
@@ -1245,6 +1297,7 @@ class Ttf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @version_number = @_io.read_u2be
       @number_of_encoding_tables = @_io.read_u2be
@@ -1252,16 +1305,19 @@ class Ttf < Kaitai::Struct::Struct
       (number_of_encoding_tables).times { |i|
         @tables[i] = SubtableHeader.new(@_io, self, @_root)
       }
+      self
     end
     class SubtableHeader < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @platform_id = @_io.read_u2be
         @encoding_id = @_io.read_u2be
         @subtable_offset = @_io.read_u4be
+        self
       end
       def table
         return @table unless @table.nil?
@@ -1289,6 +1345,7 @@ class Ttf < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @format = Kaitai::Struct::Stream::resolve_enum(SUBTABLE_FORMAT, @_io.read_u2be)
         @length = @_io.read_u2be
@@ -1313,14 +1370,17 @@ class Ttf < Kaitai::Struct::Struct
         else
           @value = @_io.read_bytes((length - 6))
         end
+        self
       end
       class ByteEncodingTable < Kaitai::Struct::Struct
         def initialize(_io, _parent = nil, _root = self)
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @glyph_id_array = @_io.read_bytes(256)
+          self
         end
         attr_reader :glyph_id_array
       end
@@ -1329,11 +1389,13 @@ class Ttf < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @sub_header_keys = Array.new(256)
           (256).times { |i|
             @sub_header_keys[i] = @_io.read_u2be
           }
+          self
         end
         attr_reader :sub_header_keys
       end
@@ -1342,6 +1404,7 @@ class Ttf < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @seg_count_x2 = @_io.read_u2be
           @search_range = @_io.read_u2be
@@ -1368,6 +1431,7 @@ class Ttf < Kaitai::Struct::Struct
           while not @_io.eof?
             @glyph_id_array << @_io.read_u2be
           end
+          self
         end
         def seg_count
           return @seg_count unless @seg_count.nil?
@@ -1390,6 +1454,7 @@ class Ttf < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @first_code = @_io.read_u2be
           @entry_count = @_io.read_u2be
@@ -1397,6 +1462,7 @@ class Ttf < Kaitai::Struct::Struct
           (entry_count).times { |i|
             @glyph_id_array[i] = @_io.read_u2be
           }
+          self
         end
         attr_reader :first_code
         attr_reader :entry_count

@@ -34,26 +34,17 @@ public class MicrosoftPe extends KaitaiStruct {
     }
 
     public MicrosoftPe(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public MicrosoftPe(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public MicrosoftPe(KaitaiStream _io, KaitaiStruct _parent, MicrosoftPe _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -99,24 +90,17 @@ public class MicrosoftPe extends KaitaiStruct {
         }
 
         public OptionalHeaderWindows(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public OptionalHeaderWindows(KaitaiStream _io, MicrosoftPe.OptionalHeader _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public OptionalHeaderWindows(KaitaiStream _io, MicrosoftPe.OptionalHeader _parent, MicrosoftPe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -230,24 +214,17 @@ public class MicrosoftPe extends KaitaiStruct {
         }
 
         public OptionalHeaderDataDirs(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public OptionalHeaderDataDirs(KaitaiStream _io, MicrosoftPe.OptionalHeader _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public OptionalHeaderDataDirs(KaitaiStream _io, MicrosoftPe.OptionalHeader _parent, MicrosoftPe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -308,24 +285,17 @@ public class MicrosoftPe extends KaitaiStruct {
         }
 
         public DataDir(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DataDir(KaitaiStream _io, MicrosoftPe.OptionalHeaderDataDirs _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DataDir(KaitaiStream _io, MicrosoftPe.OptionalHeaderDataDirs _parent, MicrosoftPe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -347,24 +317,17 @@ public class MicrosoftPe extends KaitaiStruct {
         }
 
         public OptionalHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public OptionalHeader(KaitaiStream _io, MicrosoftPe _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public OptionalHeader(KaitaiStream _io, MicrosoftPe _parent, MicrosoftPe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -389,24 +352,17 @@ public class MicrosoftPe extends KaitaiStruct {
         }
 
         public Section(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Section(KaitaiStream _io, MicrosoftPe _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Section(KaitaiStream _io, MicrosoftPe _parent, MicrosoftPe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -462,24 +418,17 @@ public class MicrosoftPe extends KaitaiStruct {
         }
 
         public MzPlaceholder(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MzPlaceholder(KaitaiStream _io, MicrosoftPe _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MzPlaceholder(KaitaiStream _io, MicrosoftPe _parent, MicrosoftPe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -504,24 +453,17 @@ public class MicrosoftPe extends KaitaiStruct {
         }
 
         public OptionalHeaderStd(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public OptionalHeaderStd(KaitaiStream _io, MicrosoftPe.OptionalHeader _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public OptionalHeaderStd(KaitaiStream _io, MicrosoftPe.OptionalHeader _parent, MicrosoftPe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -607,24 +549,17 @@ public class MicrosoftPe extends KaitaiStruct {
         }
 
         public CoffHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public CoffHeader(KaitaiStream _io, MicrosoftPe _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public CoffHeader(KaitaiStream _io, MicrosoftPe _parent, MicrosoftPe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

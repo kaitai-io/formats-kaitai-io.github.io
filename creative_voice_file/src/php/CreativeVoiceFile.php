@@ -54,9 +54,6 @@ class CreativeVoiceFile extends \Kaitai\Struct\Struct {
     public function blocks() { return $this->_m_blocks; }
 }
 
-/**
- */
-
 namespace \CreativeVoiceFile;
 
 class BlockMarker extends \Kaitai\Struct\Struct {
@@ -75,9 +72,6 @@ class BlockMarker extends \Kaitai\Struct\Struct {
      */
     public function markerId() { return $this->_m_markerId; }
 }
-
-/**
- */
 
 namespace \CreativeVoiceFile;
 
@@ -122,9 +116,6 @@ class BlockSilence extends \Kaitai\Struct\Struct {
      */
     public function freqDiv() { return $this->_m_freqDiv; }
 }
-
-/**
- */
 
 namespace \CreativeVoiceFile;
 
@@ -245,9 +236,6 @@ class Block extends \Kaitai\Struct\Struct {
     public function _raw_body() { return $this->_m__raw_body; }
 }
 
-/**
- */
-
 namespace \CreativeVoiceFile;
 
 class BlockRepeatStart extends \Kaitai\Struct\Struct {
@@ -266,9 +254,6 @@ class BlockRepeatStart extends \Kaitai\Struct\Struct {
      */
     public function repeatCount1() { return $this->_m_repeatCount1; }
 }
-
-/**
- */
 
 namespace \CreativeVoiceFile;
 
@@ -301,9 +286,6 @@ class BlockSoundData extends \Kaitai\Struct\Struct {
     public function codec() { return $this->_m_codec; }
     public function wave() { return $this->_m_wave; }
 }
-
-/**
- */
 
 namespace \CreativeVoiceFile;
 

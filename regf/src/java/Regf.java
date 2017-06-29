@@ -33,26 +33,17 @@ public class Regf extends KaitaiStruct {
     }
 
     public Regf(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Regf(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Regf(KaitaiStream _io, KaitaiStruct _parent, Regf _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -71,24 +62,17 @@ public class Regf extends KaitaiStruct {
         }
 
         public Filetime(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Filetime(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Filetime(KaitaiStream _io, KaitaiStruct _parent, Regf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -107,24 +91,17 @@ public class Regf extends KaitaiStruct {
         }
 
         public HiveBin(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public HiveBin(KaitaiStream _io, Regf _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public HiveBin(KaitaiStream _io, Regf _parent, Regf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -149,24 +126,17 @@ public class Regf extends KaitaiStruct {
         }
 
         public HiveBinHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public HiveBinHeader(KaitaiStream _io, Regf.HiveBin _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public HiveBinHeader(KaitaiStream _io, Regf.HiveBin _parent, Regf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -228,24 +198,17 @@ public class Regf extends KaitaiStruct {
         }
 
         public HiveBinCell(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public HiveBinCell(KaitaiStream _io, Regf.HiveBin _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public HiveBinCell(KaitaiStream _io, Regf.HiveBin _parent, Regf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -345,24 +308,17 @@ public class Regf extends KaitaiStruct {
             }
 
             public SubKeyListVk(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public SubKeyListVk(KaitaiStream _io, Regf.HiveBinCell _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public SubKeyListVk(KaitaiStream _io, Regf.HiveBinCell _parent, Regf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -401,24 +357,17 @@ public class Regf extends KaitaiStruct {
             }
 
             public SubKeyListLhLf(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public SubKeyListLhLf(KaitaiStream _io, Regf.HiveBinCell _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public SubKeyListLhLf(KaitaiStream _io, Regf.HiveBinCell _parent, Regf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -434,24 +383,17 @@ public class Regf extends KaitaiStruct {
                 }
 
                 public Item(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public Item(KaitaiStream _io, Regf.HiveBinCell.SubKeyListLhLf _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public Item(KaitaiStream _io, Regf.HiveBinCell.SubKeyListLhLf _parent, Regf _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -482,24 +424,17 @@ public class Regf extends KaitaiStruct {
             }
 
             public SubKeyListSk(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public SubKeyListSk(KaitaiStream _io, Regf.HiveBinCell _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public SubKeyListSk(KaitaiStream _io, Regf.HiveBinCell _parent, Regf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -527,24 +462,17 @@ public class Regf extends KaitaiStruct {
             }
 
             public SubKeyListLi(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public SubKeyListLi(KaitaiStream _io, Regf.HiveBinCell _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public SubKeyListLi(KaitaiStream _io, Regf.HiveBinCell _parent, Regf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -560,24 +488,17 @@ public class Regf extends KaitaiStruct {
                 }
 
                 public Item(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public Item(KaitaiStream _io, Regf.HiveBinCell.SubKeyListLi _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public Item(KaitaiStream _io, Regf.HiveBinCell.SubKeyListLi _parent, Regf _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -630,24 +551,17 @@ public class Regf extends KaitaiStruct {
             }
 
             public NamedKey(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public NamedKey(KaitaiStream _io, Regf.HiveBinCell _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public NamedKey(KaitaiStream _io, Regf.HiveBinCell _parent, Regf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -723,24 +637,17 @@ public class Regf extends KaitaiStruct {
             }
 
             public SubKeyListRi(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public SubKeyListRi(KaitaiStream _io, Regf.HiveBinCell _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public SubKeyListRi(KaitaiStream _io, Regf.HiveBinCell _parent, Regf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -756,24 +663,17 @@ public class Regf extends KaitaiStruct {
                 }
 
                 public Item(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public Item(KaitaiStream _io, Regf.HiveBinCell.SubKeyListRi _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public Item(KaitaiStream _io, Regf.HiveBinCell.SubKeyListRi _parent, Regf _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -859,24 +759,17 @@ public class Regf extends KaitaiStruct {
         }
 
         public FileHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public FileHeader(KaitaiStream _io, Regf _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public FileHeader(KaitaiStream _io, Regf _parent, Regf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

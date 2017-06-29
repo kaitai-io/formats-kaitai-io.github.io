@@ -21,6 +21,7 @@ class IcmpPacket < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @icmp_type = Kaitai::Struct::Stream::resolve_enum(ICMP_TYPE_ENUM, @_io.read_u1)
     if icmp_type == :icmp_type_enum_destination_unreachable
@@ -32,6 +33,7 @@ class IcmpPacket < Kaitai::Struct::Struct
     if  ((icmp_type == :icmp_type_enum_echo) || (icmp_type == :icmp_type_enum_echo_reply)) 
       @echo = EchoMsg.new(@_io, self, @_root)
     end
+    self
   end
   class DestinationUnreachableMsg < Kaitai::Struct::Struct
 
@@ -48,9 +50,11 @@ class IcmpPacket < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @code = Kaitai::Struct::Stream::resolve_enum(DESTINATION_UNREACHABLE_CODE, @_io.read_u1)
       @checksum = @_io.read_u2be
+      self
     end
     attr_reader :code
     attr_reader :checksum
@@ -66,9 +70,11 @@ class IcmpPacket < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @code = Kaitai::Struct::Stream::resolve_enum(TIME_EXCEEDED_CODE, @_io.read_u1)
       @checksum = @_io.read_u2be
+      self
     end
     attr_reader :code
     attr_reader :checksum
@@ -78,11 +84,13 @@ class IcmpPacket < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @code = @_io.ensure_fixed_contents([0].pack('C*'))
       @checksum = @_io.read_u2be
       @identifier = @_io.read_u2be
       @seq_num = @_io.read_u2be
+      self
     end
     attr_reader :code
     attr_reader :checksum

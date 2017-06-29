@@ -57,20 +57,24 @@ class Zip < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @sections = []
     while not @_io.eof?
       @sections << PkSection.new(@_io, self, @_root)
     end
+    self
   end
   class LocalFile < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @header = LocalFileHeader.new(@_io, self, @_root)
       @body = @_io.read_bytes(header.compressed_size)
+      self
     end
     attr_reader :header
     attr_reader :body
@@ -80,6 +84,7 @@ class Zip < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @code = Kaitai::Struct::Stream::resolve_enum(EXTRA_CODES, @_io.read_u2le)
       @size = @_io.read_u2le
@@ -99,6 +104,7 @@ class Zip < Kaitai::Struct::Struct
       else
         @body = @_io.read_bytes(size)
       end
+      self
     end
 
     ##
@@ -108,18 +114,21 @@ class Zip < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @reserved = @_io.read_u4le
         @attributes = []
         while not @_io.eof?
           @attributes << Attribute.new(@_io, self, @_root)
         end
+        self
       end
       class Attribute < Kaitai::Struct::Struct
         def initialize(_io, _parent = nil, _root = self)
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @tag = @_io.read_u2le
           @size = @_io.read_u2le
@@ -131,6 +140,7 @@ class Zip < Kaitai::Struct::Struct
           else
             @body = @_io.read_bytes(size)
           end
+          self
         end
         attr_reader :tag
         attr_reader :size
@@ -142,10 +152,12 @@ class Zip < Kaitai::Struct::Struct
           super(_io, _parent, _root)
           _read
         end
+
         def _read
           @last_mod_time = @_io.read_u8le
           @last_access_time = @_io.read_u8le
           @creation_time = @_io.read_u8le
+          self
         end
         attr_reader :last_mod_time
         attr_reader :last_access_time
@@ -162,6 +174,7 @@ class Zip < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @flags = @_io.read_u1
         @mod_time = @_io.read_u4le
@@ -171,6 +184,7 @@ class Zip < Kaitai::Struct::Struct
         if !(_io.eof?)
           @create_time = @_io.read_u4le
         end
+        self
       end
       attr_reader :flags
       attr_reader :mod_time
@@ -185,12 +199,14 @@ class Zip < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @version = @_io.read_u1
         @uid_size = @_io.read_u1
         @uid = @_io.read_bytes(uid_size)
         @gid_size = @_io.read_u1
         @gid = @_io.read_bytes(gid_size)
+        self
       end
 
       ##
@@ -226,6 +242,7 @@ class Zip < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @version_made_by = @_io.read_u2le
       @version_needed_to_extract = @_io.read_u2le
@@ -248,6 +265,7 @@ class Zip < Kaitai::Struct::Struct
       io = Kaitai::Struct::Stream.new(@_raw_extra)
       @extra = Extras.new(io, self, @_root)
       @comment = (@_io.read_bytes(comment_len)).force_encoding("UTF-8")
+      self
     end
     def local_header
       return @local_header unless @local_header.nil?
@@ -283,6 +301,7 @@ class Zip < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = @_io.ensure_fixed_contents([80, 75].pack('C*'))
       @section_type = @_io.read_u2le
@@ -294,6 +313,7 @@ class Zip < Kaitai::Struct::Struct
       when 1541
         @body = EndOfCentralDir.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :magic
     attr_reader :section_type
@@ -304,11 +324,13 @@ class Zip < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       while not @_io.eof?
         @entries << ExtraField.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :entries
   end
@@ -317,6 +339,7 @@ class Zip < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @version = @_io.read_u2le
       @flags = @_io.read_u2le
@@ -332,6 +355,7 @@ class Zip < Kaitai::Struct::Struct
       @_raw_extra = @_io.read_bytes(extra_len)
       io = Kaitai::Struct::Stream.new(@_raw_extra)
       @extra = Extras.new(io, self, @_root)
+      self
     end
     attr_reader :version
     attr_reader :flags
@@ -352,6 +376,7 @@ class Zip < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @disk_of_end_of_central_dir = @_io.read_u2le
       @disk_of_central_dir = @_io.read_u2le
@@ -361,6 +386,7 @@ class Zip < Kaitai::Struct::Struct
       @central_dir_offset = @_io.read_u4le
       @comment_len = @_io.read_u2le
       @comment = (@_io.read_bytes(comment_len)).force_encoding("UTF-8")
+      self
     end
     attr_reader :disk_of_end_of_central_dir
     attr_reader :disk_of_central_dir

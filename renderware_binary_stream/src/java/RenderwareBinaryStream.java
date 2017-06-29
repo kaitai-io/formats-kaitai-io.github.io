@@ -197,26 +197,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
 
     public RenderwareBinaryStream(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public RenderwareBinaryStream(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public RenderwareBinaryStream(KaitaiStream _io, KaitaiStruct _parent, RenderwareBinaryStream _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -276,24 +267,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public StructClump(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public StructClump(KaitaiStream _io, RenderwareBinaryStream.ListWithHeader _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public StructClump(KaitaiStream _io, RenderwareBinaryStream.ListWithHeader _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -326,24 +310,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public StructGeometry(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public StructGeometry(KaitaiStream _io, RenderwareBinaryStream.ListWithHeader _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public StructGeometry(KaitaiStream _io, RenderwareBinaryStream.ListWithHeader _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -419,24 +396,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public GeometryNonNative(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public GeometryNonNative(KaitaiStream _io, RenderwareBinaryStream.StructGeometry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public GeometryNonNative(KaitaiStream _io, RenderwareBinaryStream.StructGeometry _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -478,24 +448,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public StructGeometryList(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public StructGeometryList(KaitaiStream _io, RenderwareBinaryStream.ListWithHeader _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public StructGeometryList(KaitaiStream _io, RenderwareBinaryStream.ListWithHeader _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -514,24 +477,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public Rgba(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Rgba(KaitaiStream _io, RenderwareBinaryStream.GeometryNonNative _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Rgba(KaitaiStream _io, RenderwareBinaryStream.GeometryNonNative _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -559,24 +515,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public Sphere(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Sphere(KaitaiStream _io, RenderwareBinaryStream.MorphTarget _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Sphere(KaitaiStream _io, RenderwareBinaryStream.MorphTarget _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -604,24 +553,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public MorphTarget(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MorphTarget(KaitaiStream _io, RenderwareBinaryStream.StructGeometry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MorphTarget(KaitaiStream _io, RenderwareBinaryStream.StructGeometry _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -666,24 +608,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public SurfaceProperties(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SurfaceProperties(KaitaiStream _io, RenderwareBinaryStream.StructGeometry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SurfaceProperties(KaitaiStream _io, RenderwareBinaryStream.StructGeometry _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -712,24 +647,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public StructFrameList(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public StructFrameList(KaitaiStream _io, RenderwareBinaryStream.ListWithHeader _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public StructFrameList(KaitaiStream _io, RenderwareBinaryStream.ListWithHeader _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -758,24 +686,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public Matrix(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Matrix(KaitaiStream _io, RenderwareBinaryStream.Frame _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Matrix(KaitaiStream _io, RenderwareBinaryStream.Frame _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -801,24 +722,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public Vector3d(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Vector3d(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Vector3d(KaitaiStream _io, KaitaiStruct _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -852,24 +766,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public ListWithHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ListWithHeader(KaitaiStream _io, RenderwareBinaryStream _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ListWithHeader(KaitaiStream _io, RenderwareBinaryStream _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -940,24 +847,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public Triangle(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Triangle(KaitaiStream _io, RenderwareBinaryStream.GeometryNonNative _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Triangle(KaitaiStream _io, RenderwareBinaryStream.GeometryNonNative _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -989,24 +889,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public Frame(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Frame(KaitaiStream _io, RenderwareBinaryStream.StructFrameList _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Frame(KaitaiStream _io, RenderwareBinaryStream.StructFrameList _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1034,24 +927,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public TexCoord(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public TexCoord(KaitaiStream _io, RenderwareBinaryStream.GeometryNonNative _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public TexCoord(KaitaiStream _io, RenderwareBinaryStream.GeometryNonNative _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1073,24 +959,17 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
 
         public StructTextureDictionary(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public StructTextureDictionary(KaitaiStream _io, RenderwareBinaryStream.ListWithHeader _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public StructTextureDictionary(KaitaiStream _io, RenderwareBinaryStream.ListWithHeader _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

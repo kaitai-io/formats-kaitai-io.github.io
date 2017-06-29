@@ -20,11 +20,13 @@ class Jpeg < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @segments = []
     while not @_io.eof?
       @segments << Segment.new(@_io, self, @_root)
     end
+    self
   end
   class Segment < Kaitai::Struct::Struct
 
@@ -68,6 +70,7 @@ class Jpeg < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = @_io.ensure_fixed_contents([255].pack('C*'))
       @marker = Kaitai::Struct::Stream::resolve_enum(MARKER_ENUM, @_io.read_u1)
@@ -99,6 +102,7 @@ class Jpeg < Kaitai::Struct::Struct
       if marker == :marker_enum_sos
         @image_data = @_io.read_bytes_full
       end
+      self
     end
     attr_reader :magic
     attr_reader :marker
@@ -112,6 +116,7 @@ class Jpeg < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @num_components = @_io.read_u1
       @components = Array.new(num_components)
@@ -121,15 +126,18 @@ class Jpeg < Kaitai::Struct::Struct
       @start_spectral_selection = @_io.read_u1
       @end_spectral = @_io.read_u1
       @appr_bit_pos = @_io.read_u1
+      self
     end
     class Component < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @id = Kaitai::Struct::Stream::resolve_enum(COMPONENT_ID, @_io.read_u1)
         @huffman_table = @_io.read_u1
+        self
       end
 
       ##
@@ -163,12 +171,14 @@ class Jpeg < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
       case magic
       when "Exif"
         @body = ExifInJpeg.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :magic
     attr_reader :body
@@ -178,6 +188,7 @@ class Jpeg < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @bits_per_sample = @_io.read_u1
       @image_height = @_io.read_u2be
@@ -187,16 +198,19 @@ class Jpeg < Kaitai::Struct::Struct
       (num_components).times { |i|
         @components[i] = Component.new(@_io, self, @_root)
       }
+      self
     end
     class Component < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @id = Kaitai::Struct::Stream::resolve_enum(COMPONENT_ID, @_io.read_u1)
         @sampling_factors = @_io.read_u1
         @quantization_table_id = @_io.read_u1
+        self
       end
       def sampling_x
         return @sampling_x unless @sampling_x.nil?
@@ -226,11 +240,13 @@ class Jpeg < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @extra_zero = @_io.ensure_fixed_contents([0].pack('C*'))
       @_raw_data = @_io.read_bytes_full
       io = Kaitai::Struct::Stream.new(@_raw_data)
       @data = Exif.new(io)
+      self
     end
     attr_reader :extra_zero
     attr_reader :data
@@ -248,6 +264,7 @@ class Jpeg < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = (@_io.read_bytes(5)).force_encoding("ASCII")
       @version_major = @_io.read_u1
@@ -258,6 +275,7 @@ class Jpeg < Kaitai::Struct::Struct
       @thumbnail_x = @_io.read_u1
       @thumbnail_y = @_io.read_u1
       @thumbnail = @_io.read_bytes(((thumbnail_x * thumbnail_y) * 3))
+      self
     end
     attr_reader :magic
     attr_reader :version_major

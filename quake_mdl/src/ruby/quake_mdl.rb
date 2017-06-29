@@ -11,6 +11,7 @@ class QuakeMdl < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @header = MdlHeader.new(@_io, self, @_root)
     @skins = Array.new(header.num_skins)
@@ -29,18 +30,21 @@ class QuakeMdl < Kaitai::Struct::Struct
     (header.num_frames).times { |i|
       @frames[i] = MdlFrame.new(@_io, self, @_root)
     }
+    self
   end
   class MdlVertex < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @values = Array.new(3)
       (3).times { |i|
         @values[i] = @_io.read_u1
       }
       @normal_index = @_io.read_u1
+      self
     end
     attr_reader :values
     attr_reader :normal_index
@@ -50,10 +54,12 @@ class QuakeMdl < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @on_seam = @_io.read_s4le
       @s = @_io.read_s4le
       @t = @_io.read_s4le
+      self
     end
     attr_reader :on_seam
     attr_reader :s
@@ -64,6 +70,7 @@ class QuakeMdl < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @ident = @_io.ensure_fixed_contents([73, 68, 80, 79].pack('C*'))
       @version_must_be_6 = @_io.ensure_fixed_contents([6, 0, 0, 0].pack('C*'))
@@ -80,6 +87,7 @@ class QuakeMdl < Kaitai::Struct::Struct
       @synctype = @_io.read_s4le
       @flags = @_io.read_s4le
       @size = @_io.read_f4le
+      self
     end
     def version
       return @version unless @version.nil?
@@ -112,6 +120,7 @@ class QuakeMdl < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @group = @_io.read_s4le
       if group == 0
@@ -132,6 +141,7 @@ class QuakeMdl < Kaitai::Struct::Struct
           @group_texture_data[i] = @_io.read_bytes(_root.header.skin_size)
         }
       end
+      self
     end
     attr_reader :group
     attr_reader :single_texture_data
@@ -144,6 +154,7 @@ class QuakeMdl < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @type = @_io.read_s4le
       if type != 0
@@ -162,6 +173,7 @@ class QuakeMdl < Kaitai::Struct::Struct
       (num_simple_frames).times { |i|
         @frames[i] = MdlSimpleFrame.new(@_io, self, @_root)
       }
+      self
     end
     def num_simple_frames
       return @num_simple_frames unless @num_simple_frames.nil?
@@ -179,6 +191,7 @@ class QuakeMdl < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @bbox_min = MdlVertex.new(@_io, self, @_root)
       @bbox_max = MdlVertex.new(@_io, self, @_root)
@@ -187,6 +200,7 @@ class QuakeMdl < Kaitai::Struct::Struct
       (_root.header.num_verts).times { |i|
         @vertices[i] = MdlVertex.new(@_io, self, @_root)
       }
+      self
     end
     attr_reader :bbox_min
     attr_reader :bbox_max
@@ -198,12 +212,14 @@ class QuakeMdl < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @faces_front = @_io.read_s4le
       @vertices = Array.new(3)
       (3).times { |i|
         @vertices[i] = @_io.read_s4le
       }
+      self
     end
     attr_reader :faces_front
     attr_reader :vertices
@@ -213,10 +229,12 @@ class QuakeMdl < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x = @_io.read_f4le
       @y = @_io.read_f4le
       @z = @_io.read_f4le
+      self
     end
     attr_reader :x
     attr_reader :y

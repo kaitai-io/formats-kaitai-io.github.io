@@ -12,26 +12,17 @@ public class HeroesOfMightAndMagicAgg extends KaitaiStruct {
     }
 
     public HeroesOfMightAndMagicAgg(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public HeroesOfMightAndMagicAgg(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public HeroesOfMightAndMagicAgg(KaitaiStream _io, KaitaiStruct _parent, HeroesOfMightAndMagicAgg _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -47,24 +38,17 @@ public class HeroesOfMightAndMagicAgg extends KaitaiStruct {
         }
 
         public Entry(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Entry(KaitaiStream _io, HeroesOfMightAndMagicAgg _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Entry(KaitaiStream _io, HeroesOfMightAndMagicAgg _parent, HeroesOfMightAndMagicAgg _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -102,24 +86,17 @@ public class HeroesOfMightAndMagicAgg extends KaitaiStruct {
         }
 
         public Filename(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Filename(KaitaiStream _io, HeroesOfMightAndMagicAgg _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Filename(KaitaiStream _io, HeroesOfMightAndMagicAgg _parent, HeroesOfMightAndMagicAgg _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

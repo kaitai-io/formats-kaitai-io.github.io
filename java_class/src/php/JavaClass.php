@@ -1,9 +1,6 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-/**
- */
-
 class JavaClass extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \JavaClass $root = null) {
         parent::__construct($io, $parent, $root);
@@ -82,9 +79,6 @@ class JavaClass extends \Kaitai\Struct\Struct {
     public function attributes() { return $this->_m_attributes; }
 }
 
-/**
- */
-
 namespace \JavaClass;
 
 class FloatCpInfo extends \Kaitai\Struct\Struct {
@@ -99,9 +93,6 @@ class FloatCpInfo extends \Kaitai\Struct\Struct {
     protected $_m_value;
     public function value() { return $this->_m_value; }
 }
-
-/**
- */
 
 namespace \JavaClass;
 
@@ -157,9 +148,6 @@ class AttributeInfo extends \Kaitai\Struct\Struct {
     public function _raw_info() { return $this->_m__raw_info; }
 }
 
-/**
- */
-
 namespace \JavaClass\AttributeInfo;
 
 class AttrBodyCode extends \Kaitai\Struct\Struct {
@@ -203,9 +191,6 @@ class AttrBodyCode extends \Kaitai\Struct\Struct {
     public function attributesCount() { return $this->_m_attributesCount; }
     public function attributes() { return $this->_m_attributes; }
 }
-
-/**
- */
 
 namespace \JavaClass\AttributeInfo\AttrBodyCode;
 
@@ -260,9 +245,6 @@ class ExceptionEntry extends \Kaitai\Struct\Struct {
     public function catchType() { return $this->_m_catchType; }
 }
 
-/**
- */
-
 namespace \JavaClass\AttributeInfo;
 
 class AttrBodyExceptions extends \Kaitai\Struct\Struct {
@@ -314,9 +296,6 @@ class ExceptionTableEntry extends \Kaitai\Struct\Struct {
     public function index() { return $this->_m_index; }
 }
 
-/**
- */
-
 namespace \JavaClass\AttributeInfo;
 
 class AttrBodySourceFile extends \Kaitai\Struct\Struct {
@@ -338,9 +317,6 @@ class AttrBodySourceFile extends \Kaitai\Struct\Struct {
     protected $_m_sourcefileIndex;
     public function sourcefileIndex() { return $this->_m_sourcefileIndex; }
 }
-
-/**
- */
 
 namespace \JavaClass\AttributeInfo;
 
@@ -382,9 +358,6 @@ class LineNumberTableEntry extends \Kaitai\Struct\Struct {
     public function lineNumber() { return $this->_m_lineNumber; }
 }
 
-/**
- */
-
 namespace \JavaClass;
 
 class MethodRefCpInfo extends \Kaitai\Struct\Struct {
@@ -416,9 +389,6 @@ class MethodRefCpInfo extends \Kaitai\Struct\Struct {
     public function classIndex() { return $this->_m_classIndex; }
     public function nameAndTypeIndex() { return $this->_m_nameAndTypeIndex; }
 }
-
-/**
- */
 
 namespace \JavaClass;
 
@@ -458,9 +428,6 @@ class FieldInfo extends \Kaitai\Struct\Struct {
     public function attributes() { return $this->_m_attributes; }
 }
 
-/**
- */
-
 namespace \JavaClass;
 
 class DoubleCpInfo extends \Kaitai\Struct\Struct {
@@ -476,9 +443,6 @@ class DoubleCpInfo extends \Kaitai\Struct\Struct {
     public function value() { return $this->_m_value; }
 }
 
-/**
- */
-
 namespace \JavaClass;
 
 class LongCpInfo extends \Kaitai\Struct\Struct {
@@ -493,9 +457,6 @@ class LongCpInfo extends \Kaitai\Struct\Struct {
     protected $_m_value;
     public function value() { return $this->_m_value; }
 }
-
-/**
- */
 
 namespace \JavaClass;
 
@@ -514,9 +475,6 @@ class InvokeDynamicCpInfo extends \Kaitai\Struct\Struct {
     public function bootstrapMethodAttrIndex() { return $this->_m_bootstrapMethodAttrIndex; }
     public function nameAndTypeIndex() { return $this->_m_nameAndTypeIndex; }
 }
-
-/**
- */
 
 namespace \JavaClass;
 
@@ -549,9 +507,6 @@ class ReferenceKindEnum {
     const NEW_INVOKE_SPECIAL = 8;
     const INVOKE_INTERFACE = 9;
 }
-
-/**
- */
 
 namespace \JavaClass;
 
@@ -599,9 +554,6 @@ class NameAndTypeCpInfo extends \Kaitai\Struct\Struct {
     public function descriptorIndex() { return $this->_m_descriptorIndex; }
 }
 
-/**
- */
-
 namespace \JavaClass;
 
 class Utf8CpInfo extends \Kaitai\Struct\Struct {
@@ -620,9 +572,6 @@ class Utf8CpInfo extends \Kaitai\Struct\Struct {
     public function value() { return $this->_m_value; }
 }
 
-/**
- */
-
 namespace \JavaClass;
 
 class StringCpInfo extends \Kaitai\Struct\Struct {
@@ -638,9 +587,6 @@ class StringCpInfo extends \Kaitai\Struct\Struct {
     public function stringIndex() { return $this->_m_stringIndex; }
 }
 
-/**
- */
-
 namespace \JavaClass;
 
 class MethodTypeCpInfo extends \Kaitai\Struct\Struct {
@@ -655,9 +601,6 @@ class MethodTypeCpInfo extends \Kaitai\Struct\Struct {
     protected $_m_descriptorIndex;
     public function descriptorIndex() { return $this->_m_descriptorIndex; }
 }
-
-/**
- */
 
 namespace \JavaClass;
 
@@ -691,9 +634,6 @@ class InterfaceMethodRefCpInfo extends \Kaitai\Struct\Struct {
     public function nameAndTypeIndex() { return $this->_m_nameAndTypeIndex; }
 }
 
-/**
- */
-
 namespace \JavaClass;
 
 class ClassCpInfo extends \Kaitai\Struct\Struct {
@@ -722,9 +662,6 @@ class ClassCpInfo extends \Kaitai\Struct\Struct {
     protected $_m_nameIndex;
     public function nameIndex() { return $this->_m_nameIndex; }
 }
-
-/**
- */
 
 namespace \JavaClass;
 
@@ -806,9 +743,6 @@ class TagEnum {
     const INVOKE_DYNAMIC = 18;
 }
 
-/**
- */
-
 namespace \JavaClass;
 
 class MethodInfo extends \Kaitai\Struct\Struct {
@@ -847,9 +781,6 @@ class MethodInfo extends \Kaitai\Struct\Struct {
     public function attributes() { return $this->_m_attributes; }
 }
 
-/**
- */
-
 namespace \JavaClass;
 
 class IntegerCpInfo extends \Kaitai\Struct\Struct {
@@ -864,9 +795,6 @@ class IntegerCpInfo extends \Kaitai\Struct\Struct {
     protected $_m_value;
     public function value() { return $this->_m_value; }
 }
-
-/**
- */
 
 namespace \JavaClass;
 

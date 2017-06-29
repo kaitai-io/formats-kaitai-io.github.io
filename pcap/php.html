@@ -116,6 +116,10 @@ section#format-index .row {
                         <h3 class="panel-title">KS implementation details</h3>
                     </div>
                     
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
                     
                     <div class="panel-body">
                         Minimal Kaitai Struct required: 0.7
@@ -239,51 +243,6 @@ class Pcap extends \Kaitai\Struct\Struct {
 
 namespace \Pcap;
 
-class PacketPpi extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Pcap\Packet $parent = null, \Pcap $root = null) {
-        parent::__construct($io, $parent, $root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_header = new \Pcap\PacketPpiHeader($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_fields = [];
-        while (!$this-&gt;_io-&gt;isEof()) {
-            $this-&gt;_m_fields[] = new \Pcap\PacketPpiField($this-&gt;_io, $this, $this-&gt;_root);
-        }
-    }
-    protected $_m_header;
-    protected $_m_fields;
-    public function header() { return $this-&gt;_m_header; }
-    public function fields() { return $this-&gt;_m_fields; }
-}
-
-namespace \Pcap;
-
-class PacketPpiHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Pcap\PacketPpi $parent = null, \Pcap $root = null) {
-        parent::__construct($io, $parent, $root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_pphVersion = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_pphFlags = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_pphLen = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_pphDlt = $this-&gt;_io-&gt;readU4le();
-    }
-    protected $_m_pphVersion;
-    protected $_m_pphFlags;
-    protected $_m_pphLen;
-    protected $_m_pphDlt;
-    public function pphVersion() { return $this-&gt;_m_pphVersion; }
-    public function pphFlags() { return $this-&gt;_m_pphFlags; }
-    public function pphLen() { return $this-&gt;_m_pphLen; }
-    public function pphDlt() { return $this-&gt;_m_pphDlt; }
-}
-
-namespace \Pcap;
-
 class Header extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $io, \Pcap $parent = null, \Pcap $root = null) {
         parent::__construct($io, $parent, $root);
@@ -338,66 +297,6 @@ class Header extends \Kaitai\Struct\Struct {
 
 namespace \Pcap;
 
-class Radio80211CommonBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Pcap $root = null) {
-        parent::__construct($io, $parent, $root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_tsfTimer = $this-&gt;_io-&gt;readU8le();
-        $this-&gt;_m_flags = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_rate = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_channelFreq = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_channelFlags = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_fhssHopset = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_fhssPattern = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_dbmAntsignal = $this-&gt;_io-&gt;readS1();
-        $this-&gt;_m_dbmAntnoise = $this-&gt;_io-&gt;readS1();
-    }
-    protected $_m_tsfTimer;
-    protected $_m_flags;
-    protected $_m_rate;
-    protected $_m_channelFreq;
-    protected $_m_channelFlags;
-    protected $_m_fhssHopset;
-    protected $_m_fhssPattern;
-    protected $_m_dbmAntsignal;
-    protected $_m_dbmAntnoise;
-    public function tsfTimer() { return $this-&gt;_m_tsfTimer; }
-    public function flags() { return $this-&gt;_m_flags; }
-    public function rate() { return $this-&gt;_m_rate; }
-    public function channelFreq() { return $this-&gt;_m_channelFreq; }
-    public function channelFlags() { return $this-&gt;_m_channelFlags; }
-    public function fhssHopset() { return $this-&gt;_m_fhssHopset; }
-    public function fhssPattern() { return $this-&gt;_m_fhssPattern; }
-    public function dbmAntsignal() { return $this-&gt;_m_dbmAntsignal; }
-    public function dbmAntnoise() { return $this-&gt;_m_dbmAntnoise; }
-}
-
-namespace \Pcap;
-
-class PacketPpiField extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Pcap\PacketPpi $parent = null, \Pcap $root = null) {
-        parent::__construct($io, $parent, $root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_pfhType = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_pfhDatalen = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;pfhDatalen());
-    }
-    protected $_m_pfhType;
-    protected $_m_pfhDatalen;
-    protected $_m_body;
-    public function pfhType() { return $this-&gt;_m_pfhType; }
-    public function pfhDatalen() { return $this-&gt;_m_pfhDatalen; }
-    public function body() { return $this-&gt;_m_body; }
-}
-
-namespace \Pcap;
-
 class Packet extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $io, \Pcap $parent = null, \Pcap $root = null) {
         parent::__construct($io, $parent, $root);
@@ -413,7 +312,7 @@ class Packet extends \Kaitai\Struct\Struct {
             case \Pcap\Linktype::PPI:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;inclLen());
                 $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \Pcap\PacketPpi($io, $this, $this-&gt;_root);
+                $this-&gt;_m_body = new \PacketPpi($io);
                 break;
             case \Pcap\Linktype::ETHERNET:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;inclLen());
@@ -554,17 +453,6 @@ class Linktype {
     const ZWAVE_R3 = 262;
     const WATTSTOPPER_DLM = 263;
     const ISO_14443 = 264;
-}
-
-namespace \Pcap;
-
-class PfhType {
-    const RADIO_802_11_COMMON = 2;
-    const RADIO_802_11N_MAC_EXT = 3;
-    const RADIO_802_11N_MAC_PHY_EXT = 4;
-    const SPECTRUM_MAP = 5;
-    const PROCESS_INFO = 6;
-    const CAPTURE_INFO = 7;
 }
 </code></pre>
             

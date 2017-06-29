@@ -18,16 +18,20 @@ class Fallout2Dat < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
+    self
   end
   class Pstr < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @size = @_io.read_u4le
       @str = (@_io.read_bytes(size)).force_encoding("ASCII")
+      self
     end
     attr_reader :size
     attr_reader :str
@@ -37,9 +41,11 @@ class Fallout2Dat < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @index_size = @_io.read_u4le
       @file_size = @_io.read_u4le
+      self
     end
     attr_reader :index_size
     attr_reader :file_size
@@ -49,12 +55,14 @@ class Fallout2Dat < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @file_count = @_io.read_u4le
       @files = Array.new(file_count)
       (file_count).times { |i|
         @files[i] = File.new(@_io, self, @_root)
       }
+      self
     end
     attr_reader :file_count
     attr_reader :files
@@ -64,12 +72,14 @@ class Fallout2Dat < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @name = Pstr.new(@_io, self, @_root)
       @flags = Kaitai::Struct::Stream::resolve_enum(COMPRESSION, @_io.read_u1)
       @size_unpacked = @_io.read_u4le
       @size_packed = @_io.read_u4le
       @offset = @_io.read_u4le
+      self
     end
     def contents
       return @contents unless @contents.nil?

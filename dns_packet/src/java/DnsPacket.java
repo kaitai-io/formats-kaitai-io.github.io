@@ -60,26 +60,17 @@ public class DnsPacket extends KaitaiStruct {
     }
 
     public DnsPacket(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public DnsPacket(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public DnsPacket(KaitaiStream _io, KaitaiStruct _parent, DnsPacket _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -104,24 +95,17 @@ public class DnsPacket extends KaitaiStruct {
         }
 
         public PointerStruct(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PointerStruct(KaitaiStream _io, DnsPacket.Label _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PointerStruct(KaitaiStream _io, DnsPacket.Label _parent, DnsPacket _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -155,24 +139,17 @@ public class DnsPacket extends KaitaiStruct {
         }
 
         public Label(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Label(KaitaiStream _io, DnsPacket.DomainName _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Label(KaitaiStream _io, DnsPacket.DomainName _parent, DnsPacket _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -217,24 +194,17 @@ public class DnsPacket extends KaitaiStruct {
         }
 
         public Query(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Query(KaitaiStream _io, DnsPacket _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Query(KaitaiStream _io, DnsPacket _parent, DnsPacket _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -259,24 +229,17 @@ public class DnsPacket extends KaitaiStruct {
         }
 
         public DomainName(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DomainName(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DomainName(KaitaiStream _io, KaitaiStruct _parent, DnsPacket _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -306,24 +269,17 @@ public class DnsPacket extends KaitaiStruct {
         }
 
         public Address(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Address(KaitaiStream _io, DnsPacket.Answer _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Address(KaitaiStream _io, DnsPacket.Answer _parent, DnsPacket _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -345,24 +301,17 @@ public class DnsPacket extends KaitaiStruct {
         }
 
         public Answer(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Answer(KaitaiStream _io, DnsPacket _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Answer(KaitaiStream _io, DnsPacket _parent, DnsPacket _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -411,24 +360,17 @@ public class DnsPacket extends KaitaiStruct {
         }
 
         public PacketFlags(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PacketFlags(KaitaiStream _io, DnsPacket _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PacketFlags(KaitaiStream _io, DnsPacket _parent, DnsPacket _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

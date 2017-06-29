@@ -11,21 +11,25 @@ class DoomWad < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @magic = (@_io.read_bytes(4)).force_encoding("ASCII")
     @num_index_entries = @_io.read_s4le
     @index_offset = @_io.read_s4le
+    self
   end
   class Sectors < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       while not @_io.eof?
         @entries << Sector.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :entries
   end
@@ -34,9 +38,11 @@ class DoomWad < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x = @_io.read_s2le
       @y = @_io.read_s2le
+      self
     end
     attr_reader :x
     attr_reader :y
@@ -54,20 +60,24 @@ class DoomWad < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @num_textures = @_io.read_s4le
       @textures = Array.new(num_textures)
       (num_textures).times { |i|
         @textures[i] = TextureIndex.new(@_io, self, @_root)
       }
+      self
     end
     class TextureIndex < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @offset = @_io.read_s4le
+        self
       end
       def body
         return @body unless @body.nil?
@@ -84,6 +94,7 @@ class DoomWad < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @name = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 0)).force_encoding("ASCII")
         @masked = @_io.read_u4le
@@ -95,6 +106,7 @@ class DoomWad < Kaitai::Struct::Struct
         (num_patches).times { |i|
           @patches[i] = Patch.new(@_io, self, @_root)
         }
+        self
       end
 
       ##
@@ -118,12 +130,14 @@ class DoomWad < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @origin_x = @_io.read_s2le
         @origin_y = @_io.read_s2le
         @patch_id = @_io.read_u2le
         @step_dir = @_io.read_u2le
         @colormap = @_io.read_u2le
+        self
       end
 
       ##
@@ -151,6 +165,7 @@ class DoomWad < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @vertex_start_idx = @_io.read_u2le
       @vertex_end_idx = @_io.read_u2le
@@ -159,6 +174,7 @@ class DoomWad < Kaitai::Struct::Struct
       @sector_tag = @_io.read_u2le
       @sidedef_right_idx = @_io.read_u2le
       @sidedef_left_idx = @_io.read_u2le
+      self
     end
     attr_reader :vertex_start_idx
     attr_reader :vertex_end_idx
@@ -176,12 +192,14 @@ class DoomWad < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @num_patches = @_io.read_u4le
       @names = Array.new(num_patches)
       (num_patches).times { |i|
         @names[i] = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 0)).force_encoding("ASCII")
       }
+      self
     end
 
     ##
@@ -194,12 +212,14 @@ class DoomWad < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x = @_io.read_s2le
       @y = @_io.read_s2le
       @angle = @_io.read_u2le
       @type = @_io.read_u2le
       @flags = @_io.read_u2le
+      self
     end
     attr_reader :x
     attr_reader :y
@@ -240,6 +260,7 @@ class DoomWad < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @floor_z = @_io.read_s2le
       @ceil_z = @_io.read_s2le
@@ -248,6 +269,7 @@ class DoomWad < Kaitai::Struct::Struct
       @light = @_io.read_s2le
       @special_type = Kaitai::Struct::Stream::resolve_enum(SPECIAL_SECTOR, @_io.read_u2le)
       @tag = @_io.read_u2le
+      self
     end
     attr_reader :floor_z
     attr_reader :ceil_z
@@ -271,11 +293,13 @@ class DoomWad < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       while not @_io.eof?
         @entries << Vertex.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :entries
   end
@@ -284,6 +308,7 @@ class DoomWad < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @offset_x = @_io.read_s2le
       @offset_y = @_io.read_s2le
@@ -291,6 +316,7 @@ class DoomWad < Kaitai::Struct::Struct
       @lower_texture_name = (@_io.read_bytes(8)).force_encoding("ASCII")
       @normal_texture_name = (@_io.read_bytes(8)).force_encoding("ASCII")
       @sector_id = @_io.read_s2le
+      self
     end
     attr_reader :offset_x
     attr_reader :offset_y
@@ -304,11 +330,13 @@ class DoomWad < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       while not @_io.eof?
         @entries << Thing.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :entries
   end
@@ -317,11 +345,13 @@ class DoomWad < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       while not @_io.eof?
         @entries << Linedef.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :entries
   end
@@ -330,10 +360,12 @@ class DoomWad < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @offset = @_io.read_s4le
       @size = @_io.read_s4le
       @name = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 0)).force_encoding("ASCII")
+      self
     end
     def contents
       return @contents unless @contents.nil?
@@ -393,11 +425,13 @@ class DoomWad < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       while not @_io.eof?
         @entries << Sidedef.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :entries
   end
@@ -406,6 +440,7 @@ class DoomWad < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @origin_x = @_io.read_s2le
       @origin_y = @_io.read_s2le
@@ -415,14 +450,17 @@ class DoomWad < Kaitai::Struct::Struct
       ((num_cols * num_rows)).times { |i|
         @linedefs_in_block[i] = Blocklist.new(@_io, self, @_root)
       }
+      self
     end
     class Blocklist < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @offset = @_io.read_u2le
+        self
       end
 
       ##

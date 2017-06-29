@@ -11,6 +11,7 @@ class Edid < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @magic = @_io.ensure_fixed_contents([0, 255, 255, 255, 255, 255, 255, 0].pack('C*'))
     @mfg_bytes = @_io.read_u2le
@@ -26,6 +27,7 @@ class Edid < Kaitai::Struct::Struct
     @gamma_mod = @_io.read_u1
     @features_flags = @_io.read_u1
     @chromacity = @_io.read_bytes(10)
+    self
   end
   def mfg_year
     return @mfg_year unless @mfg_year.nil?

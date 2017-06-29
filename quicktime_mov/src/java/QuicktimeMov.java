@@ -169,26 +169,17 @@ public class QuicktimeMov extends KaitaiStruct {
     }
 
     public QuicktimeMov(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public QuicktimeMov(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public QuicktimeMov(KaitaiStream _io, KaitaiStruct _parent, QuicktimeMov _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -200,24 +191,17 @@ public class QuicktimeMov extends KaitaiStruct {
         }
 
         public MvhdBody(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MvhdBody(KaitaiStream _io, QuicktimeMov.Atom _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MvhdBody(KaitaiStream _io, QuicktimeMov.Atom _parent, QuicktimeMov _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -336,24 +320,17 @@ public class QuicktimeMov extends KaitaiStruct {
         }
 
         public FtypBody(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public FtypBody(KaitaiStream _io, QuicktimeMov.Atom _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public FtypBody(KaitaiStream _io, QuicktimeMov.Atom _parent, QuicktimeMov _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -381,24 +358,17 @@ public class QuicktimeMov extends KaitaiStruct {
         }
 
         public Fixed32(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Fixed32(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Fixed32(KaitaiStream _io, KaitaiStruct _parent, QuicktimeMov _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -420,24 +390,17 @@ public class QuicktimeMov extends KaitaiStruct {
         }
 
         public Fixed16(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Fixed16(KaitaiStream _io, QuicktimeMov.MvhdBody _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Fixed16(KaitaiStream _io, QuicktimeMov.MvhdBody _parent, QuicktimeMov _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -459,24 +422,17 @@ public class QuicktimeMov extends KaitaiStruct {
         }
 
         public Atom(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Atom(KaitaiStream _io, QuicktimeMov.AtomList _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Atom(KaitaiStream _io, QuicktimeMov.AtomList _parent, QuicktimeMov _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -587,24 +543,17 @@ public class QuicktimeMov extends KaitaiStruct {
         }
 
         public TkhdBody(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public TkhdBody(KaitaiStream _io, QuicktimeMov.Atom _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public TkhdBody(KaitaiStream _io, QuicktimeMov.Atom _parent, QuicktimeMov _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -669,24 +618,17 @@ public class QuicktimeMov extends KaitaiStruct {
         }
 
         public AtomList(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public AtomList(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public AtomList(KaitaiStream _io, KaitaiStruct _parent, QuicktimeMov _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

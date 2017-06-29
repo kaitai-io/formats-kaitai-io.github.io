@@ -147,22 +147,26 @@ class Warcraft2Pud < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @sections = []
     while not @_io.eof?
       @sections << Section.new(@_io, self, @_root)
     end
+    self
   end
   class SectionStartingResource < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @resources_by_player = []
       while not @_io.eof?
         @resources_by_player << @_io.read_u2le
       end
+      self
     end
     attr_reader :resources_by_player
   end
@@ -174,8 +178,10 @@ class Warcraft2Pud < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @terrain = Kaitai::Struct::Stream::resolve_enum(TERRAIN_TYPE, @_io.read_u2le)
+      self
     end
     attr_reader :terrain
   end
@@ -187,8 +193,10 @@ class Warcraft2Pud < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @version = @_io.read_u2le
+      self
     end
     attr_reader :version
   end
@@ -197,9 +205,11 @@ class Warcraft2Pud < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x = @_io.read_u2le
       @y = @_io.read_u2le
+      self
     end
     attr_reader :x
     attr_reader :y
@@ -215,10 +225,12 @@ class Warcraft2Pud < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = @_io.ensure_fixed_contents([87, 65, 82, 50, 32, 77, 65, 80, 0, 0].pack('C*'))
       @unused = @_io.read_bytes(2)
       @id_tag = @_io.read_u4le
+      self
     end
     attr_reader :magic
 
@@ -235,11 +247,13 @@ class Warcraft2Pud < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @units = []
       while not @_io.eof?
         @units << Unit.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :units
   end
@@ -248,6 +262,7 @@ class Warcraft2Pud < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @name = (@_io.read_bytes(4)).force_encoding("ASCII")
       @size = @_io.read_u4le
@@ -295,6 +310,7 @@ class Warcraft2Pud < Kaitai::Struct::Struct
       else
         @body = @_io.read_bytes(size)
       end
+      self
     end
     attr_reader :name
     attr_reader :size
@@ -309,11 +325,13 @@ class Warcraft2Pud < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @controller_by_player = []
       while not @_io.eof?
         @controller_by_player << Kaitai::Struct::Stream::resolve_enum(CONTROLLER, @_io.read_u1)
       end
+      self
     end
     attr_reader :controller_by_player
   end
@@ -322,12 +340,14 @@ class Warcraft2Pud < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x = @_io.read_u2le
       @y = @_io.read_u2le
       @u_type = Kaitai::Struct::Stream::resolve_enum(UNIT_TYPE, @_io.read_u1)
       @owner = @_io.read_u1
       @options = @_io.read_u2le
+      self
     end
     def resource
       return @resource unless @resource.nil?

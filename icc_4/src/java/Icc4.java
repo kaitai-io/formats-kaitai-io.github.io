@@ -14,26 +14,17 @@ public class Icc4 extends KaitaiStruct {
     }
 
     public Icc4(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Icc4(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Icc4(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -46,24 +37,17 @@ public class Icc4 extends KaitaiStruct {
         }
 
         public U8Fixed8Number(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public U8Fixed8Number(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public U8Fixed8Number(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -82,24 +66,17 @@ public class Icc4 extends KaitaiStruct {
         }
 
         public U16Fixed16Number(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public U16Fixed16Number(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public U16Fixed16Number(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -140,24 +117,17 @@ public class Icc4 extends KaitaiStruct {
         }
 
         public StandardIlluminantEncoding(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public StandardIlluminantEncoding(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public StandardIlluminantEncoding(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -305,24 +275,17 @@ public class Icc4 extends KaitaiStruct {
         }
 
         public ProfileHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ProfileHeader(KaitaiStream _io, Icc4 _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ProfileHeader(KaitaiStream _io, Icc4 _parent, Icc4 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -351,24 +314,17 @@ public class Icc4 extends KaitaiStruct {
             }
 
             public VersionField(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public VersionField(KaitaiStream _io, Icc4.ProfileHeader _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public VersionField(KaitaiStream _io, Icc4.ProfileHeader _parent, Icc4 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -397,24 +353,17 @@ public class Icc4 extends KaitaiStruct {
             }
 
             public ProfileFlags(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public ProfileFlags(KaitaiStream _io, Icc4.ProfileHeader _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public ProfileFlags(KaitaiStream _io, Icc4.ProfileHeader _parent, Icc4 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -480,24 +429,17 @@ public class Icc4 extends KaitaiStruct {
         }
 
         public XyzNumber(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public XyzNumber(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public XyzNumber(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -522,24 +464,17 @@ public class Icc4 extends KaitaiStruct {
         }
 
         public DateTimeNumber(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DateTimeNumber(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DateTimeNumber(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -573,24 +508,17 @@ public class Icc4 extends KaitaiStruct {
         }
 
         public Response16Number(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Response16Number(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Response16Number(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -615,24 +543,17 @@ public class Icc4 extends KaitaiStruct {
         }
 
         public U1Fixed15Number(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public U1Fixed15Number(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public U1Fixed15Number(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -651,24 +572,17 @@ public class Icc4 extends KaitaiStruct {
         }
 
         public TagTable(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public TagTable(KaitaiStream _io, Icc4 _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public TagTable(KaitaiStream _io, Icc4 _parent, Icc4 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -806,24 +720,17 @@ public class Icc4 extends KaitaiStruct {
             }
 
             public TagDefinition(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public TagDefinition(KaitaiStream _io, Icc4.TagTable _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public TagDefinition(KaitaiStream _io, Icc4.TagTable _parent, Icc4 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -837,24 +744,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public BlueMatrixColumnTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public BlueMatrixColumnTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public BlueMatrixColumnTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -881,24 +781,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public DeviceMfgDescTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public DeviceMfgDescTag(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public DeviceMfgDescTag(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -925,24 +818,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public NamedColor2Type(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public NamedColor2Type(KaitaiStream _io, Icc4.TagTable.TagDefinition.NamedColor2Tag _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public NamedColor2Type(KaitaiStream _io, Icc4.TagTable.TagDefinition.NamedColor2Tag _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -971,24 +857,17 @@ public class Icc4 extends KaitaiStruct {
                     }
 
                     public NamedColourDefinition(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public NamedColourDefinition(KaitaiStream _io, Icc4.TagTable.TagDefinition.NamedColor2Type _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public NamedColourDefinition(KaitaiStream _io, Icc4.TagTable.TagDefinition.NamedColor2Type _parent, Icc4 _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {
@@ -1047,24 +926,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ViewingConditionsTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ViewingConditionsTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ViewingConditionsTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1091,24 +963,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public BlueTrcTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public BlueTrcTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public BlueTrcTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1139,24 +1004,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ResponseCurveSet16Type(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ResponseCurveSet16Type(KaitaiStream _io, Icc4.TagTable.TagDefinition.OutputResponseTag _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ResponseCurveSet16Type(KaitaiStream _io, Icc4.TagTable.TagDefinition.OutputResponseTag _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1190,24 +1048,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public CurveType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public CurveType(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public CurveType(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1242,24 +1093,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public SaturationRenderingIntentGamutTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public SaturationRenderingIntentGamutTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public SaturationRenderingIntentGamutTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1286,24 +1130,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public XyzType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public XyzType(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public XyzType(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1328,24 +1165,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public Lut8Type(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public Lut8Type(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public Lut8Type(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1397,24 +1227,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public BToA2Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public BToA2Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public BToA2Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1449,24 +1272,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public LutAToBType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public LutAToBType(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public LutAToBType(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1512,24 +1328,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public BToA0Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public BToA0Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public BToA0Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1564,24 +1373,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public MediaWhitePointTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public MediaWhitePointTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public MediaWhitePointTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1608,24 +1410,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public Lut16Type(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public Lut16Type(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public Lut16Type(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1677,24 +1472,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public PerceptualRenderingIntentGamutTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public PerceptualRenderingIntentGamutTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public PerceptualRenderingIntentGamutTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1721,24 +1509,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public U16Fixed16ArrayType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public U16Fixed16ArrayType(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public U16Fixed16ArrayType(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1763,24 +1544,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ColorantTableOutTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ColorantTableOutTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ColorantTableOutTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1807,24 +1581,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public MeasurementTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public MeasurementTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public MeasurementTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1851,24 +1618,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ProfileSequenceTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ProfileSequenceTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ProfileSequenceTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1895,24 +1655,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public TechnologyTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public TechnologyTag(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public TechnologyTag(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1939,24 +1692,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public AToB0Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public AToB0Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public AToB0Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1991,24 +1737,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public DToB0Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public DToB0Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public DToB0Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2035,24 +1774,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public OutputResponseTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public OutputResponseTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public OutputResponseTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2079,24 +1811,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public GreenMatrixColumnTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public GreenMatrixColumnTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public GreenMatrixColumnTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2123,24 +1848,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ProfileDescriptionTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ProfileDescriptionTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ProfileDescriptionTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2167,24 +1885,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public Preview1Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public Preview1Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public Preview1Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2219,24 +1930,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public RedTrcTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public RedTrcTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public RedTrcTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2267,24 +1971,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public BToD0Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public BToD0Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public BToD0Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2311,24 +2008,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public DToB1Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public DToB1Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public DToB1Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2355,24 +2045,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public BToA1Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public BToA1Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public BToA1Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2425,24 +2108,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ParametricCurveType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ParametricCurveType(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ParametricCurveType(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2478,24 +2154,17 @@ public class Icc4 extends KaitaiStruct {
                     }
 
                     public ParamsIec619663(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public ParamsIec619663(KaitaiStream _io, Icc4.TagTable.TagDefinition.ParametricCurveType _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public ParamsIec619663(KaitaiStream _io, Icc4.TagTable.TagDefinition.ParametricCurveType _parent, Icc4 _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {
@@ -2523,24 +2192,17 @@ public class Icc4 extends KaitaiStruct {
                     }
 
                     public ParamsIec6196621(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public ParamsIec6196621(KaitaiStream _io, Icc4.TagTable.TagDefinition.ParametricCurveType _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public ParamsIec6196621(KaitaiStream _io, Icc4.TagTable.TagDefinition.ParametricCurveType _parent, Icc4 _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {
@@ -2571,24 +2233,17 @@ public class Icc4 extends KaitaiStruct {
                     }
 
                     public ParamsYEqualsXToPowerOfG(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public ParamsYEqualsXToPowerOfG(KaitaiStream _io, Icc4.TagTable.TagDefinition.ParametricCurveType _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public ParamsYEqualsXToPowerOfG(KaitaiStream _io, Icc4.TagTable.TagDefinition.ParametricCurveType _parent, Icc4 _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {
@@ -2607,24 +2262,17 @@ public class Icc4 extends KaitaiStruct {
                     }
 
                     public ParamsYEqualsObAxPlusBCbToPowerOfGPlusC(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public ParamsYEqualsObAxPlusBCbToPowerOfGPlusC(KaitaiStream _io, Icc4.TagTable.TagDefinition.ParametricCurveType _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public ParamsYEqualsObAxPlusBCbToPowerOfGPlusC(KaitaiStream _io, Icc4.TagTable.TagDefinition.ParametricCurveType _parent, Icc4 _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {
@@ -2661,24 +2309,17 @@ public class Icc4 extends KaitaiStruct {
                     }
 
                     public ParamsCie1221996(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public ParamsCie1221996(KaitaiStream _io, Icc4.TagTable.TagDefinition.ParametricCurveType _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public ParamsCie1221996(KaitaiStream _io, Icc4.TagTable.TagDefinition.ParametricCurveType _parent, Icc4 _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {
@@ -2716,24 +2357,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ChromaticityTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ChromaticityTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ChromaticityTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2760,24 +2394,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ChromaticAdaptationTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ChromaticAdaptationTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ChromaticAdaptationTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2851,24 +2478,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public MeasurementType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public MeasurementType(KaitaiStream _io, Icc4.TagTable.TagDefinition.MeasurementTag _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public MeasurementType(KaitaiStream _io, Icc4.TagTable.TagDefinition.MeasurementTag _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2902,24 +2522,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public TextType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public TextType(KaitaiStream _io, Icc4.TagTable.TagDefinition.CharTargetTag _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public TextType(KaitaiStream _io, Icc4.TagTable.TagDefinition.CharTargetTag _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2941,24 +2554,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ProfileSequenceIdentifierType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ProfileSequenceIdentifierType(KaitaiStream _io, Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierTag _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ProfileSequenceIdentifierType(KaitaiStream _io, Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierTag _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2979,24 +2585,17 @@ public class Icc4 extends KaitaiStruct {
                     }
 
                     public ProfileIdentifier(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public ProfileIdentifier(KaitaiStream _io, Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierType _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public ProfileIdentifier(KaitaiStream _io, Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierType _parent, Icc4 _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {
@@ -3031,24 +2630,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ColorantTableType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ColorantTableType(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ColorantTableType(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3065,24 +2657,17 @@ public class Icc4 extends KaitaiStruct {
                     }
 
                     public Colorant(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public Colorant(KaitaiStream _io, Icc4.TagTable.TagDefinition.ColorantTableType _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public Colorant(KaitaiStream _io, Icc4.TagTable.TagDefinition.ColorantTableType _parent, Icc4 _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {
@@ -3121,24 +2706,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public SignatureType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public SignatureType(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public SignatureType(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3160,24 +2738,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public CopyrightTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public CopyrightTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public CopyrightTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3204,24 +2775,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public Preview0Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public Preview0Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public Preview0Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3260,24 +2824,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public DateTimeType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public DateTimeType(KaitaiStream _io, Icc4.TagTable.TagDefinition.CalibrationDateTimeTag _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public DateTimeType(KaitaiStream _io, Icc4.TagTable.TagDefinition.CalibrationDateTimeTag _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3299,24 +2856,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public DToB3Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public DToB3Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public DToB3Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3343,24 +2893,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public Preview2Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public Preview2Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public Preview2Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3395,24 +2938,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public DeviceModelDescTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public DeviceModelDescTag(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public DeviceModelDescTag(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3439,24 +2975,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public MultiProcessElementsType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public MultiProcessElementsType(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public MultiProcessElementsType(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3493,24 +3022,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public UInt16ArrayType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public UInt16ArrayType(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public UInt16ArrayType(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3535,24 +3057,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ColorantOrderTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ColorantOrderTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ColorantOrderTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3594,24 +3109,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public DataType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public DataType(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public DataType(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3648,24 +3156,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ChromaticityType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ChromaticityType(KaitaiStream _io, Icc4.TagTable.TagDefinition.ChromaticityTag _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ChromaticityType(KaitaiStream _io, Icc4.TagTable.TagDefinition.ChromaticityTag _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3683,24 +3184,17 @@ public class Icc4 extends KaitaiStruct {
                     }
 
                     public CiexyCoordinateValues(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public CiexyCoordinateValues(KaitaiStream _io, Icc4.TagTable.TagDefinition.ChromaticityType _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public CiexyCoordinateValues(KaitaiStream _io, Icc4.TagTable.TagDefinition.ChromaticityType _parent, Icc4 _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {
@@ -3735,24 +3229,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public LuminanceTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public LuminanceTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public LuminanceTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3779,24 +3266,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public S15Fixed16ArrayType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public S15Fixed16ArrayType(KaitaiStream _io, Icc4.TagTable.TagDefinition.ChromaticAdaptationTag _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public S15Fixed16ArrayType(KaitaiStream _io, Icc4.TagTable.TagDefinition.ChromaticAdaptationTag _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3821,24 +3301,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public MultiLocalizedUnicodeType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public MultiLocalizedUnicodeType(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public MultiLocalizedUnicodeType(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3856,24 +3329,17 @@ public class Icc4 extends KaitaiStruct {
                     }
 
                     public Record(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public Record(KaitaiStream _io, Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public Record(KaitaiStream _io, Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType _parent, Icc4 _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {
@@ -3924,24 +3390,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public AToB2Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public AToB2Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public AToB2Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -3976,24 +3435,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public AToB1Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public AToB1Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public AToB1Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4028,24 +3480,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ColorimetricIntentImageStateTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ColorimetricIntentImageStateTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ColorimetricIntentImageStateTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4072,24 +3517,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public CharTargetTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public CharTargetTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public CharTargetTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4116,24 +3554,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ColorantTableTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ColorantTableTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ColorantTableTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4160,24 +3591,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public CalibrationDateTimeTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public CalibrationDateTimeTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public CalibrationDateTimeTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4204,24 +3628,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public NamedColor2Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public NamedColor2Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public NamedColor2Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4248,24 +3665,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ViewingCondDescTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ViewingCondDescTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ViewingCondDescTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4292,24 +3702,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public BToD3Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public BToD3Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public BToD3Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4336,24 +3739,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ProfileSequenceDescType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ProfileSequenceDescType(KaitaiStream _io, Icc4.TagTable.TagDefinition.ProfileSequenceTag _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ProfileSequenceDescType(KaitaiStream _io, Icc4.TagTable.TagDefinition.ProfileSequenceTag _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4370,24 +3766,17 @@ public class Icc4 extends KaitaiStruct {
                     }
 
                     public ProfileDescription(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public ProfileDescription(KaitaiStream _io, Icc4.TagTable.TagDefinition.ProfileSequenceDescType _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public ProfileDescription(KaitaiStream _io, Icc4.TagTable.TagDefinition.ProfileSequenceDescType _parent, Icc4 _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {
@@ -4432,24 +3821,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ProfileSequenceIdentifierTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ProfileSequenceIdentifierTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ProfileSequenceIdentifierTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4476,24 +3858,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public BToD1Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public BToD1Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public BToD1Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4520,24 +3895,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ColorantOrderType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ColorantOrderType(KaitaiStream _io, Icc4.TagTable.TagDefinition.ColorantOrderTag _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ColorantOrderType(KaitaiStream _io, Icc4.TagTable.TagDefinition.ColorantOrderTag _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4565,24 +3933,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public DToB2Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public DToB2Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public DToB2Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4609,24 +3970,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public GrayTrcTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public GrayTrcTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public GrayTrcTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4657,24 +4011,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public ViewingConditionsType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public ViewingConditionsType(KaitaiStream _io, Icc4.TagTable.TagDefinition.ViewingConditionsTag _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public ViewingConditionsType(KaitaiStream _io, Icc4.TagTable.TagDefinition.ViewingConditionsTag _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4702,24 +4049,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public LutBToAType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public LutBToAType(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public LutBToAType(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4765,24 +4105,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public GreenTrcTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public GreenTrcTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public GreenTrcTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4813,24 +4146,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public UInt32ArrayType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public UInt32ArrayType(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public UInt32ArrayType(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4855,24 +4181,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public GamutTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public GamutTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public GamutTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4907,24 +4226,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public UInt8ArrayType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public UInt8ArrayType(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public UInt8ArrayType(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4949,24 +4261,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public RedMatrixColumnTag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public RedMatrixColumnTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public RedMatrixColumnTag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -4993,24 +4298,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public UInt64ArrayType(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public UInt64ArrayType(KaitaiStream _io, KaitaiStruct _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public UInt64ArrayType(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -5035,24 +4333,17 @@ public class Icc4 extends KaitaiStruct {
                 }
 
                 public BToD2Tag(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public BToD2Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public BToD2Tag(KaitaiStream _io, Icc4.TagTable.TagDefinition _parent, Icc4 _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -5470,24 +4761,17 @@ public class Icc4 extends KaitaiStruct {
         }
 
         public DeviceAttributes(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DeviceAttributes(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DeviceAttributes(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -5797,24 +5081,17 @@ public class Icc4 extends KaitaiStruct {
         }
 
         public DeviceManufacturer(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DeviceManufacturer(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DeviceManufacturer(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -5833,24 +5110,17 @@ public class Icc4 extends KaitaiStruct {
         }
 
         public S15Fixed16Number(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public S15Fixed16Number(KaitaiStream _io, Icc4.TagTable.TagDefinition.S15Fixed16ArrayType _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public S15Fixed16Number(KaitaiStream _io, Icc4.TagTable.TagDefinition.S15Fixed16ArrayType _parent, Icc4 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -5869,24 +5139,17 @@ public class Icc4 extends KaitaiStruct {
         }
 
         public PositionNumber(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PositionNumber(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PositionNumber(KaitaiStream _io, KaitaiStruct _parent, Icc4 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

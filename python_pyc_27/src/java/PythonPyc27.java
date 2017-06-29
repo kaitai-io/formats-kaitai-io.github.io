@@ -62,26 +62,17 @@ public class PythonPyc27 extends KaitaiStruct {
     }
 
     public PythonPyc27(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public PythonPyc27(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public PythonPyc27(KaitaiStream _io, KaitaiStruct _parent, PythonPyc27 _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -112,24 +103,17 @@ public class PythonPyc27 extends KaitaiStruct {
         }
 
         public CodeObject(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public CodeObject(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public CodeObject(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -187,24 +171,17 @@ public class PythonPyc27 extends KaitaiStruct {
         }
 
         public Assembly(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Assembly(KaitaiStream _io, PythonPyc27.CodeObject _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Assembly(KaitaiStream _io, PythonPyc27.CodeObject _parent, PythonPyc27 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -365,24 +342,17 @@ public class PythonPyc27 extends KaitaiStruct {
         }
 
         public OpArg(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public OpArg(KaitaiStream _io, PythonPyc27.OpArgs _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public OpArg(KaitaiStream _io, PythonPyc27.OpArgs _parent, PythonPyc27 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -429,24 +399,17 @@ public class PythonPyc27 extends KaitaiStruct {
         }
 
         public PyObject(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PyObject(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PyObject(KaitaiStream _io, KaitaiStruct _parent, PythonPyc27 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -496,24 +459,17 @@ public class PythonPyc27 extends KaitaiStruct {
             }
 
             public PyNone(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public PyNone(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public PyNone(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -529,24 +485,17 @@ public class PythonPyc27 extends KaitaiStruct {
             }
 
             public PyFalse(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public PyFalse(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public PyFalse(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -562,24 +511,17 @@ public class PythonPyc27 extends KaitaiStruct {
             }
 
             public StringRef(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public StringRef(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public StringRef(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -598,24 +540,17 @@ public class PythonPyc27 extends KaitaiStruct {
             }
 
             public PyTrue(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public PyTrue(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public PyTrue(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -631,24 +566,17 @@ public class PythonPyc27 extends KaitaiStruct {
             }
 
             public Tuple(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Tuple(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Tuple(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -673,24 +601,17 @@ public class PythonPyc27 extends KaitaiStruct {
             }
 
             public UnicodeString(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public UnicodeString(KaitaiStream _io, KaitaiStruct _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public UnicodeString(KaitaiStream _io, KaitaiStruct _parent, PythonPyc27 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -712,24 +633,17 @@ public class PythonPyc27 extends KaitaiStruct {
             }
 
             public InternedString(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public InternedString(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public InternedString(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -751,24 +665,17 @@ public class PythonPyc27 extends KaitaiStruct {
             }
 
             public PyString(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public PyString(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public PyString(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -799,24 +706,17 @@ public class PythonPyc27 extends KaitaiStruct {
         }
 
         public OpArgs(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public OpArgs(KaitaiStream _io, PythonPyc27.Assembly _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public OpArgs(KaitaiStream _io, PythonPyc27.Assembly _parent, PythonPyc27 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

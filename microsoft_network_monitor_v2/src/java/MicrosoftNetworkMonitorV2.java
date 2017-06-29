@@ -141,26 +141,17 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
     }
 
     public MicrosoftNetworkMonitorV2(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public MicrosoftNetworkMonitorV2(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public MicrosoftNetworkMonitorV2(KaitaiStream _io, KaitaiStruct _parent, MicrosoftNetworkMonitorV2 _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -188,24 +179,17 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
         }
 
         public FrameIndex(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public FrameIndex(KaitaiStream _io, MicrosoftNetworkMonitorV2 _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public FrameIndex(KaitaiStream _io, MicrosoftNetworkMonitorV2 _parent, MicrosoftNetworkMonitorV2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -232,24 +216,17 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
         }
 
         public FrameIndexEntry(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public FrameIndexEntry(KaitaiStream _io, MicrosoftNetworkMonitorV2.FrameIndex _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public FrameIndexEntry(KaitaiStream _io, MicrosoftNetworkMonitorV2.FrameIndex _parent, MicrosoftNetworkMonitorV2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -293,24 +270,17 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
         }
 
         public Frame(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Frame(KaitaiStream _io, MicrosoftNetworkMonitorV2.FrameIndexEntry _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Frame(KaitaiStream _io, MicrosoftNetworkMonitorV2.FrameIndexEntry _parent, MicrosoftNetworkMonitorV2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

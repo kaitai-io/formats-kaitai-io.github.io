@@ -11,6 +11,7 @@ class Stl < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @header = @_io.read_bytes(80)
     @num_triangles = @_io.read_u4le
@@ -18,18 +19,21 @@ class Stl < Kaitai::Struct::Struct
     (num_triangles).times { |i|
       @triangles[i] = Triangle.new(@_io, self, @_root)
     }
+    self
   end
   class Triangle < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @normal = Vec3d.new(@_io, self, @_root)
       @vertices = Array.new(3)
       (3).times { |i|
         @vertices[i] = Vec3d.new(@_io, self, @_root)
       }
+      self
     end
     attr_reader :normal
     attr_reader :vertices
@@ -39,10 +43,12 @@ class Stl < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @x = @_io.read_f4le
       @y = @_io.read_f4le
       @z = @_io.read_f4le
+      self
     end
     attr_reader :x
     attr_reader :y

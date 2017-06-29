@@ -11,20 +11,24 @@ class FtlDat < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @num_files = @_io.read_u4le
     @files = Array.new(num_files)
     (num_files).times { |i|
       @files[i] = File.new(@_io, self, @_root)
     }
+    self
   end
   class File < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @meta_ofs = @_io.read_u4le
+      self
     end
     def meta
       return @meta unless @meta.nil?
@@ -43,11 +47,13 @@ class FtlDat < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @file_size = @_io.read_u4le
       @filename_size = @_io.read_u4le
       @filename = (@_io.read_bytes(filename_size)).force_encoding("UTF-8")
       @body = @_io.read_bytes(file_size)
+      self
     end
     attr_reader :file_size
     attr_reader :filename_size

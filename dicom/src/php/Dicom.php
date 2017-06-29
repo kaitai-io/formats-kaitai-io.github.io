@@ -51,9 +51,6 @@ class TFileHeader extends \Kaitai\Struct\Struct {
     public function magic() { return $this->_m_magic; }
 }
 
-/**
- */
-
 namespace \Dicom;
 
 class TDataElementExplicit extends \Kaitai\Struct\Struct {
@@ -141,9 +138,6 @@ class TDataElementExplicit extends \Kaitai\Struct\Struct {
     public function items() { return $this->_m_items; }
     public function elementsImplicit() { return $this->_m_elementsImplicit; }
 }
-
-/**
- */
 
 namespace \Dicom;
 

@@ -38,6 +38,7 @@ class AvantesRoh60 < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @unknown1 = @_io.read_f4le
     @wlintercept = @_io.read_f4le
@@ -63,6 +64,7 @@ class AvantesRoh60 < Kaitai::Struct::Struct
     (3).times { |i|
       @unknown4[i] = @_io.read_f4le
     }
+    self
   end
   attr_reader :unknown1
   attr_reader :wlintercept

@@ -11,6 +11,7 @@ class TcpSegment < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @src_port = @_io.read_u2be
     @dst_port = @_io.read_u2be
@@ -22,6 +23,7 @@ class TcpSegment < Kaitai::Struct::Struct
     @checksum = @_io.read_u2be
     @urgent_pointer = @_io.read_u2be
     @body = @_io.read_bytes_full
+    self
   end
   attr_reader :src_port
   attr_reader :dst_port

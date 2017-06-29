@@ -25,6 +25,7 @@ class GlibcUtmp < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @_raw_records = []
     @records = []
@@ -33,12 +34,14 @@ class GlibcUtmp < Kaitai::Struct::Struct
       io = Kaitai::Struct::Stream.new(@_raw_records.last)
       @records << Record.new(io, self, @_root)
     end
+    self
   end
   class Record < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @ut_type = Kaitai::Struct::Stream::resolve_enum(ENTRY_TYPE, @_io.read_s4le)
       @pid = @_io.read_u4le
@@ -51,6 +54,7 @@ class GlibcUtmp < Kaitai::Struct::Struct
       @tv = Timeval.new(@_io, self, @_root)
       @addr_v6 = @_io.read_bytes(16)
       @reserved = @_io.read_bytes(20)
+      self
     end
 
     ##
@@ -99,9 +103,11 @@ class GlibcUtmp < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @sec = @_io.read_s4le
       @usec = @_io.read_s4le
+      self
     end
 
     ##

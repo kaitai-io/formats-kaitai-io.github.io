@@ -10,26 +10,17 @@ public class Bmp extends KaitaiStruct {
     }
 
     public Bmp(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Bmp(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Bmp(KaitaiStream _io, KaitaiStruct _parent, Bmp _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -42,24 +33,17 @@ public class Bmp extends KaitaiStruct {
         }
 
         public FileHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public FileHeader(KaitaiStream _io, Bmp _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public FileHeader(KaitaiStream _io, Bmp _parent, Bmp _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -90,24 +74,17 @@ public class Bmp extends KaitaiStruct {
         }
 
         public DibHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DibHeader(KaitaiStream _io, Bmp _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DibHeader(KaitaiStream _io, Bmp _parent, Bmp _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -158,24 +135,17 @@ public class Bmp extends KaitaiStruct {
         }
 
         public BitmapCoreHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BitmapCoreHeader(KaitaiStream _io, Bmp.DibHeader _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BitmapCoreHeader(KaitaiStream _io, Bmp.DibHeader _parent, Bmp _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -203,24 +173,17 @@ public class Bmp extends KaitaiStruct {
         }
 
         public BitmapInfoHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BitmapInfoHeader(KaitaiStream _io, Bmp.DibHeader _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BitmapInfoHeader(KaitaiStream _io, Bmp.DibHeader _parent, Bmp _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

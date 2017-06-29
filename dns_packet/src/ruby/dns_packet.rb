@@ -39,6 +39,7 @@ class DnsPacket < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @transaction_id = @_io.read_u2be
     @flags = PacketFlags.new(@_io, self, @_root)
@@ -54,14 +55,17 @@ class DnsPacket < Kaitai::Struct::Struct
     (ancount).times { |i|
       @answers[i] = Answer.new(@_io, self, @_root)
     }
+    self
   end
   class PointerStruct < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @value = @_io.read_u1
+      self
     end
     def contents
       return @contents unless @contents.nil?
@@ -82,6 +86,7 @@ class DnsPacket < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @length = @_io.read_u1
       if is_pointer
@@ -90,6 +95,7 @@ class DnsPacket < Kaitai::Struct::Struct
       if !(is_pointer)
         @name = (@_io.read_bytes(length)).force_encoding("ASCII")
       end
+      self
     end
     def is_pointer
       return @is_pointer unless @is_pointer.nil?
@@ -111,10 +117,12 @@ class DnsPacket < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @name = DomainName.new(@_io, self, @_root)
       @type = Kaitai::Struct::Stream::resolve_enum(TYPE_TYPE, @_io.read_u2be)
       @query_class = Kaitai::Struct::Stream::resolve_enum(CLASS_TYPE, @_io.read_u2be)
+      self
     end
     attr_reader :name
     attr_reader :type
@@ -125,12 +133,14 @@ class DnsPacket < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @name = []
       begin
         _ = Label.new(@_io, self, @_root)
         @name << _
       end until  ((_.length == 0) || (_.length == 192)) 
+      self
     end
 
     ##
@@ -142,11 +152,13 @@ class DnsPacket < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @ip = Array.new(4)
       (4).times { |i|
         @ip[i] = @_io.read_u1
       }
+      self
     end
     attr_reader :ip
   end
@@ -155,6 +167,7 @@ class DnsPacket < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @name = DomainName.new(@_io, self, @_root)
       @type = Kaitai::Struct::Stream::resolve_enum(TYPE_TYPE, @_io.read_u2be)
@@ -167,6 +180,7 @@ class DnsPacket < Kaitai::Struct::Struct
       if type == :type_type_a
         @address = Address.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :name
     attr_reader :type
@@ -187,8 +201,10 @@ class DnsPacket < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @flag = @_io.read_u2be
+      self
     end
     def qr
       return @qr unless @qr.nil?

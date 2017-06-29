@@ -4,6 +4,7 @@
 
 
 #include "ethernet_frame.h"
+#include "packet_ppi.h"
 
 pcap_t::pcap_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, pcap_t *p_root) : kaitai::kstruct(p_io) {
     m__parent = p_parent;
@@ -27,44 +28,6 @@ pcap_t::~pcap_t() {
     delete m_packets;
 }
 
-pcap_t::packet_ppi_t::packet_ppi_t(kaitai::kstream *p_io, pcap_t::packet_t* p_parent, pcap_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
-    _read();
-}
-
-void pcap_t::packet_ppi_t::_read() {
-    m_header = new packet_ppi_header_t(m__io, this, m__root);
-    m_fields = new std::vector<packet_ppi_field_t*>();
-    while (!m__io->is_eof()) {
-        m_fields->push_back(new packet_ppi_field_t(m__io, this, m__root));
-    }
-}
-
-pcap_t::packet_ppi_t::~packet_ppi_t() {
-    delete m_header;
-    for (std::vector<packet_ppi_field_t*>::iterator it = m_fields->begin(); it != m_fields->end(); ++it) {
-        delete *it;
-    }
-    delete m_fields;
-}
-
-pcap_t::packet_ppi_header_t::packet_ppi_header_t(kaitai::kstream *p_io, pcap_t::packet_ppi_t* p_parent, pcap_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
-    _read();
-}
-
-void pcap_t::packet_ppi_header_t::_read() {
-    m_pph_version = m__io->read_u1();
-    m_pph_flags = m__io->read_u1();
-    m_pph_len = m__io->read_u2le();
-    m_pph_dlt = m__io->read_u4le();
-}
-
-pcap_t::packet_ppi_header_t::~packet_ppi_header_t() {
-}
-
 pcap_t::header_t::header_t(kaitai::kstream *p_io, pcap_t* p_parent, pcap_t *p_root) : kaitai::kstruct(p_io) {
     m__parent = p_parent;
     m__root = p_root;
@@ -84,42 +47,6 @@ void pcap_t::header_t::_read() {
 pcap_t::header_t::~header_t() {
 }
 
-pcap_t::radio_802_11_common_body_t::radio_802_11_common_body_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, pcap_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
-    _read();
-}
-
-void pcap_t::radio_802_11_common_body_t::_read() {
-    m_tsf_timer = m__io->read_u8le();
-    m_flags = m__io->read_u2le();
-    m_rate = m__io->read_u2le();
-    m_channel_freq = m__io->read_u2le();
-    m_channel_flags = m__io->read_u2le();
-    m_fhss_hopset = m__io->read_u1();
-    m_fhss_pattern = m__io->read_u1();
-    m_dbm_antsignal = m__io->read_s1();
-    m_dbm_antnoise = m__io->read_s1();
-}
-
-pcap_t::radio_802_11_common_body_t::~radio_802_11_common_body_t() {
-}
-
-pcap_t::packet_ppi_field_t::packet_ppi_field_t(kaitai::kstream *p_io, pcap_t::packet_ppi_t* p_parent, pcap_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
-    _read();
-}
-
-void pcap_t::packet_ppi_field_t::_read() {
-    m_pfh_type = m__io->read_u2le();
-    m_pfh_datalen = m__io->read_u2le();
-    m_body = m__io->read_bytes(pfh_datalen());
-}
-
-pcap_t::packet_ppi_field_t::~packet_ppi_field_t() {
-}
-
 pcap_t::packet_t::packet_t(kaitai::kstream *p_io, pcap_t* p_parent, pcap_t *p_root) : kaitai::kstruct(p_io) {
     m__parent = p_parent;
     m__root = p_root;
@@ -135,7 +62,7 @@ void pcap_t::packet_t::_read() {
     case LINKTYPE_PPI:
         m__raw_body = m__io->read_bytes(incl_len());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new packet_ppi_t(m__io__raw_body, this, m__root);
+        m_body = new packet_ppi_t(m__io__raw_body);
         break;
     case LINKTYPE_ETHERNET:
         m__raw_body = m__io->read_bytes(incl_len());

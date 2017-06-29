@@ -55,6 +55,7 @@ class Rar < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @magic = MagicSignature.new(@_io, self, @_root)
     @blocks = []
@@ -66,13 +67,16 @@ class Rar < Kaitai::Struct::Struct
         @blocks << BlockV5.new(@_io, self, @_root)
       end
     end
+    self
   end
   class BlockV5 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
+      self
     end
   end
 
@@ -85,6 +89,7 @@ class Rar < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @crc16 = @_io.read_u2le
       @block_type = Kaitai::Struct::Stream::resolve_enum(BLOCK_TYPES, @_io.read_u1)
@@ -104,6 +109,7 @@ class Rar < Kaitai::Struct::Struct
       if has_add
         @add_body = @_io.read_bytes(add_size)
       end
+      self
     end
 
     ##
@@ -149,6 +155,7 @@ class Rar < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @low_unp_size = @_io.read_u4le
       @host_os = Kaitai::Struct::Stream::resolve_enum(OSES, @_io.read_u1)
@@ -165,6 +172,7 @@ class Rar < Kaitai::Struct::Struct
       if (_parent.flags & 1024) != 0
         @salt = @_io.read_u8le
       end
+      self
     end
 
     ##
@@ -216,12 +224,14 @@ class Rar < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic1 = @_io.ensure_fixed_contents([82, 97, 114, 33, 26, 7].pack('C*'))
       @version = @_io.read_u1
       if version == 1
         @magic3 = @_io.ensure_fixed_contents([0].pack('C*'))
       end
+      self
     end
 
     ##
@@ -242,9 +252,11 @@ class Rar < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @time = @_io.read_u2le
       @date = @_io.read_u2le
+      self
     end
     def month
       return @month unless @month.nil?

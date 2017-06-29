@@ -37,11 +37,13 @@ class WindowsResourceFile < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @resources = []
     while not @_io.eof?
       @resources << Resource.new(@_io, self, @_root)
     end
+    self
   end
 
   ##
@@ -79,6 +81,7 @@ class WindowsResourceFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @value_size = @_io.read_u4le
       @header_size = @_io.read_u4le
@@ -92,6 +95,7 @@ class WindowsResourceFile < Kaitai::Struct::Struct
       @characteristics = @_io.read_u4le
       @value = @_io.read_bytes(value_size)
       @padding2 = @_io.read_bytes(((4 - _io.pos) % 4))
+      self
     end
 
     ##
@@ -144,6 +148,7 @@ class WindowsResourceFile < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       if save_pos1 >= 0
         @first = @_io.read_u2le
@@ -161,6 +166,7 @@ class WindowsResourceFile < Kaitai::Struct::Struct
       if  ((is_string) && (save_pos2 >= 0)) 
         @noop = @_io.read_bytes(0)
       end
+      self
     end
     def save_pos1
       return @save_pos1 unless @save_pos1.nil?

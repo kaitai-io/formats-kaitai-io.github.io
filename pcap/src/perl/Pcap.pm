@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
 use EthernetFrame;
+use PacketPpi;
 
 ########################################################################
 package Pcap;
@@ -124,13 +125,6 @@ our $LINKTYPE_ZWAVE_R3 = 262;
 our $LINKTYPE_WATTSTOPPER_DLM = 263;
 our $LINKTYPE_ISO_14443 = 264;
 
-our $PFH_TYPE_RADIO_802_11_COMMON = 2;
-our $PFH_TYPE_RADIO_802_11N_MAC_EXT = 3;
-our $PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT = 4;
-our $PFH_TYPE_SPECTRUM_MAP = 5;
-our $PFH_TYPE_PROCESS_INFO = 6;
-our $PFH_TYPE_CAPTURE_INFO = 7;
-
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
     my $self = IO::KaitaiStruct::Struct->new($_io);
@@ -162,109 +156,6 @@ sub hdr {
 sub packets {
     my ($self) = @_;
     return $self->{packets};
-}
-
-########################################################################
-package Pcap::PacketPpi;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{header} = Pcap::PacketPpiHeader->new($self->{_io}, $self, $self->{_root});
-    $self->{fields} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{fields}}, Pcap::PacketPpiField->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub header {
-    my ($self) = @_;
-    return $self->{header};
-}
-
-sub fields {
-    my ($self) = @_;
-    return $self->{fields};
-}
-
-########################################################################
-package Pcap::PacketPpiHeader;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{pph_version} = $self->{_io}->read_u1();
-    $self->{pph_flags} = $self->{_io}->read_u1();
-    $self->{pph_len} = $self->{_io}->read_u2le();
-    $self->{pph_dlt} = $self->{_io}->read_u4le();
-}
-
-sub pph_version {
-    my ($self) = @_;
-    return $self->{pph_version};
-}
-
-sub pph_flags {
-    my ($self) = @_;
-    return $self->{pph_flags};
-}
-
-sub pph_len {
-    my ($self) = @_;
-    return $self->{pph_len};
-}
-
-sub pph_dlt {
-    my ($self) = @_;
-    return $self->{pph_dlt};
 }
 
 ########################################################################
@@ -342,142 +233,6 @@ sub network {
 }
 
 ########################################################################
-package Pcap::Radio80211CommonBody;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tsf_timer} = $self->{_io}->read_u8le();
-    $self->{flags} = $self->{_io}->read_u2le();
-    $self->{rate} = $self->{_io}->read_u2le();
-    $self->{channel_freq} = $self->{_io}->read_u2le();
-    $self->{channel_flags} = $self->{_io}->read_u2le();
-    $self->{fhss_hopset} = $self->{_io}->read_u1();
-    $self->{fhss_pattern} = $self->{_io}->read_u1();
-    $self->{dbm_antsignal} = $self->{_io}->read_s1();
-    $self->{dbm_antnoise} = $self->{_io}->read_s1();
-}
-
-sub tsf_timer {
-    my ($self) = @_;
-    return $self->{tsf_timer};
-}
-
-sub flags {
-    my ($self) = @_;
-    return $self->{flags};
-}
-
-sub rate {
-    my ($self) = @_;
-    return $self->{rate};
-}
-
-sub channel_freq {
-    my ($self) = @_;
-    return $self->{channel_freq};
-}
-
-sub channel_flags {
-    my ($self) = @_;
-    return $self->{channel_flags};
-}
-
-sub fhss_hopset {
-    my ($self) = @_;
-    return $self->{fhss_hopset};
-}
-
-sub fhss_pattern {
-    my ($self) = @_;
-    return $self->{fhss_pattern};
-}
-
-sub dbm_antsignal {
-    my ($self) = @_;
-    return $self->{dbm_antsignal};
-}
-
-sub dbm_antnoise {
-    my ($self) = @_;
-    return $self->{dbm_antnoise};
-}
-
-########################################################################
-package Pcap::PacketPpiField;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{pfh_type} = $self->{_io}->read_u2le();
-    $self->{pfh_datalen} = $self->{_io}->read_u2le();
-    $self->{body} = $self->{_io}->read_bytes($self->pfh_datalen());
-}
-
-sub pfh_type {
-    my ($self) = @_;
-    return $self->{pfh_type};
-}
-
-sub pfh_datalen {
-    my ($self) = @_;
-    return $self->{pfh_datalen};
-}
-
-sub body {
-    my ($self) = @_;
-    return $self->{body};
-}
-
-########################################################################
 package Pcap::Packet;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -515,7 +270,7 @@ sub _read {
     if ($_on == $LINKTYPE_PPI) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->incl_len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Pcap::PacketPpi->new($io__raw_body, $self, $self->{_root});
+        $self->{body} = PacketPpi->new($io__raw_body);
     }
     elsif ($_on == $LINKTYPE_ETHERNET) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->incl_len());

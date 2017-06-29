@@ -11,23 +11,27 @@ class HeroesOfMightAndMagicAgg < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @num_files = @_io.read_u2le
     @entries = Array.new(num_files)
     (num_files).times { |i|
       @entries[i] = Entry.new(@_io, self, @_root)
     }
+    self
   end
   class Entry < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @hash = @_io.read_u2le
       @offset = @_io.read_u4le
       @size = @_io.read_u4le
       @size2 = @_io.read_u4le
+      self
     end
     def body
       return @body unless @body.nil?
@@ -47,8 +51,10 @@ class HeroesOfMightAndMagicAgg < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @str = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+      self
     end
     attr_reader :str
   end

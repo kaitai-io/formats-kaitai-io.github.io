@@ -11,13 +11,16 @@ class Iso9660 < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
+    self
   end
   class VolDescPrimary < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @unused1 = @_io.ensure_fixed_contents([0].pack('C*'))
       @system_id = (@_io.read_bytes(32)).force_encoding("UTF-8")
@@ -50,6 +53,7 @@ class Iso9660 < Kaitai::Struct::Struct
       @file_structure_version = @_io.read_u1
       @unused4 = @_io.read_u1
       @application_area = @_io.read_bytes(512)
+      self
     end
     def path_table
       return @path_table unless @path_table.nil?
@@ -98,9 +102,11 @@ class Iso9660 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @boot_system_id = (@_io.read_bytes(32)).force_encoding("UTF-8")
       @boot_id = (@_io.read_bytes(32)).force_encoding("UTF-8")
+      self
     end
     attr_reader :boot_system_id
     attr_reader :boot_id
@@ -110,6 +116,7 @@ class Iso9660 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @year = @_io.read_u1
       @month = @_io.read_u1
@@ -118,6 +125,7 @@ class Iso9660 < Kaitai::Struct::Struct
       @minute = @_io.read_u1
       @sec = @_io.read_u1
       @timezone = @_io.read_u1
+      self
     end
     attr_reader :year
     attr_reader :month
@@ -132,6 +140,7 @@ class Iso9660 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @len = @_io.read_u1
       if len > 0
@@ -139,6 +148,7 @@ class Iso9660 < Kaitai::Struct::Struct
         io = Kaitai::Struct::Stream.new(@_raw_body)
         @body = DirEntryBody.new(io, self, @_root)
       end
+      self
     end
     attr_reader :len
     attr_reader :body
@@ -149,6 +159,7 @@ class Iso9660 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @type = @_io.read_u1
       @magic = @_io.ensure_fixed_contents([67, 68, 48, 48, 49].pack('C*'))
@@ -159,6 +170,7 @@ class Iso9660 < Kaitai::Struct::Struct
       if type == 1
         @vol_desc_primary = VolDescPrimary.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :type
     attr_reader :magic
@@ -171,6 +183,7 @@ class Iso9660 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @len_dir_name = @_io.read_u1
       @len_ext_attr_rec = @_io.read_u1
@@ -180,6 +193,7 @@ class Iso9660 < Kaitai::Struct::Struct
       if (len_dir_name % 2) == 1
         @padding = @_io.read_u1
       end
+      self
     end
     attr_reader :len_dir_name
     attr_reader :len_ext_attr_rec
@@ -193,12 +207,14 @@ class Iso9660 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       begin
         _ = DirEntry.new(@_io, self, @_root)
         @entries << _
       end until _.len == 0
+      self
     end
     attr_reader :entries
   end
@@ -207,9 +223,11 @@ class Iso9660 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @le = @_io.read_u4le
       @be = @_io.read_u4be
+      self
     end
     attr_reader :le
     attr_reader :be
@@ -219,9 +237,11 @@ class Iso9660 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @le = @_io.read_u2le
       @be = @_io.read_u2be
+      self
     end
     attr_reader :le
     attr_reader :be
@@ -231,11 +251,13 @@ class Iso9660 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       while not @_io.eof?
         @entries << PathTableEntryLe.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :entries
   end
@@ -244,6 +266,7 @@ class Iso9660 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @year = (@_io.read_bytes(4)).force_encoding("ASCII")
       @month = (@_io.read_bytes(2)).force_encoding("ASCII")
@@ -253,6 +276,7 @@ class Iso9660 < Kaitai::Struct::Struct
       @sec = (@_io.read_bytes(2)).force_encoding("ASCII")
       @sec_hundreds = (@_io.read_bytes(2)).force_encoding("ASCII")
       @timezone = @_io.read_u1
+      self
     end
     attr_reader :year
     attr_reader :month
@@ -268,6 +292,7 @@ class Iso9660 < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @len_ext_attr_rec = @_io.read_u1
       @lba_extent = U4bi.new(@_io, self, @_root)
@@ -283,6 +308,7 @@ class Iso9660 < Kaitai::Struct::Struct
         @padding = @_io.read_u1
       end
       @rest = @_io.read_bytes_full
+      self
     end
     def extent_as_dir
       return @extent_as_dir unless @extent_as_dir.nil?

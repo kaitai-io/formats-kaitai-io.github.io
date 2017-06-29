@@ -178,26 +178,17 @@ public class Warcraft2Pud extends KaitaiStruct {
     }
 
     public Warcraft2Pud(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Warcraft2Pud(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Warcraft2Pud(KaitaiStream _io, KaitaiStruct _parent, Warcraft2Pud _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -212,24 +203,17 @@ public class Warcraft2Pud extends KaitaiStruct {
         }
 
         public SectionStartingResource(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SectionStartingResource(KaitaiStream _io, Warcraft2Pud.Section _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SectionStartingResource(KaitaiStream _io, Warcraft2Pud.Section _parent, Warcraft2Pud _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -255,24 +239,17 @@ public class Warcraft2Pud extends KaitaiStruct {
         }
 
         public SectionEra(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SectionEra(KaitaiStream _io, Warcraft2Pud.Section _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SectionEra(KaitaiStream _io, Warcraft2Pud.Section _parent, Warcraft2Pud _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -295,24 +272,17 @@ public class Warcraft2Pud extends KaitaiStruct {
         }
 
         public SectionVer(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SectionVer(KaitaiStream _io, Warcraft2Pud.Section _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SectionVer(KaitaiStream _io, Warcraft2Pud.Section _parent, Warcraft2Pud _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -331,24 +301,17 @@ public class Warcraft2Pud extends KaitaiStruct {
         }
 
         public SectionDim(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SectionDim(KaitaiStream _io, Warcraft2Pud.Section _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SectionDim(KaitaiStream _io, Warcraft2Pud.Section _parent, Warcraft2Pud _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -377,24 +340,17 @@ public class Warcraft2Pud extends KaitaiStruct {
         }
 
         public SectionType(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SectionType(KaitaiStream _io, Warcraft2Pud.Section _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SectionType(KaitaiStream _io, Warcraft2Pud.Section _parent, Warcraft2Pud _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -427,24 +383,17 @@ public class Warcraft2Pud extends KaitaiStruct {
         }
 
         public SectionUnit(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SectionUnit(KaitaiStream _io, Warcraft2Pud.Section _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SectionUnit(KaitaiStream _io, Warcraft2Pud.Section _parent, Warcraft2Pud _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -466,24 +415,17 @@ public class Warcraft2Pud extends KaitaiStruct {
         }
 
         public Section(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Section(KaitaiStream _io, Warcraft2Pud _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Section(KaitaiStream _io, Warcraft2Pud _parent, Warcraft2Pud _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -579,24 +521,17 @@ public class Warcraft2Pud extends KaitaiStruct {
         }
 
         public SectionOwnr(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SectionOwnr(KaitaiStream _io, Warcraft2Pud.Section _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SectionOwnr(KaitaiStream _io, Warcraft2Pud.Section _parent, Warcraft2Pud _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -618,24 +553,17 @@ public class Warcraft2Pud extends KaitaiStruct {
         }
 
         public Unit(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Unit(KaitaiStream _io, Warcraft2Pud.SectionUnit _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Unit(KaitaiStream _io, Warcraft2Pud.SectionUnit _parent, Warcraft2Pud _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

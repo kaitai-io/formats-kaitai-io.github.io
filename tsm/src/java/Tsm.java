@@ -23,26 +23,17 @@ public class Tsm extends KaitaiStruct {
     }
 
     public Tsm(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Tsm(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Tsm(KaitaiStream _io, KaitaiStruct _parent, Tsm _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -54,24 +45,17 @@ public class Tsm extends KaitaiStruct {
         }
 
         public Header(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Header(KaitaiStream _io, Tsm _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Header(KaitaiStream _io, Tsm _parent, Tsm _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -93,24 +77,17 @@ public class Tsm extends KaitaiStruct {
         }
 
         public Index(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Index(KaitaiStream _io, Tsm _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Index(KaitaiStream _io, Tsm _parent, Tsm _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -122,24 +99,17 @@ public class Tsm extends KaitaiStruct {
             }
 
             public IndexHeader(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public IndexHeader(KaitaiStream _io, Tsm.Index _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public IndexHeader(KaitaiStream _io, Tsm.Index _parent, Tsm _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -158,24 +128,17 @@ public class Tsm extends KaitaiStruct {
                 }
 
                 public IndexEntry(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public IndexEntry(KaitaiStream _io, Tsm.Index.IndexHeader _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public IndexEntry(KaitaiStream _io, Tsm.Index.IndexHeader _parent, Tsm _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -190,24 +153,17 @@ public class Tsm extends KaitaiStruct {
                     }
 
                     public BlockEntry(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public BlockEntry(KaitaiStream _io, Tsm.Index.IndexHeader.IndexEntry _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public BlockEntry(KaitaiStream _io, Tsm.Index.IndexHeader.IndexEntry _parent, Tsm _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {

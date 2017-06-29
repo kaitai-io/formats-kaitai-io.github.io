@@ -11,6 +11,7 @@ class Ipv6Packet < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @version = @_io.read_bits_int(4)
     @traffic_class = @_io.read_bits_int(8)
@@ -34,13 +35,16 @@ class Ipv6Packet < Kaitai::Struct::Struct
       @next_header = NoNextHeader.new(@_io, self, @_root)
     end
     @rest = @_io.read_bytes_full
+    self
   end
   class NoNextHeader < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
+      self
     end
   end
   class OptionHopByHop < Kaitai::Struct::Struct
@@ -48,6 +52,7 @@ class Ipv6Packet < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @next_header_type = @_io.read_u1
       @hdr_ext_len = @_io.read_u1
@@ -60,6 +65,7 @@ class Ipv6Packet < Kaitai::Struct::Struct
       when 59
         @next_header = NoNextHeader.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :next_header_type
     attr_reader :hdr_ext_len

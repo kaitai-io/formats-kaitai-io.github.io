@@ -242,33 +242,59 @@ Pcx data = new Pcx(new KaitaiStream(someArray));</code></pre>
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 public class Pcx extends KaitaiStruct {
     public static Pcx fromFile(String fileName) throws IOException {
         return new Pcx(new KaitaiStream(fileName));
     }
 
+    public enum Versions {
+        V2_5(0),
+        V2_8_WITH_PALETTE(2),
+        V2_8_WITHOUT_PALETTE(3),
+        PAINTBRUSH_FOR_WINDOWS(4),
+        V3_0(5);
+
+        private final long id;
+        Versions(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map&lt;Long, Versions&gt; byId = new HashMap&lt;Long, Versions&gt;(5);
+        static {
+            for (Versions e : Versions.values())
+                byId.put(e.id(), e);
+        }
+        public static Versions byId(long id) { return byId.get(id); }
+    }
+
+    public enum Encodings {
+        RLE(1);
+
+        private final long id;
+        Encodings(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map&lt;Long, Encodings&gt; byId = new HashMap&lt;Long, Encodings&gt;(1);
+        static {
+            for (Encodings e : Encodings.values())
+                byId.put(e.id(), e);
+        }
+        public static Encodings byId(long id) { return byId.get(id); }
+    }
+
     public Pcx(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Pcx(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Pcx(KaitaiStream _io, KaitaiStruct _parent, Pcx _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -286,30 +312,23 @@ public class Pcx extends KaitaiStruct {
         }
 
         public Header(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Header(KaitaiStream _io, Pcx _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Header(KaitaiStream _io, Pcx _parent, Pcx _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
-            this.manufacturer = this._io.readU1();
-            this.version = this._io.readU1();
-            this.encoding = this._io.readU1();
+            this.magic = this._io.ensureFixedContents(new byte[] { 10 });
+            this.version = Pcx.Versions.byId(this._io.readU1());
+            this.encoding = Pcx.Encodings.byId(this._io.readU1());
             this.bitsPerPixel = this._io.readU1();
             this.imgXMin = this._io.readU2le();
             this.imgYMin = this._io.readU2le();
@@ -317,17 +336,17 @@ public class Pcx extends KaitaiStruct {
             this.imgYMax = this._io.readU2le();
             this.hdpi = this._io.readU2le();
             this.vdpi = this._io.readU2le();
-            this.colormap = this._io.readBytes(48);
-            this.reserved = this._io.readBytes(1);
+            this.palette16 = this._io.readBytes(48);
+            this.reserved = this._io.ensureFixedContents(new byte[] { 0 });
             this.numPlanes = this._io.readU1();
             this.bytesPerLine = this._io.readU2le();
             this.paletteInfo = this._io.readU2le();
             this.hScreenSize = this._io.readU2le();
             this.vScreenSize = this._io.readU2le();
         }
-        private int manufacturer;
-        private int version;
-        private int encoding;
+        private byte[] magic;
+        private Versions version;
+        private Encodings encoding;
         private int bitsPerPixel;
         private int imgXMin;
         private int imgYMin;
@@ -335,7 +354,7 @@ public class Pcx extends KaitaiStruct {
         private int imgYMax;
         private int hdpi;
         private int vdpi;
-        private byte[] colormap;
+        private byte[] palette16;
         private byte[] reserved;
         private int numPlanes;
         private int bytesPerLine;
@@ -344,9 +363,17 @@ public class Pcx extends KaitaiStruct {
         private int vScreenSize;
         private Pcx _root;
         private Pcx _parent;
-        public int manufacturer() { return manufacturer; }
-        public int version() { return version; }
-        public int encoding() { return encoding; }
+
+        /**
+         * Technically, this field was supposed to be &quot;manufacturer&quot;
+         * mark to distinguish between various software vendors, and
+         * 0x0a was supposed to mean &quot;ZSoft&quot;, but everyone else ended
+         * up writing a 0x0a into this field, so that&#39;s what majority
+         * of modern software expects to have in this attribute.
+         */
+        public byte[] magic() { return magic; }
+        public Versions version() { return version; }
+        public Encodings encoding() { return encoding; }
         public int bitsPerPixel() { return bitsPerPixel; }
         public int imgXMin() { return imgXMin; }
         public int imgYMin() { return imgYMin; }
@@ -354,7 +381,7 @@ public class Pcx extends KaitaiStruct {
         public int imgYMax() { return imgYMax; }
         public int hdpi() { return hdpi; }
         public int vdpi() { return vdpi; }
-        public byte[] colormap() { return colormap; }
+        public byte[] palette16() { return palette16; }
         public byte[] reserved() { return reserved; }
         public int numPlanes() { return numPlanes; }
         public int bytesPerLine() { return bytesPerLine; }
@@ -363,6 +390,92 @@ public class Pcx extends KaitaiStruct {
         public int vScreenSize() { return vScreenSize; }
         public Pcx _root() { return _root; }
         public Pcx _parent() { return _parent; }
+    }
+    public static class TPalette256 extends KaitaiStruct {
+        public static TPalette256 fromFile(String fileName) throws IOException {
+            return new TPalette256(new KaitaiStream(fileName));
+        }
+
+        public TPalette256(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TPalette256(KaitaiStream _io, Pcx _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TPalette256(KaitaiStream _io, Pcx _parent, Pcx _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.magic = this._io.ensureFixedContents(new byte[] { 12 });
+            colors = new ArrayList&lt;Rgb&gt;((int) (256));
+            for (int i = 0; i &lt; 256; i++) {
+                this.colors.add(new Rgb(this._io, this, _root));
+            }
+        }
+        private byte[] magic;
+        private ArrayList&lt;Rgb&gt; colors;
+        private Pcx _root;
+        private Pcx _parent;
+        public byte[] magic() { return magic; }
+        public ArrayList&lt;Rgb&gt; colors() { return colors; }
+        public Pcx _root() { return _root; }
+        public Pcx _parent() { return _parent; }
+    }
+    public static class Rgb extends KaitaiStruct {
+        public static Rgb fromFile(String fileName) throws IOException {
+            return new Rgb(new KaitaiStream(fileName));
+        }
+
+        public Rgb(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Rgb(KaitaiStream _io, Pcx.TPalette256 _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Rgb(KaitaiStream _io, Pcx.TPalette256 _parent, Pcx _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.r = this._io.readU1();
+            this.g = this._io.readU1();
+            this.b = this._io.readU1();
+        }
+        private int r;
+        private int g;
+        private int b;
+        private Pcx _root;
+        private Pcx.TPalette256 _parent;
+        public int r() { return r; }
+        public int g() { return g; }
+        public int b() { return b; }
+        public Pcx _root() { return _root; }
+        public Pcx.TPalette256 _parent() { return _parent; }
+    }
+    private TPalette256 palette256;
+
+    /**
+     * @see &lt;a href=&quot;http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt&quot;&gt;- &quot;VGA 256 Color Palette Information&quot;&lt;/a&gt;
+     */
+    public TPalette256 palette256() {
+        if (this.palette256 != null)
+            return this.palette256;
+        if ( ((hdr().version() == Versions.V3_0) &amp;&amp; (hdr().bitsPerPixel() == 8) &amp;&amp; (hdr().numPlanes() == 1)) ) {
+            long _pos = this._io.pos();
+            this._io.seek((_io().size() - 769));
+            this.palette256 = new TPalette256(this._io, this, _root);
+            this._io.seek(_pos);
+        }
+        return this.palette256;
     }
     private Header hdr;
     private Pcx _root;

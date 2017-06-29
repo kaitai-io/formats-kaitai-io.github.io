@@ -275,6 +275,7 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
 #include &lt;kaitai/kaitaistream.h&gt;
 
 #include &lt;stdint.h&gt;
+#include &lt;vector&gt;
 
 #if KAITAI_STRUCT_VERSION &lt; 7000L
 #error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
@@ -284,6 +285,20 @@ class pcx_t : public kaitai::kstruct {
 
 public:
     class header_t;
+    class t_palette_256_t;
+    class rgb_t;
+
+    enum versions_t {
+        VERSIONS_V2_5 = 0,
+        VERSIONS_V2_8_WITH_PALETTE = 2,
+        VERSIONS_V2_8_WITHOUT_PALETTE = 3,
+        VERSIONS_PAINTBRUSH_FOR_WINDOWS = 4,
+        VERSIONS_V3_0 = 5
+    };
+
+    enum encodings_t {
+        ENCODINGS_RLE = 1
+    };
 
     pcx_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, pcx_t* p_root = 0);
     void _read();
@@ -302,9 +317,9 @@ public:
         ~header_t();
 
     private:
-        uint8_t m_manufacturer;
-        uint8_t m_version;
-        uint8_t m_encoding;
+        std::string m_magic;
+        versions_t m_version;
+        encodings_t m_encoding;
         uint8_t m_bits_per_pixel;
         uint16_t m_img_x_min;
         uint16_t m_img_y_min;
@@ -312,7 +327,7 @@ public:
         uint16_t m_img_y_max;
         uint16_t m_hdpi;
         uint16_t m_vdpi;
-        std::string m_colormap;
+        std::string m_palette_16;
         std::string m_reserved;
         uint8_t m_num_planes;
         uint16_t m_bytes_per_line;
@@ -323,9 +338,17 @@ public:
         pcx_t* m__parent;
 
     public:
-        uint8_t manufacturer() const { return m_manufacturer; }
-        uint8_t version() const { return m_version; }
-        uint8_t encoding() const { return m_encoding; }
+
+        /**
+         * Technically, this field was supposed to be &quot;manufacturer&quot;
+         * mark to distinguish between various software vendors, and
+         * 0x0a was supposed to mean &quot;ZSoft&quot;, but everyone else ended
+         * up writing a 0x0a into this field, so that&#39;s what majority
+         * of modern software expects to have in this attribute.
+         */
+        std::string magic() const { return m_magic; }
+        versions_t version() const { return m_version; }
+        encodings_t encoding() const { return m_encoding; }
         uint8_t bits_per_pixel() const { return m_bits_per_pixel; }
         uint16_t img_x_min() const { return m_img_x_min; }
         uint16_t img_y_min() const { return m_img_y_min; }
@@ -333,7 +356,7 @@ public:
         uint16_t img_y_max() const { return m_img_y_max; }
         uint16_t hdpi() const { return m_hdpi; }
         uint16_t vdpi() const { return m_vdpi; }
-        std::string colormap() const { return m_colormap; }
+        std::string palette_16() const { return m_palette_16; }
         std::string reserved() const { return m_reserved; }
         uint8_t num_planes() const { return m_num_planes; }
         uint16_t bytes_per_line() const { return m_bytes_per_line; }
@@ -343,6 +366,67 @@ public:
         pcx_t* _root() const { return m__root; }
         pcx_t* _parent() const { return m__parent; }
     };
+
+    class t_palette_256_t : public kaitai::kstruct {
+
+    public:
+
+        t_palette_256_t(kaitai::kstream* p_io, pcx_t* p_parent = 0, pcx_t* p_root = 0);
+        void _read();
+        ~t_palette_256_t();
+
+    private:
+        std::string m_magic;
+        std::vector&lt;rgb_t*&gt;* m_colors;
+        pcx_t* m__root;
+        pcx_t* m__parent;
+
+    public:
+        std::string magic() const { return m_magic; }
+        std::vector&lt;rgb_t*&gt;* colors() const { return m_colors; }
+        pcx_t* _root() const { return m__root; }
+        pcx_t* _parent() const { return m__parent; }
+    };
+
+    class rgb_t : public kaitai::kstruct {
+
+    public:
+
+        rgb_t(kaitai::kstream* p_io, pcx_t::t_palette_256_t* p_parent = 0, pcx_t* p_root = 0);
+        void _read();
+        ~rgb_t();
+
+    private:
+        uint8_t m_r;
+        uint8_t m_g;
+        uint8_t m_b;
+        pcx_t* m__root;
+        pcx_t::t_palette_256_t* m__parent;
+
+    public:
+        uint8_t r() const { return m_r; }
+        uint8_t g() const { return m_g; }
+        uint8_t b() const { return m_b; }
+        pcx_t* _root() const { return m__root; }
+        pcx_t::t_palette_256_t* _parent() const { return m__parent; }
+    };
+
+private:
+    bool f_palette_256;
+    t_palette_256_t* m_palette_256;
+    bool n_palette_256;
+
+public:
+    bool _is_null_palette_256() { palette_256(); return n_palette_256; };
+
+private:
+
+public:
+
+    /**
+     * \sa - &quot;VGA 256 Color Palette Information&quot;
+     */
+    t_palette_256_t* palette_256();
 
 private:
     header_t* m_hdr;
@@ -385,6 +469,7 @@ public:
 pcx_t::pcx_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, pcx_t *p_root) : kaitai::kstruct(p_io) {
     m__parent = p_parent;
     m__root = this;
+    f_palette_256 = false;
     _read();
 }
 
@@ -397,6 +482,9 @@ void pcx_t::_read() {
 pcx_t::~pcx_t() {
     delete m__io__raw_hdr;
     delete m_hdr;
+    if (f_palette_256 &amp;&amp; !n_palette_256) {
+        delete m_palette_256;
+    }
 }
 
 pcx_t::header_t::header_t(kaitai::kstream *p_io, pcx_t* p_parent, pcx_t *p_root) : kaitai::kstruct(p_io) {
@@ -406,9 +494,9 @@ pcx_t::header_t::header_t(kaitai::kstream *p_io, pcx_t* p_parent, pcx_t *p_root)
 }
 
 void pcx_t::header_t::_read() {
-    m_manufacturer = m__io-&gt;read_u1();
-    m_version = m__io-&gt;read_u1();
-    m_encoding = m__io-&gt;read_u1();
+    m_magic = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x0A&quot;, 1));
+    m_version = static_cast&lt;pcx_t::versions_t&gt;(m__io-&gt;read_u1());
+    m_encoding = static_cast&lt;pcx_t::encodings_t&gt;(m__io-&gt;read_u1());
     m_bits_per_pixel = m__io-&gt;read_u1();
     m_img_x_min = m__io-&gt;read_u2le();
     m_img_y_min = m__io-&gt;read_u2le();
@@ -416,8 +504,8 @@ void pcx_t::header_t::_read() {
     m_img_y_max = m__io-&gt;read_u2le();
     m_hdpi = m__io-&gt;read_u2le();
     m_vdpi = m__io-&gt;read_u2le();
-    m_colormap = m__io-&gt;read_bytes(48);
-    m_reserved = m__io-&gt;read_bytes(1);
+    m_palette_16 = m__io-&gt;read_bytes(48);
+    m_reserved = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x00&quot;, 1));
     m_num_planes = m__io-&gt;read_u1();
     m_bytes_per_line = m__io-&gt;read_u2le();
     m_palette_info = m__io-&gt;read_u2le();
@@ -426,6 +514,59 @@ void pcx_t::header_t::_read() {
 }
 
 pcx_t::header_t::~header_t() {
+}
+
+pcx_t::t_palette_256_t::t_palette_256_t(kaitai::kstream *p_io, pcx_t* p_parent, pcx_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void pcx_t::t_palette_256_t::_read() {
+    m_magic = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x0C&quot;, 1));
+    int l_colors = 256;
+    m_colors = new std::vector&lt;rgb_t*&gt;();
+    m_colors-&gt;reserve(l_colors);
+    for (int i = 0; i &lt; l_colors; i++) {
+        m_colors-&gt;push_back(new rgb_t(m__io, this, m__root));
+    }
+}
+
+pcx_t::t_palette_256_t::~t_palette_256_t() {
+    for (std::vector&lt;rgb_t*&gt;::iterator it = m_colors-&gt;begin(); it != m_colors-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_colors;
+}
+
+pcx_t::rgb_t::rgb_t(kaitai::kstream *p_io, pcx_t::t_palette_256_t* p_parent, pcx_t *p_root) : kaitai::kstruct(p_io) {
+    m__parent = p_parent;
+    m__root = p_root;
+    _read();
+}
+
+void pcx_t::rgb_t::_read() {
+    m_r = m__io-&gt;read_u1();
+    m_g = m__io-&gt;read_u1();
+    m_b = m__io-&gt;read_u1();
+}
+
+pcx_t::rgb_t::~rgb_t() {
+}
+
+pcx_t::t_palette_256_t* pcx_t::palette_256() {
+    if (f_palette_256)
+        return m_palette_256;
+    n_palette_256 = true;
+    if ( ((hdr()-&gt;version() == VERSIONS_V3_0) &amp;&amp; (hdr()-&gt;bits_per_pixel() == 8) &amp;&amp; (hdr()-&gt;num_planes() == 1)) ) {
+        n_palette_256 = false;
+        std::streampos _pos = m__io-&gt;pos();
+        m__io-&gt;seek((_io()-&gt;size() - 769));
+        m_palette_256 = new t_palette_256_t(m__io, this, m__root);
+        m__io-&gt;seek(_pos);
+    }
+    f_palette_256 = true;
+    return m_palette_256;
 }
 </code></pre>
             

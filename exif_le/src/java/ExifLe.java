@@ -13,26 +13,17 @@ public class ExifLe extends KaitaiStruct {
     }
 
     public ExifLe(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public ExifLe(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public ExifLe(KaitaiStream _io, KaitaiStruct _parent, ExifLe _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -45,24 +36,17 @@ public class ExifLe extends KaitaiStruct {
         }
 
         public Ifd(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Ifd(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Ifd(KaitaiStream _io, KaitaiStruct _parent, ExifLe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -591,24 +575,17 @@ public class ExifLe extends KaitaiStruct {
         }
 
         public IfdField(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public IfdField(KaitaiStream _io, ExifLe.Ifd _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public IfdField(KaitaiStream _io, ExifLe.Ifd _parent, ExifLe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

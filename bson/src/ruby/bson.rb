@@ -17,12 +17,14 @@ class Bson < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @len = @_io.read_s4le
     @_raw_fields = @_io.read_bytes((len - 5))
     io = Kaitai::Struct::Stream.new(@_raw_fields)
     @fields = ElementsList.new(io, self, @_root)
     @terminator = @_io.ensure_fixed_contents([0].pack('C*'))
+    self
   end
 
   ##
@@ -32,9 +34,11 @@ class Bson < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @increment = @_io.read_u4le
       @timestamp = @_io.read_u4le
+      self
     end
     attr_reader :increment
     attr_reader :timestamp
@@ -58,6 +62,7 @@ class Bson < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @len = @_io.read_s4le
       @subtype = Kaitai::Struct::Stream::resolve_enum(SUBTYPE, @_io.read_u1)
@@ -69,6 +74,7 @@ class Bson < Kaitai::Struct::Struct
       else
         @content = @_io.read_bytes(len)
       end
+      self
     end
 
     ##
@@ -78,9 +84,11 @@ class Bson < Kaitai::Struct::Struct
         super(_io, _parent, _root)
         _read
       end
+
       def _read
         @len = @_io.read_s4le
         @content = @_io.read_bytes(len)
+        self
       end
       attr_reader :len
       attr_reader :content
@@ -95,11 +103,13 @@ class Bson < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @elements = []
       while not @_io.eof?
         @elements << Element.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :elements
   end
@@ -108,8 +118,10 @@ class Bson < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @str = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
+      self
     end
 
     ##
@@ -121,10 +133,12 @@ class Bson < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @len = @_io.read_s4le
       @str = (@_io.read_bytes((len - 1))).force_encoding("UTF-8")
       @terminator = @_io.ensure_fixed_contents([0].pack('C*'))
+      self
     end
     attr_reader :len
     attr_reader :str
@@ -161,6 +175,7 @@ class Bson < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @type_byte = Kaitai::Struct::Stream::resolve_enum(BSON_TYPE, @_io.read_u1)
       @name = Cstring.new(@_io, self, @_root)
@@ -200,6 +215,7 @@ class Bson < Kaitai::Struct::Struct
       when :bson_type_bin_data
         @content = BinData.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :type_byte
     attr_reader :name
@@ -210,9 +226,11 @@ class Bson < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @namespace = String.new(@_io, self, @_root)
       @id = ObjectId.new(@_io, self, @_root)
+      self
     end
     attr_reader :namespace
     attr_reader :id
@@ -225,10 +243,12 @@ class Bson < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @b1 = @_io.read_u1
       @b2 = @_io.read_u1
       @b3 = @_io.read_u1
+      self
     end
     def value
       return @value unless @value.nil?
@@ -244,10 +264,12 @@ class Bson < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @id = @_io.read_s4le
       @source = String.new(@_io, self, @_root)
       @scope = Bson.new(@_io)
+      self
     end
     attr_reader :id
     attr_reader :source
@@ -264,12 +286,14 @@ class Bson < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @str = @_io.read_bits_int(1) != 0
       @exponent = @_io.read_bits_int(15)
       @significand_hi = @_io.read_bits_int(49)
       @_io.align_to_byte
       @significand_lo = @_io.read_u8le
+      self
     end
     attr_reader :str
     attr_reader :exponent
@@ -284,11 +308,13 @@ class Bson < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @epoch_time = @_io.read_u4le
       @machine_id = U3.new(@_io, self, @_root)
       @process_id = @_io.read_u2le
       @counter = U3.new(@_io, self, @_root)
+      self
     end
 
     ##
@@ -306,9 +332,11 @@ class Bson < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @pattern = Cstring.new(@_io, self, @_root)
       @options = Cstring.new(@_io, self, @_root)
+      self
     end
     attr_reader :pattern
     attr_reader :options

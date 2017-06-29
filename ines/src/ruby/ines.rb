@@ -11,20 +11,24 @@ class Ines < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @header = Header.new(@_io, self, @_root)
     @rom = @_io.read_bytes_full
+    self
   end
   class F7 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @upper_nibble = @_io.read_bits_int(4)
       @format = @_io.read_bits_int(2)
       @arcade_2 = @_io.read_bits_int(1) != 0
       @arcade_1 = @_io.read_bits_int(1) != 0
+      self
     end
 
     ##
@@ -48,12 +52,14 @@ class Ines < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @lower_nibble = @_io.read_bits_int(4)
       @ignore_mirror = @_io.read_bits_int(1) != 0
       @trainer = @_io.read_bits_int(1) != 0
       @has_battery_ram = @_io.read_bits_int(1) != 0
       @mirror = @_io.read_bits_int(1) != 0
+      self
     end
 
     ##
@@ -81,12 +87,14 @@ class Ines < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @nothing1 = @_io.read_bits_int(2)
       @bus_conflict = @_io.read_bits_int(1) != 0
       @prg_ram = @_io.read_bits_int(1) != 0
       @nothing2 = @_io.read_bits_int(2)
       @tv_system = @_io.read_bits_int(2)
+      self
     end
     attr_reader :nothing1
 
@@ -108,9 +116,11 @@ class Ines < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @reserved = @_io.read_bits_int(7)
       @tv_system = @_io.read_bits_int(1) != 0
+      self
     end
     attr_reader :reserved
 
@@ -123,6 +133,7 @@ class Ines < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @magic = @_io.ensure_fixed_contents([78, 69, 83, 26].pack('C*'))
       @prg_rom_size = @_io.read_u1
@@ -133,6 +144,7 @@ class Ines < Kaitai::Struct::Struct
       @f9 = F9.new(@_io, self, @_root)
       @f10 = F10.new(@_io, self, @_root)
       @zero_fill = @_io.read_bytes(4)
+      self
     end
     attr_reader :magic
 

@@ -258,9 +258,6 @@ class Linedef extends \Kaitai\Struct\Struct {
     public function sidedefLeftIdx() { return $this->_m_sidedefLeftIdx; }
 }
 
-/**
- */
-
 namespace \DoomWad;
 
 class Pnames extends \Kaitai\Struct\Struct {

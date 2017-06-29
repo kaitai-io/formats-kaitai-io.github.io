@@ -121,6 +121,7 @@ class Elf < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @magic = @_io.ensure_fixed_contents([127, 69, 76, 70].pack('C*'))
     @bits = Kaitai::Struct::Stream::resolve_enum(BITS, @_io.read_u1)
@@ -130,10 +131,15 @@ class Elf < Kaitai::Struct::Struct
     @abi_version = @_io.read_u1
     @pad = @_io.read_bytes(7)
     @header = EndianElf.new(@_io, self, @_root)
+    self
   end
   class EndianElf < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
       case _root.endian
       when :endian_le
         @_is_le = true
@@ -148,7 +154,9 @@ class Elf < Kaitai::Struct::Struct
       else
         raise Kaitai::Struct::Stream::UndecidedEndiannessError
       end
+      self
     end
+
     def _read_le
       @e_type = Kaitai::Struct::Stream::resolve_enum(OBJ_TYPE, @_io.read_u2le)
       @machine = Kaitai::Struct::Stream::resolve_enum(MACHINE, @_io.read_u2le)
@@ -178,7 +186,9 @@ class Elf < Kaitai::Struct::Struct
       @section_header_entry_size = @_io.read_u2le
       @qty_section_header = @_io.read_u2le
       @section_names_idx = @_io.read_u2le
+      self
     end
+
     def _read_be
       @e_type = Kaitai::Struct::Stream::resolve_enum(OBJ_TYPE, @_io.read_u2be)
       @machine = Kaitai::Struct::Stream::resolve_enum(MACHINE, @_io.read_u2be)
@@ -208,11 +218,16 @@ class Elf < Kaitai::Struct::Struct
       @section_header_entry_size = @_io.read_u2be
       @qty_section_header = @_io.read_u2be
       @section_names_idx = @_io.read_u2be
+      self
     end
     class ProgramHeader < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
         super(_io, _parent, _root)
         @_is_le = _is_le
+        _read
+      end
+
+      def _read
 
         if @_is_le == true
           _read_le
@@ -221,7 +236,9 @@ class Elf < Kaitai::Struct::Struct
         else
           raise Kaitai::Struct::Stream::UndecidedEndiannessError
         end
+        self
       end
+
       def _read_le
         @type = Kaitai::Struct::Stream::resolve_enum(PH_TYPE, @_io.read_u4le)
         if _root.bits == :bits_b64
@@ -266,7 +283,9 @@ class Elf < Kaitai::Struct::Struct
         when :bits_b64
           @align = @_io.read_u8le
         end
+        self
       end
+
       def _read_be
         @type = Kaitai::Struct::Stream::resolve_enum(PH_TYPE, @_io.read_u4be)
         if _root.bits == :bits_b64
@@ -311,6 +330,7 @@ class Elf < Kaitai::Struct::Struct
         when :bits_b64
           @align = @_io.read_u8be
         end
+        self
       end
       attr_reader :type
       attr_reader :flags64
@@ -326,6 +346,10 @@ class Elf < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
         super(_io, _parent, _root)
         @_is_le = _is_le
+        _read
+      end
+
+      def _read
 
         if @_is_le == true
           _read_le
@@ -334,7 +358,9 @@ class Elf < Kaitai::Struct::Struct
         else
           raise Kaitai::Struct::Stream::UndecidedEndiannessError
         end
+        self
       end
+
       def _read_le
         @name_offset = @_io.read_u4le
         @type = Kaitai::Struct::Stream::resolve_enum(SH_TYPE, @_io.read_u4le)
@@ -376,7 +402,9 @@ class Elf < Kaitai::Struct::Struct
         when :bits_b64
           @entry_size = @_io.read_u8le
         end
+        self
       end
+
       def _read_be
         @name_offset = @_io.read_u4be
         @type = Kaitai::Struct::Stream::resolve_enum(SH_TYPE, @_io.read_u4be)
@@ -418,6 +446,7 @@ class Elf < Kaitai::Struct::Struct
         when :bits_b64
           @entry_size = @_io.read_u8be
         end
+        self
       end
       def body
         return @body unless @body.nil?
@@ -460,6 +489,10 @@ class Elf < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
         super(_io, _parent, _root)
         @_is_le = _is_le
+        _read
+      end
+
+      def _read
 
         if @_is_le == true
           _read_le
@@ -468,18 +501,23 @@ class Elf < Kaitai::Struct::Struct
         else
           raise Kaitai::Struct::Stream::UndecidedEndiannessError
         end
+        self
       end
+
       def _read_le
         @entries = []
         while not @_io.eof?
           @entries << (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
         end
+        self
       end
+
       def _read_be
         @entries = []
         while not @_io.eof?
           @entries << (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
         end
+        self
       end
       attr_reader :entries
     end

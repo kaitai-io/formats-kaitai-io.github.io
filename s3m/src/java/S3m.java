@@ -32,26 +32,17 @@ public class S3m extends KaitaiStruct {
     }
 
     public S3m(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public S3m(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public S3m(KaitaiStream _io, KaitaiStruct _parent, S3m _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -102,24 +93,17 @@ public class S3m extends KaitaiStruct {
         }
 
         public ChannelPan(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ChannelPan(KaitaiStream _io, S3m _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ChannelPan(KaitaiStream _io, S3m _parent, S3m _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -153,24 +137,17 @@ public class S3m extends KaitaiStruct {
         }
 
         public PatternCell(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PatternCell(KaitaiStream _io, S3m.PatternCells _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PatternCell(KaitaiStream _io, S3m.PatternCells _parent, S3m _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -224,24 +201,17 @@ public class S3m extends KaitaiStruct {
         }
 
         public PatternCells(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PatternCells(KaitaiStream _io, S3m.Pattern _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PatternCells(KaitaiStream _io, S3m.Pattern _parent, S3m _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -263,24 +233,17 @@ public class S3m extends KaitaiStruct {
         }
 
         public Channel(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Channel(KaitaiStream _io, S3m _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Channel(KaitaiStream _io, S3m _parent, S3m _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -310,24 +273,17 @@ public class S3m extends KaitaiStruct {
         }
 
         public SwappedU3(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SwappedU3(KaitaiStream _io, S3m.Instrument.Sampled _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SwappedU3(KaitaiStream _io, S3m.Instrument.Sampled _parent, S3m _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -357,24 +313,17 @@ public class S3m extends KaitaiStruct {
         }
 
         public Pattern(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Pattern(KaitaiStream _io, S3m.PatternPtr _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Pattern(KaitaiStream _io, S3m.PatternPtr _parent, S3m _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -400,24 +349,17 @@ public class S3m extends KaitaiStruct {
         }
 
         public PatternPtr(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public PatternPtr(KaitaiStream _io, S3m _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public PatternPtr(KaitaiStream _io, S3m _parent, S3m _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -446,24 +388,17 @@ public class S3m extends KaitaiStruct {
         }
 
         public InstrumentPtr(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public InstrumentPtr(KaitaiStream _io, S3m _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public InstrumentPtr(KaitaiStream _io, S3m _parent, S3m _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -512,24 +447,17 @@ public class S3m extends KaitaiStruct {
         }
 
         public Instrument(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Instrument(KaitaiStream _io, S3m.InstrumentPtr _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Instrument(KaitaiStream _io, S3m.InstrumentPtr _parent, S3m _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -556,24 +484,17 @@ public class S3m extends KaitaiStruct {
             }
 
             public Sampled(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Sampled(KaitaiStream _io, S3m.Instrument _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Sampled(KaitaiStream _io, S3m.Instrument _parent, S3m _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -631,24 +552,17 @@ public class S3m extends KaitaiStruct {
             }
 
             public Adlib(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Adlib(KaitaiStream _io, S3m.Instrument _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Adlib(KaitaiStream _io, S3m.Instrument _parent, S3m _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {

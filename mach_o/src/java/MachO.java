@@ -211,26 +211,17 @@ public class MachO extends KaitaiStruct {
     }
 
     public MachO(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public MachO(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public MachO(KaitaiStream _io, KaitaiStruct _parent, MachO _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -247,24 +238,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public RpathCommand(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public RpathCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public RpathCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -286,24 +270,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public Uleb128(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Uleb128(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Uleb128(KaitaiStream _io, KaitaiStruct _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -375,24 +352,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public SourceVersionCommand(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SourceVersionCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SourceVersionCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -431,24 +401,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public CsBlob(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public CsBlob(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public CsBlob(KaitaiStream _io, KaitaiStruct _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -509,24 +472,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public Entitlement(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Entitlement(KaitaiStream _io, MachO.CsBlob _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Entitlement(KaitaiStream _io, MachO.CsBlob _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -545,24 +501,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public CodeDirectory(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public CodeDirectory(KaitaiStream _io, MachO.CsBlob _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public CodeDirectory(KaitaiStream _io, MachO.CsBlob _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -674,24 +623,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public EntitlementsBlobIndex(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public EntitlementsBlobIndex(KaitaiStream _io, MachO.CsBlob.Entitlements _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public EntitlementsBlobIndex(KaitaiStream _io, MachO.CsBlob.Entitlements _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -723,24 +665,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public Data(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Data(KaitaiStream _io, KaitaiStruct _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Data(KaitaiStream _io, KaitaiStruct _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -765,24 +700,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public SuperBlob(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public SuperBlob(KaitaiStream _io, MachO.CsBlob _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public SuperBlob(KaitaiStream _io, MachO.CsBlob _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -852,24 +780,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public Expr(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Expr(KaitaiStream _io, KaitaiStruct _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Expr(KaitaiStream _io, KaitaiStruct _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -935,24 +856,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public InfoKeyFieldExpr(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public InfoKeyFieldExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public InfoKeyFieldExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -974,24 +888,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public CertSlotExpr(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public CertSlotExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public CertSlotExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1010,24 +917,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public CertGenericExpr(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public CertGenericExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public CertGenericExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1052,24 +952,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public IdentExpr(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public IdentExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public IdentExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1088,24 +981,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public CertFieldExpr(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public CertFieldExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public CertFieldExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1130,24 +1016,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public AnchorHashExpr(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public AnchorHashExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public AnchorHashExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1169,24 +1048,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public AppleGenericAnchorExpr(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public AppleGenericAnchorExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public AppleGenericAnchorExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1209,24 +1081,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public EntitlementFieldExpr(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public EntitlementFieldExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public EntitlementFieldExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1248,24 +1113,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public AndExpr(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public AndExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public AndExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1287,24 +1145,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public OrExpr(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public OrExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public OrExpr(KaitaiStream _io, MachO.CsBlob.Expr _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1356,24 +1207,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public BlobIndex(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public BlobIndex(KaitaiStream _io, MachO.CsBlob.SuperBlob _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public BlobIndex(KaitaiStream _io, MachO.CsBlob.SuperBlob _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -1432,24 +1276,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public Match(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Match(KaitaiStream _io, KaitaiStruct _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Match(KaitaiStream _io, KaitaiStruct _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -1473,24 +1310,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public Requirement(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Requirement(KaitaiStream _io, MachO.CsBlob _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Requirement(KaitaiStream _io, MachO.CsBlob _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -1512,24 +1342,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public BlobWrapper(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public BlobWrapper(KaitaiStream _io, MachO.CsBlob _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public BlobWrapper(KaitaiStream _io, MachO.CsBlob _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -1548,24 +1371,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public Entitlements(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Entitlements(KaitaiStream _io, MachO.CsBlob _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Entitlements(KaitaiStream _io, MachO.CsBlob _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -1603,24 +1419,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public SegmentCommand64(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SegmentCommand64(KaitaiStream _io, MachO.LoadCommand _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SegmentCommand64(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -1644,24 +1453,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public Section64(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Section64(KaitaiStream _io, MachO.SegmentCommand64 _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Section64(KaitaiStream _io, MachO.SegmentCommand64 _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -1684,24 +1486,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public CfStringList(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public CfStringList(KaitaiStream _io, MachO.SegmentCommand64.Section64 _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public CfStringList(KaitaiStream _io, MachO.SegmentCommand64.Section64 _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1723,24 +1518,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public CfString(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public CfString(KaitaiStream _io, MachO.SegmentCommand64.Section64.CfStringList _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public CfString(KaitaiStream _io, MachO.SegmentCommand64.Section64.CfStringList _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1768,24 +1556,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public EhFrameItem(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public EhFrameItem(KaitaiStream _io, MachO.SegmentCommand64.Section64.EhFrame _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public EhFrameItem(KaitaiStream _io, MachO.SegmentCommand64.Section64.EhFrame _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -1815,24 +1596,17 @@ public class MachO extends KaitaiStruct {
                     }
 
                     public CharChain(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public CharChain(KaitaiStream _io, KaitaiStruct _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public CharChain(KaitaiStream _io, KaitaiStruct _parent, MachO _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {
@@ -1856,24 +1630,17 @@ public class MachO extends KaitaiStruct {
                     }
 
                     public Cie(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public Cie(KaitaiStream _io, MachO.SegmentCommand64.Section64.EhFrameItem _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public Cie(KaitaiStream _io, MachO.SegmentCommand64.Section64.EhFrameItem _parent, MachO _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {
@@ -1909,24 +1676,17 @@ public class MachO extends KaitaiStruct {
                     }
 
                     public AugmentationEntry(KaitaiStream _io) {
-                        super(_io);
-                        _init();
+                        this(_io, null, null);
                     }
 
                     public AugmentationEntry(KaitaiStream _io, MachO.SegmentCommand64.Section64.EhFrameItem.Cie _parent) {
-                        super(_io);
-                        this._parent = _parent;
-                        _init();
+                        this(_io, _parent, null);
                     }
 
                     public AugmentationEntry(KaitaiStream _io, MachO.SegmentCommand64.Section64.EhFrameItem.Cie _parent, MachO _root) {
                         super(_io);
                         this._parent = _parent;
                         this._root = _root;
-                        _init();
-                    }
-
-                    private void _init() {
                         _read();
                     }
                     private void _read() {
@@ -1965,24 +1725,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public EhFrame(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public EhFrame(KaitaiStream _io, MachO.SegmentCommand64.Section64 _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public EhFrame(KaitaiStream _io, MachO.SegmentCommand64.Section64 _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2004,24 +1757,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public PointerList(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public PointerList(KaitaiStream _io, MachO.SegmentCommand64.Section64 _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public PointerList(KaitaiStream _io, MachO.SegmentCommand64.Section64 _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2043,24 +1789,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public StringList(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public StringList(KaitaiStream _io, MachO.SegmentCommand64.Section64 _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public StringList(KaitaiStream _io, MachO.SegmentCommand64.Section64 _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2256,24 +1995,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public DysymtabCommand(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DysymtabCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DysymtabCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -2357,24 +2089,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public MachHeader(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public MachHeader(KaitaiStream _io, MachO _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public MachHeader(KaitaiStream _io, MachO _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -2413,24 +2138,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public LinkeditDataCommand(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public LinkeditDataCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public LinkeditDataCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -2452,24 +2170,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public Version(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Version(KaitaiStream _io, MachO.VersionMinCommand _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Version(KaitaiStream _io, MachO.VersionMinCommand _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -2497,24 +2208,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public CodeSignatureCommand(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public CodeSignatureCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public CodeSignatureCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -2577,24 +2281,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public DyldInfoCommand(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DyldInfoCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DyldInfoCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -2615,24 +2312,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public BindItem(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public BindItem(KaitaiStream _io, KaitaiStruct _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public BindItem(KaitaiStream _io, KaitaiStruct _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -2703,24 +2393,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public RebaseData(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public RebaseData(KaitaiStream _io, MachO.DyldInfoCommand _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public RebaseData(KaitaiStream _io, MachO.DyldInfoCommand _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -2739,24 +2422,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public RebaseItem(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public RebaseItem(KaitaiStream _io, MachO.DyldInfoCommand.RebaseData _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public RebaseItem(KaitaiStream _io, MachO.DyldInfoCommand.RebaseData _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2807,24 +2483,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public ExportNode(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public ExportNode(KaitaiStream _io, KaitaiStruct _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public ExportNode(KaitaiStream _io, KaitaiStruct _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -2842,24 +2511,17 @@ public class MachO extends KaitaiStruct {
                 }
 
                 public Child(KaitaiStream _io) {
-                    super(_io);
-                    _init();
+                    this(_io, null, null);
                 }
 
                 public Child(KaitaiStream _io, MachO.DyldInfoCommand.ExportNode _parent) {
-                    super(_io);
-                    this._parent = _parent;
-                    _init();
+                    this(_io, _parent, null);
                 }
 
                 public Child(KaitaiStream _io, MachO.DyldInfoCommand.ExportNode _parent, MachO _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
-                    _init();
-                }
-
-                private void _init() {
                     _read();
                 }
                 private void _read() {
@@ -2904,24 +2566,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public BindData(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public BindData(KaitaiStream _io, MachO.DyldInfoCommand _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public BindData(KaitaiStream _io, MachO.DyldInfoCommand _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -2947,24 +2602,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public LazyBindData(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public LazyBindData(KaitaiStream _io, MachO.DyldInfoCommand _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public LazyBindData(KaitaiStream _io, MachO.DyldInfoCommand _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -3071,24 +2719,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public DylinkerCommand(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DylinkerCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DylinkerCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -3107,24 +2748,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public DylibCommand(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DylibCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DylibCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -3155,24 +2789,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public LcStr(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public LcStr(KaitaiStream _io, MachO.DylinkerCommand _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public LcStr(KaitaiStream _io, MachO.DylinkerCommand _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -3194,24 +2821,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public LoadCommand(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public LoadCommand(KaitaiStream _io, MachO _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public LoadCommand(KaitaiStream _io, MachO _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -3327,24 +2947,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public UuidCommand(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public UuidCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public UuidCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -3363,24 +2976,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public SymtabCommand(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public SymtabCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public SymtabCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -3395,24 +3001,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public StrTable(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public StrTable(KaitaiStream _io, MachO.SymtabCommand _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public StrTable(KaitaiStream _io, MachO.SymtabCommand _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -3441,24 +3040,17 @@ public class MachO extends KaitaiStruct {
             }
 
             public Nlist64(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public Nlist64(KaitaiStream _io, MachO.SymtabCommand _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public Nlist64(KaitaiStream _io, MachO.SymtabCommand _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -3531,24 +3123,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public VersionMinCommand(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public VersionMinCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public VersionMinCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -3570,24 +3155,17 @@ public class MachO extends KaitaiStruct {
         }
 
         public EntryPointCommand(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public EntryPointCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public EntryPointCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

@@ -23,6 +23,7 @@ class EthernetFrame < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @dst_mac = @_io.read_bytes(6)
     @src_mac = @_io.read_bytes(6)
@@ -39,6 +40,7 @@ class EthernetFrame < Kaitai::Struct::Struct
     else
       @body = @_io.read_bytes_full
     end
+    self
   end
   attr_reader :dst_mac
   attr_reader :src_mac

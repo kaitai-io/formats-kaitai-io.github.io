@@ -76,26 +76,17 @@ public class Avi extends KaitaiStruct {
     }
 
     public Avi(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Avi(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Avi(KaitaiStream _io, KaitaiStruct _parent, Avi _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -112,24 +103,17 @@ public class Avi extends KaitaiStruct {
         }
 
         public ListBody(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ListBody(KaitaiStream _io, Avi.Block _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ListBody(KaitaiStream _io, Avi.Block _parent, Avi _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -151,24 +135,17 @@ public class Avi extends KaitaiStruct {
         }
 
         public Rect(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Rect(KaitaiStream _io, Avi.StrhBody _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Rect(KaitaiStream _io, Avi.StrhBody _parent, Avi _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -196,24 +173,17 @@ public class Avi extends KaitaiStruct {
         }
 
         public Blocks(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Blocks(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Blocks(KaitaiStream _io, KaitaiStruct _parent, Avi _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -240,24 +210,17 @@ public class Avi extends KaitaiStruct {
         }
 
         public AvihBody(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public AvihBody(KaitaiStream _io, Avi.Block _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public AvihBody(KaitaiStream _io, Avi.Block _parent, Avi _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -306,24 +269,17 @@ public class Avi extends KaitaiStruct {
         }
 
         public Block(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Block(KaitaiStream _io, Avi.Blocks _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Block(KaitaiStream _io, Avi.Blocks _parent, Avi _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -378,24 +334,17 @@ public class Avi extends KaitaiStruct {
         }
 
         public StrhBody(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public StrhBody(KaitaiStream _io, Avi.Block _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public StrhBody(KaitaiStream _io, Avi.Block _parent, Avi _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -465,24 +414,17 @@ public class Avi extends KaitaiStruct {
         }
 
         public StrfBody(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public StrfBody(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public StrfBody(KaitaiStream _io, KaitaiStruct _parent, Avi _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

@@ -116,6 +116,10 @@ section#format-index .row {
                         <h3 class="panel-title">KS implementation details</h3>
                     </div>
                     
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
                     
                     <div class="panel-body">
                         Minimal Kaitai Struct required: 0.7
@@ -228,29 +232,6 @@ section#format-index .row {
 			&lt;TR&gt;&lt;TD PORT=&quot;packets_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;packets_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Packet&lt;/TD&gt;&lt;TD PORT=&quot;packets_type&quot;&gt;packets&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;packets__repeat&quot;&gt;repeat to end of stream&lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
-		subgraph cluster__packet_ppi {
-			label=&quot;Pcap::PacketPpi&quot;;
-			graph[style=dotted];
-
-			packet_ppi__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
-				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;header_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;header_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;PacketPpiHeader&lt;/TD&gt;&lt;TD PORT=&quot;header_type&quot;&gt;header&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;fields_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;fields_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;PacketPpiField&lt;/TD&gt;&lt;TD PORT=&quot;fields_type&quot;&gt;fields&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;fields__repeat&quot;&gt;repeat to end of stream&lt;/TD&gt;&lt;/TR&gt;
-			&lt;/TABLE&gt;&gt;];
-		}
-		subgraph cluster__packet_ppi_header {
-			label=&quot;Pcap::PacketPpiHeader&quot;;
-			graph[style=dotted];
-
-			packet_ppi_header__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
-				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;pph_version_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;pph_version_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;pph_version_type&quot;&gt;pph_version&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;pph_flags_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;pph_flags_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;pph_flags_type&quot;&gt;pph_flags&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;pph_len_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;pph_len_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;pph_len_type&quot;&gt;pph_len&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;pph_dlt_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;pph_dlt_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;pph_dlt_type&quot;&gt;pph_dlt&lt;/TD&gt;&lt;/TR&gt;
-			&lt;/TABLE&gt;&gt;];
-		}
 		subgraph cluster__header {
 			label=&quot;Pcap::Header&quot;;
 			graph[style=dotted];
@@ -264,34 +245,6 @@ section#format-index .row {
 				&lt;TR&gt;&lt;TD PORT=&quot;sigfigs_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;sigfigs_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;sigfigs_type&quot;&gt;sigfigs&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;snaplen_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;snaplen_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;snaplen_type&quot;&gt;snaplen&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;network_pos&quot;&gt;20&lt;/TD&gt;&lt;TD PORT=&quot;network_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le→Linktype&lt;/TD&gt;&lt;TD PORT=&quot;network_type&quot;&gt;network&lt;/TD&gt;&lt;/TR&gt;
-			&lt;/TABLE&gt;&gt;];
-		}
-		subgraph cluster__radio_802_11_common_body {
-			label=&quot;Pcap::Radio80211CommonBody&quot;;
-			graph[style=dotted];
-
-			radio_802_11_common_body__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
-				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;tsf_timer_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;tsf_timer_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;u8le&lt;/TD&gt;&lt;TD PORT=&quot;tsf_timer_type&quot;&gt;tsf_timer&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;flags_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;flags_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;flags_type&quot;&gt;flags&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;rate_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;rate_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;rate_type&quot;&gt;rate&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;channel_freq_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;channel_freq_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;channel_freq_type&quot;&gt;channel_freq&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;channel_flags_pos&quot;&gt;14&lt;/TD&gt;&lt;TD PORT=&quot;channel_flags_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;channel_flags_type&quot;&gt;channel_flags&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;fhss_hopset_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;fhss_hopset_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;fhss_hopset_type&quot;&gt;fhss_hopset&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;fhss_pattern_pos&quot;&gt;17&lt;/TD&gt;&lt;TD PORT=&quot;fhss_pattern_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;fhss_pattern_type&quot;&gt;fhss_pattern&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;dbm_antsignal_pos&quot;&gt;18&lt;/TD&gt;&lt;TD PORT=&quot;dbm_antsignal_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;s1&lt;/TD&gt;&lt;TD PORT=&quot;dbm_antsignal_type&quot;&gt;dbm_antsignal&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;dbm_antnoise_pos&quot;&gt;19&lt;/TD&gt;&lt;TD PORT=&quot;dbm_antnoise_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;s1&lt;/TD&gt;&lt;TD PORT=&quot;dbm_antnoise_type&quot;&gt;dbm_antnoise&lt;/TD&gt;&lt;/TR&gt;
-			&lt;/TABLE&gt;&gt;];
-		}
-		subgraph cluster__packet_ppi_field {
-			label=&quot;Pcap::PacketPpiField&quot;;
-			graph[style=dotted];
-
-			packet_ppi_field__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
-				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;pfh_type_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;pfh_type_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;pfh_type_type&quot;&gt;pfh_type&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;pfh_datalen_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;pfh_datalen_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;pfh_datalen_type&quot;&gt;pfh_datalen&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;pfh_datalen&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
 		subgraph cluster__packet {
@@ -315,9 +268,6 @@ packet__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&qu
 	}
 	pcap__seq:hdr_type -&gt; header__seq [style=bold];
 	pcap__seq:packets_type -&gt; packet__seq [style=bold];
-	packet_ppi__seq:header_type -&gt; packet_ppi_header__seq [style=bold];
-	packet_ppi__seq:fields_type -&gt; packet_ppi_field__seq [style=bold];
-	packet_ppi_field__seq:pfh_datalen_type -&gt; packet_ppi_field__seq:body_size [color=&quot;#404040&quot;];
 	packet__seq:body_type -&gt; packet__seq_body_switch [style=bold];
 	packet__seq_body_switch:case0 -&gt; packet_ppi__seq [style=bold];
 	packet__seq_body_switch:case1 -&gt; ethernet_frame__seq [style=bold];

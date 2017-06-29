@@ -11,29 +11,6 @@ digraph {
 			<TR><TD PORT="packets_pos">...</TD><TD PORT="packets_size">...</TD><TD>Packet</TD><TD PORT="packets_type">packets</TD></TR>
 			<TR><TD COLSPAN="4" PORT="packets__repeat">repeat to end of stream</TD></TR>
 		</TABLE>>];
-		subgraph cluster__packet_ppi {
-			label="Pcap::PacketPpi";
-			graph[style=dotted];
-
-			packet_ppi__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">...</TD><TD>PacketPpiHeader</TD><TD PORT="header_type">header</TD></TR>
-				<TR><TD PORT="fields_pos">...</TD><TD PORT="fields_size">...</TD><TD>PacketPpiField</TD><TD PORT="fields_type">fields</TD></TR>
-				<TR><TD COLSPAN="4" PORT="fields__repeat">repeat to end of stream</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__packet_ppi_header {
-			label="Pcap::PacketPpiHeader";
-			graph[style=dotted];
-
-			packet_ppi_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="pph_version_pos">0</TD><TD PORT="pph_version_size">1</TD><TD>u1</TD><TD PORT="pph_version_type">pph_version</TD></TR>
-				<TR><TD PORT="pph_flags_pos">1</TD><TD PORT="pph_flags_size">1</TD><TD>u1</TD><TD PORT="pph_flags_type">pph_flags</TD></TR>
-				<TR><TD PORT="pph_len_pos">2</TD><TD PORT="pph_len_size">2</TD><TD>u2le</TD><TD PORT="pph_len_type">pph_len</TD></TR>
-				<TR><TD PORT="pph_dlt_pos">4</TD><TD PORT="pph_dlt_size">4</TD><TD>u4le</TD><TD PORT="pph_dlt_type">pph_dlt</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__header {
 			label="Pcap::Header";
 			graph[style=dotted];
@@ -47,34 +24,6 @@ digraph {
 				<TR><TD PORT="sigfigs_pos">12</TD><TD PORT="sigfigs_size">4</TD><TD>u4le</TD><TD PORT="sigfigs_type">sigfigs</TD></TR>
 				<TR><TD PORT="snaplen_pos">16</TD><TD PORT="snaplen_size">4</TD><TD>u4le</TD><TD PORT="snaplen_type">snaplen</TD></TR>
 				<TR><TD PORT="network_pos">20</TD><TD PORT="network_size">4</TD><TD>u4le→Linktype</TD><TD PORT="network_type">network</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__radio_802_11_common_body {
-			label="Pcap::Radio80211CommonBody";
-			graph[style=dotted];
-
-			radio_802_11_common_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="tsf_timer_pos">0</TD><TD PORT="tsf_timer_size">8</TD><TD>u8le</TD><TD PORT="tsf_timer_type">tsf_timer</TD></TR>
-				<TR><TD PORT="flags_pos">8</TD><TD PORT="flags_size">2</TD><TD>u2le</TD><TD PORT="flags_type">flags</TD></TR>
-				<TR><TD PORT="rate_pos">10</TD><TD PORT="rate_size">2</TD><TD>u2le</TD><TD PORT="rate_type">rate</TD></TR>
-				<TR><TD PORT="channel_freq_pos">12</TD><TD PORT="channel_freq_size">2</TD><TD>u2le</TD><TD PORT="channel_freq_type">channel_freq</TD></TR>
-				<TR><TD PORT="channel_flags_pos">14</TD><TD PORT="channel_flags_size">2</TD><TD>u2le</TD><TD PORT="channel_flags_type">channel_flags</TD></TR>
-				<TR><TD PORT="fhss_hopset_pos">16</TD><TD PORT="fhss_hopset_size">1</TD><TD>u1</TD><TD PORT="fhss_hopset_type">fhss_hopset</TD></TR>
-				<TR><TD PORT="fhss_pattern_pos">17</TD><TD PORT="fhss_pattern_size">1</TD><TD>u1</TD><TD PORT="fhss_pattern_type">fhss_pattern</TD></TR>
-				<TR><TD PORT="dbm_antsignal_pos">18</TD><TD PORT="dbm_antsignal_size">1</TD><TD>s1</TD><TD PORT="dbm_antsignal_type">dbm_antsignal</TD></TR>
-				<TR><TD PORT="dbm_antnoise_pos">19</TD><TD PORT="dbm_antnoise_size">1</TD><TD>s1</TD><TD PORT="dbm_antnoise_type">dbm_antnoise</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__packet_ppi_field {
-			label="Pcap::PacketPpiField";
-			graph[style=dotted];
-
-			packet_ppi_field__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="pfh_type_pos">0</TD><TD PORT="pfh_type_size">2</TD><TD>u2le</TD><TD PORT="pfh_type_type">pfh_type</TD></TR>
-				<TR><TD PORT="pfh_datalen_pos">2</TD><TD PORT="pfh_datalen_size">2</TD><TD>u2le</TD><TD PORT="pfh_datalen_type">pfh_datalen</TD></TR>
-				<TR><TD PORT="body_pos">4</TD><TD PORT="body_size">pfh_datalen</TD><TD></TD><TD PORT="body_type">body</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__packet {
@@ -98,9 +47,6 @@ packet__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"
 	}
 	pcap__seq:hdr_type -> header__seq [style=bold];
 	pcap__seq:packets_type -> packet__seq [style=bold];
-	packet_ppi__seq:header_type -> packet_ppi_header__seq [style=bold];
-	packet_ppi__seq:fields_type -> packet_ppi_field__seq [style=bold];
-	packet_ppi_field__seq:pfh_datalen_type -> packet_ppi_field__seq:body_size [color="#404040"];
 	packet__seq:body_type -> packet__seq_body_switch [style=bold];
 	packet__seq_body_switch:case0 -> packet_ppi__seq [style=bold];
 	packet__seq_body_switch:case1 -> ethernet_frame__seq [style=bold];

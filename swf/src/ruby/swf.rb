@@ -18,6 +18,7 @@ class Swf < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @junk = @_io.read_bytes(4)
     @file_size = @_io.read_u4le
@@ -25,12 +26,14 @@ class Swf < Kaitai::Struct::Struct
     @_raw_body = Zlib::Inflate.inflate(@_raw__raw_body)
     io = Kaitai::Struct::Stream.new(@_raw_body)
     @body = SwfBody.new(io, self, @_root)
+    self
   end
   class SwfBody < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @rect = Rect.new(@_io, self, @_root)
       @frame_rate = @_io.read_u2le
@@ -39,6 +42,7 @@ class Swf < Kaitai::Struct::Struct
       while not @_io.eof?
         @tags << Tag.new(@_io, self, @_root)
       end
+      self
     end
     attr_reader :rect
     attr_reader :frame_rate
@@ -50,9 +54,11 @@ class Swf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @b1 = @_io.read_u1
       @skip = @_io.read_bytes(num_bytes)
+      self
     end
     def num_bits
       return @num_bits unless @num_bits.nil?
@@ -72,6 +78,7 @@ class Swf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @record_header = RecordHeader.new(@_io, self, @_root)
       case record_header.tag_type
@@ -82,6 +89,7 @@ class Swf < Kaitai::Struct::Struct
       else
         @tag_body = @_io.read_bytes(record_header.len)
       end
+      self
     end
     attr_reader :record_header
     attr_reader :tag_body
@@ -92,10 +100,12 @@ class Swf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @flags = @_io.read_u4le
       @name = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
       @abcdata = @_io.read_bytes_full
+      self
     end
     attr_reader :flags
     attr_reader :name
@@ -106,11 +116,13 @@ class Swf < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @tag_code_and_length = @_io.read_u2le
       if small_len == 63
         @big_len = @_io.read_s4le
       end
+      self
     end
     def tag_type
       return @tag_type unless @tag_type.nil?

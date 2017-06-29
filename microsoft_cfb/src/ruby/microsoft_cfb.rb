@@ -11,14 +11,17 @@ class MicrosoftCfb < Kaitai::Struct::Struct
     super(_io, _parent, _root)
     _read
   end
+
   def _read
     @header = CfbHeader.new(@_io, self, @_root)
+    self
   end
   class CfbHeader < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @signature = @_io.ensure_fixed_contents([208, 207, 17, 224, 161, 177, 26, 225].pack('C*'))
       @clsid = @_io.ensure_fixed_contents([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*'))
@@ -41,6 +44,7 @@ class MicrosoftCfb < Kaitai::Struct::Struct
       (109).times { |i|
         @difat[i] = @_io.read_s4le
       }
+      self
     end
 
     ##
@@ -102,11 +106,13 @@ class MicrosoftCfb < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @entries = []
       while not @_io.eof?
         @entries << @_io.read_s4le
       end
+      self
     end
     attr_reader :entries
   end
@@ -129,6 +135,7 @@ class MicrosoftCfb < Kaitai::Struct::Struct
       super(_io, _parent, _root)
       _read
     end
+
     def _read
       @name = (@_io.read_bytes(64)).force_encoding("UTF-16LE")
       @name_len = @_io.read_u2le
@@ -143,6 +150,7 @@ class MicrosoftCfb < Kaitai::Struct::Struct
       @time_mod = @_io.read_u8le
       @ofs = @_io.read_s4le
       @size = @_io.read_u8le
+      self
     end
     def mini_stream
       return @mini_stream unless @mini_stream.nil?

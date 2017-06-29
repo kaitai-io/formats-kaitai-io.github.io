@@ -21,26 +21,17 @@ public class Bson extends KaitaiStruct {
     }
 
     public Bson(KaitaiStream _io) {
-        super(_io);
-        this._root = this;
-        _init();
+        this(_io, null, null);
     }
 
     public Bson(KaitaiStream _io, KaitaiStruct _parent) {
-        super(_io);
-        this._parent = _parent;
-        this._root = this;
-        _init();
+        this(_io, _parent, null);
     }
 
     public Bson(KaitaiStream _io, KaitaiStruct _parent, Bson _root) {
         super(_io);
         this._parent = _parent;
-        this._root = _root;
-        _init();
-    }
-
-    private void _init() {
+        this._root = _root == null ? this : _root;
         _read();
     }
     private void _read() {
@@ -60,24 +51,17 @@ public class Bson extends KaitaiStruct {
         }
 
         public Timestamp(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Timestamp(KaitaiStream _io, Bson.Element _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Timestamp(KaitaiStream _io, Bson.Element _parent, Bson _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -123,24 +107,17 @@ public class Bson extends KaitaiStruct {
         }
 
         public BinData(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public BinData(KaitaiStream _io, Bson.Element _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public BinData(KaitaiStream _io, Bson.Element _parent, Bson _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -169,24 +146,17 @@ public class Bson extends KaitaiStruct {
             }
 
             public ByteArrayDeprecated(KaitaiStream _io) {
-                super(_io);
-                _init();
+                this(_io, null, null);
             }
 
             public ByteArrayDeprecated(KaitaiStream _io, Bson.BinData _parent) {
-                super(_io);
-                this._parent = _parent;
-                _init();
+                this(_io, _parent, null);
             }
 
             public ByteArrayDeprecated(KaitaiStream _io, Bson.BinData _parent, Bson _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                _init();
-            }
-
-            private void _init() {
                 _read();
             }
             private void _read() {
@@ -221,24 +191,17 @@ public class Bson extends KaitaiStruct {
         }
 
         public ElementsList(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ElementsList(KaitaiStream _io, Bson _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ElementsList(KaitaiStream _io, Bson _parent, Bson _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -260,24 +223,17 @@ public class Bson extends KaitaiStruct {
         }
 
         public Cstring(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Cstring(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Cstring(KaitaiStream _io, KaitaiStruct _parent, Bson _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -300,24 +256,17 @@ public class Bson extends KaitaiStruct {
         }
 
         public String(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public String(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public String(KaitaiStream _io, KaitaiStruct _parent, Bson _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -377,24 +326,17 @@ public class Bson extends KaitaiStruct {
         }
 
         public Element(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public Element(KaitaiStream _io, Bson.ElementsList _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public Element(KaitaiStream _io, Bson.ElementsList _parent, Bson _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -488,24 +430,17 @@ public class Bson extends KaitaiStruct {
         }
 
         public DbPointer(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public DbPointer(KaitaiStream _io, Bson.Element _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public DbPointer(KaitaiStream _io, Bson.Element _parent, Bson _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -531,24 +466,17 @@ public class Bson extends KaitaiStruct {
         }
 
         public U3(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public U3(KaitaiStream _io, Bson.ObjectId _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public U3(KaitaiStream _io, Bson.ObjectId _parent, Bson _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -581,24 +509,17 @@ public class Bson extends KaitaiStruct {
         }
 
         public CodeWithScope(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public CodeWithScope(KaitaiStream _io, Bson.Element _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public CodeWithScope(KaitaiStream _io, Bson.Element _parent, Bson _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -631,24 +552,17 @@ public class Bson extends KaitaiStruct {
         }
 
         public F16(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public F16(KaitaiStream _io, Bson.Element _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public F16(KaitaiStream _io, Bson.Element _parent, Bson _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -681,24 +595,17 @@ public class Bson extends KaitaiStruct {
         }
 
         public ObjectId(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public ObjectId(KaitaiStream _io, KaitaiStruct _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public ObjectId(KaitaiStream _io, KaitaiStruct _parent, Bson _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {
@@ -734,24 +641,17 @@ public class Bson extends KaitaiStruct {
         }
 
         public RegEx(KaitaiStream _io) {
-            super(_io);
-            _init();
+            this(_io, null, null);
         }
 
         public RegEx(KaitaiStream _io, Bson.Element _parent) {
-            super(_io);
-            this._parent = _parent;
-            _init();
+            this(_io, _parent, null);
         }
 
         public RegEx(KaitaiStream _io, Bson.Element _parent, Bson _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            _init();
-        }
-
-        private void _init() {
             _read();
         }
         private void _read() {

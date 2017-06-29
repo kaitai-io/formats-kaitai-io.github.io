@@ -291,6 +291,10 @@ class EndianElf extends \Kaitai\Struct\Struct {
 
     public function __construct(\Kaitai\Struct\Stream $io, \Elf $parent = null, \Elf $root = null) {
         parent::__construct($io, $parent, $root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
         switch ($this-&gt;_root()-&gt;endian()) {
             case \Elf\Endian::LE:
                 $this-&gt;_m__is_le = true;
@@ -498,6 +502,10 @@ class ProgramHeader extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $io, \Elf\EndianElf $parent = null, \Elf $root = null, $is_le = null) {
         parent::__construct($io, $parent, $root);
         $this-&gt;_m__is_le = $is_le;
+        $this-&gt;_read();
+    }
+
+    private function _read() {
 
         if (is_null($this-&gt;_m__is_le)) {
             throw new \RuntimeException(&quot;Unable to decide on endianness&quot;);
@@ -651,6 +659,10 @@ class SectionHeader extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $io, \Elf\EndianElf $parent = null, \Elf $root = null, $is_le = null) {
         parent::__construct($io, $parent, $root);
         $this-&gt;_m__is_le = $is_le;
+        $this-&gt;_read();
+    }
+
+    private function _read() {
 
         if (is_null($this-&gt;_m__is_le)) {
             throw new \RuntimeException(&quot;Unable to decide on endianness&quot;);
@@ -830,6 +842,10 @@ class StringsStruct extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $io, \Elf\EndianElf $parent = null, \Elf $root = null, $is_le = null) {
         parent::__construct($io, $parent, $root);
         $this-&gt;_m__is_le = $is_le;
+        $this-&gt;_read();
+    }
+
+    private function _read() {
 
         if (is_null($this-&gt;_m__is_le)) {
             throw new \RuntimeException(&quot;Unable to decide on endianness&quot;);

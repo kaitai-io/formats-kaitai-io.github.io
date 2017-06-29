@@ -153,6 +153,9 @@ namespace Kaitai
                 f_programHeaders = false;
                 f_sectionHeaders = false;
                 f_strings = false;
+                _read();
+            }
+            private void _read() {
                 switch (M_Root.Endian) {
                 case Elf.Endian.Le: {
                     m_isLe = (bool) (true);
@@ -171,7 +174,7 @@ namespace Kaitai
                 } else {
                     _readBE();
                 }
-            }
+                }
             private void _readLE() {
                 _eType = ((Elf.ObjType) m_io.ReadU2le());
                 _machine = ((Elf.Machine) m_io.ReadU2le());
@@ -269,6 +272,9 @@ namespace Kaitai
                     m_parent = parent;
                     m_root = root;
                     m_isLe = isLe;
+                    _read();
+                }
+                private void _read() {
 
                     if (m_isLe == null) {
                         throw new Exception("Unable to decide on endianness");
@@ -277,7 +283,7 @@ namespace Kaitai
                     } else {
                         _readBE();
                     }
-                }
+                    }
                 private void _readLE() {
                     _type = ((Elf.PhType) m_io.ReadU4le());
                     if (M_Root.Bits == Elf.Bits.B64) {
@@ -454,6 +460,9 @@ namespace Kaitai
                     m_isLe = isLe;
                     f_body = false;
                     f_name = false;
+                    _read();
+                }
+                private void _read() {
 
                     if (m_isLe == null) {
                         throw new Exception("Unable to decide on endianness");
@@ -462,7 +471,7 @@ namespace Kaitai
                     } else {
                         _readBE();
                     }
-                }
+                    }
                 private void _readLE() {
                     _nameOffset = m_io.ReadU4le();
                     _type = ((Elf.ShType) m_io.ReadU4le());
@@ -675,6 +684,9 @@ namespace Kaitai
                     m_parent = parent;
                     m_root = root;
                     m_isLe = isLe;
+                    _read();
+                }
+                private void _read() {
 
                     if (m_isLe == null) {
                         throw new Exception("Unable to decide on endianness");
@@ -683,7 +695,7 @@ namespace Kaitai
                     } else {
                         _readBE();
                     }
-                }
+                    }
                 private void _readLE() {
                     _entries = new List<string>();
                     while (!m_io.IsEof) {
