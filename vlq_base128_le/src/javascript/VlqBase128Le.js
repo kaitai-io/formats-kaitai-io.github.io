@@ -32,9 +32,11 @@ var VlqBase128Le = (function() {
   }
   VlqBase128Le.prototype._read = function() {
     this.groups = []
+    var i = 0;
     do {
       var _ = new Group(this._io, this, this._root);
       this.groups.push(_);
+      i++;
     } while (!(!(_.hasNext)));
   }
 

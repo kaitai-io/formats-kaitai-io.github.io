@@ -11,19 +11,21 @@ namespace Kaitai
             return new FtlDat(new KaitaiStream(fileName));
         }
 
-        public FtlDat(KaitaiStream io, KaitaiStruct parent = null, FtlDat root = null) : base(io)
+        public FtlDat(KaitaiStream p__io, KaitaiStruct p__parent = null, FtlDat p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _numFiles = m_io.ReadU4le();
             _files = new List<File>((int) (NumFiles));
-            for (var i = 0; i < NumFiles; i++) {
+            for (var i = 0; i < NumFiles; i++)
+            {
                 _files.Add(new File(m_io, this, m_root));
             }
-            }
+        }
         public partial class File : KaitaiStruct
         {
             public static File FromFile(string fileName)
@@ -31,16 +33,17 @@ namespace Kaitai
                 return new File(new KaitaiStream(fileName));
             }
 
-            public File(KaitaiStream io, FtlDat parent = null, FtlDat root = null) : base(io)
+            public File(KaitaiStream p__io, FtlDat p__parent = null, FtlDat p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_meta = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _metaOfs = m_io.ReadU4le();
-                }
+            }
             private bool f_meta;
             private Meta _meta;
             public Meta Meta
@@ -73,18 +76,19 @@ namespace Kaitai
                 return new Meta(new KaitaiStream(fileName));
             }
 
-            public Meta(KaitaiStream io, FtlDat.File parent = null, FtlDat root = null) : base(io)
+            public Meta(KaitaiStream p__io, FtlDat.File p__parent = null, FtlDat p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _fileSize = m_io.ReadU4le();
                 _filenameSize = m_io.ReadU4le();
                 _filename = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(FilenameSize));
                 _body = m_io.ReadBytes(FileSize);
-                }
+            }
             private uint _fileSize;
             private uint _filenameSize;
             private string _filename;

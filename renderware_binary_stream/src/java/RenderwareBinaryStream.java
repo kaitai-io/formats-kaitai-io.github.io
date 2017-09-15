@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  */
 public class RenderwareBinaryStream extends KaitaiStruct {
     public static RenderwareBinaryStream fromFile(String fileName) throws IOException {
-        return new RenderwareBinaryStream(new KaitaiStream(fileName));
+        return new RenderwareBinaryStream(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum Sections {
@@ -217,37 +218,37 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         switch (code()) {
         case TEXTURE_DICTIONARY: {
             this._raw_body = this._io.readBytes(size());
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new ListWithHeader(_io__raw_body, this, _root);
             break;
         }
         case GEOMETRY_LIST: {
             this._raw_body = this._io.readBytes(size());
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new ListWithHeader(_io__raw_body, this, _root);
             break;
         }
         case CLUMP: {
             this._raw_body = this._io.readBytes(size());
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new ListWithHeader(_io__raw_body, this, _root);
             break;
         }
         case TEXTURE_NATIVE: {
             this._raw_body = this._io.readBytes(size());
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new ListWithHeader(_io__raw_body, this, _root);
             break;
         }
         case FRAME_LIST: {
             this._raw_body = this._io.readBytes(size());
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new ListWithHeader(_io__raw_body, this, _root);
             break;
         }
         case GEOMETRY: {
             this._raw_body = this._io.readBytes(size());
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new ListWithHeader(_io__raw_body, this, _root);
             break;
         }
@@ -263,7 +264,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
      */
     public static class StructClump extends KaitaiStruct {
         public static StructClump fromFile(String fileName) throws IOException {
-            return new StructClump(new KaitaiStream(fileName));
+            return new StructClump(new ByteBufferKaitaiStream(fileName));
         }
 
         public StructClump(KaitaiStream _io) {
@@ -306,7 +307,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
      */
     public static class StructGeometry extends KaitaiStruct {
         public static StructGeometry fromFile(String fileName) throws IOException {
-            return new StructGeometry(new KaitaiStream(fileName));
+            return new StructGeometry(new ByteBufferKaitaiStream(fileName));
         }
 
         public StructGeometry(KaitaiStream _io) {
@@ -392,7 +393,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
     public static class GeometryNonNative extends KaitaiStruct {
         public static GeometryNonNative fromFile(String fileName) throws IOException {
-            return new GeometryNonNative(new KaitaiStream(fileName));
+            return new GeometryNonNative(new ByteBufferKaitaiStream(fileName));
         }
 
         public GeometryNonNative(KaitaiStream _io) {
@@ -444,7 +445,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
      */
     public static class StructGeometryList extends KaitaiStruct {
         public static StructGeometryList fromFile(String fileName) throws IOException {
-            return new StructGeometryList(new KaitaiStream(fileName));
+            return new StructGeometryList(new ByteBufferKaitaiStream(fileName));
         }
 
         public StructGeometryList(KaitaiStream _io) {
@@ -473,7 +474,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
     public static class Rgba extends KaitaiStruct {
         public static Rgba fromFile(String fileName) throws IOException {
-            return new Rgba(new KaitaiStream(fileName));
+            return new Rgba(new ByteBufferKaitaiStream(fileName));
         }
 
         public Rgba(KaitaiStream _io) {
@@ -511,7 +512,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
     public static class Sphere extends KaitaiStruct {
         public static Sphere fromFile(String fileName) throws IOException {
-            return new Sphere(new KaitaiStream(fileName));
+            return new Sphere(new ByteBufferKaitaiStream(fileName));
         }
 
         public Sphere(KaitaiStream _io) {
@@ -549,7 +550,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
     public static class MorphTarget extends KaitaiStruct {
         public static MorphTarget fromFile(String fileName) throws IOException {
-            return new MorphTarget(new KaitaiStream(fileName));
+            return new MorphTarget(new ByteBufferKaitaiStream(fileName));
         }
 
         public MorphTarget(KaitaiStream _io) {
@@ -604,7 +605,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
      */
     public static class SurfaceProperties extends KaitaiStruct {
         public static SurfaceProperties fromFile(String fileName) throws IOException {
-            return new SurfaceProperties(new KaitaiStream(fileName));
+            return new SurfaceProperties(new ByteBufferKaitaiStream(fileName));
         }
 
         public SurfaceProperties(KaitaiStream _io) {
@@ -643,7 +644,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
      */
     public static class StructFrameList extends KaitaiStruct {
         public static StructFrameList fromFile(String fileName) throws IOException {
-            return new StructFrameList(new KaitaiStream(fileName));
+            return new StructFrameList(new ByteBufferKaitaiStream(fileName));
         }
 
         public StructFrameList(KaitaiStream _io) {
@@ -682,7 +683,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
      */
     public static class Matrix extends KaitaiStruct {
         public static Matrix fromFile(String fileName) throws IOException {
-            return new Matrix(new KaitaiStream(fileName));
+            return new Matrix(new ByteBufferKaitaiStream(fileName));
         }
 
         public Matrix(KaitaiStream _io) {
@@ -718,7 +719,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
      */
     public static class Vector3d extends KaitaiStruct {
         public static Vector3d fromFile(String fileName) throws IOException {
-            return new Vector3d(new KaitaiStream(fileName));
+            return new Vector3d(new ByteBufferKaitaiStream(fileName));
         }
 
         public Vector3d(KaitaiStream _io) {
@@ -762,7 +763,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
      */
     public static class ListWithHeader extends KaitaiStruct {
         public static ListWithHeader fromFile(String fileName) throws IOException {
-            return new ListWithHeader(new KaitaiStream(fileName));
+            return new ListWithHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public ListWithHeader(KaitaiStream _io) {
@@ -786,31 +787,31 @@ public class RenderwareBinaryStream extends KaitaiStruct {
             switch (_parent().code()) {
             case TEXTURE_DICTIONARY: {
                 this._raw_header = this._io.readBytes(headerSize());
-                KaitaiStream _io__raw_header = new KaitaiStream(_raw_header);
+                KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
                 this.header = new StructTextureDictionary(_io__raw_header, this, _root);
                 break;
             }
             case GEOMETRY_LIST: {
                 this._raw_header = this._io.readBytes(headerSize());
-                KaitaiStream _io__raw_header = new KaitaiStream(_raw_header);
+                KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
                 this.header = new StructGeometryList(_io__raw_header, this, _root);
                 break;
             }
             case CLUMP: {
                 this._raw_header = this._io.readBytes(headerSize());
-                KaitaiStream _io__raw_header = new KaitaiStream(_raw_header);
+                KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
                 this.header = new StructClump(_io__raw_header, this, _root);
                 break;
             }
             case FRAME_LIST: {
                 this._raw_header = this._io.readBytes(headerSize());
-                KaitaiStream _io__raw_header = new KaitaiStream(_raw_header);
+                KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
                 this.header = new StructFrameList(_io__raw_header, this, _root);
                 break;
             }
             case GEOMETRY: {
                 this._raw_header = this._io.readBytes(headerSize());
-                KaitaiStream _io__raw_header = new KaitaiStream(_raw_header);
+                KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
                 this.header = new StructGeometry(_io__raw_header, this, _root);
                 break;
             }
@@ -820,8 +821,12 @@ public class RenderwareBinaryStream extends KaitaiStruct {
             }
             }
             this.entries = new ArrayList<RenderwareBinaryStream>();
-            while (!this._io.isEof()) {
-                this.entries.add(new RenderwareBinaryStream(this._io));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new RenderwareBinaryStream(this._io));
+                    i++;
+                }
             }
         }
         private byte[] code;
@@ -843,7 +848,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
     public static class Triangle extends KaitaiStruct {
         public static Triangle fromFile(String fileName) throws IOException {
-            return new Triangle(new KaitaiStream(fileName));
+            return new Triangle(new ByteBufferKaitaiStream(fileName));
         }
 
         public Triangle(KaitaiStream _io) {
@@ -885,7 +890,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
      */
     public static class Frame extends KaitaiStruct {
         public static Frame fromFile(String fileName) throws IOException {
-            return new Frame(new KaitaiStream(fileName));
+            return new Frame(new ByteBufferKaitaiStream(fileName));
         }
 
         public Frame(KaitaiStream _io) {
@@ -923,7 +928,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
     public static class TexCoord extends KaitaiStruct {
         public static TexCoord fromFile(String fileName) throws IOException {
-            return new TexCoord(new KaitaiStream(fileName));
+            return new TexCoord(new ByteBufferKaitaiStream(fileName));
         }
 
         public TexCoord(KaitaiStream _io) {
@@ -955,7 +960,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
     public static class StructTextureDictionary extends KaitaiStruct {
         public static StructTextureDictionary fromFile(String fileName) throws IOException {
-            return new StructTextureDictionary(new KaitaiStream(fileName));
+            return new StructTextureDictionary(new ByteBufferKaitaiStream(fileName));
         }
 
         public StructTextureDictionary(KaitaiStream _io) {

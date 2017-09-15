@@ -1,12 +1,13 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 
 public class Ipv6Packet extends KaitaiStruct {
     public static Ipv6Packet fromFile(String fileName) throws IOException {
-        return new Ipv6Packet(new KaitaiStream(fileName));
+        return new Ipv6Packet(new ByteBufferKaitaiStream(fileName));
     }
 
     public Ipv6Packet(KaitaiStream _io) {
@@ -59,7 +60,7 @@ public class Ipv6Packet extends KaitaiStruct {
     }
     public static class NoNextHeader extends KaitaiStruct {
         public static NoNextHeader fromFile(String fileName) throws IOException {
-            return new NoNextHeader(new KaitaiStream(fileName));
+            return new NoNextHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public NoNextHeader(KaitaiStream _io) {
@@ -85,7 +86,7 @@ public class Ipv6Packet extends KaitaiStruct {
     }
     public static class OptionHopByHop extends KaitaiStruct {
         public static OptionHopByHop fromFile(String fileName) throws IOException {
-            return new OptionHopByHop(new KaitaiStream(fileName));
+            return new OptionHopByHop(new ByteBufferKaitaiStream(fileName));
         }
 
         public OptionHopByHop(KaitaiStream _io) {

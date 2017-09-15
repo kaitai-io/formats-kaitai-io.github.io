@@ -4,8 +4,8 @@
 
 
 
-vfat_t::vfat_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, vfat_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+vfat_t::vfat_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_fats = false;
     f_root_dir = false;
@@ -18,16 +18,18 @@ void vfat_t::_read() {
 
 vfat_t::~vfat_t() {
     delete m_boot_sector;
-    delete m_fats;
+    if (f_fats) {
+        delete m_fats;
+    }
     if (f_root_dir) {
         delete m__io__raw_root_dir;
         delete m_root_dir;
     }
 }
 
-vfat_t::ext_bios_param_block_fat32_t::ext_bios_param_block_fat32_t(kaitai::kstream *p_io, vfat_t::boot_sector_t* p_parent, vfat_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+vfat_t::ext_bios_param_block_fat32_t::ext_bios_param_block_fat32_t(kaitai::kstream* p__io, vfat_t::boot_sector_t* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -54,9 +56,9 @@ void vfat_t::ext_bios_param_block_fat32_t::_read() {
 vfat_t::ext_bios_param_block_fat32_t::~ext_bios_param_block_fat32_t() {
 }
 
-vfat_t::boot_sector_t::boot_sector_t(kaitai::kstream *p_io, vfat_t* p_parent, vfat_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+vfat_t::boot_sector_t::boot_sector_t(kaitai::kstream* p__io, vfat_t* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_pos_fats = false;
     f_ls_per_fat = false;
     f_ls_per_root_dir = false;
@@ -149,9 +151,9 @@ int32_t vfat_t::boot_sector_t::size_root_dir() {
     return m_size_root_dir;
 }
 
-vfat_t::bios_param_block_t::bios_param_block_t(kaitai::kstream *p_io, vfat_t::boot_sector_t* p_parent, vfat_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+vfat_t::bios_param_block_t::bios_param_block_t(kaitai::kstream* p__io, vfat_t::boot_sector_t* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -173,9 +175,9 @@ void vfat_t::bios_param_block_t::_read() {
 vfat_t::bios_param_block_t::~bios_param_block_t() {
 }
 
-vfat_t::root_directory_rec_t::root_directory_rec_t(kaitai::kstream *p_io, vfat_t::root_directory_t* p_parent, vfat_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+vfat_t::root_directory_rec_t::root_directory_rec_t(kaitai::kstream* p__io, vfat_t::root_directory_t* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -192,9 +194,9 @@ void vfat_t::root_directory_rec_t::_read() {
 vfat_t::root_directory_rec_t::~root_directory_rec_t() {
 }
 
-vfat_t::root_directory_t::root_directory_t(kaitai::kstream *p_io, vfat_t* p_parent, vfat_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+vfat_t::root_directory_t::root_directory_t(kaitai::kstream* p__io, vfat_t* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -214,9 +216,9 @@ vfat_t::root_directory_t::~root_directory_t() {
     delete m_records;
 }
 
-vfat_t::ext_bios_param_block_fat16_t::ext_bios_param_block_fat16_t(kaitai::kstream *p_io, vfat_t::boot_sector_t* p_parent, vfat_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+vfat_t::ext_bios_param_block_fat16_t::ext_bios_param_block_fat16_t(kaitai::kstream* p__io, vfat_t::boot_sector_t* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 
 public class Stl extends KaitaiStruct {
     public static Stl fromFile(String fileName) throws IOException {
-        return new Stl(new KaitaiStream(fileName));
+        return new Stl(new ByteBufferKaitaiStream(fileName));
     }
 
     public Stl(KaitaiStream _io) {
@@ -34,7 +35,7 @@ public class Stl extends KaitaiStruct {
     }
     public static class Triangle extends KaitaiStruct {
         public static Triangle fromFile(String fileName) throws IOException {
-            return new Triangle(new KaitaiStream(fileName));
+            return new Triangle(new ByteBufferKaitaiStream(fileName));
         }
 
         public Triangle(KaitaiStream _io) {
@@ -69,7 +70,7 @@ public class Stl extends KaitaiStruct {
     }
     public static class Vec3d extends KaitaiStruct {
         public static Vec3d fromFile(String fileName) throws IOException {
-            return new Vec3d(new KaitaiStream(fileName));
+            return new Vec3d(new ByteBufferKaitaiStream(fileName));
         }
 
         public Vec3d(KaitaiStream _io) {

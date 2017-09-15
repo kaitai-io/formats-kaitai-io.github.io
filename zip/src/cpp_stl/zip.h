@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -69,16 +68,24 @@ public:
         EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE = 30837
     };
 
-    zip_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, zip_t* p_root = 0);
+    zip_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, zip_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~zip_t();
 
     class local_file_t : public kaitai::kstruct {
 
     public:
 
-        local_file_t(kaitai::kstream* p_io, zip_t::pk_section_t* p_parent = 0, zip_t* p_root = 0);
+        local_file_t(kaitai::kstream* p__io, zip_t::pk_section_t* p__parent = 0, zip_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~local_file_t();
 
     private:
@@ -101,8 +108,12 @@ public:
         class extended_timestamp_t;
         class infozip_unix_var_size_t;
 
-        extra_field_t(kaitai::kstream* p_io, zip_t::extras_t* p_parent = 0, zip_t* p_root = 0);
+        extra_field_t(kaitai::kstream* p__io, zip_t::extras_t* p__parent = 0, zip_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~extra_field_t();
 
         /**
@@ -115,22 +126,36 @@ public:
             class attribute_t;
             class attribute_1_t;
 
-            ntfs_t(kaitai::kstream* p_io, zip_t::extra_field_t* p_parent = 0, zip_t* p_root = 0);
+            ntfs_t(kaitai::kstream* p__io, zip_t::extra_field_t* p__parent = 0, zip_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~ntfs_t();
 
             class attribute_t : public kaitai::kstruct {
 
             public:
 
-                attribute_t(kaitai::kstream* p_io, zip_t::extra_field_t::ntfs_t* p_parent = 0, zip_t* p_root = 0);
+                attribute_t(kaitai::kstream* p__io, zip_t::extra_field_t::ntfs_t* p__parent = 0, zip_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~attribute_t();
 
             private:
                 uint16_t m_tag;
                 uint16_t m_size;
                 attribute_1_t* m_body;
+                bool n_body;
+
+            public:
+                bool _is_null_body() { body(); return n_body; };
+
+            private:
                 zip_t* m__root;
                 zip_t::extra_field_t::ntfs_t* m__parent;
                 std::string m__raw_body;
@@ -150,8 +175,12 @@ public:
 
             public:
 
-                attribute_1_t(kaitai::kstream* p_io, zip_t::extra_field_t::ntfs_t::attribute_t* p_parent = 0, zip_t* p_root = 0);
+                attribute_1_t(kaitai::kstream* p__io, zip_t::extra_field_t::ntfs_t::attribute_t* p__parent = 0, zip_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~attribute_1_t();
 
             private:
@@ -190,8 +219,12 @@ public:
 
         public:
 
-            extended_timestamp_t(kaitai::kstream* p_io, zip_t::extra_field_t* p_parent = 0, zip_t* p_root = 0);
+            extended_timestamp_t(kaitai::kstream* p__io, zip_t::extra_field_t* p__parent = 0, zip_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~extended_timestamp_t();
 
         private:
@@ -231,8 +264,12 @@ public:
 
         public:
 
-            infozip_unix_var_size_t(kaitai::kstream* p_io, zip_t::extra_field_t* p_parent = 0, zip_t* p_root = 0);
+            infozip_unix_var_size_t(kaitai::kstream* p__io, zip_t::extra_field_t* p__parent = 0, zip_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~infozip_unix_var_size_t();
 
         private:
@@ -278,6 +315,12 @@ public:
         extra_codes_t m_code;
         uint16_t m_size;
         kaitai::kstruct* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
         zip_t* m__root;
         zip_t::extras_t* m__parent;
         std::string m__raw_body;
@@ -301,8 +344,12 @@ public:
 
     public:
 
-        central_dir_entry_t(kaitai::kstream* p_io, zip_t::pk_section_t* p_parent = 0, zip_t* p_root = 0);
+        central_dir_entry_t(kaitai::kstream* p__io, zip_t::pk_section_t* p__parent = 0, zip_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~central_dir_entry_t();
 
     private:
@@ -367,14 +414,24 @@ public:
 
     public:
 
-        pk_section_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, zip_t* p_root = 0);
+        pk_section_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, zip_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~pk_section_t();
 
     private:
         std::string m_magic;
         uint16_t m_section_type;
         kaitai::kstruct* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
         zip_t* m__root;
         kaitai::kstruct* m__parent;
 
@@ -390,8 +447,12 @@ public:
 
     public:
 
-        extras_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, zip_t* p_root = 0);
+        extras_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, zip_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~extras_t();
 
     private:
@@ -409,8 +470,12 @@ public:
 
     public:
 
-        local_file_header_t(kaitai::kstream* p_io, zip_t::local_file_t* p_parent = 0, zip_t* p_root = 0);
+        local_file_header_t(kaitai::kstream* p__io, zip_t::local_file_t* p__parent = 0, zip_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~local_file_header_t();
 
     private:
@@ -454,8 +519,12 @@ public:
 
     public:
 
-        end_of_central_dir_t(kaitai::kstream* p_io, zip_t::pk_section_t* p_parent = 0, zip_t* p_root = 0);
+        end_of_central_dir_t(kaitai::kstream* p__io, zip_t::pk_section_t* p__parent = 0, zip_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~end_of_central_dir_t();
 
     private:

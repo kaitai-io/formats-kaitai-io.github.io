@@ -39,10 +39,12 @@ class Regf(KaitaiStruct):
         self.header = self._root.FileHeader(self._io, self, self._root)
         self._raw_hive_bins = []
         self.hive_bins = []
+        i = 0
         while not self._io.is_eof():
             self._raw_hive_bins.append(self._io.read_bytes(4096))
             io = KaitaiStream(BytesIO(self._raw_hive_bins[-1]))
             self.hive_bins.append(self._root.HiveBin(io, self, self._root))
+            i += 1
 
 
     class Filetime(KaitaiStruct):
@@ -66,8 +68,10 @@ class Regf(KaitaiStruct):
         def _read(self):
             self.header = self._root.HiveBinHeader(self._io, self, self._root)
             self.cells = []
+            i = 0
             while not self._io.is_eof():
                 self.cells.append(self._root.HiveBinCell(self._io, self, self._root))
+                i += 1
 
 
 

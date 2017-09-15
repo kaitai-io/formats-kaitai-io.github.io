@@ -1,10 +1,10 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 if (typeof require === 'function')
-  var ExifLe = require('./ExifLe.js');
+  var ExifBe = require('./ExifBe.js');
 
 if (typeof require === 'function')
-  var ExifBe = require('./ExifBe.js');
+  var ExifLe = require('./ExifLe.js');
 
 var Exif = (function() {
   function Exif(_io, _parent, _root) {
@@ -18,10 +18,10 @@ var Exif = (function() {
     this.endianness = this._io.readU2le();
     switch (this.endianness) {
     case 18761:
-      this.body = new ExifLe(this._io);
+      this.body = new ExifLe(this._io, this, null);
       break;
     case 19789:
-      this.body = new ExifBe(this._io);
+      this.body = new ExifBe(this._io, this, null);
       break;
     }
   }

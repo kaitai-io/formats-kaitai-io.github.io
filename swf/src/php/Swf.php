@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Swf extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Swf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Swf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -30,8 +30,8 @@ class Swf extends \Kaitai\Struct\Struct {
 namespace \Swf;
 
 class SwfBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Swf $parent = null, \Swf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Swf $_parent = null, \Swf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -40,8 +40,10 @@ class SwfBody extends \Kaitai\Struct\Struct {
         $this->_m_frameRate = $this->_io->readU2le();
         $this->_m_frameCount = $this->_io->readU2le();
         $this->_m_tags = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_tags[] = new \Swf\Tag($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_rect;
@@ -57,8 +59,8 @@ class SwfBody extends \Kaitai\Struct\Struct {
 namespace \Swf;
 
 class Rect extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Swf\SwfBody $parent = null, \Swf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\SwfBody $_parent = null, \Swf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -89,8 +91,8 @@ class Rect extends \Kaitai\Struct\Struct {
 namespace \Swf;
 
 class Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Swf\SwfBody $parent = null, \Swf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\SwfBody $_parent = null, \Swf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -118,8 +120,8 @@ class Tag extends \Kaitai\Struct\Struct {
 namespace \Swf;
 
 class AbcTagBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Swf\Tag $parent = null, \Swf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\Tag $_parent = null, \Swf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -139,8 +141,8 @@ class AbcTagBody extends \Kaitai\Struct\Struct {
 namespace \Swf;
 
 class RecordHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Swf\Tag $parent = null, \Swf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\Tag $_parent = null, \Swf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

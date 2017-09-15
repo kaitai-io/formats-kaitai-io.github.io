@@ -4,8 +4,8 @@
 
 
 
-creative_voice_file_t::creative_voice_file_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, creative_voice_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+creative_voice_file_t::creative_voice_file_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, creative_voice_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -16,8 +16,12 @@ void creative_voice_file_t::_read() {
     m_version = m__io->read_u2le();
     m_checksum = m__io->read_u2le();
     m_blocks = new std::vector<block_t*>();
-    while (!m__io->is_eof()) {
-        m_blocks->push_back(new block_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_blocks->push_back(new block_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -28,9 +32,9 @@ creative_voice_file_t::~creative_voice_file_t() {
     delete m_blocks;
 }
 
-creative_voice_file_t::block_marker_t::block_marker_t(kaitai::kstream *p_io, creative_voice_file_t::block_t* p_parent, creative_voice_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+creative_voice_file_t::block_marker_t::block_marker_t(kaitai::kstream* p__io, creative_voice_file_t::block_t* p__parent, creative_voice_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -41,9 +45,9 @@ void creative_voice_file_t::block_marker_t::_read() {
 creative_voice_file_t::block_marker_t::~block_marker_t() {
 }
 
-creative_voice_file_t::block_silence_t::block_silence_t(kaitai::kstream *p_io, creative_voice_file_t::block_t* p_parent, creative_voice_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+creative_voice_file_t::block_silence_t::block_silence_t(kaitai::kstream* p__io, creative_voice_file_t::block_t* p__parent, creative_voice_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_sample_rate = false;
     f_duration_sec = false;
     _read();
@@ -73,9 +77,9 @@ double creative_voice_file_t::block_silence_t::duration_sec() {
     return m_duration_sec;
 }
 
-creative_voice_file_t::block_sound_data_new_t::block_sound_data_new_t(kaitai::kstream *p_io, creative_voice_file_t::block_t* p_parent, creative_voice_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+creative_voice_file_t::block_sound_data_new_t::block_sound_data_new_t(kaitai::kstream* p__io, creative_voice_file_t::block_t* p__parent, creative_voice_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -91,9 +95,9 @@ void creative_voice_file_t::block_sound_data_new_t::_read() {
 creative_voice_file_t::block_sound_data_new_t::~block_sound_data_new_t() {
 }
 
-creative_voice_file_t::block_t::block_t(kaitai::kstream *p_io, creative_voice_file_t* p_parent, creative_voice_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+creative_voice_file_t::block_t::block_t(kaitai::kstream* p__io, creative_voice_file_t* p__parent, creative_voice_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_body_size = false;
     _read();
 }
@@ -113,45 +117,67 @@ void creative_voice_file_t::block_t::_read() {
     n_body = true;
     if (block_type() != BLOCK_TYPES_TERMINATOR) {
         n_body = false;
+        n_body = true;
         switch (block_type()) {
-        case BLOCK_TYPES_SILENCE:
+        case BLOCK_TYPES_SILENCE: {
+            n_body = false;
             m__raw_body = m__io->read_bytes(body_size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new block_silence_t(m__io__raw_body, this, m__root);
             break;
-        case BLOCK_TYPES_SOUND_DATA:
+        }
+        case BLOCK_TYPES_SOUND_DATA: {
+            n_body = false;
             m__raw_body = m__io->read_bytes(body_size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new block_sound_data_t(m__io__raw_body, this, m__root);
             break;
-        case BLOCK_TYPES_MARKER:
+        }
+        case BLOCK_TYPES_MARKER: {
+            n_body = false;
             m__raw_body = m__io->read_bytes(body_size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new block_marker_t(m__io__raw_body, this, m__root);
             break;
-        case BLOCK_TYPES_SOUND_DATA_NEW:
+        }
+        case BLOCK_TYPES_SOUND_DATA_NEW: {
+            n_body = false;
             m__raw_body = m__io->read_bytes(body_size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new block_sound_data_new_t(m__io__raw_body, this, m__root);
             break;
-        case BLOCK_TYPES_REPEAT_START:
+        }
+        case BLOCK_TYPES_REPEAT_START: {
+            n_body = false;
             m__raw_body = m__io->read_bytes(body_size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new block_repeat_start_t(m__io__raw_body, this, m__root);
             break;
-        case BLOCK_TYPES_EXTRA_INFO:
+        }
+        case BLOCK_TYPES_EXTRA_INFO: {
+            n_body = false;
             m__raw_body = m__io->read_bytes(body_size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new block_extra_info_t(m__io__raw_body, this, m__root);
             break;
-        default:
+        }
+        default: {
             m__raw_body = m__io->read_bytes(body_size());
             break;
+        }
         }
     }
 }
 
 creative_voice_file_t::block_t::~block_t() {
+    if (!n_body_size1) {
+    }
+    if (!n_body_size2) {
+    }
+    if (!n_body) {
+        delete m__io__raw_body;
+        delete m_body;
+    }
 }
 
 int32_t creative_voice_file_t::block_t::body_size() {
@@ -166,9 +192,9 @@ int32_t creative_voice_file_t::block_t::body_size() {
     return m_body_size;
 }
 
-creative_voice_file_t::block_repeat_start_t::block_repeat_start_t(kaitai::kstream *p_io, creative_voice_file_t::block_t* p_parent, creative_voice_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+creative_voice_file_t::block_repeat_start_t::block_repeat_start_t(kaitai::kstream* p__io, creative_voice_file_t::block_t* p__parent, creative_voice_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -179,9 +205,9 @@ void creative_voice_file_t::block_repeat_start_t::_read() {
 creative_voice_file_t::block_repeat_start_t::~block_repeat_start_t() {
 }
 
-creative_voice_file_t::block_sound_data_t::block_sound_data_t(kaitai::kstream *p_io, creative_voice_file_t::block_t* p_parent, creative_voice_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+creative_voice_file_t::block_sound_data_t::block_sound_data_t(kaitai::kstream* p__io, creative_voice_file_t::block_t* p__parent, creative_voice_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_sample_rate = false;
     _read();
 }
@@ -203,9 +229,9 @@ double creative_voice_file_t::block_sound_data_t::sample_rate() {
     return m_sample_rate;
 }
 
-creative_voice_file_t::block_extra_info_t::block_extra_info_t(kaitai::kstream *p_io, creative_voice_file_t::block_t* p_parent, creative_voice_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+creative_voice_file_t::block_extra_info_t::block_extra_info_t(kaitai::kstream* p__io, creative_voice_file_t::block_t* p__parent, creative_voice_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_num_channels = false;
     f_sample_rate = false;
     _read();

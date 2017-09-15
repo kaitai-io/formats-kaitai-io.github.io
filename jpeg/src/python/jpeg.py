@@ -26,8 +26,10 @@ class Jpeg(KaitaiStruct):
 
     def _read(self):
         self.segments = []
+        i = 0
         while not self._io.is_eof():
             self.segments.append(self._root.Segment(self._io, self, self._root))
+            i += 1
 
 
     class Segment(KaitaiStruct):

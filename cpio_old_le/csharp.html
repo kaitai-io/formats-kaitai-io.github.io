@@ -250,18 +250,23 @@ namespace Kaitai
             return new CpioOldLe(new KaitaiStream(fileName));
         }
 
-        public CpioOldLe(KaitaiStream io, KaitaiStruct parent = null, CpioOldLe root = null) : base(io)
+        public CpioOldLe(KaitaiStream p__io, KaitaiStruct p__parent = null, CpioOldLe p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _files = new List&lt;File&gt;();
-            while (!m_io.IsEof) {
-                _files.Add(new File(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _files.Add(new File(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
         public partial class File : KaitaiStruct
         {
             public static File FromFile(string fileName)
@@ -269,13 +274,14 @@ namespace Kaitai
                 return new File(new KaitaiStream(fileName));
             }
 
-            public File(KaitaiStream io, CpioOldLe parent = null, CpioOldLe root = null) : base(io)
+            public File(KaitaiStream p__io, CpioOldLe p__parent = null, CpioOldLe p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _header = new FileHeader(m_io, this, m_root);
                 _pathName = m_io.ReadBytes((Header.PathNameSize - 1));
                 _stringTerminator = m_io.EnsureFixedContents(new byte[] { 0 });
@@ -289,7 +295,7 @@ namespace Kaitai
                 if ( (((KaitaiStream.ByteArrayCompare(PathName, new byte[] { 84, 82, 65, 73, 76, 69, 82, 33, 33, 33 }) == 0)) &amp;&amp; (Header.FileSize.Value == 0)) ) {
                     _endOfFilePadding = m_io.ReadBytesFull();
                 }
-                }
+            }
             private FileHeader _header;
             private byte[] _pathName;
             private byte[] _stringTerminator;
@@ -316,13 +322,14 @@ namespace Kaitai
                 return new FileHeader(new KaitaiStream(fileName));
             }
 
-            public FileHeader(KaitaiStream io, CpioOldLe.File parent = null, CpioOldLe root = null) : base(io)
+            public FileHeader(KaitaiStream p__io, CpioOldLe.File p__parent = null, CpioOldLe p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.EnsureFixedContents(new byte[] { 199, 113 });
                 _deviceNumber = m_io.ReadU2le();
                 _inodeNumber = m_io.ReadU2le();
@@ -334,7 +341,7 @@ namespace Kaitai
                 _modificationTime = new FourByteUnsignedInteger(m_io, this, m_root);
                 _pathNameSize = m_io.ReadU2le();
                 _fileSize = new FourByteUnsignedInteger(m_io, this, m_root);
-                }
+            }
             private byte[] _magic;
             private ushort _deviceNumber;
             private ushort _inodeNumber;
@@ -369,17 +376,18 @@ namespace Kaitai
                 return new FourByteUnsignedInteger(new KaitaiStream(fileName));
             }
 
-            public FourByteUnsignedInteger(KaitaiStream io, CpioOldLe.FileHeader parent = null, CpioOldLe root = null) : base(io)
+            public FourByteUnsignedInteger(KaitaiStream p__io, CpioOldLe.FileHeader p__parent = null, CpioOldLe p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_value = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _mostSignificantBits = m_io.ReadU2le();
                 _leastSignificantBits = m_io.ReadU2le();
-                }
+            }
             private bool f_value;
             private int _value;
             public int Value

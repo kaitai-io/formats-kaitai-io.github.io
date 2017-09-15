@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Ext2 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Ext2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Ext2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -31,8 +31,8 @@ class Ext2 extends \Kaitai\Struct\Struct {
 namespace \Ext2;
 
 class SuperBlockStruct extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ext2\BlockGroup $parent = null, \Ext2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ext2\BlockGroup $_parent = null, \Ext2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -208,8 +208,8 @@ class ErrorsEnum {
 namespace \Ext2;
 
 class DirEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ext2\Dir $parent = null, \Ext2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ext2\Dir $_parent = null, \Ext2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -258,8 +258,8 @@ class FileTypeEnum {
 namespace \Ext2;
 
 class Inode extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ext2\Bgd $parent = null, \Ext2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ext2\Bgd $_parent = null, \Ext2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -339,8 +339,8 @@ class Inode extends \Kaitai\Struct\Struct {
 namespace \Ext2;
 
 class BlockPtr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ext2\Inode $parent = null, \Ext2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ext2\Inode $_parent = null, \Ext2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -368,15 +368,17 @@ class BlockPtr extends \Kaitai\Struct\Struct {
 namespace \Ext2;
 
 class Dir extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ext2\Inode $parent = null, \Ext2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ext2\Inode $_parent = null, \Ext2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \Ext2\DirEntry($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -386,8 +388,8 @@ class Dir extends \Kaitai\Struct\Struct {
 namespace \Ext2;
 
 class BlockGroup extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ext2 $parent = null, \Ext2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ext2 $_parent = null, \Ext2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -412,8 +414,8 @@ class BlockGroup extends \Kaitai\Struct\Struct {
 namespace \Ext2;
 
 class Bgd extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ext2\BlockGroup $parent = null, \Ext2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ext2\BlockGroup $_parent = null, \Ext2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -479,8 +481,8 @@ class Bgd extends \Kaitai\Struct\Struct {
 namespace \Ext2;
 
 class RawBlock extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ext2\BlockPtr $parent = null, \Ext2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ext2\BlockPtr $_parent = null, \Ext2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

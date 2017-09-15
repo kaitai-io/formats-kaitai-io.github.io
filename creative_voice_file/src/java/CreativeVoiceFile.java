@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
  */
 public class CreativeVoiceFile extends KaitaiStruct {
     public static CreativeVoiceFile fromFile(String fileName) throws IOException {
-        return new CreativeVoiceFile(new KaitaiStream(fileName));
+        return new CreativeVoiceFile(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum BlockTypes {
@@ -90,8 +91,12 @@ public class CreativeVoiceFile extends KaitaiStruct {
         this.version = this._io.readU2le();
         this.checksum = this._io.readU2le();
         this.blocks = new ArrayList<Block>();
-        while (!this._io.isEof()) {
-            this.blocks.add(new Block(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.blocks.add(new Block(this._io, this, _root));
+                i++;
+            }
         }
     }
 
@@ -100,7 +105,7 @@ public class CreativeVoiceFile extends KaitaiStruct {
      */
     public static class BlockMarker extends KaitaiStruct {
         public static BlockMarker fromFile(String fileName) throws IOException {
-            return new BlockMarker(new KaitaiStream(fileName));
+            return new BlockMarker(new ByteBufferKaitaiStream(fileName));
         }
 
         public BlockMarker(KaitaiStream _io) {
@@ -137,7 +142,7 @@ public class CreativeVoiceFile extends KaitaiStruct {
      */
     public static class BlockSilence extends KaitaiStruct {
         public static BlockSilence fromFile(String fileName) throws IOException {
-            return new BlockSilence(new KaitaiStream(fileName));
+            return new BlockSilence(new ByteBufferKaitaiStream(fileName));
         }
 
         public BlockSilence(KaitaiStream _io) {
@@ -201,7 +206,7 @@ public class CreativeVoiceFile extends KaitaiStruct {
      */
     public static class BlockSoundDataNew extends KaitaiStruct {
         public static BlockSoundDataNew fromFile(String fileName) throws IOException {
-            return new BlockSoundDataNew(new KaitaiStream(fileName));
+            return new BlockSoundDataNew(new ByteBufferKaitaiStream(fileName));
         }
 
         public BlockSoundDataNew(KaitaiStream _io) {
@@ -245,7 +250,7 @@ public class CreativeVoiceFile extends KaitaiStruct {
     }
     public static class Block extends KaitaiStruct {
         public static Block fromFile(String fileName) throws IOException {
-            return new Block(new KaitaiStream(fileName));
+            return new Block(new ByteBufferKaitaiStream(fileName));
         }
 
         public Block(KaitaiStream _io) {
@@ -274,37 +279,37 @@ public class CreativeVoiceFile extends KaitaiStruct {
                 switch (blockType()) {
                 case SILENCE: {
                     this._raw_body = this._io.readBytes(bodySize());
-                    KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                     this.body = new BlockSilence(_io__raw_body, this, _root);
                     break;
                 }
                 case SOUND_DATA: {
                     this._raw_body = this._io.readBytes(bodySize());
-                    KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                     this.body = new BlockSoundData(_io__raw_body, this, _root);
                     break;
                 }
                 case MARKER: {
                     this._raw_body = this._io.readBytes(bodySize());
-                    KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                     this.body = new BlockMarker(_io__raw_body, this, _root);
                     break;
                 }
                 case SOUND_DATA_NEW: {
                     this._raw_body = this._io.readBytes(bodySize());
-                    KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                     this.body = new BlockSoundDataNew(_io__raw_body, this, _root);
                     break;
                 }
                 case REPEAT_START: {
                     this._raw_body = this._io.readBytes(bodySize());
-                    KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                     this.body = new BlockRepeatStart(_io__raw_body, this, _root);
                     break;
                 }
                 case EXTRA_INFO: {
                     this._raw_body = this._io.readBytes(bodySize());
-                    KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                     this.body = new BlockExtraInfo(_io__raw_body, this, _root);
                     break;
                 }
@@ -360,7 +365,7 @@ public class CreativeVoiceFile extends KaitaiStruct {
      */
     public static class BlockRepeatStart extends KaitaiStruct {
         public static BlockRepeatStart fromFile(String fileName) throws IOException {
-            return new BlockRepeatStart(new KaitaiStream(fileName));
+            return new BlockRepeatStart(new ByteBufferKaitaiStream(fileName));
         }
 
         public BlockRepeatStart(KaitaiStream _io) {
@@ -397,7 +402,7 @@ public class CreativeVoiceFile extends KaitaiStruct {
      */
     public static class BlockSoundData extends KaitaiStruct {
         public static BlockSoundData fromFile(String fileName) throws IOException {
-            return new BlockSoundData(new KaitaiStream(fileName));
+            return new BlockSoundData(new ByteBufferKaitaiStream(fileName));
         }
 
         public BlockSoundData(KaitaiStream _io) {
@@ -448,7 +453,7 @@ public class CreativeVoiceFile extends KaitaiStruct {
      */
     public static class BlockExtraInfo extends KaitaiStruct {
         public static BlockExtraInfo fromFile(String fileName) throws IOException {
-            return new BlockExtraInfo(new KaitaiStream(fileName));
+            return new BlockExtraInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public BlockExtraInfo(KaitaiStream _io) {

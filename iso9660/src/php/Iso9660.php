@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Iso9660 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Iso9660 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Iso9660 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -31,8 +31,8 @@ class Iso9660 extends \Kaitai\Struct\Struct {
 namespace \Iso9660;
 
 class VolDescPrimary extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Iso9660\VolDesc $parent = null, \Iso9660 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\VolDesc $_parent = null, \Iso9660 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -148,8 +148,8 @@ class VolDescPrimary extends \Kaitai\Struct\Struct {
 namespace \Iso9660;
 
 class VolDescBootRecord extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Iso9660\VolDesc $parent = null, \Iso9660 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\VolDesc $_parent = null, \Iso9660 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -166,8 +166,8 @@ class VolDescBootRecord extends \Kaitai\Struct\Struct {
 namespace \Iso9660;
 
 class Datetime extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Iso9660\DirEntryBody $parent = null, \Iso9660 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\DirEntryBody $_parent = null, \Iso9660 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -199,8 +199,8 @@ class Datetime extends \Kaitai\Struct\Struct {
 namespace \Iso9660;
 
 class DirEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Iso9660 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Iso9660 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -223,8 +223,8 @@ class DirEntry extends \Kaitai\Struct\Struct {
 namespace \Iso9660;
 
 class VolDesc extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Iso9660 $parent = null, \Iso9660 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660 $_parent = null, \Iso9660 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -254,8 +254,8 @@ class VolDesc extends \Kaitai\Struct\Struct {
 namespace \Iso9660;
 
 class PathTableEntryLe extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Iso9660\PathTableLe $parent = null, \Iso9660 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\PathTableLe $_parent = null, \Iso9660 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -286,16 +286,18 @@ class PathTableEntryLe extends \Kaitai\Struct\Struct {
 namespace \Iso9660;
 
 class DirEntries extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Iso9660\DirEntryBody $parent = null, \Iso9660 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\DirEntryBody $_parent = null, \Iso9660 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         do {
             $_ = new \Iso9660\DirEntry($this->_io, $this, $this->_root);
             $this->_m_entries[] = $_;
+            $i++;
         } while (!($_->len() == 0));
     }
     protected $_m_entries;
@@ -305,8 +307,8 @@ class DirEntries extends \Kaitai\Struct\Struct {
 namespace \Iso9660;
 
 class U4bi extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Iso9660 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Iso9660 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -323,8 +325,8 @@ class U4bi extends \Kaitai\Struct\Struct {
 namespace \Iso9660;
 
 class U2bi extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Iso9660 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Iso9660 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -341,15 +343,17 @@ class U2bi extends \Kaitai\Struct\Struct {
 namespace \Iso9660;
 
 class PathTableLe extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Iso9660\VolDescPrimary $parent = null, \Iso9660 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\VolDescPrimary $_parent = null, \Iso9660 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \Iso9660\PathTableEntryLe($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -359,8 +363,8 @@ class PathTableLe extends \Kaitai\Struct\Struct {
 namespace \Iso9660;
 
 class DecDatetime extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Iso9660\VolDescPrimary $parent = null, \Iso9660 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\VolDescPrimary $_parent = null, \Iso9660 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -395,8 +399,8 @@ class DecDatetime extends \Kaitai\Struct\Struct {
 namespace \Iso9660;
 
 class DirEntryBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Iso9660\DirEntry $parent = null, \Iso9660 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\DirEntry $_parent = null, \Iso9660 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

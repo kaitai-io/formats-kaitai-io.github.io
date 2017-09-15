@@ -509,8 +509,10 @@ class RenderwareBinaryStream(KaitaiStruct):
             else:
                 self.header = self._io.read_bytes(self.header_size)
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(RenderwareBinaryStream(self._io))
+                i += 1
 
 
 

@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.nio.charset.Charset;
 
 public class Dbf extends KaitaiStruct {
     public static Dbf fromFile(String fileName) throws IOException {
-        return new Dbf(new KaitaiStream(fileName));
+        return new Dbf(new ByteBufferKaitaiStream(fileName));
     }
 
     public Dbf(KaitaiStream _io) {
@@ -28,7 +29,7 @@ public class Dbf extends KaitaiStruct {
     private void _read() {
         this.header1 = new Header1(this._io, this, _root);
         this._raw_header2 = this._io.readBytes((header1().headerSize() - 12));
-        KaitaiStream _io__raw_header2 = new KaitaiStream(_raw_header2);
+        KaitaiStream _io__raw_header2 = new ByteBufferKaitaiStream(_raw_header2);
         this.header2 = new Header2(_io__raw_header2, this, _root);
         records = new ArrayList<byte[]>((int) (header1().numRecords()));
         for (int i = 0; i < header1().numRecords(); i++) {
@@ -37,7 +38,7 @@ public class Dbf extends KaitaiStruct {
     }
     public static class Header2 extends KaitaiStruct {
         public static Header2 fromFile(String fileName) throws IOException {
-            return new Header2(new KaitaiStream(fileName));
+            return new Header2(new ByteBufferKaitaiStream(fileName));
         }
 
         public Header2(KaitaiStream _io) {
@@ -79,7 +80,7 @@ public class Dbf extends KaitaiStruct {
     }
     public static class Field extends KaitaiStruct {
         public static Field fromFile(String fileName) throws IOException {
-            return new Field(new KaitaiStream(fileName));
+            return new Field(new ByteBufferKaitaiStream(fileName));
         }
 
         public Field(KaitaiStream _io) {
@@ -135,7 +136,7 @@ public class Dbf extends KaitaiStruct {
     }
     public static class Header1 extends KaitaiStruct {
         public static Header1 fromFile(String fileName) throws IOException {
-            return new Header1(new KaitaiStream(fileName));
+            return new Header1(new ByteBufferKaitaiStream(fileName));
         }
 
         public Header1(KaitaiStream _io) {
@@ -190,7 +191,7 @@ public class Dbf extends KaitaiStruct {
     }
     public static class HeaderDbase3 extends KaitaiStruct {
         public static HeaderDbase3 fromFile(String fileName) throws IOException {
-            return new HeaderDbase3(new KaitaiStream(fileName));
+            return new HeaderDbase3(new ByteBufferKaitaiStream(fileName));
         }
 
         public HeaderDbase3(KaitaiStream _io) {
@@ -225,7 +226,7 @@ public class Dbf extends KaitaiStruct {
     }
     public static class HeaderDbase7 extends KaitaiStruct {
         public static HeaderDbase7 fromFile(String fileName) throws IOException {
-            return new HeaderDbase7(new KaitaiStream(fileName));
+            return new HeaderDbase7(new ByteBufferKaitaiStream(fileName));
         }
 
         public HeaderDbase7(KaitaiStream _io) {

@@ -12,15 +12,17 @@
  */
 
 class Lzh extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Lzh $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Lzh $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \Lzh\Record($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -30,8 +32,8 @@ class Lzh extends \Kaitai\Struct\Struct {
 namespace \Lzh;
 
 class Record extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Lzh $parent = null, \Lzh $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Lzh $_parent = null, \Lzh $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -50,8 +52,8 @@ class Record extends \Kaitai\Struct\Struct {
 namespace \Lzh;
 
 class FileRecord extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Lzh\Record $parent = null, \Lzh $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Lzh\Record $_parent = null, \Lzh $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -77,8 +79,8 @@ class FileRecord extends \Kaitai\Struct\Struct {
 namespace \Lzh;
 
 class Header extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Lzh\FileRecord $parent = null, \Lzh $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Lzh\FileRecord $_parent = null, \Lzh $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -121,8 +123,8 @@ class Header extends \Kaitai\Struct\Struct {
 namespace \Lzh;
 
 class Header1 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Lzh\Header $parent = null, \Lzh $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Lzh\Header $_parent = null, \Lzh $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

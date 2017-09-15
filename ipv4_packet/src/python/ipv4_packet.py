@@ -9,9 +9,9 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 from tcp_segment import TcpSegment
+from ipv6_packet import Ipv6Packet
 from udp_datagram import UdpDatagram
 from icmp_packet import IcmpPacket
-from ipv6_packet import Ipv6Packet
 class Ipv4Packet(KaitaiStruct):
 
     class ProtocolEnum(Enum):
@@ -208,8 +208,10 @@ class Ipv4Packet(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.Ipv4Option(self._io, self, self._root))
+                i += 1
 
 
 

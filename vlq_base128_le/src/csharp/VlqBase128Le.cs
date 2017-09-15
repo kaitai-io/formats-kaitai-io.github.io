@@ -33,24 +33,27 @@ namespace Kaitai
             return new VlqBase128Le(new KaitaiStream(fileName));
         }
 
-        public VlqBase128Le(KaitaiStream io, KaitaiStruct parent = null, VlqBase128Le root = null) : base(io)
+        public VlqBase128Le(KaitaiStream p__io, KaitaiStruct p__parent = null, VlqBase128Le p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_len = false;
             f_value = false;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _groups = new List<Group>();
             {
+                var i = 0;
                 Group M_;
                 do {
                     M_ = new Group(m_io, this, m_root);
                     _groups.Add(M_);
+                    i++;
                 } while (!(!(M_.HasNext)));
             }
-            }
+        }
 
         /// <summary>
         /// One byte group, clearly divided into 7-bit &quot;value&quot; and 1-bit &quot;has continuation
@@ -63,17 +66,18 @@ namespace Kaitai
                 return new Group(new KaitaiStream(fileName));
             }
 
-            public Group(KaitaiStream io, VlqBase128Le parent = null, VlqBase128Le root = null) : base(io)
+            public Group(KaitaiStream p__io, VlqBase128Le p__parent = null, VlqBase128Le p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_hasNext = false;
                 f_value = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _b = m_io.ReadU1();
-                }
+            }
             private bool f_hasNext;
             private bool _hasNext;
 

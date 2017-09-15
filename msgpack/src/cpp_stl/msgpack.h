@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -24,16 +23,24 @@ class msgpack_t : public kaitai::kstruct {
 public:
     class map_tuple_t;
 
-    msgpack_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, msgpack_t* p_root = 0);
+    msgpack_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, msgpack_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~msgpack_t();
 
     class map_tuple_t : public kaitai::kstruct {
 
     public:
 
-        map_tuple_t(kaitai::kstream* p_io, msgpack_t* p_parent = 0, msgpack_t* p_root = 0);
+        map_tuple_t(kaitai::kstream* p__io, msgpack_t* p__parent = 0, msgpack_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~map_tuple_t();
 
     private:
@@ -375,6 +382,12 @@ public:
 private:
     uint8_t m_b1;
     int32_t m_int_extra;
+    bool n_int_extra;
+
+public:
+    bool _is_null_int_extra() { int_extra(); return n_int_extra; };
+
+private:
     float m_float_32_value;
     bool n_float_32_value;
 

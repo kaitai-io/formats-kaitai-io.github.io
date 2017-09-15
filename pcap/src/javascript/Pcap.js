@@ -1,10 +1,10 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 if (typeof require === 'function')
-  var EthernetFrame = require('./EthernetFrame.js');
+  var PacketPpi = require('./PacketPpi.js');
 
 if (typeof require === 'function')
-  var PacketPpi = require('./PacketPpi.js');
+  var EthernetFrame = require('./EthernetFrame.js');
 
 /**
  * @see {@link http://wiki.wireshark.org/Development/LibpcapFileFormat|Source}
@@ -233,8 +233,10 @@ var Pcap = (function() {
   Pcap.prototype._read = function() {
     this.hdr = new Header(this._io, this, this._root);
     this.packets = [];
+    var i = 0;
     while (!this._io.isEof()) {
       this.packets.push(new Packet(this._io, this, this._root));
+      i++;
     }
   }
 
@@ -305,12 +307,12 @@ var Pcap = (function() {
       case Pcap.Linktype.PPI:
         this._raw_body = this._io.readBytes(this.inclLen);
         var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new PacketPpi(_io__raw_body);
+        this.body = new PacketPpi(_io__raw_body, this, null);
         break;
       case Pcap.Linktype.ETHERNET:
         this._raw_body = this._io.readBytes(this.inclLen);
         var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new EthernetFrame(_io__raw_body);
+        this.body = new EthernetFrame(_io__raw_body, this, null);
         break;
       default:
         this.body = this._io.readBytes(this.inclLen);

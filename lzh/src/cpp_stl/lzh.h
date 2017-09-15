@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -31,16 +30,24 @@ public:
     class header_t;
     class header1_t;
 
-    lzh_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, lzh_t* p_root = 0);
+    lzh_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, lzh_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~lzh_t();
 
     class record_t : public kaitai::kstruct {
 
     public:
 
-        record_t(kaitai::kstream* p_io, lzh_t* p_parent = 0, lzh_t* p_root = 0);
+        record_t(kaitai::kstream* p__io, lzh_t* p__parent = 0, lzh_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~record_t();
 
     private:
@@ -66,8 +73,12 @@ public:
 
     public:
 
-        file_record_t(kaitai::kstream* p_io, lzh_t::record_t* p_parent = 0, lzh_t* p_root = 0);
+        file_record_t(kaitai::kstream* p__io, lzh_t::record_t* p__parent = 0, lzh_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~file_record_t();
 
     private:
@@ -99,8 +110,12 @@ public:
 
     public:
 
-        header_t(kaitai::kstream* p_io, lzh_t::file_record_t* p_parent = 0, lzh_t* p_root = 0);
+        header_t(kaitai::kstream* p__io, lzh_t::file_record_t* p__parent = 0, lzh_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header_t();
 
     private:
@@ -162,8 +177,12 @@ public:
 
     public:
 
-        header1_t(kaitai::kstream* p_io, lzh_t::header_t* p_parent = 0, lzh_t* p_root = 0);
+        header1_t(kaitai::kstream* p__io, lzh_t::header_t* p__parent = 0, lzh_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header1_t();
 
     private:

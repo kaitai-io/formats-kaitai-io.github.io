@@ -2,16 +2,18 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class ShapefileMain extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_header = new \ShapefileMain\FileHeader($this->_io, $this, $this->_root);
         $this->_m_records = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_records[] = new \ShapefileMain\Record($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_header;
@@ -27,8 +29,8 @@ class ShapefileMain extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class MultiPointM extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain\RecordContents $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -62,8 +64,8 @@ class MultiPointM extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class BoundingBoxXYZM extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain\FileHeader $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\FileHeader $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -86,8 +88,8 @@ class BoundingBoxXYZM extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class Point extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -104,8 +106,8 @@ class Point extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class Polygon extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain\RecordContents $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -139,8 +141,8 @@ class Polygon extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class BoundsMinMax extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -157,8 +159,8 @@ class BoundsMinMax extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class PolyLine extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain\RecordContents $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -192,8 +194,8 @@ class PolyLine extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class MultiPointZ extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain\RecordContents $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -237,8 +239,8 @@ class MultiPointZ extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class PolyLineZ extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain\RecordContents $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -292,8 +294,8 @@ class PolyLineZ extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class PolygonZ extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain\RecordContents $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -347,8 +349,8 @@ class PolygonZ extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class BoundingBoxXY extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -365,8 +367,8 @@ class BoundingBoxXY extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class PointM extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain\RecordContents $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -386,8 +388,8 @@ class PointM extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class PolygonM extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain\RecordContents $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -431,8 +433,8 @@ class PolygonM extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class RecordHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain\Record $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\Record $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -449,8 +451,8 @@ class RecordHeader extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class MultiPoint extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain\RecordContents $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -474,8 +476,8 @@ class MultiPoint extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class FileHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -524,8 +526,8 @@ class FileHeader extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class PointZ extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain\RecordContents $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -548,8 +550,8 @@ class PointZ extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class Record extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -570,8 +572,8 @@ class Record extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class RecordContents extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain\Record $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\Record $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -630,8 +632,8 @@ class RecordContents extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class MultiPatch extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain\RecordContents $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -692,8 +694,8 @@ class MultiPatch extends \Kaitai\Struct\Struct {
 namespace \ShapefileMain;
 
 class PolyLineM extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileMain\RecordContents $parent = null, \ShapefileMain $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

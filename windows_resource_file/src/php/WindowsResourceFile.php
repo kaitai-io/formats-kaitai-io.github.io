@@ -29,15 +29,17 @@
  */
 
 class WindowsResourceFile extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \WindowsResourceFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \WindowsResourceFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_resources = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_resources[] = new \WindowsResourceFile\Resource($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_resources;
@@ -53,8 +55,8 @@ class WindowsResourceFile extends \Kaitai\Struct\Struct {
 namespace \WindowsResourceFile;
 
 class Resource extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \WindowsResourceFile $parent = null, \WindowsResourceFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \WindowsResourceFile $_parent = null, \WindowsResourceFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -168,8 +170,8 @@ class PredefTypes {
 namespace \WindowsResourceFile;
 
 class UnicodeOrId extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \WindowsResourceFile\Resource $parent = null, \WindowsResourceFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \WindowsResourceFile\Resource $_parent = null, \WindowsResourceFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -182,9 +184,11 @@ class UnicodeOrId extends \Kaitai\Struct\Struct {
         }
         if ($this->isString()) {
             $this->_m_rest = [];
+            $i = 0;
             do {
                 $_ = $this->_io->readU2le();
                 $this->_m_rest[] = $_;
+                $i++;
             } while (!($_ == 0));
         }
         if ( (($this->isString()) && ($this->savePos2() >= 0)) ) {

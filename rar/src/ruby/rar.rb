@@ -59,6 +59,7 @@ class Rar < Kaitai::Struct::Struct
   def _read
     @magic = MagicSignature.new(@_io, self, @_root)
     @blocks = []
+    i = 0
     while not @_io.eof?
       case magic.version
       when 0
@@ -66,6 +67,7 @@ class Rar < Kaitai::Struct::Struct
       when 1
         @blocks << BlockV5.new(@_io, self, @_root)
       end
+      i += 1
     end
     self
   end

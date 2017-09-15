@@ -9,15 +9,17 @@
  */
 
 class Code6502 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Code6502 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Code6502 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_operations = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_operations[] = new \Code6502\Operation($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_operations;
@@ -27,8 +29,8 @@ class Code6502 extends \Kaitai\Struct\Struct {
 namespace \Code6502;
 
 class Operation extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Code6502 $parent = null, \Code6502 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Code6502 $_parent = null, \Code6502 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

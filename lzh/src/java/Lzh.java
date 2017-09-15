@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.nio.charset.Charset;
  */
 public class Lzh extends KaitaiStruct {
     public static Lzh fromFile(String fileName) throws IOException {
-        return new Lzh(new KaitaiStream(fileName));
+        return new Lzh(new ByteBufferKaitaiStream(fileName));
     }
 
     public Lzh(KaitaiStream _io) {
@@ -37,13 +38,17 @@ public class Lzh extends KaitaiStruct {
     }
     private void _read() {
         this.entries = new ArrayList<Record>();
-        while (!this._io.isEof()) {
-            this.entries.add(new Record(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.entries.add(new Record(this._io, this, _root));
+                i++;
+            }
         }
     }
     public static class Record extends KaitaiStruct {
         public static Record fromFile(String fileName) throws IOException {
-            return new Record(new KaitaiStream(fileName));
+            return new Record(new ByteBufferKaitaiStream(fileName));
         }
 
         public Record(KaitaiStream _io) {
@@ -77,7 +82,7 @@ public class Lzh extends KaitaiStruct {
     }
     public static class FileRecord extends KaitaiStruct {
         public static FileRecord fromFile(String fileName) throws IOException {
-            return new FileRecord(new KaitaiStream(fileName));
+            return new FileRecord(new ByteBufferKaitaiStream(fileName));
         }
 
         public FileRecord(KaitaiStream _io) {
@@ -96,7 +101,7 @@ public class Lzh extends KaitaiStruct {
         }
         private void _read() {
             this._raw_header = this._io.readBytes((_parent().headerLen() - 1));
-            KaitaiStream _io__raw_header = new KaitaiStream(_raw_header);
+            KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
             this.header = new Header(_io__raw_header, this, _root);
             if (header().header1().lhaLevel() == 0) {
                 this.fileUncomprCrc16 = this._io.readU2le();
@@ -118,7 +123,7 @@ public class Lzh extends KaitaiStruct {
     }
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
-            return new Header(new KaitaiStream(fileName));
+            return new Header(new ByteBufferKaitaiStream(fileName));
         }
 
         public Header(KaitaiStream _io) {
@@ -176,7 +181,7 @@ public class Lzh extends KaitaiStruct {
     }
     public static class Header1 extends KaitaiStruct {
         public static Header1 fromFile(String fileName) throws IOException {
-            return new Header1(new KaitaiStream(fileName));
+            return new Header1(new ByteBufferKaitaiStream(fileName));
         }
 
         public Header1(KaitaiStream _io) {

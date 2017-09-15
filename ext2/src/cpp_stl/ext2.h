@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -25,8 +24,12 @@ public:
     class bgd_t;
     class raw_block_t;
 
-    ext2_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, ext2_t* p_root = 0);
+    ext2_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, ext2_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~ext2_t();
 
     class super_block_struct_t : public kaitai::kstruct {
@@ -44,8 +47,12 @@ public:
             ERRORS_ENUM_ACT_PANIC = 3
         };
 
-        super_block_struct_t(kaitai::kstream* p_io, ext2_t::block_group_t* p_parent = 0, ext2_t* p_root = 0);
+        super_block_struct_t(kaitai::kstream* p__io, ext2_t::block_group_t* p__parent = 0, ext2_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~super_block_struct_t();
 
     private:
@@ -174,8 +181,12 @@ public:
             FILE_TYPE_ENUM_SYMLINK = 7
         };
 
-        dir_entry_t(kaitai::kstream* p_io, ext2_t::dir_t* p_parent = 0, ext2_t* p_root = 0);
+        dir_entry_t(kaitai::kstream* p__io, ext2_t::dir_t* p__parent = 0, ext2_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~dir_entry_t();
 
     private:
@@ -210,8 +221,12 @@ public:
 
     public:
 
-        inode_t(kaitai::kstream* p_io, ext2_t::bgd_t* p_parent = 0, ext2_t* p_root = 0);
+        inode_t(kaitai::kstream* p__io, ext2_t::bgd_t* p__parent = 0, ext2_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~inode_t();
 
     private:
@@ -270,8 +285,12 @@ public:
 
     public:
 
-        block_ptr_t(kaitai::kstream* p_io, ext2_t::inode_t* p_parent = 0, ext2_t* p_root = 0);
+        block_ptr_t(kaitai::kstream* p__io, ext2_t::inode_t* p__parent = 0, ext2_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~block_ptr_t();
 
     private:
@@ -300,8 +319,12 @@ public:
 
     public:
 
-        dir_t(kaitai::kstream* p_io, ext2_t::inode_t* p_parent = 0, ext2_t* p_root = 0);
+        dir_t(kaitai::kstream* p__io, ext2_t::inode_t* p__parent = 0, ext2_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~dir_t();
 
     private:
@@ -319,8 +342,12 @@ public:
 
     public:
 
-        block_group_t(kaitai::kstream* p_io, ext2_t* p_parent = 0, ext2_t* p_root = 0);
+        block_group_t(kaitai::kstream* p__io, ext2_t* p__parent = 0, ext2_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~block_group_t();
 
     private:
@@ -344,8 +371,12 @@ public:
 
     public:
 
-        bgd_t(kaitai::kstream* p_io, ext2_t::block_group_t* p_parent = 0, ext2_t* p_root = 0);
+        bgd_t(kaitai::kstream* p__io, ext2_t::block_group_t* p__parent = 0, ext2_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~bgd_t();
 
     private:
@@ -396,8 +427,12 @@ public:
 
     public:
 
-        raw_block_t(kaitai::kstream* p_io, ext2_t::block_ptr_t* p_parent = 0, ext2_t* p_root = 0);
+        raw_block_t(kaitai::kstream* p__io, ext2_t::block_ptr_t* p__parent = 0, ext2_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~raw_block_t();
 
     private:

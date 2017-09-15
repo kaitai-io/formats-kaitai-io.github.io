@@ -105,8 +105,10 @@ var MicrosoftCfb = (function() {
     }
     FatEntries.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.entries.push(this._io.readS4le());
+        i++;
       }
     }
 
@@ -170,6 +172,48 @@ var MicrosoftCfb = (function() {
         return this._m_miniStream;
       }
     });
+    Object.defineProperty(DirEntry.prototype, 'child', {
+      get: function() {
+        if (this._m_child !== undefined)
+          return this._m_child;
+        if (this.childId != -1) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek((((this._root.header.ofsDir + 1) * this._root.sectorSize) + (this.childId * 128)));
+          this._m_child = new DirEntry(io, this, this._root);
+          io.seek(_pos);
+        }
+        return this._m_child;
+      }
+    });
+    Object.defineProperty(DirEntry.prototype, 'leftSibling', {
+      get: function() {
+        if (this._m_leftSibling !== undefined)
+          return this._m_leftSibling;
+        if (this.leftSiblingId != -1) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek((((this._root.header.ofsDir + 1) * this._root.sectorSize) + (this.leftSiblingId * 128)));
+          this._m_leftSibling = new DirEntry(io, this, this._root);
+          io.seek(_pos);
+        }
+        return this._m_leftSibling;
+      }
+    });
+    Object.defineProperty(DirEntry.prototype, 'rightSibling', {
+      get: function() {
+        if (this._m_rightSibling !== undefined)
+          return this._m_rightSibling;
+        if (this.rightSiblingId != -1) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek((((this._root.header.ofsDir + 1) * this._root.sectorSize) + (this.rightSiblingId * 128)));
+          this._m_rightSibling = new DirEntry(io, this, this._root);
+          io.seek(_pos);
+        }
+        return this._m_rightSibling;
+      }
+    });
 
     /**
      * User-defined flags for storage or root storage objects
@@ -220,9 +264,7 @@ var MicrosoftCfb = (function() {
         return this._m_dir;
       var _pos = this._io.pos;
       this._io.seek(((this.header.ofsDir + 1) * this.sectorSize));
-      this._raw__m_dir = this._io.readBytes(128);
-      var _io__raw__m_dir = new KaitaiStream(this._raw__m_dir);
-      this._m_dir = new DirEntry(_io__raw__m_dir, this, this._root);
+      this._m_dir = new DirEntry(this._io, this, this._root);
       this._io.seek(_pos);
       return this._m_dir;
     }

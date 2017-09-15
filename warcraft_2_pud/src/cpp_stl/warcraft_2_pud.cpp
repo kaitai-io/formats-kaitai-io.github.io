@@ -4,16 +4,20 @@
 
 
 
-warcraft_2_pud_t::warcraft_2_pud_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, warcraft_2_pud_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+warcraft_2_pud_t::warcraft_2_pud_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, warcraft_2_pud_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
 
 void warcraft_2_pud_t::_read() {
     m_sections = new std::vector<section_t*>();
-    while (!m__io->is_eof()) {
-        m_sections->push_back(new section_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_sections->push_back(new section_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -24,16 +28,20 @@ warcraft_2_pud_t::~warcraft_2_pud_t() {
     delete m_sections;
 }
 
-warcraft_2_pud_t::section_starting_resource_t::section_starting_resource_t(kaitai::kstream *p_io, warcraft_2_pud_t::section_t* p_parent, warcraft_2_pud_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+warcraft_2_pud_t::section_starting_resource_t::section_starting_resource_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent, warcraft_2_pud_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void warcraft_2_pud_t::section_starting_resource_t::_read() {
     m_resources_by_player = new std::vector<uint16_t>();
-    while (!m__io->is_eof()) {
-        m_resources_by_player->push_back(m__io->read_u2le());
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_resources_by_player->push_back(m__io->read_u2le());
+            i++;
+        }
     }
 }
 
@@ -41,9 +49,9 @@ warcraft_2_pud_t::section_starting_resource_t::~section_starting_resource_t() {
     delete m_resources_by_player;
 }
 
-warcraft_2_pud_t::section_era_t::section_era_t(kaitai::kstream *p_io, warcraft_2_pud_t::section_t* p_parent, warcraft_2_pud_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+warcraft_2_pud_t::section_era_t::section_era_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent, warcraft_2_pud_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -54,9 +62,9 @@ void warcraft_2_pud_t::section_era_t::_read() {
 warcraft_2_pud_t::section_era_t::~section_era_t() {
 }
 
-warcraft_2_pud_t::section_ver_t::section_ver_t(kaitai::kstream *p_io, warcraft_2_pud_t::section_t* p_parent, warcraft_2_pud_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+warcraft_2_pud_t::section_ver_t::section_ver_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent, warcraft_2_pud_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -67,9 +75,9 @@ void warcraft_2_pud_t::section_ver_t::_read() {
 warcraft_2_pud_t::section_ver_t::~section_ver_t() {
 }
 
-warcraft_2_pud_t::section_dim_t::section_dim_t(kaitai::kstream *p_io, warcraft_2_pud_t::section_t* p_parent, warcraft_2_pud_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+warcraft_2_pud_t::section_dim_t::section_dim_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent, warcraft_2_pud_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -81,9 +89,9 @@ void warcraft_2_pud_t::section_dim_t::_read() {
 warcraft_2_pud_t::section_dim_t::~section_dim_t() {
 }
 
-warcraft_2_pud_t::section_type_t::section_type_t(kaitai::kstream *p_io, warcraft_2_pud_t::section_t* p_parent, warcraft_2_pud_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+warcraft_2_pud_t::section_type_t::section_type_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent, warcraft_2_pud_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -96,16 +104,20 @@ void warcraft_2_pud_t::section_type_t::_read() {
 warcraft_2_pud_t::section_type_t::~section_type_t() {
 }
 
-warcraft_2_pud_t::section_unit_t::section_unit_t(kaitai::kstream *p_io, warcraft_2_pud_t::section_t* p_parent, warcraft_2_pud_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+warcraft_2_pud_t::section_unit_t::section_unit_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent, warcraft_2_pud_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void warcraft_2_pud_t::section_unit_t::_read() {
     m_units = new std::vector<unit_t*>();
-    while (!m__io->is_eof()) {
-        m_units->push_back(new unit_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_units->push_back(new unit_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -116,63 +128,74 @@ warcraft_2_pud_t::section_unit_t::~section_unit_t() {
     delete m_units;
 }
 
-warcraft_2_pud_t::section_t::section_t(kaitai::kstream *p_io, warcraft_2_pud_t* p_parent, warcraft_2_pud_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+warcraft_2_pud_t::section_t::section_t(kaitai::kstream* p__io, warcraft_2_pud_t* p__parent, warcraft_2_pud_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void warcraft_2_pud_t::section_t::_read() {
     m_name = kaitai::kstream::bytes_to_str(m__io->read_bytes(4), std::string("ASCII"));
     m_size = m__io->read_u4le();
+    n_body = true;
     {
         std::string on = name();
         if (on == std::string("SLBR")) {
+            n_body = false;
             m__raw_body = m__io->read_bytes(size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new section_starting_resource_t(m__io__raw_body, this, m__root);
         }
         else if (on == std::string("ERAX")) {
+            n_body = false;
             m__raw_body = m__io->read_bytes(size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new section_era_t(m__io__raw_body, this, m__root);
         }
         else if (on == std::string("OWNR")) {
+            n_body = false;
             m__raw_body = m__io->read_bytes(size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new section_ownr_t(m__io__raw_body, this, m__root);
         }
         else if (on == std::string("ERA ")) {
+            n_body = false;
             m__raw_body = m__io->read_bytes(size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new section_era_t(m__io__raw_body, this, m__root);
         }
         else if (on == std::string("SGLD")) {
+            n_body = false;
             m__raw_body = m__io->read_bytes(size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new section_starting_resource_t(m__io__raw_body, this, m__root);
         }
         else if (on == std::string("VER ")) {
+            n_body = false;
             m__raw_body = m__io->read_bytes(size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new section_ver_t(m__io__raw_body, this, m__root);
         }
         else if (on == std::string("SOIL")) {
+            n_body = false;
             m__raw_body = m__io->read_bytes(size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new section_starting_resource_t(m__io__raw_body, this, m__root);
         }
         else if (on == std::string("UNIT")) {
+            n_body = false;
             m__raw_body = m__io->read_bytes(size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new section_unit_t(m__io__raw_body, this, m__root);
         }
         else if (on == std::string("DIM ")) {
+            n_body = false;
             m__raw_body = m__io->read_bytes(size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new section_dim_t(m__io__raw_body, this, m__root);
         }
         else if (on == std::string("TYPE")) {
+            n_body = false;
             m__raw_body = m__io->read_bytes(size());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new section_type_t(m__io__raw_body, this, m__root);
@@ -184,18 +207,26 @@ void warcraft_2_pud_t::section_t::_read() {
 }
 
 warcraft_2_pud_t::section_t::~section_t() {
+    if (!n_body) {
+        delete m__io__raw_body;
+        delete m_body;
+    }
 }
 
-warcraft_2_pud_t::section_ownr_t::section_ownr_t(kaitai::kstream *p_io, warcraft_2_pud_t::section_t* p_parent, warcraft_2_pud_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+warcraft_2_pud_t::section_ownr_t::section_ownr_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent, warcraft_2_pud_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void warcraft_2_pud_t::section_ownr_t::_read() {
     m_controller_by_player = new std::vector<controller_t>();
-    while (!m__io->is_eof()) {
-        m_controller_by_player->push_back(static_cast<warcraft_2_pud_t::controller_t>(m__io->read_u1()));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_controller_by_player->push_back(static_cast<warcraft_2_pud_t::controller_t>(m__io->read_u1()));
+            i++;
+        }
     }
 }
 
@@ -203,9 +234,9 @@ warcraft_2_pud_t::section_ownr_t::~section_ownr_t() {
     delete m_controller_by_player;
 }
 
-warcraft_2_pud_t::unit_t::unit_t(kaitai::kstream *p_io, warcraft_2_pud_t::section_unit_t* p_parent, warcraft_2_pud_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+warcraft_2_pud_t::unit_t::unit_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_unit_t* p__parent, warcraft_2_pud_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_resource = false;
     _read();
 }

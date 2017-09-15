@@ -15,8 +15,8 @@
  */
 
 class CreativeVoiceFile extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \CreativeVoiceFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \CreativeVoiceFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -26,8 +26,10 @@ class CreativeVoiceFile extends \Kaitai\Struct\Struct {
         $this->_m_version = $this->_io->readU2le();
         $this->_m_checksum = $this->_io->readU2le();
         $this->_m_blocks = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_blocks[] = new \CreativeVoiceFile\Block($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_magic;
@@ -57,8 +59,8 @@ class CreativeVoiceFile extends \Kaitai\Struct\Struct {
 namespace \CreativeVoiceFile;
 
 class BlockMarker extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \CreativeVoiceFile\Block $parent = null, \CreativeVoiceFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \CreativeVoiceFile\Block $_parent = null, \CreativeVoiceFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -76,8 +78,8 @@ class BlockMarker extends \Kaitai\Struct\Struct {
 namespace \CreativeVoiceFile;
 
 class BlockSilence extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \CreativeVoiceFile\Block $parent = null, \CreativeVoiceFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \CreativeVoiceFile\Block $_parent = null, \CreativeVoiceFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -120,8 +122,8 @@ class BlockSilence extends \Kaitai\Struct\Struct {
 namespace \CreativeVoiceFile;
 
 class BlockSoundDataNew extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \CreativeVoiceFile\Block $parent = null, \CreativeVoiceFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \CreativeVoiceFile\Block $_parent = null, \CreativeVoiceFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -150,8 +152,8 @@ class BlockSoundDataNew extends \Kaitai\Struct\Struct {
 namespace \CreativeVoiceFile;
 
 class Block extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \CreativeVoiceFile $parent = null, \CreativeVoiceFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \CreativeVoiceFile $_parent = null, \CreativeVoiceFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -239,8 +241,8 @@ class Block extends \Kaitai\Struct\Struct {
 namespace \CreativeVoiceFile;
 
 class BlockRepeatStart extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \CreativeVoiceFile\Block $parent = null, \CreativeVoiceFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \CreativeVoiceFile\Block $_parent = null, \CreativeVoiceFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -258,8 +260,8 @@ class BlockRepeatStart extends \Kaitai\Struct\Struct {
 namespace \CreativeVoiceFile;
 
 class BlockSoundData extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \CreativeVoiceFile\Block $parent = null, \CreativeVoiceFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \CreativeVoiceFile\Block $_parent = null, \CreativeVoiceFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -290,8 +292,8 @@ class BlockSoundData extends \Kaitai\Struct\Struct {
 namespace \CreativeVoiceFile;
 
 class BlockExtraInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \CreativeVoiceFile\Block $parent = null, \CreativeVoiceFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \CreativeVoiceFile\Block $_parent = null, \CreativeVoiceFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

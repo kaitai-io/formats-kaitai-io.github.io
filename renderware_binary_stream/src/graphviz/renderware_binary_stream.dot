@@ -42,8 +42,8 @@ renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="
 				<TR><TD PORT="num_triangles_pos">4</TD><TD PORT="num_triangles_size">4</TD><TD>u4le</TD><TD PORT="num_triangles_type">num_triangles</TD></TR>
 				<TR><TD PORT="num_vertices_pos">8</TD><TD PORT="num_vertices_size">4</TD><TD>u4le</TD><TD PORT="num_vertices_type">num_vertices</TD></TR>
 				<TR><TD PORT="num_morph_targets_pos">12</TD><TD PORT="num_morph_targets_size">4</TD><TD>u4le</TD><TD PORT="num_morph_targets_type">num_morph_targets</TD></TR>
-				<TR><TD PORT="surf_prop_pos">16</TD><TD PORT="surf_prop_size">...</TD><TD>SurfaceProperties</TD><TD PORT="surf_prop_type">surf_prop</TD></TR>
-				<TR><TD PORT="geometry_pos">...</TD><TD PORT="geometry_size">...</TD><TD>GeometryNonNative</TD><TD PORT="geometry_type">geometry</TD></TR>
+				<TR><TD PORT="surf_prop_pos">16</TD><TD PORT="surf_prop_size">12</TD><TD>SurfaceProperties</TD><TD PORT="surf_prop_type">surf_prop</TD></TR>
+				<TR><TD PORT="geometry_pos">28</TD><TD PORT="geometry_size">...</TD><TD>GeometryNonNative</TD><TD PORT="geometry_type">geometry</TD></TR>
 				<TR><TD PORT="morph_targets_pos">...</TD><TD PORT="morph_targets_size">...</TD><TD>MorphTarget</TD><TD PORT="morph_targets_type">morph_targets</TD></TR>
 				<TR><TD COLSPAN="4" PORT="morph_targets__repeat">repeat num_morph_targets times</TD></TR>
 			</TABLE>>];
@@ -70,11 +70,11 @@ renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="
 
 			geometry_non_native__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="prelit_colors_pos">0</TD><TD PORT="prelit_colors_size">...</TD><TD>Rgba</TD><TD PORT="prelit_colors_type">prelit_colors</TD></TR>
+				<TR><TD PORT="prelit_colors_pos">0</TD><TD PORT="prelit_colors_size">4</TD><TD>Rgba</TD><TD PORT="prelit_colors_type">prelit_colors</TD></TR>
 				<TR><TD COLSPAN="4" PORT="prelit_colors__repeat">repeat _parent.num_vertices times</TD></TR>
-				<TR><TD PORT="tex_coords_pos">...</TD><TD PORT="tex_coords_size">...</TD><TD>TexCoord</TD><TD PORT="tex_coords_type">tex_coords</TD></TR>
+				<TR><TD PORT="tex_coords_pos">...</TD><TD PORT="tex_coords_size">8</TD><TD>TexCoord</TD><TD PORT="tex_coords_type">tex_coords</TD></TR>
 				<TR><TD COLSPAN="4" PORT="tex_coords__repeat">repeat _parent.num_vertices times</TD></TR>
-				<TR><TD PORT="triangles_pos">...</TD><TD PORT="triangles_size">...</TD><TD>Triangle</TD><TD PORT="triangles_type">triangles</TD></TR>
+				<TR><TD PORT="triangles_pos">...</TD><TD PORT="triangles_size">8</TD><TD>Triangle</TD><TD PORT="triangles_type">triangles</TD></TR>
 				<TR><TD COLSPAN="4" PORT="triangles__repeat">repeat _parent.num_triangles times</TD></TR>
 			</TABLE>>];
 		}
@@ -117,12 +117,12 @@ renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="
 
 			morph_target__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="bounding_sphere_pos">0</TD><TD PORT="bounding_sphere_size">...</TD><TD>Sphere</TD><TD PORT="bounding_sphere_type">bounding_sphere</TD></TR>
-				<TR><TD PORT="has_vertices_pos">...</TD><TD PORT="has_vertices_size">4</TD><TD>u4le</TD><TD PORT="has_vertices_type">has_vertices</TD></TR>
-				<TR><TD PORT="has_normals_pos">...</TD><TD PORT="has_normals_size">4</TD><TD>u4le</TD><TD PORT="has_normals_type">has_normals</TD></TR>
-				<TR><TD PORT="vertices_pos">...</TD><TD PORT="vertices_size">...</TD><TD>Vector3d</TD><TD PORT="vertices_type">vertices</TD></TR>
+				<TR><TD PORT="bounding_sphere_pos">0</TD><TD PORT="bounding_sphere_size">16</TD><TD>Sphere</TD><TD PORT="bounding_sphere_type">bounding_sphere</TD></TR>
+				<TR><TD PORT="has_vertices_pos">16</TD><TD PORT="has_vertices_size">4</TD><TD>u4le</TD><TD PORT="has_vertices_type">has_vertices</TD></TR>
+				<TR><TD PORT="has_normals_pos">20</TD><TD PORT="has_normals_size">4</TD><TD>u4le</TD><TD PORT="has_normals_type">has_normals</TD></TR>
+				<TR><TD PORT="vertices_pos">24</TD><TD PORT="vertices_size">12</TD><TD>Vector3d</TD><TD PORT="vertices_type">vertices</TD></TR>
 				<TR><TD COLSPAN="4" PORT="vertices__repeat">repeat _parent.num_vertices times</TD></TR>
-				<TR><TD PORT="normals_pos">...</TD><TD PORT="normals_size">...</TD><TD>Vector3d</TD><TD PORT="normals_type">normals</TD></TR>
+				<TR><TD PORT="normals_pos">...</TD><TD PORT="normals_size">12</TD><TD>Vector3d</TD><TD PORT="normals_type">normals</TD></TR>
 				<TR><TD COLSPAN="4" PORT="normals__repeat">repeat _parent.num_vertices times</TD></TR>
 			</TABLE>>];
 		}
@@ -144,7 +144,7 @@ renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="
 			struct_frame_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="num_frames_pos">0</TD><TD PORT="num_frames_size">4</TD><TD>u4le</TD><TD PORT="num_frames_type">num_frames</TD></TR>
-				<TR><TD PORT="frames_pos">4</TD><TD PORT="frames_size">...</TD><TD>Frame</TD><TD PORT="frames_type">frames</TD></TR>
+				<TR><TD PORT="frames_pos">4</TD><TD PORT="frames_size">56</TD><TD>Frame</TD><TD PORT="frames_type">frames</TD></TR>
 				<TR><TD COLSPAN="4" PORT="frames__repeat">repeat num_frames times</TD></TR>
 			</TABLE>>];
 		}
@@ -154,7 +154,7 @@ renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="
 
 			matrix__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>Vector3d</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">12</TD><TD>Vector3d</TD><TD PORT="entries_type">entries</TD></TR>
 				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat 3 times</TD></TR>
 			</TABLE>>];
 		}
@@ -209,10 +209,10 @@ list_with_header__seq_header_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CEL
 
 			frame__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="rotation_matrix_pos">0</TD><TD PORT="rotation_matrix_size">...</TD><TD>Matrix</TD><TD PORT="rotation_matrix_type">rotation_matrix</TD></TR>
-				<TR><TD PORT="position_pos">...</TD><TD PORT="position_size">...</TD><TD>Vector3d</TD><TD PORT="position_type">position</TD></TR>
-				<TR><TD PORT="cur_frame_idx_pos">...</TD><TD PORT="cur_frame_idx_size">4</TD><TD>s4le</TD><TD PORT="cur_frame_idx_type">cur_frame_idx</TD></TR>
-				<TR><TD PORT="matrix_creation_flags_pos">...</TD><TD PORT="matrix_creation_flags_size">4</TD><TD>u4le</TD><TD PORT="matrix_creation_flags_type">matrix_creation_flags</TD></TR>
+				<TR><TD PORT="rotation_matrix_pos">0</TD><TD PORT="rotation_matrix_size">36</TD><TD>Matrix</TD><TD PORT="rotation_matrix_type">rotation_matrix</TD></TR>
+				<TR><TD PORT="position_pos">36</TD><TD PORT="position_size">12</TD><TD>Vector3d</TD><TD PORT="position_type">position</TD></TR>
+				<TR><TD PORT="cur_frame_idx_pos">48</TD><TD PORT="cur_frame_idx_size">4</TD><TD>s4le</TD><TD PORT="cur_frame_idx_type">cur_frame_idx</TD></TR>
+				<TR><TD PORT="matrix_creation_flags_pos">52</TD><TD PORT="matrix_creation_flags_size">4</TD><TD>u4le</TD><TD PORT="matrix_creation_flags_type">matrix_creation_flags</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__tex_coord {

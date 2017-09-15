@@ -247,18 +247,19 @@ namespace Kaitai
             return new QuakePak(new KaitaiStream(fileName));
         }
 
-        public QuakePak(KaitaiStream io, KaitaiStruct parent = null, QuakePak root = null) : base(io)
+        public QuakePak(KaitaiStream p__io, KaitaiStruct p__parent = null, QuakePak p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_index = false;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _magic = m_io.EnsureFixedContents(new byte[] { 80, 65, 67, 75 });
             _indexOfs = m_io.ReadU4le();
             _indexSize = m_io.ReadU4le();
-            }
+        }
         public partial class IndexStruct : KaitaiStruct
         {
             public static IndexStruct FromFile(string fileName)
@@ -266,18 +267,23 @@ namespace Kaitai
                 return new IndexStruct(new KaitaiStream(fileName));
             }
 
-            public IndexStruct(KaitaiStream io, QuakePak parent = null, QuakePak root = null) : base(io)
+            public IndexStruct(KaitaiStream p__io, QuakePak p__parent = null, QuakePak p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List&lt;IndexEntry&gt;();
-                while (!m_io.IsEof) {
-                    _entries.Add(new IndexEntry(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new IndexEntry(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List&lt;IndexEntry&gt; _entries;
             private QuakePak m_root;
             private QuakePak m_parent;
@@ -292,18 +298,19 @@ namespace Kaitai
                 return new IndexEntry(new KaitaiStream(fileName));
             }
 
-            public IndexEntry(KaitaiStream io, QuakePak.IndexStruct parent = null, QuakePak root = null) : base(io)
+            public IndexEntry(KaitaiStream p__io, QuakePak.IndexStruct p__parent = null, QuakePak p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_body = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _name = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(KaitaiStream.BytesTerminate(KaitaiStream.BytesStripRight(m_io.ReadBytes(56), 0), 0, false));
                 _ofs = m_io.ReadU4le();
                 _size = m_io.ReadU4le();
-                }
+            }
             private bool f_body;
             private byte[] _body;
             public byte[] Body

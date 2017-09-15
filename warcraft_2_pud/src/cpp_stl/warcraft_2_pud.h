@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -160,16 +159,24 @@ public:
         UNIT_TYPE_ORC_WALL = 104
     };
 
-    warcraft_2_pud_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, warcraft_2_pud_t* p_root = 0);
+    warcraft_2_pud_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, warcraft_2_pud_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~warcraft_2_pud_t();
 
     class section_starting_resource_t : public kaitai::kstruct {
 
     public:
 
-        section_starting_resource_t(kaitai::kstream* p_io, warcraft_2_pud_t::section_t* p_parent = 0, warcraft_2_pud_t* p_root = 0);
+        section_starting_resource_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~section_starting_resource_t();
 
     private:
@@ -191,8 +198,12 @@ public:
 
     public:
 
-        section_era_t(kaitai::kstream* p_io, warcraft_2_pud_t::section_t* p_parent = 0, warcraft_2_pud_t* p_root = 0);
+        section_era_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~section_era_t();
 
     private:
@@ -214,8 +225,12 @@ public:
 
     public:
 
-        section_ver_t(kaitai::kstream* p_io, warcraft_2_pud_t::section_t* p_parent = 0, warcraft_2_pud_t* p_root = 0);
+        section_ver_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~section_ver_t();
 
     private:
@@ -233,8 +248,12 @@ public:
 
     public:
 
-        section_dim_t(kaitai::kstream* p_io, warcraft_2_pud_t::section_t* p_parent = 0, warcraft_2_pud_t* p_root = 0);
+        section_dim_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~section_dim_t();
 
     private:
@@ -261,8 +280,12 @@ public:
 
     public:
 
-        section_type_t(kaitai::kstream* p_io, warcraft_2_pud_t::section_t* p_parent = 0, warcraft_2_pud_t* p_root = 0);
+        section_type_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~section_type_t();
 
     private:
@@ -292,8 +315,12 @@ public:
 
     public:
 
-        section_unit_t(kaitai::kstream* p_io, warcraft_2_pud_t::section_t* p_parent = 0, warcraft_2_pud_t* p_root = 0);
+        section_unit_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~section_unit_t();
 
     private:
@@ -311,14 +338,24 @@ public:
 
     public:
 
-        section_t(kaitai::kstream* p_io, warcraft_2_pud_t* p_parent = 0, warcraft_2_pud_t* p_root = 0);
+        section_t(kaitai::kstream* p__io, warcraft_2_pud_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~section_t();
 
     private:
         std::string m_name;
         uint32_t m_size;
         kaitai::kstruct* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
         warcraft_2_pud_t* m__root;
         warcraft_2_pud_t* m__parent;
         std::string m__raw_body;
@@ -342,8 +379,12 @@ public:
 
     public:
 
-        section_ownr_t(kaitai::kstream* p_io, warcraft_2_pud_t::section_t* p_parent = 0, warcraft_2_pud_t* p_root = 0);
+        section_ownr_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~section_ownr_t();
 
     private:
@@ -361,8 +402,12 @@ public:
 
     public:
 
-        unit_t(kaitai::kstream* p_io, warcraft_2_pud_t::section_unit_t* p_parent = 0, warcraft_2_pud_t* p_root = 0);
+        unit_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_unit_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~unit_t();
 
     private:

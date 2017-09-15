@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -24,7 +25,7 @@ import java.nio.charset.Charset;
  */
 public class Warcraft2Pud extends KaitaiStruct {
     public static Warcraft2Pud fromFile(String fileName) throws IOException {
-        return new Warcraft2Pud(new KaitaiStream(fileName));
+        return new Warcraft2Pud(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum Controller {
@@ -193,13 +194,17 @@ public class Warcraft2Pud extends KaitaiStruct {
     }
     private void _read() {
         this.sections = new ArrayList<Section>();
-        while (!this._io.isEof()) {
-            this.sections.add(new Section(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.sections.add(new Section(this._io, this, _root));
+                i++;
+            }
         }
     }
     public static class SectionStartingResource extends KaitaiStruct {
         public static SectionStartingResource fromFile(String fileName) throws IOException {
-            return new SectionStartingResource(new KaitaiStream(fileName));
+            return new SectionStartingResource(new ByteBufferKaitaiStream(fileName));
         }
 
         public SectionStartingResource(KaitaiStream _io) {
@@ -218,8 +223,12 @@ public class Warcraft2Pud extends KaitaiStruct {
         }
         private void _read() {
             this.resourcesByPlayer = new ArrayList<Integer>();
-            while (!this._io.isEof()) {
-                this.resourcesByPlayer.add(this._io.readU2le());
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.resourcesByPlayer.add(this._io.readU2le());
+                    i++;
+                }
             }
         }
         private ArrayList<Integer> resourcesByPlayer;
@@ -235,7 +244,7 @@ public class Warcraft2Pud extends KaitaiStruct {
      */
     public static class SectionEra extends KaitaiStruct {
         public static SectionEra fromFile(String fileName) throws IOException {
-            return new SectionEra(new KaitaiStream(fileName));
+            return new SectionEra(new ByteBufferKaitaiStream(fileName));
         }
 
         public SectionEra(KaitaiStream _io) {
@@ -268,7 +277,7 @@ public class Warcraft2Pud extends KaitaiStruct {
      */
     public static class SectionVer extends KaitaiStruct {
         public static SectionVer fromFile(String fileName) throws IOException {
-            return new SectionVer(new KaitaiStream(fileName));
+            return new SectionVer(new ByteBufferKaitaiStream(fileName));
         }
 
         public SectionVer(KaitaiStream _io) {
@@ -297,7 +306,7 @@ public class Warcraft2Pud extends KaitaiStruct {
     }
     public static class SectionDim extends KaitaiStruct {
         public static SectionDim fromFile(String fileName) throws IOException {
-            return new SectionDim(new KaitaiStream(fileName));
+            return new SectionDim(new ByteBufferKaitaiStream(fileName));
         }
 
         public SectionDim(KaitaiStream _io) {
@@ -336,7 +345,7 @@ public class Warcraft2Pud extends KaitaiStruct {
      */
     public static class SectionType extends KaitaiStruct {
         public static SectionType fromFile(String fileName) throws IOException {
-            return new SectionType(new KaitaiStream(fileName));
+            return new SectionType(new ByteBufferKaitaiStream(fileName));
         }
 
         public SectionType(KaitaiStream _io) {
@@ -379,7 +388,7 @@ public class Warcraft2Pud extends KaitaiStruct {
     }
     public static class SectionUnit extends KaitaiStruct {
         public static SectionUnit fromFile(String fileName) throws IOException {
-            return new SectionUnit(new KaitaiStream(fileName));
+            return new SectionUnit(new ByteBufferKaitaiStream(fileName));
         }
 
         public SectionUnit(KaitaiStream _io) {
@@ -398,8 +407,12 @@ public class Warcraft2Pud extends KaitaiStruct {
         }
         private void _read() {
             this.units = new ArrayList<Unit>();
-            while (!this._io.isEof()) {
-                this.units.add(new Unit(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.units.add(new Unit(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<Unit> units;
@@ -411,7 +424,7 @@ public class Warcraft2Pud extends KaitaiStruct {
     }
     public static class Section extends KaitaiStruct {
         public static Section fromFile(String fileName) throws IOException {
-            return new Section(new KaitaiStream(fileName));
+            return new Section(new ByteBufferKaitaiStream(fileName));
         }
 
         public Section(KaitaiStream _io) {
@@ -434,61 +447,61 @@ public class Warcraft2Pud extends KaitaiStruct {
             switch (name()) {
             case "SLBR": {
                 this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SectionStartingResource(_io__raw_body, this, _root);
                 break;
             }
             case "ERAX": {
                 this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SectionEra(_io__raw_body, this, _root);
                 break;
             }
             case "OWNR": {
                 this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SectionOwnr(_io__raw_body, this, _root);
                 break;
             }
             case "ERA ": {
                 this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SectionEra(_io__raw_body, this, _root);
                 break;
             }
             case "SGLD": {
                 this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SectionStartingResource(_io__raw_body, this, _root);
                 break;
             }
             case "VER ": {
                 this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SectionVer(_io__raw_body, this, _root);
                 break;
             }
             case "SOIL": {
                 this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SectionStartingResource(_io__raw_body, this, _root);
                 break;
             }
             case "UNIT": {
                 this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SectionUnit(_io__raw_body, this, _root);
                 break;
             }
             case "DIM ": {
                 this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SectionDim(_io__raw_body, this, _root);
                 break;
             }
             case "TYPE": {
                 this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SectionType(_io__raw_body, this, _root);
                 break;
             }
@@ -517,7 +530,7 @@ public class Warcraft2Pud extends KaitaiStruct {
      */
     public static class SectionOwnr extends KaitaiStruct {
         public static SectionOwnr fromFile(String fileName) throws IOException {
-            return new SectionOwnr(new KaitaiStream(fileName));
+            return new SectionOwnr(new ByteBufferKaitaiStream(fileName));
         }
 
         public SectionOwnr(KaitaiStream _io) {
@@ -536,8 +549,12 @@ public class Warcraft2Pud extends KaitaiStruct {
         }
         private void _read() {
             this.controllerByPlayer = new ArrayList<Controller>();
-            while (!this._io.isEof()) {
-                this.controllerByPlayer.add(Warcraft2Pud.Controller.byId(this._io.readU1()));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.controllerByPlayer.add(Warcraft2Pud.Controller.byId(this._io.readU1()));
+                    i++;
+                }
             }
         }
         private ArrayList<Controller> controllerByPlayer;
@@ -549,7 +566,7 @@ public class Warcraft2Pud extends KaitaiStruct {
     }
     public static class Unit extends KaitaiStruct {
         public static Unit fromFile(String fileName) throws IOException {
-            return new Unit(new KaitaiStream(fileName));
+            return new Unit(new ByteBufferKaitaiStream(fileName));
         }
 
         public Unit(KaitaiStream _io) {

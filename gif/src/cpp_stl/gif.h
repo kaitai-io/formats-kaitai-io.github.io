@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -61,8 +60,12 @@ public:
         EXTENSION_LABEL_APPLICATION = 255
     };
 
-    gif_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, gif_t* p_root = 0);
+    gif_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gif_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~gif_t();
 
     /**
@@ -73,8 +76,12 @@ public:
 
     public:
 
-        image_data_t(kaitai::kstream* p_io, gif_t::local_image_descriptor_t* p_parent = 0, gif_t* p_root = 0);
+        image_data_t(kaitai::kstream* p__io, gif_t::local_image_descriptor_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~image_data_t();
 
     private:
@@ -94,8 +101,12 @@ public:
 
     public:
 
-        color_table_entry_t(kaitai::kstream* p_io, gif_t::color_table_t* p_parent = 0, gif_t* p_root = 0);
+        color_table_entry_t(kaitai::kstream* p__io, gif_t::color_table_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~color_table_entry_t();
 
     private:
@@ -121,8 +132,12 @@ public:
 
     public:
 
-        logical_screen_descriptor_struct_t(kaitai::kstream* p_io, gif_t* p_parent = 0, gif_t* p_root = 0);
+        logical_screen_descriptor_struct_t(kaitai::kstream* p__io, gif_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~logical_screen_descriptor_struct_t();
 
     private:
@@ -162,8 +177,12 @@ public:
 
     public:
 
-        local_image_descriptor_t(kaitai::kstream* p_io, gif_t::block_t* p_parent = 0, gif_t* p_root = 0);
+        local_image_descriptor_t(kaitai::kstream* p__io, gif_t::block_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~local_image_descriptor_t();
 
     private:
@@ -231,13 +250,23 @@ public:
 
     public:
 
-        block_t(kaitai::kstream* p_io, gif_t* p_parent = 0, gif_t* p_root = 0);
+        block_t(kaitai::kstream* p__io, gif_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~block_t();
 
     private:
         block_type_t m_block_type;
         kaitai::kstruct* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
         gif_t* m__root;
         gif_t* m__parent;
 
@@ -256,8 +285,12 @@ public:
 
     public:
 
-        color_table_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, gif_t* p_root = 0);
+        color_table_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gif_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~color_table_t();
 
     private:
@@ -279,8 +312,12 @@ public:
 
     public:
 
-        header_t(kaitai::kstream* p_io, gif_t* p_parent = 0, gif_t* p_root = 0);
+        header_t(kaitai::kstream* p__io, gif_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header_t();
 
     private:
@@ -304,8 +341,12 @@ public:
 
     public:
 
-        ext_graphic_control_t(kaitai::kstream* p_io, gif_t::extension_t* p_parent = 0, gif_t* p_root = 0);
+        ext_graphic_control_t(kaitai::kstream* p__io, gif_t::extension_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~ext_graphic_control_t();
 
     private:
@@ -345,8 +386,12 @@ public:
 
     public:
 
-        subblock_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, gif_t* p_root = 0);
+        subblock_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gif_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~subblock_t();
 
     private:
@@ -366,8 +411,12 @@ public:
 
     public:
 
-        ext_application_t(kaitai::kstream* p_io, gif_t::extension_t* p_parent = 0, gif_t* p_root = 0);
+        ext_application_t(kaitai::kstream* p__io, gif_t::extension_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~ext_application_t();
 
     private:
@@ -387,8 +436,12 @@ public:
 
     public:
 
-        subblocks_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, gif_t* p_root = 0);
+        subblocks_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gif_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~subblocks_t();
 
     private:
@@ -406,8 +459,12 @@ public:
 
     public:
 
-        extension_t(kaitai::kstream* p_io, gif_t::block_t* p_parent = 0, gif_t* p_root = 0);
+        extension_t(kaitai::kstream* p__io, gif_t::block_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~extension_t();
 
     private:

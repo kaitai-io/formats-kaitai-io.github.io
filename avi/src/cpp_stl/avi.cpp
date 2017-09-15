@@ -4,8 +4,8 @@
 
 
 
-avi_t::avi_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, avi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+avi_t::avi_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, avi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -24,9 +24,9 @@ avi_t::~avi_t() {
     delete m_data;
 }
 
-avi_t::list_body_t::list_body_t(kaitai::kstream *p_io, avi_t::block_t* p_parent, avi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+avi_t::list_body_t::list_body_t(kaitai::kstream* p__io, avi_t::block_t* p__parent, avi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -39,9 +39,9 @@ avi_t::list_body_t::~list_body_t() {
     delete m_data;
 }
 
-avi_t::rect_t::rect_t(kaitai::kstream *p_io, avi_t::strh_body_t* p_parent, avi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+avi_t::rect_t::rect_t(kaitai::kstream* p__io, avi_t::strh_body_t* p__parent, avi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -55,16 +55,20 @@ void avi_t::rect_t::_read() {
 avi_t::rect_t::~rect_t() {
 }
 
-avi_t::blocks_t::blocks_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, avi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+avi_t::blocks_t::blocks_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, avi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void avi_t::blocks_t::_read() {
     m_entries = new std::vector<block_t*>();
-    while (!m__io->is_eof()) {
-        m_entries->push_back(new block_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new block_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -75,9 +79,9 @@ avi_t::blocks_t::~blocks_t() {
     delete m_entries;
 }
 
-avi_t::avih_body_t::avih_body_t(kaitai::kstream *p_io, avi_t::block_t* p_parent, avi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+avi_t::avih_body_t::avih_body_t(kaitai::kstream* p__io, avi_t::block_t* p__parent, avi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -98,43 +102,55 @@ void avi_t::avih_body_t::_read() {
 avi_t::avih_body_t::~avih_body_t() {
 }
 
-avi_t::block_t::block_t(kaitai::kstream *p_io, avi_t::blocks_t* p_parent, avi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+avi_t::block_t::block_t(kaitai::kstream* p__io, avi_t::blocks_t* p__parent, avi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void avi_t::block_t::_read() {
     m_four_cc = static_cast<avi_t::chunk_type_t>(m__io->read_u4le());
     m_block_size = m__io->read_u4le();
+    n_data = true;
     switch (four_cc()) {
-    case CHUNK_TYPE_LIST:
+    case CHUNK_TYPE_LIST: {
+        n_data = false;
         m__raw_data = m__io->read_bytes(block_size());
         m__io__raw_data = new kaitai::kstream(m__raw_data);
         m_data = new list_body_t(m__io__raw_data, this, m__root);
         break;
-    case CHUNK_TYPE_AVIH:
+    }
+    case CHUNK_TYPE_AVIH: {
+        n_data = false;
         m__raw_data = m__io->read_bytes(block_size());
         m__io__raw_data = new kaitai::kstream(m__raw_data);
         m_data = new avih_body_t(m__io__raw_data, this, m__root);
         break;
-    case CHUNK_TYPE_STRH:
+    }
+    case CHUNK_TYPE_STRH: {
+        n_data = false;
         m__raw_data = m__io->read_bytes(block_size());
         m__io__raw_data = new kaitai::kstream(m__raw_data);
         m_data = new strh_body_t(m__io__raw_data, this, m__root);
         break;
-    default:
+    }
+    default: {
         m__raw_data = m__io->read_bytes(block_size());
         break;
+    }
     }
 }
 
 avi_t::block_t::~block_t() {
+    if (!n_data) {
+        delete m__io__raw_data;
+        delete m_data;
+    }
 }
 
-avi_t::strh_body_t::strh_body_t(kaitai::kstream *p_io, avi_t::block_t* p_parent, avi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+avi_t::strh_body_t::strh_body_t(kaitai::kstream* p__io, avi_t::block_t* p__parent, avi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -159,9 +175,9 @@ avi_t::strh_body_t::~strh_body_t() {
     delete m_frame;
 }
 
-avi_t::strf_body_t::strf_body_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, avi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+avi_t::strf_body_t::strf_body_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, avi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

@@ -235,10 +235,12 @@ var GlibcUtmp = (function() {
   GlibcUtmp.prototype._read = function() {
     this._raw_records = [];
     this.records = [];
+    var i = 0;
     while (!this._io.isEof()) {
       this._raw_records.push(this._io.readBytes(384));
       var _io__raw_records = new KaitaiStream(this._raw_records[this._raw_records.length - 1]);
       this.records.push(new Record(_io__raw_records, this, this._root));
+      i++;
     }
   }
 

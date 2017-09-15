@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -32,8 +31,12 @@ public:
         ENCODINGS_RLE = 1
     };
 
-    pcx_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, pcx_t* p_root = 0);
+    pcx_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, pcx_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~pcx_t();
 
     /**
@@ -44,8 +47,12 @@ public:
 
     public:
 
-        header_t(kaitai::kstream* p_io, pcx_t* p_parent = 0, pcx_t* p_root = 0);
+        header_t(kaitai::kstream* p__io, pcx_t* p__parent = 0, pcx_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header_t();
 
     private:
@@ -103,8 +110,12 @@ public:
 
     public:
 
-        t_palette_256_t(kaitai::kstream* p_io, pcx_t* p_parent = 0, pcx_t* p_root = 0);
+        t_palette_256_t(kaitai::kstream* p__io, pcx_t* p__parent = 0, pcx_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~t_palette_256_t();
 
     private:
@@ -124,8 +135,12 @@ public:
 
     public:
 
-        rgb_t(kaitai::kstream* p_io, pcx_t::t_palette_256_t* p_parent = 0, pcx_t* p_root = 0);
+        rgb_t(kaitai::kstream* p__io, pcx_t::t_palette_256_t* p__parent = 0, pcx_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~rgb_t();
 
     private:

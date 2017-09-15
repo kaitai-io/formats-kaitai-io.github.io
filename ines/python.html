@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>.nes / .ines file format: Python parsing library</title>
+  <title>.nes file format: Python parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Firmware</li>
-        <li class="active">.nes / .ines file format</li>
+        <li class="active">.nes file format</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>.nes / .ines file format:
+        <h1>.nes file format:
             
             Python parsing library
             
@@ -108,7 +108,7 @@ section#format-index .row {
                         <h3 class="panel-title">File extension</h3>
                     </div>
                     <div class="panel-body">
-                        ["nes", "ines"]
+                        nes
                     </div>
                     
                     
@@ -129,7 +129,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of .nes / .ines file format
+            This page hosts a formal specification of .nes file format
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -140,52 +140,52 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="index.html" title=".nes / .ines file format parsing Overview library">Overview</a></li>
+                <a href="index.html" title=".nes file format parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title=".nes / .ines file format parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title=".nes file format parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title=".nes / .ines file format parsing C# library">C#</a></li>
+                <a href="csharp.html" title=".nes file format parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title=".nes / .ines file format parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title=".nes file format parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title=".nes / .ines file format parsing Java library">Java</a></li>
+                <a href="java.html" title=".nes file format parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title=".nes / .ines file format parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title=".nes file format parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title=".nes / .ines file format parsing Perl library">Perl</a></li>
+                <a href="perl.html" title=".nes file format parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title=".nes / .ines file format parsing PHP library">PHP</a></li>
+                <a href="php.html" title=".nes file format parsing PHP library">PHP</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="python.html" title=".nes / .ines file format parsing Python library">Python</a></li>
+                <a href="python.html" title=".nes file format parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title=".nes / .ines file format parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title=".nes file format parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -201,14 +201,14 @@ section#format-index .row {
 
 
 
-<pre><code class="python">data = Ines.from_file("path/to/local/file.["nes", "ines"]")</code></pre>
+<pre><code class="python">data = Ines.from_file("path/to/local/file.nes")</code></pre>
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = Ines(KaitaiStream(raw))</code></pre>
+data = Ines(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -222,7 +222,7 @@ data = Ines(KaitaiStream(raw))</code></pre>
     <div class="container">
         <h2>
             
-            Python source code to parse .nes / .ines file format
+            Python source code to parse .nes file format
             
         </h2>
 
@@ -244,12 +244,17 @@ data = Ines(KaitaiStream(raw))</code></pre>
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 import struct
+from enum import Enum
 
 
 if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
     raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
 
 class Ines(KaitaiStruct):
+    &quot;&quot;&quot;
+    .. seealso::
+       Source - https://wiki.nesdev.com/w/index.php/INES
+    &quot;&quot;&quot;
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -257,63 +262,19 @@ class Ines(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.header = self._root.Header(self._io, self, self._root)
-        self.rom = self._io.read_bytes_full()
+        self._raw_header = self._io.read_bytes(16)
+        io = KaitaiStream(BytesIO(self._raw_header))
+        self.header = self._root.Header(io, self, self._root)
+        if self.header.f6.trainer:
+            self.trainer = self._io.read_bytes(512)
 
-    class F7(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+        self.prg_rom = self._io.read_bytes((self.header.len_prg_rom * 16384))
+        self.chr_rom = self._io.read_bytes((self.header.len_chr_rom * 8192))
+        if self.header.f7.playchoice10:
+            self.playchoice10 = self._root.Playchoice10(self._io, self, self._root)
 
-        def _read(self):
-            self.upper_nibble = self._io.read_bits_int(4)
-            self.format = self._io.read_bits_int(2)
-            self.arcade_2 = self._io.read_bits_int(1) != 0
-            self.arcade_1 = self._io.read_bits_int(1) != 0
-
-
-    class F6(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.lower_nibble = self._io.read_bits_int(4)
-            self.ignore_mirror = self._io.read_bits_int(1) != 0
-            self.trainer = self._io.read_bits_int(1) != 0
-            self.has_battery_ram = self._io.read_bits_int(1) != 0
-            self.mirror = self._io.read_bits_int(1) != 0
-
-
-    class F10(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.nothing1 = self._io.read_bits_int(2)
-            self.bus_conflict = self._io.read_bits_int(1) != 0
-            self.prg_ram = self._io.read_bits_int(1) != 0
-            self.nothing2 = self._io.read_bits_int(2)
-            self.tv_system = self._io.read_bits_int(2)
-
-
-    class F9(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.reserved = self._io.read_bits_int(7)
-            self.tv_system = self._io.read_bits_int(1) != 0
+        if not (self._io.is_eof()):
+            self.title = (self._io.read_bytes_full()).decode(u&quot;ASCII&quot;)
 
 
     class Header(KaitaiStruct):
@@ -325,23 +286,149 @@ class Ines(KaitaiStruct):
 
         def _read(self):
             self.magic = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 78, 69, 83, 26))
-            self.prg_rom_size = self._io.read_u1()
-            self.chr_rom_size = self._io.read_u1()
-            self.f6 = self._root.F6(self._io, self, self._root)
-            self.f7 = self._root.F7(self._io, self, self._root)
-            self.prg_ram_size = self._io.read_u1()
-            self.f9 = self._root.F9(self._io, self, self._root)
-            self.f10 = self._root.F10(self._io, self, self._root)
-            self.zero_fill = self._io.read_bytes(4)
+            self.len_prg_rom = self._io.read_u1()
+            self.len_chr_rom = self._io.read_u1()
+            self._raw_f6 = self._io.read_bytes(1)
+            io = KaitaiStream(BytesIO(self._raw_f6))
+            self.f6 = self._root.Header.F6(io, self, self._root)
+            self._raw_f7 = self._io.read_bytes(1)
+            io = KaitaiStream(BytesIO(self._raw_f7))
+            self.f7 = self._root.Header.F7(io, self, self._root)
+            self.len_prg_ram = self._io.read_u1()
+            self._raw_f9 = self._io.read_bytes(1)
+            io = KaitaiStream(BytesIO(self._raw_f9))
+            self.f9 = self._root.Header.F9(io, self, self._root)
+            self._raw_f10 = self._io.read_bytes(1)
+            io = KaitaiStream(BytesIO(self._raw_f10))
+            self.f10 = self._root.Header.F10(io, self, self._root)
+            self.reserved = self._io.ensure_fixed_contents(struct.pack(&#39;5b&#39;, 0, 0, 0, 0, 0))
+
+        class F6(KaitaiStruct):
+            &quot;&quot;&quot;
+            .. seealso::
+               Source - https://wiki.nesdev.com/w/index.php/INES#Flags_6
+            &quot;&quot;&quot;
+
+            class Mirroring(Enum):
+                horizontal = 0
+                vertical = 1
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.lower_mapper = self._io.read_bits_int(4)
+                self.four_screen = self._io.read_bits_int(1) != 0
+                self.trainer = self._io.read_bits_int(1) != 0
+                self.has_battery_ram = self._io.read_bits_int(1) != 0
+                self.mirroring = self._root.Header.F6.Mirroring(self._io.read_bits_int(1))
 
 
-    @property
-    def mapper(self):
-        if hasattr(self, &#39;_m_mapper&#39;):
+        class F7(KaitaiStruct):
+            &quot;&quot;&quot;
+            .. seealso::
+               Source - https://wiki.nesdev.com/w/index.php/INES#Flags_7
+            &quot;&quot;&quot;
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.upper_mapper = self._io.read_bits_int(4)
+                self.format = self._io.read_bits_int(2)
+                self.playchoice10 = self._io.read_bits_int(1) != 0
+                self.vs_unisystem = self._io.read_bits_int(1) != 0
+
+
+        class F9(KaitaiStruct):
+            &quot;&quot;&quot;
+            .. seealso::
+               Source - https://wiki.nesdev.com/w/index.php/INES#Flags_9
+            &quot;&quot;&quot;
+
+            class TvSystem(Enum):
+                ntsc = 0
+                pal = 1
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.reserved = self._io.read_bits_int(7)
+                self.tv_system = self._root.Header.F9.TvSystem(self._io.read_bits_int(1))
+
+
+        class F10(KaitaiStruct):
+            &quot;&quot;&quot;
+            .. seealso::
+               Source - https://wiki.nesdev.com/w/index.php/INES#Flags_10
+            &quot;&quot;&quot;
+
+            class TvSystem(Enum):
+                ntsc = 0
+                dual1 = 1
+                pal = 2
+                dual2 = 3
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.reserved1 = self._io.read_bits_int(2)
+                self.bus_conflict = self._io.read_bits_int(1) != 0
+                self.prg_ram = self._io.read_bits_int(1) != 0
+                self.reserved2 = self._io.read_bits_int(2)
+                self.tv_system = self._root.Header.F10.TvSystem(self._io.read_bits_int(2))
+
+
+        @property
+        def mapper(self):
+            &quot;&quot;&quot;
+            .. seealso::
+               Source - https://wiki.nesdev.com/w/index.php/Mapper
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_mapper&#39;):
+                return self._m_mapper if hasattr(self, &#39;_m_mapper&#39;) else None
+
+            self._m_mapper = (self.f6.lower_mapper | (self.f7.upper_mapper &lt;&lt; 4))
             return self._m_mapper if hasattr(self, &#39;_m_mapper&#39;) else None
 
-        self._m_mapper = (self._root.header.f6.lower_nibble | (self._root.header.f7.upper_nibble &lt;&lt; 4))
-        return self._m_mapper if hasattr(self, &#39;_m_mapper&#39;) else None
+
+    class Playchoice10(KaitaiStruct):
+        &quot;&quot;&quot;
+        .. seealso::
+           Source - http://wiki.nesdev.com/w/index.php/PC10_ROM-Images
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.inst_rom = self._io.read_bytes(8192)
+            self.prom = self._root.Playchoice10.Prom(self._io, self, self._root)
+
+        class Prom(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.data = self._io.read_bytes(16)
+                self.counter_out = self._io.read_bytes(16)
+
+
 
 
 </code></pre>

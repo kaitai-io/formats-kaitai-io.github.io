@@ -30,10 +30,12 @@ class GlibcUtmp(KaitaiStruct):
     def _read(self):
         self._raw_records = []
         self.records = []
+        i = 0
         while not self._io.is_eof():
             self._raw_records.append(self._io.read_bytes(384))
             io = KaitaiStream(BytesIO(self._raw_records[-1]))
             self.records.append(self._root.Record(io, self, self._root))
+            i += 1
 
 
     class Record(KaitaiStruct):

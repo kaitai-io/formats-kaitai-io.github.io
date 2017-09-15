@@ -573,13 +573,13 @@ sub strings {
     my ($self) = @_;
     return $self-&gt;{strings} if ($self-&gt;{strings});
     my $_pos = $self-&gt;{_io}-&gt;pos();
-    $self-&gt;{_io}-&gt;seek($self-&gt;section_headers()[$self-&gt;section_names_idx()]-&gt;offset());
+    $self-&gt;{_io}-&gt;seek(@{$self-&gt;section_headers()}[$self-&gt;section_names_idx()]-&gt;offset());
     if ($self-&gt;{_is_le}) {
-        $self-&gt;{_raw_strings} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;section_headers()[$self-&gt;section_names_idx()]-&gt;size());
+        $self-&gt;{_raw_strings} = $self-&gt;{_io}-&gt;read_bytes(@{$self-&gt;section_headers()}[$self-&gt;section_names_idx()]-&gt;size());
         my $io__raw_strings = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_strings});
         $self-&gt;{strings} = Elf::EndianElf::StringsStruct-&gt;new($io__raw_strings, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
     } else {
-        $self-&gt;{_raw_strings} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;section_headers()[$self-&gt;section_names_idx()]-&gt;size());
+        $self-&gt;{_raw_strings} = $self-&gt;{_io}-&gt;read_bytes(@{$self-&gt;section_headers()}[$self-&gt;section_names_idx()]-&gt;size());
         my $io__raw_strings = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_strings});
         $self-&gt;{strings} = Elf::EndianElf::StringsStruct-&gt;new($io__raw_strings, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
     }

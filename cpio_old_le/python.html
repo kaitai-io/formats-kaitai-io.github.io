@@ -205,10 +205,10 @@ section#format-index .row {
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = CpioOldLe(KaitaiStream(raw))</code></pre>
+data = CpioOldLe(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -258,8 +258,10 @@ class CpioOldLe(KaitaiStruct):
 
     def _read(self):
         self.files = []
+        i = 0
         while not self._io.is_eof():
             self.files.append(self._root.File(self._io, self, self._root))
+            i += 1
 
 
     class File(KaitaiStruct):

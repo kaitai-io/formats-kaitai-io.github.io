@@ -7,8 +7,8 @@
  */
 
 class Msgpack extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Msgpack $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Msgpack $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -343,8 +343,8 @@ class Msgpack extends \Kaitai\Struct\Struct {
 namespace \Msgpack;
 
 class MapTuple extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Msgpack $parent = null, \Msgpack $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Msgpack $_parent = null, \Msgpack $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

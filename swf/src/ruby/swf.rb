@@ -39,8 +39,10 @@ class Swf < Kaitai::Struct::Struct
       @frame_rate = @_io.read_u2le
       @frame_count = @_io.read_u2le
       @tags = []
+      i = 0
       while not @_io.eof?
         @tags << Tag.new(@_io, self, @_root)
+        i += 1
       end
       self
     end

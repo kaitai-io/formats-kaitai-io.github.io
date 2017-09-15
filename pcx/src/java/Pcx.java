@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 public class Pcx extends KaitaiStruct {
     public static Pcx fromFile(String fileName) throws IOException {
-        return new Pcx(new KaitaiStream(fileName));
+        return new Pcx(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum Versions {
@@ -60,7 +61,7 @@ public class Pcx extends KaitaiStruct {
     }
     private void _read() {
         this._raw_hdr = this._io.readBytes(128);
-        KaitaiStream _io__raw_hdr = new KaitaiStream(_raw_hdr);
+        KaitaiStream _io__raw_hdr = new ByteBufferKaitaiStream(_raw_hdr);
         this.hdr = new Header(_io__raw_hdr, this, _root);
     }
 
@@ -69,7 +70,7 @@ public class Pcx extends KaitaiStruct {
      */
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
-            return new Header(new KaitaiStream(fileName));
+            return new Header(new ByteBufferKaitaiStream(fileName));
         }
 
         public Header(KaitaiStream _io) {
@@ -154,7 +155,7 @@ public class Pcx extends KaitaiStruct {
     }
     public static class TPalette256 extends KaitaiStruct {
         public static TPalette256 fromFile(String fileName) throws IOException {
-            return new TPalette256(new KaitaiStream(fileName));
+            return new TPalette256(new ByteBufferKaitaiStream(fileName));
         }
 
         public TPalette256(KaitaiStream _io) {
@@ -189,7 +190,7 @@ public class Pcx extends KaitaiStruct {
     }
     public static class Rgb extends KaitaiStruct {
         public static Rgb fromFile(String fileName) throws IOException {
-            return new Rgb(new KaitaiStream(fileName));
+            return new Rgb(new ByteBufferKaitaiStream(fileName));
         }
 
         public Rgb(KaitaiStream _io) {

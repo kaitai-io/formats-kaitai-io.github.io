@@ -11,16 +11,17 @@ namespace Kaitai
             return new Iso9660(new KaitaiStream(fileName));
         }
 
-        public Iso9660(KaitaiStream io, KaitaiStruct parent = null, Iso9660 root = null) : base(io)
+        public Iso9660(KaitaiStream p__io, KaitaiStruct p__parent = null, Iso9660 p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_sectorSize = false;
             f_primaryVolDesc = false;
             _read();
         }
-        private void _read() {
-            }
+        private void _read()
+        {
+        }
         public partial class VolDescPrimary : KaitaiStruct
         {
             public static VolDescPrimary FromFile(string fileName)
@@ -28,14 +29,15 @@ namespace Kaitai
                 return new VolDescPrimary(new KaitaiStream(fileName));
             }
 
-            public VolDescPrimary(KaitaiStream io, Iso9660.VolDesc parent = null, Iso9660 root = null) : base(io)
+            public VolDescPrimary(KaitaiStream p__io, Iso9660.VolDesc p__parent = null, Iso9660 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_pathTable = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _unused1 = m_io.EnsureFixedContents(new byte[] { 0 });
                 _systemId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(32));
                 _volumeId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(32));
@@ -67,7 +69,7 @@ namespace Kaitai
                 _fileStructureVersion = m_io.ReadU1();
                 _unused4 = m_io.ReadU1();
                 _applicationArea = m_io.ReadBytes(512);
-                }
+            }
             private bool f_pathTable;
             private PathTableLe _pathTable;
             public PathTableLe PathTable
@@ -160,16 +162,17 @@ namespace Kaitai
                 return new VolDescBootRecord(new KaitaiStream(fileName));
             }
 
-            public VolDescBootRecord(KaitaiStream io, Iso9660.VolDesc parent = null, Iso9660 root = null) : base(io)
+            public VolDescBootRecord(KaitaiStream p__io, Iso9660.VolDesc p__parent = null, Iso9660 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _bootSystemId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(32));
                 _bootId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(32));
-                }
+            }
             private string _bootSystemId;
             private string _bootId;
             private Iso9660 m_root;
@@ -186,13 +189,14 @@ namespace Kaitai
                 return new Datetime(new KaitaiStream(fileName));
             }
 
-            public Datetime(KaitaiStream io, Iso9660.DirEntryBody parent = null, Iso9660 root = null) : base(io)
+            public Datetime(KaitaiStream p__io, Iso9660.DirEntryBody p__parent = null, Iso9660 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _year = m_io.ReadU1();
                 _month = m_io.ReadU1();
                 _day = m_io.ReadU1();
@@ -200,7 +204,7 @@ namespace Kaitai
                 _minute = m_io.ReadU1();
                 _sec = m_io.ReadU1();
                 _timezone = m_io.ReadU1();
-                }
+            }
             private byte _year;
             private byte _month;
             private byte _day;
@@ -227,20 +231,21 @@ namespace Kaitai
                 return new DirEntry(new KaitaiStream(fileName));
             }
 
-            public DirEntry(KaitaiStream io, KaitaiStruct parent = null, Iso9660 root = null) : base(io)
+            public DirEntry(KaitaiStream p__io, KaitaiStruct p__parent = null, Iso9660 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _len = m_io.ReadU1();
                 if (Len > 0) {
                     __raw_body = m_io.ReadBytes((Len - 1));
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new DirEntryBody(io___raw_body, this, m_root);
                 }
-                }
+            }
             private byte _len;
             private DirEntryBody _body;
             private Iso9660 m_root;
@@ -259,13 +264,14 @@ namespace Kaitai
                 return new VolDesc(new KaitaiStream(fileName));
             }
 
-            public VolDesc(KaitaiStream io, Iso9660 parent = null, Iso9660 root = null) : base(io)
+            public VolDesc(KaitaiStream p__io, Iso9660 p__parent = null, Iso9660 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _type = m_io.ReadU1();
                 _magic = m_io.EnsureFixedContents(new byte[] { 67, 68, 48, 48, 49 });
                 _version = m_io.ReadU1();
@@ -275,7 +281,7 @@ namespace Kaitai
                 if (Type == 1) {
                     _volDescPrimary = new VolDescPrimary(m_io, this, m_root);
                 }
-                }
+            }
             private byte _type;
             private byte[] _magic;
             private byte _version;
@@ -298,13 +304,14 @@ namespace Kaitai
                 return new PathTableEntryLe(new KaitaiStream(fileName));
             }
 
-            public PathTableEntryLe(KaitaiStream io, Iso9660.PathTableLe parent = null, Iso9660 root = null) : base(io)
+            public PathTableEntryLe(KaitaiStream p__io, Iso9660.PathTableLe p__parent = null, Iso9660 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _lenDirName = m_io.ReadU1();
                 _lenExtAttrRec = m_io.ReadU1();
                 _lbaExtent = m_io.ReadU4le();
@@ -313,13 +320,13 @@ namespace Kaitai
                 if (KaitaiStream.Mod(LenDirName, 2) == 1) {
                     _padding = m_io.ReadU1();
                 }
-                }
+            }
             private byte _lenDirName;
             private byte _lenExtAttrRec;
             private uint _lbaExtent;
             private ushort _parentDirIdx;
             private string _dirName;
-            private byte _padding;
+            private byte? _padding;
             private Iso9660 m_root;
             private Iso9660.PathTableLe m_parent;
             public byte LenDirName { get { return _lenDirName; } }
@@ -327,7 +334,7 @@ namespace Kaitai
             public uint LbaExtent { get { return _lbaExtent; } }
             public ushort ParentDirIdx { get { return _parentDirIdx; } }
             public string DirName { get { return _dirName; } }
-            public byte Padding { get { return _padding; } }
+            public byte? Padding { get { return _padding; } }
             public Iso9660 M_Root { get { return m_root; } }
             public Iso9660.PathTableLe M_Parent { get { return m_parent; } }
         }
@@ -338,22 +345,25 @@ namespace Kaitai
                 return new DirEntries(new KaitaiStream(fileName));
             }
 
-            public DirEntries(KaitaiStream io, Iso9660.DirEntryBody parent = null, Iso9660 root = null) : base(io)
+            public DirEntries(KaitaiStream p__io, Iso9660.DirEntryBody p__parent = null, Iso9660 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List<DirEntry>();
                 {
+                    var i = 0;
                     DirEntry M_;
                     do {
                         M_ = new DirEntry(m_io, this, m_root);
                         _entries.Add(M_);
+                        i++;
                     } while (!(M_.Len == 0));
                 }
-                }
+            }
             private List<DirEntry> _entries;
             private Iso9660 m_root;
             private Iso9660.DirEntryBody m_parent;
@@ -368,16 +378,17 @@ namespace Kaitai
                 return new U4bi(new KaitaiStream(fileName));
             }
 
-            public U4bi(KaitaiStream io, KaitaiStruct parent = null, Iso9660 root = null) : base(io)
+            public U4bi(KaitaiStream p__io, KaitaiStruct p__parent = null, Iso9660 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _le = m_io.ReadU4le();
                 _be = m_io.ReadU4be();
-                }
+            }
             private uint _le;
             private uint _be;
             private Iso9660 m_root;
@@ -394,16 +405,17 @@ namespace Kaitai
                 return new U2bi(new KaitaiStream(fileName));
             }
 
-            public U2bi(KaitaiStream io, KaitaiStruct parent = null, Iso9660 root = null) : base(io)
+            public U2bi(KaitaiStream p__io, KaitaiStruct p__parent = null, Iso9660 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _le = m_io.ReadU2le();
                 _be = m_io.ReadU2be();
-                }
+            }
             private ushort _le;
             private ushort _be;
             private Iso9660 m_root;
@@ -420,18 +432,23 @@ namespace Kaitai
                 return new PathTableLe(new KaitaiStream(fileName));
             }
 
-            public PathTableLe(KaitaiStream io, Iso9660.VolDescPrimary parent = null, Iso9660 root = null) : base(io)
+            public PathTableLe(KaitaiStream p__io, Iso9660.VolDescPrimary p__parent = null, Iso9660 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List<PathTableEntryLe>();
-                while (!m_io.IsEof) {
-                    _entries.Add(new PathTableEntryLe(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new PathTableEntryLe(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<PathTableEntryLe> _entries;
             private Iso9660 m_root;
             private Iso9660.VolDescPrimary m_parent;
@@ -446,13 +463,14 @@ namespace Kaitai
                 return new DecDatetime(new KaitaiStream(fileName));
             }
 
-            public DecDatetime(KaitaiStream io, Iso9660.VolDescPrimary parent = null, Iso9660 root = null) : base(io)
+            public DecDatetime(KaitaiStream p__io, Iso9660.VolDescPrimary p__parent = null, Iso9660 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _year = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(4));
                 _month = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(2));
                 _day = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(2));
@@ -461,7 +479,7 @@ namespace Kaitai
                 _sec = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(2));
                 _secHundreds = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(2));
                 _timezone = m_io.ReadU1();
-                }
+            }
             private string _year;
             private string _month;
             private string _day;
@@ -490,15 +508,16 @@ namespace Kaitai
                 return new DirEntryBody(new KaitaiStream(fileName));
             }
 
-            public DirEntryBody(KaitaiStream io, Iso9660.DirEntry parent = null, Iso9660 root = null) : base(io)
+            public DirEntryBody(KaitaiStream p__io, Iso9660.DirEntry p__parent = null, Iso9660 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_extentAsDir = false;
                 f_extentAsFile = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _lenExtAttrRec = m_io.ReadU1();
                 _lbaExtent = new U4bi(m_io, this, m_root);
                 _sizeExtent = new U4bi(m_io, this, m_root);
@@ -513,7 +532,7 @@ namespace Kaitai
                     _padding = m_io.ReadU1();
                 }
                 _rest = m_io.ReadBytesFull();
-                }
+            }
             private bool f_extentAsDir;
             private DirEntries _extentAsDir;
             public DirEntries ExtentAsDir
@@ -564,7 +583,7 @@ namespace Kaitai
             private U2bi _volSeqNum;
             private byte _lenFileName;
             private string _fileName;
-            private byte _padding;
+            private byte? _padding;
             private byte[] _rest;
             private Iso9660 m_root;
             private Iso9660.DirEntry m_parent;
@@ -579,7 +598,7 @@ namespace Kaitai
             public U2bi VolSeqNum { get { return _volSeqNum; } }
             public byte LenFileName { get { return _lenFileName; } }
             public string FileName { get { return _fileName; } }
-            public byte Padding { get { return _padding; } }
+            public byte? Padding { get { return _padding; } }
             public byte[] Rest { get { return _rest; } }
             public Iso9660 M_Root { get { return m_root; } }
             public Iso9660.DirEntry M_Parent { get { return m_parent; } }

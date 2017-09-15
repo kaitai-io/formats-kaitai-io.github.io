@@ -2,16 +2,18 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Pcap extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Pcap $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Pcap $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_hdr = new \Pcap\Header($this->_io, $this, $this->_root);
         $this->_m_packets = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_packets[] = new \Pcap\Packet($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_hdr;
@@ -23,8 +25,8 @@ class Pcap extends \Kaitai\Struct\Struct {
 namespace \Pcap;
 
 class Header extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Pcap $parent = null, \Pcap $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Pcap $_parent = null, \Pcap $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -77,8 +79,8 @@ class Header extends \Kaitai\Struct\Struct {
 namespace \Pcap;
 
 class Packet extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Pcap $parent = null, \Pcap $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Pcap $_parent = null, \Pcap $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -40,7 +41,7 @@ import java.util.HashMap;
  */
 public class GoogleProtobuf extends KaitaiStruct {
     public static GoogleProtobuf fromFile(String fileName) throws IOException {
-        return new GoogleProtobuf(new KaitaiStream(fileName));
+        return new GoogleProtobuf(new ByteBufferKaitaiStream(fileName));
     }
 
     public GoogleProtobuf(KaitaiStream _io) {
@@ -59,8 +60,12 @@ public class GoogleProtobuf extends KaitaiStruct {
     }
     private void _read() {
         this.pairs = new ArrayList<Pair>();
-        while (!this._io.isEof()) {
-            this.pairs.add(new Pair(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.pairs.add(new Pair(this._io, this, _root));
+                i++;
+            }
         }
     }
 
@@ -69,7 +74,7 @@ public class GoogleProtobuf extends KaitaiStruct {
      */
     public static class Pair extends KaitaiStruct {
         public static Pair fromFile(String fileName) throws IOException {
-            return new Pair(new KaitaiStream(fileName));
+            return new Pair(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum WireTypes {
@@ -117,11 +122,11 @@ public class GoogleProtobuf extends KaitaiStruct {
                 break;
             }
             case BIT_64: {
-                this.value = this._io.readU8le();
+                this.value = (Object) (this._io.readU8le());
                 break;
             }
             case BIT_32: {
-                this.value = this._io.readU4le();
+                this.value = (Object) (this._io.readU4le());
                 break;
             }
             }
@@ -181,7 +186,7 @@ public class GoogleProtobuf extends KaitaiStruct {
     }
     public static class DelimitedBytes extends KaitaiStruct {
         public static DelimitedBytes fromFile(String fileName) throws IOException {
-            return new DelimitedBytes(new KaitaiStream(fileName));
+            return new DelimitedBytes(new ByteBufferKaitaiStream(fileName));
         }
 
         public DelimitedBytes(KaitaiStream _io) {

@@ -49,8 +49,10 @@ class GoogleProtobuf(KaitaiStruct):
 
     def _read(self):
         self.pairs = []
+        i = 0
         while not self._io.is_eof():
             self.pairs.append(self._root.Pair(self._io, self, self._root))
+            i += 1
 
 
     class Pair(KaitaiStruct):

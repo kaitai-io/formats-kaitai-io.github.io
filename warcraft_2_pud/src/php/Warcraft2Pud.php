@@ -16,15 +16,17 @@
  */
 
 class Warcraft2Pud extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Warcraft2Pud $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Warcraft2Pud $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_sections = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_sections[] = new \Warcraft2Pud\Section($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_sections;
@@ -34,15 +36,17 @@ class Warcraft2Pud extends \Kaitai\Struct\Struct {
 namespace \Warcraft2Pud;
 
 class SectionStartingResource extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Warcraft2Pud\Section $parent = null, \Warcraft2Pud $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\Section $_parent = null, \Warcraft2Pud $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_resourcesByPlayer = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_resourcesByPlayer[] = $this->_io->readU2le();
+            $i++;
         }
     }
     protected $_m_resourcesByPlayer;
@@ -56,8 +60,8 @@ class SectionStartingResource extends \Kaitai\Struct\Struct {
 namespace \Warcraft2Pud;
 
 class SectionEra extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Warcraft2Pud\Section $parent = null, \Warcraft2Pud $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\Section $_parent = null, \Warcraft2Pud $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -75,8 +79,8 @@ class SectionEra extends \Kaitai\Struct\Struct {
 namespace \Warcraft2Pud;
 
 class SectionVer extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Warcraft2Pud\Section $parent = null, \Warcraft2Pud $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\Section $_parent = null, \Warcraft2Pud $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -90,8 +94,8 @@ class SectionVer extends \Kaitai\Struct\Struct {
 namespace \Warcraft2Pud;
 
 class SectionDim extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Warcraft2Pud\Section $parent = null, \Warcraft2Pud $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\Section $_parent = null, \Warcraft2Pud $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -115,8 +119,8 @@ class SectionDim extends \Kaitai\Struct\Struct {
 namespace \Warcraft2Pud;
 
 class SectionType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Warcraft2Pud\Section $parent = null, \Warcraft2Pud $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\Section $_parent = null, \Warcraft2Pud $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -144,15 +148,17 @@ class SectionType extends \Kaitai\Struct\Struct {
 namespace \Warcraft2Pud;
 
 class SectionUnit extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Warcraft2Pud\Section $parent = null, \Warcraft2Pud $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\Section $_parent = null, \Warcraft2Pud $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_units = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_units[] = new \Warcraft2Pud\Unit($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_units;
@@ -162,8 +168,8 @@ class SectionUnit extends \Kaitai\Struct\Struct {
 namespace \Warcraft2Pud;
 
 class Section extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Warcraft2Pud $parent = null, \Warcraft2Pud $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud $_parent = null, \Warcraft2Pud $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -243,15 +249,17 @@ class Section extends \Kaitai\Struct\Struct {
 namespace \Warcraft2Pud;
 
 class SectionOwnr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Warcraft2Pud\Section $parent = null, \Warcraft2Pud $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\Section $_parent = null, \Warcraft2Pud $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_controllerByPlayer = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_controllerByPlayer[] = $this->_io->readU1();
+            $i++;
         }
     }
     protected $_m_controllerByPlayer;
@@ -261,8 +269,8 @@ class SectionOwnr extends \Kaitai\Struct\Struct {
 namespace \Warcraft2Pud;
 
 class Unit extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Warcraft2Pud\SectionUnit $parent = null, \Warcraft2Pud $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\SectionUnit $_parent = null, \Warcraft2Pud $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

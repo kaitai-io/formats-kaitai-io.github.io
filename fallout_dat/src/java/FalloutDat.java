@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.nio.charset.Charset;
 
 public class FalloutDat extends KaitaiStruct {
     public static FalloutDat fromFile(String fileName) throws IOException {
-        return new FalloutDat(new KaitaiStream(fileName));
+        return new FalloutDat(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum Compression {
@@ -58,7 +59,7 @@ public class FalloutDat extends KaitaiStruct {
     }
     public static class Pstr extends KaitaiStruct {
         public static Pstr fromFile(String fileName) throws IOException {
-            return new Pstr(new KaitaiStream(fileName));
+            return new Pstr(new ByteBufferKaitaiStream(fileName));
         }
 
         public Pstr(KaitaiStream _io) {
@@ -90,7 +91,7 @@ public class FalloutDat extends KaitaiStruct {
     }
     public static class Folder extends KaitaiStruct {
         public static Folder fromFile(String fileName) throws IOException {
-            return new Folder(new KaitaiStream(fileName));
+            return new Folder(new ByteBufferKaitaiStream(fileName));
         }
 
         public Folder(KaitaiStream _io) {
@@ -134,7 +135,7 @@ public class FalloutDat extends KaitaiStruct {
     }
     public static class File extends KaitaiStruct {
         public static File fromFile(String fileName) throws IOException {
-            return new File(new KaitaiStream(fileName));
+            return new File(new ByteBufferKaitaiStream(fileName));
         }
 
         public File(KaitaiStream _io) {

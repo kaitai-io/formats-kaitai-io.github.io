@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.util.HashMap;
 
 public class IcmpPacket extends KaitaiStruct {
     public static IcmpPacket fromFile(String fileName) throws IOException {
-        return new IcmpPacket(new KaitaiStream(fileName));
+        return new IcmpPacket(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum IcmpTypeEnum {
@@ -58,7 +59,7 @@ public class IcmpPacket extends KaitaiStruct {
     }
     public static class DestinationUnreachableMsg extends KaitaiStruct {
         public static DestinationUnreachableMsg fromFile(String fileName) throws IOException {
-            return new DestinationUnreachableMsg(new KaitaiStream(fileName));
+            return new DestinationUnreachableMsg(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum DestinationUnreachableCode {
@@ -109,7 +110,7 @@ public class IcmpPacket extends KaitaiStruct {
     }
     public static class TimeExceededMsg extends KaitaiStruct {
         public static TimeExceededMsg fromFile(String fileName) throws IOException {
-            return new TimeExceededMsg(new KaitaiStream(fileName));
+            return new TimeExceededMsg(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum TimeExceededCode {
@@ -156,7 +157,7 @@ public class IcmpPacket extends KaitaiStruct {
     }
     public static class EchoMsg extends KaitaiStruct {
         public static EchoMsg fromFile(String fileName) throws IOException {
-            return new EchoMsg(new KaitaiStream(fileName));
+            return new EchoMsg(new ByteBufferKaitaiStream(fileName));
         }
 
         public EchoMsg(KaitaiStream _io) {

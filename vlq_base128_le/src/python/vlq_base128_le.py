@@ -36,11 +36,13 @@ class VlqBase128Le(KaitaiStruct):
 
     def _read(self):
         self.groups = []
+        i = 0
         while True:
             _ = self._root.Group(self._io, self, self._root)
             self.groups.append(_)
             if not (_.has_next):
                 break
+            i += 1
 
     class Group(KaitaiStruct):
         """One byte group, clearly divided into 7-bit "value" and 1-bit "has continuation

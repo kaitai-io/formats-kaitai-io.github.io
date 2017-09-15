@@ -233,13 +233,14 @@ namespace Kaitai
             return new TcpSegment(new KaitaiStream(fileName));
         }
 
-        public TcpSegment(KaitaiStream io, KaitaiStruct parent = null, TcpSegment root = null) : base(io)
+        public TcpSegment(KaitaiStream p__io, KaitaiStruct p__parent = null, TcpSegment p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _srcPort = m_io.ReadU2be();
             _dstPort = m_io.ReadU2be();
             _seqNum = m_io.ReadU4be();
@@ -250,7 +251,7 @@ namespace Kaitai
             _checksum = m_io.ReadU2be();
             _urgentPointer = m_io.ReadU2be();
             _body = m_io.ReadBytesFull();
-            }
+        }
         private ushort _srcPort;
         private ushort _dstPort;
         private uint _seqNum;

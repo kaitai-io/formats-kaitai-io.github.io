@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class MachO extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -27,8 +27,8 @@ class MachO extends \Kaitai\Struct\Struct {
 namespace \MachO;
 
 class RpathCommand extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\LoadCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -45,8 +45,8 @@ class RpathCommand extends \Kaitai\Struct\Struct {
 namespace \MachO;
 
 class Uleb128 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -112,8 +112,8 @@ class Uleb128 extends \Kaitai\Struct\Struct {
 namespace \MachO;
 
 class SourceVersionCommand extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\LoadCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -127,8 +127,8 @@ class SourceVersionCommand extends \Kaitai\Struct\Struct {
 namespace \MachO;
 
 class CsBlob extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -189,8 +189,8 @@ class CsBlob extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob;
 
 class Entitlement extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -204,8 +204,8 @@ class Entitlement extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob;
 
 class CodeDirectory extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -296,8 +296,8 @@ class CodeDirectory extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob;
 
 class EntitlementsBlobIndex extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob\Entitlements $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob\Entitlements $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -333,8 +333,8 @@ class RequirementType {
 namespace \MachO\CsBlob;
 
 class Data extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -354,8 +354,8 @@ class Data extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob;
 
 class SuperBlob extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -376,8 +376,8 @@ class SuperBlob extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob;
 
 class Expr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -434,8 +434,8 @@ class Expr extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob\Expr;
 
 class InfoKeyFieldExpr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob\Expr $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob\Expr $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -452,8 +452,8 @@ class InfoKeyFieldExpr extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob\Expr;
 
 class CertSlotExpr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob\Expr $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob\Expr $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -467,8 +467,8 @@ class CertSlotExpr extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob\Expr;
 
 class CertGenericExpr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob\Expr $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob\Expr $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -488,8 +488,8 @@ class CertGenericExpr extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob\Expr;
 
 class IdentExpr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob\Expr $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob\Expr $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -503,8 +503,8 @@ class IdentExpr extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob\Expr;
 
 class CertFieldExpr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob\Expr $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob\Expr $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -524,8 +524,8 @@ class CertFieldExpr extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob\Expr;
 
 class AnchorHashExpr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob\Expr $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob\Expr $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -542,8 +542,8 @@ class AnchorHashExpr extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob\Expr;
 
 class AppleGenericAnchorExpr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob\Expr $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob\Expr $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -561,8 +561,8 @@ class AppleGenericAnchorExpr extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob\Expr;
 
 class EntitlementFieldExpr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob\Expr $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob\Expr $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -579,8 +579,8 @@ class EntitlementFieldExpr extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob\Expr;
 
 class AndExpr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob\Expr $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob\Expr $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -597,8 +597,8 @@ class AndExpr extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob\Expr;
 
 class OrExpr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob\Expr $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob\Expr $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -644,8 +644,8 @@ class CertSlot {
 namespace \MachO\CsBlob;
 
 class BlobIndex extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob\SuperBlob $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob\SuperBlob $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -690,8 +690,8 @@ class CsslotType {
 namespace \MachO\CsBlob;
 
 class Match extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -724,8 +724,8 @@ class Op {
 namespace \MachO\CsBlob;
 
 class Requirement extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -742,8 +742,8 @@ class Requirement extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob;
 
 class BlobWrapper extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -757,8 +757,8 @@ class BlobWrapper extends \Kaitai\Struct\Struct {
 namespace \MachO\CsBlob;
 
 class Entitlements extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\CsBlob $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -790,9 +790,73 @@ class CsMagic {
 
 namespace \MachO;
 
+class RoutinesCommand extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_initAddress = $this->_io->readU4le();
+        $this->_m_initModule = $this->_io->readU4le();
+        $this->_m_reserved = $this->_io->readBytes(24);
+    }
+    protected $_m_initAddress;
+    protected $_m_initModule;
+    protected $_m_reserved;
+    public function initAddress() { return $this->_m_initAddress; }
+    public function initModule() { return $this->_m_initModule; }
+    public function reserved() { return $this->_m_reserved; }
+}
+
+namespace \MachO;
+
+class RoutinesCommand64 extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_initAddress = $this->_io->readU8le();
+        $this->_m_initModule = $this->_io->readU8le();
+        $this->_m_reserved = $this->_io->readBytes(48);
+    }
+    protected $_m_initAddress;
+    protected $_m_initModule;
+    protected $_m_reserved;
+    public function initAddress() { return $this->_m_initAddress; }
+    public function initModule() { return $this->_m_initModule; }
+    public function reserved() { return $this->_m_reserved; }
+}
+
+namespace \MachO;
+
+class LinkerOptionCommand extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_numStrings = $this->_io->readU4le();
+        $this->_m_strings = [];
+        $n = $this->numStrings();
+        for ($i = 0; $i < $n; $i++) {
+            $this->_m_strings[] = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "utf-8");
+        }
+    }
+    protected $_m_numStrings;
+    protected $_m_strings;
+    public function numStrings() { return $this->_m_numStrings; }
+    public function strings() { return $this->_m_strings; }
+}
+
+namespace \MachO;
+
 class SegmentCommand64 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\LoadCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -802,8 +866,8 @@ class SegmentCommand64 extends \Kaitai\Struct\Struct {
         $this->_m_vmsize = $this->_io->readU8le();
         $this->_m_fileoff = $this->_io->readU8le();
         $this->_m_filesize = $this->_io->readU8le();
-        $this->_m_maxprot = $this->_io->readU4le();
-        $this->_m_initprot = $this->_io->readU4le();
+        $this->_m_maxprot = new \MachO\VmProt($this->_io, $this, $this->_root);
+        $this->_m_initprot = new \MachO\VmProt($this->_io, $this, $this->_root);
         $this->_m_nsects = $this->_io->readU4le();
         $this->_m_flags = $this->_io->readU4le();
         $this->_m_sections = [];
@@ -837,8 +901,8 @@ class SegmentCommand64 extends \Kaitai\Struct\Struct {
 namespace \MachO\SegmentCommand64;
 
 class Section64 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\SegmentCommand64 $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\SegmentCommand64 $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -987,15 +1051,17 @@ class Section64 extends \Kaitai\Struct\Struct {
 namespace \MachO\SegmentCommand64\Section64;
 
 class CfStringList extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\SegmentCommand64\Section64 $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\SegmentCommand64\Section64 $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_items = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_items[] = new \MachO\SegmentCommand64\Section64\CfString($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_items;
@@ -1005,8 +1071,8 @@ class CfStringList extends \Kaitai\Struct\Struct {
 namespace \MachO\SegmentCommand64\Section64;
 
 class CfString extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\SegmentCommand64\Section64\CfStringList $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\SegmentCommand64\Section64\CfStringList $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1029,8 +1095,8 @@ class CfString extends \Kaitai\Struct\Struct {
 namespace \MachO\SegmentCommand64\Section64;
 
 class EhFrameItem extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\SegmentCommand64\Section64\EhFrame $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\SegmentCommand64\Section64\EhFrame $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1068,8 +1134,8 @@ class EhFrameItem extends \Kaitai\Struct\Struct {
 namespace \MachO\SegmentCommand64\Section64\EhFrameItem;
 
 class CharChain extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1088,8 +1154,8 @@ class CharChain extends \Kaitai\Struct\Struct {
 namespace \MachO\SegmentCommand64\Section64\EhFrameItem;
 
 class Cie extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\SegmentCommand64\Section64\EhFrameItem $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\SegmentCommand64\Section64\EhFrameItem $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1120,8 +1186,8 @@ class Cie extends \Kaitai\Struct\Struct {
 namespace \MachO\SegmentCommand64\Section64\EhFrameItem;
 
 class AugmentationEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\SegmentCommand64\Section64\EhFrameItem\Cie $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\SegmentCommand64\Section64\EhFrameItem\Cie $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1140,15 +1206,17 @@ class AugmentationEntry extends \Kaitai\Struct\Struct {
 namespace \MachO\SegmentCommand64\Section64;
 
 class EhFrame extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\SegmentCommand64\Section64 $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\SegmentCommand64\Section64 $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_items = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_items[] = new \MachO\SegmentCommand64\Section64\EhFrameItem($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_items;
@@ -1158,15 +1226,17 @@ class EhFrame extends \Kaitai\Struct\Struct {
 namespace \MachO\SegmentCommand64\Section64;
 
 class PointerList extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\SegmentCommand64\Section64 $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\SegmentCommand64\Section64 $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_items = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_items[] = $this->_io->readU8le();
+            $i++;
         }
     }
     protected $_m_items;
@@ -1176,15 +1246,17 @@ class PointerList extends \Kaitai\Struct\Struct {
 namespace \MachO\SegmentCommand64\Section64;
 
 class StringList extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\SegmentCommand64\Section64 $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\SegmentCommand64\Section64 $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_strings = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_strings[] = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ascii");
+            $i++;
         }
     }
     protected $_m_strings;
@@ -1193,9 +1265,84 @@ class StringList extends \Kaitai\Struct\Struct {
 
 namespace \MachO;
 
+class VmProt extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\SegmentCommand64 $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_stripRead = $this->_io->readBitsInt(1) != 0;
+        $this->_m_isMask = $this->_io->readBitsInt(1) != 0;
+        $this->_m_reserved0 = $this->_io->readBitsInt(1) != 0;
+        $this->_m_copy = $this->_io->readBitsInt(1) != 0;
+        $this->_m_noChange = $this->_io->readBitsInt(1) != 0;
+        $this->_m_execute = $this->_io->readBitsInt(1) != 0;
+        $this->_m_write = $this->_io->readBitsInt(1) != 0;
+        $this->_m_read = $this->_io->readBitsInt(1) != 0;
+        $this->_m_reserved1 = $this->_io->readBitsInt(24);
+    }
+    protected $_m_stripRead;
+    protected $_m_isMask;
+    protected $_m_reserved0;
+    protected $_m_copy;
+    protected $_m_noChange;
+    protected $_m_execute;
+    protected $_m_write;
+    protected $_m_read;
+    protected $_m_reserved1;
+
+    /**
+     * Special marker to support execute-only protection.
+     */
+    public function stripRead() { return $this->_m_stripRead; }
+
+    /**
+     * Indicates to use value as a mask against the actual protection bits.
+     */
+    public function isMask() { return $this->_m_isMask; }
+
+    /**
+     * Reserved (unused) bit.
+     */
+    public function reserved0() { return $this->_m_reserved0; }
+
+    /**
+     * Used when write permission can not be obtained, to mark the entry as COW.
+     */
+    public function copy() { return $this->_m_copy; }
+
+    /**
+     * Used only by memory_object_lock_request to indicate no change to page locks.
+     */
+    public function noChange() { return $this->_m_noChange; }
+
+    /**
+     * Execute permission.
+     */
+    public function execute() { return $this->_m_execute; }
+
+    /**
+     * Write permission.
+     */
+    public function write() { return $this->_m_write; }
+
+    /**
+     * Read permission.
+     */
+    public function read() { return $this->_m_read; }
+
+    /**
+     * Reserved (unused) bits.
+     */
+    public function reserved1() { return $this->_m_reserved1; }
+}
+
+namespace \MachO;
+
 class DysymtabCommand extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\LoadCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1275,8 +1422,8 @@ class DysymtabCommand extends \Kaitai\Struct\Struct {
 namespace \MachO;
 
 class MachHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1310,8 +1457,8 @@ class MachHeader extends \Kaitai\Struct\Struct {
 namespace \MachO;
 
 class LinkeditDataCommand extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\LoadCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1327,9 +1474,42 @@ class LinkeditDataCommand extends \Kaitai\Struct\Struct {
 
 namespace \MachO;
 
+class SubCommand extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_name = new \MachO\LcStr($this->_io, $this, $this->_root);
+    }
+    protected $_m_name;
+    public function name() { return $this->_m_name; }
+}
+
+namespace \MachO;
+
+class TwolevelHintsCommand extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_offset = $this->_io->readU4le();
+        $this->_m_numHints = $this->_io->readU4le();
+    }
+    protected $_m_offset;
+    protected $_m_numHints;
+    public function offset() { return $this->_m_offset; }
+    public function numHints() { return $this->_m_numHints; }
+}
+
+namespace \MachO;
+
 class Version extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\VersionMinCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\VersionMinCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1351,9 +1531,35 @@ class Version extends \Kaitai\Struct\Struct {
 
 namespace \MachO;
 
+class EncryptionInfoCommand extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_cryptoff = $this->_io->readU4le();
+        $this->_m_cryptsize = $this->_io->readU4le();
+        $this->_m_cryptid = $this->_io->readU4le();
+        if ( (($this->_root()->magic() == \MachO\MagicType::MACHO_BE_X64) || ($this->_root()->magic() == \MachO\MagicType::MACHO_LE_X64)) ) {
+            $this->_m_pad = $this->_io->readU4le();
+        }
+    }
+    protected $_m_cryptoff;
+    protected $_m_cryptsize;
+    protected $_m_cryptid;
+    protected $_m_pad;
+    public function cryptoff() { return $this->_m_cryptoff; }
+    public function cryptsize() { return $this->_m_cryptsize; }
+    public function cryptid() { return $this->_m_cryptid; }
+    public function pad() { return $this->_m_pad; }
+}
+
+namespace \MachO;
+
 class CodeSignatureCommand extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\LoadCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1385,8 +1591,8 @@ class CodeSignatureCommand extends \Kaitai\Struct\Struct {
 namespace \MachO;
 
 class DyldInfoCommand extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\LoadCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1487,8 +1693,8 @@ class DyldInfoCommand extends \Kaitai\Struct\Struct {
 namespace \MachO\DyldInfoCommand;
 
 class BindItem extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1531,16 +1737,18 @@ class BindItem extends \Kaitai\Struct\Struct {
 namespace \MachO\DyldInfoCommand;
 
 class RebaseData extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\DyldInfoCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\DyldInfoCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_items = [];
+        $i = 0;
         do {
             $_ = new \MachO\DyldInfoCommand\RebaseData\RebaseItem($this->_io, $this, $this->_root);
             $this->_m_items[] = $_;
+            $i++;
         } while (!($_->opcode() == \MachO\DyldInfoCommand\RebaseData\Opcode::DONE));
     }
     protected $_m_items;
@@ -1550,8 +1758,8 @@ class RebaseData extends \Kaitai\Struct\Struct {
 namespace \MachO\DyldInfoCommand\RebaseData;
 
 class RebaseItem extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\DyldInfoCommand\RebaseData $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\DyldInfoCommand\RebaseData $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1603,8 +1811,8 @@ class Opcode {
 namespace \MachO\DyldInfoCommand;
 
 class ExportNode extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1631,8 +1839,8 @@ class ExportNode extends \Kaitai\Struct\Struct {
 namespace \MachO\DyldInfoCommand\ExportNode;
 
 class Child extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\DyldInfoCommand\ExportNode $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\DyldInfoCommand\ExportNode $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1659,16 +1867,18 @@ class Child extends \Kaitai\Struct\Struct {
 namespace \MachO\DyldInfoCommand;
 
 class BindData extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\DyldInfoCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\DyldInfoCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_items = [];
+        $i = 0;
         do {
             $_ = new \MachO\DyldInfoCommand\BindItem($this->_io, $this, $this->_root);
             $this->_m_items[] = $_;
+            $i++;
         } while (!($_->opcode() == \MachO\DyldInfoCommand\BindOpcode::DONE));
     }
     protected $_m_items;
@@ -1678,15 +1888,17 @@ class BindData extends \Kaitai\Struct\Struct {
 namespace \MachO\DyldInfoCommand;
 
 class LazyBindData extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\DyldInfoCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\DyldInfoCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_items = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_items[] = new \MachO\DyldInfoCommand\BindItem($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_items;
@@ -1714,8 +1926,8 @@ class BindOpcode {
 namespace \MachO;
 
 class DylinkerCommand extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\LoadCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1729,8 +1941,8 @@ class DylinkerCommand extends \Kaitai\Struct\Struct {
 namespace \MachO;
 
 class DylibCommand extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\LoadCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1756,8 +1968,8 @@ class DylibCommand extends \Kaitai\Struct\Struct {
 namespace \MachO;
 
 class LcStr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\DylinkerCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1774,8 +1986,8 @@ class LcStr extends \Kaitai\Struct\Struct {
 namespace \MachO;
 
 class LoadCommand extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1783,6 +1995,16 @@ class LoadCommand extends \Kaitai\Struct\Struct {
         $this->_m_type = $this->_io->readU4le();
         $this->_m_size = $this->_io->readU4le();
         switch ($this->type()) {
+            case \MachO\LoadCommandType::SUB_LIBRARY:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\SubCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::SEGMENT_SPLIT_INFO:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\LinkeditDataCommand($io, $this, $this->_root);
+                break;
             case \MachO\LoadCommandType::RPATH:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
@@ -1793,15 +2015,80 @@ class LoadCommand extends \Kaitai\Struct\Struct {
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
                 $this->_m_body = new \MachO\SourceVersionCommand($io, $this, $this->_root);
                 break;
+            case \MachO\LoadCommandType::ENCRYPTION_INFO_64:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\EncryptionInfoCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::VERSION_MIN_TVOS:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\VersionMinCommand($io, $this, $this->_root);
+                break;
             case \MachO\LoadCommandType::LOAD_DYLINKER:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
                 $this->_m_body = new \MachO\DylinkerCommand($io, $this, $this->_root);
                 break;
+            case \MachO\LoadCommandType::SUB_FRAMEWORK:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\SubCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::LOAD_WEAK_DYLIB:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylibCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::VERSION_MIN_IPHONEOS:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\VersionMinCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::LINKER_OPTIMIZATION_HINT:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\LinkeditDataCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::DYLD_ENVIRONMENT:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylinkerCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::LOAD_UPWARD_DYLIB:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylibCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::DYLIB_CODE_SIGN_DRS:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\LinkeditDataCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::DYLD_INFO:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DyldInfoCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::REEXPORT_DYLIB:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylibCommand($io, $this, $this->_root);
+                break;
             case \MachO\LoadCommandType::SYMTAB:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
                 $this->_m_body = new \MachO\SymtabCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::ROUTINES_64:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\RoutinesCommand64($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::ID_DYLINKER:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylinkerCommand($io, $this, $this->_root);
                 break;
             case \MachO\LoadCommandType::MAIN:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
@@ -1823,6 +2110,31 @@ class LoadCommand extends \Kaitai\Struct\Struct {
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
                 $this->_m_body = new \MachO\LinkeditDataCommand($io, $this, $this->_root);
                 break;
+            case \MachO\LoadCommandType::VERSION_MIN_WATCHOS:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\VersionMinCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::ENCRYPTION_INFO:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\EncryptionInfoCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::SUB_UMBRELLA:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\SubCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::LINKER_OPTION:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\LinkerOptionCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::TWOLEVEL_HINTS:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\TwolevelHintsCommand($io, $this, $this->_root);
+                break;
             case \MachO\LoadCommandType::UUID:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
@@ -1832,6 +2144,21 @@ class LoadCommand extends \Kaitai\Struct\Struct {
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
                 $this->_m_body = new \MachO\DyldInfoCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::LAZY_LOAD_DYLIB:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylibCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::SUB_CLIENT:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\SubCommand($io, $this, $this->_root);
+                break;
+            case \MachO\LoadCommandType::ROUTINES:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\RoutinesCommand($io, $this, $this->_root);
                 break;
             case \MachO\LoadCommandType::CODE_SIGNATURE:
                 $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
@@ -1853,6 +2180,11 @@ class LoadCommand extends \Kaitai\Struct\Struct {
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
                 $this->_m_body = new \MachO\SegmentCommand64($io, $this, $this->_root);
                 break;
+            case \MachO\LoadCommandType::ID_DYLIB:
+                $this->_m__raw_body = $this->_io->readBytes(($this->size() - 8));
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                $this->_m_body = new \MachO\DylibCommand($io, $this, $this->_root);
+                break;
             default:
                 $this->_m_body = $this->_io->readBytes(($this->size() - 8));
                 break;
@@ -1871,8 +2203,8 @@ class LoadCommand extends \Kaitai\Struct\Struct {
 namespace \MachO;
 
 class UuidCommand extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\LoadCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1886,8 +2218,8 @@ class UuidCommand extends \Kaitai\Struct\Struct {
 namespace \MachO;
 
 class SymtabCommand extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\LoadCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1940,17 +2272,19 @@ class SymtabCommand extends \Kaitai\Struct\Struct {
 namespace \MachO\SymtabCommand;
 
 class StrTable extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\SymtabCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\SymtabCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_unknown = $this->_io->readU4le();
         $this->_m_items = [];
+        $i = 0;
         do {
             $_ = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ascii");
             $this->_m_items[] = $_;
+            $i++;
         } while (!($_ == ""));
     }
     protected $_m_unknown;
@@ -1962,8 +2296,8 @@ class StrTable extends \Kaitai\Struct\Struct {
 namespace \MachO\SymtabCommand;
 
 class Nlist64 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\SymtabCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\SymtabCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1989,26 +2323,26 @@ class Nlist64 extends \Kaitai\Struct\Struct {
 namespace \MachO;
 
 class VersionMinCommand extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\LoadCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_version = new \MachO\Version($this->_io, $this, $this->_root);
-        $this->_m_reserved = new \MachO\Version($this->_io, $this, $this->_root);
+        $this->_m_sdk = new \MachO\Version($this->_io, $this, $this->_root);
     }
     protected $_m_version;
-    protected $_m_reserved;
+    protected $_m_sdk;
     public function version() { return $this->_m_version; }
-    public function reserved() { return $this->_m_reserved; }
+    public function sdk() { return $this->_m_sdk; }
 }
 
 namespace \MachO;
 
 class EntryPointCommand extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MachO\LoadCommand $parent = null, \MachO $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2056,12 +2390,10 @@ class LoadCommandType {
     const LAZY_LOAD_DYLIB = 32;
     const ENCRYPTION_INFO = 33;
     const DYLD_INFO = 34;
-    const LOAD_UPWARD_DYLIB = 35;
     const VERSION_MIN_MACOSX = 36;
     const VERSION_MIN_IPHONEOS = 37;
     const FUNCTION_STARTS = 38;
     const DYLD_ENVIRONMENT = 39;
-    const MAIN = 40;
     const DATA_IN_CODE = 41;
     const SOURCE_VERSION = 42;
     const DYLIB_CODE_SIGN_DRS = 43;
@@ -2075,7 +2407,8 @@ class LoadCommandType {
     const RPATH = 2147483676;
     const REEXPORT_DYLIB = 2147483679;
     const DYLD_INFO_ONLY = 2147483682;
-    const MAIN2 = 2147483688;
+    const LOAD_UPWARD_DYLIB = 2147483683;
+    const MAIN = 2147483688;
 }
 
 namespace \MachO;
@@ -2107,17 +2440,6 @@ class MachoFlags {
     const HAS_TLV_DESCRIPTORS = 8388608;
     const NO_HEAP_EXECUTION = 16777216;
     const APP_EXTENSION_SAFE = 33554432;
-}
-
-namespace \MachO;
-
-class VmProt {
-    const NONE = 0;
-    const READ = 1;
-    const WRITE = 2;
-    const EXECUTE = 4;
-    const NO_CHANGE = 8;
-    const COPY = 16;
 }
 
 namespace \MachO;
@@ -2167,6 +2489,7 @@ class CpuType {
     const POWERPC = 18;
     const ABI64 = 16777216;
     const X86_64 = 16777223;
+    const ARM64 = 16777228;
     const POWERPC64 = 16777234;
     const ANY = 4294967295;
 }

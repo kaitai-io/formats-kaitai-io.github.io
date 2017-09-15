@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -29,7 +30,7 @@ import java.util.HashMap;
  */
 public class Regf extends KaitaiStruct {
     public static Regf fromFile(String fileName) throws IOException {
-        return new Regf(new KaitaiStream(fileName));
+        return new Regf(new ByteBufferKaitaiStream(fileName));
     }
 
     public Regf(KaitaiStream _io) {
@@ -50,15 +51,19 @@ public class Regf extends KaitaiStruct {
         this.header = new FileHeader(this._io, this, _root);
         this._raw_hiveBins = new ArrayList<byte[]>();
         this.hiveBins = new ArrayList<HiveBin>();
-        while (!this._io.isEof()) {
-            this._raw_hiveBins.add(this._io.readBytes(4096));
-            KaitaiStream _io__raw_hiveBins = new KaitaiStream(_raw_hiveBins.get(_raw_hiveBins.size() - 1));
-            this.hiveBins.add(new HiveBin(_io__raw_hiveBins, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this._raw_hiveBins.add(this._io.readBytes(4096));
+                KaitaiStream _io__raw_hiveBins = new ByteBufferKaitaiStream(_raw_hiveBins.get(_raw_hiveBins.size() - 1));
+                this.hiveBins.add(new HiveBin(_io__raw_hiveBins, this, _root));
+                i++;
+            }
         }
     }
     public static class Filetime extends KaitaiStruct {
         public static Filetime fromFile(String fileName) throws IOException {
-            return new Filetime(new KaitaiStream(fileName));
+            return new Filetime(new ByteBufferKaitaiStream(fileName));
         }
 
         public Filetime(KaitaiStream _io) {
@@ -87,7 +92,7 @@ public class Regf extends KaitaiStruct {
     }
     public static class HiveBin extends KaitaiStruct {
         public static HiveBin fromFile(String fileName) throws IOException {
-            return new HiveBin(new KaitaiStream(fileName));
+            return new HiveBin(new ByteBufferKaitaiStream(fileName));
         }
 
         public HiveBin(KaitaiStream _io) {
@@ -107,8 +112,12 @@ public class Regf extends KaitaiStruct {
         private void _read() {
             this.header = new HiveBinHeader(this._io, this, _root);
             this.cells = new ArrayList<HiveBinCell>();
-            while (!this._io.isEof()) {
-                this.cells.add(new HiveBinCell(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.cells.add(new HiveBinCell(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private HiveBinHeader header;
@@ -122,7 +131,7 @@ public class Regf extends KaitaiStruct {
     }
     public static class HiveBinHeader extends KaitaiStruct {
         public static HiveBinHeader fromFile(String fileName) throws IOException {
-            return new HiveBinHeader(new KaitaiStream(fileName));
+            return new HiveBinHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public HiveBinHeader(KaitaiStream _io) {
@@ -194,7 +203,7 @@ public class Regf extends KaitaiStruct {
     }
     public static class HiveBinCell extends KaitaiStruct {
         public static HiveBinCell fromFile(String fileName) throws IOException {
-            return new HiveBinCell(new KaitaiStream(fileName));
+            return new HiveBinCell(new ByteBufferKaitaiStream(fileName));
         }
 
         public HiveBinCell(KaitaiStream _io) {
@@ -217,43 +226,43 @@ public class Regf extends KaitaiStruct {
             switch (identifier()) {
             case "li": {
                 this._raw_data = this._io.readBytes(((cellSize() - 2) - 4));
-                KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                 this.data = new SubKeyListLi(_io__raw_data, this, _root);
                 break;
             }
             case "vk": {
                 this._raw_data = this._io.readBytes(((cellSize() - 2) - 4));
-                KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                 this.data = new SubKeyListVk(_io__raw_data, this, _root);
                 break;
             }
             case "lf": {
                 this._raw_data = this._io.readBytes(((cellSize() - 2) - 4));
-                KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                 this.data = new SubKeyListLhLf(_io__raw_data, this, _root);
                 break;
             }
             case "ri": {
                 this._raw_data = this._io.readBytes(((cellSize() - 2) - 4));
-                KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                 this.data = new SubKeyListRi(_io__raw_data, this, _root);
                 break;
             }
             case "lh": {
                 this._raw_data = this._io.readBytes(((cellSize() - 2) - 4));
-                KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                 this.data = new SubKeyListLhLf(_io__raw_data, this, _root);
                 break;
             }
             case "nk": {
                 this._raw_data = this._io.readBytes(((cellSize() - 2) - 4));
-                KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                 this.data = new NamedKey(_io__raw_data, this, _root);
                 break;
             }
             case "sk": {
                 this._raw_data = this._io.readBytes(((cellSize() - 2) - 4));
-                KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                 this.data = new SubKeyListSk(_io__raw_data, this, _root);
                 break;
             }
@@ -265,7 +274,7 @@ public class Regf extends KaitaiStruct {
         }
         public static class SubKeyListVk extends KaitaiStruct {
             public static SubKeyListVk fromFile(String fileName) throws IOException {
-                return new SubKeyListVk(new KaitaiStream(fileName));
+                return new SubKeyListVk(new ByteBufferKaitaiStream(fileName));
             }
 
             public enum DataTypeEnum {
@@ -353,7 +362,7 @@ public class Regf extends KaitaiStruct {
         }
         public static class SubKeyListLhLf extends KaitaiStruct {
             public static SubKeyListLhLf fromFile(String fileName) throws IOException {
-                return new SubKeyListLhLf(new KaitaiStream(fileName));
+                return new SubKeyListLhLf(new ByteBufferKaitaiStream(fileName));
             }
 
             public SubKeyListLhLf(KaitaiStream _io) {
@@ -379,7 +388,7 @@ public class Regf extends KaitaiStruct {
             }
             public static class Item extends KaitaiStruct {
                 public static Item fromFile(String fileName) throws IOException {
-                    return new Item(new KaitaiStream(fileName));
+                    return new Item(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public Item(KaitaiStream _io) {
@@ -420,7 +429,7 @@ public class Regf extends KaitaiStruct {
         }
         public static class SubKeyListSk extends KaitaiStruct {
             public static SubKeyListSk fromFile(String fileName) throws IOException {
-                return new SubKeyListSk(new KaitaiStream(fileName));
+                return new SubKeyListSk(new ByteBufferKaitaiStream(fileName));
             }
 
             public SubKeyListSk(KaitaiStream _io) {
@@ -458,7 +467,7 @@ public class Regf extends KaitaiStruct {
         }
         public static class SubKeyListLi extends KaitaiStruct {
             public static SubKeyListLi fromFile(String fileName) throws IOException {
-                return new SubKeyListLi(new KaitaiStream(fileName));
+                return new SubKeyListLi(new ByteBufferKaitaiStream(fileName));
             }
 
             public SubKeyListLi(KaitaiStream _io) {
@@ -484,7 +493,7 @@ public class Regf extends KaitaiStruct {
             }
             public static class Item extends KaitaiStruct {
                 public static Item fromFile(String fileName) throws IOException {
-                    return new Item(new KaitaiStream(fileName));
+                    return new Item(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public Item(KaitaiStream _io) {
@@ -522,7 +531,7 @@ public class Regf extends KaitaiStruct {
         }
         public static class NamedKey extends KaitaiStruct {
             public static NamedKey fromFile(String fileName) throws IOException {
-                return new NamedKey(new KaitaiStream(fileName));
+                return new NamedKey(new ByteBufferKaitaiStream(fileName));
             }
 
             public enum NkFlags {
@@ -633,7 +642,7 @@ public class Regf extends KaitaiStruct {
         }
         public static class SubKeyListRi extends KaitaiStruct {
             public static SubKeyListRi fromFile(String fileName) throws IOException {
-                return new SubKeyListRi(new KaitaiStream(fileName));
+                return new SubKeyListRi(new ByteBufferKaitaiStream(fileName));
             }
 
             public SubKeyListRi(KaitaiStream _io) {
@@ -659,7 +668,7 @@ public class Regf extends KaitaiStruct {
             }
             public static class Item extends KaitaiStruct {
                 public static Item fromFile(String fileName) throws IOException {
-                    return new Item(new KaitaiStream(fileName));
+                    return new Item(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public Item(KaitaiStream _io) {
@@ -726,7 +735,7 @@ public class Regf extends KaitaiStruct {
     }
     public static class FileHeader extends KaitaiStruct {
         public static FileHeader fromFile(String fileName) throws IOException {
-            return new FileHeader(new KaitaiStream(fileName));
+            return new FileHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum FileType {

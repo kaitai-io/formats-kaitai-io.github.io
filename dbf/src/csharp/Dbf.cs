@@ -11,22 +11,24 @@ namespace Kaitai
             return new Dbf(new KaitaiStream(fileName));
         }
 
-        public Dbf(KaitaiStream io, KaitaiStruct parent = null, Dbf root = null) : base(io)
+        public Dbf(KaitaiStream p__io, KaitaiStruct p__parent = null, Dbf p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _header1 = new Header1(m_io, this, m_root);
             __raw_header2 = m_io.ReadBytes((Header1.HeaderSize - 12));
             var io___raw_header2 = new KaitaiStream(__raw_header2);
             _header2 = new Header2(io___raw_header2, this, m_root);
             _records = new List<byte[]>((int) (Header1.NumRecords));
-            for (var i = 0; i < Header1.NumRecords; i++) {
+            for (var i = 0; i < Header1.NumRecords; i++)
+            {
                 _records.Add(m_io.ReadBytes(Header1.RecordSize));
             }
-            }
+        }
         public partial class Header2 : KaitaiStruct
         {
             public static Header2 FromFile(string fileName)
@@ -34,13 +36,14 @@ namespace Kaitai
                 return new Header2(new KaitaiStream(fileName));
             }
 
-            public Header2(KaitaiStream io, Dbf parent = null, Dbf root = null) : base(io)
+            public Header2(KaitaiStream p__io, Dbf p__parent = null, Dbf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 if (M_Root.Header1.DbaseLevel == 3) {
                     _headerDbase3 = new HeaderDbase3(m_io, this, m_root);
                 }
@@ -48,10 +51,11 @@ namespace Kaitai
                     _headerDbase7 = new HeaderDbase7(m_io, this, m_root);
                 }
                 _fields = new List<Field>((int) (11));
-                for (var i = 0; i < 11; i++) {
+                for (var i = 0; i < 11; i++)
+                {
                     _fields.Add(new Field(m_io, this, m_root));
                 }
-                }
+            }
             private HeaderDbase3 _headerDbase3;
             private HeaderDbase7 _headerDbase7;
             private List<Field> _fields;
@@ -70,13 +74,14 @@ namespace Kaitai
                 return new Field(new KaitaiStream(fileName));
             }
 
-            public Field(KaitaiStream io, Dbf.Header2 parent = null, Dbf root = null) : base(io)
+            public Field(KaitaiStream p__io, Dbf.Header2 p__parent = null, Dbf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _name = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(11));
                 _datatype = m_io.ReadU1();
                 _dataAddress = m_io.ReadU4le();
@@ -87,7 +92,7 @@ namespace Kaitai
                 _reserved2 = m_io.ReadBytes(2);
                 _setFieldsFlag = m_io.ReadU1();
                 _reserved3 = m_io.ReadBytes(8);
-                }
+            }
             private string _name;
             private byte _datatype;
             private uint _dataAddress;
@@ -120,14 +125,15 @@ namespace Kaitai
                 return new Header1(new KaitaiStream(fileName));
             }
 
-            public Header1(KaitaiStream io, Dbf parent = null, Dbf root = null) : base(io)
+            public Header1(KaitaiStream p__io, Dbf p__parent = null, Dbf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_dbaseLevel = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _version = m_io.ReadU1();
                 _lastUpdateY = m_io.ReadU1();
                 _lastUpdateM = m_io.ReadU1();
@@ -135,7 +141,7 @@ namespace Kaitai
                 _numRecords = m_io.ReadU4le();
                 _headerSize = m_io.ReadU2le();
                 _recordSize = m_io.ReadU2le();
-                }
+            }
             private bool f_dbaseLevel;
             private int _dbaseLevel;
             public int DbaseLevel
@@ -175,17 +181,18 @@ namespace Kaitai
                 return new HeaderDbase3(new KaitaiStream(fileName));
             }
 
-            public HeaderDbase3(KaitaiStream io, Dbf.Header2 parent = null, Dbf root = null) : base(io)
+            public HeaderDbase3(KaitaiStream p__io, Dbf.Header2 p__parent = null, Dbf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _reserved1 = m_io.ReadBytes(3);
                 _reserved2 = m_io.ReadBytes(13);
                 _reserved3 = m_io.ReadBytes(4);
-                }
+            }
             private byte[] _reserved1;
             private byte[] _reserved2;
             private byte[] _reserved3;
@@ -204,13 +211,14 @@ namespace Kaitai
                 return new HeaderDbase7(new KaitaiStream(fileName));
             }
 
-            public HeaderDbase7(KaitaiStream io, Dbf.Header2 parent = null, Dbf root = null) : base(io)
+            public HeaderDbase7(KaitaiStream p__io, Dbf.Header2 p__parent = null, Dbf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _reserved1 = m_io.EnsureFixedContents(new byte[] { 0, 0 });
                 _hasIncompleteTransaction = m_io.ReadU1();
                 _dbaseIvEncryption = m_io.ReadU1();
@@ -220,7 +228,7 @@ namespace Kaitai
                 _reserved3 = m_io.EnsureFixedContents(new byte[] { 0, 0 });
                 _languageDriverName = m_io.ReadBytes(32);
                 _reserved4 = m_io.ReadBytes(4);
-                }
+            }
             private byte[] _reserved1;
             private byte _hasIncompleteTransaction;
             private byte _dbaseIvEncryption;

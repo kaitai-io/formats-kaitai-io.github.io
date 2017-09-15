@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>edid: JavaScript parsing library</title>
+  <title>EDID (VESA Enhanced Extended Display Identification Data): JavaScript parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Hardware Protocols</li>
-        <li class="active">edid</li>
+        <li class="active">EDID (VESA Enhanced Extended Display Identification Data)</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>edid:
+        <h1>EDID (VESA Enhanced Extended Display Identification Data):
             
             JavaScript parsing library
             
@@ -105,6 +105,16 @@ section#format-index .row {
                     
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
                 </div>
             </div>
         </div>
@@ -112,7 +122,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of edid
+            This page hosts a formal specification of EDID (VESA Enhanced Extended Display Identification Data)
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -123,52 +133,52 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="index.html" title="edid parsing Overview library">Overview</a></li>
+                <a href="index.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="edid parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="edid parsing C# library">C#</a></li>
+                <a href="csharp.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="edid parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="edid parsing Java library">Java</a></li>
+                <a href="java.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Java library">Java</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="javascript.html" title="edid parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title="edid parsing Perl library">Perl</a></li>
+                <a href="perl.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="edid parsing PHP library">PHP</a></li>
+                <a href="php.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing PHP library">PHP</a></li>
                 
                 
                 <li>
                 
-                <a href="python.html" title="edid parsing Python library">Python</a></li>
+                <a href="python.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title="edid parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -181,7 +191,7 @@ section#format-index .row {
     <div class="container">
         <h2>
             
-            JavaScript source code to parse edid
+            JavaScript source code to parse EDID (VESA Enhanced Extended Display Identification Data)
             
         </h2>
 
@@ -222,8 +232,443 @@ var Edid = (function() {
     this.screenSizeV = this._io.readU1();
     this.gammaMod = this._io.readU1();
     this.featuresFlags = this._io.readU1();
-    this.chromacity = this._io.readBytes(10);
+    this.chromacity = new ChromacityInfo(this._io, this, this._root);
+    this.estTimings = new EstTimingsInfo(this._io, this, this._root);
+    this.stdTimings = new Array(8);
+    for (var i = 0; i &lt; 8; i++) {
+      this.stdTimings[i] = new StdTiming(this._io, this, this._root);
+    }
   }
+
+  /**
+   * Chromaticity information: colorimetry and white point
+   * coordinates. All coordinates are stored as fixed precision
+   * 10-bit numbers, bits are shuffled for compactness.
+   */
+
+  var ChromacityInfo = Edid.ChromacityInfo = (function() {
+    function ChromacityInfo(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    ChromacityInfo.prototype._read = function() {
+      this.redX10 = this._io.readBitsInt(2);
+      this.redY10 = this._io.readBitsInt(2);
+      this.greenX10 = this._io.readBitsInt(2);
+      this.greenY10 = this._io.readBitsInt(2);
+      this.blueX10 = this._io.readBitsInt(2);
+      this.blueY10 = this._io.readBitsInt(2);
+      this.whiteX10 = this._io.readBitsInt(2);
+      this.whiteY10 = this._io.readBitsInt(2);
+      this._io.alignToByte();
+      this.redX92 = this._io.readU1();
+      this.redY92 = this._io.readU1();
+      this.greenX92 = this._io.readU1();
+      this.greenY92 = this._io.readU1();
+      this.blueX92 = this._io.readU1();
+      this.blueY92 = this._io.readU1();
+      this.whiteX92 = this._io.readU1();
+      this.whiteY92 = this._io.readU1();
+    }
+    Object.defineProperty(ChromacityInfo.prototype, &#39;greenXInt&#39;, {
+      get: function() {
+        if (this._m_greenXInt !== undefined)
+          return this._m_greenXInt;
+        this._m_greenXInt = ((this.greenX92 &lt;&lt; 2) | this.greenX10);
+        return this._m_greenXInt;
+      }
+    });
+
+    /**
+     * Red Y coordinate
+     */
+    Object.defineProperty(ChromacityInfo.prototype, &#39;redY&#39;, {
+      get: function() {
+        if (this._m_redY !== undefined)
+          return this._m_redY;
+        this._m_redY = (this.redYInt / 1024.0);
+        return this._m_redY;
+      }
+    });
+    Object.defineProperty(ChromacityInfo.prototype, &#39;greenYInt&#39;, {
+      get: function() {
+        if (this._m_greenYInt !== undefined)
+          return this._m_greenYInt;
+        this._m_greenYInt = ((this.greenY92 &lt;&lt; 2) | this.greenY10);
+        return this._m_greenYInt;
+      }
+    });
+
+    /**
+     * White Y coordinate
+     */
+    Object.defineProperty(ChromacityInfo.prototype, &#39;whiteY&#39;, {
+      get: function() {
+        if (this._m_whiteY !== undefined)
+          return this._m_whiteY;
+        this._m_whiteY = (this.whiteYInt / 1024.0);
+        return this._m_whiteY;
+      }
+    });
+
+    /**
+     * Red X coordinate
+     */
+    Object.defineProperty(ChromacityInfo.prototype, &#39;redX&#39;, {
+      get: function() {
+        if (this._m_redX !== undefined)
+          return this._m_redX;
+        this._m_redX = (this.redXInt / 1024.0);
+        return this._m_redX;
+      }
+    });
+
+    /**
+     * White X coordinate
+     */
+    Object.defineProperty(ChromacityInfo.prototype, &#39;whiteX&#39;, {
+      get: function() {
+        if (this._m_whiteX !== undefined)
+          return this._m_whiteX;
+        this._m_whiteX = (this.whiteXInt / 1024.0);
+        return this._m_whiteX;
+      }
+    });
+
+    /**
+     * Blue X coordinate
+     */
+    Object.defineProperty(ChromacityInfo.prototype, &#39;blueX&#39;, {
+      get: function() {
+        if (this._m_blueX !== undefined)
+          return this._m_blueX;
+        this._m_blueX = (this.blueXInt / 1024.0);
+        return this._m_blueX;
+      }
+    });
+    Object.defineProperty(ChromacityInfo.prototype, &#39;whiteXInt&#39;, {
+      get: function() {
+        if (this._m_whiteXInt !== undefined)
+          return this._m_whiteXInt;
+        this._m_whiteXInt = ((this.whiteX92 &lt;&lt; 2) | this.whiteX10);
+        return this._m_whiteXInt;
+      }
+    });
+    Object.defineProperty(ChromacityInfo.prototype, &#39;whiteYInt&#39;, {
+      get: function() {
+        if (this._m_whiteYInt !== undefined)
+          return this._m_whiteYInt;
+        this._m_whiteYInt = ((this.whiteY92 &lt;&lt; 2) | this.whiteY10);
+        return this._m_whiteYInt;
+      }
+    });
+
+    /**
+     * Green X coordinate
+     */
+    Object.defineProperty(ChromacityInfo.prototype, &#39;greenX&#39;, {
+      get: function() {
+        if (this._m_greenX !== undefined)
+          return this._m_greenX;
+        this._m_greenX = (this.greenXInt / 1024.0);
+        return this._m_greenX;
+      }
+    });
+    Object.defineProperty(ChromacityInfo.prototype, &#39;redXInt&#39;, {
+      get: function() {
+        if (this._m_redXInt !== undefined)
+          return this._m_redXInt;
+        this._m_redXInt = ((this.redX92 &lt;&lt; 2) | this.redX10);
+        return this._m_redXInt;
+      }
+    });
+    Object.defineProperty(ChromacityInfo.prototype, &#39;redYInt&#39;, {
+      get: function() {
+        if (this._m_redYInt !== undefined)
+          return this._m_redYInt;
+        this._m_redYInt = ((this.redY92 &lt;&lt; 2) | this.redY10);
+        return this._m_redYInt;
+      }
+    });
+    Object.defineProperty(ChromacityInfo.prototype, &#39;blueXInt&#39;, {
+      get: function() {
+        if (this._m_blueXInt !== undefined)
+          return this._m_blueXInt;
+        this._m_blueXInt = ((this.blueX92 &lt;&lt; 2) | this.blueX10);
+        return this._m_blueXInt;
+      }
+    });
+
+    /**
+     * Blue Y coordinate
+     */
+    Object.defineProperty(ChromacityInfo.prototype, &#39;blueY&#39;, {
+      get: function() {
+        if (this._m_blueY !== undefined)
+          return this._m_blueY;
+        this._m_blueY = (this.blueYInt / 1024.0);
+        return this._m_blueY;
+      }
+    });
+
+    /**
+     * Green Y coordinate
+     */
+    Object.defineProperty(ChromacityInfo.prototype, &#39;greenY&#39;, {
+      get: function() {
+        if (this._m_greenY !== undefined)
+          return this._m_greenY;
+        this._m_greenY = (this.greenYInt / 1024.0);
+        return this._m_greenY;
+      }
+    });
+    Object.defineProperty(ChromacityInfo.prototype, &#39;blueYInt&#39;, {
+      get: function() {
+        if (this._m_blueYInt !== undefined)
+          return this._m_blueYInt;
+        this._m_blueYInt = ((this.blueY92 &lt;&lt; 2) | this.blueY10);
+        return this._m_blueYInt;
+      }
+    });
+
+    /**
+     * Red X, bits 1..0
+     */
+
+    /**
+     * Red Y, bits 1..0
+     */
+
+    /**
+     * Green X, bits 1..0
+     */
+
+    /**
+     * Green Y, bits 1..0
+     */
+
+    /**
+     * Blue X, bits 1..0
+     */
+
+    /**
+     * Blue Y, bits 1..0
+     */
+
+    /**
+     * White X, bits 1..0
+     */
+
+    /**
+     * White Y, bits 1..0
+     */
+
+    /**
+     * Red X, bits 9..2
+     */
+
+    /**
+     * Red Y, bits 9..2
+     */
+
+    /**
+     * Green X, bits 9..2
+     */
+
+    /**
+     * Green Y, bits 9..2
+     */
+
+    /**
+     * Blue X, bits 9..2
+     */
+
+    /**
+     * Blue Y, bits 9..2
+     */
+
+    /**
+     * White X, bits 9..2
+     */
+
+    /**
+     * White Y, bits 9..2
+     */
+
+    return ChromacityInfo;
+  })();
+
+  var EstTimingsInfo = Edid.EstTimingsInfo = (function() {
+    function EstTimingsInfo(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    EstTimingsInfo.prototype._read = function() {
+      this.can72040070 = this._io.readBitsInt(1) != 0;
+      this.can72040088 = this._io.readBitsInt(1) != 0;
+      this.can64048060 = this._io.readBitsInt(1) != 0;
+      this.can64048067 = this._io.readBitsInt(1) != 0;
+      this.can64048072 = this._io.readBitsInt(1) != 0;
+      this.can64048075 = this._io.readBitsInt(1) != 0;
+      this.can80060056 = this._io.readBitsInt(1) != 0;
+      this.can80060060 = this._io.readBitsInt(1) != 0;
+      this.can80060072 = this._io.readBitsInt(1) != 0;
+      this.can80060075 = this._io.readBitsInt(1) != 0;
+      this.can83262475 = this._io.readBitsInt(1) != 0;
+      this.can102476887I = this._io.readBitsInt(1) != 0;
+      this.can102476860 = this._io.readBitsInt(1) != 0;
+      this.can102476870 = this._io.readBitsInt(1) != 0;
+      this.can102476875 = this._io.readBitsInt(1) != 0;
+      this.can1280102475 = this._io.readBitsInt(1) != 0;
+      this.can115287075 = this._io.readBitsInt(1) != 0;
+      this.reserved = this._io.readBitsInt(7);
+    }
+
+    /**
+     * Supports 720 x 400 @ 70Hz
+     */
+
+    /**
+     * Supports 720 x 400 @ 88Hz
+     */
+
+    /**
+     * Supports 640 x 480 @ 60Hz
+     */
+
+    /**
+     * Supports 640 x 480 @ 67Hz
+     */
+
+    /**
+     * Supports 640 x 480 @ 72Hz
+     */
+
+    /**
+     * Supports 640 x 480 @ 75Hz
+     */
+
+    /**
+     * Supports 800 x 600 @ 56Hz
+     */
+
+    /**
+     * Supports 800 x 600 @ 60Hz
+     */
+
+    /**
+     * Supports 800 x 600 @ 72Hz
+     */
+
+    /**
+     * Supports 800 x 600 @ 75Hz
+     */
+
+    /**
+     * Supports 832 x 624 @ 75Hz
+     */
+
+    /**
+     * Supports 1024 x 768 @ 87Hz(I)
+     */
+
+    /**
+     * Supports 1024 x 768 @ 60Hz
+     */
+
+    /**
+     * Supports 1024 x 768 @ 70Hz
+     */
+
+    /**
+     * Supports 1024 x 768 @ 75Hz
+     */
+
+    /**
+     * Supports 1280 x 1024 @ 75Hz
+     */
+
+    /**
+     * Supports 1152 x 870 @ 75Hz
+     */
+
+    return EstTimingsInfo;
+  })();
+
+  var StdTiming = Edid.StdTiming = (function() {
+    StdTiming.AspectRatios = Object.freeze({
+      RATIO_16_10: 0,
+      RATIO_4_3: 1,
+      RATIO_5_4: 2,
+      RATIO_16_9: 3,
+
+      0: &quot;RATIO_16_10&quot;,
+      1: &quot;RATIO_4_3&quot;,
+      2: &quot;RATIO_5_4&quot;,
+      3: &quot;RATIO_16_9&quot;,
+    });
+
+    function StdTiming(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    StdTiming.prototype._read = function() {
+      this.horizActivePixelsMod = this._io.readU1();
+      this.aspectRatio = this._io.readBitsInt(2);
+      this.refreshRateMod = this._io.readBitsInt(5);
+    }
+
+    /**
+     * Range of horizontal active pixels.
+     */
+    Object.defineProperty(StdTiming.prototype, &#39;horizActivePixels&#39;, {
+      get: function() {
+        if (this._m_horizActivePixels !== undefined)
+          return this._m_horizActivePixels;
+        this._m_horizActivePixels = ((this.horizActivePixelsMod + 31) * 8);
+        return this._m_horizActivePixels;
+      }
+    });
+
+    /**
+     * Vertical refresh rate, Hz.
+     */
+    Object.defineProperty(StdTiming.prototype, &#39;refreshRate&#39;, {
+      get: function() {
+        if (this._m_refreshRate !== undefined)
+          return this._m_refreshRate;
+        this._m_refreshRate = (this.refreshRateMod + 60);
+        return this._m_refreshRate;
+      }
+    });
+
+    /**
+     * Range of horizontal active pixels, written in modified form:
+     * `(horiz_active_pixels / 8) - 31`. This yields an effective
+     * range of 256..2288, with steps of 8 pixels.
+     */
+
+    /**
+     * Aspect ratio of the image. Can be used to calculate number
+     * of vertical pixels.
+     */
+
+    /**
+     * Refresh rate in Hz, written in modified form: `refresh_rate
+     * - 60`. This yields an effective range of 60..123 Hz.
+     */
+
+    return StdTiming;
+  })();
   Object.defineProperty(Edid.prototype, &#39;mfgYear&#39;, {
     get: function() {
       if (this._m_mfgYear !== undefined)
@@ -236,7 +681,7 @@ var Edid = (function() {
     get: function() {
       if (this._m_mfgIdCh1 !== undefined)
         return this._m_mfgIdCh1;
-      this._m_mfgIdCh1 = ((this.mfgBytes &amp; 31744) &gt;&gt; 10);
+      this._m_mfgIdCh1 = ((this.mfgBytes &amp; 31744) &gt;&gt;&gt; 10);
       return this._m_mfgIdCh1;
     }
   });
@@ -262,7 +707,7 @@ var Edid = (function() {
     get: function() {
       if (this._m_mfgIdCh2 !== undefined)
         return this._m_mfgIdCh2;
-      this._m_mfgIdCh2 = ((this.mfgBytes &amp; 992) &gt;&gt; 5);
+      this._m_mfgIdCh2 = ((this.mfgBytes &amp; 992) &gt;&gt;&gt; 5);
       return this._m_mfgIdCh2;
     }
   });
@@ -301,6 +746,24 @@ var Edid = (function() {
 
   /**
    * Display gamma, datavalue = (gamma*100)-100 (range 1.00–3.54)
+   */
+
+  /**
+   * Phosphor or filter chromaticity structure, which provides info on colorimetry and white point
+   * @see Standard, section 3.7
+   */
+
+  /**
+   * Block of bit flags that indicates support of so called
+   * &quot;established timings&quot;, which is a commonly used subset of VESA
+   * DMT (Discrete Monitor Timings) modes.
+   * @see Standard, section 3.8
+   */
+
+  /**
+   * Array of descriptions of so called &quot;standard timings&quot;, which are
+   * used to specify up to 8 additional timings not included in
+   * &quot;established timings&quot;.
    */
 
   return Edid;

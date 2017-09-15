@@ -258,12 +258,12 @@ var PacketPpi = (function() {
     case PacketPpi.Linktype.PPI:
       this._raw_body = this._io.readBytesFull();
       var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new PacketPpi(_io__raw_body);
+      this.body = new PacketPpi(_io__raw_body, this, null);
       break;
     case PacketPpi.Linktype.ETHERNET:
       this._raw_body = this._io.readBytesFull();
       var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new EthernetFrame(_io__raw_body);
+      this.body = new EthernetFrame(_io__raw_body, this, null);
       break;
     default:
       this.body = this._io.readBytesFull();
@@ -281,8 +281,10 @@ var PacketPpi = (function() {
     }
     PacketPpiFields.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.entries.push(new PacketPpiField(this._io, this, this._root));
+        i++;
       }
     }
 

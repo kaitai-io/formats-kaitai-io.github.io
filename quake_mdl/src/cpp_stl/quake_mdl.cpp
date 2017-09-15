@@ -4,8 +4,8 @@
 
 
 
-quake_mdl_t::quake_mdl_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, quake_mdl_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+quake_mdl_t::quake_mdl_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, quake_mdl_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -58,9 +58,9 @@ quake_mdl_t::~quake_mdl_t() {
     delete m_frames;
 }
 
-quake_mdl_t::mdl_vertex_t::mdl_vertex_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, quake_mdl_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+quake_mdl_t::mdl_vertex_t::mdl_vertex_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, quake_mdl_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -78,9 +78,9 @@ quake_mdl_t::mdl_vertex_t::~mdl_vertex_t() {
     delete m_values;
 }
 
-quake_mdl_t::mdl_texcoord_t::mdl_texcoord_t(kaitai::kstream *p_io, quake_mdl_t* p_parent, quake_mdl_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+quake_mdl_t::mdl_texcoord_t::mdl_texcoord_t(kaitai::kstream* p__io, quake_mdl_t* p__parent, quake_mdl_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -93,9 +93,9 @@ void quake_mdl_t::mdl_texcoord_t::_read() {
 quake_mdl_t::mdl_texcoord_t::~mdl_texcoord_t() {
 }
 
-quake_mdl_t::mdl_header_t::mdl_header_t(kaitai::kstream *p_io, quake_mdl_t* p_parent, quake_mdl_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+quake_mdl_t::mdl_header_t::mdl_header_t(kaitai::kstream* p__io, quake_mdl_t* p__parent, quake_mdl_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_version = false;
     f_skin_size = false;
     _read();
@@ -141,9 +141,9 @@ int32_t quake_mdl_t::mdl_header_t::skin_size() {
     return m_skin_size;
 }
 
-quake_mdl_t::mdl_skin_t::mdl_skin_t(kaitai::kstream *p_io, quake_mdl_t* p_parent, quake_mdl_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+quake_mdl_t::mdl_skin_t::mdl_skin_t(kaitai::kstream* p__io, quake_mdl_t* p__parent, quake_mdl_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -182,13 +182,21 @@ void quake_mdl_t::mdl_skin_t::_read() {
 }
 
 quake_mdl_t::mdl_skin_t::~mdl_skin_t() {
-    delete m_frame_times;
-    delete m_group_texture_data;
+    if (!n_single_texture_data) {
+    }
+    if (!n_num_frames) {
+    }
+    if (!n_frame_times) {
+        delete m_frame_times;
+    }
+    if (!n_group_texture_data) {
+        delete m_group_texture_data;
+    }
 }
 
-quake_mdl_t::mdl_frame_t::mdl_frame_t(kaitai::kstream *p_io, quake_mdl_t* p_parent, quake_mdl_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+quake_mdl_t::mdl_frame_t::mdl_frame_t(kaitai::kstream* p__io, quake_mdl_t* p__parent, quake_mdl_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_num_simple_frames = false;
     _read();
 }
@@ -230,7 +238,9 @@ quake_mdl_t::mdl_frame_t::~mdl_frame_t() {
     if (!n_max) {
         delete m_max;
     }
-    delete m_time;
+    if (!n_time) {
+        delete m_time;
+    }
     for (std::vector<mdl_simple_frame_t*>::iterator it = m_frames->begin(); it != m_frames->end(); ++it) {
         delete *it;
     }
@@ -245,9 +255,9 @@ int32_t quake_mdl_t::mdl_frame_t::num_simple_frames() {
     return m_num_simple_frames;
 }
 
-quake_mdl_t::mdl_simple_frame_t::mdl_simple_frame_t(kaitai::kstream *p_io, quake_mdl_t::mdl_frame_t* p_parent, quake_mdl_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+quake_mdl_t::mdl_simple_frame_t::mdl_simple_frame_t(kaitai::kstream* p__io, quake_mdl_t::mdl_frame_t* p__parent, quake_mdl_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -272,9 +282,9 @@ quake_mdl_t::mdl_simple_frame_t::~mdl_simple_frame_t() {
     delete m_vertices;
 }
 
-quake_mdl_t::mdl_triangle_t::mdl_triangle_t(kaitai::kstream *p_io, quake_mdl_t* p_parent, quake_mdl_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+quake_mdl_t::mdl_triangle_t::mdl_triangle_t(kaitai::kstream* p__io, quake_mdl_t* p__parent, quake_mdl_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -292,9 +302,9 @@ quake_mdl_t::mdl_triangle_t::~mdl_triangle_t() {
     delete m_vertices;
 }
 
-quake_mdl_t::vec3_t::vec3_t(kaitai::kstream *p_io, quake_mdl_t::mdl_header_t* p_parent, quake_mdl_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+quake_mdl_t::vec3_t::vec3_t(kaitai::kstream* p__io, quake_mdl_t::mdl_header_t* p__parent, quake_mdl_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

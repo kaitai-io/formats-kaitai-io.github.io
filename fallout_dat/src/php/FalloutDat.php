@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class FalloutDat extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \FalloutDat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \FalloutDat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -40,8 +40,8 @@ class FalloutDat extends \Kaitai\Struct\Struct {
 namespace \FalloutDat;
 
 class Pstr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \FalloutDat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \FalloutDat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -58,8 +58,8 @@ class Pstr extends \Kaitai\Struct\Struct {
 namespace \FalloutDat;
 
 class Folder extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \FalloutDat $parent = null, \FalloutDat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \FalloutDat $_parent = null, \FalloutDat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -89,8 +89,8 @@ class Folder extends \Kaitai\Struct\Struct {
 namespace \FalloutDat;
 
 class File extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \FalloutDat\Folder $parent = null, \FalloutDat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \FalloutDat\Folder $_parent = null, \FalloutDat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

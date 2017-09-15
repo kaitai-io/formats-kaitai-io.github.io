@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -32,8 +31,12 @@ public:
         COMPONENT_ID_Q = 5
     };
 
-    jpeg_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, jpeg_t* p_root = 0);
+    jpeg_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, jpeg_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~jpeg_t();
 
     class segment_t : public kaitai::kstruct {
@@ -76,8 +79,12 @@ public:
             MARKER_ENUM_COM = 254
         };
 
-        segment_t(kaitai::kstream* p_io, jpeg_t* p_parent = 0, jpeg_t* p_root = 0);
+        segment_t(kaitai::kstream* p__io, jpeg_t* p__parent = 0, jpeg_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~segment_t();
 
     private:
@@ -126,16 +133,24 @@ public:
     public:
         class component_t;
 
-        segment_sos_t(kaitai::kstream* p_io, jpeg_t::segment_t* p_parent = 0, jpeg_t* p_root = 0);
+        segment_sos_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent = 0, jpeg_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~segment_sos_t();
 
         class component_t : public kaitai::kstruct {
 
         public:
 
-            component_t(kaitai::kstream* p_io, jpeg_t::segment_sos_t* p_parent = 0, jpeg_t* p_root = 0);
+            component_t(kaitai::kstream* p__io, jpeg_t::segment_sos_t* p__parent = 0, jpeg_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~component_t();
 
         private:
@@ -198,13 +213,23 @@ public:
 
     public:
 
-        segment_app1_t(kaitai::kstream* p_io, jpeg_t::segment_t* p_parent = 0, jpeg_t* p_root = 0);
+        segment_app1_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent = 0, jpeg_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~segment_app1_t();
 
     private:
         std::string m_magic;
         exif_in_jpeg_t* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
         jpeg_t* m__root;
         jpeg_t::segment_t* m__parent;
 
@@ -220,16 +245,24 @@ public:
     public:
         class component_t;
 
-        segment_sof0_t(kaitai::kstream* p_io, jpeg_t::segment_t* p_parent = 0, jpeg_t* p_root = 0);
+        segment_sof0_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent = 0, jpeg_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~segment_sof0_t();
 
         class component_t : public kaitai::kstruct {
 
         public:
 
-            component_t(kaitai::kstream* p_io, jpeg_t::segment_sof0_t* p_parent = 0, jpeg_t* p_root = 0);
+            component_t(kaitai::kstream* p__io, jpeg_t::segment_sof0_t* p__parent = 0, jpeg_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~component_t();
 
         private:
@@ -288,8 +321,12 @@ public:
 
     public:
 
-        exif_in_jpeg_t(kaitai::kstream* p_io, jpeg_t::segment_app1_t* p_parent = 0, jpeg_t* p_root = 0);
+        exif_in_jpeg_t(kaitai::kstream* p__io, jpeg_t::segment_app1_t* p__parent = 0, jpeg_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~exif_in_jpeg_t();
 
     private:
@@ -319,8 +356,12 @@ public:
             DENSITY_UNIT_PIXELS_PER_CM = 2
         };
 
-        segment_app0_t(kaitai::kstream* p_io, jpeg_t::segment_t* p_parent = 0, jpeg_t* p_root = 0);
+        segment_app0_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent = 0, jpeg_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~segment_app0_t();
 
     private:

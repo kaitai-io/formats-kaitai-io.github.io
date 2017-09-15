@@ -54,9 +54,11 @@ class Ttf < Kaitai::Struct::Struct
           @glyph_name_index[i] = @_io.read_u2be
         }
         @glyph_names = []
+        i = 0
         begin
           _ = PascalString.new(@_io, self, @_root)
           @glyph_names << _
+          i += 1
         end until _.length == 0
         self
       end
@@ -1177,8 +1179,10 @@ class Ttf < Kaitai::Struct::Struct
 
     def _read
       @fwords = []
+      i = 0
       while not @_io.eof?
         @fwords << @_io.read_s2be
+        i += 1
       end
       self
     end
@@ -1428,8 +1432,10 @@ class Ttf < Kaitai::Struct::Struct
             @id_range_offset[i] = @_io.read_u2be
           }
           @glyph_id_array = []
+          i = 0
           while not @_io.eof?
             @glyph_id_array << @_io.read_u2be
+            i += 1
           end
           self
         end

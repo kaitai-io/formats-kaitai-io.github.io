@@ -11,6 +11,7 @@ namespace Kaitai
             return new PsxTim(new KaitaiStream(fileName));
         }
 
+
         public enum BppType
         {
             Bpp4 = 0,
@@ -18,23 +19,23 @@ namespace Kaitai
             Bpp16 = 2,
             Bpp24 = 3,
         }
-
-        public PsxTim(KaitaiStream io, KaitaiStruct parent = null, PsxTim root = null) : base(io)
+        public PsxTim(KaitaiStream p__io, KaitaiStruct p__parent = null, PsxTim p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_hasClut = false;
             f_bpp = false;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _magic = m_io.EnsureFixedContents(new byte[] { 16, 0, 0, 0 });
             _flags = m_io.ReadU4le();
             if (HasClut) {
                 _clut = new Bitmap(m_io, this, m_root);
             }
             _img = new Bitmap(m_io, this, m_root);
-            }
+        }
         public partial class Bitmap : KaitaiStruct
         {
             public static Bitmap FromFile(string fileName)
@@ -42,20 +43,21 @@ namespace Kaitai
                 return new Bitmap(new KaitaiStream(fileName));
             }
 
-            public Bitmap(KaitaiStream io, PsxTim parent = null, PsxTim root = null) : base(io)
+            public Bitmap(KaitaiStream p__io, PsxTim p__parent = null, PsxTim p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _len = m_io.ReadU4le();
                 _originX = m_io.ReadU2le();
                 _originY = m_io.ReadU2le();
                 _width = m_io.ReadU2le();
                 _height = m_io.ReadU2le();
                 _body = m_io.ReadBytes((Len - 12));
-                }
+            }
             private uint _len;
             private ushort _originX;
             private ushort _originY;

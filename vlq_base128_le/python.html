@@ -219,10 +219,10 @@ http://avro.apache.org/docs/current/spec.html#binary_encode_primitive</li>
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = VlqBase128Le(KaitaiStream(raw))</code></pre>
+data = VlqBase128Le(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -291,11 +291,13 @@ class VlqBase128Le(KaitaiStruct):
 
     def _read(self):
         self.groups = []
+        i = 0
         while True:
             _ = self._root.Group(self._io, self, self._root)
             self.groups.append(_)
             if not (_.has_next):
                 break
+            i += 1
 
     class Group(KaitaiStruct):
         &quot;&quot;&quot;One byte group, clearly divided into 7-bit &quot;value&quot; and 1-bit &quot;has continuation

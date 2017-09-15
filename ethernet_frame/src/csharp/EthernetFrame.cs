@@ -11,6 +11,7 @@ namespace Kaitai
             return new EthernetFrame(new KaitaiStream(fileName));
         }
 
+
         public enum EtherTypeEnum
         {
             Ipv4 = 2048,
@@ -22,14 +23,14 @@ namespace Kaitai
             Arp = 2054,
             Ipv6 = 34525,
         }
-
-        public EthernetFrame(KaitaiStream io, KaitaiStruct parent = null, EthernetFrame root = null) : base(io)
+        public EthernetFrame(KaitaiStream p__io, KaitaiStruct p__parent = null, EthernetFrame p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _dstMac = m_io.ReadBytes(6);
             _srcMac = m_io.ReadBytes(6);
             _etherType = ((EtherTypeEnum) m_io.ReadU2be());
@@ -51,7 +52,7 @@ namespace Kaitai
                 break;
             }
             }
-            }
+        }
         private byte[] _dstMac;
         private byte[] _srcMac;
         private EtherTypeEnum _etherType;

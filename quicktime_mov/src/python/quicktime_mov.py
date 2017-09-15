@@ -190,8 +190,10 @@ class QuicktimeMov(KaitaiStruct):
             self.major_brand = self._root.Brand(self._io.read_u4be())
             self.minor_version = self._io.read_bytes(4)
             self.compatible_brands = []
+            i = 0
             while not self._io.is_eof():
                 self.compatible_brands.append(self._root.Brand(self._io.read_u4be()))
+                i += 1
 
 
 
@@ -323,8 +325,10 @@ class QuicktimeMov(KaitaiStruct):
 
         def _read(self):
             self.items = []
+            i = 0
             while not self._io.is_eof():
                 self.items.append(self._root.Atom(self._io, self, self._root))
+                i += 1
 
 
 

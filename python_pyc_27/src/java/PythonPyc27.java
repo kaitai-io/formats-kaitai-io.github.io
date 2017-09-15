@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.nio.charset.Charset;
  */
 public class PythonPyc27 extends KaitaiStruct {
     public static PythonPyc27 fromFile(String fileName) throws IOException {
-        return new PythonPyc27(new KaitaiStream(fileName));
+        return new PythonPyc27(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum Version {
@@ -83,7 +84,7 @@ public class PythonPyc27 extends KaitaiStruct {
     }
     public static class CodeObject extends KaitaiStruct {
         public static CodeObject fromFile(String fileName) throws IOException {
-            return new CodeObject(new KaitaiStream(fileName));
+            return new CodeObject(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum FlagsEnum {
@@ -167,7 +168,7 @@ public class PythonPyc27 extends KaitaiStruct {
     }
     public static class Assembly extends KaitaiStruct {
         public static Assembly fromFile(String fileName) throws IOException {
-            return new Assembly(new KaitaiStream(fileName));
+            return new Assembly(new ByteBufferKaitaiStream(fileName));
         }
 
         public Assembly(KaitaiStream _io) {
@@ -188,7 +189,7 @@ public class PythonPyc27 extends KaitaiStruct {
             this.stringMagic = this._io.ensureFixedContents(new byte[] { 115 });
             this.length = this._io.readU4le();
             this._raw_items = this._io.readBytes(length());
-            KaitaiStream _io__raw_items = new KaitaiStream(_raw_items);
+            KaitaiStream _io__raw_items = new ByteBufferKaitaiStream(_raw_items);
             this.items = new OpArgs(_io__raw_items, this, _root);
         }
         private byte[] stringMagic;
@@ -206,7 +207,7 @@ public class PythonPyc27 extends KaitaiStruct {
     }
     public static class OpArg extends KaitaiStruct {
         public static OpArg fromFile(String fileName) throws IOException {
-            return new OpArg(new KaitaiStream(fileName));
+            return new OpArg(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum OpCodeEnum {
@@ -372,7 +373,7 @@ public class PythonPyc27 extends KaitaiStruct {
     }
     public static class PyObject extends KaitaiStruct {
         public static PyObject fromFile(String fileName) throws IOException {
-            return new PyObject(new KaitaiStream(fileName));
+            return new PyObject(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum ObjectType {
@@ -424,7 +425,7 @@ public class PythonPyc27 extends KaitaiStruct {
                 break;
             }
             case INT: {
-                this.value = this._io.readU4le();
+                this.value = (Object) (this._io.readU4le());
                 break;
             }
             case STRING_REF: {
@@ -455,7 +456,7 @@ public class PythonPyc27 extends KaitaiStruct {
         }
         public static class PyNone extends KaitaiStruct {
             public static PyNone fromFile(String fileName) throws IOException {
-                return new PyNone(new KaitaiStream(fileName));
+                return new PyNone(new ByteBufferKaitaiStream(fileName));
             }
 
             public PyNone(KaitaiStream _io) {
@@ -481,7 +482,7 @@ public class PythonPyc27 extends KaitaiStruct {
         }
         public static class PyFalse extends KaitaiStruct {
             public static PyFalse fromFile(String fileName) throws IOException {
-                return new PyFalse(new KaitaiStream(fileName));
+                return new PyFalse(new ByteBufferKaitaiStream(fileName));
             }
 
             public PyFalse(KaitaiStream _io) {
@@ -507,7 +508,7 @@ public class PythonPyc27 extends KaitaiStruct {
         }
         public static class StringRef extends KaitaiStruct {
             public static StringRef fromFile(String fileName) throws IOException {
-                return new StringRef(new KaitaiStream(fileName));
+                return new StringRef(new ByteBufferKaitaiStream(fileName));
             }
 
             public StringRef(KaitaiStream _io) {
@@ -536,7 +537,7 @@ public class PythonPyc27 extends KaitaiStruct {
         }
         public static class PyTrue extends KaitaiStruct {
             public static PyTrue fromFile(String fileName) throws IOException {
-                return new PyTrue(new KaitaiStream(fileName));
+                return new PyTrue(new ByteBufferKaitaiStream(fileName));
             }
 
             public PyTrue(KaitaiStream _io) {
@@ -562,7 +563,7 @@ public class PythonPyc27 extends KaitaiStruct {
         }
         public static class Tuple extends KaitaiStruct {
             public static Tuple fromFile(String fileName) throws IOException {
-                return new Tuple(new KaitaiStream(fileName));
+                return new Tuple(new ByteBufferKaitaiStream(fileName));
             }
 
             public Tuple(KaitaiStream _io) {
@@ -597,7 +598,7 @@ public class PythonPyc27 extends KaitaiStruct {
         }
         public static class UnicodeString extends KaitaiStruct {
             public static UnicodeString fromFile(String fileName) throws IOException {
-                return new UnicodeString(new KaitaiStream(fileName));
+                return new UnicodeString(new ByteBufferKaitaiStream(fileName));
             }
 
             public UnicodeString(KaitaiStream _io) {
@@ -629,7 +630,7 @@ public class PythonPyc27 extends KaitaiStruct {
         }
         public static class InternedString extends KaitaiStruct {
             public static InternedString fromFile(String fileName) throws IOException {
-                return new InternedString(new KaitaiStream(fileName));
+                return new InternedString(new ByteBufferKaitaiStream(fileName));
             }
 
             public InternedString(KaitaiStream _io) {
@@ -661,7 +662,7 @@ public class PythonPyc27 extends KaitaiStruct {
         }
         public static class PyString extends KaitaiStruct {
             public static PyString fromFile(String fileName) throws IOException {
-                return new PyString(new KaitaiStream(fileName));
+                return new PyString(new ByteBufferKaitaiStream(fileName));
             }
 
             public PyString(KaitaiStream _io) {
@@ -702,7 +703,7 @@ public class PythonPyc27 extends KaitaiStruct {
     }
     public static class OpArgs extends KaitaiStruct {
         public static OpArgs fromFile(String fileName) throws IOException {
-            return new OpArgs(new KaitaiStream(fileName));
+            return new OpArgs(new ByteBufferKaitaiStream(fileName));
         }
 
         public OpArgs(KaitaiStream _io) {
@@ -721,8 +722,12 @@ public class PythonPyc27 extends KaitaiStruct {
         }
         private void _read() {
             this.items = new ArrayList<OpArg>();
-            while (!this._io.isEof()) {
-                this.items.add(new OpArg(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.items.add(new OpArg(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<OpArg> items;

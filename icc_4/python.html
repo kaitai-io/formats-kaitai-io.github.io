@@ -198,10 +198,10 @@ section#format-index .row {
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = Icc4(KaitaiStream(raw))</code></pre>
+data = Icc4(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -767,8 +767,10 @@ class Icc4(KaitaiStruct):
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 0, 0, 0, 0))
                     self.values = []
+                    i = 0
                     while not self._io.is_eof():
                         self.values.append(self._root.XyzNumber(self._io, self, self._root))
+                        i += 1
 
 
 
@@ -914,8 +916,10 @@ class Icc4(KaitaiStruct):
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 0, 0, 0, 0))
                     self.values = []
+                    i = 0
                     while not self._io.is_eof():
                         self.values.append(self._root.U16Fixed16Number(self._io, self, self._root))
+                        i += 1
 
 
 
@@ -1497,8 +1501,10 @@ class Icc4(KaitaiStruct):
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 0, 0, 0, 0))
                     self.values = []
+                    i = 0
                     while not self._io.is_eof():
                         self.values.append(self._io.read_u2be())
+                        i += 1
 
 
 
@@ -1591,8 +1597,10 @@ class Icc4(KaitaiStruct):
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 0, 0, 0, 0))
                     self.values = []
+                    i = 0
                     while not self._io.is_eof():
                         self.values.append(self._root.S15Fixed16Number(self._io, self, self._root))
+                        i += 1
 
 
 
@@ -1938,8 +1946,10 @@ class Icc4(KaitaiStruct):
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 0, 0, 0, 0))
                     self.values = []
+                    i = 0
                     while not self._io.is_eof():
                         self.values.append(self._io.read_u4be())
+                        i += 1
 
 
 
@@ -1971,8 +1981,10 @@ class Icc4(KaitaiStruct):
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 0, 0, 0, 0))
                     self.values = []
+                    i = 0
                     while not self._io.is_eof():
                         self.values.append(self._io.read_u1())
+                        i += 1
 
 
 
@@ -2000,8 +2012,10 @@ class Icc4(KaitaiStruct):
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 0, 0, 0, 0))
                     self.values = []
+                    i = 0
                     while not self._io.is_eof():
                         self.values.append(self._io.read_u8be())
+                        i += 1
 
 
 

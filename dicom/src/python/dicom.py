@@ -4058,8 +4058,10 @@ class Dicom(KaitaiStruct):
     def _read(self):
         self.file_header = self._root.TFileHeader(self._io, self, self._root)
         self.elements = []
+        i = 0
         while not self._io.is_eof():
             self.elements.append(self._root.TDataElementImplicit(self._io, self, self._root))
+            i += 1
 
 
     class TFileHeader(KaitaiStruct):
@@ -4104,16 +4106,20 @@ class Dicom(KaitaiStruct):
 
             if  ((self.vr == u"SQ") and (self.value_len == 4294967295)) :
                 self.items = []
+                i = 0
                 while True:
                     _ = self._root.SeqItem(self._io, self, self._root)
                     self.items.append(_)
                     if _.tag_elem == 57565:
                         break
+                    i += 1
 
             if self.is_transfer_syntax_change_implicit:
                 self.elements_implicit = []
+                i = 0
                 while not self._io.is_eof():
                     self.elements_implicit.append(self._root.TDataElementImplicit(self._io, self, self._root))
+                    i += 1
 
 
 
@@ -4180,16 +4186,20 @@ class Dicom(KaitaiStruct):
 
             if  ((self.vr == u"SQ") and (self.value_len == 4294967295)) :
                 self.items = []
+                i = 0
                 while True:
                     _ = self._root.SeqItem(self._io, self, self._root)
                     self.items.append(_)
                     if _.tag_elem == 57565:
                         break
+                    i += 1
 
             if self.is_transfer_syntax_change_explicit:
                 self.elements = []
+                i = 0
                 while not self._io.is_eof():
                     self.elements.append(self._root.TDataElementExplicit(self._io, self, self._root))
+                    i += 1
 
 
 
@@ -4250,11 +4260,13 @@ class Dicom(KaitaiStruct):
 
             if self.value_len == 4294967295:
                 self.items = []
+                i = 0
                 while True:
                     _ = self._root.TDataElementExplicit(self._io, self, self._root)
                     self.items.append(_)
                     if  ((_.tag_group == 65534) and (_.tag_elem == 57357)) :
                         break
+                    i += 1
 
 
 

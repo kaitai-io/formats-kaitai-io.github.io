@@ -233,6 +233,7 @@ namespace Kaitai
             return new GlibcUtmp(new KaitaiStream(fileName));
         }
 
+
         public enum EntryType
         {
             Empty = 0,
@@ -246,22 +247,26 @@ namespace Kaitai
             DeadProcess = 8,
             Accounting = 9,
         }
-
-        public GlibcUtmp(KaitaiStream io, KaitaiStruct parent = null, GlibcUtmp root = null) : base(io)
+        public GlibcUtmp(KaitaiStream p__io, KaitaiStruct p__parent = null, GlibcUtmp p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             __raw_records = new List&lt;byte[]&gt;();
             _records = new List&lt;Record&gt;();
-            while (!m_io.IsEof) {
-                __raw_records.Add(m_io.ReadBytes(384));
-                var io___raw_records = new KaitaiStream(__raw_records[__raw_records.Count - 1]);
-                _records.Add(new Record(io___raw_records, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    __raw_records.Add(m_io.ReadBytes(384));
+                    var io___raw_records = new KaitaiStream(__raw_records[__raw_records.Count - 1]);
+                    _records.Add(new Record(io___raw_records, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
         public partial class Record : KaitaiStruct
         {
             public static Record FromFile(string fileName)
@@ -269,13 +274,14 @@ namespace Kaitai
                 return new Record(new KaitaiStream(fileName));
             }
 
-            public Record(KaitaiStream io, GlibcUtmp parent = null, GlibcUtmp root = null) : base(io)
+            public Record(KaitaiStream p__io, GlibcUtmp p__parent = null, GlibcUtmp p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _utType = ((GlibcUtmp.EntryType) m_io.ReadS4le());
                 _pid = m_io.ReadU4le();
                 _line = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(32));
@@ -287,7 +293,7 @@ namespace Kaitai
                 _tv = new Timeval(m_io, this, m_root);
                 _addrV6 = m_io.ReadBytes(16);
                 _reserved = m_io.ReadBytes(20);
-                }
+            }
             private EntryType _utType;
             private uint _pid;
             private string _line;
@@ -362,16 +368,17 @@ namespace Kaitai
                 return new Timeval(new KaitaiStream(fileName));
             }
 
-            public Timeval(KaitaiStream io, GlibcUtmp.Record parent = null, GlibcUtmp root = null) : base(io)
+            public Timeval(KaitaiStream p__io, GlibcUtmp.Record p__parent = null, GlibcUtmp p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _sec = m_io.ReadS4le();
                 _usec = m_io.ReadS4le();
-                }
+            }
             private int _sec;
             private int _usec;
             private GlibcUtmp m_root;

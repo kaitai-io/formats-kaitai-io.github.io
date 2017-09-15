@@ -792,8 +792,10 @@ var Icc4 = (function() {
         XyzType.prototype._read = function() {
           this.reserved = this._io.ensureFixedContents([0, 0, 0, 0]);
           this.values = [];
+          var i = 0;
           while (!this._io.isEof()) {
             this.values.push(new XyzNumber(this._io, this, this._root));
+            i++;
           }
         }
 
@@ -983,8 +985,10 @@ var Icc4 = (function() {
         U16Fixed16ArrayType.prototype._read = function() {
           this.reserved = this._io.ensureFixedContents([0, 0, 0, 0]);
           this.values = [];
+          var i = 0;
           while (!this._io.isEof()) {
             this.values.push(new U16Fixed16Number(this._io, this, this._root));
+            i++;
           }
         }
 
@@ -1795,8 +1799,10 @@ var Icc4 = (function() {
         UInt16ArrayType.prototype._read = function() {
           this.reserved = this._io.ensureFixedContents([0, 0, 0, 0]);
           this.values = [];
+          var i = 0;
           while (!this._io.isEof()) {
             this.values.push(this._io.readU2be());
+            i++;
           }
         }
 
@@ -1928,8 +1934,10 @@ var Icc4 = (function() {
         S15Fixed16ArrayType.prototype._read = function() {
           this.reserved = this._io.ensureFixedContents([0, 0, 0, 0]);
           this.values = [];
+          var i = 0;
           while (!this._io.isEof()) {
             this.values.push(new S15Fixed16Number(this._io, this, this._root));
+            i++;
           }
         }
 
@@ -2397,8 +2405,10 @@ var Icc4 = (function() {
         UInt32ArrayType.prototype._read = function() {
           this.reserved = this._io.ensureFixedContents([0, 0, 0, 0]);
           this.values = [];
+          var i = 0;
           while (!this._io.isEof()) {
             this.values.push(this._io.readU4be());
+            i++;
           }
         }
 
@@ -2442,8 +2452,10 @@ var Icc4 = (function() {
         UInt8ArrayType.prototype._read = function() {
           this.reserved = this._io.ensureFixedContents([0, 0, 0, 0]);
           this.values = [];
+          var i = 0;
           while (!this._io.isEof()) {
             this.values.push(this._io.readU1());
+            i++;
           }
         }
 
@@ -2481,8 +2493,10 @@ var Icc4 = (function() {
         UInt64ArrayType.prototype._read = function() {
           this.reserved = this._io.ensureFixedContents([0, 0, 0, 0]);
           this.values = [];
+          var i = 0;
           while (!this._io.isEof()) {
             this.values.push(this._io.readU8be());
+            i++;
           }
         }
 

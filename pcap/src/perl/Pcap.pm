@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
-use EthernetFrame;
 use PacketPpi;
+use EthernetFrame;
 
 ########################################################################
 package Pcap;

@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -28,7 +29,7 @@ import java.util.HashMap;
  */
 public class S3m extends KaitaiStruct {
     public static S3m fromFile(String fileName) throws IOException {
-        return new S3m(new KaitaiStream(fileName));
+        return new S3m(new ByteBufferKaitaiStream(fileName));
     }
 
     public S3m(KaitaiStream _io) {
@@ -89,7 +90,7 @@ public class S3m extends KaitaiStruct {
     }
     public static class ChannelPan extends KaitaiStruct {
         public static ChannelPan fromFile(String fileName) throws IOException {
-            return new ChannelPan(new KaitaiStream(fileName));
+            return new ChannelPan(new ByteBufferKaitaiStream(fileName));
         }
 
         public ChannelPan(KaitaiStream _io) {
@@ -133,7 +134,7 @@ public class S3m extends KaitaiStruct {
     }
     public static class PatternCell extends KaitaiStruct {
         public static PatternCell fromFile(String fileName) throws IOException {
-            return new PatternCell(new KaitaiStream(fileName));
+            return new PatternCell(new ByteBufferKaitaiStream(fileName));
         }
 
         public PatternCell(KaitaiStream _io) {
@@ -197,7 +198,7 @@ public class S3m extends KaitaiStruct {
     }
     public static class PatternCells extends KaitaiStruct {
         public static PatternCells fromFile(String fileName) throws IOException {
-            return new PatternCells(new KaitaiStream(fileName));
+            return new PatternCells(new ByteBufferKaitaiStream(fileName));
         }
 
         public PatternCells(KaitaiStream _io) {
@@ -216,8 +217,12 @@ public class S3m extends KaitaiStruct {
         }
         private void _read() {
             this.cells = new ArrayList<PatternCell>();
-            while (!this._io.isEof()) {
-                this.cells.add(new PatternCell(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.cells.add(new PatternCell(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<PatternCell> cells;
@@ -229,7 +234,7 @@ public class S3m extends KaitaiStruct {
     }
     public static class Channel extends KaitaiStruct {
         public static Channel fromFile(String fileName) throws IOException {
-            return new Channel(new KaitaiStream(fileName));
+            return new Channel(new ByteBufferKaitaiStream(fileName));
         }
 
         public Channel(KaitaiStream _io) {
@@ -269,7 +274,7 @@ public class S3m extends KaitaiStruct {
      */
     public static class SwappedU3 extends KaitaiStruct {
         public static SwappedU3 fromFile(String fileName) throws IOException {
-            return new SwappedU3(new KaitaiStream(fileName));
+            return new SwappedU3(new ByteBufferKaitaiStream(fileName));
         }
 
         public SwappedU3(KaitaiStream _io) {
@@ -309,7 +314,7 @@ public class S3m extends KaitaiStruct {
     }
     public static class Pattern extends KaitaiStruct {
         public static Pattern fromFile(String fileName) throws IOException {
-            return new Pattern(new KaitaiStream(fileName));
+            return new Pattern(new ByteBufferKaitaiStream(fileName));
         }
 
         public Pattern(KaitaiStream _io) {
@@ -329,7 +334,7 @@ public class S3m extends KaitaiStruct {
         private void _read() {
             this.size = this._io.readU2le();
             this._raw_body = this._io.readBytes((size() - 2));
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new PatternCells(_io__raw_body, this, _root);
         }
         private int size;
@@ -345,7 +350,7 @@ public class S3m extends KaitaiStruct {
     }
     public static class PatternPtr extends KaitaiStruct {
         public static PatternPtr fromFile(String fileName) throws IOException {
-            return new PatternPtr(new KaitaiStream(fileName));
+            return new PatternPtr(new ByteBufferKaitaiStream(fileName));
         }
 
         public PatternPtr(KaitaiStream _io) {
@@ -384,7 +389,7 @@ public class S3m extends KaitaiStruct {
     }
     public static class InstrumentPtr extends KaitaiStruct {
         public static InstrumentPtr fromFile(String fileName) throws IOException {
-            return new InstrumentPtr(new KaitaiStream(fileName));
+            return new InstrumentPtr(new ByteBufferKaitaiStream(fileName));
         }
 
         public InstrumentPtr(KaitaiStream _io) {
@@ -423,7 +428,7 @@ public class S3m extends KaitaiStruct {
     }
     public static class Instrument extends KaitaiStruct {
         public static Instrument fromFile(String fileName) throws IOException {
-            return new Instrument(new KaitaiStream(fileName));
+            return new Instrument(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum InstTypes {
@@ -480,7 +485,7 @@ public class S3m extends KaitaiStruct {
         }
         public static class Sampled extends KaitaiStruct {
             public static Sampled fromFile(String fileName) throws IOException {
-                return new Sampled(new KaitaiStream(fileName));
+                return new Sampled(new ByteBufferKaitaiStream(fileName));
             }
 
             public Sampled(KaitaiStream _io) {
@@ -548,7 +553,7 @@ public class S3m extends KaitaiStruct {
         }
         public static class Adlib extends KaitaiStruct {
             public static Adlib fromFile(String fileName) throws IOException {
-                return new Adlib(new KaitaiStream(fileName));
+                return new Adlib(new ByteBufferKaitaiStream(fileName));
             }
 
             public Adlib(KaitaiStream _io) {

@@ -7,12 +7,12 @@ digraph {
 
 		microsoft_pe__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="mz1_pos">0</TD><TD PORT="mz1_size">...</TD><TD>MzPlaceholder</TD><TD PORT="mz1_type">mz1</TD></TR>
-			<TR><TD PORT="mz2_pos">...</TD><TD PORT="mz2_size">(mz1.header_size - 64)</TD><TD></TD><TD PORT="mz2_type">mz2</TD></TR>
+			<TR><TD PORT="mz1_pos">0</TD><TD PORT="mz1_size">64</TD><TD>MzPlaceholder</TD><TD PORT="mz1_type">mz1</TD></TR>
+			<TR><TD PORT="mz2_pos">64</TD><TD PORT="mz2_size">(mz1.header_size - 64)</TD><TD></TD><TD PORT="mz2_type">mz2</TD></TR>
 			<TR><TD PORT="pe_signature_pos">...</TD><TD PORT="pe_signature_size">4</TD><TD>50 45 00 00</TD><TD PORT="pe_signature_type">pe_signature</TD></TR>
-			<TR><TD PORT="coff_hdr_pos">...</TD><TD PORT="coff_hdr_size">...</TD><TD>CoffHeader</TD><TD PORT="coff_hdr_type">coff_hdr</TD></TR>
+			<TR><TD PORT="coff_hdr_pos">...</TD><TD PORT="coff_hdr_size">20</TD><TD>CoffHeader</TD><TD PORT="coff_hdr_type">coff_hdr</TD></TR>
 			<TR><TD PORT="optional_hdr_pos">...</TD><TD PORT="optional_hdr_size">coff_hdr.size_of_optional_header</TD><TD>OptionalHeader</TD><TD PORT="optional_hdr_type">optional_hdr</TD></TR>
-			<TR><TD PORT="sections_pos">...</TD><TD PORT="sections_size">...</TD><TD>Section</TD><TD PORT="sections_type">sections</TD></TR>
+			<TR><TD PORT="sections_pos">...</TD><TD PORT="sections_size">40</TD><TD>Section</TD><TD PORT="sections_type">sections</TD></TR>
 			<TR><TD COLSPAN="4" PORT="sections__repeat">repeat coff_hdr.number_of_sections times</TD></TR>
 		</TABLE>>];
 		subgraph cluster__optional_header_windows {
@@ -55,21 +55,21 @@ digraph {
 
 			optional_header_data_dirs__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="export_table_pos">0</TD><TD PORT="export_table_size">...</TD><TD>DataDir</TD><TD PORT="export_table_type">export_table</TD></TR>
-				<TR><TD PORT="import_table_pos">...</TD><TD PORT="import_table_size">...</TD><TD>DataDir</TD><TD PORT="import_table_type">import_table</TD></TR>
-				<TR><TD PORT="resource_table_pos">...</TD><TD PORT="resource_table_size">...</TD><TD>DataDir</TD><TD PORT="resource_table_type">resource_table</TD></TR>
-				<TR><TD PORT="exception_table_pos">...</TD><TD PORT="exception_table_size">...</TD><TD>DataDir</TD><TD PORT="exception_table_type">exception_table</TD></TR>
-				<TR><TD PORT="certificate_table_pos">...</TD><TD PORT="certificate_table_size">...</TD><TD>DataDir</TD><TD PORT="certificate_table_type">certificate_table</TD></TR>
-				<TR><TD PORT="base_relocation_table_pos">...</TD><TD PORT="base_relocation_table_size">...</TD><TD>DataDir</TD><TD PORT="base_relocation_table_type">base_relocation_table</TD></TR>
-				<TR><TD PORT="debug_pos">...</TD><TD PORT="debug_size">...</TD><TD>DataDir</TD><TD PORT="debug_type">debug</TD></TR>
-				<TR><TD PORT="architecture_pos">...</TD><TD PORT="architecture_size">...</TD><TD>DataDir</TD><TD PORT="architecture_type">architecture</TD></TR>
-				<TR><TD PORT="global_ptr_pos">...</TD><TD PORT="global_ptr_size">...</TD><TD>DataDir</TD><TD PORT="global_ptr_type">global_ptr</TD></TR>
-				<TR><TD PORT="tls_table_pos">...</TD><TD PORT="tls_table_size">...</TD><TD>DataDir</TD><TD PORT="tls_table_type">tls_table</TD></TR>
-				<TR><TD PORT="load_config_table_pos">...</TD><TD PORT="load_config_table_size">...</TD><TD>DataDir</TD><TD PORT="load_config_table_type">load_config_table</TD></TR>
-				<TR><TD PORT="bound_import_pos">...</TD><TD PORT="bound_import_size">...</TD><TD>DataDir</TD><TD PORT="bound_import_type">bound_import</TD></TR>
-				<TR><TD PORT="iat_pos">...</TD><TD PORT="iat_size">...</TD><TD>DataDir</TD><TD PORT="iat_type">iat</TD></TR>
-				<TR><TD PORT="delay_import_descriptor_pos">...</TD><TD PORT="delay_import_descriptor_size">...</TD><TD>DataDir</TD><TD PORT="delay_import_descriptor_type">delay_import_descriptor</TD></TR>
-				<TR><TD PORT="clr_runtime_header_pos">...</TD><TD PORT="clr_runtime_header_size">...</TD><TD>DataDir</TD><TD PORT="clr_runtime_header_type">clr_runtime_header</TD></TR>
+				<TR><TD PORT="export_table_pos">0</TD><TD PORT="export_table_size">8</TD><TD>DataDir</TD><TD PORT="export_table_type">export_table</TD></TR>
+				<TR><TD PORT="import_table_pos">8</TD><TD PORT="import_table_size">8</TD><TD>DataDir</TD><TD PORT="import_table_type">import_table</TD></TR>
+				<TR><TD PORT="resource_table_pos">16</TD><TD PORT="resource_table_size">8</TD><TD>DataDir</TD><TD PORT="resource_table_type">resource_table</TD></TR>
+				<TR><TD PORT="exception_table_pos">24</TD><TD PORT="exception_table_size">8</TD><TD>DataDir</TD><TD PORT="exception_table_type">exception_table</TD></TR>
+				<TR><TD PORT="certificate_table_pos">32</TD><TD PORT="certificate_table_size">8</TD><TD>DataDir</TD><TD PORT="certificate_table_type">certificate_table</TD></TR>
+				<TR><TD PORT="base_relocation_table_pos">40</TD><TD PORT="base_relocation_table_size">8</TD><TD>DataDir</TD><TD PORT="base_relocation_table_type">base_relocation_table</TD></TR>
+				<TR><TD PORT="debug_pos">48</TD><TD PORT="debug_size">8</TD><TD>DataDir</TD><TD PORT="debug_type">debug</TD></TR>
+				<TR><TD PORT="architecture_pos">56</TD><TD PORT="architecture_size">8</TD><TD>DataDir</TD><TD PORT="architecture_type">architecture</TD></TR>
+				<TR><TD PORT="global_ptr_pos">64</TD><TD PORT="global_ptr_size">8</TD><TD>DataDir</TD><TD PORT="global_ptr_type">global_ptr</TD></TR>
+				<TR><TD PORT="tls_table_pos">72</TD><TD PORT="tls_table_size">8</TD><TD>DataDir</TD><TD PORT="tls_table_type">tls_table</TD></TR>
+				<TR><TD PORT="load_config_table_pos">80</TD><TD PORT="load_config_table_size">8</TD><TD>DataDir</TD><TD PORT="load_config_table_type">load_config_table</TD></TR>
+				<TR><TD PORT="bound_import_pos">88</TD><TD PORT="bound_import_size">8</TD><TD>DataDir</TD><TD PORT="bound_import_type">bound_import</TD></TR>
+				<TR><TD PORT="iat_pos">96</TD><TD PORT="iat_size">8</TD><TD>DataDir</TD><TD PORT="iat_type">iat</TD></TR>
+				<TR><TD PORT="delay_import_descriptor_pos">104</TD><TD PORT="delay_import_descriptor_size">8</TD><TD>DataDir</TD><TD PORT="delay_import_descriptor_type">delay_import_descriptor</TD></TR>
+				<TR><TD PORT="clr_runtime_header_pos">112</TD><TD PORT="clr_runtime_header_size">8</TD><TD>DataDir</TD><TD PORT="clr_runtime_header_type">clr_runtime_header</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__data_dir {
@@ -88,9 +88,9 @@ digraph {
 
 			optional_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="std_pos">0</TD><TD PORT="std_size">...</TD><TD>OptionalHeaderStd</TD><TD PORT="std_type">std</TD></TR>
-				<TR><TD PORT="windows_pos">...</TD><TD PORT="windows_size">...</TD><TD>OptionalHeaderWindows</TD><TD PORT="windows_type">windows</TD></TR>
-				<TR><TD PORT="data_dirs_pos">...</TD><TD PORT="data_dirs_size">...</TD><TD>OptionalHeaderDataDirs</TD><TD PORT="data_dirs_type">data_dirs</TD></TR>
+				<TR><TD PORT="std_pos">0</TD><TD PORT="std_size">28</TD><TD>OptionalHeaderStd</TD><TD PORT="std_type">std</TD></TR>
+				<TR><TD PORT="windows_pos">28</TD><TD PORT="windows_size">108</TD><TD>OptionalHeaderWindows</TD><TD PORT="windows_type">windows</TD></TR>
+				<TR><TD PORT="data_dirs_pos">136</TD><TD PORT="data_dirs_size">120</TD><TD>OptionalHeaderDataDirs</TD><TD PORT="data_dirs_type">data_dirs</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__section {

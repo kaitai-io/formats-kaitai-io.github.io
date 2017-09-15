@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -25,16 +24,24 @@ public:
         COMPRESSION_LZSS = 64
     };
 
-    fallout_dat_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, fallout_dat_t* p_root = 0);
+    fallout_dat_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, fallout_dat_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~fallout_dat_t();
 
     class pstr_t : public kaitai::kstruct {
 
     public:
 
-        pstr_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, fallout_dat_t* p_root = 0);
+        pstr_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, fallout_dat_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~pstr_t();
 
     private:
@@ -54,8 +61,12 @@ public:
 
     public:
 
-        folder_t(kaitai::kstream* p_io, fallout_dat_t* p_parent = 0, fallout_dat_t* p_root = 0);
+        folder_t(kaitai::kstream* p__io, fallout_dat_t* p__parent = 0, fallout_dat_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~folder_t();
 
     private:
@@ -81,8 +92,12 @@ public:
 
     public:
 
-        file_t(kaitai::kstream* p_io, fallout_dat_t::folder_t* p_parent = 0, fallout_dat_t* p_root = 0);
+        file_t(kaitai::kstream* p__io, fallout_dat_t::folder_t* p__parent = 0, fallout_dat_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~file_t();
 
     private:

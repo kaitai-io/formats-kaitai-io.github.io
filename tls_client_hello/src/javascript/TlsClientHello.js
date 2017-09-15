@@ -79,8 +79,10 @@ var TlsClientHello = (function() {
     Sni.prototype._read = function() {
       this.listLength = this._io.readU2be();
       this.serverNames = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.serverNames.push(new ServerName(this._io, this, this._root));
+        i++;
       }
     }
 
@@ -133,8 +135,10 @@ var TlsClientHello = (function() {
     Alpn.prototype._read = function() {
       this.extLen = this._io.readU2be();
       this.alpnProtocols = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.alpnProtocols.push(new Protocol(this._io, this, this._root));
+        i++;
       }
     }
 
@@ -152,8 +156,10 @@ var TlsClientHello = (function() {
     Extensions.prototype._read = function() {
       this.len = this._io.readU2be();
       this.extensions = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.extensions.push(new Extension(this._io, this, this._root));
+        i++;
       }
     }
 

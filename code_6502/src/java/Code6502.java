@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
  */
 public class Code6502 extends KaitaiStruct {
     public static Code6502 fromFile(String fileName) throws IOException {
-        return new Code6502(new KaitaiStream(fileName));
+        return new Code6502(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum Opcode {
@@ -199,13 +200,17 @@ public class Code6502 extends KaitaiStruct {
     }
     private void _read() {
         this.operations = new ArrayList<Operation>();
-        while (!this._io.isEof()) {
-            this.operations.add(new Operation(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.operations.add(new Operation(this._io, this, _root));
+                i++;
+            }
         }
     }
     public static class Operation extends KaitaiStruct {
         public static Operation fromFile(String fileName) throws IOException {
-            return new Operation(new KaitaiStream(fileName));
+            return new Operation(new ByteBufferKaitaiStream(fileName));
         }
 
         public Operation(KaitaiStream _io) {
@@ -234,11 +239,11 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case BIT_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case ASL_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case ROR_ABS_X: {
@@ -250,11 +255,11 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case ORA_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case EOR_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case EOR_ABS: {
@@ -262,7 +267,7 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case EOR_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case ORA_ABS_X: {
@@ -274,11 +279,11 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case STY_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case EOR_IND_Y: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case ROL_ABS: {
@@ -286,11 +291,11 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case EOR_IMM: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case BMI_REL: {
-                this.args = this._io.readS1();
+                this.args = (int) (this._io.readS1());
                 break;
             }
             case INC_ABS_X: {
@@ -298,7 +303,7 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case CPY_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case JSR_ABS: {
@@ -310,23 +315,23 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case CMP_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case SBC_IND_Y: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case AND_X_IND: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case BVC_REL: {
-                this.args = this._io.readS1();
+                this.args = (int) (this._io.readS1());
                 break;
             }
             case ORA_X_IND: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case ORA_ABS_Y: {
@@ -338,7 +343,7 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case LDX_ZPG_Y: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case ROL_ABS_X: {
@@ -350,11 +355,11 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case STY_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case ORA_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case LDY_ABS_X: {
@@ -362,19 +367,19 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case ADC_IMM: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case SBC_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case LDX_IMM: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case BEQ_REL: {
-                this.args = this._io.readS1();
+                this.args = (int) (this._io.readS1());
                 break;
             }
             case SBC_ABS_X: {
@@ -386,39 +391,39 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case ORA_IMM: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case BCS_REL: {
-                this.args = this._io.readS1();
+                this.args = (int) (this._io.readS1());
                 break;
             }
             case SBC_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case STA_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case BCC_REL: {
-                this.args = this._io.readS1();
+                this.args = (int) (this._io.readS1());
                 break;
             }
             case AND_IMM: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case LDY_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case ADC_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case BNE_REL: {
-                this.args = this._io.readS1();
+                this.args = (int) (this._io.readS1());
                 break;
             }
             case EOR_ABS_Y: {
@@ -434,11 +439,11 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case LDY_IMM: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case LDA_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case CMP_ABS_Y: {
@@ -446,7 +451,7 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case LSR_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case EOR_ABS_X: {
@@ -462,27 +467,27 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case STA_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case STA_X_IND: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case CMP_IMM: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case EOR_X_IND: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case CMP_IND_Y: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case CMP_X_IND: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case ASL_ABS_X: {
@@ -490,7 +495,7 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case DEC_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case SBC_ABS_Y: {
@@ -498,7 +503,7 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case STX_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case LDA_ABS_X: {
@@ -506,15 +511,15 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case AND_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case SBC_X_IND: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case LDA_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case JMP_IND: {
@@ -530,7 +535,7 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case CMP_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case LDX_ABS: {
@@ -538,11 +543,11 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case ADC_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case ROR_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case AND_ABS_X: {
@@ -566,7 +571,7 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case STX_ZPG_Y: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case LDA_ABS_Y: {
@@ -574,27 +579,27 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case LDA_X_IND: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case CPY_IMM: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case ORA_IND_Y: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case ASL_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case AND_IND_Y: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case STA_IND_Y: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case ROR_ABS: {
@@ -602,19 +607,19 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case LDX_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case AND_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case CPX_IMM: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case BVS_REL: {
-                this.args = this._io.readS1();
+                this.args = (int) (this._io.readS1());
                 break;
             }
             case LDY_ABS: {
@@ -622,7 +627,7 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case INC_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case SBC_ABS: {
@@ -630,15 +635,15 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case ROL_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case SBC_IMM: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case ADC_X_IND: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case STA_ABS_X: {
@@ -658,35 +663,35 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case ROL_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case INC_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case LDA_IMM: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case DEC_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case ADC_IND_Y: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case LDA_IND_Y: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case BPL_REL: {
-                this.args = this._io.readS1();
+                this.args = (int) (this._io.readS1());
                 break;
             }
             case LSR_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case JMP_ABS: {
@@ -702,25 +707,25 @@ public class Code6502 extends KaitaiStruct {
                 break;
             }
             case ROR_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case LDY_ZPG_X: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             case CPX_ZPG: {
-                this.args = this._io.readU1();
+                this.args = (int) (this._io.readU1());
                 break;
             }
             }
         }
         private Opcode code;
-        private int args;
+        private Integer args;
         private Code6502 _root;
         private Code6502 _parent;
         public Opcode code() { return code; }
-        public int args() { return args; }
+        public Integer args() { return args; }
         public Code6502 _root() { return _root; }
         public Code6502 _parent() { return _parent; }
     }

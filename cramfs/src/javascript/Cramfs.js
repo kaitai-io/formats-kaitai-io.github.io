@@ -34,7 +34,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_flagFsidV2 !== undefined)
           return this._m_flagFsidV2;
-        this._m_flagFsidV2 = ((this.flags >> 0) & 1);
+        this._m_flagFsidV2 = ((this.flags >>> 0) & 1);
         return this._m_flagFsidV2;
       }
     });
@@ -42,7 +42,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_flagHoles !== undefined)
           return this._m_flagHoles;
-        this._m_flagHoles = ((this.flags >> 8) & 1);
+        this._m_flagHoles = ((this.flags >>> 8) & 1);
         return this._m_flagHoles;
       }
     });
@@ -50,7 +50,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_flagWrongSignature !== undefined)
           return this._m_flagWrongSignature;
-        this._m_flagWrongSignature = ((this.flags >> 9) & 1);
+        this._m_flagWrongSignature = ((this.flags >>> 9) & 1);
         return this._m_flagWrongSignature;
       }
     });
@@ -58,7 +58,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_flagSortedDirs !== undefined)
           return this._m_flagSortedDirs;
-        this._m_flagSortedDirs = ((this.flags >> 1) & 1);
+        this._m_flagSortedDirs = ((this.flags >>> 1) & 1);
         return this._m_flagSortedDirs;
       }
     });
@@ -66,7 +66,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_flagShiftedRootOffset !== undefined)
           return this._m_flagShiftedRootOffset;
-        this._m_flagShiftedRootOffset = ((this.flags >> 10) & 1);
+        this._m_flagShiftedRootOffset = ((this.flags >>> 10) & 1);
         return this._m_flagShiftedRootOffset;
       }
     });
@@ -130,7 +130,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_attr !== undefined)
           return this._m_attr;
-        this._m_attr = ((this.mode >> 9) & 7);
+        this._m_attr = ((this.mode >>> 9) & 7);
         return this._m_attr;
       }
     });
@@ -150,7 +150,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_permU !== undefined)
           return this._m_permU;
-        this._m_permU = ((this.mode >> 6) & 7);
+        this._m_permU = ((this.mode >>> 6) & 7);
         return this._m_permU;
       }
     });
@@ -186,7 +186,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_gid !== undefined)
           return this._m_gid;
-        this._m_gid = (this.sizeGid >> 24);
+        this._m_gid = (this.sizeGid >>> 24);
         return this._m_gid;
       }
     });
@@ -194,7 +194,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_permG !== undefined)
           return this._m_permG;
-        this._m_permG = ((this.mode >> 3) & 7);
+        this._m_permG = ((this.mode >>> 3) & 7);
         return this._m_permG;
       }
     });
@@ -224,7 +224,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_type !== undefined)
           return this._m_type;
-        this._m_type = ((this.mode >> 12) & 15);
+        this._m_type = ((this.mode >>> 12) & 15);
         return this._m_type;
       }
     });
@@ -232,7 +232,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_offset !== undefined)
           return this._m_offset;
-        this._m_offset = (((this.namelenOffset >> 6) & 67108863) << 2);
+        this._m_offset = (((this.namelenOffset >>> 6) & 67108863) << 2);
         return this._m_offset;
       }
     });
@@ -251,8 +251,10 @@ var Cramfs = (function() {
     DirInode.prototype._read = function() {
       if (this._io.size > 0) {
         this.children = [];
+        var i = 0;
         while (!this._io.isEof()) {
           this.children.push(new Inode(this._io, this, this._root));
+          i++;
         }
       }
     }

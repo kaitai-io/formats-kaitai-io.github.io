@@ -2,16 +2,18 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class BlenderBlend extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \BlenderBlend $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \BlenderBlend $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_hdr = new \BlenderBlend\Header($this->_io, $this, $this->_root);
         $this->_m_blocks = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_blocks[] = new \BlenderBlend\FileBlock($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_hdr;
@@ -23,8 +25,8 @@ class BlenderBlend extends \Kaitai\Struct\Struct {
 namespace \BlenderBlend;
 
 class Header extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \BlenderBlend $parent = null, \BlenderBlend $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \BlenderBlend $_parent = null, \BlenderBlend $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -70,8 +72,8 @@ class Header extends \Kaitai\Struct\Struct {
 namespace \BlenderBlend;
 
 class FileBlock extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \BlenderBlend $parent = null, \BlenderBlend $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \BlenderBlend $_parent = null, \BlenderBlend $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

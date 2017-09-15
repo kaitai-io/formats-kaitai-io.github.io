@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 
 public class Vfat extends KaitaiStruct {
     public static Vfat fromFile(String fileName) throws IOException {
-        return new Vfat(new KaitaiStream(fileName));
+        return new Vfat(new ByteBufferKaitaiStream(fileName));
     }
 
     public Vfat(KaitaiStream _io) {
@@ -34,7 +35,7 @@ public class Vfat extends KaitaiStruct {
      */
     public static class ExtBiosParamBlockFat32 extends KaitaiStruct {
         public static ExtBiosParamBlockFat32 fromFile(String fileName) throws IOException {
-            return new ExtBiosParamBlockFat32(new KaitaiStream(fileName));
+            return new ExtBiosParamBlockFat32(new ByteBufferKaitaiStream(fileName));
         }
 
         public ExtBiosParamBlockFat32(KaitaiStream _io) {
@@ -168,7 +169,7 @@ public class Vfat extends KaitaiStruct {
     }
     public static class BootSector extends KaitaiStruct {
         public static BootSector fromFile(String fileName) throws IOException {
-            return new BootSector(new KaitaiStream(fileName));
+            return new BootSector(new ByteBufferKaitaiStream(fileName));
         }
 
         public BootSector(KaitaiStream _io) {
@@ -309,7 +310,7 @@ public class Vfat extends KaitaiStruct {
     }
     public static class BiosParamBlock extends KaitaiStruct {
         public static BiosParamBlock fromFile(String fileName) throws IOException {
-            return new BiosParamBlock(new KaitaiStream(fileName));
+            return new BiosParamBlock(new ByteBufferKaitaiStream(fileName));
         }
 
         public BiosParamBlock(KaitaiStream _io) {
@@ -435,7 +436,7 @@ public class Vfat extends KaitaiStruct {
     }
     public static class RootDirectoryRec extends KaitaiStruct {
         public static RootDirectoryRec fromFile(String fileName) throws IOException {
-            return new RootDirectoryRec(new KaitaiStream(fileName));
+            return new RootDirectoryRec(new ByteBufferKaitaiStream(fileName));
         }
 
         public RootDirectoryRec(KaitaiStream _io) {
@@ -482,7 +483,7 @@ public class Vfat extends KaitaiStruct {
     }
     public static class RootDirectory extends KaitaiStruct {
         public static RootDirectory fromFile(String fileName) throws IOException {
-            return new RootDirectory(new KaitaiStream(fileName));
+            return new RootDirectory(new ByteBufferKaitaiStream(fileName));
         }
 
         public RootDirectory(KaitaiStream _io) {
@@ -519,7 +520,7 @@ public class Vfat extends KaitaiStruct {
      */
     public static class ExtBiosParamBlockFat16 extends KaitaiStruct {
         public static ExtBiosParamBlockFat16 fromFile(String fileName) throws IOException {
-            return new ExtBiosParamBlockFat16(new KaitaiStream(fileName));
+            return new ExtBiosParamBlockFat16(new ByteBufferKaitaiStream(fileName));
         }
 
         public ExtBiosParamBlockFat16(KaitaiStream _io) {
@@ -605,7 +606,7 @@ public class Vfat extends KaitaiStruct {
         long _pos = this._io.pos();
         this._io.seek(bootSector().posRootDir());
         this._raw_rootDir = this._io.readBytes(bootSector().sizeRootDir());
-        KaitaiStream _io__raw_rootDir = new KaitaiStream(_raw_rootDir);
+        KaitaiStream _io__raw_rootDir = new ByteBufferKaitaiStream(_raw_rootDir);
         this.rootDir = new RootDirectory(_io__raw_rootDir, this, _root);
         this._io.seek(_pos);
         return this.rootDir;

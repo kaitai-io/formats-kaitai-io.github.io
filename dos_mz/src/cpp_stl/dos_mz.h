@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -30,16 +29,24 @@ public:
     class mz_header_t;
     class relocation_t;
 
-    dos_mz_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, dos_mz_t* p_root = 0);
+    dos_mz_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, dos_mz_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~dos_mz_t();
 
     class mz_header_t : public kaitai::kstruct {
 
     public:
 
-        mz_header_t(kaitai::kstream* p_io, dos_mz_t* p_parent = 0, dos_mz_t* p_root = 0);
+        mz_header_t(kaitai::kstream* p__io, dos_mz_t* p__parent = 0, dos_mz_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~mz_header_t();
 
     private:
@@ -83,8 +90,12 @@ public:
 
     public:
 
-        relocation_t(kaitai::kstream* p_io, dos_mz_t* p_parent = 0, dos_mz_t* p_root = 0);
+        relocation_t(kaitai::kstream* p__io, dos_mz_t* p__parent = 0, dos_mz_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~relocation_t();
 
     private:

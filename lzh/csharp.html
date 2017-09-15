@@ -273,18 +273,23 @@ namespace Kaitai
             return new Lzh(new KaitaiStream(fileName));
         }
 
-        public Lzh(KaitaiStream io, KaitaiStruct parent = null, Lzh root = null) : base(io)
+        public Lzh(KaitaiStream p__io, KaitaiStruct p__parent = null, Lzh p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _entries = new List&lt;Record&gt;();
-            while (!m_io.IsEof) {
-                _entries.Add(new Record(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _entries.Add(new Record(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
         public partial class Record : KaitaiStruct
         {
             public static Record FromFile(string fileName)
@@ -292,18 +297,19 @@ namespace Kaitai
                 return new Record(new KaitaiStream(fileName));
             }
 
-            public Record(KaitaiStream io, Lzh parent = null, Lzh root = null) : base(io)
+            public Record(KaitaiStream p__io, Lzh p__parent = null, Lzh p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _headerLen = m_io.ReadU1();
                 if (HeaderLen &gt; 0) {
                     _fileRecord = new FileRecord(m_io, this, m_root);
                 }
-                }
+            }
             private byte _headerLen;
             private FileRecord _fileRecord;
             private Lzh m_root;
@@ -320,13 +326,14 @@ namespace Kaitai
                 return new FileRecord(new KaitaiStream(fileName));
             }
 
-            public FileRecord(KaitaiStream io, Lzh.Record parent = null, Lzh root = null) : base(io)
+            public FileRecord(KaitaiStream p__io, Lzh.Record p__parent = null, Lzh p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 __raw_header = m_io.ReadBytes((M_Parent.HeaderLen - 1));
                 var io___raw_header = new KaitaiStream(__raw_header);
                 _header = new Header(io___raw_header, this, m_root);
@@ -334,15 +341,15 @@ namespace Kaitai
                     _fileUncomprCrc16 = m_io.ReadU2le();
                 }
                 _body = m_io.ReadBytes(Header.Header1.FileSizeCompr);
-                }
+            }
             private Header _header;
-            private ushort _fileUncomprCrc16;
+            private ushort? _fileUncomprCrc16;
             private byte[] _body;
             private Lzh m_root;
             private Lzh.Record m_parent;
             private byte[] __raw_header;
             public Header Header { get { return _header; } }
-            public ushort FileUncomprCrc16 { get { return _fileUncomprCrc16; } }
+            public ushort? FileUncomprCrc16 { get { return _fileUncomprCrc16; } }
             public byte[] Body { get { return _body; } }
             public Lzh M_Root { get { return m_root; } }
             public Lzh.Record M_Parent { get { return m_parent; } }
@@ -355,13 +362,14 @@ namespace Kaitai
                 return new Header(new KaitaiStream(fileName));
             }
 
-            public Header(KaitaiStream io, Lzh.FileRecord parent = null, Lzh root = null) : base(io)
+            public Header(KaitaiStream p__io, Lzh.FileRecord p__parent = null, Lzh p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _header1 = new Header1(m_io, this, m_root);
                 if (Header1.LhaLevel == 0) {
                     _filenameLen = m_io.ReadU1();
@@ -378,13 +386,13 @@ namespace Kaitai
                 if (Header1.LhaLevel == 2) {
                     _extHeaderSize = m_io.ReadU2le();
                 }
-                }
+            }
             private Header1 _header1;
-            private byte _filenameLen;
+            private byte? _filenameLen;
             private string _filename;
-            private ushort _fileUncomprCrc16;
-            private byte _os;
-            private ushort _extHeaderSize;
+            private ushort? _fileUncomprCrc16;
+            private byte? _os;
+            private ushort? _extHeaderSize;
             private Lzh m_root;
             private Lzh.FileRecord m_parent;
 
@@ -392,11 +400,11 @@ namespace Kaitai
             /// Level-neutral header, same for all LHA levels. Subsequent fields order and meaning varies, based on LHA level specified in this header.
             /// &lt;/summary&gt;
             public Header1 Header1 { get { return _header1; } }
-            public byte FilenameLen { get { return _filenameLen; } }
+            public byte? FilenameLen { get { return _filenameLen; } }
             public string Filename { get { return _filename; } }
-            public ushort FileUncomprCrc16 { get { return _fileUncomprCrc16; } }
-            public byte Os { get { return _os; } }
-            public ushort ExtHeaderSize { get { return _extHeaderSize; } }
+            public ushort? FileUncomprCrc16 { get { return _fileUncomprCrc16; } }
+            public byte? Os { get { return _os; } }
+            public ushort? ExtHeaderSize { get { return _extHeaderSize; } }
             public Lzh M_Root { get { return m_root; } }
             public Lzh.FileRecord M_Parent { get { return m_parent; } }
         }
@@ -407,13 +415,14 @@ namespace Kaitai
                 return new Header1(new KaitaiStream(fileName));
             }
 
-            public Header1(KaitaiStream io, Lzh.Header parent = null, Lzh root = null) : base(io)
+            public Header1(KaitaiStream p__io, Lzh.Header p__parent = null, Lzh p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _headerChecksum = m_io.ReadU1();
                 _methodId = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytes(5));
                 _fileSizeCompr = m_io.ReadU4le();
@@ -421,7 +430,7 @@ namespace Kaitai
                 _fileTimestamp = m_io.ReadU4le();
                 _attr = m_io.ReadU1();
                 _lhaLevel = m_io.ReadU1();
-                }
+            }
             private byte _headerChecksum;
             private string _methodId;
             private uint _fileSizeCompr;

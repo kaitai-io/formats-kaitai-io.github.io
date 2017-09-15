@@ -224,10 +224,10 @@ are the fields' default values, etc, etc.</li>
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = GoogleProtobuf(KaitaiStream(raw))</code></pre>
+data = GoogleProtobuf(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -309,8 +309,10 @@ class GoogleProtobuf(KaitaiStruct):
 
     def _read(self):
         self.pairs = []
+        i = 0
         while not self._io.is_eof():
             self.pairs.append(self._root.Pair(self._io, self, self._root))
+            i += 1
 
 
     class Pair(KaitaiStruct):

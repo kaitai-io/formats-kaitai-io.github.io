@@ -526,8 +526,10 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
         @header = @_io.read_bytes(header_size)
       end
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries << RenderwareBinaryStream.new(@_io)
+        i += 1
       end
       self
     end

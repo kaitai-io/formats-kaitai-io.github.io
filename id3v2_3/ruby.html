@@ -300,9 +300,11 @@ class Id3v23 &lt; Kaitai::Struct::Struct
         @header_ex = HeaderEx.new(@_io, self, @_root)
       end
       @frames = []
+      i = 0
       begin
         _ = Frame.new(@_io, self, @_root)
         @frames &lt;&lt; _
+        i += 1
       end until  (((_io.pos + _.size) &gt; header.size.value) || (_.is_invalid)) 
       if header.flags.flag_headerex
         @padding = @_io.read_bytes((header_ex.padding_size - _io.pos))

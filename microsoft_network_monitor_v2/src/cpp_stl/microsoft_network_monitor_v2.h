@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -140,16 +139,24 @@ public:
         LINKTYPE_ISO_14443 = 264
     };
 
-    microsoft_network_monitor_v2_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, microsoft_network_monitor_v2_t* p_root = 0);
+    microsoft_network_monitor_v2_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, microsoft_network_monitor_v2_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~microsoft_network_monitor_v2_t();
 
     class frame_index_t : public kaitai::kstruct {
 
     public:
 
-        frame_index_t(kaitai::kstream* p_io, microsoft_network_monitor_v2_t* p_parent = 0, microsoft_network_monitor_v2_t* p_root = 0);
+        frame_index_t(kaitai::kstream* p__io, microsoft_network_monitor_v2_t* p__parent = 0, microsoft_network_monitor_v2_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~frame_index_t();
 
     private:
@@ -172,8 +179,12 @@ public:
 
     public:
 
-        frame_index_entry_t(kaitai::kstream* p_io, microsoft_network_monitor_v2_t::frame_index_t* p_parent = 0, microsoft_network_monitor_v2_t* p_root = 0);
+        frame_index_entry_t(kaitai::kstream* p__io, microsoft_network_monitor_v2_t::frame_index_t* p__parent = 0, microsoft_network_monitor_v2_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~frame_index_entry_t();
 
     private:
@@ -212,8 +223,12 @@ public:
 
     public:
 
-        frame_t(kaitai::kstream* p_io, microsoft_network_monitor_v2_t::frame_index_entry_t* p_parent = 0, microsoft_network_monitor_v2_t* p_root = 0);
+        frame_t(kaitai::kstream* p__io, microsoft_network_monitor_v2_t::frame_index_entry_t* p__parent = 0, microsoft_network_monitor_v2_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~frame_t();
 
     private:
@@ -221,6 +236,12 @@ public:
         uint32_t m_orig_len;
         uint32_t m_inc_len;
         ethernet_frame_t* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
         microsoft_network_monitor_v2_t* m__root;
         microsoft_network_monitor_v2_t::frame_index_entry_t* m__parent;
         std::string m__raw_body;

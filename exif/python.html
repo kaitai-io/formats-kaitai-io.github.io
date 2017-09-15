@@ -188,10 +188,10 @@ section#format-index .row {
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = Exif(KaitaiStream(raw))</code></pre>
+data = Exif(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -231,8 +231,8 @@ from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, 
 if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
     raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
 
-from exif_le import ExifLe
 from exif_be import ExifBe
+from exif_le import ExifLe
 class Exif(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

@@ -236,8 +236,10 @@ class Cramfs(KaitaiStruct):
         def _read(self):
             if self._io.size() > 0:
                 self.children = []
+                i = 0
                 while not self._io.is_eof():
                     self.children.append(self._root.Inode(self._io, self, self._root))
+                    i += 1
 
 
 

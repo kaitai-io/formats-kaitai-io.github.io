@@ -4,8 +4,8 @@
 
 
 
-quake_pak_t::quake_pak_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, quake_pak_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+quake_pak_t::quake_pak_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, quake_pak_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_index = false;
     _read();
@@ -24,16 +24,20 @@ quake_pak_t::~quake_pak_t() {
     }
 }
 
-quake_pak_t::index_struct_t::index_struct_t(kaitai::kstream *p_io, quake_pak_t* p_parent, quake_pak_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+quake_pak_t::index_struct_t::index_struct_t(kaitai::kstream* p__io, quake_pak_t* p__parent, quake_pak_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void quake_pak_t::index_struct_t::_read() {
     m_entries = new std::vector<index_entry_t*>();
-    while (!m__io->is_eof()) {
-        m_entries->push_back(new index_entry_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new index_entry_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -44,9 +48,9 @@ quake_pak_t::index_struct_t::~index_struct_t() {
     delete m_entries;
 }
 
-quake_pak_t::index_entry_t::index_entry_t(kaitai::kstream *p_io, quake_pak_t::index_struct_t* p_parent, quake_pak_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+quake_pak_t::index_entry_t::index_entry_t(kaitai::kstream* p__io, quake_pak_t::index_struct_t* p__parent, quake_pak_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_body = false;
     _read();
 }
@@ -58,6 +62,8 @@ void quake_pak_t::index_entry_t::_read() {
 }
 
 quake_pak_t::index_entry_t::~index_entry_t() {
+    if (f_body) {
+    }
 }
 
 std::string quake_pak_t::index_entry_t::body() {

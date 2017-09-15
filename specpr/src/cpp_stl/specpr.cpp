@@ -4,16 +4,20 @@
 
 
 
-specpr_t::specpr_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, specpr_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+specpr_t::specpr_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
 
 void specpr_t::_read() {
     m_records = new std::vector<record_t*>();
-    while (!m__io->is_eof()) {
-        m_records->push_back(new record_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_records->push_back(new record_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -24,9 +28,9 @@ specpr_t::~specpr_t() {
     delete m_records;
 }
 
-specpr_t::data_initial_t::data_initial_t(kaitai::kstream *p_io, specpr_t::record_t* p_parent, specpr_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+specpr_t::data_initial_t::data_initial_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_phase_angle_arcsec = false;
     _read();
 }
@@ -98,9 +102,9 @@ double specpr_t::data_initial_t::phase_angle_arcsec() {
     return m_phase_angle_arcsec;
 }
 
-specpr_t::coarse_timestamp_t::coarse_timestamp_t(kaitai::kstream *p_io, specpr_t::data_initial_t* p_parent, specpr_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+specpr_t::coarse_timestamp_t::coarse_timestamp_t(kaitai::kstream* p__io, specpr_t::data_initial_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_seconds = false;
     _read();
 }
@@ -120,9 +124,9 @@ double specpr_t::coarse_timestamp_t::seconds() {
     return m_seconds;
 }
 
-specpr_t::icflag_t::icflag_t(kaitai::kstream *p_io, specpr_t::record_t* p_parent, specpr_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+specpr_t::icflag_t::icflag_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_type = false;
     _read();
 }
@@ -148,9 +152,9 @@ specpr_t::record_type_t specpr_t::icflag_t::type() {
     return m_type;
 }
 
-specpr_t::data_continuation_t::data_continuation_t(kaitai::kstream *p_io, specpr_t::record_t* p_parent, specpr_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+specpr_t::data_continuation_t::data_continuation_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -167,9 +171,9 @@ specpr_t::data_continuation_t::~data_continuation_t() {
     delete m_cdata;
 }
 
-specpr_t::identifiers_t::identifiers_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, specpr_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+specpr_t::identifiers_t::identifiers_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -181,9 +185,9 @@ void specpr_t::identifiers_t::_read() {
 specpr_t::identifiers_t::~identifiers_t() {
 }
 
-specpr_t::illum_angle_t::illum_angle_t(kaitai::kstream *p_io, specpr_t::data_initial_t* p_parent, specpr_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+specpr_t::illum_angle_t::illum_angle_t(kaitai::kstream* p__io, specpr_t::data_initial_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_seconds_total = false;
     f_minutes_total = false;
     f_degrees_total = false;
@@ -221,9 +225,9 @@ int32_t specpr_t::illum_angle_t::degrees_total() {
     return m_degrees_total;
 }
 
-specpr_t::text_initial_t::text_initial_t(kaitai::kstream *p_io, specpr_t::record_t* p_parent, specpr_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+specpr_t::text_initial_t::text_initial_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -238,48 +242,62 @@ specpr_t::text_initial_t::~text_initial_t() {
     delete m_ids;
 }
 
-specpr_t::record_t::record_t(kaitai::kstream *p_io, specpr_t* p_parent, specpr_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+specpr_t::record_t::record_t(kaitai::kstream* p__io, specpr_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void specpr_t::record_t::_read() {
     m_icflag = new icflag_t(m__io, this, m__root);
+    n_content = true;
     switch (icflag()->type()) {
-    case RECORD_TYPE_DATA_INITIAL:
+    case RECORD_TYPE_DATA_INITIAL: {
+        n_content = false;
         m__raw_content = m__io->read_bytes((1536 - 4));
         m__io__raw_content = new kaitai::kstream(m__raw_content);
         m_content = new data_initial_t(m__io__raw_content, this, m__root);
         break;
-    case RECORD_TYPE_DATA_CONTINUATION:
+    }
+    case RECORD_TYPE_DATA_CONTINUATION: {
+        n_content = false;
         m__raw_content = m__io->read_bytes((1536 - 4));
         m__io__raw_content = new kaitai::kstream(m__raw_content);
         m_content = new data_continuation_t(m__io__raw_content, this, m__root);
         break;
-    case RECORD_TYPE_TEXT_CONTINUATION:
+    }
+    case RECORD_TYPE_TEXT_CONTINUATION: {
+        n_content = false;
         m__raw_content = m__io->read_bytes((1536 - 4));
         m__io__raw_content = new kaitai::kstream(m__raw_content);
         m_content = new text_continuation_t(m__io__raw_content, this, m__root);
         break;
-    case RECORD_TYPE_TEXT_INITIAL:
+    }
+    case RECORD_TYPE_TEXT_INITIAL: {
+        n_content = false;
         m__raw_content = m__io->read_bytes((1536 - 4));
         m__io__raw_content = new kaitai::kstream(m__raw_content);
         m_content = new text_initial_t(m__io__raw_content, this, m__root);
         break;
-    default:
+    }
+    default: {
         m__raw_content = m__io->read_bytes((1536 - 4));
         break;
+    }
     }
 }
 
 specpr_t::record_t::~record_t() {
     delete m_icflag;
+    if (!n_content) {
+        delete m__io__raw_content;
+        delete m_content;
+    }
 }
 
-specpr_t::text_continuation_t::text_continuation_t(kaitai::kstream *p_io, specpr_t::record_t* p_parent, specpr_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+specpr_t::text_continuation_t::text_continuation_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

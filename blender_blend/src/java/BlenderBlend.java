@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.nio.charset.Charset;
 
 public class BlenderBlend extends KaitaiStruct {
     public static BlenderBlend fromFile(String fileName) throws IOException {
-        return new BlenderBlend(new KaitaiStream(fileName));
+        return new BlenderBlend(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum PtrSize {
@@ -60,13 +61,17 @@ public class BlenderBlend extends KaitaiStruct {
     private void _read() {
         this.hdr = new Header(this._io, this, _root);
         this.blocks = new ArrayList<FileBlock>();
-        while (!this._io.isEof()) {
-            this.blocks.add(new FileBlock(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.blocks.add(new FileBlock(this._io, this, _root));
+                i++;
+            }
         }
     }
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
-            return new Header(new KaitaiStream(fileName));
+            return new Header(new ByteBufferKaitaiStream(fileName));
         }
 
         public Header(KaitaiStream _io) {
@@ -128,7 +133,7 @@ public class BlenderBlend extends KaitaiStruct {
     }
     public static class FileBlock extends KaitaiStruct {
         public static FileBlock fromFile(String fileName) throws IOException {
-            return new FileBlock(new KaitaiStream(fileName));
+            return new FileBlock(new ByteBufferKaitaiStream(fileName));
         }
 
         public FileBlock(KaitaiStream _io) {

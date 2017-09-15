@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -41,16 +40,24 @@ public:
     class hive_bin_cell_t;
     class file_header_t;
 
-    regf_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, regf_t* p_root = 0);
+    regf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, regf_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~regf_t();
 
     class filetime_t : public kaitai::kstruct {
 
     public:
 
-        filetime_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, regf_t* p_root = 0);
+        filetime_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, regf_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~filetime_t();
 
     private:
@@ -68,8 +75,12 @@ public:
 
     public:
 
-        hive_bin_t(kaitai::kstream* p_io, regf_t* p_parent = 0, regf_t* p_root = 0);
+        hive_bin_t(kaitai::kstream* p__io, regf_t* p__parent = 0, regf_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~hive_bin_t();
 
     private:
@@ -89,8 +100,12 @@ public:
 
     public:
 
-        hive_bin_header_t(kaitai::kstream* p_io, regf_t::hive_bin_t* p_parent = 0, regf_t* p_root = 0);
+        hive_bin_header_t(kaitai::kstream* p__io, regf_t::hive_bin_t* p__parent = 0, regf_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~hive_bin_header_t();
 
     private:
@@ -151,8 +166,12 @@ public:
         class named_key_t;
         class sub_key_list_ri_t;
 
-        hive_bin_cell_t(kaitai::kstream* p_io, regf_t::hive_bin_t* p_parent = 0, regf_t* p_root = 0);
+        hive_bin_cell_t(kaitai::kstream* p__io, regf_t::hive_bin_t* p__parent = 0, regf_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~hive_bin_cell_t();
 
         class sub_key_list_vk_t : public kaitai::kstruct {
@@ -178,8 +197,12 @@ public:
                 VK_FLAGS_VALUE_COMP_NAME = 1
             };
 
-            sub_key_list_vk_t(kaitai::kstream* p_io, regf_t::hive_bin_cell_t* p_parent = 0, regf_t* p_root = 0);
+            sub_key_list_vk_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t* p__parent = 0, regf_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~sub_key_list_vk_t();
 
         private:
@@ -216,16 +239,24 @@ public:
         public:
             class item_t;
 
-            sub_key_list_lh_lf_t(kaitai::kstream* p_io, regf_t::hive_bin_cell_t* p_parent = 0, regf_t* p_root = 0);
+            sub_key_list_lh_lf_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t* p__parent = 0, regf_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~sub_key_list_lh_lf_t();
 
             class item_t : public kaitai::kstruct {
 
             public:
 
-                item_t(kaitai::kstream* p_io, regf_t::hive_bin_cell_t::sub_key_list_lh_lf_t* p_parent = 0, regf_t* p_root = 0);
+                item_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t::sub_key_list_lh_lf_t* p__parent = 0, regf_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~item_t();
 
             private:
@@ -258,8 +289,12 @@ public:
 
         public:
 
-            sub_key_list_sk_t(kaitai::kstream* p_io, regf_t::hive_bin_cell_t* p_parent = 0, regf_t* p_root = 0);
+            sub_key_list_sk_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t* p__parent = 0, regf_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~sub_key_list_sk_t();
 
         private:
@@ -284,16 +319,24 @@ public:
         public:
             class item_t;
 
-            sub_key_list_li_t(kaitai::kstream* p_io, regf_t::hive_bin_cell_t* p_parent = 0, regf_t* p_root = 0);
+            sub_key_list_li_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t* p__parent = 0, regf_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~sub_key_list_li_t();
 
             class item_t : public kaitai::kstruct {
 
             public:
 
-                item_t(kaitai::kstream* p_io, regf_t::hive_bin_cell_t::sub_key_list_li_t* p_parent = 0, regf_t* p_root = 0);
+                item_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t::sub_key_list_li_t* p__parent = 0, regf_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~item_t();
 
             private:
@@ -339,8 +382,12 @@ public:
                 NK_FLAGS_UNKNOWN2 = 16384
             };
 
-            named_key_t(kaitai::kstream* p_io, regf_t::hive_bin_cell_t* p_parent = 0, regf_t* p_root = 0);
+            named_key_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t* p__parent = 0, regf_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~named_key_t();
 
         private:
@@ -397,16 +444,24 @@ public:
         public:
             class item_t;
 
-            sub_key_list_ri_t(kaitai::kstream* p_io, regf_t::hive_bin_cell_t* p_parent = 0, regf_t* p_root = 0);
+            sub_key_list_ri_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t* p__parent = 0, regf_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~sub_key_list_ri_t();
 
             class item_t : public kaitai::kstruct {
 
             public:
 
-                item_t(kaitai::kstream* p_io, regf_t::hive_bin_cell_t::sub_key_list_ri_t* p_parent = 0, regf_t* p_root = 0);
+                item_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t::sub_key_list_ri_t* p__parent = 0, regf_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~item_t();
 
             private:
@@ -451,6 +506,12 @@ public:
         int32_t m_cell_size_raw;
         std::string m_identifier;
         kaitai::kstruct* m_data;
+        bool n_data;
+
+    public:
+        bool _is_null_data() { data(); return n_data; };
+
+    private:
         regf_t* m__root;
         regf_t::hive_bin_t* m__parent;
         std::string m__raw_data;
@@ -479,8 +540,12 @@ public:
             FILE_FORMAT_DIRECT_MEMORY_LOAD = 1
         };
 
-        file_header_t(kaitai::kstream* p_io, regf_t* p_parent = 0, regf_t* p_root = 0);
+        file_header_t(kaitai::kstream* p__io, regf_t* p__parent = 0, regf_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~file_header_t();
 
     private:
@@ -532,7 +597,7 @@ private:
     regf_t* m__root;
     kaitai::kstruct* m__parent;
     std::vector<std::string>* m__raw_hive_bins;
-    kaitai::kstream* m__io__raw_hive_bins;
+    std::vector<kaitai::kstream*>* m__io__raw_hive_bins;
 
 public:
     file_header_t* header() const { return m_header; }
@@ -540,7 +605,7 @@ public:
     regf_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
     std::vector<std::string>* _raw_hive_bins() const { return m__raw_hive_bins; }
-    kaitai::kstream* _io__raw_hive_bins() const { return m__io__raw_hive_bins; }
+    std::vector<kaitai::kstream*>* _io__raw_hive_bins() const { return m__io__raw_hive_bins; }
 };
 
 #endif  // REGF_H_

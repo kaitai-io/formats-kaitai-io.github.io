@@ -11,24 +11,26 @@ namespace Kaitai
             return new GranTurismoVol(new KaitaiStream(fileName));
         }
 
-        public GranTurismoVol(KaitaiStream io, KaitaiStruct parent = null, GranTurismoVol root = null) : base(io)
+        public GranTurismoVol(KaitaiStream p__io, KaitaiStruct p__parent = null, GranTurismoVol p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_ofsDir = false;
             f_files = false;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _magic = m_io.EnsureFixedContents(new byte[] { 71, 84, 70, 83, 0, 0, 0, 0 });
             _numFiles = m_io.ReadU2le();
             _numEntries = m_io.ReadU2le();
             _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
             _offsets = new List<uint>((int) (NumFiles));
-            for (var i = 0; i < NumFiles; i++) {
+            for (var i = 0; i < NumFiles; i++)
+            {
                 _offsets.Add(m_io.ReadU4le());
             }
-            }
+        }
         public partial class FileInfo : KaitaiStruct
         {
             public static FileInfo FromFile(string fileName)
@@ -36,22 +38,23 @@ namespace Kaitai
                 return new FileInfo(new KaitaiStream(fileName));
             }
 
-            public FileInfo(KaitaiStream io, GranTurismoVol parent = null, GranTurismoVol root = null) : base(io)
+            public FileInfo(KaitaiStream p__io, GranTurismoVol p__parent = null, GranTurismoVol p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_size = false;
                 f_body = false;
                 f_isDir = false;
                 f_isLastEntry = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _timestamp = m_io.ReadU4le();
                 _offsetIdx = m_io.ReadU2le();
                 _flags = m_io.ReadU1();
                 _name = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(KaitaiStream.BytesStripRight(m_io.ReadBytes(25), 0), 0, false));
-                }
+            }
             private bool f_size;
             private int _size;
             public int Size
@@ -146,7 +149,8 @@ namespace Kaitai
                 long _pos = m_io.Pos;
                 m_io.Seek((OfsDir & 4294965248));
                 _files = new List<FileInfo>((int) (M_Root.NumEntries));
-                for (var i = 0; i < M_Root.NumEntries; i++) {
+                for (var i = 0; i < M_Root.NumEntries; i++)
+                {
                     _files.Add(new FileInfo(m_io, this, m_root));
                 }
                 m_io.Seek(_pos);

@@ -29,10 +29,12 @@ class GlibcUtmp < Kaitai::Struct::Struct
   def _read
     @_raw_records = []
     @records = []
+    i = 0
     while not @_io.eof?
       @_raw_records << @_io.read_bytes(384)
       io = Kaitai::Struct::Stream.new(@_raw_records.last)
       @records << Record.new(io, self, @_root)
+      i += 1
     end
     self
   end

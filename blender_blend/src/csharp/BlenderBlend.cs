@@ -11,6 +11,7 @@ namespace Kaitai
             return new BlenderBlend(new KaitaiStream(fileName));
         }
 
+
         public enum PtrSize
         {
             Bits64 = 45,
@@ -22,20 +23,24 @@ namespace Kaitai
             Be = 86,
             Le = 118,
         }
-
-        public BlenderBlend(KaitaiStream io, KaitaiStruct parent = null, BlenderBlend root = null) : base(io)
+        public BlenderBlend(KaitaiStream p__io, KaitaiStruct p__parent = null, BlenderBlend p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _hdr = new Header(m_io, this, m_root);
             _blocks = new List<FileBlock>();
-            while (!m_io.IsEof) {
-                _blocks.Add(new FileBlock(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _blocks.Add(new FileBlock(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
         public partial class Header : KaitaiStruct
         {
             public static Header FromFile(string fileName)
@@ -43,19 +48,20 @@ namespace Kaitai
                 return new Header(new KaitaiStream(fileName));
             }
 
-            public Header(KaitaiStream io, BlenderBlend parent = null, BlenderBlend root = null) : base(io)
+            public Header(KaitaiStream p__io, BlenderBlend p__parent = null, BlenderBlend p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_psize = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.EnsureFixedContents(new byte[] { 66, 76, 69, 78, 68, 69, 82 });
                 _ptrSizeId = ((BlenderBlend.PtrSize) m_io.ReadU1());
                 _endian = ((BlenderBlend.Endian) m_io.ReadU1());
                 _version = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(3));
-                }
+            }
             private bool f_psize;
             private sbyte _psize;
 
@@ -105,20 +111,21 @@ namespace Kaitai
                 return new FileBlock(new KaitaiStream(fileName));
             }
 
-            public FileBlock(KaitaiStream io, BlenderBlend parent = null, BlenderBlend root = null) : base(io)
+            public FileBlock(KaitaiStream p__io, BlenderBlend p__parent = null, BlenderBlend p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _code = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(4));
                 _size = m_io.ReadU4le();
                 _memAddr = m_io.ReadBytes(M_Root.Hdr.Psize);
                 _sdnaIndex = m_io.ReadU4le();
                 _count = m_io.ReadU4le();
                 _body = m_io.ReadBytes(Size);
-                }
+            }
             private string _code;
             private uint _size;
             private byte[] _memAddr;

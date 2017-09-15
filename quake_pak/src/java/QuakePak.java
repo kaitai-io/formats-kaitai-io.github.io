@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.nio.charset.Charset;
 
 public class QuakePak extends KaitaiStruct {
     public static QuakePak fromFile(String fileName) throws IOException {
-        return new QuakePak(new KaitaiStream(fileName));
+        return new QuakePak(new ByteBufferKaitaiStream(fileName));
     }
 
     public QuakePak(KaitaiStream _io) {
@@ -32,7 +33,7 @@ public class QuakePak extends KaitaiStruct {
     }
     public static class IndexStruct extends KaitaiStruct {
         public static IndexStruct fromFile(String fileName) throws IOException {
-            return new IndexStruct(new KaitaiStream(fileName));
+            return new IndexStruct(new ByteBufferKaitaiStream(fileName));
         }
 
         public IndexStruct(KaitaiStream _io) {
@@ -51,8 +52,12 @@ public class QuakePak extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<IndexEntry>();
-            while (!this._io.isEof()) {
-                this.entries.add(new IndexEntry(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new IndexEntry(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<IndexEntry> entries;
@@ -64,7 +69,7 @@ public class QuakePak extends KaitaiStruct {
     }
     public static class IndexEntry extends KaitaiStruct {
         public static IndexEntry fromFile(String fileName) throws IOException {
-            return new IndexEntry(new KaitaiStream(fileName));
+            return new IndexEntry(new ByteBufferKaitaiStream(fileName));
         }
 
         public IndexEntry(KaitaiStream _io) {
@@ -115,7 +120,7 @@ public class QuakePak extends KaitaiStruct {
         long _pos = this._io.pos();
         this._io.seek(indexOfs());
         this._raw_index = this._io.readBytes(indexSize());
-        KaitaiStream _io__raw_index = new KaitaiStream(_raw_index);
+        KaitaiStream _io__raw_index = new ByteBufferKaitaiStream(_raw_index);
         this.index = new IndexStruct(_io__raw_index, this, _root);
         this._io.seek(_pos);
         return this.index;

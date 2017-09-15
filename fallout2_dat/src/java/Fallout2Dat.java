@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 
 public class Fallout2Dat extends KaitaiStruct {
     public static Fallout2Dat fromFile(String fileName) throws IOException {
-        return new Fallout2Dat(new KaitaiStream(fileName));
+        return new Fallout2Dat(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum Compression {
@@ -46,7 +47,7 @@ public class Fallout2Dat extends KaitaiStruct {
     }
     public static class Pstr extends KaitaiStruct {
         public static Pstr fromFile(String fileName) throws IOException {
-            return new Pstr(new KaitaiStream(fileName));
+            return new Pstr(new ByteBufferKaitaiStream(fileName));
         }
 
         public Pstr(KaitaiStream _io) {
@@ -78,7 +79,7 @@ public class Fallout2Dat extends KaitaiStruct {
     }
     public static class Footer extends KaitaiStruct {
         public static Footer fromFile(String fileName) throws IOException {
-            return new Footer(new KaitaiStream(fileName));
+            return new Footer(new ByteBufferKaitaiStream(fileName));
         }
 
         public Footer(KaitaiStream _io) {
@@ -110,7 +111,7 @@ public class Fallout2Dat extends KaitaiStruct {
     }
     public static class Index extends KaitaiStruct {
         public static Index fromFile(String fileName) throws IOException {
-            return new Index(new KaitaiStream(fileName));
+            return new Index(new ByteBufferKaitaiStream(fileName));
         }
 
         public Index(KaitaiStream _io) {
@@ -145,7 +146,7 @@ public class Fallout2Dat extends KaitaiStruct {
     }
     public static class File extends KaitaiStruct {
         public static File fromFile(String fileName) throws IOException {
-            return new File(new KaitaiStream(fileName));
+            return new File(new ByteBufferKaitaiStream(fileName));
         }
 
         public File(KaitaiStream _io) {

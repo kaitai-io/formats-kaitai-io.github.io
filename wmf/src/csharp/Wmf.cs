@@ -4,12 +4,17 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <remarks>
+    /// Reference: <a href="http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf">Source</a>
+    /// </remarks>
     public partial class Wmf : KaitaiStruct
     {
         public static Wmf FromFile(string fileName)
         {
             return new Wmf(new KaitaiStream(fileName));
         }
+
 
         public enum Func
         {
@@ -85,24 +90,390 @@ namespace Kaitai
             Stretchdib = 3907,
         }
 
-        public Wmf(KaitaiStream io, KaitaiStruct parent = null, Wmf root = null) : base(io)
+        public enum BinRasterOp
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            Black = 1,
+            Notmergepen = 2,
+            Masknotpen = 3,
+            Notcopypen = 4,
+            Maskpennot = 5,
+            Not = 6,
+            Xorpen = 7,
+            Notmaskpen = 8,
+            Maskpen = 9,
+            Notxorpen = 10,
+            Nop = 11,
+            Mergenotpen = 12,
+            Copypen = 13,
+            Mergepennot = 14,
+            Mergepen = 15,
+            White = 16,
+        }
+
+        public enum MixMode
+        {
+            Transparent = 1,
+            Opaque = 2,
+        }
+
+        public enum PolyFillMode
+        {
+            Alternate = 1,
+            Winding = 2,
+        }
+        public Wmf(KaitaiStream p__io, KaitaiStruct p__parent = null, Wmf p__root = null) : base(p__io)
+        {
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
-            _specialHdr = new SpecialHeader(m_io, this, m_root);
-            _header = new WmfHeader(m_io, this, m_root);
+        private void _read()
+        {
+            _specialHeader = new SpecialHeader(m_io, this, m_root);
+            _header = new Header(m_io, this, m_root);
             _records = new List<Record>();
             {
+                var i = 0;
                 Record M_;
                 do {
                     M_ = new Record(m_io, this, m_root);
                     _records.Add(M_);
+                    i++;
                 } while (!(M_.Function == Func.Eof));
             }
+        }
+        public partial class ParamsSetwindoworg : KaitaiStruct
+        {
+            public static ParamsSetwindoworg FromFile(string fileName)
+            {
+                return new ParamsSetwindoworg(new KaitaiStream(fileName));
             }
+
+            public ParamsSetwindoworg(KaitaiStream p__io, Wmf.Record p__parent = null, Wmf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _y = m_io.ReadS2le();
+                _x = m_io.ReadS2le();
+            }
+            private short _y;
+            private short _x;
+            private Wmf m_root;
+            private Wmf.Record m_parent;
+
+            /// <summary>
+            /// Y coordinate of the window origin, in logical units.
+            /// </summary>
+            public short Y { get { return _y; } }
+
+            /// <summary>
+            /// X coordinate of the window origin, in logical units.
+            /// </summary>
+            public short X { get { return _x; } }
+            public Wmf M_Root { get { return m_root; } }
+            public Wmf.Record M_Parent { get { return m_parent; } }
+        }
+        public partial class ParamsSetbkmode : KaitaiStruct
+        {
+            public static ParamsSetbkmode FromFile(string fileName)
+            {
+                return new ParamsSetbkmode(new KaitaiStream(fileName));
+            }
+
+            public ParamsSetbkmode(KaitaiStream p__io, Wmf.Record p__parent = null, Wmf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _bkMode = ((Wmf.MixMode) m_io.ReadU2le());
+            }
+            private MixMode _bkMode;
+            private Wmf m_root;
+            private Wmf.Record m_parent;
+
+            /// <summary>
+            /// Defines current graphic context background mix mode.
+            /// </summary>
+            public MixMode BkMode { get { return _bkMode; } }
+            public Wmf M_Root { get { return m_root; } }
+            public Wmf.Record M_Parent { get { return m_parent; } }
+        }
+        public partial class PointS : KaitaiStruct
+        {
+            public static PointS FromFile(string fileName)
+            {
+                return new PointS(new KaitaiStream(fileName));
+            }
+
+            public PointS(KaitaiStream p__io, KaitaiStruct p__parent = null, Wmf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _x = m_io.ReadS2le();
+                _y = m_io.ReadS2le();
+            }
+            private short _x;
+            private short _y;
+            private Wmf m_root;
+            private KaitaiStruct m_parent;
+
+            /// <summary>
+            /// X coordinate of the point, in logical units.
+            /// </summary>
+            public short X { get { return _x; } }
+
+            /// <summary>
+            /// Y coordinate of the point, in logical units.
+            /// </summary>
+            public short Y { get { return _y; } }
+            public Wmf M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class ParamsSetwindowext : KaitaiStruct
+        {
+            public static ParamsSetwindowext FromFile(string fileName)
+            {
+                return new ParamsSetwindowext(new KaitaiStream(fileName));
+            }
+
+            public ParamsSetwindowext(KaitaiStream p__io, Wmf.Record p__parent = null, Wmf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _y = m_io.ReadS2le();
+                _x = m_io.ReadS2le();
+            }
+            private short _y;
+            private short _x;
+            private Wmf m_root;
+            private Wmf.Record m_parent;
+
+            /// <summary>
+            /// Vertical extent of the window in logical units.
+            /// </summary>
+            public short Y { get { return _y; } }
+
+            /// <summary>
+            /// Horizontal extent of the window in logical units.
+            /// </summary>
+            public short X { get { return _x; } }
+            public Wmf M_Root { get { return m_root; } }
+            public Wmf.Record M_Parent { get { return m_parent; } }
+        }
+        public partial class ParamsPolygon : KaitaiStruct
+        {
+            public static ParamsPolygon FromFile(string fileName)
+            {
+                return new ParamsPolygon(new KaitaiStream(fileName));
+            }
+
+            public ParamsPolygon(KaitaiStream p__io, Wmf.Record p__parent = null, Wmf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _numPoints = m_io.ReadS2le();
+                _points = new List<PointS>((int) (NumPoints));
+                for (var i = 0; i < NumPoints; i++)
+                {
+                    _points.Add(new PointS(m_io, this, m_root));
+                }
+            }
+            private short _numPoints;
+            private List<PointS> _points;
+            private Wmf m_root;
+            private Wmf.Record m_parent;
+            public short NumPoints { get { return _numPoints; } }
+            public List<PointS> Points { get { return _points; } }
+            public Wmf M_Root { get { return m_root; } }
+            public Wmf.Record M_Parent { get { return m_parent; } }
+        }
+        public partial class Header : KaitaiStruct
+        {
+            public static Header FromFile(string fileName)
+            {
+                return new Header(new KaitaiStream(fileName));
+            }
+
+
+            public enum MetafileType
+            {
+                MemoryMetafile = 1,
+                DiskMetafile = 2,
+            }
+            public Header(KaitaiStream p__io, Wmf p__parent = null, Wmf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _metafileType = ((MetafileType) m_io.ReadU2le());
+                _headerSize = m_io.ReadU2le();
+                _version = m_io.ReadU2le();
+                _size = m_io.ReadU4le();
+                _numberOfObjects = m_io.ReadU2le();
+                _maxRecord = m_io.ReadU4le();
+                _numberOfMembers = m_io.ReadU2le();
+            }
+            private MetafileType _metafileType;
+            private ushort _headerSize;
+            private ushort _version;
+            private uint _size;
+            private ushort _numberOfObjects;
+            private uint _maxRecord;
+            private ushort _numberOfMembers;
+            private Wmf m_root;
+            private Wmf m_parent;
+            public MetafileType MetafileType { get { return _metafileType; } }
+            public ushort HeaderSize { get { return _headerSize; } }
+            public ushort Version { get { return _version; } }
+            public uint Size { get { return _size; } }
+            public ushort NumberOfObjects { get { return _numberOfObjects; } }
+            public uint MaxRecord { get { return _maxRecord; } }
+            public ushort NumberOfMembers { get { return _numberOfMembers; } }
+            public Wmf M_Root { get { return m_root; } }
+            public Wmf M_Parent { get { return m_parent; } }
+        }
+        public partial class ColorRef : KaitaiStruct
+        {
+            public static ColorRef FromFile(string fileName)
+            {
+                return new ColorRef(new KaitaiStream(fileName));
+            }
+
+            public ColorRef(KaitaiStream p__io, Wmf.Record p__parent = null, Wmf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _red = m_io.ReadU1();
+                _green = m_io.ReadU1();
+                _blue = m_io.ReadU1();
+                _reserved = m_io.ReadU1();
+            }
+            private byte _red;
+            private byte _green;
+            private byte _blue;
+            private byte _reserved;
+            private Wmf m_root;
+            private Wmf.Record m_parent;
+            public byte Red { get { return _red; } }
+            public byte Green { get { return _green; } }
+            public byte Blue { get { return _blue; } }
+            public byte Reserved { get { return _reserved; } }
+            public Wmf M_Root { get { return m_root; } }
+            public Wmf.Record M_Parent { get { return m_parent; } }
+        }
+        public partial class ParamsSetrop2 : KaitaiStruct
+        {
+            public static ParamsSetrop2 FromFile(string fileName)
+            {
+                return new ParamsSetrop2(new KaitaiStream(fileName));
+            }
+
+            public ParamsSetrop2(KaitaiStream p__io, Wmf.Record p__parent = null, Wmf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _drawMode = ((Wmf.BinRasterOp) m_io.ReadU2le());
+            }
+            private BinRasterOp _drawMode;
+            private Wmf m_root;
+            private Wmf.Record m_parent;
+
+            /// <summary>
+            /// Defines current foreground binary raster operation mixing mode.
+            /// </summary>
+            public BinRasterOp DrawMode { get { return _drawMode; } }
+            public Wmf M_Root { get { return m_root; } }
+            public Wmf.Record M_Parent { get { return m_parent; } }
+        }
+        public partial class ParamsSetpolyfillmode : KaitaiStruct
+        {
+            public static ParamsSetpolyfillmode FromFile(string fileName)
+            {
+                return new ParamsSetpolyfillmode(new KaitaiStream(fileName));
+            }
+
+            public ParamsSetpolyfillmode(KaitaiStream p__io, Wmf.Record p__parent = null, Wmf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _polyFillMode = ((Wmf.PolyFillMode) m_io.ReadU2le());
+            }
+            private PolyFillMode _polyFillMode;
+            private Wmf m_root;
+            private Wmf.Record m_parent;
+
+            /// <summary>
+            /// Defines current polygon fill mode.
+            /// </summary>
+            public PolyFillMode PolyFillMode { get { return _polyFillMode; } }
+            public Wmf M_Root { get { return m_root; } }
+            public Wmf.Record M_Parent { get { return m_parent; } }
+        }
+        public partial class ParamsPolyline : KaitaiStruct
+        {
+            public static ParamsPolyline FromFile(string fileName)
+            {
+                return new ParamsPolyline(new KaitaiStream(fileName));
+            }
+
+            public ParamsPolyline(KaitaiStream p__io, Wmf.Record p__parent = null, Wmf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _numPoints = m_io.ReadS2le();
+                _points = new List<PointS>((int) (NumPoints));
+                for (var i = 0; i < NumPoints; i++)
+                {
+                    _points.Add(new PointS(m_io, this, m_root));
+                }
+            }
+            private short _numPoints;
+            private List<PointS> _points;
+            private Wmf m_root;
+            private Wmf.Record m_parent;
+            public short NumPoints { get { return _numPoints; } }
+            public List<PointS> Points { get { return _points; } }
+            public Wmf M_Root { get { return m_root; } }
+            public Wmf.Record M_Parent { get { return m_parent; } }
+        }
         public partial class SpecialHeader : KaitaiStruct
         {
             public static SpecialHeader FromFile(string fileName)
@@ -110,13 +481,14 @@ namespace Kaitai
                 return new SpecialHeader(new KaitaiStream(fileName));
             }
 
-            public SpecialHeader(KaitaiStream io, Wmf parent = null, Wmf root = null) : base(io)
+            public SpecialHeader(KaitaiStream p__io, Wmf p__parent = null, Wmf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.EnsureFixedContents(new byte[] { 215, 205, 198, 154 });
                 _handle = m_io.EnsureFixedContents(new byte[] { 0, 0 });
                 _left = m_io.ReadS2le();
@@ -126,7 +498,7 @@ namespace Kaitai
                 _inch = m_io.ReadU2le();
                 _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                 _checksum = m_io.ReadU2le();
-                }
+            }
             private byte[] _magic;
             private byte[] _handle;
             private short _left;
@@ -150,53 +522,6 @@ namespace Kaitai
             public Wmf M_Root { get { return m_root; } }
             public Wmf M_Parent { get { return m_parent; } }
         }
-        public partial class WmfHeader : KaitaiStruct
-        {
-            public static WmfHeader FromFile(string fileName)
-            {
-                return new WmfHeader(new KaitaiStream(fileName));
-            }
-
-            public enum MetafileType
-            {
-                MemoryMetafile = 1,
-                DiskMetafile = 2,
-            }
-
-            public WmfHeader(KaitaiStream io, Wmf parent = null, Wmf root = null) : base(io)
-            {
-                m_parent = parent;
-                m_root = root;
-                _read();
-            }
-            private void _read() {
-                _type = ((MetafileType) m_io.ReadU2le());
-                _headerSize = m_io.ReadU2le();
-                _version = m_io.ReadU2le();
-                _size = m_io.ReadU4le();
-                _numberOfObjects = m_io.ReadU2le();
-                _maxRecord = m_io.ReadU4le();
-                _numberOfMembers = m_io.ReadU2le();
-                }
-            private MetafileType _type;
-            private ushort _headerSize;
-            private ushort _version;
-            private uint _size;
-            private ushort _numberOfObjects;
-            private uint _maxRecord;
-            private ushort _numberOfMembers;
-            private Wmf m_root;
-            private Wmf m_parent;
-            public MetafileType Type { get { return _type; } }
-            public ushort HeaderSize { get { return _headerSize; } }
-            public ushort Version { get { return _version; } }
-            public uint Size { get { return _size; } }
-            public ushort NumberOfObjects { get { return _numberOfObjects; } }
-            public uint MaxRecord { get { return _maxRecord; } }
-            public ushort NumberOfMembers { get { return _numberOfMembers; } }
-            public Wmf M_Root { get { return m_root; } }
-            public Wmf M_Parent { get { return m_parent; } }
-        }
         public partial class Record : KaitaiStruct
         {
             public static Record FromFile(string fileName)
@@ -204,35 +529,91 @@ namespace Kaitai
                 return new Record(new KaitaiStream(fileName));
             }
 
-            public Record(KaitaiStream io, Wmf parent = null, Wmf root = null) : base(io)
+            public Record(KaitaiStream p__io, Wmf p__parent = null, Wmf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _size = m_io.ReadU4le();
                 _function = ((Wmf.Func) m_io.ReadU2le());
-                _params = m_io.ReadBytes(((Size - 3) * 2));
+                switch (Function) {
+                case Wmf.Func.Setbkmode: {
+                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
+                    var io___raw_params = new KaitaiStream(__raw_params);
+                    _params = new ParamsSetbkmode(io___raw_params, this, m_root);
+                    break;
                 }
+                case Wmf.Func.Setbkcolor: {
+                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
+                    var io___raw_params = new KaitaiStream(__raw_params);
+                    _params = new ColorRef(io___raw_params, this, m_root);
+                    break;
+                }
+                case Wmf.Func.Setrop2: {
+                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
+                    var io___raw_params = new KaitaiStream(__raw_params);
+                    _params = new ParamsSetrop2(io___raw_params, this, m_root);
+                    break;
+                }
+                case Wmf.Func.Polyline: {
+                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
+                    var io___raw_params = new KaitaiStream(__raw_params);
+                    _params = new ParamsPolyline(io___raw_params, this, m_root);
+                    break;
+                }
+                case Wmf.Func.Setwindoworg: {
+                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
+                    var io___raw_params = new KaitaiStream(__raw_params);
+                    _params = new ParamsSetwindoworg(io___raw_params, this, m_root);
+                    break;
+                }
+                case Wmf.Func.Polygon: {
+                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
+                    var io___raw_params = new KaitaiStream(__raw_params);
+                    _params = new ParamsPolygon(io___raw_params, this, m_root);
+                    break;
+                }
+                case Wmf.Func.Setwindowext: {
+                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
+                    var io___raw_params = new KaitaiStream(__raw_params);
+                    _params = new ParamsSetwindowext(io___raw_params, this, m_root);
+                    break;
+                }
+                case Wmf.Func.Setpolyfillmode: {
+                    __raw_params = m_io.ReadBytes(((Size - 3) * 2));
+                    var io___raw_params = new KaitaiStream(__raw_params);
+                    _params = new ParamsSetpolyfillmode(io___raw_params, this, m_root);
+                    break;
+                }
+                default: {
+                    _params = m_io.ReadBytes(((Size - 3) * 2));
+                    break;
+                }
+                }
+            }
             private uint _size;
             private Func _function;
-            private byte[] _params;
+            private object _params;
             private Wmf m_root;
             private Wmf m_parent;
+            private byte[] __raw_params;
             public uint Size { get { return _size; } }
             public Func Function { get { return _function; } }
-            public byte[] Params { get { return _params; } }
+            public object Params { get { return _params; } }
             public Wmf M_Root { get { return m_root; } }
             public Wmf M_Parent { get { return m_parent; } }
+            public byte[] M_RawParams { get { return __raw_params; } }
         }
-        private SpecialHeader _specialHdr;
-        private WmfHeader _header;
+        private SpecialHeader _specialHeader;
+        private Header _header;
         private List<Record> _records;
         private Wmf m_root;
         private KaitaiStruct m_parent;
-        public SpecialHeader SpecialHdr { get { return _specialHdr; } }
-        public WmfHeader Header { get { return _header; } }
+        public SpecialHeader SpecialHeader { get { return _specialHeader; } }
+        public Header Header { get { return _header; } }
         public List<Record> Records { get { return _records; } }
         public Wmf M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }

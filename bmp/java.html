@@ -112,6 +112,20 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.8
+                    </div>
+                    
+                    
                 </div>
             </div>
         </div>
@@ -229,13 +243,38 @@ Bmp data = new Bmp(new KaitaiStream(someArray));</code></pre>
         <div class="row">
             <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Bmp extends KaitaiStruct {
     public static Bmp fromFile(String fileName) throws IOException {
-        return new Bmp(new KaitaiStream(fileName));
+        return new Bmp(new ByteBufferKaitaiStream(fileName));
+    }
+
+    public enum Compressions {
+        RGB(0),
+        RLE8(1),
+        RLE4(2),
+        BITFIELDS(3),
+        JPEG(4),
+        PNG(5),
+        CMYK(11),
+        CMYK_RLE8(12),
+        CMYK_RLE4(13);
+
+        private final long id;
+        Compressions(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map&lt;Long, Compressions&gt; byId = new HashMap&lt;Long, Compressions&gt;(9);
+        static {
+            for (Compressions e : Compressions.values())
+                byId.put(e.id(), e);
+        }
+        public static Compressions byId(long id) { return byId.get(id); }
     }
 
     public Bmp(KaitaiStream _io) {
@@ -254,11 +293,45 @@ public class Bmp extends KaitaiStruct {
     }
     private void _read() {
         this.fileHdr = new FileHeader(this._io, this, _root);
-        this.dibHdr = new DibHeader(this._io, this, _root);
+        this.lenDibHeader = this._io.readS4le();
+        switch (lenDibHeader()) {
+        case 104: {
+            this._raw_dibHeader = this._io.readBytes((lenDibHeader() - 4));
+            KaitaiStream _io__raw_dibHeader = new ByteBufferKaitaiStream(_raw_dibHeader);
+            this.dibHeader = new BitmapCoreHeader(_io__raw_dibHeader, this, _root);
+            break;
+        }
+        case 12: {
+            this._raw_dibHeader = this._io.readBytes((lenDibHeader() - 4));
+            KaitaiStream _io__raw_dibHeader = new ByteBufferKaitaiStream(_raw_dibHeader);
+            this.dibHeader = new BitmapCoreHeader(_io__raw_dibHeader, this, _root);
+            break;
+        }
+        case 40: {
+            this._raw_dibHeader = this._io.readBytes((lenDibHeader() - 4));
+            KaitaiStream _io__raw_dibHeader = new ByteBufferKaitaiStream(_raw_dibHeader);
+            this.dibHeader = new BitmapInfoHeader(_io__raw_dibHeader, this, _root);
+            break;
+        }
+        case 124: {
+            this._raw_dibHeader = this._io.readBytes((lenDibHeader() - 4));
+            KaitaiStream _io__raw_dibHeader = new ByteBufferKaitaiStream(_raw_dibHeader);
+            this.dibHeader = new BitmapCoreHeader(_io__raw_dibHeader, this, _root);
+            break;
+        }
+        default: {
+            this.dibHeader = this._io.readBytes((lenDibHeader() - 4));
+            break;
+        }
+        }
     }
+
+    /**
+     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/dd183374.aspx&quot;&gt;Source&lt;/a&gt;
+     */
     public static class FileHeader extends KaitaiStruct {
         public static FileHeader fromFile(String fileName) throws IOException {
-            return new FileHeader(new KaitaiStream(fileName));
+            return new FileHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public FileHeader(KaitaiStream _io) {
@@ -276,102 +349,49 @@ public class Bmp extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.fileType = this._io.readBytes(2);
-            this.fileSize = this._io.readU4le();
+            this.magic = this._io.ensureFixedContents(new byte[] { 66, 77 });
+            this.lenFile = this._io.readU4le();
             this.reserved1 = this._io.readU2le();
             this.reserved2 = this._io.readU2le();
-            this.bitmapOfs = this._io.readS4le();
+            this.ofsBitmap = this._io.readS4le();
         }
-        private byte[] fileType;
-        private long fileSize;
+        private byte[] magic;
+        private long lenFile;
         private int reserved1;
         private int reserved2;
-        private int bitmapOfs;
+        private int ofsBitmap;
         private Bmp _root;
         private Bmp _parent;
-        public byte[] fileType() { return fileType; }
-        public long fileSize() { return fileSize; }
+        public byte[] magic() { return magic; }
+        public long lenFile() { return lenFile; }
         public int reserved1() { return reserved1; }
         public int reserved2() { return reserved2; }
-        public int bitmapOfs() { return bitmapOfs; }
+
+        /**
+         * Offset to actual raw pixel data of the image
+         */
+        public int ofsBitmap() { return ofsBitmap; }
         public Bmp _root() { return _root; }
         public Bmp _parent() { return _parent; }
     }
-    public static class DibHeader extends KaitaiStruct {
-        public static DibHeader fromFile(String fileName) throws IOException {
-            return new DibHeader(new KaitaiStream(fileName));
-        }
 
-        public DibHeader(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public DibHeader(KaitaiStream _io, Bmp _parent) {
-            this(_io, _parent, null);
-        }
-
-        public DibHeader(KaitaiStream _io, Bmp _parent, Bmp _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.dibHeaderSize = this._io.readS4le();
-            if (dibHeaderSize() == 12) {
-                this._raw_bitmapCoreHeader = this._io.readBytes((dibHeaderSize() - 4));
-                KaitaiStream _io__raw_bitmapCoreHeader = new KaitaiStream(_raw_bitmapCoreHeader);
-                this.bitmapCoreHeader = new BitmapCoreHeader(_io__raw_bitmapCoreHeader, this, _root);
-            }
-            if (dibHeaderSize() == 40) {
-                this._raw_bitmapInfoHeader = this._io.readBytes((dibHeaderSize() - 4));
-                KaitaiStream _io__raw_bitmapInfoHeader = new KaitaiStream(_raw_bitmapInfoHeader);
-                this.bitmapInfoHeader = new BitmapInfoHeader(_io__raw_bitmapInfoHeader, this, _root);
-            }
-            if (dibHeaderSize() == 124) {
-                this._raw_bitmapV5Header = this._io.readBytes((dibHeaderSize() - 4));
-                KaitaiStream _io__raw_bitmapV5Header = new KaitaiStream(_raw_bitmapV5Header);
-                this.bitmapV5Header = new BitmapCoreHeader(_io__raw_bitmapV5Header, this, _root);
-            }
-            if ( ((dibHeaderSize() != 12) &amp;&amp; (dibHeaderSize() != 40) &amp;&amp; (dibHeaderSize() != 124)) ) {
-                this.dibHeaderBody = this._io.readBytes((dibHeaderSize() - 4));
-            }
-        }
-        private int dibHeaderSize;
-        private BitmapCoreHeader bitmapCoreHeader;
-        private BitmapInfoHeader bitmapInfoHeader;
-        private BitmapCoreHeader bitmapV5Header;
-        private byte[] dibHeaderBody;
-        private Bmp _root;
-        private Bmp _parent;
-        private byte[] _raw_bitmapCoreHeader;
-        private byte[] _raw_bitmapInfoHeader;
-        private byte[] _raw_bitmapV5Header;
-        public int dibHeaderSize() { return dibHeaderSize; }
-        public BitmapCoreHeader bitmapCoreHeader() { return bitmapCoreHeader; }
-        public BitmapInfoHeader bitmapInfoHeader() { return bitmapInfoHeader; }
-        public BitmapCoreHeader bitmapV5Header() { return bitmapV5Header; }
-        public byte[] dibHeaderBody() { return dibHeaderBody; }
-        public Bmp _root() { return _root; }
-        public Bmp _parent() { return _parent; }
-        public byte[] _raw_bitmapCoreHeader() { return _raw_bitmapCoreHeader; }
-        public byte[] _raw_bitmapInfoHeader() { return _raw_bitmapInfoHeader; }
-        public byte[] _raw_bitmapV5Header() { return _raw_bitmapV5Header; }
-    }
+    /**
+     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/dd183372.aspx&quot;&gt;Source&lt;/a&gt;
+     */
     public static class BitmapCoreHeader extends KaitaiStruct {
         public static BitmapCoreHeader fromFile(String fileName) throws IOException {
-            return new BitmapCoreHeader(new KaitaiStream(fileName));
+            return new BitmapCoreHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public BitmapCoreHeader(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public BitmapCoreHeader(KaitaiStream _io, Bmp.DibHeader _parent) {
+        public BitmapCoreHeader(KaitaiStream _io, Bmp _parent) {
             this(_io, _parent, null);
         }
 
-        public BitmapCoreHeader(KaitaiStream _io, Bmp.DibHeader _parent, Bmp _root) {
+        public BitmapCoreHeader(KaitaiStream _io, Bmp _parent, Bmp _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -388,28 +408,48 @@ public class Bmp extends KaitaiStruct {
         private int numPlanes;
         private int bitsPerPixel;
         private Bmp _root;
-        private Bmp.DibHeader _parent;
+        private Bmp _parent;
+
+        /**
+         * Image width, px
+         */
         public int imageWidth() { return imageWidth; }
+
+        /**
+         * Image height, px
+         */
         public int imageHeight() { return imageHeight; }
+
+        /**
+         * Number of planes for target device, must be 1
+         */
         public int numPlanes() { return numPlanes; }
+
+        /**
+         * Number of bits per pixel that image buffer uses (1, 4, 8, or 24)
+         */
         public int bitsPerPixel() { return bitsPerPixel; }
         public Bmp _root() { return _root; }
-        public Bmp.DibHeader _parent() { return _parent; }
+        public Bmp _parent() { return _parent; }
     }
+
+    /**
+     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/dd183376.aspx&quot;&gt;Source&lt;/a&gt;
+     */
     public static class BitmapInfoHeader extends KaitaiStruct {
         public static BitmapInfoHeader fromFile(String fileName) throws IOException {
-            return new BitmapInfoHeader(new KaitaiStream(fileName));
+            return new BitmapInfoHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public BitmapInfoHeader(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public BitmapInfoHeader(KaitaiStream _io, Bmp.DibHeader _parent) {
+        public BitmapInfoHeader(KaitaiStream _io, Bmp _parent) {
             this(_io, _parent, null);
         }
 
-        public BitmapInfoHeader(KaitaiStream _io, Bmp.DibHeader _parent, Bmp _root) {
+        public BitmapInfoHeader(KaitaiStream _io, Bmp _parent, Bmp _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -420,8 +460,8 @@ public class Bmp extends KaitaiStruct {
             this.imageHeight = this._io.readU4le();
             this.numPlanes = this._io.readU2le();
             this.bitsPerPixel = this._io.readU2le();
-            this.compression = this._io.readU4le();
-            this.sizeImage = this._io.readU4le();
+            this.compression = Bmp.Compressions.byId(this._io.readU4le());
+            this.lenImage = this._io.readU4le();
             this.xPxPerM = this._io.readU4le();
             this.yPxPerM = this._io.readU4le();
             this.numColorsUsed = this._io.readU4le();
@@ -431,45 +471,49 @@ public class Bmp extends KaitaiStruct {
         private long imageHeight;
         private int numPlanes;
         private int bitsPerPixel;
-        private long compression;
-        private long sizeImage;
+        private Compressions compression;
+        private long lenImage;
         private long xPxPerM;
         private long yPxPerM;
         private long numColorsUsed;
         private long numColorsImportant;
         private Bmp _root;
-        private Bmp.DibHeader _parent;
+        private Bmp _parent;
         public long imageWidth() { return imageWidth; }
         public long imageHeight() { return imageHeight; }
         public int numPlanes() { return numPlanes; }
         public int bitsPerPixel() { return bitsPerPixel; }
-        public long compression() { return compression; }
-        public long sizeImage() { return sizeImage; }
+        public Compressions compression() { return compression; }
+        public long lenImage() { return lenImage; }
         public long xPxPerM() { return xPxPerM; }
         public long yPxPerM() { return yPxPerM; }
         public long numColorsUsed() { return numColorsUsed; }
         public long numColorsImportant() { return numColorsImportant; }
         public Bmp _root() { return _root; }
-        public Bmp.DibHeader _parent() { return _parent; }
+        public Bmp _parent() { return _parent; }
     }
     private byte[] image;
     public byte[] image() {
         if (this.image != null)
             return this.image;
         long _pos = this._io.pos();
-        this._io.seek(fileHdr().bitmapOfs());
+        this._io.seek(fileHdr().ofsBitmap());
         this.image = this._io.readBytesFull();
         this._io.seek(_pos);
         return this.image;
     }
     private FileHeader fileHdr;
-    private DibHeader dibHdr;
+    private int lenDibHeader;
+    private Object dibHeader;
     private Bmp _root;
     private KaitaiStruct _parent;
+    private byte[] _raw_dibHeader;
     public FileHeader fileHdr() { return fileHdr; }
-    public DibHeader dibHdr() { return dibHdr; }
+    public int lenDibHeader() { return lenDibHeader; }
+    public Object dibHeader() { return dibHeader; }
     public Bmp _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
+    public byte[] _raw_dibHeader() { return _raw_dibHeader; }
 }
 </code></pre>
             

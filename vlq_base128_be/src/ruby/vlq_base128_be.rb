@@ -29,9 +29,11 @@ class VlqBase128Be < Kaitai::Struct::Struct
 
   def _read
     @groups = []
+    i = 0
     begin
       _ = Group.new(@_io, self, @_root)
       @groups << _
+      i += 1
     end until !(_.has_next)
     self
   end

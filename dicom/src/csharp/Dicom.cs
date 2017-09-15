@@ -27,6 +27,7 @@ namespace Kaitai
             return new Dicom(new KaitaiStream(fileName));
         }
 
+
         public enum Tags
         {
             FileMetaInformationGroupLength = 131072,
@@ -4053,20 +4054,24 @@ namespace Kaitai
             ItemDelimitationItem = 4294893581,
             SequenceDelimitationItem = 4294893789,
         }
-
-        public Dicom(KaitaiStream io, KaitaiStruct parent = null, Dicom root = null) : base(io)
+        public Dicom(KaitaiStream p__io, KaitaiStruct p__parent = null, Dicom p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _fileHeader = new TFileHeader(m_io, this, m_root);
             _elements = new List<TDataElementImplicit>();
-            while (!m_io.IsEof) {
-                _elements.Add(new TDataElementImplicit(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _elements.Add(new TDataElementImplicit(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
         public partial class TFileHeader : KaitaiStruct
         {
             public static TFileHeader FromFile(string fileName)
@@ -4074,16 +4079,17 @@ namespace Kaitai
                 return new TFileHeader(new KaitaiStream(fileName));
             }
 
-            public TFileHeader(KaitaiStream io, Dicom parent = null, Dicom root = null) : base(io)
+            public TFileHeader(KaitaiStream p__io, Dicom p__parent = null, Dicom p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _preamble = m_io.ReadBytes(128);
                 _magic = m_io.EnsureFixedContents(new byte[] { 68, 73, 67, 77 });
-                }
+            }
             private byte[] _preamble;
             private byte[] _magic;
             private Dicom m_root;
@@ -4104,17 +4110,18 @@ namespace Kaitai
                 return new TDataElementExplicit(new KaitaiStream(fileName));
             }
 
-            public TDataElementExplicit(KaitaiStream io, KaitaiStruct parent = null, Dicom root = null) : base(io)
+            public TDataElementExplicit(KaitaiStream p__io, KaitaiStruct p__parent = null, Dicom p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_isForcedImplicit = false;
                 f_isLongLen = false;
                 f_isTransferSyntaxChangeImplicit = false;
                 f_tag = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _tagGroup = m_io.ReadU2le();
                 _tagElem = m_io.ReadU2le();
                 if (!(IsForcedImplicit)) {
@@ -4140,20 +4147,26 @@ namespace Kaitai
                 if ( ((Vr == "SQ") && (ValueLen == 4294967295)) ) {
                     _items = new List<SeqItem>();
                     {
+                        var i = 0;
                         SeqItem M_;
                         do {
                             M_ = new SeqItem(m_io, this, m_root);
                             _items.Add(M_);
+                            i++;
                         } while (!(M_.TagElem == 57565));
                     }
                 }
                 if (IsTransferSyntaxChangeImplicit) {
                     _elementsImplicit = new List<TDataElementImplicit>();
-                    while (!m_io.IsEof) {
-                        _elementsImplicit.Add(new TDataElementImplicit(m_io, this, m_root));
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _elementsImplicit.Add(new TDataElementImplicit(m_io, this, m_root));
+                            i++;
+                        }
                     }
                 }
-                }
+            }
             private bool f_isForcedImplicit;
             private bool _isForcedImplicit;
             public bool IsForcedImplicit
@@ -4209,7 +4222,7 @@ namespace Kaitai
             private ushort _tagGroup;
             private ushort _tagElem;
             private string _vr;
-            private ushort _reserved;
+            private ushort? _reserved;
             private uint _valueLen;
             private byte[] _value;
             private List<SeqItem> _items;
@@ -4219,7 +4232,7 @@ namespace Kaitai
             public ushort TagGroup { get { return _tagGroup; } }
             public ushort TagElem { get { return _tagElem; } }
             public string Vr { get { return _vr; } }
-            public ushort Reserved { get { return _reserved; } }
+            public ushort? Reserved { get { return _reserved; } }
             public uint ValueLen { get { return _valueLen; } }
             public byte[] Value { get { return _value; } }
             public List<SeqItem> Items { get { return _items; } }
@@ -4238,10 +4251,10 @@ namespace Kaitai
                 return new TDataElementImplicit(new KaitaiStream(fileName));
             }
 
-            public TDataElementImplicit(KaitaiStream io, KaitaiStruct parent = null, Dicom root = null) : base(io)
+            public TDataElementImplicit(KaitaiStream p__io, KaitaiStruct p__parent = null, Dicom p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_tag = false;
                 f_isTransferSyntaxChangeExplicit = false;
                 f_isLongLen = false;
@@ -4249,7 +4262,8 @@ namespace Kaitai
                 f_isForcedExplicit = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _tagGroup = m_io.ReadU2le();
                 _tagElem = m_io.ReadU2le();
                 if (IsForcedExplicit) {
@@ -4275,20 +4289,26 @@ namespace Kaitai
                 if ( ((Vr == "SQ") && (ValueLen == 4294967295)) ) {
                     _items = new List<SeqItem>();
                     {
+                        var i = 0;
                         SeqItem M_;
                         do {
                             M_ = new SeqItem(m_io, this, m_root);
                             _items.Add(M_);
+                            i++;
                         } while (!(M_.TagElem == 57565));
                     }
                 }
                 if (IsTransferSyntaxChangeExplicit) {
                     _elements = new List<TDataElementExplicit>();
-                    while (!m_io.IsEof) {
-                        _elements.Add(new TDataElementExplicit(m_io, this, m_root));
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _elements.Add(new TDataElementExplicit(m_io, this, m_root));
+                            i++;
+                        }
                     }
                 }
-                }
+            }
             private bool f_tag;
             private Tags _tag;
             public Tags Tag
@@ -4357,7 +4377,7 @@ namespace Kaitai
             private ushort _tagGroup;
             private ushort _tagElem;
             private string _vr;
-            private ushort _reserved;
+            private ushort? _reserved;
             private uint _valueLen;
             private byte[] _value;
             private List<SeqItem> _items;
@@ -4367,7 +4387,7 @@ namespace Kaitai
             public ushort TagGroup { get { return _tagGroup; } }
             public ushort TagElem { get { return _tagElem; } }
             public string Vr { get { return _vr; } }
-            public ushort Reserved { get { return _reserved; } }
+            public ushort? Reserved { get { return _reserved; } }
             public uint ValueLen { get { return _valueLen; } }
             public byte[] Value { get { return _value; } }
             public List<SeqItem> Items { get { return _items; } }
@@ -4382,13 +4402,14 @@ namespace Kaitai
                 return new SeqItem(new KaitaiStream(fileName));
             }
 
-            public SeqItem(KaitaiStream io, KaitaiStruct parent = null, Dicom root = null) : base(io)
+            public SeqItem(KaitaiStream p__io, KaitaiStruct p__parent = null, Dicom p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _tagGroup = m_io.EnsureFixedContents(new byte[] { 254, 255 });
                 _tagElem = m_io.ReadU2le();
                 _valueLen = m_io.ReadU4le();
@@ -4398,14 +4419,16 @@ namespace Kaitai
                 if (ValueLen == 4294967295) {
                     _items = new List<TDataElementExplicit>();
                     {
+                        var i = 0;
                         TDataElementExplicit M_;
                         do {
                             M_ = new TDataElementExplicit(m_io, this, m_root);
                             _items.Add(M_);
+                            i++;
                         } while (!( ((M_.TagGroup == 65534) && (M_.TagElem == 57357)) ));
                     }
                 }
-                }
+            }
             private byte[] _tagGroup;
             private ushort _tagElem;
             private uint _valueLen;

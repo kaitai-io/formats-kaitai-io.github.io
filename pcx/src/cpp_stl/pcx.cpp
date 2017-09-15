@@ -4,8 +4,8 @@
 
 
 
-pcx_t::pcx_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, pcx_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+pcx_t::pcx_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, pcx_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_palette_256 = false;
     _read();
@@ -25,9 +25,9 @@ pcx_t::~pcx_t() {
     }
 }
 
-pcx_t::header_t::header_t(kaitai::kstream *p_io, pcx_t* p_parent, pcx_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+pcx_t::header_t::header_t(kaitai::kstream* p__io, pcx_t* p__parent, pcx_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -54,9 +54,9 @@ void pcx_t::header_t::_read() {
 pcx_t::header_t::~header_t() {
 }
 
-pcx_t::t_palette_256_t::t_palette_256_t(kaitai::kstream *p_io, pcx_t* p_parent, pcx_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+pcx_t::t_palette_256_t::t_palette_256_t(kaitai::kstream* p__io, pcx_t* p__parent, pcx_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -77,9 +77,9 @@ pcx_t::t_palette_256_t::~t_palette_256_t() {
     delete m_colors;
 }
 
-pcx_t::rgb_t::rgb_t(kaitai::kstream *p_io, pcx_t::t_palette_256_t* p_parent, pcx_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+pcx_t::rgb_t::rgb_t(kaitai::kstream* p__io, pcx_t::t_palette_256_t* p__parent, pcx_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

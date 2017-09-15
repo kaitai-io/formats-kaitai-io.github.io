@@ -11,6 +11,7 @@ namespace Kaitai
             return new MachO(new KaitaiStream(fileName));
         }
 
+
         public enum LoadCommandType
         {
             Segment = 1,
@@ -44,12 +45,10 @@ namespace Kaitai
             LazyLoadDylib = 32,
             EncryptionInfo = 33,
             DyldInfo = 34,
-            LoadUpwardDylib = 35,
             VersionMinMacosx = 36,
             VersionMinIphoneos = 37,
             FunctionStarts = 38,
             DyldEnvironment = 39,
-            Main = 40,
             DataInCode = 41,
             SourceVersion = 42,
             DylibCodeSignDrs = 43,
@@ -63,7 +62,8 @@ namespace Kaitai
             Rpath = 2147483676,
             ReexportDylib = 2147483679,
             DyldInfoOnly = 2147483682,
-            Main2 = 2147483688,
+            LoadUpwardDylib = 2147483683,
+            Main = 2147483688,
         }
 
         public enum MachoFlags
@@ -94,16 +94,6 @@ namespace Kaitai
             HasTlvDescriptors = 8388608,
             NoHeapExecution = 16777216,
             AppExtensionSafe = 33554432,
-        }
-
-        public enum VmProt
-        {
-            None = 0,
-            Read = 1,
-            Write = 2,
-            Execute = 4,
-            NoChange = 8,
-            Copy = 16,
         }
 
         public enum MagicType
@@ -150,24 +140,26 @@ namespace Kaitai
             Powerpc = 18,
             Abi64 = 16777216,
             X8664 = 16777223,
+            Arm64 = 16777228,
             Powerpc64 = 16777234,
             Any = 4294967295,
         }
-
-        public MachO(KaitaiStream io, KaitaiStruct parent = null, MachO root = null) : base(io)
+        public MachO(KaitaiStream p__io, KaitaiStruct p__parent = null, MachO p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _magic = ((MagicType) m_io.ReadU4be());
             _header = new MachHeader(m_io, this, m_root);
             _loadCommands = new List<LoadCommand>((int) (Header.Ncmds));
-            for (var i = 0; i < Header.Ncmds; i++) {
+            for (var i = 0; i < Header.Ncmds; i++)
+            {
                 _loadCommands.Add(new LoadCommand(m_io, this, m_root));
             }
-            }
+        }
         public partial class RpathCommand : KaitaiStruct
         {
             public static RpathCommand FromFile(string fileName)
@@ -175,16 +167,17 @@ namespace Kaitai
                 return new RpathCommand(new KaitaiStream(fileName));
             }
 
-            public RpathCommand(KaitaiStream io, MachO.LoadCommand parent = null, MachO root = null) : base(io)
+            public RpathCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _pathOffset = m_io.ReadU4le();
                 _path = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
-                }
+            }
             private uint _pathOffset;
             private string _path;
             private MachO m_root;
@@ -201,14 +194,15 @@ namespace Kaitai
                 return new Uleb128(new KaitaiStream(fileName));
             }
 
-            public Uleb128(KaitaiStream io, KaitaiStruct parent = null, MachO root = null) : base(io)
+            public Uleb128(KaitaiStream p__io, KaitaiStruct p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_value = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _b1 = m_io.ReadU1();
                 if ((B1 & 128) != 0) {
                     _b2 = m_io.ReadU1();
@@ -237,7 +231,7 @@ namespace Kaitai
                 if ((B9 & 128) != 0) {
                     _b10 = m_io.ReadU1();
                 }
-                }
+            }
             private bool f_value;
             private int _value;
             public int Value
@@ -252,27 +246,27 @@ namespace Kaitai
                 }
             }
             private byte _b1;
-            private byte _b2;
-            private byte _b3;
-            private byte _b4;
-            private byte _b5;
-            private byte _b6;
-            private byte _b7;
-            private byte _b8;
-            private byte _b9;
-            private byte _b10;
+            private byte? _b2;
+            private byte? _b3;
+            private byte? _b4;
+            private byte? _b5;
+            private byte? _b6;
+            private byte? _b7;
+            private byte? _b8;
+            private byte? _b9;
+            private byte? _b10;
             private MachO m_root;
             private KaitaiStruct m_parent;
             public byte B1 { get { return _b1; } }
-            public byte B2 { get { return _b2; } }
-            public byte B3 { get { return _b3; } }
-            public byte B4 { get { return _b4; } }
-            public byte B5 { get { return _b5; } }
-            public byte B6 { get { return _b6; } }
-            public byte B7 { get { return _b7; } }
-            public byte B8 { get { return _b8; } }
-            public byte B9 { get { return _b9; } }
-            public byte B10 { get { return _b10; } }
+            public byte? B2 { get { return _b2; } }
+            public byte? B3 { get { return _b3; } }
+            public byte? B4 { get { return _b4; } }
+            public byte? B5 { get { return _b5; } }
+            public byte? B6 { get { return _b6; } }
+            public byte? B7 { get { return _b7; } }
+            public byte? B8 { get { return _b8; } }
+            public byte? B9 { get { return _b9; } }
+            public byte? B10 { get { return _b10; } }
             public MachO M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
@@ -283,15 +277,16 @@ namespace Kaitai
                 return new SourceVersionCommand(new KaitaiStream(fileName));
             }
 
-            public SourceVersionCommand(KaitaiStream io, MachO.LoadCommand parent = null, MachO root = null) : base(io)
+            public SourceVersionCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _version = m_io.ReadU8le();
-                }
+            }
             private ulong _version;
             private MachO m_root;
             private MachO.LoadCommand m_parent;
@@ -306,6 +301,7 @@ namespace Kaitai
                 return new CsBlob(new KaitaiStream(fileName));
             }
 
+
             public enum CsMagic
             {
                 BlobWrapper = 4208855809,
@@ -316,14 +312,14 @@ namespace Kaitai
                 DetachedSignature = 4208856257,
                 Entitlement = 4208882033,
             }
-
-            public CsBlob(KaitaiStream io, KaitaiStruct parent = null, MachO root = null) : base(io)
+            public CsBlob(KaitaiStream p__io, KaitaiStruct p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = ((CsMagic) m_io.ReadU4be());
                 _length = m_io.ReadU4be();
                 switch (Magic) {
@@ -374,7 +370,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             public partial class Entitlement : KaitaiStruct
             {
                 public static Entitlement FromFile(string fileName)
@@ -382,15 +378,16 @@ namespace Kaitai
                     return new Entitlement(new KaitaiStream(fileName));
                 }
 
-                public Entitlement(KaitaiStream io, MachO.CsBlob parent = null, MachO root = null) : base(io)
+                public Entitlement(KaitaiStream p__io, MachO.CsBlob p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _data = m_io.ReadBytesFull();
-                    }
+                }
                 private byte[] _data;
                 private MachO m_root;
                 private MachO.CsBlob m_parent;
@@ -405,16 +402,17 @@ namespace Kaitai
                     return new CodeDirectory(new KaitaiStream(fileName));
                 }
 
-                public CodeDirectory(KaitaiStream io, MachO.CsBlob parent = null, MachO root = null) : base(io)
+                public CodeDirectory(KaitaiStream p__io, MachO.CsBlob p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     f_ident = false;
                     f_teamId = false;
                     f_hashes = false;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _version = m_io.ReadU4be();
                     _flags = m_io.ReadU4be();
                     _hashOffset = m_io.ReadU4be();
@@ -433,7 +431,7 @@ namespace Kaitai
                     if (Version >= 131584) {
                         _teamIdOffset = m_io.ReadU4be();
                     }
-                    }
+                }
                 private bool f_ident;
                 private string _ident;
                 public string Ident
@@ -477,7 +475,8 @@ namespace Kaitai
                         long _pos = m_io.Pos;
                         m_io.Seek(((HashOffset - 8) - (HashSize * NSpecialSlots)));
                         _hashes = new List<byte[]>((int) ((NSpecialSlots + NCodeSlots)));
-                        for (var i = 0; i < (NSpecialSlots + NCodeSlots); i++) {
+                        for (var i = 0; i < (NSpecialSlots + NCodeSlots); i++)
+                        {
                             _hashes.Add(m_io.ReadBytes(HashSize));
                         }
                         m_io.Seek(_pos);
@@ -497,8 +496,8 @@ namespace Kaitai
                 private byte _spare1;
                 private byte _pageSize;
                 private uint _spare2;
-                private uint _scatterOffset;
-                private uint _teamIdOffset;
+                private uint? _scatterOffset;
+                private uint? _teamIdOffset;
                 private MachO m_root;
                 private MachO.CsBlob m_parent;
                 public uint Version { get { return _version; } }
@@ -513,8 +512,8 @@ namespace Kaitai
                 public byte Spare1 { get { return _spare1; } }
                 public byte PageSize { get { return _pageSize; } }
                 public uint Spare2 { get { return _spare2; } }
-                public uint ScatterOffset { get { return _scatterOffset; } }
-                public uint TeamIdOffset { get { return _teamIdOffset; } }
+                public uint? ScatterOffset { get { return _scatterOffset; } }
+                public uint? TeamIdOffset { get { return _teamIdOffset; } }
                 public MachO M_Root { get { return m_root; } }
                 public MachO.CsBlob M_Parent { get { return m_parent; } }
             }
@@ -525,6 +524,7 @@ namespace Kaitai
                     return new EntitlementsBlobIndex(new KaitaiStream(fileName));
                 }
 
+
                 public enum RequirementType
                 {
                     Host = 1,
@@ -532,18 +532,18 @@ namespace Kaitai
                     Designated = 3,
                     Library = 4,
                 }
-
-                public EntitlementsBlobIndex(KaitaiStream io, MachO.CsBlob.Entitlements parent = null, MachO root = null) : base(io)
+                public EntitlementsBlobIndex(KaitaiStream p__io, MachO.CsBlob.Entitlements p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     f_value = false;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _type = ((RequirementType) m_io.ReadU4be());
                     _offset = m_io.ReadU4be();
-                    }
+                }
                 private bool f_value;
                 private CsBlob _value;
                 public CsBlob Value
@@ -576,17 +576,18 @@ namespace Kaitai
                     return new Data(new KaitaiStream(fileName));
                 }
 
-                public Data(KaitaiStream io, KaitaiStruct parent = null, MachO root = null) : base(io)
+                public Data(KaitaiStream p__io, KaitaiStruct p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _length = m_io.ReadU4be();
                     _value = m_io.ReadBytes(Length);
                     _padding = m_io.ReadBytes((4 - (Length & 3)));
-                    }
+                }
                 private uint _length;
                 private byte[] _value;
                 private byte[] _padding;
@@ -605,19 +606,21 @@ namespace Kaitai
                     return new SuperBlob(new KaitaiStream(fileName));
                 }
 
-                public SuperBlob(KaitaiStream io, MachO.CsBlob parent = null, MachO root = null) : base(io)
+                public SuperBlob(KaitaiStream p__io, MachO.CsBlob p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _count = m_io.ReadU4be();
                     _blobs = new List<BlobIndex>((int) (Count));
-                    for (var i = 0; i < Count; i++) {
+                    for (var i = 0; i < Count; i++)
+                    {
                         _blobs.Add(new BlobIndex(m_io, this, m_root));
                     }
-                    }
+                }
                 private uint _count;
                 private List<BlobIndex> _blobs;
                 private MachO m_root;
@@ -633,6 +636,7 @@ namespace Kaitai
                 {
                     return new Expr(new KaitaiStream(fileName));
                 }
+
 
                 public enum OpEnum
                 {
@@ -660,14 +664,14 @@ namespace Kaitai
                     LeftCert = 0,
                     AnchorCert = 4294967295,
                 }
-
-                public Expr(KaitaiStream io, KaitaiStruct parent = null, MachO root = null) : base(io)
+                public Expr(KaitaiStream p__io, KaitaiStruct p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _op = ((OpEnum) m_io.ReadU4be());
                     switch (Op) {
                     case OpEnum.CertGeneric: {
@@ -723,7 +727,7 @@ namespace Kaitai
                         break;
                     }
                     }
-                    }
+                }
                 public partial class InfoKeyFieldExpr : KaitaiStruct
                 {
                     public static InfoKeyFieldExpr FromFile(string fileName)
@@ -731,16 +735,17 @@ namespace Kaitai
                         return new InfoKeyFieldExpr(new KaitaiStream(fileName));
                     }
 
-                    public InfoKeyFieldExpr(KaitaiStream io, MachO.CsBlob.Expr parent = null, MachO root = null) : base(io)
+                    public InfoKeyFieldExpr(KaitaiStream p__io, MachO.CsBlob.Expr p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _data = new Data(m_io, this, m_root);
                         _match = new Match(m_io, this, m_root);
-                        }
+                    }
                     private Data _data;
                     private Match _match;
                     private MachO m_root;
@@ -757,15 +762,16 @@ namespace Kaitai
                         return new CertSlotExpr(new KaitaiStream(fileName));
                     }
 
-                    public CertSlotExpr(KaitaiStream io, MachO.CsBlob.Expr parent = null, MachO root = null) : base(io)
+                    public CertSlotExpr(KaitaiStream p__io, MachO.CsBlob.Expr p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _value = ((MachO.CsBlob.Expr.CertSlot) m_io.ReadU4be());
-                        }
+                    }
                     private CertSlot _value;
                     private MachO m_root;
                     private MachO.CsBlob.Expr m_parent;
@@ -780,17 +786,18 @@ namespace Kaitai
                         return new CertGenericExpr(new KaitaiStream(fileName));
                     }
 
-                    public CertGenericExpr(KaitaiStream io, MachO.CsBlob.Expr parent = null, MachO root = null) : base(io)
+                    public CertGenericExpr(KaitaiStream p__io, MachO.CsBlob.Expr p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _certSlot = ((MachO.CsBlob.Expr.CertSlot) m_io.ReadU4be());
                         _data = new Data(m_io, this, m_root);
                         _match = new Match(m_io, this, m_root);
-                        }
+                    }
                     private CertSlot _certSlot;
                     private Data _data;
                     private Match _match;
@@ -809,15 +816,16 @@ namespace Kaitai
                         return new IdentExpr(new KaitaiStream(fileName));
                     }
 
-                    public IdentExpr(KaitaiStream io, MachO.CsBlob.Expr parent = null, MachO root = null) : base(io)
+                    public IdentExpr(KaitaiStream p__io, MachO.CsBlob.Expr p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _identifier = new Data(m_io, this, m_root);
-                        }
+                    }
                     private Data _identifier;
                     private MachO m_root;
                     private MachO.CsBlob.Expr m_parent;
@@ -832,17 +840,18 @@ namespace Kaitai
                         return new CertFieldExpr(new KaitaiStream(fileName));
                     }
 
-                    public CertFieldExpr(KaitaiStream io, MachO.CsBlob.Expr parent = null, MachO root = null) : base(io)
+                    public CertFieldExpr(KaitaiStream p__io, MachO.CsBlob.Expr p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _certSlot = ((MachO.CsBlob.Expr.CertSlot) m_io.ReadU4be());
                         _data = new Data(m_io, this, m_root);
                         _match = new Match(m_io, this, m_root);
-                        }
+                    }
                     private CertSlot _certSlot;
                     private Data _data;
                     private Match _match;
@@ -861,16 +870,17 @@ namespace Kaitai
                         return new AnchorHashExpr(new KaitaiStream(fileName));
                     }
 
-                    public AnchorHashExpr(KaitaiStream io, MachO.CsBlob.Expr parent = null, MachO root = null) : base(io)
+                    public AnchorHashExpr(KaitaiStream p__io, MachO.CsBlob.Expr p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _certSlot = ((MachO.CsBlob.Expr.CertSlot) m_io.ReadU4be());
                         _data = new Data(m_io, this, m_root);
-                        }
+                    }
                     private CertSlot _certSlot;
                     private Data _data;
                     private MachO m_root;
@@ -887,15 +897,16 @@ namespace Kaitai
                         return new AppleGenericAnchorExpr(new KaitaiStream(fileName));
                     }
 
-                    public AppleGenericAnchorExpr(KaitaiStream io, MachO.CsBlob.Expr parent = null, MachO root = null) : base(io)
+                    public AppleGenericAnchorExpr(KaitaiStream p__io, MachO.CsBlob.Expr p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         f_value = false;
                         _read();
                     }
-                    private void _read() {
-                        }
+                    private void _read()
+                    {
+                    }
                     private bool f_value;
                     private string _value;
                     public string Value
@@ -921,16 +932,17 @@ namespace Kaitai
                         return new EntitlementFieldExpr(new KaitaiStream(fileName));
                     }
 
-                    public EntitlementFieldExpr(KaitaiStream io, MachO.CsBlob.Expr parent = null, MachO root = null) : base(io)
+                    public EntitlementFieldExpr(KaitaiStream p__io, MachO.CsBlob.Expr p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _data = new Data(m_io, this, m_root);
                         _match = new Match(m_io, this, m_root);
-                        }
+                    }
                     private Data _data;
                     private Match _match;
                     private MachO m_root;
@@ -947,16 +959,17 @@ namespace Kaitai
                         return new AndExpr(new KaitaiStream(fileName));
                     }
 
-                    public AndExpr(KaitaiStream io, MachO.CsBlob.Expr parent = null, MachO root = null) : base(io)
+                    public AndExpr(KaitaiStream p__io, MachO.CsBlob.Expr p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _left = new Expr(m_io, this, m_root);
                         _right = new Expr(m_io, this, m_root);
-                        }
+                    }
                     private Expr _left;
                     private Expr _right;
                     private MachO m_root;
@@ -973,16 +986,17 @@ namespace Kaitai
                         return new OrExpr(new KaitaiStream(fileName));
                     }
 
-                    public OrExpr(KaitaiStream io, MachO.CsBlob.Expr parent = null, MachO root = null) : base(io)
+                    public OrExpr(KaitaiStream p__io, MachO.CsBlob.Expr p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _left = new Expr(m_io, this, m_root);
                         _right = new Expr(m_io, this, m_root);
-                        }
+                    }
                     private Expr _left;
                     private Expr _right;
                     private MachO m_root;
@@ -1008,6 +1022,7 @@ namespace Kaitai
                     return new BlobIndex(new KaitaiStream(fileName));
                 }
 
+
                 public enum CsslotType
                 {
                     CodeDirectory = 0,
@@ -1019,18 +1034,18 @@ namespace Kaitai
                     AlternateCodeDirectories = 4096,
                     SignatureSlot = 65536,
                 }
-
-                public BlobIndex(KaitaiStream io, MachO.CsBlob.SuperBlob parent = null, MachO root = null) : base(io)
+                public BlobIndex(KaitaiStream p__io, MachO.CsBlob.SuperBlob p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     f_blob = false;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _type = ((CsslotType) m_io.ReadU4be());
                     _offset = m_io.ReadU4be();
-                    }
+                }
                 private bool f_blob;
                 private CsBlob _blob;
                 public CsBlob Blob
@@ -1068,6 +1083,7 @@ namespace Kaitai
                     return new Match(new KaitaiStream(fileName));
                 }
 
+
                 public enum Op
                 {
                     Exists = 0,
@@ -1080,19 +1096,19 @@ namespace Kaitai
                     LessEqual = 7,
                     GreaterEqual = 8,
                 }
-
-                public Match(KaitaiStream io, KaitaiStruct parent = null, MachO root = null) : base(io)
+                public Match(KaitaiStream p__io, KaitaiStruct p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _matchOp = ((Op) m_io.ReadU4be());
                     if (MatchOp != Op.Exists) {
                         _data = new Data(m_io, this, m_root);
                     }
-                    }
+                }
                 private Op _matchOp;
                 private Data _data;
                 private MachO m_root;
@@ -1109,16 +1125,17 @@ namespace Kaitai
                     return new Requirement(new KaitaiStream(fileName));
                 }
 
-                public Requirement(KaitaiStream io, MachO.CsBlob parent = null, MachO root = null) : base(io)
+                public Requirement(KaitaiStream p__io, MachO.CsBlob p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _kind = m_io.ReadU4be();
                     _expr = new Expr(m_io, this, m_root);
-                    }
+                }
                 private uint _kind;
                 private Expr _expr;
                 private MachO m_root;
@@ -1135,15 +1152,16 @@ namespace Kaitai
                     return new BlobWrapper(new KaitaiStream(fileName));
                 }
 
-                public BlobWrapper(KaitaiStream io, MachO.CsBlob parent = null, MachO root = null) : base(io)
+                public BlobWrapper(KaitaiStream p__io, MachO.CsBlob p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _data = m_io.ReadBytesFull();
-                    }
+                }
                 private byte[] _data;
                 private MachO m_root;
                 private MachO.CsBlob m_parent;
@@ -1158,19 +1176,21 @@ namespace Kaitai
                     return new Entitlements(new KaitaiStream(fileName));
                 }
 
-                public Entitlements(KaitaiStream io, MachO.CsBlob parent = null, MachO root = null) : base(io)
+                public Entitlements(KaitaiStream p__io, MachO.CsBlob p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _count = m_io.ReadU4be();
                     _items = new List<EntitlementsBlobIndex>((int) (Count));
-                    for (var i = 0; i < Count; i++) {
+                    for (var i = 0; i < Count; i++)
+                    {
                         _items.Add(new EntitlementsBlobIndex(m_io, this, m_root));
                     }
-                    }
+                }
                 private uint _count;
                 private List<EntitlementsBlobIndex> _items;
                 private MachO m_root;
@@ -1193,6 +1213,97 @@ namespace Kaitai
             public KaitaiStruct M_Parent { get { return m_parent; } }
             public byte[] M_RawBody { get { return __raw_body; } }
         }
+        public partial class RoutinesCommand : KaitaiStruct
+        {
+            public static RoutinesCommand FromFile(string fileName)
+            {
+                return new RoutinesCommand(new KaitaiStream(fileName));
+            }
+
+            public RoutinesCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _initAddress = m_io.ReadU4le();
+                _initModule = m_io.ReadU4le();
+                _reserved = m_io.ReadBytes(24);
+            }
+            private uint _initAddress;
+            private uint _initModule;
+            private byte[] _reserved;
+            private MachO m_root;
+            private MachO.LoadCommand m_parent;
+            public uint InitAddress { get { return _initAddress; } }
+            public uint InitModule { get { return _initModule; } }
+            public byte[] Reserved { get { return _reserved; } }
+            public MachO M_Root { get { return m_root; } }
+            public MachO.LoadCommand M_Parent { get { return m_parent; } }
+        }
+        public partial class RoutinesCommand64 : KaitaiStruct
+        {
+            public static RoutinesCommand64 FromFile(string fileName)
+            {
+                return new RoutinesCommand64(new KaitaiStream(fileName));
+            }
+
+            public RoutinesCommand64(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _initAddress = m_io.ReadU8le();
+                _initModule = m_io.ReadU8le();
+                _reserved = m_io.ReadBytes(48);
+            }
+            private ulong _initAddress;
+            private ulong _initModule;
+            private byte[] _reserved;
+            private MachO m_root;
+            private MachO.LoadCommand m_parent;
+            public ulong InitAddress { get { return _initAddress; } }
+            public ulong InitModule { get { return _initModule; } }
+            public byte[] Reserved { get { return _reserved; } }
+            public MachO M_Root { get { return m_root; } }
+            public MachO.LoadCommand M_Parent { get { return m_parent; } }
+        }
+        public partial class LinkerOptionCommand : KaitaiStruct
+        {
+            public static LinkerOptionCommand FromFile(string fileName)
+            {
+                return new LinkerOptionCommand(new KaitaiStream(fileName));
+            }
+
+            public LinkerOptionCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _numStrings = m_io.ReadU4le();
+                _strings = new List<string>((int) (NumStrings));
+                for (var i = 0; i < NumStrings; i++)
+                {
+                    _strings.Add(System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                }
+            }
+            private uint _numStrings;
+            private List<string> _strings;
+            private MachO m_root;
+            private MachO.LoadCommand m_parent;
+            public uint NumStrings { get { return _numStrings; } }
+            public List<string> Strings { get { return _strings; } }
+            public MachO M_Root { get { return m_root; } }
+            public MachO.LoadCommand M_Parent { get { return m_parent; } }
+        }
         public partial class SegmentCommand64 : KaitaiStruct
         {
             public static SegmentCommand64 FromFile(string fileName)
@@ -1200,27 +1311,29 @@ namespace Kaitai
                 return new SegmentCommand64(new KaitaiStream(fileName));
             }
 
-            public SegmentCommand64(KaitaiStream io, MachO.LoadCommand parent = null, MachO root = null) : base(io)
+            public SegmentCommand64(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _segname = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(16), 0));
                 _vmaddr = m_io.ReadU8le();
                 _vmsize = m_io.ReadU8le();
                 _fileoff = m_io.ReadU8le();
                 _filesize = m_io.ReadU8le();
-                _maxprot = ((MachO.VmProt) m_io.ReadU4le());
-                _initprot = ((MachO.VmProt) m_io.ReadU4le());
+                _maxprot = new VmProt(m_io, this, m_root);
+                _initprot = new VmProt(m_io, this, m_root);
                 _nsects = m_io.ReadU4le();
                 _flags = m_io.ReadU4le();
                 _sections = new List<Section64>((int) (Nsects));
-                for (var i = 0; i < Nsects; i++) {
+                for (var i = 0; i < Nsects; i++)
+                {
                     _sections.Add(new Section64(m_io, this, m_root));
                 }
-                }
+            }
             public partial class Section64 : KaitaiStruct
             {
                 public static Section64 FromFile(string fileName)
@@ -1228,14 +1341,15 @@ namespace Kaitai
                     return new Section64(new KaitaiStream(fileName));
                 }
 
-                public Section64(KaitaiStream io, MachO.SegmentCommand64 parent = null, MachO root = null) : base(io)
+                public Section64(KaitaiStream p__io, MachO.SegmentCommand64 p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     f_data = false;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _sectName = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(16), 0));
                     _segName = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(16), 0));
                     _addr = m_io.ReadU8le();
@@ -1248,7 +1362,7 @@ namespace Kaitai
                     _reserved1 = m_io.ReadU4le();
                     _reserved2 = m_io.ReadU4le();
                     _reserved3 = m_io.ReadU4le();
-                    }
+                }
                 public partial class CfStringList : KaitaiStruct
                 {
                     public static CfStringList FromFile(string fileName)
@@ -1256,18 +1370,23 @@ namespace Kaitai
                         return new CfStringList(new KaitaiStream(fileName));
                     }
 
-                    public CfStringList(KaitaiStream io, MachO.SegmentCommand64.Section64 parent = null, MachO root = null) : base(io)
+                    public CfStringList(KaitaiStream p__io, MachO.SegmentCommand64.Section64 p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _items = new List<CfString>();
-                        while (!m_io.IsEof) {
-                            _items.Add(new CfString(m_io, this, m_root));
+                        {
+                            var i = 0;
+                            while (!m_io.IsEof) {
+                                _items.Add(new CfString(m_io, this, m_root));
+                                i++;
+                            }
                         }
-                        }
+                    }
                     private List<CfString> _items;
                     private MachO m_root;
                     private MachO.SegmentCommand64.Section64 m_parent;
@@ -1282,18 +1401,19 @@ namespace Kaitai
                         return new CfString(new KaitaiStream(fileName));
                     }
 
-                    public CfString(KaitaiStream io, MachO.SegmentCommand64.Section64.CfStringList parent = null, MachO root = null) : base(io)
+                    public CfString(KaitaiStream p__io, MachO.SegmentCommand64.Section64.CfStringList p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _isa = m_io.ReadU8le();
                         _info = m_io.ReadU8le();
                         _data = m_io.ReadU8le();
                         _length = m_io.ReadU8le();
-                        }
+                    }
                     private ulong _isa;
                     private ulong _info;
                     private ulong _data;
@@ -1314,13 +1434,14 @@ namespace Kaitai
                         return new EhFrameItem(new KaitaiStream(fileName));
                     }
 
-                    public EhFrameItem(KaitaiStream io, MachO.SegmentCommand64.Section64.EhFrame parent = null, MachO root = null) : base(io)
+                    public EhFrameItem(KaitaiStream p__io, MachO.SegmentCommand64.Section64.EhFrame p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _length = m_io.ReadU4le();
                         if (Length == 4294967295) {
                             _length64 = m_io.ReadU8le();
@@ -1340,7 +1461,7 @@ namespace Kaitai
                             }
                             }
                         }
-                        }
+                    }
                     public partial class CharChain : KaitaiStruct
                     {
                         public static CharChain FromFile(string fileName)
@@ -1348,18 +1469,19 @@ namespace Kaitai
                             return new CharChain(new KaitaiStream(fileName));
                         }
 
-                        public CharChain(KaitaiStream io, KaitaiStruct parent = null, MachO root = null) : base(io)
+                        public CharChain(KaitaiStream p__io, KaitaiStruct p__parent = null, MachO p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _chr = m_io.ReadU1();
                             if (Chr != 0) {
                                 _next = new CharChain(m_io, this, m_root);
                             }
-                            }
+                        }
                         private byte _chr;
                         private CharChain _next;
                         private MachO m_root;
@@ -1376,13 +1498,14 @@ namespace Kaitai
                             return new Cie(new KaitaiStream(fileName));
                         }
 
-                        public Cie(KaitaiStream io, MachO.SegmentCommand64.Section64.EhFrameItem parent = null, MachO root = null) : base(io)
+                        public Cie(KaitaiStream p__io, MachO.SegmentCommand64.Section64.EhFrameItem p__parent = null, MachO p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _version = m_io.ReadU1();
                             _augStr = new CharChain(m_io, this, m_root);
                             _codeAlignmentFactor = new Uleb128(m_io, this, m_root);
@@ -1391,7 +1514,7 @@ namespace Kaitai
                             if (AugStr.Chr == 122) {
                                 _augmentation = new AugmentationEntry(m_io, this, m_root);
                             }
-                            }
+                        }
                         private byte _version;
                         private CharChain _augStr;
                         private Uleb128 _codeAlignmentFactor;
@@ -1416,36 +1539,37 @@ namespace Kaitai
                             return new AugmentationEntry(new KaitaiStream(fileName));
                         }
 
-                        public AugmentationEntry(KaitaiStream io, MachO.SegmentCommand64.Section64.EhFrameItem.Cie parent = null, MachO root = null) : base(io)
+                        public AugmentationEntry(KaitaiStream p__io, MachO.SegmentCommand64.Section64.EhFrameItem.Cie p__parent = null, MachO p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _length = new Uleb128(m_io, this, m_root);
                             if (M_Parent.AugStr.Next.Chr == 82) {
                                 _fdePointerEncoding = m_io.ReadU1();
                             }
-                            }
+                        }
                         private Uleb128 _length;
-                        private byte _fdePointerEncoding;
+                        private byte? _fdePointerEncoding;
                         private MachO m_root;
                         private MachO.SegmentCommand64.Section64.EhFrameItem.Cie m_parent;
                         public Uleb128 Length { get { return _length; } }
-                        public byte FdePointerEncoding { get { return _fdePointerEncoding; } }
+                        public byte? FdePointerEncoding { get { return _fdePointerEncoding; } }
                         public MachO M_Root { get { return m_root; } }
                         public MachO.SegmentCommand64.Section64.EhFrameItem.Cie M_Parent { get { return m_parent; } }
                     }
                     private uint _length;
-                    private ulong _length64;
+                    private ulong? _length64;
                     private uint _id;
                     private object _body;
                     private MachO m_root;
                     private MachO.SegmentCommand64.Section64.EhFrame m_parent;
                     private byte[] __raw_body;
                     public uint Length { get { return _length; } }
-                    public ulong Length64 { get { return _length64; } }
+                    public ulong? Length64 { get { return _length64; } }
                     public uint Id { get { return _id; } }
                     public object Body { get { return _body; } }
                     public MachO M_Root { get { return m_root; } }
@@ -1459,18 +1583,23 @@ namespace Kaitai
                         return new EhFrame(new KaitaiStream(fileName));
                     }
 
-                    public EhFrame(KaitaiStream io, MachO.SegmentCommand64.Section64 parent = null, MachO root = null) : base(io)
+                    public EhFrame(KaitaiStream p__io, MachO.SegmentCommand64.Section64 p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _items = new List<EhFrameItem>();
-                        while (!m_io.IsEof) {
-                            _items.Add(new EhFrameItem(m_io, this, m_root));
+                        {
+                            var i = 0;
+                            while (!m_io.IsEof) {
+                                _items.Add(new EhFrameItem(m_io, this, m_root));
+                                i++;
+                            }
                         }
-                        }
+                    }
                     private List<EhFrameItem> _items;
                     private MachO m_root;
                     private MachO.SegmentCommand64.Section64 m_parent;
@@ -1485,18 +1614,23 @@ namespace Kaitai
                         return new PointerList(new KaitaiStream(fileName));
                     }
 
-                    public PointerList(KaitaiStream io, MachO.SegmentCommand64.Section64 parent = null, MachO root = null) : base(io)
+                    public PointerList(KaitaiStream p__io, MachO.SegmentCommand64.Section64 p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _items = new List<ulong>();
-                        while (!m_io.IsEof) {
-                            _items.Add(m_io.ReadU8le());
+                        {
+                            var i = 0;
+                            while (!m_io.IsEof) {
+                                _items.Add(m_io.ReadU8le());
+                                i++;
+                            }
                         }
-                        }
+                    }
                     private List<ulong> _items;
                     private MachO m_root;
                     private MachO.SegmentCommand64.Section64 m_parent;
@@ -1511,18 +1645,23 @@ namespace Kaitai
                         return new StringList(new KaitaiStream(fileName));
                     }
 
-                    public StringList(KaitaiStream io, MachO.SegmentCommand64.Section64 parent = null, MachO root = null) : base(io)
+                    public StringList(KaitaiStream p__io, MachO.SegmentCommand64.Section64 p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _strings = new List<string>();
-                        while (!m_io.IsEof) {
-                            _strings.Add(System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                        {
+                            var i = 0;
+                            while (!m_io.IsEof) {
+                                _strings.Add(System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                                i++;
+                            }
                         }
-                        }
+                    }
                     private List<string> _strings;
                     private MachO m_root;
                     private MachO.SegmentCommand64.Section64 m_parent;
@@ -1710,6 +1849,90 @@ namespace Kaitai
             public MachO M_Root { get { return m_root; } }
             public MachO.LoadCommand M_Parent { get { return m_parent; } }
         }
+        public partial class VmProt : KaitaiStruct
+        {
+            public static VmProt FromFile(string fileName)
+            {
+                return new VmProt(new KaitaiStream(fileName));
+            }
+
+            public VmProt(KaitaiStream p__io, MachO.SegmentCommand64 p__parent = null, MachO p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _stripRead = m_io.ReadBitsInt(1) != 0;
+                _isMask = m_io.ReadBitsInt(1) != 0;
+                _reserved0 = m_io.ReadBitsInt(1) != 0;
+                _copy = m_io.ReadBitsInt(1) != 0;
+                _noChange = m_io.ReadBitsInt(1) != 0;
+                _execute = m_io.ReadBitsInt(1) != 0;
+                _write = m_io.ReadBitsInt(1) != 0;
+                _read = m_io.ReadBitsInt(1) != 0;
+                _reserved1 = m_io.ReadBitsInt(24);
+            }
+            private bool _stripRead;
+            private bool _isMask;
+            private bool _reserved0;
+            private bool _copy;
+            private bool _noChange;
+            private bool _execute;
+            private bool _write;
+            private bool _read;
+            private ulong _reserved1;
+            private MachO m_root;
+            private MachO.SegmentCommand64 m_parent;
+
+            /// <summary>
+            /// Special marker to support execute-only protection.
+            /// </summary>
+            public bool StripRead { get { return _stripRead; } }
+
+            /// <summary>
+            /// Indicates to use value as a mask against the actual protection bits.
+            /// </summary>
+            public bool IsMask { get { return _isMask; } }
+
+            /// <summary>
+            /// Reserved (unused) bit.
+            /// </summary>
+            public bool Reserved0 { get { return _reserved0; } }
+
+            /// <summary>
+            /// Used when write permission can not be obtained, to mark the entry as COW.
+            /// </summary>
+            public bool Copy { get { return _copy; } }
+
+            /// <summary>
+            /// Used only by memory_object_lock_request to indicate no change to page locks.
+            /// </summary>
+            public bool NoChange { get { return _noChange; } }
+
+            /// <summary>
+            /// Execute permission.
+            /// </summary>
+            public bool Execute { get { return _execute; } }
+
+            /// <summary>
+            /// Write permission.
+            /// </summary>
+            public bool Write { get { return _write; } }
+
+            /// <summary>
+            /// Read permission.
+            /// </summary>
+            public bool Read { get { return _read; } }
+
+            /// <summary>
+            /// Reserved (unused) bits.
+            /// </summary>
+            public ulong Reserved1 { get { return _reserved1; } }
+            public MachO M_Root { get { return m_root; } }
+            public MachO.SegmentCommand64 M_Parent { get { return m_parent; } }
+        }
         public partial class DysymtabCommand : KaitaiStruct
         {
             public static DysymtabCommand FromFile(string fileName)
@@ -1717,14 +1940,15 @@ namespace Kaitai
                 return new DysymtabCommand(new KaitaiStream(fileName));
             }
 
-            public DysymtabCommand(KaitaiStream io, MachO.LoadCommand parent = null, MachO root = null) : base(io)
+            public DysymtabCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_indirectSymbols = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _iLocalSym = m_io.ReadU4le();
                 _nLocalSym = m_io.ReadU4le();
                 _iExtDefSym = m_io.ReadU4le();
@@ -1743,7 +1967,7 @@ namespace Kaitai
                 _nExtRel = m_io.ReadU4le();
                 _locRelOff = m_io.ReadU4le();
                 _nLocRel = m_io.ReadU4le();
-                }
+            }
             private bool f_indirectSymbols;
             private List<uint> _indirectSymbols;
             public List<uint> IndirectSymbols
@@ -1756,7 +1980,8 @@ namespace Kaitai
                     long _pos = io.Pos;
                     io.Seek(IndirectSymOff);
                     _indirectSymbols = new List<uint>((int) (NIndirectSyms));
-                    for (var i = 0; i < NIndirectSyms; i++) {
+                    for (var i = 0; i < NIndirectSyms; i++)
+                    {
                         _indirectSymbols.Add(io.ReadU4le());
                     }
                     io.Seek(_pos);
@@ -1812,13 +2037,14 @@ namespace Kaitai
                 return new MachHeader(new KaitaiStream(fileName));
             }
 
-            public MachHeader(KaitaiStream io, MachO parent = null, MachO root = null) : base(io)
+            public MachHeader(KaitaiStream p__io, MachO p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _cputype = ((MachO.CpuType) m_io.ReadU4le());
                 _cpusubtype = m_io.ReadU4le();
                 _filetype = ((MachO.FileType) m_io.ReadU4le());
@@ -1828,14 +2054,14 @@ namespace Kaitai
                 if ( ((M_Root.Magic == MachO.MagicType.MachoBeX64) || (M_Root.Magic == MachO.MagicType.MachoLeX64)) ) {
                     _reserved = m_io.ReadU4le();
                 }
-                }
+            }
             private CpuType _cputype;
             private uint _cpusubtype;
             private FileType _filetype;
             private uint _ncmds;
             private uint _sizeofcmds;
             private uint _flags;
-            private uint _reserved;
+            private uint? _reserved;
             private MachO m_root;
             private MachO m_parent;
             public CpuType Cputype { get { return _cputype; } }
@@ -1844,7 +2070,7 @@ namespace Kaitai
             public uint Ncmds { get { return _ncmds; } }
             public uint Sizeofcmds { get { return _sizeofcmds; } }
             public uint Flags { get { return _flags; } }
-            public uint Reserved { get { return _reserved; } }
+            public uint? Reserved { get { return _reserved; } }
             public MachO M_Root { get { return m_root; } }
             public MachO M_Parent { get { return m_parent; } }
         }
@@ -1855,22 +2081,74 @@ namespace Kaitai
                 return new LinkeditDataCommand(new KaitaiStream(fileName));
             }
 
-            public LinkeditDataCommand(KaitaiStream io, MachO.LoadCommand parent = null, MachO root = null) : base(io)
+            public LinkeditDataCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _dataOff = m_io.ReadU4le();
                 _dataSize = m_io.ReadU4le();
-                }
+            }
             private uint _dataOff;
             private uint _dataSize;
             private MachO m_root;
             private MachO.LoadCommand m_parent;
             public uint DataOff { get { return _dataOff; } }
             public uint DataSize { get { return _dataSize; } }
+            public MachO M_Root { get { return m_root; } }
+            public MachO.LoadCommand M_Parent { get { return m_parent; } }
+        }
+        public partial class SubCommand : KaitaiStruct
+        {
+            public static SubCommand FromFile(string fileName)
+            {
+                return new SubCommand(new KaitaiStream(fileName));
+            }
+
+            public SubCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _name = new LcStr(m_io, this, m_root);
+            }
+            private LcStr _name;
+            private MachO m_root;
+            private MachO.LoadCommand m_parent;
+            public LcStr Name { get { return _name; } }
+            public MachO M_Root { get { return m_root; } }
+            public MachO.LoadCommand M_Parent { get { return m_parent; } }
+        }
+        public partial class TwolevelHintsCommand : KaitaiStruct
+        {
+            public static TwolevelHintsCommand FromFile(string fileName)
+            {
+                return new TwolevelHintsCommand(new KaitaiStream(fileName));
+            }
+
+            public TwolevelHintsCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _offset = m_io.ReadU4le();
+                _numHints = m_io.ReadU4le();
+            }
+            private uint _offset;
+            private uint _numHints;
+            private MachO m_root;
+            private MachO.LoadCommand m_parent;
+            public uint Offset { get { return _offset; } }
+            public uint NumHints { get { return _numHints; } }
             public MachO M_Root { get { return m_root; } }
             public MachO.LoadCommand M_Parent { get { return m_parent; } }
         }
@@ -1881,18 +2159,19 @@ namespace Kaitai
                 return new Version(new KaitaiStream(fileName));
             }
 
-            public Version(KaitaiStream io, MachO.VersionMinCommand parent = null, MachO root = null) : base(io)
+            public Version(KaitaiStream p__io, MachO.VersionMinCommand p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _p1 = m_io.ReadU1();
                 _minor = m_io.ReadU1();
                 _major = m_io.ReadU1();
                 _release = m_io.ReadU1();
-                }
+            }
             private byte _p1;
             private byte _minor;
             private byte _major;
@@ -1906,6 +2185,41 @@ namespace Kaitai
             public MachO M_Root { get { return m_root; } }
             public MachO.VersionMinCommand M_Parent { get { return m_parent; } }
         }
+        public partial class EncryptionInfoCommand : KaitaiStruct
+        {
+            public static EncryptionInfoCommand FromFile(string fileName)
+            {
+                return new EncryptionInfoCommand(new KaitaiStream(fileName));
+            }
+
+            public EncryptionInfoCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _cryptoff = m_io.ReadU4le();
+                _cryptsize = m_io.ReadU4le();
+                _cryptid = m_io.ReadU4le();
+                if ( ((M_Root.Magic == MachO.MagicType.MachoBeX64) || (M_Root.Magic == MachO.MagicType.MachoLeX64)) ) {
+                    _pad = m_io.ReadU4le();
+                }
+            }
+            private uint _cryptoff;
+            private uint _cryptsize;
+            private uint _cryptid;
+            private uint? _pad;
+            private MachO m_root;
+            private MachO.LoadCommand m_parent;
+            public uint Cryptoff { get { return _cryptoff; } }
+            public uint Cryptsize { get { return _cryptsize; } }
+            public uint Cryptid { get { return _cryptid; } }
+            public uint? Pad { get { return _pad; } }
+            public MachO M_Root { get { return m_root; } }
+            public MachO.LoadCommand M_Parent { get { return m_parent; } }
+        }
         public partial class CodeSignatureCommand : KaitaiStruct
         {
             public static CodeSignatureCommand FromFile(string fileName)
@@ -1913,17 +2227,18 @@ namespace Kaitai
                 return new CodeSignatureCommand(new KaitaiStream(fileName));
             }
 
-            public CodeSignatureCommand(KaitaiStream io, MachO.LoadCommand parent = null, MachO root = null) : base(io)
+            public CodeSignatureCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_codeSignature = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _dataOff = m_io.ReadU4le();
                 _dataSize = m_io.ReadU4le();
-                }
+            }
             private bool f_codeSignature;
             private CsBlob _codeSignature;
             public CsBlob CodeSignature
@@ -1961,6 +2276,7 @@ namespace Kaitai
                 return new DyldInfoCommand(new KaitaiStream(fileName));
             }
 
+
             public enum BindOpcode
             {
                 Done = 0,
@@ -1977,18 +2293,18 @@ namespace Kaitai
                 DoBindAddAddressImmediateScaled = 176,
                 DoBindUlebTimesSkippingUleb = 192,
             }
-
-            public DyldInfoCommand(KaitaiStream io, MachO.LoadCommand parent = null, MachO root = null) : base(io)
+            public DyldInfoCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_rebase = false;
                 f_bind = false;
                 f_lazyBind = false;
                 f_exports = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _rebaseOff = m_io.ReadU4le();
                 _rebaseSize = m_io.ReadU4le();
                 _bindOff = m_io.ReadU4le();
@@ -1999,7 +2315,7 @@ namespace Kaitai
                 _lazyBindSize = m_io.ReadU4le();
                 _exportOff = m_io.ReadU4le();
                 _exportSize = m_io.ReadU4le();
-                }
+            }
             public partial class BindItem : KaitaiStruct
             {
                 public static BindItem FromFile(string fileName)
@@ -2007,15 +2323,16 @@ namespace Kaitai
                     return new BindItem(new KaitaiStream(fileName));
                 }
 
-                public BindItem(KaitaiStream io, KaitaiStruct parent = null, MachO root = null) : base(io)
+                public BindItem(KaitaiStream p__io, KaitaiStruct p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     f_opcode = false;
                     f_immediate = false;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _opcodeAndImmediate = m_io.ReadU1();
                     if ( ((Opcode == MachO.DyldInfoCommand.BindOpcode.SetDylibOrdinalUleb) || (Opcode == MachO.DyldInfoCommand.BindOpcode.SetAppendSleb) || (Opcode == MachO.DyldInfoCommand.BindOpcode.SetSegmentAndOffsetUleb) || (Opcode == MachO.DyldInfoCommand.BindOpcode.AddAddressUleb) || (Opcode == MachO.DyldInfoCommand.BindOpcode.DoBindAddAddressUleb) || (Opcode == MachO.DyldInfoCommand.BindOpcode.DoBindUlebTimesSkippingUleb)) ) {
                         _uleb = new Uleb128(m_io, this, m_root);
@@ -2026,7 +2343,7 @@ namespace Kaitai
                     if (Opcode == MachO.DyldInfoCommand.BindOpcode.SetSymbolTrailingFlagsImmediate) {
                         _symbol = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(0, false, true, true));
                     }
-                    }
+                }
                 private bool f_opcode;
                 private BindOpcode _opcode;
                 public BindOpcode Opcode
@@ -2073,6 +2390,7 @@ namespace Kaitai
                     return new RebaseData(new KaitaiStream(fileName));
                 }
 
+
                 public enum Opcode
                 {
                     Done = 0,
@@ -2085,23 +2403,25 @@ namespace Kaitai
                     DoRebaseAddAddressUleb = 112,
                     DoRebaseUlebTimesSkippingUleb = 128,
                 }
-
-                public RebaseData(KaitaiStream io, MachO.DyldInfoCommand parent = null, MachO root = null) : base(io)
+                public RebaseData(KaitaiStream p__io, MachO.DyldInfoCommand p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _items = new List<RebaseItem>();
                     {
+                        var i = 0;
                         RebaseItem M_;
                         do {
                             M_ = new RebaseItem(m_io, this, m_root);
                             _items.Add(M_);
+                            i++;
                         } while (!(M_.Opcode == Opcode.Done));
                     }
-                    }
+                }
                 public partial class RebaseItem : KaitaiStruct
                 {
                     public static RebaseItem FromFile(string fileName)
@@ -2109,15 +2429,16 @@ namespace Kaitai
                         return new RebaseItem(new KaitaiStream(fileName));
                     }
 
-                    public RebaseItem(KaitaiStream io, MachO.DyldInfoCommand.RebaseData parent = null, MachO root = null) : base(io)
+                    public RebaseItem(KaitaiStream p__io, MachO.DyldInfoCommand.RebaseData p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         f_opcode = false;
                         f_immediate = false;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _opcodeAndImmediate = m_io.ReadU1();
                         if ( ((Opcode == MachO.DyldInfoCommand.RebaseData.Opcode.SetSegmentAndOffsetUleb) || (Opcode == MachO.DyldInfoCommand.RebaseData.Opcode.AddAddressUleb) || (Opcode == MachO.DyldInfoCommand.RebaseData.Opcode.DoRebaseUlebTimes) || (Opcode == MachO.DyldInfoCommand.RebaseData.Opcode.DoRebaseAddAddressUleb) || (Opcode == MachO.DyldInfoCommand.RebaseData.Opcode.DoRebaseUlebTimesSkippingUleb)) ) {
                             _uleb = new Uleb128(m_io, this, m_root);
@@ -2125,7 +2446,7 @@ namespace Kaitai
                         if (Opcode == MachO.DyldInfoCommand.RebaseData.Opcode.DoRebaseUlebTimesSkippingUleb) {
                             _skip = new Uleb128(m_io, this, m_root);
                         }
-                        }
+                    }
                     private bool f_opcode;
                     private Opcode _opcode;
                     public Opcode Opcode
@@ -2177,21 +2498,23 @@ namespace Kaitai
                     return new ExportNode(new KaitaiStream(fileName));
                 }
 
-                public ExportNode(KaitaiStream io, KaitaiStruct parent = null, MachO root = null) : base(io)
+                public ExportNode(KaitaiStream p__io, KaitaiStruct p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _terminalSize = new Uleb128(m_io, this, m_root);
                     _childrenCount = m_io.ReadU1();
                     _children = new List<Child>((int) (ChildrenCount));
-                    for (var i = 0; i < ChildrenCount; i++) {
+                    for (var i = 0; i < ChildrenCount; i++)
+                    {
                         _children.Add(new Child(m_io, this, m_root));
                     }
                     _terminal = m_io.ReadBytes(TerminalSize.Value);
-                    }
+                }
                 public partial class Child : KaitaiStruct
                 {
                     public static Child FromFile(string fileName)
@@ -2199,17 +2522,18 @@ namespace Kaitai
                         return new Child(new KaitaiStream(fileName));
                     }
 
-                    public Child(KaitaiStream io, MachO.DyldInfoCommand.ExportNode parent = null, MachO root = null) : base(io)
+                    public Child(KaitaiStream p__io, MachO.DyldInfoCommand.ExportNode p__parent = null, MachO p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         f_value = false;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _name = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(0, false, true, true));
                         _nodeOffset = new Uleb128(m_io, this, m_root);
-                        }
+                    }
                     private bool f_value;
                     private ExportNode _value;
                     public ExportNode Value
@@ -2255,22 +2579,25 @@ namespace Kaitai
                     return new BindData(new KaitaiStream(fileName));
                 }
 
-                public BindData(KaitaiStream io, MachO.DyldInfoCommand parent = null, MachO root = null) : base(io)
+                public BindData(KaitaiStream p__io, MachO.DyldInfoCommand p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _items = new List<BindItem>();
                     {
+                        var i = 0;
                         BindItem M_;
                         do {
                             M_ = new BindItem(m_io, this, m_root);
                             _items.Add(M_);
+                            i++;
                         } while (!(M_.Opcode == MachO.DyldInfoCommand.BindOpcode.Done));
                     }
-                    }
+                }
                 private List<BindItem> _items;
                 private MachO m_root;
                 private MachO.DyldInfoCommand m_parent;
@@ -2285,18 +2612,23 @@ namespace Kaitai
                     return new LazyBindData(new KaitaiStream(fileName));
                 }
 
-                public LazyBindData(KaitaiStream io, MachO.DyldInfoCommand parent = null, MachO root = null) : base(io)
+                public LazyBindData(KaitaiStream p__io, MachO.DyldInfoCommand p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _items = new List<BindItem>();
-                    while (!m_io.IsEof) {
-                        _items.Add(new BindItem(m_io, this, m_root));
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _items.Add(new BindItem(m_io, this, m_root));
+                            i++;
+                        }
                     }
-                    }
+                }
                 private List<BindItem> _items;
                 private MachO m_root;
                 private MachO.DyldInfoCommand m_parent;
@@ -2420,15 +2752,16 @@ namespace Kaitai
                 return new DylinkerCommand(new KaitaiStream(fileName));
             }
 
-            public DylinkerCommand(KaitaiStream io, MachO.LoadCommand parent = null, MachO root = null) : base(io)
+            public DylinkerCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _name = new LcStr(m_io, this, m_root);
-                }
+            }
             private LcStr _name;
             private MachO m_root;
             private MachO.LoadCommand m_parent;
@@ -2443,19 +2776,20 @@ namespace Kaitai
                 return new DylibCommand(new KaitaiStream(fileName));
             }
 
-            public DylibCommand(KaitaiStream io, MachO.LoadCommand parent = null, MachO root = null) : base(io)
+            public DylibCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _nameOffset = m_io.ReadU4le();
                 _timestamp = m_io.ReadU4le();
                 _currentVersion = m_io.ReadU4le();
                 _compatibilityVersion = m_io.ReadU4le();
                 _name = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
-                }
+            }
             private uint _nameOffset;
             private uint _timestamp;
             private uint _currentVersion;
@@ -2478,24 +2812,25 @@ namespace Kaitai
                 return new LcStr(new KaitaiStream(fileName));
             }
 
-            public LcStr(KaitaiStream io, MachO.DylinkerCommand parent = null, MachO root = null) : base(io)
+            public LcStr(KaitaiStream p__io, KaitaiStruct p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _length = m_io.ReadU4le();
                 _value = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
-                }
+            }
             private uint _length;
             private string _value;
             private MachO m_root;
-            private MachO.DylinkerCommand m_parent;
+            private KaitaiStruct m_parent;
             public uint Length { get { return _length; } }
             public string Value { get { return _value; } }
             public MachO M_Root { get { return m_root; } }
-            public MachO.DylinkerCommand M_Parent { get { return m_parent; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
         public partial class LoadCommand : KaitaiStruct
         {
@@ -2504,16 +2839,29 @@ namespace Kaitai
                 return new LoadCommand(new KaitaiStream(fileName));
             }
 
-            public LoadCommand(KaitaiStream io, MachO parent = null, MachO root = null) : base(io)
+            public LoadCommand(KaitaiStream p__io, MachO p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _type = ((MachO.LoadCommandType) m_io.ReadU4le());
                 _size = m_io.ReadU4le();
                 switch (Type) {
+                case MachO.LoadCommandType.SubLibrary: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new SubCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.SegmentSplitInfo: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new LinkeditDataCommand(io___raw_body, this, m_root);
+                    break;
+                }
                 case MachO.LoadCommandType.Rpath: {
                     __raw_body = m_io.ReadBytes((Size - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
@@ -2526,16 +2874,94 @@ namespace Kaitai
                     _body = new SourceVersionCommand(io___raw_body, this, m_root);
                     break;
                 }
+                case MachO.LoadCommandType.EncryptionInfo64: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new EncryptionInfoCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.VersionMinTvos: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new VersionMinCommand(io___raw_body, this, m_root);
+                    break;
+                }
                 case MachO.LoadCommandType.LoadDylinker: {
                     __raw_body = m_io.ReadBytes((Size - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new DylinkerCommand(io___raw_body, this, m_root);
                     break;
                 }
+                case MachO.LoadCommandType.SubFramework: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new SubCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.LoadWeakDylib: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DylibCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.VersionMinIphoneos: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new VersionMinCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.LinkerOptimizationHint: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new LinkeditDataCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.DyldEnvironment: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DylinkerCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.LoadUpwardDylib: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DylibCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.DylibCodeSignDrs: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new LinkeditDataCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.DyldInfo: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DyldInfoCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.ReexportDylib: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DylibCommand(io___raw_body, this, m_root);
+                    break;
+                }
                 case MachO.LoadCommandType.Symtab: {
                     __raw_body = m_io.ReadBytes((Size - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new SymtabCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.Routines64: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new RoutinesCommand64(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.IdDylinker: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DylinkerCommand(io___raw_body, this, m_root);
                     break;
                 }
                 case MachO.LoadCommandType.Main: {
@@ -2562,6 +2988,36 @@ namespace Kaitai
                     _body = new LinkeditDataCommand(io___raw_body, this, m_root);
                     break;
                 }
+                case MachO.LoadCommandType.VersionMinWatchos: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new VersionMinCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.EncryptionInfo: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new EncryptionInfoCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.SubUmbrella: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new SubCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.LinkerOption: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new LinkerOptionCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.TwolevelHints: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new TwolevelHintsCommand(io___raw_body, this, m_root);
+                    break;
+                }
                 case MachO.LoadCommandType.Uuid: {
                     __raw_body = m_io.ReadBytes((Size - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
@@ -2572,6 +3028,24 @@ namespace Kaitai
                     __raw_body = m_io.ReadBytes((Size - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new DyldInfoCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.LazyLoadDylib: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DylibCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.SubClient: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new SubCommand(io___raw_body, this, m_root);
+                    break;
+                }
+                case MachO.LoadCommandType.Routines: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new RoutinesCommand(io___raw_body, this, m_root);
                     break;
                 }
                 case MachO.LoadCommandType.CodeSignature: {
@@ -2598,12 +3072,18 @@ namespace Kaitai
                     _body = new SegmentCommand64(io___raw_body, this, m_root);
                     break;
                 }
+                case MachO.LoadCommandType.IdDylib: {
+                    __raw_body = m_io.ReadBytes((Size - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DylibCommand(io___raw_body, this, m_root);
+                    break;
+                }
                 default: {
                     _body = m_io.ReadBytes((Size - 8));
                     break;
                 }
                 }
-                }
+            }
             private LoadCommandType _type;
             private uint _size;
             private object _body;
@@ -2624,15 +3104,16 @@ namespace Kaitai
                 return new UuidCommand(new KaitaiStream(fileName));
             }
 
-            public UuidCommand(KaitaiStream io, MachO.LoadCommand parent = null, MachO root = null) : base(io)
+            public UuidCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _uuid = m_io.ReadBytes(16);
-                }
+            }
             private byte[] _uuid;
             private MachO m_root;
             private MachO.LoadCommand m_parent;
@@ -2647,20 +3128,21 @@ namespace Kaitai
                 return new SymtabCommand(new KaitaiStream(fileName));
             }
 
-            public SymtabCommand(KaitaiStream io, MachO.LoadCommand parent = null, MachO root = null) : base(io)
+            public SymtabCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_symbols = false;
                 f_strs = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _symOff = m_io.ReadU4le();
                 _nSyms = m_io.ReadU4le();
                 _strOff = m_io.ReadU4le();
                 _strSize = m_io.ReadU4le();
-                }
+            }
             public partial class StrTable : KaitaiStruct
             {
                 public static StrTable FromFile(string fileName)
@@ -2668,23 +3150,26 @@ namespace Kaitai
                     return new StrTable(new KaitaiStream(fileName));
                 }
 
-                public StrTable(KaitaiStream io, MachO.SymtabCommand parent = null, MachO root = null) : base(io)
+                public StrTable(KaitaiStream p__io, MachO.SymtabCommand p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _unknown = m_io.ReadU4le();
                     _items = new List<string>();
                     {
+                        var i = 0;
                         string M_;
                         do {
                             M_ = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(0, false, true, true));
                             _items.Add(M_);
+                            i++;
                         } while (!(M_ == ""));
                     }
-                    }
+                }
                 private uint _unknown;
                 private List<string> _items;
                 private MachO m_root;
@@ -2701,19 +3186,20 @@ namespace Kaitai
                     return new Nlist64(new KaitaiStream(fileName));
                 }
 
-                public Nlist64(KaitaiStream io, MachO.SymtabCommand parent = null, MachO root = null) : base(io)
+                public Nlist64(KaitaiStream p__io, MachO.SymtabCommand p__parent = null, MachO p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _un = m_io.ReadU4le();
                     _type = m_io.ReadU1();
                     _sect = m_io.ReadU1();
                     _desc = m_io.ReadU2le();
                     _value = m_io.ReadU8le();
-                    }
+                }
                 private uint _un;
                 private byte _type;
                 private byte _sect;
@@ -2741,7 +3227,8 @@ namespace Kaitai
                     long _pos = io.Pos;
                     io.Seek(SymOff);
                     _symbols = new List<Nlist64>((int) (NSyms));
-                    for (var i = 0; i < NSyms; i++) {
+                    for (var i = 0; i < NSyms; i++)
+                    {
                         _symbols.Add(new Nlist64(io, this, m_root));
                     }
                     io.Seek(_pos);
@@ -2790,22 +3277,23 @@ namespace Kaitai
                 return new VersionMinCommand(new KaitaiStream(fileName));
             }
 
-            public VersionMinCommand(KaitaiStream io, MachO.LoadCommand parent = null, MachO root = null) : base(io)
+            public VersionMinCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _version = new Version(m_io, this, m_root);
-                _reserved = new Version(m_io, this, m_root);
-                }
+                _sdk = new Version(m_io, this, m_root);
+            }
             private Version _version;
-            private Version _reserved;
+            private Version _sdk;
             private MachO m_root;
             private MachO.LoadCommand m_parent;
             public Version Version { get { return _version; } }
-            public Version Reserved { get { return _reserved; } }
+            public Version Sdk { get { return _sdk; } }
             public MachO M_Root { get { return m_root; } }
             public MachO.LoadCommand M_Parent { get { return m_parent; } }
         }
@@ -2816,16 +3304,17 @@ namespace Kaitai
                 return new EntryPointCommand(new KaitaiStream(fileName));
             }
 
-            public EntryPointCommand(KaitaiStream io, MachO.LoadCommand parent = null, MachO root = null) : base(io)
+            public EntryPointCommand(KaitaiStream p__io, MachO.LoadCommand p__parent = null, MachO p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entryOff = m_io.ReadU8le();
                 _stackSize = m_io.ReadU8le();
-                }
+            }
             private ulong _entryOff;
             private ulong _stackSize;
             private MachO m_root;

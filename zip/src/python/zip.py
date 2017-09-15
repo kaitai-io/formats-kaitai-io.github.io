@@ -61,8 +61,10 @@ class Zip(KaitaiStruct):
 
     def _read(self):
         self.sections = []
+        i = 0
         while not self._io.is_eof():
             self.sections.append(self._root.PkSection(self._io, self, self._root))
+            i += 1
 
 
     class LocalFile(KaitaiStruct):
@@ -117,8 +119,10 @@ class Zip(KaitaiStruct):
             def _read(self):
                 self.reserved = self._io.read_u4le()
                 self.attributes = []
+                i = 0
                 while not self._io.is_eof():
                     self.attributes.append(self._root.ExtraField.Ntfs.Attribute(self._io, self, self._root))
+                    i += 1
 
 
             class Attribute(KaitaiStruct):
@@ -270,8 +274,10 @@ class Zip(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.ExtraField(self._io, self, self._root))
+                i += 1
 
 
 

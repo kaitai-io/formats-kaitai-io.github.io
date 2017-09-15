@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.util.Arrays;
 
 public class CpioOldLe extends KaitaiStruct {
     public static CpioOldLe fromFile(String fileName) throws IOException {
-        return new CpioOldLe(new KaitaiStream(fileName));
+        return new CpioOldLe(new ByteBufferKaitaiStream(fileName));
     }
 
     public CpioOldLe(KaitaiStream _io) {
@@ -27,13 +28,17 @@ public class CpioOldLe extends KaitaiStruct {
     }
     private void _read() {
         this.files = new ArrayList<File>();
-        while (!this._io.isEof()) {
-            this.files.add(new File(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.files.add(new File(this._io, this, _root));
+                i++;
+            }
         }
     }
     public static class File extends KaitaiStruct {
         public static File fromFile(String fileName) throws IOException {
-            return new File(new KaitaiStream(fileName));
+            return new File(new ByteBufferKaitaiStream(fileName));
         }
 
         public File(KaitaiStream _io) {
@@ -86,7 +91,7 @@ public class CpioOldLe extends KaitaiStruct {
     }
     public static class FileHeader extends KaitaiStruct {
         public static FileHeader fromFile(String fileName) throws IOException {
-            return new FileHeader(new KaitaiStream(fileName));
+            return new FileHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public FileHeader(KaitaiStream _io) {
@@ -145,7 +150,7 @@ public class CpioOldLe extends KaitaiStruct {
     }
     public static class FourByteUnsignedInteger extends KaitaiStruct {
         public static FourByteUnsignedInteger fromFile(String fileName) throws IOException {
-            return new FourByteUnsignedInteger(new KaitaiStream(fileName));
+            return new FourByteUnsignedInteger(new ByteBufferKaitaiStream(fileName));
         }
 
         public FourByteUnsignedInteger(KaitaiStream _io) {

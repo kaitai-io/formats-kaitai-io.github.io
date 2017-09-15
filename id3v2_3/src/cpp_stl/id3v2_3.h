@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -24,16 +23,24 @@ public:
     class header_ex_t;
     class header_t;
 
-    id3v2_3_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, id3v2_3_t* p_root = 0);
+    id3v2_3_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, id3v2_3_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~id3v2_3_t();
 
     class u1be_synchsafe_t : public kaitai::kstruct {
 
     public:
 
-        u1be_synchsafe_t(kaitai::kstream* p_io, id3v2_3_t::u2be_synchsafe_t* p_parent = 0, id3v2_3_t* p_root = 0);
+        u1be_synchsafe_t(kaitai::kstream* p__io, id3v2_3_t::u2be_synchsafe_t* p__parent = 0, id3v2_3_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~u1be_synchsafe_t();
 
     private:
@@ -53,8 +60,12 @@ public:
 
     public:
 
-        u2be_synchsafe_t(kaitai::kstream* p_io, id3v2_3_t::u4be_synchsafe_t* p_parent = 0, id3v2_3_t* p_root = 0);
+        u2be_synchsafe_t(kaitai::kstream* p__io, id3v2_3_t::u4be_synchsafe_t* p__parent = 0, id3v2_3_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~u2be_synchsafe_t();
 
     private:
@@ -81,8 +92,12 @@ public:
 
     public:
 
-        tag_t(kaitai::kstream* p_io, id3v2_3_t* p_parent = 0, id3v2_3_t* p_root = 0);
+        tag_t(kaitai::kstream* p__io, id3v2_3_t* p__parent = 0, id3v2_3_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~tag_t();
 
     private:
@@ -118,8 +133,12 @@ public:
 
     public:
 
-        u4be_synchsafe_t(kaitai::kstream* p_io, id3v2_3_t::header_t* p_parent = 0, id3v2_3_t* p_root = 0);
+        u4be_synchsafe_t(kaitai::kstream* p__io, id3v2_3_t::header_t* p__parent = 0, id3v2_3_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~u4be_synchsafe_t();
 
     private:
@@ -147,16 +166,24 @@ public:
     public:
         class flags_t;
 
-        frame_t(kaitai::kstream* p_io, id3v2_3_t::tag_t* p_parent = 0, id3v2_3_t* p_root = 0);
+        frame_t(kaitai::kstream* p__io, id3v2_3_t::tag_t* p__parent = 0, id3v2_3_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~frame_t();
 
         class flags_t : public kaitai::kstruct {
 
         public:
 
-            flags_t(kaitai::kstream* p_io, id3v2_3_t::frame_t* p_parent = 0, id3v2_3_t* p_root = 0);
+            flags_t(kaitai::kstream* p__io, id3v2_3_t::frame_t* p__parent = 0, id3v2_3_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~flags_t();
 
         private:
@@ -218,16 +245,24 @@ public:
     public:
         class flags_ex_t;
 
-        header_ex_t(kaitai::kstream* p_io, id3v2_3_t::tag_t* p_parent = 0, id3v2_3_t* p_root = 0);
+        header_ex_t(kaitai::kstream* p__io, id3v2_3_t::tag_t* p__parent = 0, id3v2_3_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header_ex_t();
 
         class flags_ex_t : public kaitai::kstruct {
 
         public:
 
-            flags_ex_t(kaitai::kstream* p_io, id3v2_3_t::header_ex_t* p_parent = 0, id3v2_3_t* p_root = 0);
+            flags_ex_t(kaitai::kstream* p__io, id3v2_3_t::header_ex_t* p__parent = 0, id3v2_3_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~flags_ex_t();
 
         private:
@@ -276,16 +311,24 @@ public:
     public:
         class flags_t;
 
-        header_t(kaitai::kstream* p_io, id3v2_3_t::tag_t* p_parent = 0, id3v2_3_t* p_root = 0);
+        header_t(kaitai::kstream* p__io, id3v2_3_t::tag_t* p__parent = 0, id3v2_3_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header_t();
 
         class flags_t : public kaitai::kstruct {
 
         public:
 
-            flags_t(kaitai::kstream* p_io, id3v2_3_t::header_t* p_parent = 0, id3v2_3_t* p_root = 0);
+            flags_t(kaitai::kstream* p__io, id3v2_3_t::header_t* p__parent = 0, id3v2_3_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~flags_t();
 
         private:

@@ -200,7 +200,7 @@ data = Iso9660.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="ruby">data.sectorSize # => get sector size</code></pre>
+<pre><code class="ruby">data.sector_size # => get sector size</code></pre>
 
     </div>
 </section>
@@ -439,9 +439,11 @@ class Iso9660 &lt; Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       begin
         _ = DirEntry.new(@_io, self, @_root)
         @entries &lt;&lt; _
+        i += 1
       end until _.len == 0
       self
     end
@@ -483,8 +485,10 @@ class Iso9660 &lt; Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries &lt;&lt; PathTableEntryLe.new(@_io, self, @_root)
+        i += 1
       end
       self
     end

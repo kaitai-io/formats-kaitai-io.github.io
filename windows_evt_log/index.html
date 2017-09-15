@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Windows Event Log (EVT) format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Logs</li>
+        <li class="active">Windows Event Log (EVT)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Windows Event Log (EVT):
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>EVT files are Windows Event Log files written by older Windows
+operating systems (2000, XP, 2003). They are used as binary log
+files by several major Windows subsystems and
+applications. Typically, several of them can be found in
+<code>%WINDIR%\system32\config</code> directory:</p>
+<ul>
+<li>Application = <code>AppEvent.evt</code></li>
+<li>System = <code>SysEvent.evt</code></li>
+<li>Security = <code>SecEvent.evt</code></li>
+</ul>
+<p>Alternatively, one can export any system event log as distinct .evt
+file using relevant option in Event Viewer application.</p>
+<p>A Windows application can submit an entry into these logs using
+<a href="https://msdn.microsoft.com/en-us/library/aa363679(v=vs.85).aspx">ReportEvent</a>
+function of Windows API.</p>
+<p>Internally, EVT files consist of a fixed-size header and event
+records. There are several usage scenarios (non-wrapping vs wrapping
+log files) which result in slightly different organization of
+records.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        evt
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Windows Event Log (EVT)
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="Windows Event Log (EVT) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="Windows Event Log (EVT) parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Windows Event Log (EVT) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Windows Event Log (EVT) parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Windows Event Log (EVT) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Windows Event Log (EVT) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Windows Event Log (EVT) parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Windows Event Log (EVT) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Windows Event Log (EVT) parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Windows Event Log (EVT) parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="windows_evt_log.svg">
+            <img class="diagram-img" src="windows_evt_log.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+        
+        <pre><code class="yaml">meta:
+  id: windows_evt_log
+  title: Windows Event Log (EVT)
+  file-extension: evt
+  license: CC0-1.0
+  endian: le
+doc-ref: https://msdn.microsoft.com/en-us/library/bb309026(v=vs.85).aspx
+doc: |
+  EVT files are Windows Event Log files written by older Windows
+  operating systems (2000, XP, 2003). They are used as binary log
+  files by several major Windows subsystems and
+  applications. Typically, several of them can be found in
+  `%WINDIR%\system32\config` directory:
+
+  * Application = `AppEvent.evt`
+  * System = `SysEvent.evt`
+  * Security = `SecEvent.evt`
+
+  Alternatively, one can export any system event log as distinct .evt
+  file using relevant option in Event Viewer application.
+
+  A Windows application can submit an entry into these logs using
+  [ReportEvent](https://msdn.microsoft.com/en-us/library/aa363679(v=vs.85).aspx)
+  function of Windows API.
+
+  Internally, EVT files consist of a fixed-size header and event
+  records. There are several usage scenarios (non-wrapping vs wrapping
+  log files) which result in slightly different organization of
+  records.
+seq:
+  - id: header
+    type: header
+  - id: records
+    type: record
+    repeat: eos
+types:
+  header:
+    doc-ref: https://msdn.microsoft.com/en-us/library/bb309024(v=vs.85).aspx
+    seq:
+      - id: len_header
+        -orig-id: HeaderSize
+        type: u4
+        doc: Size of the header structure, must be 0x30.
+      - id: magic
+        -orig-id: Signature
+        contents: "LfLe"
+      - id: version_major
+        -orig-id: MajorVersion
+        type: u4
+      - id: version_minor
+        -orig-id: MinorVersion
+        type: u4
+      - id: ofs_start
+        -orig-id: StartOffset
+        type: u4
+        doc: Offset of oldest record kept in this log file.
+      - id: ofs_end
+        -orig-id: EndOffset
+        type: u4
+        doc: Offset of EOF log record, which is a placeholder for new record.
+      - id: cur_rec_idx
+        -orig-id: CurrentRecordNumber
+        type: u4
+        doc: |
+          Index of current record, where a new submission would be
+          written to (normally there should to EOF log record there).
+      - id: oldest_rec_idx
+        -orig-id: OldestRecordNumber
+        type: u4
+        doc: Index of oldest record in the log file
+      - id: len_file_max
+        -orig-id: MaxSize
+        type: u4
+        doc: Total maximum size of the log file
+      - id: flags
+        -orig-id: Flags
+        type: flags
+      - id: retention
+        -orig-id: Retention
+        type: u4
+      - id: len_header_2
+        -orig-id: EndHeaderSize
+        type: u4
+        doc: Size of the header structure repeated again, and again it must be 0x30.
+    types:
+      flags:
+        seq:
+          - id: reserved
+            type: b28
+          - id: archive
+            -orig-id: ELF_LOGFILE_ARCHIVE_SET
+            type: b1
+            doc: True if archive attribute has been set for this log file.
+          - id: log_full
+            -orig-id: ELF_LOGFILE_LOGFULL_WRITTEN            
+            type: b1
+            doc: True if last write operation failed due to log being full.
+          - id: wrap
+            -orig-id: ELF_LOGFILE_HEADER_WRAP
+            type: b1
+            doc: True if wrapping of record has occured.
+          - id: dirty
+            -orig-id: ELF_LOGFILE_HEADER_DIRTY
+            type: b1
+            doc: |
+              True if write operation was in progress, but log file
+              wasn't properly closed.
+  record:
+    doc-ref: https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx
+    seq:
+      - id: len_record
+        -orig-id: Length
+        type: u4
+        doc: Size of whole record, including all headers, footers and data
+      - id: type
+        -orig-id: Reserved
+        type: u4
+        doc: |
+          Type of record. Normal log records specify "LfLe"
+          (0x654c664c) in this field, cursor records use 0x11111111.
+      - id: body
+        size: len_record - 12
+        type:
+          switch-on: type
+          cases:
+            0x654c664c: record_body
+            0x11111111: cursor_record_body
+        doc: |
+          Record body interpretation depends on type of record. Body
+          size is specified in a way that it won't include a 8-byte
+          "header" (`len_record` + `type`) and a "footer"
+          (`len_record2`).
+      - id: len_record2
+        type: u4
+        doc: Size of whole record again.
+  record_body:
+    doc-ref: https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx
+    seq:    
+      - id: idx
+        -orig-id: RecordNumber
+        type: u4
+        doc: Index of record in the file.
+      - id: time_generated
+        -orig-id: TimeGenerated
+        type: u4
+        doc: Time when this record was generated, POSIX timestamp format.
+      - id: time_written
+        -orig-id: TimeWritten
+        type: u4
+        doc: Time when thsi record was written into the log file, POSIX timestamp format.
+      - id: event_id
+        -orig-id: EventID
+        type: u4
+        doc: |
+          Identifier of an event, meaning is specific to particular
+          source of events / event type.
+      - id: event_type
+        -orig-id: EventType
+        type: u2
+        enum: event_types
+        doc: Type of event.
+        doc-ref: https://msdn.microsoft.com/en-us/library/windows/desktop/aa363662(v=vs.85).aspx
+      - id: num_strings
+        -orig-id: NumStrings
+        type: u2
+        doc: Number of strings present in the log.
+      - id: event_category
+        -orig-id: EventCategory
+        type: u2
+        doc-ref: https://msdn.microsoft.com/en-us/library/windows/desktop/aa363649(v=vs.85).aspx
+      - id: reserved
+        -orig-id: ReservedFlags, ClosingRecordNumber
+        size: 6
+      - id: ofs_strings
+        -orig-id: StringOffset
+        type: u4
+        doc: Offset of strings present in the log
+      - id: len_user_sid
+        -orig-id: UserSidLength
+        type: u4
+      - id: ofs_user_sid
+        -orig-id: UserSidOffset
+        type: u4
+      - id: len_data
+        -orig-id: DataLength
+        type: u4
+      - id: ofs_data
+        -orig-id: DataOffset
+        type: u4
+    instances:
+#      strings:
+#        pos: ofs_strings - 8
+      user_sid:
+        pos: ofs_user_sid - 8
+        size: len_user_sid
+      data:
+        pos: ofs_data - 8
+        size: len_data
+    enums:
+      event_types:
+        1: error
+        2: audit_failure
+        3: audit_success
+        4: info
+        5: warning
+  cursor_record_body:
+    doc-ref: 'http://www.forensicswiki.org/wiki/Windows_Event_Log_(EVT)#Cursor_Record'
+    seq:
+      - id: magic
+        contents: [0x22, 0x22, 0x22, 0x22, 0x33, 0x33, 0x33, 0x33, 0x44, 0x44, 0x44, 0x44]
+      - id: ofs_first_record
+        type: u4
+      - id: ofs_next_record
+        type: u4
+      - id: idx_next_record
+        type: u4
+      - id: idx_first_record
+        type: u4
+</code></pre>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

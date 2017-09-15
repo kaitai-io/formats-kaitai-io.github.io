@@ -78,6 +78,7 @@ var Rar = (function() {
   Rar.prototype._read = function() {
     this.magic = new MagicSignature(this._io, this, this._root);
     this.blocks = [];
+    var i = 0;
     while (!this._io.isEof()) {
       switch (this.magic.version) {
       case 0:
@@ -87,6 +88,7 @@ var Rar = (function() {
         this.blocks.push(new BlockV5(this._io, this, this._root));
         break;
       }
+      i++;
     }
   }
 
@@ -307,7 +309,7 @@ var Rar = (function() {
       get: function() {
         if (this._m_month !== undefined)
           return this._m_month;
-        this._m_month = ((this.date & 480) >> 5);
+        this._m_month = ((this.date & 480) >>> 5);
         return this._m_month;
       }
     });
@@ -323,7 +325,7 @@ var Rar = (function() {
       get: function() {
         if (this._m_year !== undefined)
           return this._m_year;
-        this._m_year = (((this.date & 65024) >> 9) + 1980);
+        this._m_year = (((this.date & 65024) >>> 9) + 1980);
         return this._m_year;
       }
     });
@@ -331,7 +333,7 @@ var Rar = (function() {
       get: function() {
         if (this._m_minutes !== undefined)
           return this._m_minutes;
-        this._m_minutes = ((this.time & 2016) >> 5);
+        this._m_minutes = ((this.time & 2016) >>> 5);
         return this._m_minutes;
       }
     });
@@ -347,7 +349,7 @@ var Rar = (function() {
       get: function() {
         if (this._m_hours !== undefined)
           return this._m_hours;
-        this._m_hours = ((this.time & 63488) >> 11);
+        this._m_hours = ((this.time & 63488) >>> 11);
         return this._m_hours;
       }
     });

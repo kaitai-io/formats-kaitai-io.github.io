@@ -368,9 +368,11 @@ var DnsPacket = (function() {
     }
     DomainName.prototype._read = function() {
       this.name = []
+      var i = 0;
       do {
         var _ = new Label(this._io, this, this._root);
         this.name.push(_);
+        i++;
       } while (!( ((_.length == 0) || (_.length == 192)) ));
     }
 
@@ -447,7 +449,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_qr !== undefined)
           return this._m_qr;
-        this._m_qr = ((this.flag &amp; 32768) &gt;&gt; 15);
+        this._m_qr = ((this.flag &amp; 32768) &gt;&gt;&gt; 15);
         return this._m_qr;
       }
     });
@@ -455,7 +457,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_ra !== undefined)
           return this._m_ra;
-        this._m_ra = ((this.flag &amp; 128) &gt;&gt; 7);
+        this._m_ra = ((this.flag &amp; 128) &gt;&gt;&gt; 7);
         return this._m_ra;
       }
     });
@@ -463,7 +465,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_tc !== undefined)
           return this._m_tc;
-        this._m_tc = ((this.flag &amp; 512) &gt;&gt; 9);
+        this._m_tc = ((this.flag &amp; 512) &gt;&gt;&gt; 9);
         return this._m_tc;
       }
     });
@@ -471,7 +473,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_rcode !== undefined)
           return this._m_rcode;
-        this._m_rcode = ((this.flag &amp; 15) &gt;&gt; 0);
+        this._m_rcode = ((this.flag &amp; 15) &gt;&gt;&gt; 0);
         return this._m_rcode;
       }
     });
@@ -479,7 +481,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_opcode !== undefined)
           return this._m_opcode;
-        this._m_opcode = ((this.flag &amp; 30720) &gt;&gt; 11);
+        this._m_opcode = ((this.flag &amp; 30720) &gt;&gt;&gt; 11);
         return this._m_opcode;
       }
     });
@@ -487,7 +489,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_aa !== undefined)
           return this._m_aa;
-        this._m_aa = ((this.flag &amp; 1024) &gt;&gt; 10);
+        this._m_aa = ((this.flag &amp; 1024) &gt;&gt;&gt; 10);
         return this._m_aa;
       }
     });
@@ -495,7 +497,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_z !== undefined)
           return this._m_z;
-        this._m_z = ((this.flag &amp; 64) &gt;&gt; 6);
+        this._m_z = ((this.flag &amp; 64) &gt;&gt;&gt; 6);
         return this._m_z;
       }
     });
@@ -503,7 +505,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_rd !== undefined)
           return this._m_rd;
-        this._m_rd = ((this.flag &amp; 256) &gt;&gt; 8);
+        this._m_rd = ((this.flag &amp; 256) &gt;&gt;&gt; 8);
         return this._m_rd;
       }
     });
@@ -511,7 +513,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_cd !== undefined)
           return this._m_cd;
-        this._m_cd = ((this.flag &amp; 16) &gt;&gt; 4);
+        this._m_cd = ((this.flag &amp; 16) &gt;&gt;&gt; 4);
         return this._m_cd;
       }
     });
@@ -519,7 +521,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_ad !== undefined)
           return this._m_ad;
-        this._m_ad = ((this.flag &amp; 32) &gt;&gt; 5);
+        this._m_ad = ((this.flag &amp; 32) &gt;&gt;&gt; 5);
         return this._m_ad;
       }
     });

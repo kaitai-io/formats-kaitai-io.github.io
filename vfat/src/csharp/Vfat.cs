@@ -11,17 +11,18 @@ namespace Kaitai
             return new Vfat(new KaitaiStream(fileName));
         }
 
-        public Vfat(KaitaiStream io, KaitaiStruct parent = null, Vfat root = null) : base(io)
+        public Vfat(KaitaiStream p__io, KaitaiStruct p__parent = null, Vfat p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_fats = false;
             f_rootDir = false;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _bootSector = new BootSector(m_io, this, m_root);
-            }
+        }
 
         /// <summary>
         /// Extended BIOS Parameter Block for FAT32
@@ -33,13 +34,14 @@ namespace Kaitai
                 return new ExtBiosParamBlockFat32(new KaitaiStream(fileName));
             }
 
-            public ExtBiosParamBlockFat32(KaitaiStream io, Vfat.BootSector parent = null, Vfat root = null) : base(io)
+            public ExtBiosParamBlockFat32(KaitaiStream p__io, Vfat.BootSector p__parent = null, Vfat p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _lsPerFat = m_io.ReadU4le();
                 _hasActiveFat = m_io.ReadBitsInt(1) != 0;
                 _reserved1 = m_io.ReadBitsInt(3);
@@ -57,7 +59,7 @@ namespace Kaitai
                 _volumeId = m_io.ReadBytes(4);
                 _partitionVolumeLabel = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(11), 32));
                 _fsTypeStr = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 32));
-                }
+            }
             private uint _lsPerFat;
             private bool _hasActiveFat;
             private ulong _reserved1;
@@ -161,10 +163,10 @@ namespace Kaitai
                 return new BootSector(new KaitaiStream(fileName));
             }
 
-            public BootSector(KaitaiStream io, Vfat parent = null, Vfat root = null) : base(io)
+            public BootSector(KaitaiStream p__io, Vfat p__parent = null, Vfat p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_posFats = false;
                 f_lsPerFat = false;
                 f_lsPerRootDir = false;
@@ -174,7 +176,8 @@ namespace Kaitai
                 f_sizeRootDir = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _jmpInstruction = m_io.ReadBytes(3);
                 _oemName = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 32));
                 _bpb = new BiosParamBlock(m_io, this, m_root);
@@ -184,7 +187,7 @@ namespace Kaitai
                 if (IsFat32) {
                     _ebpbFat32 = new ExtBiosParamBlockFat32(m_io, this, m_root);
                 }
-                }
+            }
             private bool f_posFats;
             private int _posFats;
 
@@ -340,13 +343,14 @@ namespace Kaitai
                 return new BiosParamBlock(new KaitaiStream(fileName));
             }
 
-            public BiosParamBlock(KaitaiStream io, Vfat.BootSector parent = null, Vfat root = null) : base(io)
+            public BiosParamBlock(KaitaiStream p__io, Vfat.BootSector p__parent = null, Vfat p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _bytesPerLs = m_io.ReadU2le();
                 _lsPerClus = m_io.ReadU1();
                 _numReservedLs = m_io.ReadU2le();
@@ -359,7 +363,7 @@ namespace Kaitai
                 _numHeads = m_io.ReadU2le();
                 _numHiddenSectors = m_io.ReadU4le();
                 _totalLs4 = m_io.ReadU4le();
-                }
+            }
             private ushort _bytesPerLs;
             private byte _lsPerClus;
             private ushort _numReservedLs;
@@ -460,13 +464,14 @@ namespace Kaitai
                 return new RootDirectoryRec(new KaitaiStream(fileName));
             }
 
-            public RootDirectoryRec(KaitaiStream io, Vfat.RootDirectory parent = null, Vfat root = null) : base(io)
+            public RootDirectoryRec(KaitaiStream p__io, Vfat.RootDirectory p__parent = null, Vfat p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _fileName = m_io.ReadBytes(11);
                 _attribute = m_io.ReadU1();
                 _reserved = m_io.ReadBytes(10);
@@ -474,7 +479,7 @@ namespace Kaitai
                 _date = m_io.ReadU2le();
                 _startClus = m_io.ReadU2le();
                 _fileSize = m_io.ReadU4le();
-                }
+            }
             private byte[] _fileName;
             private byte _attribute;
             private byte[] _reserved;
@@ -501,18 +506,20 @@ namespace Kaitai
                 return new RootDirectory(new KaitaiStream(fileName));
             }
 
-            public RootDirectory(KaitaiStream io, Vfat parent = null, Vfat root = null) : base(io)
+            public RootDirectory(KaitaiStream p__io, Vfat p__parent = null, Vfat p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _records = new List<RootDirectoryRec>((int) (M_Root.BootSector.Bpb.MaxRootDirRec));
-                for (var i = 0; i < M_Root.BootSector.Bpb.MaxRootDirRec; i++) {
+                for (var i = 0; i < M_Root.BootSector.Bpb.MaxRootDirRec; i++)
+                {
                     _records.Add(new RootDirectoryRec(m_io, this, m_root));
                 }
-                }
+            }
             private List<RootDirectoryRec> _records;
             private Vfat m_root;
             private Vfat m_parent;
@@ -532,20 +539,21 @@ namespace Kaitai
                 return new ExtBiosParamBlockFat16(new KaitaiStream(fileName));
             }
 
-            public ExtBiosParamBlockFat16(KaitaiStream io, Vfat.BootSector parent = null, Vfat root = null) : base(io)
+            public ExtBiosParamBlockFat16(KaitaiStream p__io, Vfat.BootSector p__parent = null, Vfat p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _physDriveNum = m_io.ReadU1();
                 _reserved1 = m_io.ReadU1();
                 _extBootSign = m_io.ReadU1();
                 _volumeId = m_io.ReadBytes(4);
                 _partitionVolumeLabel = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(11), 32));
                 _fsTypeStr = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 32));
-                }
+            }
             private byte _physDriveNum;
             private byte _reserved1;
             private byte _extBootSign;
@@ -598,7 +606,8 @@ namespace Kaitai
                 long _pos = m_io.Pos;
                 m_io.Seek(BootSector.PosFats);
                 _fats = new List<byte[]>((int) (BootSector.Bpb.NumFats));
-                for (var i = 0; i < BootSector.Bpb.NumFats; i++) {
+                for (var i = 0; i < BootSector.Bpb.NumFats; i++)
+                {
                     _fats.Add(m_io.ReadBytes(BootSector.SizeFat));
                 }
                 m_io.Seek(_pos);

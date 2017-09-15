@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class ExifLe extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \ExifLe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ExifLe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -30,8 +30,8 @@ class ExifLe extends \Kaitai\Struct\Struct {
 namespace \ExifLe;
 
 class Ifd extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \ExifLe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ExifLe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -67,8 +67,8 @@ class Ifd extends \Kaitai\Struct\Struct {
 namespace \ExifLe;
 
 class IfdField extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ExifLe\Ifd $parent = null, \ExifLe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ExifLe\Ifd $_parent = null, \ExifLe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

@@ -234,7 +234,7 @@ var Elf = (function() {
       } else if (this._is_le === false) {
         this._readBE();
       } else {
-        throw new KaitaiUndecidedEndiannessError();
+        throw new KaitaiStream.UndecidedEndiannessError();
       }
     }
     EndianElf.prototype._readLE = function() {
@@ -326,7 +326,7 @@ var Elf = (function() {
         } else if (this._is_le === false) {
           this._readBE();
         } else {
-          throw new KaitaiUndecidedEndiannessError();
+          throw new KaitaiStream.UndecidedEndiannessError();
         }
       }
       ProgramHeader.prototype._readLE = function() {
@@ -463,7 +463,7 @@ var Elf = (function() {
         } else if (this._is_le === false) {
           this._readBE();
         } else {
-          throw new KaitaiUndecidedEndiannessError();
+          throw new KaitaiStream.UndecidedEndiannessError();
         }
       }
       SectionHeader.prototype._readLE = function() {
@@ -626,19 +626,23 @@ var Elf = (function() {
         } else if (this._is_le === false) {
           this._readBE();
         } else {
-          throw new KaitaiUndecidedEndiannessError();
+          throw new KaitaiStream.UndecidedEndiannessError();
         }
       }
       StringsStruct.prototype._readLE = function() {
         this.entries = [];
+        var i = 0;
         while (!this._io.isEof()) {
           this.entries.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII"));
+          i++;
         }
       }
       StringsStruct.prototype._readBE = function() {
         this.entries = [];
+        var i = 0;
         while (!this._io.isEof()) {
           this.entries.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII"));
+          i++;
         }
       }
 

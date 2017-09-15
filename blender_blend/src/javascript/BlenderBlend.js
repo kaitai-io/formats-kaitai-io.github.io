@@ -27,8 +27,10 @@ var BlenderBlend = (function() {
   BlenderBlend.prototype._read = function() {
     this.hdr = new Header(this._io, this, this._root);
     this.blocks = [];
+    var i = 0;
     while (!this._io.isEof()) {
       this.blocks.push(new FileBlock(this._io, this, this._root));
+      i++;
     }
   }
 

@@ -11,16 +11,17 @@ namespace Kaitai
             return new Cramfs(new KaitaiStream(fileName));
         }
 
-        public Cramfs(KaitaiStream io, KaitaiStruct parent = null, Cramfs root = null) : base(io)
+        public Cramfs(KaitaiStream p__io, KaitaiStruct p__parent = null, Cramfs p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_pageSize = false;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _superBlock = new SuperBlockStruct(m_io, this, m_root);
-            }
+        }
         public partial class SuperBlockStruct : KaitaiStruct
         {
             public static SuperBlockStruct FromFile(string fileName)
@@ -28,10 +29,10 @@ namespace Kaitai
                 return new SuperBlockStruct(new KaitaiStream(fileName));
             }
 
-            public SuperBlockStruct(KaitaiStream io, Cramfs parent = null, Cramfs root = null) : base(io)
+            public SuperBlockStruct(KaitaiStream p__io, Cramfs p__parent = null, Cramfs p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_flagFsidV2 = false;
                 f_flagHoles = false;
                 f_flagWrongSignature = false;
@@ -39,7 +40,8 @@ namespace Kaitai
                 f_flagShiftedRootOffset = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.EnsureFixedContents(new byte[] { 69, 61, 205, 40 });
                 _size = m_io.ReadU4le();
                 _flags = m_io.ReadU4le();
@@ -48,7 +50,7 @@ namespace Kaitai
                 _fsid = new Info(m_io, this, m_root);
                 _name = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(16));
                 _root = new Inode(m_io, this, m_root);
-                }
+            }
             private bool f_flagFsidV2;
             private int _flagFsidV2;
             public int FlagFsidV2
@@ -142,19 +144,21 @@ namespace Kaitai
                 return new ChunkedDataInode(new KaitaiStream(fileName));
             }
 
-            public ChunkedDataInode(KaitaiStream io, Cramfs.Inode parent = null, Cramfs root = null) : base(io)
+            public ChunkedDataInode(KaitaiStream p__io, Cramfs.Inode p__parent = null, Cramfs p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _blockEndIndex = new List<uint>((int) ((((M_Parent.Size + M_Root.PageSize) - 1) / M_Root.PageSize)));
-                for (var i = 0; i < (((M_Parent.Size + M_Root.PageSize) - 1) / M_Root.PageSize); i++) {
+                for (var i = 0; i < (((M_Parent.Size + M_Root.PageSize) - 1) / M_Root.PageSize); i++)
+                {
                     _blockEndIndex.Add(m_io.ReadU4le());
                 }
                 _rawBlocks = m_io.ReadBytesFull();
-                }
+            }
             private List<uint> _blockEndIndex;
             private byte[] _rawBlocks;
             private Cramfs m_root;
@@ -171,6 +175,7 @@ namespace Kaitai
                 return new Inode(new KaitaiStream(fileName));
             }
 
+
             public enum FileType
             {
                 Fifo = 1,
@@ -181,11 +186,10 @@ namespace Kaitai
                 Symlink = 10,
                 Socket = 12,
             }
-
-            public Inode(KaitaiStream io, KaitaiStruct parent = null, Cramfs root = null) : base(io)
+            public Inode(KaitaiStream p__io, KaitaiStruct p__parent = null, Cramfs p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_attr = false;
                 f_asRegFile = false;
                 f_permU = false;
@@ -200,13 +204,14 @@ namespace Kaitai
                 f_offset = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _mode = m_io.ReadU2le();
                 _uid = m_io.ReadU2le();
                 _sizeGid = m_io.ReadU4le();
                 _namelenOffset = m_io.ReadU4le();
                 _name = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytes(Namelen));
-                }
+            }
             private bool f_attr;
             private int _attr;
             public int Attr
@@ -401,20 +406,25 @@ namespace Kaitai
                 return new DirInode(new KaitaiStream(fileName));
             }
 
-            public DirInode(KaitaiStream io, Cramfs.Inode parent = null, Cramfs root = null) : base(io)
+            public DirInode(KaitaiStream p__io, Cramfs.Inode p__parent = null, Cramfs p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 if (M_Io.Size > 0) {
                     _children = new List<Inode>();
-                    while (!m_io.IsEof) {
-                        _children.Add(new Inode(m_io, this, m_root));
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _children.Add(new Inode(m_io, this, m_root));
+                            i++;
+                        }
                     }
                 }
-                }
+            }
             private List<Inode> _children;
             private Cramfs m_root;
             private Cramfs.Inode m_parent;
@@ -429,18 +439,19 @@ namespace Kaitai
                 return new Info(new KaitaiStream(fileName));
             }
 
-            public Info(KaitaiStream io, Cramfs.SuperBlockStruct parent = null, Cramfs root = null) : base(io)
+            public Info(KaitaiStream p__io, Cramfs.SuperBlockStruct p__parent = null, Cramfs p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _crc = m_io.ReadU4le();
                 _edition = m_io.ReadU4le();
                 _blocks = m_io.ReadU4le();
                 _files = m_io.ReadU4le();
-                }
+            }
             private uint _crc;
             private uint _edition;
             private uint _blocks;

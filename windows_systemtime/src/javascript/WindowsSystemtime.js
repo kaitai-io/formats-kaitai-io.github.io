@@ -3,6 +3,7 @@
 /**
  * Microsoft Windows SYSTEMTIME structure, stores individual components
  * of date and time as individual fields, up to millisecond precision.
+ * @see {@link https://msdn.microsoft.com/en-us/library/windows/desktop/ms724950.aspx|Source}
  */
 
 var WindowsSystemtime = (function() {

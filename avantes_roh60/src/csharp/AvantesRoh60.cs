@@ -39,13 +39,14 @@ namespace Kaitai
             return new AvantesRoh60(new KaitaiStream(fileName));
         }
 
-        public AvantesRoh60(KaitaiStream io, KaitaiStruct parent = null, AvantesRoh60 root = null) : base(io)
+        public AvantesRoh60(KaitaiStream p__io, KaitaiStruct p__parent = null, AvantesRoh60 p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _unknown1 = m_io.ReadF4le();
             _wlintercept = m_io.ReadF4le();
             _wlx1 = m_io.ReadF4le();
@@ -53,24 +54,28 @@ namespace Kaitai
             _wlx3 = m_io.ReadF4le();
             _wlx4 = m_io.ReadF4le();
             _unknown2 = new List<float>((int) (9));
-            for (var i = 0; i < 9; i++) {
+            for (var i = 0; i < 9; i++)
+            {
                 _unknown2.Add(m_io.ReadF4le());
             }
             _ipixfirst = m_io.ReadF4le();
             _ipixlast = m_io.ReadF4le();
             _unknown3 = new List<float>((int) (4));
-            for (var i = 0; i < 4; i++) {
+            for (var i = 0; i < 4; i++)
+            {
                 _unknown3.Add(m_io.ReadF4le());
             }
             _spectrum = new List<float>((int) ((((long) (Ipixlast) - (long) (Ipixfirst)) - 1)));
-            for (var i = 0; i < (((long) (Ipixlast) - (long) (Ipixfirst)) - 1); i++) {
+            for (var i = 0; i < (((long) (Ipixlast) - (long) (Ipixfirst)) - 1); i++)
+            {
                 _spectrum.Add(m_io.ReadF4le());
             }
             _unknown4 = new List<float>((int) (3));
-            for (var i = 0; i < 3; i++) {
+            for (var i = 0; i < 3; i++)
+            {
                 _unknown4.Add(m_io.ReadF4le());
             }
-            }
+        }
         private float _unknown1;
         private float _wlintercept;
         private float _wlx1;

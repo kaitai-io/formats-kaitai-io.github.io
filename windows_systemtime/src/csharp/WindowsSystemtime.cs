@@ -9,6 +9,9 @@ namespace Kaitai
     /// Microsoft Windows SYSTEMTIME structure, stores individual components
     /// of date and time as individual fields, up to millisecond precision.
     /// </summary>
+    /// <remarks>
+    /// Reference: <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms724950.aspx">Source</a>
+    /// </remarks>
     public partial class WindowsSystemtime : KaitaiStruct
     {
         public static WindowsSystemtime FromFile(string fileName)
@@ -16,13 +19,14 @@ namespace Kaitai
             return new WindowsSystemtime(new KaitaiStream(fileName));
         }
 
-        public WindowsSystemtime(KaitaiStream io, KaitaiStruct parent = null, WindowsSystemtime root = null) : base(io)
+        public WindowsSystemtime(KaitaiStream p__io, KaitaiStruct p__parent = null, WindowsSystemtime p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _year = m_io.ReadU2le();
             _month = m_io.ReadU2le();
             _dow = m_io.ReadU2le();
@@ -31,7 +35,7 @@ namespace Kaitai
             _min = m_io.ReadU2le();
             _sec = m_io.ReadU2le();
             _msec = m_io.ReadU2le();
-            }
+        }
         private ushort _year;
         private ushort _month;
         private ushort _dow;

@@ -40,8 +40,10 @@ class Swf(KaitaiStruct):
             self.frame_rate = self._io.read_u2le()
             self.frame_count = self._io.read_u2le()
             self.tags = []
+            i = 0
             while not self._io.is_eof():
                 self.tags.append(self._root.Tag(self._io, self, self._root))
+                i += 1
 
 
 

@@ -233,26 +233,27 @@ namespace Kaitai
             return new Swf(new KaitaiStream(fileName));
         }
 
+
         public enum TagType
         {
             FileAttributes = 69,
             AbcTag = 82,
         }
-
-        public Swf(KaitaiStream io, KaitaiStruct parent = null, Swf root = null) : base(io)
+        public Swf(KaitaiStream p__io, KaitaiStruct p__parent = null, Swf p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _junk = m_io.ReadBytes(4);
             _fileSize = m_io.ReadU4le();
             __raw__raw_body = m_io.ReadBytesFull();
             __raw_body = m_io.ProcessZlib(__raw__raw_body);
             var io___raw_body = new KaitaiStream(__raw_body);
             _body = new SwfBody(io___raw_body, this, m_root);
-            }
+        }
         public partial class SwfBody : KaitaiStruct
         {
             public static SwfBody FromFile(string fileName)
@@ -260,21 +261,26 @@ namespace Kaitai
                 return new SwfBody(new KaitaiStream(fileName));
             }
 
-            public SwfBody(KaitaiStream io, Swf parent = null, Swf root = null) : base(io)
+            public SwfBody(KaitaiStream p__io, Swf p__parent = null, Swf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _rect = new Rect(m_io, this, m_root);
                 _frameRate = m_io.ReadU2le();
                 _frameCount = m_io.ReadU2le();
                 _tags = new List&lt;Tag&gt;();
-                while (!m_io.IsEof) {
-                    _tags.Add(new Tag(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _tags.Add(new Tag(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private Rect _rect;
             private ushort _frameRate;
             private ushort _frameCount;
@@ -295,18 +301,19 @@ namespace Kaitai
                 return new Rect(new KaitaiStream(fileName));
             }
 
-            public Rect(KaitaiStream io, Swf.SwfBody parent = null, Swf root = null) : base(io)
+            public Rect(KaitaiStream p__io, Swf.SwfBody p__parent = null, Swf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_numBits = false;
                 f_numBytes = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _b1 = m_io.ReadU1();
                 _skip = m_io.ReadBytes(NumBytes);
-                }
+            }
             private bool f_numBits;
             private int _numBits;
             public int NumBits
@@ -349,13 +356,14 @@ namespace Kaitai
                 return new Tag(new KaitaiStream(fileName));
             }
 
-            public Tag(KaitaiStream io, Swf.SwfBody parent = null, Swf root = null) : base(io)
+            public Tag(KaitaiStream p__io, Swf.SwfBody p__parent = null, Swf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _recordHeader = new RecordHeader(m_io, this, m_root);
                 switch (RecordHeader.TagType) {
                 case Swf.TagType.AbcTag: {
@@ -369,7 +377,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private RecordHeader _recordHeader;
             private object _tagBody;
             private Swf m_root;
@@ -388,17 +396,18 @@ namespace Kaitai
                 return new AbcTagBody(new KaitaiStream(fileName));
             }
 
-            public AbcTagBody(KaitaiStream io, Swf.Tag parent = null, Swf root = null) : base(io)
+            public AbcTagBody(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _flags = m_io.ReadU4le();
                 _name = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true));
                 _abcdata = m_io.ReadBytesFull();
-                }
+            }
             private uint _flags;
             private string _name;
             private byte[] _abcdata;
@@ -417,21 +426,22 @@ namespace Kaitai
                 return new RecordHeader(new KaitaiStream(fileName));
             }
 
-            public RecordHeader(KaitaiStream io, Swf.Tag parent = null, Swf root = null) : base(io)
+            public RecordHeader(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_tagType = false;
                 f_smallLen = false;
                 f_len = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _tagCodeAndLength = m_io.ReadU2le();
                 if (SmallLen == 63) {
                     _bigLen = m_io.ReadS4le();
                 }
-                }
+            }
             private bool f_tagType;
             private TagType _tagType;
             public TagType TagType
@@ -472,11 +482,11 @@ namespace Kaitai
                 }
             }
             private ushort _tagCodeAndLength;
-            private int _bigLen;
+            private int? _bigLen;
             private Swf m_root;
             private Swf.Tag m_parent;
             public ushort TagCodeAndLength { get { return _tagCodeAndLength; } }
-            public int BigLen { get { return _bigLen; } }
+            public int? BigLen { get { return _bigLen; } }
             public Swf M_Root { get { return m_root; } }
             public Swf.Tag M_Parent { get { return m_parent; } }
         }

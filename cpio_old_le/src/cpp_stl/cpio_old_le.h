@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -20,16 +19,24 @@ public:
     class file_header_t;
     class four_byte_unsigned_integer_t;
 
-    cpio_old_le_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, cpio_old_le_t* p_root = 0);
+    cpio_old_le_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, cpio_old_le_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~cpio_old_le_t();
 
     class file_t : public kaitai::kstruct {
 
     public:
 
-        file_t(kaitai::kstream* p_io, cpio_old_le_t* p_parent = 0, cpio_old_le_t* p_root = 0);
+        file_t(kaitai::kstream* p__io, cpio_old_le_t* p__parent = 0, cpio_old_le_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~file_t();
 
     private:
@@ -77,8 +84,12 @@ public:
 
     public:
 
-        file_header_t(kaitai::kstream* p_io, cpio_old_le_t::file_t* p_parent = 0, cpio_old_le_t* p_root = 0);
+        file_header_t(kaitai::kstream* p__io, cpio_old_le_t::file_t* p__parent = 0, cpio_old_le_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~file_header_t();
 
     private:
@@ -116,8 +127,12 @@ public:
 
     public:
 
-        four_byte_unsigned_integer_t(kaitai::kstream* p_io, cpio_old_le_t::file_header_t* p_parent = 0, cpio_old_le_t* p_root = 0);
+        four_byte_unsigned_integer_t(kaitai::kstream* p__io, cpio_old_le_t::file_header_t* p__parent = 0, cpio_old_le_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~four_byte_unsigned_integer_t();
 
     private:

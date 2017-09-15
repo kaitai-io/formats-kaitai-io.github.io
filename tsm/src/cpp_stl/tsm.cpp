@@ -4,8 +4,8 @@
 
 
 
-tsm_t::tsm_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, tsm_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+tsm_t::tsm_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, tsm_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_index = false;
     _read();
@@ -22,9 +22,9 @@ tsm_t::~tsm_t() {
     }
 }
 
-tsm_t::header_t::header_t(kaitai::kstream *p_io, tsm_t* p_parent, tsm_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tsm_t::header_t::header_t(kaitai::kstream* p__io, tsm_t* p__parent, tsm_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -36,9 +36,9 @@ void tsm_t::header_t::_read() {
 tsm_t::header_t::~header_t() {
 }
 
-tsm_t::index_t::index_t(kaitai::kstream *p_io, tsm_t* p_parent, tsm_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tsm_t::index_t::index_t(kaitai::kstream* p__io, tsm_t* p__parent, tsm_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_entries = false;
     _read();
 }
@@ -48,15 +48,17 @@ void tsm_t::index_t::_read() {
 }
 
 tsm_t::index_t::~index_t() {
-    for (std::vector<index_header_t*>::iterator it = m_entries->begin(); it != m_entries->end(); ++it) {
-        delete *it;
+    if (f_entries) {
+        for (std::vector<index_header_t*>::iterator it = m_entries->begin(); it != m_entries->end(); ++it) {
+            delete *it;
+        }
+        delete m_entries;
     }
-    delete m_entries;
 }
 
-tsm_t::index_t::index_header_t::index_header_t(kaitai::kstream *p_io, tsm_t::index_t* p_parent, tsm_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tsm_t::index_t::index_header_t::index_header_t(kaitai::kstream* p__io, tsm_t::index_t* p__parent, tsm_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -80,9 +82,9 @@ tsm_t::index_t::index_header_t::~index_header_t() {
     delete m_index_entries;
 }
 
-tsm_t::index_t::index_header_t::index_entry_t::index_entry_t(kaitai::kstream *p_io, tsm_t::index_t::index_header_t* p_parent, tsm_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tsm_t::index_t::index_header_t::index_entry_t::index_entry_t(kaitai::kstream* p__io, tsm_t::index_t::index_header_t* p__parent, tsm_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_block = false;
     _read();
 }
@@ -100,9 +102,9 @@ tsm_t::index_t::index_header_t::index_entry_t::~index_entry_t() {
     }
 }
 
-tsm_t::index_t::index_header_t::index_entry_t::block_entry_t::block_entry_t(kaitai::kstream *p_io, tsm_t::index_t::index_header_t::index_entry_t* p_parent, tsm_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tsm_t::index_t::index_header_t::index_entry_t::block_entry_t::block_entry_t(kaitai::kstream* p__io, tsm_t::index_t::index_header_t::index_entry_t* p__parent, tsm_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -133,10 +135,12 @@ std::vector<tsm_t::index_t::index_header_t*>* tsm_t::index_t::entries() {
     m__io->seek(offset());
     m_entries = new std::vector<index_header_t*>();
     {
+        int i = 0;
         index_header_t* _;
         do {
             _ = new index_header_t(m__io, this, m__root);
             m_entries->push_back(_);
+            i++;
         } while (!(_io()->pos() == (_io()->size() - 8)));
     }
     m__io->seek(_pos);

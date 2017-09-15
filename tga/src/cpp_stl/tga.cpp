@@ -4,8 +4,8 @@
 
 
 
-tga_t::tga_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, tga_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+tga_t::tga_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, tga_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_footer = false;
     _read();
@@ -38,15 +38,17 @@ void tga_t::_read() {
 }
 
 tga_t::~tga_t() {
-    delete m_color_map;
+    if (!n_color_map) {
+        delete m_color_map;
+    }
     if (f_footer) {
         delete m_footer;
     }
 }
 
-tga_t::tga_footer_t::tga_footer_t(kaitai::kstream *p_io, tga_t* p_parent, tga_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tga_t::tga_footer_t::tga_footer_t(kaitai::kstream* p__io, tga_t* p__parent, tga_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_is_valid = false;
     f_ext_area = false;
     _read();
@@ -87,9 +89,9 @@ tga_t::tga_ext_area_t* tga_t::tga_footer_t::ext_area() {
     return m_ext_area;
 }
 
-tga_t::tga_ext_area_t::tga_ext_area_t(kaitai::kstream *p_io, tga_t::tga_footer_t* p_parent, tga_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tga_t::tga_ext_area_t::tga_ext_area_t(kaitai::kstream* p__io, tga_t::tga_footer_t* p__parent, tga_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

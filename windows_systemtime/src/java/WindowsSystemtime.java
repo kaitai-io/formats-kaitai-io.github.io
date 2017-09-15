@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -8,10 +9,11 @@ import java.io.IOException;
 /**
  * Microsoft Windows SYSTEMTIME structure, stores individual components
  * of date and time as individual fields, up to millisecond precision.
+ * @see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms724950.aspx">Source</a>
  */
 public class WindowsSystemtime extends KaitaiStruct {
     public static WindowsSystemtime fromFile(String fileName) throws IOException {
-        return new WindowsSystemtime(new KaitaiStream(fileName));
+        return new WindowsSystemtime(new ByteBufferKaitaiStream(fileName));
     }
 
     public WindowsSystemtime(KaitaiStream _io) {

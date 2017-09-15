@@ -49,7 +49,7 @@ sub _read {
 sub ofs_dir {
     my ($self) = @_;
     return $self->{ofs_dir} if ($self->{ofs_dir});
-    $self->{ofs_dir} = $self->offsets()[1];
+    $self->{ofs_dir} = @{$self->offsets()}[1];
     return $self->{ofs_dir};
 }
 
@@ -131,7 +131,7 @@ sub _read {
 sub size {
     my ($self) = @_;
     return $self->{size} if ($self->{size});
-    $self->{size} = (($self->_root()->offsets()[($self->offset_idx() + 1)] & 4294965248) - $self->_root()->offsets()[$self->offset_idx()]);
+    $self->{size} = ((@{$self->_root()->offsets()}[($self->offset_idx() + 1)] & 4294965248) - @{$self->_root()->offsets()}[$self->offset_idx()]);
     return $self->{size};
 }
 
@@ -140,7 +140,7 @@ sub body {
     return $self->{body} if ($self->{body});
     if (!($self->is_dir())) {
         my $_pos = $self->{_io}->pos();
-        $self->{_io}->seek(($self->_root()->offsets()[$self->offset_idx()] & 4294965248));
+        $self->{_io}->seek((@{$self->_root()->offsets()}[$self->offset_idx()] & 4294965248));
         $self->{body} = $self->{_io}->read_bytes($self->size());
         $self->{_io}->seek($_pos);
     }

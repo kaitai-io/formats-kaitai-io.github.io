@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.HashMap;
 
 public class StandardMidiFile extends KaitaiStruct {
     public static StandardMidiFile fromFile(String fileName) throws IOException {
-        return new StandardMidiFile(new KaitaiStream(fileName));
+        return new StandardMidiFile(new ByteBufferKaitaiStream(fileName));
     }
 
     public StandardMidiFile(KaitaiStream _io) {
@@ -35,7 +36,7 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     public static class TrackEvents extends KaitaiStruct {
         public static TrackEvents fromFile(String fileName) throws IOException {
-            return new TrackEvents(new KaitaiStream(fileName));
+            return new TrackEvents(new ByteBufferKaitaiStream(fileName));
         }
 
         public TrackEvents(KaitaiStream _io) {
@@ -54,8 +55,12 @@ public class StandardMidiFile extends KaitaiStruct {
         }
         private void _read() {
             this.event = new ArrayList<TrackEvent>();
-            while (!this._io.isEof()) {
-                this.event.add(new TrackEvent(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.event.add(new TrackEvent(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<TrackEvent> event;
@@ -67,7 +72,7 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     public static class TrackEvent extends KaitaiStruct {
         public static TrackEvent fromFile(String fileName) throws IOException {
-            return new TrackEvent(new KaitaiStream(fileName));
+            return new TrackEvent(new ByteBufferKaitaiStream(fileName));
         }
 
         public TrackEvent(KaitaiStream _io) {
@@ -159,7 +164,7 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     public static class PitchBendEvent extends KaitaiStruct {
         public static PitchBendEvent fromFile(String fileName) throws IOException {
-            return new PitchBendEvent(new KaitaiStream(fileName));
+            return new PitchBendEvent(new ByteBufferKaitaiStream(fileName));
         }
 
         public PitchBendEvent(KaitaiStream _io) {
@@ -207,7 +212,7 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     public static class ProgramChangeEvent extends KaitaiStruct {
         public static ProgramChangeEvent fromFile(String fileName) throws IOException {
-            return new ProgramChangeEvent(new KaitaiStream(fileName));
+            return new ProgramChangeEvent(new ByteBufferKaitaiStream(fileName));
         }
 
         public ProgramChangeEvent(KaitaiStream _io) {
@@ -236,7 +241,7 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     public static class NoteOnEvent extends KaitaiStruct {
         public static NoteOnEvent fromFile(String fileName) throws IOException {
-            return new NoteOnEvent(new KaitaiStream(fileName));
+            return new NoteOnEvent(new ByteBufferKaitaiStream(fileName));
         }
 
         public NoteOnEvent(KaitaiStream _io) {
@@ -268,7 +273,7 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     public static class PolyphonicPressureEvent extends KaitaiStruct {
         public static PolyphonicPressureEvent fromFile(String fileName) throws IOException {
-            return new PolyphonicPressureEvent(new KaitaiStream(fileName));
+            return new PolyphonicPressureEvent(new ByteBufferKaitaiStream(fileName));
         }
 
         public PolyphonicPressureEvent(KaitaiStream _io) {
@@ -300,7 +305,7 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     public static class Track extends KaitaiStruct {
         public static Track fromFile(String fileName) throws IOException {
-            return new Track(new KaitaiStream(fileName));
+            return new Track(new ByteBufferKaitaiStream(fileName));
         }
 
         public Track(KaitaiStream _io) {
@@ -321,7 +326,7 @@ public class StandardMidiFile extends KaitaiStruct {
             this.magic = this._io.ensureFixedContents(new byte[] { 77, 84, 114, 107 });
             this.trackLength = this._io.readU4be();
             this._raw_events = this._io.readBytes(trackLength());
-            KaitaiStream _io__raw_events = new KaitaiStream(_raw_events);
+            KaitaiStream _io__raw_events = new ByteBufferKaitaiStream(_raw_events);
             this.events = new TrackEvents(_io__raw_events, this, _root);
         }
         private byte[] magic;
@@ -339,7 +344,7 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     public static class MetaEventBody extends KaitaiStruct {
         public static MetaEventBody fromFile(String fileName) throws IOException {
-            return new MetaEventBody(new KaitaiStream(fileName));
+            return new MetaEventBody(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum MetaTypeEnum {
@@ -402,7 +407,7 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     public static class ControllerEvent extends KaitaiStruct {
         public static ControllerEvent fromFile(String fileName) throws IOException {
-            return new ControllerEvent(new KaitaiStream(fileName));
+            return new ControllerEvent(new ByteBufferKaitaiStream(fileName));
         }
 
         public ControllerEvent(KaitaiStream _io) {
@@ -434,7 +439,7 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
-            return new Header(new KaitaiStream(fileName));
+            return new Header(new ByteBufferKaitaiStream(fileName));
         }
 
         public Header(KaitaiStream _io) {
@@ -475,7 +480,7 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     public static class SysexEventBody extends KaitaiStruct {
         public static SysexEventBody fromFile(String fileName) throws IOException {
-            return new SysexEventBody(new KaitaiStream(fileName));
+            return new SysexEventBody(new ByteBufferKaitaiStream(fileName));
         }
 
         public SysexEventBody(KaitaiStream _io) {
@@ -507,7 +512,7 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     public static class NoteOffEvent extends KaitaiStruct {
         public static NoteOffEvent fromFile(String fileName) throws IOException {
-            return new NoteOffEvent(new KaitaiStream(fileName));
+            return new NoteOffEvent(new ByteBufferKaitaiStream(fileName));
         }
 
         public NoteOffEvent(KaitaiStream _io) {
@@ -539,7 +544,7 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     public static class ChannelPressureEvent extends KaitaiStruct {
         public static ChannelPressureEvent fromFile(String fileName) throws IOException {
-            return new ChannelPressureEvent(new KaitaiStream(fileName));
+            return new ChannelPressureEvent(new ByteBufferKaitaiStream(fileName));
         }
 
         public ChannelPressureEvent(KaitaiStream _io) {

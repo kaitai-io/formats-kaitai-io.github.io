@@ -92,8 +92,10 @@ class Bson(KaitaiStruct):
 
         def _read(self):
             self.elements = []
+            i = 0
             while not self._io.is_eof():
                 self.elements.append(self._root.Element(self._io, self, self._root))
+                i += 1
 
 
 

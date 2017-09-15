@@ -268,8 +268,7 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include &lt;kaitai/kaitaistruct.h&gt;
-#include &lt;kaitai/kaitaistream.h&gt;
+#include &quot;kaitai/kaitaistruct.h&quot;
 
 #include &lt;stdint.h&gt;
 #include &lt;vector&gt;
@@ -284,16 +283,24 @@ public:
     class entry_t;
     class filename_t;
 
-    heroes_of_might_and_magic_agg_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, heroes_of_might_and_magic_agg_t* p_root = 0);
+    heroes_of_might_and_magic_agg_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, heroes_of_might_and_magic_agg_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~heroes_of_might_and_magic_agg_t();
 
     class entry_t : public kaitai::kstruct {
 
     public:
 
-        entry_t(kaitai::kstream* p_io, heroes_of_might_and_magic_agg_t* p_parent = 0, heroes_of_might_and_magic_agg_t* p_root = 0);
+        entry_t(kaitai::kstream* p__io, heroes_of_might_and_magic_agg_t* p__parent = 0, heroes_of_might_and_magic_agg_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~entry_t();
 
     private:
@@ -324,8 +331,12 @@ public:
 
     public:
 
-        filename_t(kaitai::kstream* p_io, heroes_of_might_and_magic_agg_t* p_parent = 0, heroes_of_might_and_magic_agg_t* p_root = 0);
+        filename_t(kaitai::kstream* p__io, heroes_of_might_and_magic_agg_t* p__parent = 0, heroes_of_might_and_magic_agg_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~filename_t();
 
     private:
@@ -352,7 +363,7 @@ private:
     heroes_of_might_and_magic_agg_t* m__root;
     kaitai::kstruct* m__parent;
     std::vector&lt;std::string&gt;* m__raw_filenames;
-    kaitai::kstream* m__io__raw_filenames;
+    std::vector&lt;kaitai::kstream*&gt;* m__io__raw_filenames;
 
 public:
     uint16_t num_files() const { return m_num_files; }
@@ -360,7 +371,7 @@ public:
     heroes_of_might_and_magic_agg_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
     std::vector&lt;std::string&gt;* _raw_filenames() const { return m__raw_filenames; }
-    kaitai::kstream* _io__raw_filenames() const { return m__io__raw_filenames; }
+    std::vector&lt;kaitai::kstream*&gt;* _io__raw_filenames() const { return m__io__raw_filenames; }
 };
 
 #endif  // HEROES_OF_MIGHT_AND_MAGIC_AGG_H_
@@ -386,8 +397,8 @@ public:
 
 
 
-heroes_of_might_and_magic_agg_t::heroes_of_might_and_magic_agg_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, heroes_of_might_and_magic_agg_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+heroes_of_might_and_magic_agg_t::heroes_of_might_and_magic_agg_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, heroes_of_might_and_magic_agg_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_filenames = false;
     _read();
@@ -408,16 +419,22 @@ heroes_of_might_and_magic_agg_t::~heroes_of_might_and_magic_agg_t() {
         delete *it;
     }
     delete m_entries;
-    delete m__raw_filenames;
-    for (std::vector&lt;filename_t*&gt;::iterator it = m_filenames-&gt;begin(); it != m_filenames-&gt;end(); ++it) {
-        delete *it;
+    if (f_filenames) {
+        delete m__raw_filenames;
+        for (std::vector&lt;kaitai::kstream*&gt;::iterator it = m__io__raw_filenames-&gt;begin(); it != m__io__raw_filenames-&gt;end(); ++it) {
+            delete *it;
+        }
+        delete m__io__raw_filenames;
+        for (std::vector&lt;filename_t*&gt;::iterator it = m_filenames-&gt;begin(); it != m_filenames-&gt;end(); ++it) {
+            delete *it;
+        }
+        delete m_filenames;
     }
-    delete m_filenames;
 }
 
-heroes_of_might_and_magic_agg_t::entry_t::entry_t(kaitai::kstream *p_io, heroes_of_might_and_magic_agg_t* p_parent, heroes_of_might_and_magic_agg_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+heroes_of_might_and_magic_agg_t::entry_t::entry_t(kaitai::kstream* p__io, heroes_of_might_and_magic_agg_t* p__parent, heroes_of_might_and_magic_agg_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_body = false;
     _read();
 }
@@ -430,6 +447,8 @@ void heroes_of_might_and_magic_agg_t::entry_t::_read() {
 }
 
 heroes_of_might_and_magic_agg_t::entry_t::~entry_t() {
+    if (f_body) {
+    }
 }
 
 std::string heroes_of_might_and_magic_agg_t::entry_t::body() {
@@ -443,9 +462,9 @@ std::string heroes_of_might_and_magic_agg_t::entry_t::body() {
     return m_body;
 }
 
-heroes_of_might_and_magic_agg_t::filename_t::filename_t(kaitai::kstream *p_io, heroes_of_might_and_magic_agg_t* p_parent, heroes_of_might_and_magic_agg_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+heroes_of_might_and_magic_agg_t::filename_t::filename_t(kaitai::kstream* p__io, heroes_of_might_and_magic_agg_t* p__parent, heroes_of_might_and_magic_agg_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -464,12 +483,15 @@ std::vector&lt;heroes_of_might_and_magic_agg_t::filename_t*&gt;* heroes_of_might
     int l_filenames = num_files();
     m__raw_filenames = new std::vector&lt;std::string&gt;();
     m__raw_filenames-&gt;reserve(l_filenames);
+    m__io__raw_filenames = new std::vector&lt;kaitai::kstream*&gt;();
+    m__io__raw_filenames-&gt;reserve(l_filenames);
     m_filenames = new std::vector&lt;filename_t*&gt;();
     m_filenames-&gt;reserve(l_filenames);
     for (int i = 0; i &lt; l_filenames; i++) {
         m__raw_filenames-&gt;push_back(m__io-&gt;read_bytes(15));
-        m__io__raw_filenames = new kaitai::kstream(m__raw_filenames-&gt;at(m__raw_filenames-&gt;size() - 1));
-        m_filenames-&gt;push_back(new filename_t(m__io__raw_filenames, this, m__root));
+        kaitai::kstream* io__raw_filenames = new kaitai::kstream(m__raw_filenames-&gt;at(m__raw_filenames-&gt;size() - 1));
+        m__io__raw_filenames-&gt;push_back(io__raw_filenames);
+        m_filenames-&gt;push_back(new filename_t(io__raw_filenames, this, m__root));
     }
     m__io-&gt;seek(_pos);
     f_filenames = true;

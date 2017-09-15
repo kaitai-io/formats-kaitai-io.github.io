@@ -4,16 +4,20 @@
 
 
 
-zip_t::zip_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+zip_t::zip_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
 
 void zip_t::_read() {
     m_sections = new std::vector<pk_section_t*>();
-    while (!m__io->is_eof()) {
-        m_sections->push_back(new pk_section_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_sections->push_back(new pk_section_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -24,9 +28,9 @@ zip_t::~zip_t() {
     delete m_sections;
 }
 
-zip_t::local_file_t::local_file_t(kaitai::kstream *p_io, zip_t::pk_section_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+zip_t::local_file_t::local_file_t(kaitai::kstream* p__io, zip_t::pk_section_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -39,51 +43,67 @@ zip_t::local_file_t::~local_file_t() {
     delete m_header;
 }
 
-zip_t::extra_field_t::extra_field_t(kaitai::kstream *p_io, zip_t::extras_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+zip_t::extra_field_t::extra_field_t(kaitai::kstream* p__io, zip_t::extras_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void zip_t::extra_field_t::_read() {
     m_code = static_cast<zip_t::extra_codes_t>(m__io->read_u2le());
     m_size = m__io->read_u2le();
+    n_body = true;
     switch (code()) {
-    case EXTRA_CODES_NTFS:
+    case EXTRA_CODES_NTFS: {
+        n_body = false;
         m__raw_body = m__io->read_bytes(size());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new ntfs_t(m__io__raw_body, this, m__root);
         break;
-    case EXTRA_CODES_EXTENDED_TIMESTAMP:
+    }
+    case EXTRA_CODES_EXTENDED_TIMESTAMP: {
+        n_body = false;
         m__raw_body = m__io->read_bytes(size());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new extended_timestamp_t(m__io__raw_body, this, m__root);
         break;
-    case EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE:
+    }
+    case EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE: {
+        n_body = false;
         m__raw_body = m__io->read_bytes(size());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new infozip_unix_var_size_t(m__io__raw_body, this, m__root);
         break;
-    default:
+    }
+    default: {
         m__raw_body = m__io->read_bytes(size());
         break;
+    }
     }
 }
 
 zip_t::extra_field_t::~extra_field_t() {
+    if (!n_body) {
+        delete m__io__raw_body;
+        delete m_body;
+    }
 }
 
-zip_t::extra_field_t::ntfs_t::ntfs_t(kaitai::kstream *p_io, zip_t::extra_field_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+zip_t::extra_field_t::ntfs_t::ntfs_t(kaitai::kstream* p__io, zip_t::extra_field_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void zip_t::extra_field_t::ntfs_t::_read() {
     m_reserved = m__io->read_u4le();
     m_attributes = new std::vector<attribute_t*>();
-    while (!m__io->is_eof()) {
-        m_attributes->push_back(new attribute_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_attributes->push_back(new attribute_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -94,33 +114,41 @@ zip_t::extra_field_t::ntfs_t::~ntfs_t() {
     delete m_attributes;
 }
 
-zip_t::extra_field_t::ntfs_t::attribute_t::attribute_t(kaitai::kstream *p_io, zip_t::extra_field_t::ntfs_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+zip_t::extra_field_t::ntfs_t::attribute_t::attribute_t(kaitai::kstream* p__io, zip_t::extra_field_t::ntfs_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void zip_t::extra_field_t::ntfs_t::attribute_t::_read() {
     m_tag = m__io->read_u2le();
     m_size = m__io->read_u2le();
+    n_body = true;
     switch (tag()) {
-    case 1:
+    case 1: {
+        n_body = false;
         m__raw_body = m__io->read_bytes(size());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new attribute_1_t(m__io__raw_body, this, m__root);
         break;
-    default:
+    }
+    default: {
         m__raw_body = m__io->read_bytes(size());
         break;
+    }
     }
 }
 
 zip_t::extra_field_t::ntfs_t::attribute_t::~attribute_t() {
+    if (!n_body) {
+        delete m__io__raw_body;
+        delete m_body;
+    }
 }
 
-zip_t::extra_field_t::ntfs_t::attribute_1_t::attribute_1_t(kaitai::kstream *p_io, zip_t::extra_field_t::ntfs_t::attribute_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+zip_t::extra_field_t::ntfs_t::attribute_1_t::attribute_1_t(kaitai::kstream* p__io, zip_t::extra_field_t::ntfs_t::attribute_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -133,9 +161,9 @@ void zip_t::extra_field_t::ntfs_t::attribute_1_t::_read() {
 zip_t::extra_field_t::ntfs_t::attribute_1_t::~attribute_1_t() {
 }
 
-zip_t::extra_field_t::extended_timestamp_t::extended_timestamp_t(kaitai::kstream *p_io, zip_t::extra_field_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+zip_t::extra_field_t::extended_timestamp_t::extended_timestamp_t(kaitai::kstream* p__io, zip_t::extra_field_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -155,11 +183,15 @@ void zip_t::extra_field_t::extended_timestamp_t::_read() {
 }
 
 zip_t::extra_field_t::extended_timestamp_t::~extended_timestamp_t() {
+    if (!n_access_time) {
+    }
+    if (!n_create_time) {
+    }
 }
 
-zip_t::extra_field_t::infozip_unix_var_size_t::infozip_unix_var_size_t(kaitai::kstream *p_io, zip_t::extra_field_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+zip_t::extra_field_t::infozip_unix_var_size_t::infozip_unix_var_size_t(kaitai::kstream* p__io, zip_t::extra_field_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -174,9 +206,9 @@ void zip_t::extra_field_t::infozip_unix_var_size_t::_read() {
 zip_t::extra_field_t::infozip_unix_var_size_t::~infozip_unix_var_size_t() {
 }
 
-zip_t::central_dir_entry_t::central_dir_entry_t(kaitai::kstream *p_io, zip_t::pk_section_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+zip_t::central_dir_entry_t::central_dir_entry_t(kaitai::kstream* p__io, zip_t::pk_section_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_local_header = false;
     _read();
 }
@@ -224,41 +256,55 @@ zip_t::pk_section_t* zip_t::central_dir_entry_t::local_header() {
     return m_local_header;
 }
 
-zip_t::pk_section_t::pk_section_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+zip_t::pk_section_t::pk_section_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void zip_t::pk_section_t::_read() {
     m_magic = m__io->ensure_fixed_contents(std::string("\x50\x4B", 2));
     m_section_type = m__io->read_u2le();
+    n_body = true;
     switch (section_type()) {
-    case 513:
+    case 513: {
+        n_body = false;
         m_body = new central_dir_entry_t(m__io, this, m__root);
         break;
-    case 1027:
+    }
+    case 1027: {
+        n_body = false;
         m_body = new local_file_t(m__io, this, m__root);
         break;
-    case 1541:
+    }
+    case 1541: {
+        n_body = false;
         m_body = new end_of_central_dir_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 zip_t::pk_section_t::~pk_section_t() {
+    if (!n_body) {
+        delete m_body;
+    }
 }
 
-zip_t::extras_t::extras_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+zip_t::extras_t::extras_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void zip_t::extras_t::_read() {
     m_entries = new std::vector<extra_field_t*>();
-    while (!m__io->is_eof()) {
-        m_entries->push_back(new extra_field_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new extra_field_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -269,9 +315,9 @@ zip_t::extras_t::~extras_t() {
     delete m_entries;
 }
 
-zip_t::local_file_header_t::local_file_header_t(kaitai::kstream *p_io, zip_t::local_file_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+zip_t::local_file_header_t::local_file_header_t(kaitai::kstream* p__io, zip_t::local_file_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -297,9 +343,9 @@ zip_t::local_file_header_t::~local_file_header_t() {
     delete m_extra;
 }
 
-zip_t::end_of_central_dir_t::end_of_central_dir_t(kaitai::kstream *p_io, zip_t::pk_section_t* p_parent, zip_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+zip_t::end_of_central_dir_t::end_of_central_dir_t(kaitai::kstream* p__io, zip_t::pk_section_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

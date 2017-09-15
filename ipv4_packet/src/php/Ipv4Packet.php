@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Ipv4Packet extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Ipv4Packet $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Ipv4Packet $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -101,15 +101,17 @@ class Ipv4Packet extends \Kaitai\Struct\Struct {
 namespace \Ipv4Packet;
 
 class Ipv4Options extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ipv4Packet $parent = null, \Ipv4Packet $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ipv4Packet $_parent = null, \Ipv4Packet $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \Ipv4Packet\Ipv4Option($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -119,8 +121,8 @@ class Ipv4Options extends \Kaitai\Struct\Struct {
 namespace \Ipv4Packet;
 
 class Ipv4Option extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ipv4Packet\Ipv4Options $parent = null, \Ipv4Packet $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ipv4Packet\Ipv4Options $_parent = null, \Ipv4Packet $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

@@ -4,8 +4,8 @@
 
 
 
-ext2_t::ext2_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, ext2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+ext2_t::ext2_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_bg1 = false;
     f_root_dir = false;
@@ -21,9 +21,9 @@ ext2_t::~ext2_t() {
     }
 }
 
-ext2_t::super_block_struct_t::super_block_struct_t(kaitai::kstream *p_io, ext2_t::block_group_t* p_parent, ext2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ext2_t::super_block_struct_t::super_block_struct_t(kaitai::kstream* p__io, ext2_t::block_group_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_block_size = false;
     f_block_group_count = false;
     _read();
@@ -101,9 +101,9 @@ int32_t ext2_t::super_block_struct_t::block_group_count() {
     return m_block_group_count;
 }
 
-ext2_t::dir_entry_t::dir_entry_t(kaitai::kstream *p_io, ext2_t::dir_t* p_parent, ext2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ext2_t::dir_entry_t::dir_entry_t(kaitai::kstream* p__io, ext2_t::dir_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_inode = false;
     _read();
 }
@@ -128,9 +128,9 @@ ext2_t::inode_t* ext2_t::dir_entry_t::inode() {
     return m_inode;
 }
 
-ext2_t::inode_t::inode_t(kaitai::kstream *p_io, ext2_t::bgd_t* p_parent, ext2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ext2_t::inode_t::inode_t(kaitai::kstream* p__io, ext2_t::bgd_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_as_dir = false;
     _read();
 }
@@ -183,9 +183,9 @@ ext2_t::dir_t* ext2_t::inode_t::as_dir() {
     return m_as_dir;
 }
 
-ext2_t::block_ptr_t::block_ptr_t(kaitai::kstream *p_io, ext2_t::inode_t* p_parent, ext2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ext2_t::block_ptr_t::block_ptr_t(kaitai::kstream* p__io, ext2_t::inode_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_body = false;
     _read();
 }
@@ -214,16 +214,20 @@ ext2_t::raw_block_t* ext2_t::block_ptr_t::body() {
     return m_body;
 }
 
-ext2_t::dir_t::dir_t(kaitai::kstream *p_io, ext2_t::inode_t* p_parent, ext2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ext2_t::dir_t::dir_t(kaitai::kstream* p__io, ext2_t::inode_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void ext2_t::dir_t::_read() {
     m_entries = new std::vector<dir_entry_t*>();
-    while (!m__io->is_eof()) {
-        m_entries->push_back(new dir_entry_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new dir_entry_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -234,9 +238,9 @@ ext2_t::dir_t::~dir_t() {
     delete m_entries;
 }
 
-ext2_t::block_group_t::block_group_t(kaitai::kstream *p_io, ext2_t* p_parent, ext2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ext2_t::block_group_t::block_group_t(kaitai::kstream* p__io, ext2_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -261,9 +265,9 @@ ext2_t::block_group_t::~block_group_t() {
     delete m_block_groups;
 }
 
-ext2_t::bgd_t::bgd_t(kaitai::kstream *p_io, ext2_t::block_group_t* p_parent, ext2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ext2_t::bgd_t::bgd_t(kaitai::kstream* p__io, ext2_t::block_group_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_block_bitmap = false;
     f_inode_bitmap = false;
     f_inodes = false;
@@ -281,10 +285,16 @@ void ext2_t::bgd_t::_read() {
 }
 
 ext2_t::bgd_t::~bgd_t() {
-    for (std::vector<inode_t*>::iterator it = m_inodes->begin(); it != m_inodes->end(); ++it) {
-        delete *it;
+    if (f_block_bitmap) {
     }
-    delete m_inodes;
+    if (f_inode_bitmap) {
+    }
+    if (f_inodes) {
+        for (std::vector<inode_t*>::iterator it = m_inodes->begin(); it != m_inodes->end(); ++it) {
+            delete *it;
+        }
+        delete m_inodes;
+    }
 }
 
 std::string ext2_t::bgd_t::block_bitmap() {
@@ -325,9 +335,9 @@ std::vector<ext2_t::inode_t*>* ext2_t::bgd_t::inodes() {
     return m_inodes;
 }
 
-ext2_t::raw_block_t::raw_block_t(kaitai::kstream *p_io, ext2_t::block_ptr_t* p_parent, ext2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ext2_t::raw_block_t::raw_block_t(kaitai::kstream* p__io, ext2_t::block_ptr_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

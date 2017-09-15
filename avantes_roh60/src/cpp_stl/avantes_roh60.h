@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -45,8 +44,12 @@ class avantes_roh60_t : public kaitai::kstruct {
 
 public:
 
-    avantes_roh60_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, avantes_roh60_t* p_root = 0);
+    avantes_roh60_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, avantes_roh60_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~avantes_roh60_t();
 
 private:

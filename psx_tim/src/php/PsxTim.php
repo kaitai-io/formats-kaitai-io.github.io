@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class PsxTim extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \PsxTim $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PsxTim $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -50,8 +50,8 @@ class PsxTim extends \Kaitai\Struct\Struct {
 namespace \PsxTim;
 
 class Bitmap extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PsxTim $parent = null, \PsxTim $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PsxTim $_parent = null, \PsxTim $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

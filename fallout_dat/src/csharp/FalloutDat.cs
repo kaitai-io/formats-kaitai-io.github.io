@@ -11,32 +11,35 @@ namespace Kaitai
             return new FalloutDat(new KaitaiStream(fileName));
         }
 
+
         public enum Compression
         {
             None = 32,
             Lzss = 64,
         }
-
-        public FalloutDat(KaitaiStream io, KaitaiStruct parent = null, FalloutDat root = null) : base(io)
+        public FalloutDat(KaitaiStream p__io, KaitaiStruct p__parent = null, FalloutDat p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _folderCount = m_io.ReadU4be();
             _unknown1 = m_io.ReadU4be();
             _unknown2 = m_io.ReadU4be();
             _timestamp = m_io.ReadU4be();
             _folderNames = new List<Pstr>((int) (FolderCount));
-            for (var i = 0; i < FolderCount; i++) {
+            for (var i = 0; i < FolderCount; i++)
+            {
                 _folderNames.Add(new Pstr(m_io, this, m_root));
             }
             _folders = new List<Folder>((int) (FolderCount));
-            for (var i = 0; i < FolderCount; i++) {
+            for (var i = 0; i < FolderCount; i++)
+            {
                 _folders.Add(new Folder(m_io, this, m_root));
             }
-            }
+        }
         public partial class Pstr : KaitaiStruct
         {
             public static Pstr FromFile(string fileName)
@@ -44,16 +47,17 @@ namespace Kaitai
                 return new Pstr(new KaitaiStream(fileName));
             }
 
-            public Pstr(KaitaiStream io, KaitaiStruct parent = null, FalloutDat root = null) : base(io)
+            public Pstr(KaitaiStream p__io, KaitaiStruct p__parent = null, FalloutDat p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _size = m_io.ReadU1();
                 _str = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(Size));
-                }
+            }
             private byte _size;
             private string _str;
             private FalloutDat m_root;
@@ -70,22 +74,24 @@ namespace Kaitai
                 return new Folder(new KaitaiStream(fileName));
             }
 
-            public Folder(KaitaiStream io, FalloutDat parent = null, FalloutDat root = null) : base(io)
+            public Folder(KaitaiStream p__io, FalloutDat p__parent = null, FalloutDat p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _fileCount = m_io.ReadU4be();
                 _unknown = m_io.ReadU4be();
                 _flags = m_io.ReadU4be();
                 _timestamp = m_io.ReadU4be();
                 _files = new List<File>((int) (FileCount));
-                for (var i = 0; i < FileCount; i++) {
+                for (var i = 0; i < FileCount; i++)
+                {
                     _files.Add(new File(m_io, this, m_root));
                 }
-                }
+            }
             private uint _fileCount;
             private uint _unknown;
             private uint _flags;
@@ -108,20 +114,21 @@ namespace Kaitai
                 return new File(new KaitaiStream(fileName));
             }
 
-            public File(KaitaiStream io, FalloutDat.Folder parent = null, FalloutDat root = null) : base(io)
+            public File(KaitaiStream p__io, FalloutDat.Folder p__parent = null, FalloutDat p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_contents = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _name = new Pstr(m_io, this, m_root);
                 _flags = ((FalloutDat.Compression) m_io.ReadU4be());
                 _offset = m_io.ReadU4be();
                 _sizeUnpacked = m_io.ReadU4be();
                 _sizePacked = m_io.ReadU4be();
-                }
+            }
             private bool f_contents;
             private byte[] _contents;
             public byte[] Contents

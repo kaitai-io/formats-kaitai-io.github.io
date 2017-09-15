@@ -250,7 +250,7 @@ sub bg1 {
 sub root_dir {
     my ($self) = @_;
     return $self-&gt;{root_dir} if ($self-&gt;{root_dir});
-    $self-&gt;{root_dir} = $self-&gt;bg1()-&gt;block_groups()[0]-&gt;inodes()[1]-&gt;as_dir();
+    $self-&gt;{root_dir} = @{@{$self-&gt;bg1()-&gt;block_groups()}[0]-&gt;inodes()}[1]-&gt;as_dir();
     return $self-&gt;{root_dir};
 }
 
@@ -625,7 +625,7 @@ sub _read {
 sub inode {
     my ($self) = @_;
     return $self-&gt;{inode} if ($self-&gt;{inode});
-    $self-&gt;{inode} = $self-&gt;_root()-&gt;bg1()-&gt;block_groups()[int(($self-&gt;inode_ptr() - 1) / $self-&gt;_root()-&gt;bg1()-&gt;super_block()-&gt;inodes_per_group())]-&gt;inodes()[(($self-&gt;inode_ptr() - 1) % $self-&gt;_root()-&gt;bg1()-&gt;super_block()-&gt;inodes_per_group())];
+    $self-&gt;{inode} = @{@{$self-&gt;_root()-&gt;bg1()-&gt;block_groups()}[int(($self-&gt;inode_ptr() - 1) / $self-&gt;_root()-&gt;bg1()-&gt;super_block()-&gt;inodes_per_group())]-&gt;inodes()}[(($self-&gt;inode_ptr() - 1) % $self-&gt;_root()-&gt;bg1()-&gt;super_block()-&gt;inodes_per_group())];
     return $self-&gt;{inode};
 }
 
@@ -716,7 +716,7 @@ sub _read {
 sub as_dir {
     my ($self) = @_;
     return $self-&gt;{as_dir} if ($self-&gt;{as_dir});
-    my $io = $self-&gt;block()[0]-&gt;body()-&gt;_io();
+    my $io = @{$self-&gt;block()}[0]-&gt;body()-&gt;_io();
     my $_pos = $io-&gt;pos();
     $io-&gt;seek(0);
     $self-&gt;{as_dir} = Ext2::Dir-&gt;new($io, $self, $self-&gt;{_root});

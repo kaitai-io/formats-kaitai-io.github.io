@@ -4,8 +4,8 @@
 
 
 
-s3m_t::s3m_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, s3m_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+s3m_t::s3m_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, s3m_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -84,9 +84,9 @@ s3m_t::~s3m_t() {
     }
 }
 
-s3m_t::channel_pan_t::channel_pan_t(kaitai::kstream *p_io, s3m_t* p_parent, s3m_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+s3m_t::channel_pan_t::channel_pan_t(kaitai::kstream* p__io, s3m_t* p__parent, s3m_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -100,9 +100,9 @@ void s3m_t::channel_pan_t::_read() {
 s3m_t::channel_pan_t::~channel_pan_t() {
 }
 
-s3m_t::pattern_cell_t::pattern_cell_t(kaitai::kstream *p_io, s3m_t::pattern_cells_t* p_parent, s3m_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+s3m_t::pattern_cell_t::pattern_cell_t(kaitai::kstream* p__io, s3m_t::pattern_cells_t* p__parent, s3m_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -140,18 +140,32 @@ void s3m_t::pattern_cell_t::_read() {
 }
 
 s3m_t::pattern_cell_t::~pattern_cell_t() {
+    if (!n_note) {
+    }
+    if (!n_instrument) {
+    }
+    if (!n_volume) {
+    }
+    if (!n_fx_type) {
+    }
+    if (!n_fx_value) {
+    }
 }
 
-s3m_t::pattern_cells_t::pattern_cells_t(kaitai::kstream *p_io, s3m_t::pattern_t* p_parent, s3m_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+s3m_t::pattern_cells_t::pattern_cells_t(kaitai::kstream* p__io, s3m_t::pattern_t* p__parent, s3m_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void s3m_t::pattern_cells_t::_read() {
     m_cells = new std::vector<pattern_cell_t*>();
-    while (!m__io->is_eof()) {
-        m_cells->push_back(new pattern_cell_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_cells->push_back(new pattern_cell_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -162,9 +176,9 @@ s3m_t::pattern_cells_t::~pattern_cells_t() {
     delete m_cells;
 }
 
-s3m_t::channel_t::channel_t(kaitai::kstream *p_io, s3m_t* p_parent, s3m_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+s3m_t::channel_t::channel_t(kaitai::kstream* p__io, s3m_t* p__parent, s3m_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -176,9 +190,9 @@ void s3m_t::channel_t::_read() {
 s3m_t::channel_t::~channel_t() {
 }
 
-s3m_t::swapped_u3_t::swapped_u3_t(kaitai::kstream *p_io, s3m_t::instrument_t::sampled_t* p_parent, s3m_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+s3m_t::swapped_u3_t::swapped_u3_t(kaitai::kstream* p__io, s3m_t::instrument_t::sampled_t* p__parent, s3m_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_value = false;
     _read();
 }
@@ -199,9 +213,9 @@ int32_t s3m_t::swapped_u3_t::value() {
     return m_value;
 }
 
-s3m_t::pattern_t::pattern_t(kaitai::kstream *p_io, s3m_t::pattern_ptr_t* p_parent, s3m_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+s3m_t::pattern_t::pattern_t(kaitai::kstream* p__io, s3m_t::pattern_ptr_t* p__parent, s3m_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -217,9 +231,9 @@ s3m_t::pattern_t::~pattern_t() {
     delete m_body;
 }
 
-s3m_t::pattern_ptr_t::pattern_ptr_t(kaitai::kstream *p_io, s3m_t* p_parent, s3m_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+s3m_t::pattern_ptr_t::pattern_ptr_t(kaitai::kstream* p__io, s3m_t* p__parent, s3m_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_body = false;
     _read();
 }
@@ -245,9 +259,9 @@ s3m_t::pattern_t* s3m_t::pattern_ptr_t::body() {
     return m_body;
 }
 
-s3m_t::instrument_ptr_t::instrument_ptr_t(kaitai::kstream *p_io, s3m_t* p_parent, s3m_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+s3m_t::instrument_ptr_t::instrument_ptr_t(kaitai::kstream* p__io, s3m_t* p__parent, s3m_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_body = false;
     _read();
 }
@@ -273,9 +287,9 @@ s3m_t::instrument_t* s3m_t::instrument_ptr_t::body() {
     return m_body;
 }
 
-s3m_t::instrument_t::instrument_t(kaitai::kstream *p_io, s3m_t::instrument_ptr_t* p_parent, s3m_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+s3m_t::instrument_t::instrument_t(kaitai::kstream* p__io, s3m_t::instrument_ptr_t* p__parent, s3m_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -283,12 +297,14 @@ void s3m_t::instrument_t::_read() {
     m_type = static_cast<s3m_t::instrument_t::inst_types_t>(m__io->read_u1());
     m_filename = kaitai::kstream::bytes_terminate(m__io->read_bytes(12), 0, false);
     switch (type()) {
-    case INST_TYPES_SAMPLE:
+    case INST_TYPES_SAMPLE: {
         m_body = new sampled_t(m__io, this, m__root);
         break;
-    default:
+    }
+    default: {
         m_body = new adlib_t(m__io, this, m__root);
         break;
+    }
     }
     m_tuning_hz = m__io->read_u4le();
     m_reserved2 = m__io->read_bytes(12);
@@ -297,11 +313,12 @@ void s3m_t::instrument_t::_read() {
 }
 
 s3m_t::instrument_t::~instrument_t() {
+    delete m_body;
 }
 
-s3m_t::instrument_t::sampled_t::sampled_t(kaitai::kstream *p_io, s3m_t::instrument_t* p_parent, s3m_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+s3m_t::instrument_t::sampled_t::sampled_t(kaitai::kstream* p__io, s3m_t::instrument_t* p__parent, s3m_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_sample = false;
     _read();
 }
@@ -319,6 +336,8 @@ void s3m_t::instrument_t::sampled_t::_read() {
 
 s3m_t::instrument_t::sampled_t::~sampled_t() {
     delete m_paraptr_sample;
+    if (f_sample) {
+    }
 }
 
 std::string s3m_t::instrument_t::sampled_t::sample() {
@@ -332,9 +351,9 @@ std::string s3m_t::instrument_t::sampled_t::sample() {
     return m_sample;
 }
 
-s3m_t::instrument_t::adlib_t::adlib_t(kaitai::kstream *p_io, s3m_t::instrument_t* p_parent, s3m_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+s3m_t::instrument_t::adlib_t::adlib_t(kaitai::kstream* p__io, s3m_t::instrument_t* p__parent, s3m_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

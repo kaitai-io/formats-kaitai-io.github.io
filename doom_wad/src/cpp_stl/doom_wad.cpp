@@ -4,8 +4,8 @@
 
 
 
-doom_wad_t::doom_wad_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+doom_wad_t::doom_wad_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_index = false;
     _read();
@@ -18,22 +18,28 @@ void doom_wad_t::_read() {
 }
 
 doom_wad_t::~doom_wad_t() {
-    for (std::vector<index_entry_t*>::iterator it = m_index->begin(); it != m_index->end(); ++it) {
-        delete *it;
+    if (f_index) {
+        for (std::vector<index_entry_t*>::iterator it = m_index->begin(); it != m_index->end(); ++it) {
+            delete *it;
+        }
+        delete m_index;
     }
-    delete m_index;
 }
 
-doom_wad_t::sectors_t::sectors_t(kaitai::kstream *p_io, doom_wad_t::index_entry_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::sectors_t::sectors_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void doom_wad_t::sectors_t::_read() {
     m_entries = new std::vector<sector_t*>();
-    while (!m__io->is_eof()) {
-        m_entries->push_back(new sector_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new sector_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -44,9 +50,9 @@ doom_wad_t::sectors_t::~sectors_t() {
     delete m_entries;
 }
 
-doom_wad_t::vertex_t::vertex_t(kaitai::kstream *p_io, doom_wad_t::vertexes_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::vertex_t::vertex_t(kaitai::kstream* p__io, doom_wad_t::vertexes_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -58,9 +64,9 @@ void doom_wad_t::vertex_t::_read() {
 doom_wad_t::vertex_t::~vertex_t() {
 }
 
-doom_wad_t::texture12_t::texture12_t(kaitai::kstream *p_io, doom_wad_t::index_entry_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::texture12_t::texture12_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -81,9 +87,9 @@ doom_wad_t::texture12_t::~texture12_t() {
     delete m_textures;
 }
 
-doom_wad_t::texture12_t::texture_index_t::texture_index_t(kaitai::kstream *p_io, doom_wad_t::texture12_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::texture12_t::texture_index_t::texture_index_t(kaitai::kstream* p__io, doom_wad_t::texture12_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_body = false;
     _read();
 }
@@ -109,9 +115,9 @@ doom_wad_t::texture12_t::texture_body_t* doom_wad_t::texture12_t::texture_index_
     return m_body;
 }
 
-doom_wad_t::texture12_t::texture_body_t::texture_body_t(kaitai::kstream *p_io, doom_wad_t::texture12_t::texture_index_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::texture12_t::texture_body_t::texture_body_t(kaitai::kstream* p__io, doom_wad_t::texture12_t::texture_index_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -137,9 +143,9 @@ doom_wad_t::texture12_t::texture_body_t::~texture_body_t() {
     delete m_patches;
 }
 
-doom_wad_t::texture12_t::patch_t::patch_t(kaitai::kstream *p_io, doom_wad_t::texture12_t::texture_body_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::texture12_t::patch_t::patch_t(kaitai::kstream* p__io, doom_wad_t::texture12_t::texture_body_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -154,9 +160,9 @@ void doom_wad_t::texture12_t::patch_t::_read() {
 doom_wad_t::texture12_t::patch_t::~patch_t() {
 }
 
-doom_wad_t::linedef_t::linedef_t(kaitai::kstream *p_io, doom_wad_t::linedefs_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::linedef_t::linedef_t(kaitai::kstream* p__io, doom_wad_t::linedefs_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -173,9 +179,9 @@ void doom_wad_t::linedef_t::_read() {
 doom_wad_t::linedef_t::~linedef_t() {
 }
 
-doom_wad_t::pnames_t::pnames_t(kaitai::kstream *p_io, doom_wad_t::index_entry_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::pnames_t::pnames_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -193,9 +199,9 @@ doom_wad_t::pnames_t::~pnames_t() {
     delete m_names;
 }
 
-doom_wad_t::thing_t::thing_t(kaitai::kstream *p_io, doom_wad_t::things_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::thing_t::thing_t(kaitai::kstream* p__io, doom_wad_t::things_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -210,9 +216,9 @@ void doom_wad_t::thing_t::_read() {
 doom_wad_t::thing_t::~thing_t() {
 }
 
-doom_wad_t::sector_t::sector_t(kaitai::kstream *p_io, doom_wad_t::sectors_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::sector_t::sector_t(kaitai::kstream* p__io, doom_wad_t::sectors_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -229,16 +235,20 @@ void doom_wad_t::sector_t::_read() {
 doom_wad_t::sector_t::~sector_t() {
 }
 
-doom_wad_t::vertexes_t::vertexes_t(kaitai::kstream *p_io, doom_wad_t::index_entry_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::vertexes_t::vertexes_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void doom_wad_t::vertexes_t::_read() {
     m_entries = new std::vector<vertex_t*>();
-    while (!m__io->is_eof()) {
-        m_entries->push_back(new vertex_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new vertex_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -249,9 +259,9 @@ doom_wad_t::vertexes_t::~vertexes_t() {
     delete m_entries;
 }
 
-doom_wad_t::sidedef_t::sidedef_t(kaitai::kstream *p_io, doom_wad_t::sidedefs_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::sidedef_t::sidedef_t(kaitai::kstream* p__io, doom_wad_t::sidedefs_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -267,16 +277,20 @@ void doom_wad_t::sidedef_t::_read() {
 doom_wad_t::sidedef_t::~sidedef_t() {
 }
 
-doom_wad_t::things_t::things_t(kaitai::kstream *p_io, doom_wad_t::index_entry_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::things_t::things_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void doom_wad_t::things_t::_read() {
     m_entries = new std::vector<thing_t*>();
-    while (!m__io->is_eof()) {
-        m_entries->push_back(new thing_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new thing_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -287,16 +301,20 @@ doom_wad_t::things_t::~things_t() {
     delete m_entries;
 }
 
-doom_wad_t::linedefs_t::linedefs_t(kaitai::kstream *p_io, doom_wad_t::index_entry_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::linedefs_t::linedefs_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void doom_wad_t::linedefs_t::_read() {
     m_entries = new std::vector<linedef_t*>();
-    while (!m__io->is_eof()) {
-        m_entries->push_back(new linedef_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new linedef_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -307,9 +325,9 @@ doom_wad_t::linedefs_t::~linedefs_t() {
     delete m_entries;
 }
 
-doom_wad_t::index_entry_t::index_entry_t(kaitai::kstream *p_io, doom_wad_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::index_entry_t::index_entry_t(kaitai::kstream* p__io, doom_wad_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_contents = false;
     _read();
 }
@@ -321,6 +339,10 @@ void doom_wad_t::index_entry_t::_read() {
 }
 
 doom_wad_t::index_entry_t::~index_entry_t() {
+    if (f_contents && !n_contents) {
+        delete m__io__raw_contents;
+        delete m_contents;
+    }
 }
 
 kaitai::kstruct* doom_wad_t::index_entry_t::contents() {
@@ -329,49 +351,59 @@ kaitai::kstruct* doom_wad_t::index_entry_t::contents() {
     kaitai::kstream *io = _root()->_io();
     std::streampos _pos = io->pos();
     io->seek(offset());
+    n_contents = true;
     {
         std::string on = name();
         if (on == std::string("SECTORS")) {
+            n_contents = false;
             m__raw_contents = io->read_bytes(size());
             m__io__raw_contents = new kaitai::kstream(m__raw_contents);
             m_contents = new sectors_t(m__io__raw_contents, this, m__root);
         }
         else if (on == std::string("TEXTURE1")) {
+            n_contents = false;
             m__raw_contents = io->read_bytes(size());
             m__io__raw_contents = new kaitai::kstream(m__raw_contents);
             m_contents = new texture12_t(m__io__raw_contents, this, m__root);
         }
         else if (on == std::string("VERTEXES")) {
+            n_contents = false;
             m__raw_contents = io->read_bytes(size());
             m__io__raw_contents = new kaitai::kstream(m__raw_contents);
             m_contents = new vertexes_t(m__io__raw_contents, this, m__root);
         }
         else if (on == std::string("BLOCKMAP")) {
+            n_contents = false;
             m__raw_contents = io->read_bytes(size());
             m__io__raw_contents = new kaitai::kstream(m__raw_contents);
             m_contents = new blockmap_t(m__io__raw_contents, this, m__root);
         }
         else if (on == std::string("PNAMES")) {
+            n_contents = false;
             m__raw_contents = io->read_bytes(size());
             m__io__raw_contents = new kaitai::kstream(m__raw_contents);
             m_contents = new pnames_t(m__io__raw_contents, this, m__root);
         }
         else if (on == std::string("TEXTURE2")) {
+            n_contents = false;
             m__raw_contents = io->read_bytes(size());
             m__io__raw_contents = new kaitai::kstream(m__raw_contents);
             m_contents = new texture12_t(m__io__raw_contents, this, m__root);
         }
         else if (on == std::string("THINGS")) {
+            n_contents = false;
             m__raw_contents = io->read_bytes(size());
             m__io__raw_contents = new kaitai::kstream(m__raw_contents);
             m_contents = new things_t(m__io__raw_contents, this, m__root);
         }
         else if (on == std::string("LINEDEFS")) {
+            n_contents = false;
             m__raw_contents = io->read_bytes(size());
             m__io__raw_contents = new kaitai::kstream(m__raw_contents);
             m_contents = new linedefs_t(m__io__raw_contents, this, m__root);
         }
         else if (on == std::string("SIDEDEFS")) {
+            n_contents = false;
             m__raw_contents = io->read_bytes(size());
             m__io__raw_contents = new kaitai::kstream(m__raw_contents);
             m_contents = new sidedefs_t(m__io__raw_contents, this, m__root);
@@ -385,16 +417,20 @@ kaitai::kstruct* doom_wad_t::index_entry_t::contents() {
     return m_contents;
 }
 
-doom_wad_t::sidedefs_t::sidedefs_t(kaitai::kstream *p_io, doom_wad_t::index_entry_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::sidedefs_t::sidedefs_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void doom_wad_t::sidedefs_t::_read() {
     m_entries = new std::vector<sidedef_t*>();
-    while (!m__io->is_eof()) {
-        m_entries->push_back(new sidedef_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new sidedef_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -405,9 +441,9 @@ doom_wad_t::sidedefs_t::~sidedefs_t() {
     delete m_entries;
 }
 
-doom_wad_t::blockmap_t::blockmap_t(kaitai::kstream *p_io, doom_wad_t::index_entry_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::blockmap_t::blockmap_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -431,9 +467,9 @@ doom_wad_t::blockmap_t::~blockmap_t() {
     delete m_linedefs_in_block;
 }
 
-doom_wad_t::blockmap_t::blocklist_t::blocklist_t(kaitai::kstream *p_io, doom_wad_t::blockmap_t* p_parent, doom_wad_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+doom_wad_t::blockmap_t::blocklist_t::blocklist_t(kaitai::kstream* p__io, doom_wad_t::blockmap_t* p__parent, doom_wad_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_linedefs = false;
     _read();
 }
@@ -443,7 +479,9 @@ void doom_wad_t::blockmap_t::blocklist_t::_read() {
 }
 
 doom_wad_t::blockmap_t::blocklist_t::~blocklist_t() {
-    delete m_linedefs;
+    if (f_linedefs) {
+        delete m_linedefs;
+    }
 }
 
 std::vector<int16_t>* doom_wad_t::blockmap_t::blocklist_t::linedefs() {
@@ -453,10 +491,12 @@ std::vector<int16_t>* doom_wad_t::blockmap_t::blocklist_t::linedefs() {
     m__io->seek((offset() * 2));
     m_linedefs = new std::vector<int16_t>();
     {
+        int i = 0;
         int16_t _;
         do {
             _ = m__io->read_s2le();
             m_linedefs->push_back(_);
+            i++;
         } while (!(_ == -1));
     }
     m__io->seek(_pos);

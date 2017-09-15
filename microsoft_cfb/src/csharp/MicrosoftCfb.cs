@@ -11,18 +11,19 @@ namespace Kaitai
             return new MicrosoftCfb(new KaitaiStream(fileName));
         }
 
-        public MicrosoftCfb(KaitaiStream io, KaitaiStruct parent = null, MicrosoftCfb root = null) : base(io)
+        public MicrosoftCfb(KaitaiStream p__io, KaitaiStruct p__parent = null, MicrosoftCfb p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_sectorSize = false;
             f_fat = false;
             f_dir = false;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _header = new CfbHeader(m_io, this, m_root);
-            }
+        }
         public partial class CfbHeader : KaitaiStruct
         {
             public static CfbHeader FromFile(string fileName)
@@ -30,13 +31,14 @@ namespace Kaitai
                 return new CfbHeader(new KaitaiStream(fileName));
             }
 
-            public CfbHeader(KaitaiStream io, MicrosoftCfb parent = null, MicrosoftCfb root = null) : base(io)
+            public CfbHeader(KaitaiStream p__io, MicrosoftCfb p__parent = null, MicrosoftCfb p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _signature = m_io.EnsureFixedContents(new byte[] { 208, 207, 17, 224, 161, 177, 26, 225 });
                 _clsid = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
                 _versionMinor = m_io.ReadU2le();
@@ -55,10 +57,11 @@ namespace Kaitai
                 _ofsDifat = m_io.ReadS4le();
                 _sizeDifat = m_io.ReadS4le();
                 _difat = new List<int>((int) (109));
-                for (var i = 0; i < 109; i++) {
+                for (var i = 0; i < 109; i++)
+                {
                     _difat.Add(m_io.ReadS4le());
                 }
-                }
+            }
             private byte[] _signature;
             private byte[] _clsid;
             private ushort _versionMinor;
@@ -155,18 +158,23 @@ namespace Kaitai
                 return new FatEntries(new KaitaiStream(fileName));
             }
 
-            public FatEntries(KaitaiStream io, MicrosoftCfb parent = null, MicrosoftCfb root = null) : base(io)
+            public FatEntries(KaitaiStream p__io, MicrosoftCfb p__parent = null, MicrosoftCfb p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List<int>();
-                while (!m_io.IsEof) {
-                    _entries.Add(m_io.ReadS4le());
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(m_io.ReadS4le());
+                        i++;
+                    }
                 }
-                }
+            }
             private List<int> _entries;
             private MicrosoftCfb m_root;
             private MicrosoftCfb m_parent;
@@ -181,6 +189,7 @@ namespace Kaitai
                 return new DirEntry(new KaitaiStream(fileName));
             }
 
+
             public enum ObjType
             {
                 Unknown = 0,
@@ -194,15 +203,18 @@ namespace Kaitai
                 Red = 0,
                 Black = 1,
             }
-
-            public DirEntry(KaitaiStream io, MicrosoftCfb parent = null, MicrosoftCfb root = null) : base(io)
+            public DirEntry(KaitaiStream p__io, KaitaiStruct p__parent = null, MicrosoftCfb p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_miniStream = false;
+                f_child = false;
+                f_leftSibling = false;
+                f_rightSibling = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _name = System.Text.Encoding.GetEncoding("UTF-16LE").GetString(m_io.ReadBytes(64));
                 _nameLen = m_io.ReadU2le();
                 _objectType = ((ObjType) m_io.ReadU1());
@@ -216,7 +228,7 @@ namespace Kaitai
                 _timeMod = m_io.ReadU8le();
                 _ofs = m_io.ReadS4le();
                 _size = m_io.ReadU8le();
-                }
+            }
             private bool f_miniStream;
             private byte[] _miniStream;
             public byte[] MiniStream
@@ -236,6 +248,63 @@ namespace Kaitai
                     return _miniStream;
                 }
             }
+            private bool f_child;
+            private DirEntry _child;
+            public DirEntry Child
+            {
+                get
+                {
+                    if (f_child)
+                        return _child;
+                    if (ChildId != -1) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek((((M_Root.Header.OfsDir + 1) * M_Root.SectorSize) + (ChildId * 128)));
+                        _child = new DirEntry(io, this, m_root);
+                        io.Seek(_pos);
+                    }
+                    f_child = true;
+                    return _child;
+                }
+            }
+            private bool f_leftSibling;
+            private DirEntry _leftSibling;
+            public DirEntry LeftSibling
+            {
+                get
+                {
+                    if (f_leftSibling)
+                        return _leftSibling;
+                    if (LeftSiblingId != -1) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek((((M_Root.Header.OfsDir + 1) * M_Root.SectorSize) + (LeftSiblingId * 128)));
+                        _leftSibling = new DirEntry(io, this, m_root);
+                        io.Seek(_pos);
+                    }
+                    f_leftSibling = true;
+                    return _leftSibling;
+                }
+            }
+            private bool f_rightSibling;
+            private DirEntry _rightSibling;
+            public DirEntry RightSibling
+            {
+                get
+                {
+                    if (f_rightSibling)
+                        return _rightSibling;
+                    if (RightSiblingId != -1) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek((((M_Root.Header.OfsDir + 1) * M_Root.SectorSize) + (RightSiblingId * 128)));
+                        _rightSibling = new DirEntry(io, this, m_root);
+                        io.Seek(_pos);
+                    }
+                    f_rightSibling = true;
+                    return _rightSibling;
+                }
+            }
             private string _name;
             private ushort _nameLen;
             private ObjType _objectType;
@@ -250,7 +319,7 @@ namespace Kaitai
             private int _ofs;
             private ulong _size;
             private MicrosoftCfb m_root;
-            private MicrosoftCfb m_parent;
+            private KaitaiStruct m_parent;
             public string Name { get { return _name; } }
             public ushort NameLen { get { return _nameLen; } }
             public ObjType ObjectType { get { return _objectType; } }
@@ -285,7 +354,7 @@ namespace Kaitai
             /// </summary>
             public ulong Size { get { return _size; } }
             public MicrosoftCfb M_Root { get { return m_root; } }
-            public MicrosoftCfb M_Parent { get { return m_parent; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
         private bool f_sectorSize;
         private int _sectorSize;
@@ -328,9 +397,7 @@ namespace Kaitai
                     return _dir;
                 long _pos = m_io.Pos;
                 m_io.Seek(((Header.OfsDir + 1) * SectorSize));
-                __raw_dir = m_io.ReadBytes(128);
-                var io___raw_dir = new KaitaiStream(__raw_dir);
-                _dir = new DirEntry(io___raw_dir, this, m_root);
+                _dir = new DirEntry(m_io, this, m_root);
                 m_io.Seek(_pos);
                 f_dir = true;
                 return _dir;
@@ -340,11 +407,9 @@ namespace Kaitai
         private MicrosoftCfb m_root;
         private KaitaiStruct m_parent;
         private byte[] __raw_fat;
-        private byte[] __raw_dir;
         public CfbHeader Header { get { return _header; } }
         public MicrosoftCfb M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
         public byte[] M_RawFat { get { return __raw_fat; } }
-        public byte[] M_RawDir { get { return __raw_dir; } }
     }
 }

@@ -22,16 +22,17 @@ namespace Kaitai
             return new Tsm(new KaitaiStream(fileName));
         }
 
-        public Tsm(KaitaiStream io, KaitaiStruct parent = null, Tsm root = null) : base(io)
+        public Tsm(KaitaiStream p__io, KaitaiStruct p__parent = null, Tsm p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_index = false;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _header = new Header(m_io, this, m_root);
-            }
+        }
         public partial class Header : KaitaiStruct
         {
             public static Header FromFile(string fileName)
@@ -39,16 +40,17 @@ namespace Kaitai
                 return new Header(new KaitaiStream(fileName));
             }
 
-            public Header(KaitaiStream io, Tsm parent = null, Tsm root = null) : base(io)
+            public Header(KaitaiStream p__io, Tsm p__parent = null, Tsm p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.EnsureFixedContents(new byte[] { 22, 209, 22, 209 });
                 _version = m_io.ReadU1();
-                }
+            }
             private byte[] _magic;
             private byte _version;
             private Tsm m_root;
@@ -65,16 +67,17 @@ namespace Kaitai
                 return new Index(new KaitaiStream(fileName));
             }
 
-            public Index(KaitaiStream io, Tsm parent = null, Tsm root = null) : base(io)
+            public Index(KaitaiStream p__io, Tsm p__parent = null, Tsm p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_entries = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _offset = m_io.ReadU8be();
-                }
+            }
             public partial class IndexHeader : KaitaiStruct
             {
                 public static IndexHeader FromFile(string fileName)
@@ -82,22 +85,24 @@ namespace Kaitai
                     return new IndexHeader(new KaitaiStream(fileName));
                 }
 
-                public IndexHeader(KaitaiStream io, Tsm.Index parent = null, Tsm root = null) : base(io)
+                public IndexHeader(KaitaiStream p__io, Tsm.Index p__parent = null, Tsm p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _keyLen = m_io.ReadU2be();
                     _key = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(KeyLen));
                     _type = m_io.ReadU1();
                     _entryCount = m_io.ReadU2be();
                     _indexEntries = new List<IndexEntry>((int) (EntryCount));
-                    for (var i = 0; i < EntryCount; i++) {
+                    for (var i = 0; i < EntryCount; i++)
+                    {
                         _indexEntries.Add(new IndexEntry(m_io, this, m_root));
                     }
-                    }
+                }
                 public partial class IndexEntry : KaitaiStruct
                 {
                     public static IndexEntry FromFile(string fileName)
@@ -105,19 +110,20 @@ namespace Kaitai
                         return new IndexEntry(new KaitaiStream(fileName));
                     }
 
-                    public IndexEntry(KaitaiStream io, Tsm.Index.IndexHeader parent = null, Tsm root = null) : base(io)
+                    public IndexEntry(KaitaiStream p__io, Tsm.Index.IndexHeader p__parent = null, Tsm p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         f_block = false;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _minTime = m_io.ReadU8be();
                         _maxTime = m_io.ReadU8be();
                         _blockOffset = m_io.ReadU8be();
                         _blockSize = m_io.ReadU4be();
-                        }
+                    }
                     public partial class BlockEntry : KaitaiStruct
                     {
                         public static BlockEntry FromFile(string fileName)
@@ -125,16 +131,17 @@ namespace Kaitai
                             return new BlockEntry(new KaitaiStream(fileName));
                         }
 
-                        public BlockEntry(KaitaiStream io, Tsm.Index.IndexHeader.IndexEntry parent = null, Tsm root = null) : base(io)
+                        public BlockEntry(KaitaiStream p__io, Tsm.Index.IndexHeader.IndexEntry p__parent = null, Tsm p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _crc32 = m_io.ReadU4be();
                             _data = m_io.ReadBytes((M_Parent.BlockSize - 4));
-                            }
+                        }
                         private uint _crc32;
                         private byte[] _data;
                         private Tsm m_root;
@@ -201,10 +208,12 @@ namespace Kaitai
                     m_io.Seek(Offset);
                     _entries = new List<IndexHeader>();
                     {
+                        var i = 0;
                         IndexHeader M_;
                         do {
                             M_ = new IndexHeader(m_io, this, m_root);
                             _entries.Add(M_);
+                            i++;
                         } while (!(M_Io.Pos == (M_Io.Size - 8)));
                     }
                     m_io.Seek(_pos);

@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 
 public class MbrPartitionTable extends KaitaiStruct {
     public static MbrPartitionTable fromFile(String fileName) throws IOException {
-        return new MbrPartitionTable(new KaitaiStream(fileName));
+        return new MbrPartitionTable(new ByteBufferKaitaiStream(fileName));
     }
 
     public MbrPartitionTable(KaitaiStream _io) {
@@ -34,7 +35,7 @@ public class MbrPartitionTable extends KaitaiStruct {
     }
     public static class PartitionEntry extends KaitaiStruct {
         public static PartitionEntry fromFile(String fileName) throws IOException {
-            return new PartitionEntry(new KaitaiStream(fileName));
+            return new PartitionEntry(new ByteBufferKaitaiStream(fileName));
         }
 
         public PartitionEntry(KaitaiStream _io) {
@@ -78,7 +79,7 @@ public class MbrPartitionTable extends KaitaiStruct {
     }
     public static class Chs extends KaitaiStruct {
         public static Chs fromFile(String fileName) throws IOException {
-            return new Chs(new KaitaiStream(fileName));
+            return new Chs(new ByteBufferKaitaiStream(fileName));
         }
 
         public Chs(KaitaiStream _io) {

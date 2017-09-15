@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -20,16 +19,24 @@ public:
     class fat_entries_t;
     class dir_entry_t;
 
-    microsoft_cfb_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, microsoft_cfb_t* p_root = 0);
+    microsoft_cfb_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, microsoft_cfb_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~microsoft_cfb_t();
 
     class cfb_header_t : public kaitai::kstruct {
 
     public:
 
-        cfb_header_t(kaitai::kstream* p_io, microsoft_cfb_t* p_parent = 0, microsoft_cfb_t* p_root = 0);
+        cfb_header_t(kaitai::kstream* p__io, microsoft_cfb_t* p__parent = 0, microsoft_cfb_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~cfb_header_t();
 
     private:
@@ -129,8 +136,12 @@ public:
 
     public:
 
-        fat_entries_t(kaitai::kstream* p_io, microsoft_cfb_t* p_parent = 0, microsoft_cfb_t* p_root = 0);
+        fat_entries_t(kaitai::kstream* p__io, microsoft_cfb_t* p__parent = 0, microsoft_cfb_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~fat_entries_t();
 
     private:
@@ -160,8 +171,12 @@ public:
             RB_COLOR_BLACK = 1
         };
 
-        dir_entry_t(kaitai::kstream* p_io, microsoft_cfb_t* p_parent = 0, microsoft_cfb_t* p_root = 0);
+        dir_entry_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, microsoft_cfb_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~dir_entry_t();
 
     private:
@@ -178,6 +193,45 @@ public:
         std::string mini_stream();
 
     private:
+        bool f_child;
+        dir_entry_t* m_child;
+        bool n_child;
+
+    public:
+        bool _is_null_child() { child(); return n_child; };
+
+    private:
+
+    public:
+        dir_entry_t* child();
+
+    private:
+        bool f_left_sibling;
+        dir_entry_t* m_left_sibling;
+        bool n_left_sibling;
+
+    public:
+        bool _is_null_left_sibling() { left_sibling(); return n_left_sibling; };
+
+    private:
+
+    public:
+        dir_entry_t* left_sibling();
+
+    private:
+        bool f_right_sibling;
+        dir_entry_t* m_right_sibling;
+        bool n_right_sibling;
+
+    public:
+        bool _is_null_right_sibling() { right_sibling(); return n_right_sibling; };
+
+    private:
+
+    public:
+        dir_entry_t* right_sibling();
+
+    private:
         std::string m_name;
         uint16_t m_name_len;
         obj_type_t m_object_type;
@@ -192,7 +246,7 @@ public:
         int32_t m_ofs;
         uint64_t m_size;
         microsoft_cfb_t* m__root;
-        microsoft_cfb_t* m__parent;
+        kaitai::kstruct* m__parent;
 
     public:
         std::string name() const { return m_name; }
@@ -229,7 +283,7 @@ public:
          */
         uint64_t size() const { return m_size; }
         microsoft_cfb_t* _root() const { return m__root; }
-        microsoft_cfb_t* _parent() const { return m__parent; }
+        kaitai::kstruct* _parent() const { return m__parent; }
     };
 
 private:
@@ -259,8 +313,6 @@ private:
     kaitai::kstruct* m__parent;
     std::string m__raw_fat;
     kaitai::kstream* m__io__raw_fat;
-    std::string m__raw_dir;
-    kaitai::kstream* m__io__raw_dir;
 
 public:
     cfb_header_t* header() const { return m_header; }
@@ -268,8 +320,6 @@ public:
     kaitai::kstruct* _parent() const { return m__parent; }
     std::string _raw_fat() const { return m__raw_fat; }
     kaitai::kstream* _io__raw_fat() const { return m__io__raw_fat; }
-    std::string _raw_dir() const { return m__raw_dir; }
-    kaitai::kstream* _io__raw_dir() const { return m__io__raw_dir; }
 };
 
 #endif  // MICROSOFT_CFB_H_

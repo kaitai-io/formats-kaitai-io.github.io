@@ -220,10 +220,10 @@ for repetitive musical phrases.</li>
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = S3m(KaitaiStream(raw))</code></pre>
+data = S3m(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -386,8 +386,10 @@ class S3m(KaitaiStruct):
 
         def _read(self):
             self.cells = []
+            i = 0
             while not self._io.is_eof():
                 self.cells.append(self._root.PatternCell(self._io, self, self._root))
+                i += 1
 
 
 

@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -22,16 +21,24 @@ public:
     class dir_inode_t;
     class info_t;
 
-    cramfs_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, cramfs_t* p_root = 0);
+    cramfs_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, cramfs_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~cramfs_t();
 
     class super_block_struct_t : public kaitai::kstruct {
 
     public:
 
-        super_block_struct_t(kaitai::kstream* p_io, cramfs_t* p_parent = 0, cramfs_t* p_root = 0);
+        super_block_struct_t(kaitai::kstream* p__io, cramfs_t* p__parent = 0, cramfs_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~super_block_struct_t();
 
     private:
@@ -98,8 +105,12 @@ public:
 
     public:
 
-        chunked_data_inode_t(kaitai::kstream* p_io, cramfs_t::inode_t* p_parent = 0, cramfs_t* p_root = 0);
+        chunked_data_inode_t(kaitai::kstream* p__io, cramfs_t::inode_t* p__parent = 0, cramfs_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~chunked_data_inode_t();
 
     private:
@@ -129,8 +140,12 @@ public:
             FILE_TYPE_SOCKET = 12
         };
 
-        inode_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, cramfs_t* p_root = 0);
+        inode_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, cramfs_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~inode_t();
 
     private:
@@ -244,8 +259,12 @@ public:
 
     public:
 
-        dir_inode_t(kaitai::kstream* p_io, cramfs_t::inode_t* p_parent = 0, cramfs_t* p_root = 0);
+        dir_inode_t(kaitai::kstream* p__io, cramfs_t::inode_t* p__parent = 0, cramfs_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~dir_inode_t();
 
     private:
@@ -269,8 +288,12 @@ public:
 
     public:
 
-        info_t(kaitai::kstream* p_io, cramfs_t::super_block_struct_t* p_parent = 0, cramfs_t* p_root = 0);
+        info_t(kaitai::kstream* p__io, cramfs_t::super_block_struct_t* p__parent = 0, cramfs_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~info_t();
 
     private:

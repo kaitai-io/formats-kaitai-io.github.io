@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -19,16 +18,24 @@ public:
     class ifd_t;
     class ifd_field_t;
 
-    exif_be_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, exif_be_t* p_root = 0);
+    exif_be_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, exif_be_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~exif_be_t();
 
     class ifd_t : public kaitai::kstruct {
 
     public:
 
-        ifd_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, exif_be_t* p_root = 0);
+        ifd_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, exif_be_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~ifd_t();
 
     private:
@@ -532,8 +539,12 @@ public:
             TAG_ENUM_MOIRE_FILTER = 65112
         };
 
-        ifd_field_t(kaitai::kstream* p_io, exif_be_t::ifd_t* p_parent = 0, exif_be_t* p_root = 0);
+        ifd_field_t(kaitai::kstream* p__io, exif_be_t::ifd_t* p__parent = 0, exif_be_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~ifd_field_t();
 
     private:

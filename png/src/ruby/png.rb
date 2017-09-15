@@ -35,9 +35,11 @@ class Png < Kaitai::Struct::Struct
     @ihdr = IhdrChunk.new(@_io, self, @_root)
     @ihdr_crc = @_io.read_bytes(4)
     @chunks = []
+    i = 0
     begin
       _ = Chunk.new(@_io, self, @_root)
       @chunks << _
+      i += 1
     end until  ((_.type == "IEND") || (_io.eof?)) 
     self
   end
@@ -217,8 +219,10 @@ class Png < Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries << Rgb.new(@_io, self, @_root)
+        i += 1
       end
       self
     end

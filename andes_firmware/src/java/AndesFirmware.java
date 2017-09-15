@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -11,7 +12,7 @@ import java.nio.charset.Charset;
  */
 public class AndesFirmware extends KaitaiStruct {
     public static AndesFirmware fromFile(String fileName) throws IOException {
-        return new AndesFirmware(new KaitaiStream(fileName));
+        return new AndesFirmware(new ByteBufferKaitaiStream(fileName));
     }
 
     public AndesFirmware(KaitaiStream _io) {
@@ -30,14 +31,14 @@ public class AndesFirmware extends KaitaiStruct {
     }
     private void _read() {
         this._raw_imageHeader = this._io.readBytes(32);
-        KaitaiStream _io__raw_imageHeader = new KaitaiStream(_raw_imageHeader);
+        KaitaiStream _io__raw_imageHeader = new ByteBufferKaitaiStream(_raw_imageHeader);
         this.imageHeader = new ImageHeader(_io__raw_imageHeader, this, _root);
         this.ilm = this._io.readBytes(imageHeader().ilmLen());
         this.dlm = this._io.readBytes(imageHeader().dlmLen());
     }
     public static class ImageHeader extends KaitaiStruct {
         public static ImageHeader fromFile(String fileName) throws IOException {
-            return new ImageHeader(new KaitaiStream(fileName));
+            return new ImageHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public ImageHeader(KaitaiStream _io) {

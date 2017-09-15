@@ -193,7 +193,7 @@ Wmf data = new Wmf(new KaitaiStream(someArray));</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="java">data.specialHdr() // => get special hdr</code></pre>
+<pre><code class="java">data.specialHeader() // => get special header</code></pre>
 
     </div>
 </section>
@@ -222,6 +222,7 @@ Wmf data = new Wmf(new KaitaiStream(someArray));</code></pre>
         <div class="row">
             <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -229,9 +230,13 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+
+/**
+ * @see &lt;a href=&quot;http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf&quot;&gt;Source&lt;/a&gt;
+ */
 public class Wmf extends KaitaiStruct {
     public static Wmf fromFile(String fileName) throws IOException {
-        return new Wmf(new KaitaiStream(fileName));
+        return new Wmf(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum Func {
@@ -317,6 +322,65 @@ public class Wmf extends KaitaiStruct {
         public static Func byId(long id) { return byId.get(id); }
     }
 
+    public enum BinRasterOp {
+        BLACK(1),
+        NOTMERGEPEN(2),
+        MASKNOTPEN(3),
+        NOTCOPYPEN(4),
+        MASKPENNOT(5),
+        NOT(6),
+        XORPEN(7),
+        NOTMASKPEN(8),
+        MASKPEN(9),
+        NOTXORPEN(10),
+        NOP(11),
+        MERGENOTPEN(12),
+        COPYPEN(13),
+        MERGEPENNOT(14),
+        MERGEPEN(15),
+        WHITE(16);
+
+        private final long id;
+        BinRasterOp(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map&lt;Long, BinRasterOp&gt; byId = new HashMap&lt;Long, BinRasterOp&gt;(16);
+        static {
+            for (BinRasterOp e : BinRasterOp.values())
+                byId.put(e.id(), e);
+        }
+        public static BinRasterOp byId(long id) { return byId.get(id); }
+    }
+
+    public enum MixMode {
+        TRANSPARENT(1),
+        OPAQUE(2);
+
+        private final long id;
+        MixMode(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map&lt;Long, MixMode&gt; byId = new HashMap&lt;Long, MixMode&gt;(2);
+        static {
+            for (MixMode e : MixMode.values())
+                byId.put(e.id(), e);
+        }
+        public static MixMode byId(long id) { return byId.get(id); }
+    }
+
+    public enum PolyFillMode {
+        ALTERNATE(1),
+        WINDING(2);
+
+        private final long id;
+        PolyFillMode(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map&lt;Long, PolyFillMode&gt; byId = new HashMap&lt;Long, PolyFillMode&gt;(2);
+        static {
+            for (PolyFillMode e : PolyFillMode.values())
+                byId.put(e.id(), e);
+        }
+        public static PolyFillMode byId(long id) { return byId.get(id); }
+    }
+
     public Wmf(KaitaiStream _io) {
         this(_io, null, null);
     }
@@ -332,20 +396,411 @@ public class Wmf extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.specialHdr = new SpecialHeader(this._io, this, _root);
-        this.header = new WmfHeader(this._io, this, _root);
+        this.specialHeader = new SpecialHeader(this._io, this, _root);
+        this.header = new Header(this._io, this, _root);
         this.records = new ArrayList&lt;Record&gt;();
         {
             Record _it;
+            int i = 0;
             do {
                 _it = new Record(this._io, this, _root);
                 this.records.add(_it);
+                i++;
             } while (!(_it.function() == Func.EOF));
         }
     }
+    public static class ParamsSetwindoworg extends KaitaiStruct {
+        public static ParamsSetwindoworg fromFile(String fileName) throws IOException {
+            return new ParamsSetwindoworg(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ParamsSetwindoworg(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ParamsSetwindoworg(KaitaiStream _io, Wmf.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ParamsSetwindoworg(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.y = this._io.readS2le();
+            this.x = this._io.readS2le();
+        }
+        private short y;
+        private short x;
+        private Wmf _root;
+        private Wmf.Record _parent;
+
+        /**
+         * Y coordinate of the window origin, in logical units.
+         */
+        public short y() { return y; }
+
+        /**
+         * X coordinate of the window origin, in logical units.
+         */
+        public short x() { return x; }
+        public Wmf _root() { return _root; }
+        public Wmf.Record _parent() { return _parent; }
+    }
+    public static class ParamsSetbkmode extends KaitaiStruct {
+        public static ParamsSetbkmode fromFile(String fileName) throws IOException {
+            return new ParamsSetbkmode(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ParamsSetbkmode(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ParamsSetbkmode(KaitaiStream _io, Wmf.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ParamsSetbkmode(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.bkMode = Wmf.MixMode.byId(this._io.readU2le());
+        }
+        private MixMode bkMode;
+        private Wmf _root;
+        private Wmf.Record _parent;
+
+        /**
+         * Defines current graphic context background mix mode.
+         */
+        public MixMode bkMode() { return bkMode; }
+        public Wmf _root() { return _root; }
+        public Wmf.Record _parent() { return _parent; }
+    }
+    public static class PointS extends KaitaiStruct {
+        public static PointS fromFile(String fileName) throws IOException {
+            return new PointS(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PointS(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PointS(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PointS(KaitaiStream _io, KaitaiStruct _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.x = this._io.readS2le();
+            this.y = this._io.readS2le();
+        }
+        private short x;
+        private short y;
+        private Wmf _root;
+        private KaitaiStruct _parent;
+
+        /**
+         * X coordinate of the point, in logical units.
+         */
+        public short x() { return x; }
+
+        /**
+         * Y coordinate of the point, in logical units.
+         */
+        public short y() { return y; }
+        public Wmf _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
+    public static class ParamsSetwindowext extends KaitaiStruct {
+        public static ParamsSetwindowext fromFile(String fileName) throws IOException {
+            return new ParamsSetwindowext(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ParamsSetwindowext(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ParamsSetwindowext(KaitaiStream _io, Wmf.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ParamsSetwindowext(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.y = this._io.readS2le();
+            this.x = this._io.readS2le();
+        }
+        private short y;
+        private short x;
+        private Wmf _root;
+        private Wmf.Record _parent;
+
+        /**
+         * Vertical extent of the window in logical units.
+         */
+        public short y() { return y; }
+
+        /**
+         * Horizontal extent of the window in logical units.
+         */
+        public short x() { return x; }
+        public Wmf _root() { return _root; }
+        public Wmf.Record _parent() { return _parent; }
+    }
+    public static class ParamsPolygon extends KaitaiStruct {
+        public static ParamsPolygon fromFile(String fileName) throws IOException {
+            return new ParamsPolygon(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ParamsPolygon(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ParamsPolygon(KaitaiStream _io, Wmf.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ParamsPolygon(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.numPoints = this._io.readS2le();
+            points = new ArrayList&lt;PointS&gt;((int) (numPoints()));
+            for (int i = 0; i &lt; numPoints(); i++) {
+                this.points.add(new PointS(this._io, this, _root));
+            }
+        }
+        private short numPoints;
+        private ArrayList&lt;PointS&gt; points;
+        private Wmf _root;
+        private Wmf.Record _parent;
+        public short numPoints() { return numPoints; }
+        public ArrayList&lt;PointS&gt; points() { return points; }
+        public Wmf _root() { return _root; }
+        public Wmf.Record _parent() { return _parent; }
+    }
+    public static class Header extends KaitaiStruct {
+        public static Header fromFile(String fileName) throws IOException {
+            return new Header(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public enum MetafileType {
+            MEMORY_METAFILE(1),
+            DISK_METAFILE(2);
+
+            private final long id;
+            MetafileType(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map&lt;Long, MetafileType&gt; byId = new HashMap&lt;Long, MetafileType&gt;(2);
+            static {
+                for (MetafileType e : MetafileType.values())
+                    byId.put(e.id(), e);
+            }
+            public static MetafileType byId(long id) { return byId.get(id); }
+        }
+
+        public Header(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Header(KaitaiStream _io, Wmf _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Header(KaitaiStream _io, Wmf _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.metafileType = MetafileType.byId(this._io.readU2le());
+            this.headerSize = this._io.readU2le();
+            this.version = this._io.readU2le();
+            this.size = this._io.readU4le();
+            this.numberOfObjects = this._io.readU2le();
+            this.maxRecord = this._io.readU4le();
+            this.numberOfMembers = this._io.readU2le();
+        }
+        private MetafileType metafileType;
+        private int headerSize;
+        private int version;
+        private long size;
+        private int numberOfObjects;
+        private long maxRecord;
+        private int numberOfMembers;
+        private Wmf _root;
+        private Wmf _parent;
+        public MetafileType metafileType() { return metafileType; }
+        public int headerSize() { return headerSize; }
+        public int version() { return version; }
+        public long size() { return size; }
+        public int numberOfObjects() { return numberOfObjects; }
+        public long maxRecord() { return maxRecord; }
+        public int numberOfMembers() { return numberOfMembers; }
+        public Wmf _root() { return _root; }
+        public Wmf _parent() { return _parent; }
+    }
+    public static class ColorRef extends KaitaiStruct {
+        public static ColorRef fromFile(String fileName) throws IOException {
+            return new ColorRef(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ColorRef(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ColorRef(KaitaiStream _io, Wmf.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ColorRef(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.red = this._io.readU1();
+            this.green = this._io.readU1();
+            this.blue = this._io.readU1();
+            this.reserved = this._io.readU1();
+        }
+        private int red;
+        private int green;
+        private int blue;
+        private int reserved;
+        private Wmf _root;
+        private Wmf.Record _parent;
+        public int red() { return red; }
+        public int green() { return green; }
+        public int blue() { return blue; }
+        public int reserved() { return reserved; }
+        public Wmf _root() { return _root; }
+        public Wmf.Record _parent() { return _parent; }
+    }
+    public static class ParamsSetrop2 extends KaitaiStruct {
+        public static ParamsSetrop2 fromFile(String fileName) throws IOException {
+            return new ParamsSetrop2(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ParamsSetrop2(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ParamsSetrop2(KaitaiStream _io, Wmf.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ParamsSetrop2(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.drawMode = Wmf.BinRasterOp.byId(this._io.readU2le());
+        }
+        private BinRasterOp drawMode;
+        private Wmf _root;
+        private Wmf.Record _parent;
+
+        /**
+         * Defines current foreground binary raster operation mixing mode.
+         */
+        public BinRasterOp drawMode() { return drawMode; }
+        public Wmf _root() { return _root; }
+        public Wmf.Record _parent() { return _parent; }
+    }
+    public static class ParamsSetpolyfillmode extends KaitaiStruct {
+        public static ParamsSetpolyfillmode fromFile(String fileName) throws IOException {
+            return new ParamsSetpolyfillmode(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ParamsSetpolyfillmode(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ParamsSetpolyfillmode(KaitaiStream _io, Wmf.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ParamsSetpolyfillmode(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.polyFillMode = Wmf.PolyFillMode.byId(this._io.readU2le());
+        }
+        private PolyFillMode polyFillMode;
+        private Wmf _root;
+        private Wmf.Record _parent;
+
+        /**
+         * Defines current polygon fill mode.
+         */
+        public PolyFillMode polyFillMode() { return polyFillMode; }
+        public Wmf _root() { return _root; }
+        public Wmf.Record _parent() { return _parent; }
+    }
+    public static class ParamsPolyline extends KaitaiStruct {
+        public static ParamsPolyline fromFile(String fileName) throws IOException {
+            return new ParamsPolyline(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ParamsPolyline(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ParamsPolyline(KaitaiStream _io, Wmf.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ParamsPolyline(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.numPoints = this._io.readS2le();
+            points = new ArrayList&lt;PointS&gt;((int) (numPoints()));
+            for (int i = 0; i &lt; numPoints(); i++) {
+                this.points.add(new PointS(this._io, this, _root));
+            }
+        }
+        private short numPoints;
+        private ArrayList&lt;PointS&gt; points;
+        private Wmf _root;
+        private Wmf.Record _parent;
+        public short numPoints() { return numPoints; }
+        public ArrayList&lt;PointS&gt; points() { return points; }
+        public Wmf _root() { return _root; }
+        public Wmf.Record _parent() { return _parent; }
+    }
     public static class SpecialHeader extends KaitaiStruct {
         public static SpecialHeader fromFile(String fileName) throws IOException {
-            return new SpecialHeader(new KaitaiStream(fileName));
+            return new SpecialHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public SpecialHeader(KaitaiStream _io) {
@@ -396,71 +851,9 @@ public class Wmf extends KaitaiStruct {
         public Wmf _root() { return _root; }
         public Wmf _parent() { return _parent; }
     }
-    public static class WmfHeader extends KaitaiStruct {
-        public static WmfHeader fromFile(String fileName) throws IOException {
-            return new WmfHeader(new KaitaiStream(fileName));
-        }
-
-        public enum MetafileType {
-            MEMORY_METAFILE(1),
-            DISK_METAFILE(2);
-
-            private final long id;
-            MetafileType(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map&lt;Long, MetafileType&gt; byId = new HashMap&lt;Long, MetafileType&gt;(2);
-            static {
-                for (MetafileType e : MetafileType.values())
-                    byId.put(e.id(), e);
-            }
-            public static MetafileType byId(long id) { return byId.get(id); }
-        }
-
-        public WmfHeader(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public WmfHeader(KaitaiStream _io, Wmf _parent) {
-            this(_io, _parent, null);
-        }
-
-        public WmfHeader(KaitaiStream _io, Wmf _parent, Wmf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.type = MetafileType.byId(this._io.readU2le());
-            this.headerSize = this._io.readU2le();
-            this.version = this._io.readU2le();
-            this.size = this._io.readU4le();
-            this.numberOfObjects = this._io.readU2le();
-            this.maxRecord = this._io.readU4le();
-            this.numberOfMembers = this._io.readU2le();
-        }
-        private MetafileType type;
-        private int headerSize;
-        private int version;
-        private long size;
-        private int numberOfObjects;
-        private long maxRecord;
-        private int numberOfMembers;
-        private Wmf _root;
-        private Wmf _parent;
-        public MetafileType type() { return type; }
-        public int headerSize() { return headerSize; }
-        public int version() { return version; }
-        public long size() { return size; }
-        public int numberOfObjects() { return numberOfObjects; }
-        public long maxRecord() { return maxRecord; }
-        public int numberOfMembers() { return numberOfMembers; }
-        public Wmf _root() { return _root; }
-        public Wmf _parent() { return _parent; }
-    }
     public static class Record extends KaitaiStruct {
         public static Record fromFile(String fileName) throws IOException {
-            return new Record(new KaitaiStream(fileName));
+            return new Record(new ByteBufferKaitaiStream(fileName));
         }
 
         public Record(KaitaiStream _io) {
@@ -480,26 +873,81 @@ public class Wmf extends KaitaiStruct {
         private void _read() {
             this.size = this._io.readU4le();
             this.function = Wmf.Func.byId(this._io.readU2le());
-            this.params = this._io.readBytes(((size() - 3) * 2));
+            switch (function()) {
+            case SETBKMODE: {
+                this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                this.params = new ParamsSetbkmode(_io__raw_params, this, _root);
+                break;
+            }
+            case SETBKCOLOR: {
+                this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                this.params = new ColorRef(_io__raw_params, this, _root);
+                break;
+            }
+            case SETROP2: {
+                this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                this.params = new ParamsSetrop2(_io__raw_params, this, _root);
+                break;
+            }
+            case POLYLINE: {
+                this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                this.params = new ParamsPolyline(_io__raw_params, this, _root);
+                break;
+            }
+            case SETWINDOWORG: {
+                this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                this.params = new ParamsSetwindoworg(_io__raw_params, this, _root);
+                break;
+            }
+            case POLYGON: {
+                this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                this.params = new ParamsPolygon(_io__raw_params, this, _root);
+                break;
+            }
+            case SETWINDOWEXT: {
+                this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                this.params = new ParamsSetwindowext(_io__raw_params, this, _root);
+                break;
+            }
+            case SETPOLYFILLMODE: {
+                this._raw_params = this._io.readBytes(((size() - 3) * 2));
+                KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
+                this.params = new ParamsSetpolyfillmode(_io__raw_params, this, _root);
+                break;
+            }
+            default: {
+                this.params = this._io.readBytes(((size() - 3) * 2));
+                break;
+            }
+            }
         }
         private long size;
         private Func function;
-        private byte[] params;
+        private Object params;
         private Wmf _root;
         private Wmf _parent;
+        private byte[] _raw_params;
         public long size() { return size; }
         public Func function() { return function; }
-        public byte[] params() { return params; }
+        public Object params() { return params; }
         public Wmf _root() { return _root; }
         public Wmf _parent() { return _parent; }
+        public byte[] _raw_params() { return _raw_params; }
     }
-    private SpecialHeader specialHdr;
-    private WmfHeader header;
+    private SpecialHeader specialHeader;
+    private Header header;
     private ArrayList&lt;Record&gt; records;
     private Wmf _root;
     private KaitaiStruct _parent;
-    public SpecialHeader specialHdr() { return specialHdr; }
-    public WmfHeader header() { return header; }
+    public SpecialHeader specialHeader() { return specialHeader; }
+    public Header header() { return header; }
     public ArrayList&lt;Record&gt; records() { return records; }
     public Wmf _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }

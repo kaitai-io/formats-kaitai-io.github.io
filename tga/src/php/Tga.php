@@ -6,8 +6,8 @@
  */
 
 class Tga extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Tga $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Tga $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -101,8 +101,8 @@ class Tga extends \Kaitai\Struct\Struct {
 namespace \Tga;
 
 class TgaFooter extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Tga $parent = null, \Tga $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Tga $_parent = null, \Tga $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -149,8 +149,8 @@ class TgaFooter extends \Kaitai\Struct\Struct {
 namespace \Tga;
 
 class TgaExtArea extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Tga\TgaFooter $parent = null, \Tga $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Tga\TgaFooter $_parent = null, \Tga $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

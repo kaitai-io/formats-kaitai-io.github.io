@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.nio.charset.Charset;
 
 public class GranTurismoVol extends KaitaiStruct {
     public static GranTurismoVol fromFile(String fileName) throws IOException {
-        return new GranTurismoVol(new KaitaiStream(fileName));
+        return new GranTurismoVol(new ByteBufferKaitaiStream(fileName));
     }
 
     public GranTurismoVol(KaitaiStream _io) {
@@ -37,7 +38,7 @@ public class GranTurismoVol extends KaitaiStruct {
     }
     public static class FileInfo extends KaitaiStruct {
         public static FileInfo fromFile(String fileName) throws IOException {
-            return new FileInfo(new KaitaiStream(fileName));
+            return new FileInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public FileInfo(KaitaiStream _io) {

@@ -18,16 +18,18 @@
  */
 
 class VlqBase128Be extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \VlqBase128Be $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \VlqBase128Be $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_groups = [];
+        $i = 0;
         do {
             $_ = new \VlqBase128Be\Group($this->_io, $this, $this->_root);
             $this->_m_groups[] = $_;
+            $i++;
         } while (!(!($_->hasNext())));
     }
     protected $_m_last;
@@ -60,8 +62,8 @@ class VlqBase128Be extends \Kaitai\Struct\Struct {
 namespace \VlqBase128Be;
 
 class Group extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \VlqBase128Be $parent = null, \VlqBase128Be $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \VlqBase128Be $_parent = null, \VlqBase128Be $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

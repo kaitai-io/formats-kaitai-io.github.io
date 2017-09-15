@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class MbrPartitionTable extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \MbrPartitionTable $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MbrPartitionTable $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -27,8 +27,8 @@ class MbrPartitionTable extends \Kaitai\Struct\Struct {
 namespace \MbrPartitionTable;
 
 class PartitionEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MbrPartitionTable $parent = null, \MbrPartitionTable $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MbrPartitionTable $_parent = null, \MbrPartitionTable $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -57,8 +57,8 @@ class PartitionEntry extends \Kaitai\Struct\Struct {
 namespace \MbrPartitionTable;
 
 class Chs extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MbrPartitionTable\PartitionEntry $parent = null, \MbrPartitionTable $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MbrPartitionTable\PartitionEntry $_parent = null, \MbrPartitionTable $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

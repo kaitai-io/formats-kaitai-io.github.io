@@ -382,8 +382,10 @@ class PythonPyc27(KaitaiStruct):
 
         def _read(self):
             self.items = []
+            i = 0
             while not self._io.is_eof():
                 self.items.append(self._root.OpArg(self._io, self, self._root))
+                i += 1
 
 
 

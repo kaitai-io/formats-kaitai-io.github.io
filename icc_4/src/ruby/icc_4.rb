@@ -625,8 +625,10 @@ class Icc4 < Kaitai::Struct::Struct
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @values = []
+          i = 0
           while not @_io.eof?
             @values << XyzNumber.new(@_io, self, @_root)
+            i += 1
           end
           self
         end
@@ -818,8 +820,10 @@ class Icc4 < Kaitai::Struct::Struct
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @values = []
+          i = 0
           while not @_io.eof?
             @values << U16Fixed16Number.new(@_io, self, @_root)
+            i += 1
           end
           self
         end
@@ -1529,8 +1533,10 @@ class Icc4 < Kaitai::Struct::Struct
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @values = []
+          i = 0
           while not @_io.eof?
             @values << @_io.read_u2be
+            i += 1
           end
           self
         end
@@ -1642,8 +1648,10 @@ class Icc4 < Kaitai::Struct::Struct
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @values = []
+          i = 0
           while not @_io.eof?
             @values << S15Fixed16Number.new(@_io, self, @_root)
+            i += 1
           end
           self
         end
@@ -2064,8 +2072,10 @@ class Icc4 < Kaitai::Struct::Struct
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @values = []
+          i = 0
           while not @_io.eof?
             @values << @_io.read_u4be
+            i += 1
           end
           self
         end
@@ -2102,8 +2112,10 @@ class Icc4 < Kaitai::Struct::Struct
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @values = []
+          i = 0
           while not @_io.eof?
             @values << @_io.read_u1
+            i += 1
           end
           self
         end
@@ -2136,8 +2148,10 @@ class Icc4 < Kaitai::Struct::Struct
         def _read
           @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack('C*'))
           @values = []
+          i = 0
           while not @_io.eof?
             @values << @_io.read_u8be
+            i += 1
           end
           self
         end

@@ -202,10 +202,10 @@ and, optionally, an argument. Register arguments are part of the
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = Code6502(KaitaiStream(raw))</code></pre>
+data = Code6502(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -413,8 +413,10 @@ class Code6502(KaitaiStruct):
 
     def _read(self):
         self.operations = []
+        i = 0
         while not self._io.is_eof():
             self.operations.append(self._root.Operation(self._io, self, self._root))
+            i += 1
 
 
     class Operation(KaitaiStruct):

@@ -11,6 +11,7 @@ namespace Kaitai
             return new ShapefileMain(new KaitaiStream(fileName));
         }
 
+
         public enum ShapeType
         {
             NullShape = 0,
@@ -38,20 +39,24 @@ namespace Kaitai
             FirstRing = 4,
             Ring = 5,
         }
-
-        public ShapefileMain(KaitaiStream io, KaitaiStruct parent = null, ShapefileMain root = null) : base(io)
+        public ShapefileMain(KaitaiStream p__io, KaitaiStruct p__parent = null, ShapefileMain p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _header = new FileHeader(m_io, this, m_root);
             _records = new List<Record>();
-            while (!m_io.IsEof) {
-                _records.Add(new Record(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _records.Add(new Record(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
         public partial class MultiPointM : KaitaiStruct
         {
             public static MultiPointM FromFile(string fileName)
@@ -59,25 +64,28 @@ namespace Kaitai
                 return new MultiPointM(new KaitaiStream(fileName));
             }
 
-            public MultiPointM(KaitaiStream io, ShapefileMain.RecordContents parent = null, ShapefileMain root = null) : base(io)
+            public MultiPointM(KaitaiStream p__io, ShapefileMain.RecordContents p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfPoints = m_io.ReadS4le();
                 _points = new List<Point>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _points.Add(new Point(m_io, this, m_root));
                 }
                 _mRange = new BoundsMinMax(m_io, this, m_root);
                 _mValues = new List<double>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _mValues.Add(m_io.ReadF8le());
                 }
-                }
+            }
             private BoundingBoxXY _boundingBox;
             private int _numberOfPoints;
             private List<Point> _points;
@@ -100,18 +108,19 @@ namespace Kaitai
                 return new BoundingBoxXYZM(new KaitaiStream(fileName));
             }
 
-            public BoundingBoxXYZM(KaitaiStream io, ShapefileMain.FileHeader parent = null, ShapefileMain root = null) : base(io)
+            public BoundingBoxXYZM(KaitaiStream p__io, ShapefileMain.FileHeader p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _x = new BoundsMinMax(m_io, this, m_root);
                 _y = new BoundsMinMax(m_io, this, m_root);
                 _z = new BoundsMinMax(m_io, this, m_root);
                 _m = new BoundsMinMax(m_io, this, m_root);
-                }
+            }
             private BoundsMinMax _x;
             private BoundsMinMax _y;
             private BoundsMinMax _z;
@@ -132,16 +141,17 @@ namespace Kaitai
                 return new Point(new KaitaiStream(fileName));
             }
 
-            public Point(KaitaiStream io, KaitaiStruct parent = null, ShapefileMain root = null) : base(io)
+            public Point(KaitaiStream p__io, KaitaiStruct p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _x = m_io.ReadF8le();
                 _y = m_io.ReadF8le();
-                }
+            }
             private double _x;
             private double _y;
             private ShapefileMain m_root;
@@ -158,25 +168,28 @@ namespace Kaitai
                 return new Polygon(new KaitaiStream(fileName));
             }
 
-            public Polygon(KaitaiStream io, ShapefileMain.RecordContents parent = null, ShapefileMain root = null) : base(io)
+            public Polygon(KaitaiStream p__io, ShapefileMain.RecordContents p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfParts = m_io.ReadS4le();
                 _numberOfPoints = m_io.ReadS4le();
                 _parts = new List<int>((int) (NumberOfParts));
-                for (var i = 0; i < NumberOfParts; i++) {
+                for (var i = 0; i < NumberOfParts; i++)
+                {
                     _parts.Add(m_io.ReadS4le());
                 }
                 _points = new List<Point>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _points.Add(new Point(m_io, this, m_root));
                 }
-                }
+            }
             private BoundingBoxXY _boundingBox;
             private int _numberOfParts;
             private int _numberOfPoints;
@@ -199,16 +212,17 @@ namespace Kaitai
                 return new BoundsMinMax(new KaitaiStream(fileName));
             }
 
-            public BoundsMinMax(KaitaiStream io, KaitaiStruct parent = null, ShapefileMain root = null) : base(io)
+            public BoundsMinMax(KaitaiStream p__io, KaitaiStruct p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _min = m_io.ReadF8le();
                 _max = m_io.ReadF8le();
-                }
+            }
             private double _min;
             private double _max;
             private ShapefileMain m_root;
@@ -225,25 +239,28 @@ namespace Kaitai
                 return new PolyLine(new KaitaiStream(fileName));
             }
 
-            public PolyLine(KaitaiStream io, ShapefileMain.RecordContents parent = null, ShapefileMain root = null) : base(io)
+            public PolyLine(KaitaiStream p__io, ShapefileMain.RecordContents p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfParts = m_io.ReadS4le();
                 _numberOfPoints = m_io.ReadS4le();
                 _parts = new List<int>((int) (NumberOfParts));
-                for (var i = 0; i < NumberOfParts; i++) {
+                for (var i = 0; i < NumberOfParts; i++)
+                {
                     _parts.Add(m_io.ReadS4le());
                 }
                 _points = new List<Point>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _points.Add(new Point(m_io, this, m_root));
                 }
-                }
+            }
             private BoundingBoxXY _boundingBox;
             private int _numberOfParts;
             private int _numberOfPoints;
@@ -266,30 +283,34 @@ namespace Kaitai
                 return new MultiPointZ(new KaitaiStream(fileName));
             }
 
-            public MultiPointZ(KaitaiStream io, ShapefileMain.RecordContents parent = null, ShapefileMain root = null) : base(io)
+            public MultiPointZ(KaitaiStream p__io, ShapefileMain.RecordContents p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfPoints = m_io.ReadS4le();
                 _points = new List<Point>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _points.Add(new Point(m_io, this, m_root));
                 }
                 _zRange = new BoundsMinMax(m_io, this, m_root);
                 _zValues = new List<double>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _zValues.Add(m_io.ReadF8le());
                 }
                 _mRange = new BoundsMinMax(m_io, this, m_root);
                 _mValues = new List<double>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _mValues.Add(m_io.ReadF8le());
                 }
-                }
+            }
             private BoundingBoxXY _boundingBox;
             private int _numberOfPoints;
             private List<Point> _points;
@@ -316,35 +337,40 @@ namespace Kaitai
                 return new PolyLineZ(new KaitaiStream(fileName));
             }
 
-            public PolyLineZ(KaitaiStream io, ShapefileMain.RecordContents parent = null, ShapefileMain root = null) : base(io)
+            public PolyLineZ(KaitaiStream p__io, ShapefileMain.RecordContents p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfParts = m_io.ReadS4le();
                 _numberOfPoints = m_io.ReadS4le();
                 _parts = new List<int>((int) (NumberOfParts));
-                for (var i = 0; i < NumberOfParts; i++) {
+                for (var i = 0; i < NumberOfParts; i++)
+                {
                     _parts.Add(m_io.ReadS4le());
                 }
                 _points = new List<Point>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _points.Add(new Point(m_io, this, m_root));
                 }
                 _zRange = new BoundsMinMax(m_io, this, m_root);
                 _zValues = new List<double>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _zValues.Add(m_io.ReadF8le());
                 }
                 _mRange = new BoundsMinMax(m_io, this, m_root);
                 _mValues = new List<double>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _mValues.Add(m_io.ReadF8le());
                 }
-                }
+            }
             private BoundingBoxXY _boundingBox;
             private int _numberOfParts;
             private int _numberOfPoints;
@@ -375,35 +401,40 @@ namespace Kaitai
                 return new PolygonZ(new KaitaiStream(fileName));
             }
 
-            public PolygonZ(KaitaiStream io, ShapefileMain.RecordContents parent = null, ShapefileMain root = null) : base(io)
+            public PolygonZ(KaitaiStream p__io, ShapefileMain.RecordContents p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfParts = m_io.ReadS4le();
                 _numberOfPoints = m_io.ReadS4le();
                 _parts = new List<int>((int) (NumberOfParts));
-                for (var i = 0; i < NumberOfParts; i++) {
+                for (var i = 0; i < NumberOfParts; i++)
+                {
                     _parts.Add(m_io.ReadS4le());
                 }
                 _points = new List<Point>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _points.Add(new Point(m_io, this, m_root));
                 }
                 _zRange = new BoundsMinMax(m_io, this, m_root);
                 _zValues = new List<double>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _zValues.Add(m_io.ReadF8le());
                 }
                 _mRange = new BoundsMinMax(m_io, this, m_root);
                 _mValues = new List<double>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _mValues.Add(m_io.ReadF8le());
                 }
-                }
+            }
             private BoundingBoxXY _boundingBox;
             private int _numberOfParts;
             private int _numberOfPoints;
@@ -434,16 +465,17 @@ namespace Kaitai
                 return new BoundingBoxXY(new KaitaiStream(fileName));
             }
 
-            public BoundingBoxXY(KaitaiStream io, KaitaiStruct parent = null, ShapefileMain root = null) : base(io)
+            public BoundingBoxXY(KaitaiStream p__io, KaitaiStruct p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _x = new BoundsMinMax(m_io, this, m_root);
                 _y = new BoundsMinMax(m_io, this, m_root);
-                }
+            }
             private BoundsMinMax _x;
             private BoundsMinMax _y;
             private ShapefileMain m_root;
@@ -460,17 +492,18 @@ namespace Kaitai
                 return new PointM(new KaitaiStream(fileName));
             }
 
-            public PointM(KaitaiStream io, ShapefileMain.RecordContents parent = null, ShapefileMain root = null) : base(io)
+            public PointM(KaitaiStream p__io, ShapefileMain.RecordContents p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _x = m_io.ReadF8le();
                 _y = m_io.ReadF8le();
                 _m = m_io.ReadF8le();
-                }
+            }
             private double _x;
             private double _y;
             private double _m;
@@ -489,30 +522,34 @@ namespace Kaitai
                 return new PolygonM(new KaitaiStream(fileName));
             }
 
-            public PolygonM(KaitaiStream io, ShapefileMain.RecordContents parent = null, ShapefileMain root = null) : base(io)
+            public PolygonM(KaitaiStream p__io, ShapefileMain.RecordContents p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfParts = m_io.ReadS4le();
                 _numberOfPoints = m_io.ReadS4le();
                 _parts = new List<int>((int) (NumberOfParts));
-                for (var i = 0; i < NumberOfParts; i++) {
+                for (var i = 0; i < NumberOfParts; i++)
+                {
                     _parts.Add(m_io.ReadS4le());
                 }
                 _points = new List<Point>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _points.Add(new Point(m_io, this, m_root));
                 }
                 _mRange = new BoundsMinMax(m_io, this, m_root);
                 _mValues = new List<double>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _mValues.Add(m_io.ReadF8le());
                 }
-                }
+            }
             private BoundingBoxXY _boundingBox;
             private int _numberOfParts;
             private int _numberOfPoints;
@@ -539,16 +576,17 @@ namespace Kaitai
                 return new RecordHeader(new KaitaiStream(fileName));
             }
 
-            public RecordHeader(KaitaiStream io, ShapefileMain.Record parent = null, ShapefileMain root = null) : base(io)
+            public RecordHeader(KaitaiStream p__io, ShapefileMain.Record p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _recordNumber = m_io.ReadS4be();
                 _contentLength = m_io.ReadS4be();
-                }
+            }
             private int _recordNumber;
             private int _contentLength;
             private ShapefileMain m_root;
@@ -565,20 +603,22 @@ namespace Kaitai
                 return new MultiPoint(new KaitaiStream(fileName));
             }
 
-            public MultiPoint(KaitaiStream io, ShapefileMain.RecordContents parent = null, ShapefileMain root = null) : base(io)
+            public MultiPoint(KaitaiStream p__io, ShapefileMain.RecordContents p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfPoints = m_io.ReadS4le();
                 _points = new List<Point>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _points.Add(new Point(m_io, this, m_root));
                 }
-                }
+            }
             private BoundingBoxXY _boundingBox;
             private int _numberOfPoints;
             private List<Point> _points;
@@ -597,13 +637,14 @@ namespace Kaitai
                 return new FileHeader(new KaitaiStream(fileName));
             }
 
-            public FileHeader(KaitaiStream io, ShapefileMain parent = null, ShapefileMain root = null) : base(io)
+            public FileHeader(KaitaiStream p__io, ShapefileMain p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _fileCode = m_io.EnsureFixedContents(new byte[] { 0, 0, 39, 10 });
                 _unusedField1 = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                 _unusedField2 = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
@@ -614,7 +655,7 @@ namespace Kaitai
                 _version = m_io.EnsureFixedContents(new byte[] { 232, 3, 0, 0 });
                 _shapeType = ((ShapefileMain.ShapeType) m_io.ReadS4le());
                 _boundingBox = new BoundingBoxXYZM(m_io, this, m_root);
-                }
+            }
             private byte[] _fileCode;
             private byte[] _unusedField1;
             private byte[] _unusedField2;
@@ -655,18 +696,19 @@ namespace Kaitai
                 return new PointZ(new KaitaiStream(fileName));
             }
 
-            public PointZ(KaitaiStream io, ShapefileMain.RecordContents parent = null, ShapefileMain root = null) : base(io)
+            public PointZ(KaitaiStream p__io, ShapefileMain.RecordContents p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _x = m_io.ReadF8le();
                 _y = m_io.ReadF8le();
                 _z = m_io.ReadF8le();
                 _m = m_io.ReadF8le();
-                }
+            }
             private double _x;
             private double _y;
             private double _z;
@@ -687,16 +729,17 @@ namespace Kaitai
                 return new Record(new KaitaiStream(fileName));
             }
 
-            public Record(KaitaiStream io, ShapefileMain parent = null, ShapefileMain root = null) : base(io)
+            public Record(KaitaiStream p__io, ShapefileMain p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _header = new RecordHeader(m_io, this, m_root);
                 _contents = new RecordContents(m_io, this, m_root);
-                }
+            }
             private RecordHeader _header;
             private RecordContents _contents;
             private ShapefileMain m_root;
@@ -717,13 +760,14 @@ namespace Kaitai
                 return new RecordContents(new KaitaiStream(fileName));
             }
 
-            public RecordContents(KaitaiStream io, ShapefileMain.Record parent = null, ShapefileMain root = null) : base(io)
+            public RecordContents(KaitaiStream p__io, ShapefileMain.Record p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _shapeType = ((ShapefileMain.ShapeType) m_io.ReadS4le());
                 if (ShapeType != ShapefileMain.ShapeType.NullShape) {
                     switch (ShapeType) {
@@ -781,7 +825,7 @@ namespace Kaitai
                     }
                     }
                 }
-                }
+            }
             private ShapeType _shapeType;
             private KaitaiStruct _shapeParameters;
             private ShapefileMain m_root;
@@ -798,39 +842,45 @@ namespace Kaitai
                 return new MultiPatch(new KaitaiStream(fileName));
             }
 
-            public MultiPatch(KaitaiStream io, ShapefileMain.RecordContents parent = null, ShapefileMain root = null) : base(io)
+            public MultiPatch(KaitaiStream p__io, ShapefileMain.RecordContents p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfParts = m_io.ReadS4le();
                 _numberOfPoints = m_io.ReadS4le();
                 _parts = new List<int>((int) (NumberOfParts));
-                for (var i = 0; i < NumberOfParts; i++) {
+                for (var i = 0; i < NumberOfParts; i++)
+                {
                     _parts.Add(m_io.ReadS4le());
                 }
                 _partTypes = new List<PartType>((int) (NumberOfParts));
-                for (var i = 0; i < NumberOfParts; i++) {
+                for (var i = 0; i < NumberOfParts; i++)
+                {
                     _partTypes.Add(((ShapefileMain.PartType) m_io.ReadS4le()));
                 }
                 _points = new List<Point>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _points.Add(new Point(m_io, this, m_root));
                 }
                 _zRange = new BoundsMinMax(m_io, this, m_root);
                 _zValues = new List<double>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _zValues.Add(m_io.ReadF8le());
                 }
                 _mRange = new BoundsMinMax(m_io, this, m_root);
                 _mValues = new List<double>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _mValues.Add(m_io.ReadF8le());
                 }
-                }
+            }
             private BoundingBoxXY _boundingBox;
             private int _numberOfParts;
             private int _numberOfPoints;
@@ -863,30 +913,34 @@ namespace Kaitai
                 return new PolyLineM(new KaitaiStream(fileName));
             }
 
-            public PolyLineM(KaitaiStream io, ShapefileMain.RecordContents parent = null, ShapefileMain root = null) : base(io)
+            public PolyLineM(KaitaiStream p__io, ShapefileMain.RecordContents p__parent = null, ShapefileMain p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfParts = m_io.ReadS4le();
                 _numberOfPoints = m_io.ReadS4le();
                 _parts = new List<int>((int) (NumberOfParts));
-                for (var i = 0; i < NumberOfParts; i++) {
+                for (var i = 0; i < NumberOfParts; i++)
+                {
                     _parts.Add(m_io.ReadS4le());
                 }
                 _points = new List<Point>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _points.Add(new Point(m_io, this, m_root));
                 }
                 _mRange = new BoundsMinMax(m_io, this, m_root);
                 _mValues = new List<double>((int) (NumberOfPoints));
-                for (var i = 0; i < NumberOfPoints; i++) {
+                for (var i = 0; i < NumberOfPoints; i++)
+                {
                     _mValues.Add(m_io.ReadF8le());
                 }
-                }
+            }
             private BoundingBoxXY _boundingBox;
             private int _numberOfParts;
             private int _numberOfPoints;

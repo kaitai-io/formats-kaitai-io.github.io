@@ -112,6 +112,20 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.8
+                    </div>
+                    
+                    
                 </div>
             </div>
         </div>
@@ -225,6 +239,16 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
 }
 
+our $COMPRESSIONS_RGB = 0;
+our $COMPRESSIONS_RLE8 = 1;
+our $COMPRESSIONS_RLE4 = 2;
+our $COMPRESSIONS_BITFIELDS = 3;
+our $COMPRESSIONS_JPEG = 4;
+our $COMPRESSIONS_PNG = 5;
+our $COMPRESSIONS_CMYK = 11;
+our $COMPRESSIONS_CMYK_RLE8 = 12;
+our $COMPRESSIONS_CMYK_RLE4 = 13;
+
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
     my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
@@ -242,14 +266,38 @@ sub _read {
     my ($self) = @_;
 
     $self-&gt;{file_hdr} = Bmp::FileHeader-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{dib_hdr} = Bmp::DibHeader-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{len_dib_header} = $self-&gt;{_io}-&gt;read_s4le();
+    my $_on = $self-&gt;len_dib_header();
+    if ($_on == 104) {
+        $self-&gt;{_raw_dib_header} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;len_dib_header() - 4));
+        my $io__raw_dib_header = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_dib_header});
+        $self-&gt;{dib_header} = Bmp::BitmapCoreHeader-&gt;new($io__raw_dib_header, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == 12) {
+        $self-&gt;{_raw_dib_header} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;len_dib_header() - 4));
+        my $io__raw_dib_header = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_dib_header});
+        $self-&gt;{dib_header} = Bmp::BitmapCoreHeader-&gt;new($io__raw_dib_header, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == 40) {
+        $self-&gt;{_raw_dib_header} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;len_dib_header() - 4));
+        my $io__raw_dib_header = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_dib_header});
+        $self-&gt;{dib_header} = Bmp::BitmapInfoHeader-&gt;new($io__raw_dib_header, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == 124) {
+        $self-&gt;{_raw_dib_header} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;len_dib_header() - 4));
+        my $io__raw_dib_header = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_dib_header});
+        $self-&gt;{dib_header} = Bmp::BitmapCoreHeader-&gt;new($io__raw_dib_header, $self, $self-&gt;{_root});
+    }
+    else {
+        $self-&gt;{dib_header} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;len_dib_header() - 4));
+    }
 }
 
 sub image {
     my ($self) = @_;
     return $self-&gt;{image} if ($self-&gt;{image});
     my $_pos = $self-&gt;{_io}-&gt;pos();
-    $self-&gt;{_io}-&gt;seek($self-&gt;file_hdr()-&gt;bitmap_ofs());
+    $self-&gt;{_io}-&gt;seek($self-&gt;file_hdr()-&gt;ofs_bitmap());
     $self-&gt;{image} = $self-&gt;{_io}-&gt;read_bytes_full();
     $self-&gt;{_io}-&gt;seek($_pos);
     return $self-&gt;{image};
@@ -260,9 +308,19 @@ sub file_hdr {
     return $self-&gt;{file_hdr};
 }
 
-sub dib_hdr {
+sub len_dib_header {
     my ($self) = @_;
-    return $self-&gt;{dib_hdr};
+    return $self-&gt;{len_dib_header};
+}
+
+sub dib_header {
+    my ($self) = @_;
+    return $self-&gt;{dib_header};
+}
+
+sub _raw_dib_header {
+    my ($self) = @_;
+    return $self-&gt;{_raw_dib_header};
 }
 
 ########################################################################
@@ -295,21 +353,21 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{file_type} = $self-&gt;{_io}-&gt;read_bytes(2);
-    $self-&gt;{file_size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{magic} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (66, 77)));
+    $self-&gt;{len_file} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{reserved1} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{reserved2} = $self-&gt;{_io}-&gt;read_u2le();
-    $self-&gt;{bitmap_ofs} = $self-&gt;{_io}-&gt;read_s4le();
+    $self-&gt;{ofs_bitmap} = $self-&gt;{_io}-&gt;read_s4le();
 }
 
-sub file_type {
+sub magic {
     my ($self) = @_;
-    return $self-&gt;{file_type};
+    return $self-&gt;{magic};
 }
 
-sub file_size {
+sub len_file {
     my ($self) = @_;
-    return $self-&gt;{file_size};
+    return $self-&gt;{len_file};
 }
 
 sub reserved1 {
@@ -322,100 +380,9 @@ sub reserved2 {
     return $self-&gt;{reserved2};
 }
 
-sub bitmap_ofs {
+sub ofs_bitmap {
     my ($self) = @_;
-    return $self-&gt;{bitmap_ofs};
-}
-
-########################################################################
-package Bmp::DibHeader;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{dib_header_size} = $self-&gt;{_io}-&gt;read_s4le();
-    if ($self-&gt;dib_header_size() == 12) {
-        $self-&gt;{_raw_bitmap_core_header} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;dib_header_size() - 4));
-        my $io__raw_bitmap_core_header = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_bitmap_core_header});
-        $self-&gt;{bitmap_core_header} = Bmp::BitmapCoreHeader-&gt;new($io__raw_bitmap_core_header, $self, $self-&gt;{_root});
-    }
-    if ($self-&gt;dib_header_size() == 40) {
-        $self-&gt;{_raw_bitmap_info_header} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;dib_header_size() - 4));
-        my $io__raw_bitmap_info_header = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_bitmap_info_header});
-        $self-&gt;{bitmap_info_header} = Bmp::BitmapInfoHeader-&gt;new($io__raw_bitmap_info_header, $self, $self-&gt;{_root});
-    }
-    if ($self-&gt;dib_header_size() == 124) {
-        $self-&gt;{_raw_bitmap_v5_header} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;dib_header_size() - 4));
-        my $io__raw_bitmap_v5_header = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_bitmap_v5_header});
-        $self-&gt;{bitmap_v5_header} = Bmp::BitmapCoreHeader-&gt;new($io__raw_bitmap_v5_header, $self, $self-&gt;{_root});
-    }
-    if ( (($self-&gt;dib_header_size() != 12) &amp;&amp; ($self-&gt;dib_header_size() != 40) &amp;&amp; ($self-&gt;dib_header_size() != 124)) ) {
-        $self-&gt;{dib_header_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;dib_header_size() - 4));
-    }
-}
-
-sub dib_header_size {
-    my ($self) = @_;
-    return $self-&gt;{dib_header_size};
-}
-
-sub bitmap_core_header {
-    my ($self) = @_;
-    return $self-&gt;{bitmap_core_header};
-}
-
-sub bitmap_info_header {
-    my ($self) = @_;
-    return $self-&gt;{bitmap_info_header};
-}
-
-sub bitmap_v5_header {
-    my ($self) = @_;
-    return $self-&gt;{bitmap_v5_header};
-}
-
-sub dib_header_body {
-    my ($self) = @_;
-    return $self-&gt;{dib_header_body};
-}
-
-sub _raw_bitmap_core_header {
-    my ($self) = @_;
-    return $self-&gt;{_raw_bitmap_core_header};
-}
-
-sub _raw_bitmap_info_header {
-    my ($self) = @_;
-    return $self-&gt;{_raw_bitmap_info_header};
-}
-
-sub _raw_bitmap_v5_header {
-    my ($self) = @_;
-    return $self-&gt;{_raw_bitmap_v5_header};
+    return $self-&gt;{ofs_bitmap};
 }
 
 ########################################################################
@@ -509,7 +476,7 @@ sub _read {
     $self-&gt;{num_planes} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{bits_per_pixel} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{compression} = $self-&gt;{_io}-&gt;read_u4le();
-    $self-&gt;{size_image} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{len_image} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{x_px_per_m} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{y_px_per_m} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{num_colors_used} = $self-&gt;{_io}-&gt;read_u4le();
@@ -541,9 +508,9 @@ sub compression {
     return $self-&gt;{compression};
 }
 
-sub size_image {
+sub len_image {
     my ($self) = @_;
-    return $self-&gt;{size_image};
+    return $self-&gt;{len_image};
 }
 
 sub x_px_per_m {

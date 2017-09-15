@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  */
 public class Tsm extends KaitaiStruct {
     public static Tsm fromFile(String fileName) throws IOException {
-        return new Tsm(new KaitaiStream(fileName));
+        return new Tsm(new ByteBufferKaitaiStream(fileName));
     }
 
     public Tsm(KaitaiStream _io) {
@@ -41,7 +42,7 @@ public class Tsm extends KaitaiStruct {
     }
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
-            return new Header(new KaitaiStream(fileName));
+            return new Header(new ByteBufferKaitaiStream(fileName));
         }
 
         public Header(KaitaiStream _io) {
@@ -73,7 +74,7 @@ public class Tsm extends KaitaiStruct {
     }
     public static class Index extends KaitaiStruct {
         public static Index fromFile(String fileName) throws IOException {
-            return new Index(new KaitaiStream(fileName));
+            return new Index(new ByteBufferKaitaiStream(fileName));
         }
 
         public Index(KaitaiStream _io) {
@@ -95,7 +96,7 @@ public class Tsm extends KaitaiStruct {
         }
         public static class IndexHeader extends KaitaiStruct {
             public static IndexHeader fromFile(String fileName) throws IOException {
-                return new IndexHeader(new KaitaiStream(fileName));
+                return new IndexHeader(new ByteBufferKaitaiStream(fileName));
             }
 
             public IndexHeader(KaitaiStream _io) {
@@ -124,7 +125,7 @@ public class Tsm extends KaitaiStruct {
             }
             public static class IndexEntry extends KaitaiStruct {
                 public static IndexEntry fromFile(String fileName) throws IOException {
-                    return new IndexEntry(new KaitaiStream(fileName));
+                    return new IndexEntry(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public IndexEntry(KaitaiStream _io) {
@@ -149,7 +150,7 @@ public class Tsm extends KaitaiStruct {
                 }
                 public static class BlockEntry extends KaitaiStruct {
                     public static BlockEntry fromFile(String fileName) throws IOException {
-                        return new BlockEntry(new KaitaiStream(fileName));
+                        return new BlockEntry(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public BlockEntry(KaitaiStream _io) {
@@ -227,9 +228,11 @@ public class Tsm extends KaitaiStruct {
             this.entries = new ArrayList<IndexHeader>();
             {
                 IndexHeader _it;
+                int i = 0;
                 do {
                     _it = new IndexHeader(this._io, this, _root);
                     this.entries.add(_it);
+                    i++;
                 } while (!(_io().pos() == (_io().size() - 8)));
             }
             this._io.seek(_pos);

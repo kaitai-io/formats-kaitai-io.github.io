@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class DoomWad extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -45,15 +45,17 @@ class DoomWad extends \Kaitai\Struct\Struct {
 namespace \DoomWad;
 
 class Sectors extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\IndexEntry $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\IndexEntry $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \DoomWad\Sector($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -63,8 +65,8 @@ class Sectors extends \Kaitai\Struct\Struct {
 namespace \DoomWad;
 
 class Vertex extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\Vertexes $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\Vertexes $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -89,8 +91,8 @@ class Vertex extends \Kaitai\Struct\Struct {
 namespace \DoomWad;
 
 class Texture12 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\IndexEntry $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\IndexEntry $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -115,8 +117,8 @@ class Texture12 extends \Kaitai\Struct\Struct {
 namespace \DoomWad\Texture12;
 
 class TextureIndex extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\Texture12 $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\Texture12 $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -140,8 +142,8 @@ class TextureIndex extends \Kaitai\Struct\Struct {
 namespace \DoomWad\Texture12;
 
 class TextureBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\Texture12\TextureIndex $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\Texture12\TextureIndex $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -189,8 +191,8 @@ class TextureBody extends \Kaitai\Struct\Struct {
 namespace \DoomWad\Texture12;
 
 class Patch extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\Texture12\TextureBody $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\Texture12\TextureBody $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -228,8 +230,8 @@ class Patch extends \Kaitai\Struct\Struct {
 namespace \DoomWad;
 
 class Linedef extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\Linedefs $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\Linedefs $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -261,8 +263,8 @@ class Linedef extends \Kaitai\Struct\Struct {
 namespace \DoomWad;
 
 class Pnames extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\IndexEntry $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\IndexEntry $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -287,8 +289,8 @@ class Pnames extends \Kaitai\Struct\Struct {
 namespace \DoomWad;
 
 class Thing extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\Things $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\Things $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -314,8 +316,8 @@ class Thing extends \Kaitai\Struct\Struct {
 namespace \DoomWad;
 
 class Sector extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\Sectors $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\Sectors $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -387,15 +389,17 @@ class SpecialSector {
 namespace \DoomWad;
 
 class Vertexes extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\IndexEntry $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\IndexEntry $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \DoomWad\Vertex($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -405,8 +409,8 @@ class Vertexes extends \Kaitai\Struct\Struct {
 namespace \DoomWad;
 
 class Sidedef extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\Sidedefs $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\Sidedefs $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -435,15 +439,17 @@ class Sidedef extends \Kaitai\Struct\Struct {
 namespace \DoomWad;
 
 class Things extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\IndexEntry $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\IndexEntry $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \DoomWad\Thing($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -453,15 +459,17 @@ class Things extends \Kaitai\Struct\Struct {
 namespace \DoomWad;
 
 class Linedefs extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\IndexEntry $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\IndexEntry $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \DoomWad\Linedef($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -471,8 +479,8 @@ class Linedefs extends \Kaitai\Struct\Struct {
 namespace \DoomWad;
 
 class IndexEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -554,15 +562,17 @@ class IndexEntry extends \Kaitai\Struct\Struct {
 namespace \DoomWad;
 
 class Sidedefs extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\IndexEntry $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\IndexEntry $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \DoomWad\Sidedef($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -572,8 +582,8 @@ class Sidedefs extends \Kaitai\Struct\Struct {
 namespace \DoomWad;
 
 class Blockmap extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\IndexEntry $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\IndexEntry $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -623,8 +633,8 @@ class Blockmap extends \Kaitai\Struct\Struct {
 namespace \DoomWad\Blockmap;
 
 class Blocklist extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \DoomWad\Blockmap $parent = null, \DoomWad $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \DoomWad\Blockmap $_parent = null, \DoomWad $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -642,9 +652,11 @@ class Blocklist extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek(($this->offset() * 2));
         $this->_m_linedefs = [];
+        $i = 0;
         do {
             $_ = $this->_io->readS2le();
             $this->_m_linedefs[] = $_;
+            $i++;
         } while (!($_ == -1));
         $this->_io->seek($_pos);
         return $this->_m_linedefs;

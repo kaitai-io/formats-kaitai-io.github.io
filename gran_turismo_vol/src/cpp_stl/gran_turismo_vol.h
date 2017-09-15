@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -18,16 +17,24 @@ class gran_turismo_vol_t : public kaitai::kstruct {
 public:
     class file_info_t;
 
-    gran_turismo_vol_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, gran_turismo_vol_t* p_root = 0);
+    gran_turismo_vol_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gran_turismo_vol_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~gran_turismo_vol_t();
 
     class file_info_t : public kaitai::kstruct {
 
     public:
 
-        file_info_t(kaitai::kstream* p_io, gran_turismo_vol_t* p_parent = 0, gran_turismo_vol_t* p_root = 0);
+        file_info_t(kaitai::kstream* p__io, gran_turismo_vol_t* p__parent = 0, gran_turismo_vol_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~file_info_t();
 
     private:

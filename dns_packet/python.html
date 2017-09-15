@@ -188,10 +188,10 @@ section#format-index .row {
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = DnsPacket(KaitaiStream(raw))</code></pre>
+data = DnsPacket(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -349,11 +349,13 @@ class DnsPacket(KaitaiStruct):
 
         def _read(self):
             self.name = []
+            i = 0
             while True:
                 _ = self._root.Label(self._io, self, self._root)
                 self.name.append(_)
                 if  ((_.length == 0) or (_.length == 192)) :
                     break
+                i += 1
 
 
     class Address(KaitaiStruct):

@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -31,16 +30,24 @@ public:
     class note_off_event_t;
     class channel_pressure_event_t;
 
-    standard_midi_file_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, standard_midi_file_t* p_root = 0);
+    standard_midi_file_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, standard_midi_file_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~standard_midi_file_t();
 
     class track_events_t : public kaitai::kstruct {
 
     public:
 
-        track_events_t(kaitai::kstream* p_io, standard_midi_file_t::track_t* p_parent = 0, standard_midi_file_t* p_root = 0);
+        track_events_t(kaitai::kstream* p__io, standard_midi_file_t::track_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~track_events_t();
 
     private:
@@ -58,8 +65,12 @@ public:
 
     public:
 
-        track_event_t(kaitai::kstream* p_io, standard_midi_file_t::track_events_t* p_parent = 0, standard_midi_file_t* p_root = 0);
+        track_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_events_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~track_event_t();
 
     private:
@@ -100,6 +111,12 @@ public:
 
     private:
         kaitai::kstruct* m_event_body;
+        bool n_event_body;
+
+    public:
+        bool _is_null_event_body() { event_body(); return n_event_body; };
+
+    private:
         standard_midi_file_t* m__root;
         standard_midi_file_t::track_events_t* m__parent;
 
@@ -117,8 +134,12 @@ public:
 
     public:
 
-        pitch_bend_event_t(kaitai::kstream* p_io, standard_midi_file_t::track_event_t* p_parent = 0, standard_midi_file_t* p_root = 0);
+        pitch_bend_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~pitch_bend_event_t();
 
     private:
@@ -152,8 +173,12 @@ public:
 
     public:
 
-        program_change_event_t(kaitai::kstream* p_io, standard_midi_file_t::track_event_t* p_parent = 0, standard_midi_file_t* p_root = 0);
+        program_change_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~program_change_event_t();
 
     private:
@@ -171,8 +196,12 @@ public:
 
     public:
 
-        note_on_event_t(kaitai::kstream* p_io, standard_midi_file_t::track_event_t* p_parent = 0, standard_midi_file_t* p_root = 0);
+        note_on_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~note_on_event_t();
 
     private:
@@ -192,8 +221,12 @@ public:
 
     public:
 
-        polyphonic_pressure_event_t(kaitai::kstream* p_io, standard_midi_file_t::track_event_t* p_parent = 0, standard_midi_file_t* p_root = 0);
+        polyphonic_pressure_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~polyphonic_pressure_event_t();
 
     private:
@@ -213,8 +246,12 @@ public:
 
     public:
 
-        track_t(kaitai::kstream* p_io, standard_midi_file_t* p_parent = 0, standard_midi_file_t* p_root = 0);
+        track_t(kaitai::kstream* p__io, standard_midi_file_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~track_t();
 
     private:
@@ -258,8 +295,12 @@ public:
             META_TYPE_ENUM_SEQUENCER_SPECIFIC_EVENT = 127
         };
 
-        meta_event_body_t(kaitai::kstream* p_io, standard_midi_file_t::track_event_t* p_parent = 0, standard_midi_file_t* p_root = 0);
+        meta_event_body_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~meta_event_body_t();
 
     private:
@@ -281,8 +322,12 @@ public:
 
     public:
 
-        controller_event_t(kaitai::kstream* p_io, standard_midi_file_t::track_event_t* p_parent = 0, standard_midi_file_t* p_root = 0);
+        controller_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~controller_event_t();
 
     private:
@@ -302,8 +347,12 @@ public:
 
     public:
 
-        header_t(kaitai::kstream* p_io, standard_midi_file_t* p_parent = 0, standard_midi_file_t* p_root = 0);
+        header_t(kaitai::kstream* p__io, standard_midi_file_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header_t();
 
     private:
@@ -329,8 +378,12 @@ public:
 
     public:
 
-        sysex_event_body_t(kaitai::kstream* p_io, standard_midi_file_t::track_event_t* p_parent = 0, standard_midi_file_t* p_root = 0);
+        sysex_event_body_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~sysex_event_body_t();
 
     private:
@@ -350,8 +403,12 @@ public:
 
     public:
 
-        note_off_event_t(kaitai::kstream* p_io, standard_midi_file_t::track_event_t* p_parent = 0, standard_midi_file_t* p_root = 0);
+        note_off_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~note_off_event_t();
 
     private:
@@ -371,8 +428,12 @@ public:
 
     public:
 
-        channel_pressure_event_t(kaitai::kstream* p_io, standard_midi_file_t::track_event_t* p_parent = 0, standard_midi_file_t* p_root = 0);
+        channel_pressure_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~channel_pressure_event_t();
 
     private:

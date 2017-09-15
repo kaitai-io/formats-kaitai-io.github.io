@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Asn1Der extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Asn1Der $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Asn1Der $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -54,8 +54,8 @@ class Asn1Der extends \Kaitai\Struct\Struct {
 namespace \Asn1Der;
 
 class LenEncoded extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Asn1Der $parent = null, \Asn1Der $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Asn1Der $_parent = null, \Asn1Der $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -81,15 +81,17 @@ class LenEncoded extends \Kaitai\Struct\Struct {
 namespace \Asn1Der;
 
 class BodySequence extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Asn1Der $parent = null, \Asn1Der $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Asn1Der $_parent = null, \Asn1Der $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \Asn1Der($this->_io);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -99,8 +101,8 @@ class BodySequence extends \Kaitai\Struct\Struct {
 namespace \Asn1Der;
 
 class BodyUtf8string extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Asn1Der $parent = null, \Asn1Der $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Asn1Der $_parent = null, \Asn1Der $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -114,8 +116,8 @@ class BodyUtf8string extends \Kaitai\Struct\Struct {
 namespace \Asn1Der;
 
 class BodyPrintableString extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Asn1Der $parent = null, \Asn1Der $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Asn1Der $_parent = null, \Asn1Der $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

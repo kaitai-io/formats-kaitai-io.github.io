@@ -4,8 +4,8 @@
 
 
 
-stl_t::stl_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, stl_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+stl_t::stl_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, stl_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -28,9 +28,9 @@ stl_t::~stl_t() {
     delete m_triangles;
 }
 
-stl_t::triangle_t::triangle_t(kaitai::kstream *p_io, stl_t* p_parent, stl_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+stl_t::triangle_t::triangle_t(kaitai::kstream* p__io, stl_t* p__parent, stl_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -52,9 +52,9 @@ stl_t::triangle_t::~triangle_t() {
     delete m_vertices;
 }
 
-stl_t::vec3d_t::vec3d_t(kaitai::kstream *p_io, stl_t::triangle_t* p_parent, stl_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+stl_t::vec3d_t::vec3d_t(kaitai::kstream* p__io, stl_t::triangle_t* p__parent, stl_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

@@ -321,8 +321,10 @@ var Asn1Der = (function() {
     }
     BodySequence.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
-        this.entries.push(new Asn1Der(this._io));
+        this.entries.push(new Asn1Der(this._io, this, null));
+        i++;
       }
     }
 

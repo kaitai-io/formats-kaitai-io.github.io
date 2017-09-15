@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Cramfs extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Cramfs $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Cramfs $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -24,8 +24,8 @@ class Cramfs extends \Kaitai\Struct\Struct {
 namespace \Cramfs;
 
 class SuperBlockStruct extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Cramfs $parent = null, \Cramfs $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Cramfs $_parent = null, \Cramfs $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -95,8 +95,8 @@ class SuperBlockStruct extends \Kaitai\Struct\Struct {
 namespace \Cramfs;
 
 class ChunkedDataInode extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Cramfs\Inode $parent = null, \Cramfs $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Cramfs\Inode $_parent = null, \Cramfs $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -117,8 +117,8 @@ class ChunkedDataInode extends \Kaitai\Struct\Struct {
 namespace \Cramfs;
 
 class Inode extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Cramfs $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Cramfs $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -256,16 +256,18 @@ class FileType {
 namespace \Cramfs;
 
 class DirInode extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Cramfs\Inode $parent = null, \Cramfs $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Cramfs\Inode $_parent = null, \Cramfs $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         if ($this->_io()->size() > 0) {
             $this->_m_children = [];
+            $i = 0;
             while (!$this->_io->isEof()) {
                 $this->_m_children[] = new \Cramfs\Inode($this->_io, $this, $this->_root);
+                $i++;
             }
         }
     }
@@ -276,8 +278,8 @@ class DirInode extends \Kaitai\Struct\Struct {
 namespace \Cramfs;
 
 class Info extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Cramfs\SuperBlockStruct $parent = null, \Cramfs $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Cramfs\SuperBlockStruct $_parent = null, \Cramfs $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

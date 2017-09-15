@@ -4,8 +4,8 @@
 
 
 
-xwd_t::xwd_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, xwd_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+xwd_t::xwd_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, xwd_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -18,12 +18,15 @@ void xwd_t::_read() {
     int l_color_map = hdr()->color_map_entries();
     m__raw_color_map = new std::vector<std::string>();
     m__raw_color_map->reserve(l_color_map);
+    m__io__raw_color_map = new std::vector<kaitai::kstream*>();
+    m__io__raw_color_map->reserve(l_color_map);
     m_color_map = new std::vector<color_map_entry_t*>();
     m_color_map->reserve(l_color_map);
     for (int i = 0; i < l_color_map; i++) {
         m__raw_color_map->push_back(m__io->read_bytes(12));
-        m__io__raw_color_map = new kaitai::kstream(m__raw_color_map->at(m__raw_color_map->size() - 1));
-        m_color_map->push_back(new color_map_entry_t(m__io__raw_color_map, this, m__root));
+        kaitai::kstream* io__raw_color_map = new kaitai::kstream(m__raw_color_map->at(m__raw_color_map->size() - 1));
+        m__io__raw_color_map->push_back(io__raw_color_map);
+        m_color_map->push_back(new color_map_entry_t(io__raw_color_map, this, m__root));
     }
 }
 
@@ -31,15 +34,19 @@ xwd_t::~xwd_t() {
     delete m__io__raw_hdr;
     delete m_hdr;
     delete m__raw_color_map;
+    for (std::vector<kaitai::kstream*>::iterator it = m__io__raw_color_map->begin(); it != m__io__raw_color_map->end(); ++it) {
+        delete *it;
+    }
+    delete m__io__raw_color_map;
     for (std::vector<color_map_entry_t*>::iterator it = m_color_map->begin(); it != m_color_map->end(); ++it) {
         delete *it;
     }
     delete m_color_map;
 }
 
-xwd_t::header_t::header_t(kaitai::kstream *p_io, xwd_t* p_parent, xwd_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+xwd_t::header_t::header_t(kaitai::kstream* p__io, xwd_t* p__parent, xwd_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -74,9 +81,9 @@ void xwd_t::header_t::_read() {
 xwd_t::header_t::~header_t() {
 }
 
-xwd_t::color_map_entry_t::color_map_entry_t(kaitai::kstream *p_io, xwd_t* p_parent, xwd_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+xwd_t::color_map_entry_t::color_map_entry_t(kaitai::kstream* p__io, xwd_t* p__parent, xwd_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

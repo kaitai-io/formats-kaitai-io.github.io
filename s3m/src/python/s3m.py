@@ -130,8 +130,10 @@ class S3m(KaitaiStruct):
 
         def _read(self):
             self.cells = []
+            i = 0
             while not self._io.is_eof():
                 self.cells.append(self._root.PatternCell(self._io, self, self._root))
+                i += 1
 
 
 

@@ -23,6 +23,7 @@ namespace Kaitai
             return new PacketPpi(new KaitaiStream(fileName));
         }
 
+
         public enum PfhType
         {
             Radio80211Common = 2,
@@ -140,14 +141,14 @@ namespace Kaitai
             WattstopperDlm = 263,
             Iso14443 = 264,
         }
-
-        public PacketPpi(KaitaiStream io, KaitaiStruct parent = null, PacketPpi root = null) : base(io)
+        public PacketPpi(KaitaiStream p__io, KaitaiStruct p__parent = null, PacketPpi p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _header = new PacketPpiHeader(m_io, this, m_root);
             __raw_fields = m_io.ReadBytes((Header.PphLen - 8));
             var io___raw_fields = new KaitaiStream(__raw_fields);
@@ -170,7 +171,7 @@ namespace Kaitai
                 break;
             }
             }
-            }
+        }
         public partial class PacketPpiFields : KaitaiStruct
         {
             public static PacketPpiFields FromFile(string fileName)
@@ -178,18 +179,23 @@ namespace Kaitai
                 return new PacketPpiFields(new KaitaiStream(fileName));
             }
 
-            public PacketPpiFields(KaitaiStream io, PacketPpi parent = null, PacketPpi root = null) : base(io)
+            public PacketPpiFields(KaitaiStream p__io, PacketPpi p__parent = null, PacketPpi p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List<PacketPpiField>();
-                while (!m_io.IsEof) {
-                    _entries.Add(new PacketPpiField(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new PacketPpiField(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<PacketPpiField> _entries;
             private PacketPpi m_root;
             private PacketPpi m_parent;
@@ -208,18 +214,19 @@ namespace Kaitai
                 return new Radio80211nMacExtBody(new KaitaiStream(fileName));
             }
 
-            public Radio80211nMacExtBody(KaitaiStream io, PacketPpi.PacketPpiField parent = null, PacketPpi root = null) : base(io)
+            public Radio80211nMacExtBody(KaitaiStream p__io, PacketPpi.PacketPpiField p__parent = null, PacketPpi p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _flags = new MacFlags(m_io, this, m_root);
                 _aMpduId = m_io.ReadU4le();
                 _numDelimiters = m_io.ReadU1();
                 _reserved = m_io.ReadBytes(3);
-                }
+            }
             private MacFlags _flags;
             private uint _aMpduId;
             private byte _numDelimiters;
@@ -240,13 +247,14 @@ namespace Kaitai
                 return new MacFlags(new KaitaiStream(fileName));
             }
 
-            public MacFlags(KaitaiStream io, KaitaiStruct parent = null, PacketPpi root = null) : base(io)
+            public MacFlags(KaitaiStream p__io, KaitaiStruct p__parent = null, PacketPpi p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _unused1 = m_io.ReadBitsInt(1) != 0;
                 _aggregateDelimiter = m_io.ReadBitsInt(1) != 0;
                 _moreAggregates = m_io.ReadBitsInt(1) != 0;
@@ -257,7 +265,7 @@ namespace Kaitai
                 _greenfield = m_io.ReadBitsInt(1) != 0;
                 m_io.AlignToByte();
                 _unused2 = m_io.ReadBytes(3);
-                }
+            }
             private bool _unused1;
             private bool _aggregateDelimiter;
             private bool _moreAggregates;
@@ -320,18 +328,19 @@ namespace Kaitai
                 return new PacketPpiHeader(new KaitaiStream(fileName));
             }
 
-            public PacketPpiHeader(KaitaiStream io, PacketPpi parent = null, PacketPpi root = null) : base(io)
+            public PacketPpiHeader(KaitaiStream p__io, PacketPpi p__parent = null, PacketPpi p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _pphVersion = m_io.ReadU1();
                 _pphFlags = m_io.ReadU1();
                 _pphLen = m_io.ReadU2le();
                 _pphDlt = ((PacketPpi.Linktype) m_io.ReadU4le());
-                }
+            }
             private byte _pphVersion;
             private byte _pphFlags;
             private ushort _pphLen;
@@ -356,13 +365,14 @@ namespace Kaitai
                 return new Radio80211CommonBody(new KaitaiStream(fileName));
             }
 
-            public Radio80211CommonBody(KaitaiStream io, PacketPpi.PacketPpiField parent = null, PacketPpi root = null) : base(io)
+            public Radio80211CommonBody(KaitaiStream p__io, PacketPpi.PacketPpiField p__parent = null, PacketPpi p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _tsfTimer = m_io.ReadU8le();
                 _flags = m_io.ReadU2le();
                 _rate = m_io.ReadU2le();
@@ -372,7 +382,7 @@ namespace Kaitai
                 _fhssPattern = m_io.ReadU1();
                 _dbmAntsignal = m_io.ReadS1();
                 _dbmAntnoise = m_io.ReadS1();
-                }
+            }
             private ulong _tsfTimer;
             private ushort _flags;
             private ushort _rate;
@@ -407,13 +417,14 @@ namespace Kaitai
                 return new PacketPpiField(new KaitaiStream(fileName));
             }
 
-            public PacketPpiField(KaitaiStream io, PacketPpi.PacketPpiFields parent = null, PacketPpi root = null) : base(io)
+            public PacketPpiField(KaitaiStream p__io, PacketPpi.PacketPpiFields p__parent = null, PacketPpi p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _pfhType = ((PacketPpi.PfhType) m_io.ReadU2le());
                 _pfhDatalen = m_io.ReadU2le();
                 switch (PfhType) {
@@ -440,7 +451,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private PfhType _pfhType;
             private ushort _pfhDatalen;
             private object _body;
@@ -465,13 +476,14 @@ namespace Kaitai
                 return new Radio80211nMacPhyExtBody(new KaitaiStream(fileName));
             }
 
-            public Radio80211nMacPhyExtBody(KaitaiStream io, PacketPpi.PacketPpiField parent = null, PacketPpi root = null) : base(io)
+            public Radio80211nMacPhyExtBody(KaitaiStream p__io, PacketPpi.PacketPpiField p__parent = null, PacketPpi p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _flags = new MacFlags(m_io, this, m_root);
                 _aMpduId = m_io.ReadU4le();
                 _numDelimiters = m_io.ReadU1();
@@ -479,24 +491,28 @@ namespace Kaitai
                 _numStreams = m_io.ReadU1();
                 _rssiCombined = m_io.ReadU1();
                 _rssiAntCtl = new List<byte>((int) (4));
-                for (var i = 0; i < 4; i++) {
+                for (var i = 0; i < 4; i++)
+                {
                     _rssiAntCtl.Add(m_io.ReadU1());
                 }
                 _rssiAntExt = new List<byte>((int) (4));
-                for (var i = 0; i < 4; i++) {
+                for (var i = 0; i < 4; i++)
+                {
                     _rssiAntExt.Add(m_io.ReadU1());
                 }
                 _extChannelFreq = m_io.ReadU2le();
                 _extChannelFlags = new ChannelFlags(m_io, this, m_root);
                 _rfSignalNoise = new List<SignalNoise>((int) (4));
-                for (var i = 0; i < 4; i++) {
+                for (var i = 0; i < 4; i++)
+                {
                     _rfSignalNoise.Add(new SignalNoise(m_io, this, m_root));
                 }
                 _evm = new List<uint>((int) (4));
-                for (var i = 0; i < 4; i++) {
+                for (var i = 0; i < 4; i++)
+                {
                     _evm.Add(m_io.ReadU4le());
                 }
-                }
+            }
             public partial class ChannelFlags : KaitaiStruct
             {
                 public static ChannelFlags FromFile(string fileName)
@@ -504,13 +520,14 @@ namespace Kaitai
                     return new ChannelFlags(new KaitaiStream(fileName));
                 }
 
-                public ChannelFlags(KaitaiStream io, PacketPpi.Radio80211nMacPhyExtBody parent = null, PacketPpi root = null) : base(io)
+                public ChannelFlags(KaitaiStream p__io, PacketPpi.Radio80211nMacPhyExtBody p__parent = null, PacketPpi p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _spectrum2ghz = m_io.ReadBitsInt(1) != 0;
                     _ofdm = m_io.ReadBitsInt(1) != 0;
                     _cck = m_io.ReadBitsInt(1) != 0;
@@ -520,7 +537,7 @@ namespace Kaitai
                     _dynCckOfdm = m_io.ReadBitsInt(1) != 0;
                     _onlyPassiveScan = m_io.ReadBitsInt(1) != 0;
                     _spectrum5ghz = m_io.ReadBitsInt(1) != 0;
-                    }
+                }
                 private bool _spectrum2ghz;
                 private bool _ofdm;
                 private bool _cck;
@@ -583,16 +600,17 @@ namespace Kaitai
                     return new SignalNoise(new KaitaiStream(fileName));
                 }
 
-                public SignalNoise(KaitaiStream io, PacketPpi.Radio80211nMacPhyExtBody parent = null, PacketPpi root = null) : base(io)
+                public SignalNoise(KaitaiStream p__io, PacketPpi.Radio80211nMacPhyExtBody p__parent = null, PacketPpi p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _signal = m_io.ReadS1();
                     _noise = m_io.ReadS1();
-                    }
+                }
                 private sbyte _signal;
                 private sbyte _noise;
                 private PacketPpi m_root;

@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.nio.charset.Charset;
 
 public class Asn1Der extends KaitaiStruct {
     public static Asn1Der fromFile(String fileName) throws IOException {
-        return new Asn1Der(new KaitaiStream(fileName));
+        return new Asn1Der(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum TypeTag {
@@ -65,31 +66,31 @@ public class Asn1Der extends KaitaiStruct {
         switch (typeTag()) {
         case SEQUENCE_30: {
             this._raw_body = this._io.readBytes(len().result());
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new BodySequence(_io__raw_body, this, _root);
             break;
         }
         case SEQUENCE_10: {
             this._raw_body = this._io.readBytes(len().result());
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new BodySequence(_io__raw_body, this, _root);
             break;
         }
         case UTF8STRING: {
             this._raw_body = this._io.readBytes(len().result());
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new BodyUtf8string(_io__raw_body, this, _root);
             break;
         }
         case PRINTABLE_STRING: {
             this._raw_body = this._io.readBytes(len().result());
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new BodyPrintableString(_io__raw_body, this, _root);
             break;
         }
         case SET: {
             this._raw_body = this._io.readBytes(len().result());
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new BodySequence(_io__raw_body, this, _root);
             break;
         }
@@ -101,7 +102,7 @@ public class Asn1Der extends KaitaiStruct {
     }
     public static class LenEncoded extends KaitaiStruct {
         public static LenEncoded fromFile(String fileName) throws IOException {
-            return new LenEncoded(new KaitaiStream(fileName));
+            return new LenEncoded(new ByteBufferKaitaiStream(fileName));
         }
 
         public LenEncoded(KaitaiStream _io) {
@@ -143,7 +144,7 @@ public class Asn1Der extends KaitaiStruct {
     }
     public static class BodySequence extends KaitaiStruct {
         public static BodySequence fromFile(String fileName) throws IOException {
-            return new BodySequence(new KaitaiStream(fileName));
+            return new BodySequence(new ByteBufferKaitaiStream(fileName));
         }
 
         public BodySequence(KaitaiStream _io) {
@@ -162,8 +163,12 @@ public class Asn1Der extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<Asn1Der>();
-            while (!this._io.isEof()) {
-                this.entries.add(new Asn1Der(this._io));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Asn1Der(this._io));
+                    i++;
+                }
             }
         }
         private ArrayList<Asn1Der> entries;
@@ -175,7 +180,7 @@ public class Asn1Der extends KaitaiStruct {
     }
     public static class BodyUtf8string extends KaitaiStruct {
         public static BodyUtf8string fromFile(String fileName) throws IOException {
-            return new BodyUtf8string(new KaitaiStream(fileName));
+            return new BodyUtf8string(new ByteBufferKaitaiStream(fileName));
         }
 
         public BodyUtf8string(KaitaiStream _io) {
@@ -204,7 +209,7 @@ public class Asn1Der extends KaitaiStruct {
     }
     public static class BodyPrintableString extends KaitaiStruct {
         public static BodyPrintableString fromFile(String fileName) throws IOException {
-            return new BodyPrintableString(new KaitaiStream(fileName));
+            return new BodyPrintableString(new ByteBufferKaitaiStream(fileName));
         }
 
         public BodyPrintableString(KaitaiStream _io) {

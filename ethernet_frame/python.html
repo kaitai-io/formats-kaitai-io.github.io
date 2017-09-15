@@ -198,10 +198,10 @@ section#format-index .row {
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = EthernetFrame(KaitaiStream(raw))</code></pre>
+data = EthernetFrame(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -242,8 +242,8 @@ from enum import Enum
 if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
     raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
 
-from ipv4_packet import Ipv4Packet
 from ipv6_packet import Ipv6Packet
+from ipv4_packet import Ipv4Packet
 class EthernetFrame(KaitaiStruct):
 
     class EtherTypeEnum(Enum):

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Microsoft WAVE audio file format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Multimedia Files</li>
+        <li class="active">Microsoft WAVE audio file</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Microsoft WAVE audio file:
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>The WAVE file format is a subset of Microsoft's RIFF specification for the
+storage of multimedia files. A RIFF file starts out with a file header
+followed by a sequence of data chunks. A WAVE file is often just a RIFF
+file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --
+a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing
+the actual sample data.</p>
+<p>This Kaitai implementation was written by John Byrd of Gigantic Software
+(jbyrd@giganticsoftware.com), and it is likely to contain bugs.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        wav
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/BSD-3-Clause-Attribution.html">BSD-3-Clause-Attribution</a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Microsoft WAVE audio file
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="Microsoft WAVE audio file parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Microsoft WAVE audio file parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Microsoft WAVE audio file parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Microsoft WAVE audio file parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Microsoft WAVE audio file parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Microsoft WAVE audio file parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Microsoft WAVE audio file parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Microsoft WAVE audio file parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Microsoft WAVE audio file parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="wav.svg">
+            <img class="diagram-img" src="wav.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+        
+        <pre><code class="yaml">meta:
+  id: wav
+  title: Microsoft WAVE audio file
+  file-extension: wav
+  license: BSD-3-Clause-Attribution
+  encoding: ASCII
+  endian: le
+doc: |
+  The WAVE file format is a subset of Microsoft's RIFF specification for the
+  storage of multimedia files. A RIFF file starts out with a file header
+  followed by a sequence of data chunks. A WAVE file is often just a RIFF
+  file with a single "WAVE" chunk which consists of two sub-chunks --
+  a "fmt " chunk specifying the data format and a "data" chunk containing
+  the actual sample data.
+
+  This Kaitai implementation was written by John Byrd of Gigantic Software
+  (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
+doc-ref: http://soundfile.sapp.org/doc/WaveFormat/
+doc-ref: https://www.loc.gov/preservation/digital/formats/fdd/fdd000001.shtml
+seq:
+  - id: riff_id
+    contents: RIFF
+  - id: file_size
+    type: u4
+  - id: wave_id
+    contents: WAVE
+  - id: chunks
+    type: chunks_type
+    size: file_size - 5
+
+instances:
+  format_chunk:
+    value: chunks.chunk[0].data
+
+types:
+  chunks_type:
+    seq:
+      - id: chunk
+        type: chunk_type
+        repeat: eos
+
+  chunk_type:
+    seq:
+      - id: chunk_id
+        type: u4be
+      - id: len
+        type: u4
+      - id: data
+        size: len
+        type:
+          switch-on: chunk_id
+          cases:
+            0x666d7420: format_chunk_type
+            0x62657874: bext_chunk_type
+            0x63756520: cue_chunk_type
+            0x64617461: data_chunk_type
+
+  bext_chunk_type:
+    seq:
+    - id: description
+      size: 256
+      type: str
+    - id: originator
+      size: 32
+      type: str
+    - id: originator_reference
+      size: 32
+      type: str
+    - id: origination_date
+      size: 10
+      type: str
+    - id: origination_time
+      size: 8
+      type: str
+    - id: time_reference_low
+      type: u4
+    - id: time_reference_high
+      type: u4
+    - id: version
+      type: u2
+    - id: umid
+      size: 64
+    - id: loudness_value
+      type: u2
+    - id: loudness_range
+      type: u2
+    - id: max_true_peak_level
+      type: u2
+    - id: max_momentary_loudness
+      type: u2
+    - id: max_short_term_loudness
+      type: u2
+
+  cue_chunk_type:
+    seq:
+      - id: dw_cue_points
+        type: u4
+      - id: cue_points
+        type: cue_point_type
+        repeat: expr
+        repeat-expr: dw_cue_points
+        if: dw_cue_points != 0
+
+  cue_point_type:
+    seq:
+      - id: dw_name
+        type: u4
+      - id: dw_position
+        type: u4
+      - id: fcc_chunk
+        type: u4
+      - id: dw_chunk_start
+        type: u4
+      - id: dw_block_start
+        type: u4
+      - id: dw_sample_offset
+        type: u4
+
+  data_chunk_type:
+    seq:
+      - id: data
+        size-eos: true
+
+  format_chunk_type:
+    instances:
+      is_extensible:
+        value: w_format_tag == w_format_tag_type::extensible
+      is_basic_pcm:
+        value: w_format_tag == w_format_tag_type::pcm
+      is_basic_float:
+        value: w_format_tag == w_format_tag_type::ieee_float
+      is_cb_size_meaningful:
+        value: not is_basic_pcm and cb_size != 0
+
+    seq:
+      - id: w_format_tag
+        type: u2
+        enum: w_format_tag_type
+      - id: n_channels
+        type: u2
+      - id: n_samples_per_sec
+        type: u4
+      - id: n_avg_bytes_per_sec
+        type: u4
+      - id: n_block_align
+        type: u2
+      - id: w_bits_per_sample
+        type: u2
+      - id: cb_size
+        type: u2
+        if: not is_basic_pcm
+      - id: w_valid_bits_per_sample
+        type: u2
+        if: is_cb_size_meaningful
+      - id: channel_mask_and_subformat
+        type: channel_mask_and_subformat_type
+        if: is_extensible
+
+  channel_mask_and_subformat_type:
+    seq:
+      - id: dw_channel_mask
+        type: channel_mask_type
+      - id: subformat
+        type: guid_type
+
+  channel_mask_type:
+    seq:
+      - id: front_right_of_center
+        type: b1
+      - id: front_left_of_center
+        type: b1
+      - id: back_right
+        type: b1
+      - id: back_left
+        type: b1
+
+      - id: low_frequency
+        type: b1
+      - id: front_center
+        type: b1
+      - id: front_right
+        type: b1
+      - id: front_left
+        type: b1
+
+      - id: top_center
+        type: b1
+      - id: side_right
+        type: b1
+      - id: side_left
+        type: b1
+      - id: back_center
+        type: b1
+
+      - id: top_back_left
+        type: b1
+      - id: top_front_right
+        type: b1
+      - id: top_front_center
+        type: b1
+      - id: top_front_left
+        type: b1
+
+      - id: unused1
+        type: b6
+
+      - id: top_back_right
+        type: b1
+      - id: top_back_center
+        type: b1
+
+      - id: unused2
+        type: b8
+
+  guid_type:
+    seq:
+      - id: data1
+        type: u4
+      - id: data2
+        type: u2
+      - id: data3
+        type: u2
+      - id: data4
+        type: u4be
+      - id: data4a
+        type: u4be
+
+  samples_type:
+    seq:
+      - id: samples
+        type: u4
+
+  sample_type:
+    seq:
+      - id: sample
+        type: u2
+
+enums:
+  w_format_tag_type:
+    0x0000: unknown
+    0x0001: pcm
+    0x0002: adpcm
+    0x0003: ieee_float
+    0x0006: alaw
+    0x0007: mulaw
+    0x0011: dvi_adpcm
+    0x0092: dolby_ac3_spdif
+    0xfffe: extensible
+    0xffff: development
+
+  chunk_type:
+    0x20746d66: fmt
+    0x62657874: bext
+    0x63756520: cue
+    0x64617461: data
+    0x756d6964: umid
+    0x6d696e66: minf
+    0x7265676e: regn
+</code></pre>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

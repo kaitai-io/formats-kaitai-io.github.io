@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.nio.charset.Charset;
 
 public class Id3v23 extends KaitaiStruct {
     public static Id3v23 fromFile(String fileName) throws IOException {
-        return new Id3v23(new KaitaiStream(fileName));
+        return new Id3v23(new ByteBufferKaitaiStream(fileName));
     }
 
     public Id3v23(KaitaiStream _io) {
@@ -30,7 +31,7 @@ public class Id3v23 extends KaitaiStruct {
     }
     public static class U1beSynchsafe extends KaitaiStruct {
         public static U1beSynchsafe fromFile(String fileName) throws IOException {
-            return new U1beSynchsafe(new KaitaiStream(fileName));
+            return new U1beSynchsafe(new ByteBufferKaitaiStream(fileName));
         }
 
         public U1beSynchsafe(KaitaiStream _io) {
@@ -62,7 +63,7 @@ public class Id3v23 extends KaitaiStruct {
     }
     public static class U2beSynchsafe extends KaitaiStruct {
         public static U2beSynchsafe fromFile(String fileName) throws IOException {
-            return new U2beSynchsafe(new KaitaiStream(fileName));
+            return new U2beSynchsafe(new ByteBufferKaitaiStream(fileName));
         }
 
         public U2beSynchsafe(KaitaiStream _io) {
@@ -102,7 +103,7 @@ public class Id3v23 extends KaitaiStruct {
     }
     public static class Tag extends KaitaiStruct {
         public static Tag fromFile(String fileName) throws IOException {
-            return new Tag(new KaitaiStream(fileName));
+            return new Tag(new ByteBufferKaitaiStream(fileName));
         }
 
         public Tag(KaitaiStream _io) {
@@ -127,9 +128,11 @@ public class Id3v23 extends KaitaiStruct {
             this.frames = new ArrayList<Frame>();
             {
                 Frame _it;
+                int i = 0;
                 do {
                     _it = new Frame(this._io, this, _root);
                     this.frames.add(_it);
+                    i++;
                 } while (!( (((_io().pos() + _it.size()) > header().size().value()) || (_it.isInvalid())) ));
             }
             if (header().flags().flagHeaderex()) {
@@ -151,7 +154,7 @@ public class Id3v23 extends KaitaiStruct {
     }
     public static class U4beSynchsafe extends KaitaiStruct {
         public static U4beSynchsafe fromFile(String fileName) throws IOException {
-            return new U4beSynchsafe(new KaitaiStream(fileName));
+            return new U4beSynchsafe(new ByteBufferKaitaiStream(fileName));
         }
 
         public U4beSynchsafe(KaitaiStream _io) {
@@ -191,7 +194,7 @@ public class Id3v23 extends KaitaiStruct {
     }
     public static class Frame extends KaitaiStruct {
         public static Frame fromFile(String fileName) throws IOException {
-            return new Frame(new KaitaiStream(fileName));
+            return new Frame(new ByteBufferKaitaiStream(fileName));
         }
 
         public Frame(KaitaiStream _io) {
@@ -216,7 +219,7 @@ public class Id3v23 extends KaitaiStruct {
         }
         public static class Flags extends KaitaiStruct {
             public static Flags fromFile(String fileName) throws IOException {
-                return new Flags(new KaitaiStream(fileName));
+                return new Flags(new ByteBufferKaitaiStream(fileName));
             }
 
             public Flags(KaitaiStream _io) {
@@ -292,7 +295,7 @@ public class Id3v23 extends KaitaiStruct {
      */
     public static class HeaderEx extends KaitaiStruct {
         public static HeaderEx fromFile(String fileName) throws IOException {
-            return new HeaderEx(new KaitaiStream(fileName));
+            return new HeaderEx(new ByteBufferKaitaiStream(fileName));
         }
 
         public HeaderEx(KaitaiStream _io) {
@@ -319,7 +322,7 @@ public class Id3v23 extends KaitaiStruct {
         }
         public static class FlagsEx extends KaitaiStruct {
             public static FlagsEx fromFile(String fileName) throws IOException {
-                return new FlagsEx(new KaitaiStream(fileName));
+                return new FlagsEx(new ByteBufferKaitaiStream(fileName));
             }
 
             public FlagsEx(KaitaiStream _io) {
@@ -369,7 +372,7 @@ public class Id3v23 extends KaitaiStruct {
      */
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
-            return new Header(new KaitaiStream(fileName));
+            return new Header(new ByteBufferKaitaiStream(fileName));
         }
 
         public Header(KaitaiStream _io) {
@@ -395,7 +398,7 @@ public class Id3v23 extends KaitaiStruct {
         }
         public static class Flags extends KaitaiStruct {
             public static Flags fromFile(String fileName) throws IOException {
-                return new Flags(new KaitaiStream(fileName));
+                return new Flags(new ByteBufferKaitaiStream(fileName));
             }
 
             public Flags(KaitaiStream _io) {

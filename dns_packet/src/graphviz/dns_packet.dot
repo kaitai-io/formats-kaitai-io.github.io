@@ -8,12 +8,12 @@ digraph {
 		dns_packet__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="transaction_id_pos">0</TD><TD PORT="transaction_id_size">2</TD><TD>u2be</TD><TD PORT="transaction_id_type">transaction_id</TD></TR>
-			<TR><TD PORT="flags_pos">2</TD><TD PORT="flags_size">...</TD><TD>PacketFlags</TD><TD PORT="flags_type">flags</TD></TR>
-			<TR><TD PORT="qdcount_pos">...</TD><TD PORT="qdcount_size">2</TD><TD>u2be</TD><TD PORT="qdcount_type">qdcount</TD></TR>
-			<TR><TD PORT="ancount_pos">...</TD><TD PORT="ancount_size">2</TD><TD>u2be</TD><TD PORT="ancount_type">ancount</TD></TR>
-			<TR><TD PORT="nscount_pos">...</TD><TD PORT="nscount_size">2</TD><TD>u2be</TD><TD PORT="nscount_type">nscount</TD></TR>
-			<TR><TD PORT="arcount_pos">...</TD><TD PORT="arcount_size">2</TD><TD>u2be</TD><TD PORT="arcount_type">arcount</TD></TR>
-			<TR><TD PORT="queries_pos">...</TD><TD PORT="queries_size">...</TD><TD>Query</TD><TD PORT="queries_type">queries</TD></TR>
+			<TR><TD PORT="flags_pos">2</TD><TD PORT="flags_size">2</TD><TD>PacketFlags</TD><TD PORT="flags_type">flags</TD></TR>
+			<TR><TD PORT="qdcount_pos">4</TD><TD PORT="qdcount_size">2</TD><TD>u2be</TD><TD PORT="qdcount_type">qdcount</TD></TR>
+			<TR><TD PORT="ancount_pos">6</TD><TD PORT="ancount_size">2</TD><TD>u2be</TD><TD PORT="ancount_type">ancount</TD></TR>
+			<TR><TD PORT="nscount_pos">8</TD><TD PORT="nscount_size">2</TD><TD>u2be</TD><TD PORT="nscount_type">nscount</TD></TR>
+			<TR><TD PORT="arcount_pos">10</TD><TD PORT="arcount_size">2</TD><TD>u2be</TD><TD PORT="arcount_type">arcount</TD></TR>
+			<TR><TD PORT="queries_pos">12</TD><TD PORT="queries_size">...</TD><TD>Query</TD><TD PORT="queries_type">queries</TD></TR>
 			<TR><TD COLSPAN="4" PORT="queries__repeat">repeat qdcount times</TD></TR>
 			<TR><TD PORT="answers_pos">...</TD><TD PORT="answers_size">...</TD><TD>Answer</TD><TD PORT="answers_type">answers</TD></TR>
 			<TR><TD COLSPAN="4" PORT="answers__repeat">repeat ancount times</TD></TR>
@@ -38,8 +38,8 @@ digraph {
 			label__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">1</TD><TD>u1</TD><TD PORT="length_type">length</TD></TR>
-				<TR><TD PORT="pointer_pos">1</TD><TD PORT="pointer_size">...</TD><TD>PointerStruct</TD><TD PORT="pointer_type">pointer</TD></TR>
-				<TR><TD PORT="name_pos">...</TD><TD PORT="name_size">length</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="pointer_pos">1</TD><TD PORT="pointer_size">1</TD><TD>PointerStruct</TD><TD PORT="pointer_type">pointer</TD></TR>
+				<TR><TD PORT="name_pos">2</TD><TD PORT="name_size">length</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
 			</TABLE>>];
 			label__inst__is_pointer [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
@@ -89,7 +89,7 @@ digraph {
 				<TR><TD PORT="ttl_pos">...</TD><TD PORT="ttl_size">4</TD><TD>s4be</TD><TD PORT="ttl_type">ttl</TD></TR>
 				<TR><TD PORT="rdlength_pos">...</TD><TD PORT="rdlength_size">2</TD><TD>u2be</TD><TD PORT="rdlength_type">rdlength</TD></TR>
 				<TR><TD PORT="ptrdname_pos">...</TD><TD PORT="ptrdname_size">...</TD><TD>DomainName</TD><TD PORT="ptrdname_type">ptrdname</TD></TR>
-				<TR><TD PORT="address_pos">...</TD><TD PORT="address_size">...</TD><TD>Address</TD><TD PORT="address_type">address</TD></TR>
+				<TR><TD PORT="address_pos">...</TD><TD PORT="address_size">4</TD><TD>Address</TD><TD PORT="address_type">address</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__packet_flags {

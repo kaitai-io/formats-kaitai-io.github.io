@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class MicrosoftCfb extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \MicrosoftCfb $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MicrosoftCfb $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -35,25 +35,21 @@ class MicrosoftCfb extends \Kaitai\Struct\Struct {
             return $this->_m_dir;
         $_pos = $this->_io->pos();
         $this->_io->seek((($this->header()->ofsDir() + 1) * $this->sectorSize()));
-        $this->_m__raw_dir = $this->_io->readBytes(128);
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_dir);
-        $this->_m_dir = new \MicrosoftCfb\DirEntry($io, $this, $this->_root);
+        $this->_m_dir = new \MicrosoftCfb\DirEntry($this->_io, $this, $this->_root);
         $this->_io->seek($_pos);
         return $this->_m_dir;
     }
     protected $_m_header;
     protected $_m__raw_fat;
-    protected $_m__raw_dir;
     public function header() { return $this->_m_header; }
     public function _raw_fat() { return $this->_m__raw_fat; }
-    public function _raw_dir() { return $this->_m__raw_dir; }
 }
 
 namespace \MicrosoftCfb;
 
 class CfbHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftCfb $parent = null, \MicrosoftCfb $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftCfb $_parent = null, \MicrosoftCfb $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -170,15 +166,17 @@ class CfbHeader extends \Kaitai\Struct\Struct {
 namespace \MicrosoftCfb;
 
 class FatEntries extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftCfb $parent = null, \MicrosoftCfb $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftCfb $_parent = null, \MicrosoftCfb $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = $this->_io->readS4le();
+            $i++;
         }
     }
     protected $_m_entries;
@@ -188,8 +186,8 @@ class FatEntries extends \Kaitai\Struct\Struct {
 namespace \MicrosoftCfb;
 
 class DirEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftCfb $parent = null, \MicrosoftCfb $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MicrosoftCfb $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -220,6 +218,45 @@ class DirEntry extends \Kaitai\Struct\Struct {
             $io->seek($_pos);
         }
         return $this->_m_miniStream;
+    }
+    protected $_m_child;
+    public function child() {
+        if ($this->_m_child !== null)
+            return $this->_m_child;
+        if ($this->childId() != -1) {
+            $io = $this->_root()->_io();
+            $_pos = $io->pos();
+            $io->seek(((($this->_root()->header()->ofsDir() + 1) * $this->_root()->sectorSize()) + ($this->childId() * 128)));
+            $this->_m_child = new \MicrosoftCfb\DirEntry($io, $this, $this->_root);
+            $io->seek($_pos);
+        }
+        return $this->_m_child;
+    }
+    protected $_m_leftSibling;
+    public function leftSibling() {
+        if ($this->_m_leftSibling !== null)
+            return $this->_m_leftSibling;
+        if ($this->leftSiblingId() != -1) {
+            $io = $this->_root()->_io();
+            $_pos = $io->pos();
+            $io->seek(((($this->_root()->header()->ofsDir() + 1) * $this->_root()->sectorSize()) + ($this->leftSiblingId() * 128)));
+            $this->_m_leftSibling = new \MicrosoftCfb\DirEntry($io, $this, $this->_root);
+            $io->seek($_pos);
+        }
+        return $this->_m_leftSibling;
+    }
+    protected $_m_rightSibling;
+    public function rightSibling() {
+        if ($this->_m_rightSibling !== null)
+            return $this->_m_rightSibling;
+        if ($this->rightSiblingId() != -1) {
+            $io = $this->_root()->_io();
+            $_pos = $io->pos();
+            $io->seek(((($this->_root()->header()->ofsDir() + 1) * $this->_root()->sectorSize()) + ($this->rightSiblingId() * 128)));
+            $this->_m_rightSibling = new \MicrosoftCfb\DirEntry($io, $this, $this->_root);
+            $io->seek($_pos);
+        }
+        return $this->_m_rightSibling;
     }
     protected $_m_name;
     protected $_m_nameLen;

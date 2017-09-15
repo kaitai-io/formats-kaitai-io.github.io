@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>NT-MDT data: PHP parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Scientific Applications</li>
+        <li class="active">NT-MDT data</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>NT-MDT data:
+            
+            PHP parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A native file format of NT-MDT scientific software. Usually contains
+any of:</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Scanning_probe_microscopy">Scanning probe</a> microscopy scans and spectra</li>
+<li><a href="https://en.wikipedia.org/wiki/Raman_spectroscopy">Raman spectra</a></li>
+<li>results of their analysis</li>
+</ul>
+<p>Some examples of mdt files can be downloaded at:</p>
+<ul>
+<li>http://www.ntmdt-si.ru/scan-gallery</li>
+<li>http://callistosoft.narod.ru/Resources/Mdt.zip</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["Nova", "Image Analysis", "NanoEducator", "Gwyddion", "Callisto"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        mdt
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/GPL-3.0+.html">GPL-3.0+</a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of NT-MDT data
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="NT-MDT data parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="NT-MDT data parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="NT-MDT data parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="NT-MDT data parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="NT-MDT data parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="NT-MDT data parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="NT-MDT data parsing Perl library">Perl</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="php.html" title="NT-MDT data parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="NT-MDT data parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="NT-MDT data parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            PHP source code to parse NT-MDT data
+            
+        </h2>
+
+        
+
+        <h3>NtMdt.php</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/php/NtMdt.php" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="php">&lt;?php
+// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+/**
+ * A native file format of NT-MDT scientific software. Usually contains
+ * any of:
+ * 
+ * * [Scanning probe](https://en.wikipedia.org/wiki/Scanning_probe_microscopy) microscopy scans and spectra
+ * * [Raman spectra](https://en.wikipedia.org/wiki/Raman_spectroscopy)
+ * * results of their analysis
+ * 
+ * Some examples of mdt files can be downloaded at:
+ * 
+ * * http://www.ntmdt-si.ru/scan-gallery
+ * * http://callistosoft.narod.ru/Resources/Mdt.zip
+ */
+
+class NtMdt extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_signature = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x01\xB0\x93\xFF&quot;);
+        $this-&gt;_m_size = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_reserved0 = $this-&gt;_io-&gt;readBytes(4);
+        $this-&gt;_m_lastFrame = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_reserved1 = $this-&gt;_io-&gt;readBytes(18);
+        $this-&gt;_m_wrondDoc = $this-&gt;_io-&gt;readBytes(1);
+        $this-&gt;_m__raw_frames = $this-&gt;_io-&gt;readBytes($this-&gt;size());
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_frames);
+        $this-&gt;_m_frames = new \NtMdt\Framez($io, $this, $this-&gt;_root);
+    }
+    protected $_m_signature;
+    protected $_m_size;
+    protected $_m_reserved0;
+    protected $_m_lastFrame;
+    protected $_m_reserved1;
+    protected $_m_wrondDoc;
+    protected $_m_frames;
+    protected $_m__raw_frames;
+    public function signature() { return $this-&gt;_m_signature; }
+
+    /**
+     * File size (w/o header)
+     */
+    public function size() { return $this-&gt;_m_size; }
+    public function reserved0() { return $this-&gt;_m_reserved0; }
+    public function lastFrame() { return $this-&gt;_m_lastFrame; }
+    public function reserved1() { return $this-&gt;_m_reserved1; }
+
+    /**
+     * documentation specifies 32 bytes long header, but zeroth frame starts at 33th byte in reality
+     */
+    public function wrondDoc() { return $this-&gt;_m_wrondDoc; }
+    public function frames() { return $this-&gt;_m_frames; }
+    public function _raw_frames() { return $this-&gt;_m__raw_frames; }
+}
+
+namespace \NtMdt;
+
+class Uuid extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdMetaData $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_data = [];
+        $n = 16;
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_data[] = $this-&gt;_io-&gt;readU1();
+        }
+    }
+    protected $_m_data;
+    public function data() { return $this-&gt;_m_data; }
+}
+
+namespace \NtMdt;
+
+class Framez extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_frames = [];
+        $n = ($this-&gt;_root()-&gt;lastFrame() + 1);
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_frames[] = new \NtMdt\Frame($this-&gt;_io, $this, $this-&gt;_root);
+        }
+    }
+    protected $_m_frames;
+    public function frames() { return $this-&gt;_m_frames; }
+}
+
+namespace \NtMdt;
+
+class Frame extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Framez $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_size = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m__raw_main = $this-&gt;_io-&gt;readBytes(($this-&gt;size() - 4));
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_main);
+        $this-&gt;_m_main = new \NtMdt\Frame\FrameMain($io, $this, $this-&gt;_root);
+    }
+    protected $_m_size;
+    protected $_m_main;
+    protected $_m__raw_main;
+
+    /**
+     * h_sz
+     */
+    public function size() { return $this-&gt;_m_size; }
+    public function main() { return $this-&gt;_m_main; }
+    public function _raw_main() { return $this-&gt;_m__raw_main; }
+}
+
+namespace \NtMdt\Frame;
+
+class Dots extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_fmNdots = $this-&gt;_io-&gt;readU2le();
+        if ($this-&gt;fmNdots() &gt; 0) {
+            $this-&gt;_m_coordHeader = new \NtMdt\Frame\Dots\DotsHeader($this-&gt;_io, $this, $this-&gt;_root);
+        }
+        $this-&gt;_m_coordinates = [];
+        $n = $this-&gt;fmNdots();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_coordinates[] = new \NtMdt\Frame\Dots\DotsData($this-&gt;_io, $this, $this-&gt;_root);
+        }
+        $this-&gt;_m_data = [];
+        $n = $this-&gt;fmNdots();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_data[] = new \NtMdt\Frame\Dots\DataLinez($i, $this-&gt;_io, $this, $this-&gt;_root);
+        }
+    }
+    protected $_m_fmNdots;
+    protected $_m_coordHeader;
+    protected $_m_coordinates;
+    protected $_m_data;
+    public function fmNdots() { return $this-&gt;_m_fmNdots; }
+    public function coordHeader() { return $this-&gt;_m_coordHeader; }
+    public function coordinates() { return $this-&gt;_m_coordinates; }
+    public function data() { return $this-&gt;_m_data; }
+}
+
+namespace \NtMdt\Frame\Dots;
+
+class DotsHeader extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\Dots $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_headerSize = $this-&gt;_io-&gt;readS4le();
+        $this-&gt;_m__raw_header = $this-&gt;_io-&gt;readBytes($this-&gt;headerSize());
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_header);
+        $this-&gt;_m_header = new \NtMdt\Frame\Dots\DotsHeader\Header($io, $this, $this-&gt;_root);
+    }
+    protected $_m_headerSize;
+    protected $_m_header;
+    protected $_m__raw_header;
+    public function headerSize() { return $this-&gt;_m_headerSize; }
+    public function header() { return $this-&gt;_m_header; }
+    public function _raw_header() { return $this-&gt;_m__raw_header; }
+}
+
+namespace \NtMdt\Frame\Dots\DotsHeader;
+
+class Header extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\Dots\DotsHeader $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_coordSize = $this-&gt;_io-&gt;readS4le();
+        $this-&gt;_m_version = $this-&gt;_io-&gt;readS4le();
+        $this-&gt;_m_xyunits = $this-&gt;_io-&gt;readS2le();
+    }
+    protected $_m_coordSize;
+    protected $_m_version;
+    protected $_m_xyunits;
+    public function coordSize() { return $this-&gt;_m_coordSize; }
+    public function version() { return $this-&gt;_m_version; }
+    public function xyunits() { return $this-&gt;_m_xyunits; }
+}
+
+namespace \NtMdt\Frame\Dots;
+
+class DotsData extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\Dots $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_coordX = $this-&gt;_io-&gt;readF4le();
+        $this-&gt;_m_coordY = $this-&gt;_io-&gt;readF4le();
+        $this-&gt;_m_forwardSize = $this-&gt;_io-&gt;readS4le();
+        $this-&gt;_m_backwardSize = $this-&gt;_io-&gt;readS4le();
+    }
+    protected $_m_coordX;
+    protected $_m_coordY;
+    protected $_m_forwardSize;
+    protected $_m_backwardSize;
+    public function coordX() { return $this-&gt;_m_coordX; }
+    public function coordY() { return $this-&gt;_m_coordY; }
+    public function forwardSize() { return $this-&gt;_m_forwardSize; }
+    public function backwardSize() { return $this-&gt;_m_backwardSize; }
+}
+
+namespace \NtMdt\Frame\Dots;
+
+class DataLinez extends \Kaitai\Struct\Struct {
+    public function __construct(int $index, \Kaitai\Struct\Stream $_io, \NtMdt\Frame\Dots $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_m_index = $index;
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_forward = [];
+        $n = $this-&gt;_parent()-&gt;coordinates()[$this-&gt;index()]-&gt;forwardSize();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_forward[] = $this-&gt;_io-&gt;readS2le();
+        }
+        $this-&gt;_m_backward = [];
+        $n = $this-&gt;_parent()-&gt;coordinates()[$this-&gt;index()]-&gt;backwardSize();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_backward[] = $this-&gt;_io-&gt;readS2le();
+        }
+    }
+    protected $_m_forward;
+    protected $_m_backward;
+    protected $_m_index;
+    public function forward() { return $this-&gt;_m_forward; }
+    public function backward() { return $this-&gt;_m_backward; }
+    public function index() { return $this-&gt;_m_index; }
+}
+
+namespace \NtMdt\Frame;
+
+class FrameMain extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_type = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_version = new \NtMdt\Version($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_dateTime = new \NtMdt\Frame\DateTime($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_varSize = $this-&gt;_io-&gt;readU2le();
+        switch ($this-&gt;type()) {
+            case \NtMdt\Frame\FrameType::SCANNED:
+                $this-&gt;_m__raw_frameData = $this-&gt;_io-&gt;readBytesFull();
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_frameData);
+                $this-&gt;_m_frameData = new \NtMdt\Frame\FdScanned($io, $this, $this-&gt;_root);
+                break;
+            case \NtMdt\Frame\FrameType::CURVES_NEW:
+                $this-&gt;_m__raw_frameData = $this-&gt;_io-&gt;readBytesFull();
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_frameData);
+                $this-&gt;_m_frameData = new \NtMdt\Frame\FdCurvesNew($io, $this, $this-&gt;_root);
+                break;
+            case \NtMdt\Frame\FrameType::MDA:
+                $this-&gt;_m__raw_frameData = $this-&gt;_io-&gt;readBytesFull();
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_frameData);
+                $this-&gt;_m_frameData = new \NtMdt\Frame\FdMetaData($io, $this, $this-&gt;_root);
+                break;
+            case \NtMdt\Frame\FrameType::SPECTROSCOPY:
+                $this-&gt;_m__raw_frameData = $this-&gt;_io-&gt;readBytesFull();
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_frameData);
+                $this-&gt;_m_frameData = new \NtMdt\Frame\FdSpectroscopy($io, $this, $this-&gt;_root);
+                break;
+            case \NtMdt\Frame\FrameType::CURVES:
+                $this-&gt;_m__raw_frameData = $this-&gt;_io-&gt;readBytesFull();
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_frameData);
+                $this-&gt;_m_frameData = new \NtMdt\Frame\FdSpectroscopy($io, $this, $this-&gt;_root);
+                break;
+            default:
+                $this-&gt;_m_frameData = $this-&gt;_io-&gt;readBytesFull();
+                break;
+        }
+    }
+    protected $_m_type;
+    protected $_m_version;
+    protected $_m_dateTime;
+    protected $_m_varSize;
+    protected $_m_frameData;
+    protected $_m__raw_frameData;
+
+    /**
+     * h_what
+     */
+    public function type() { return $this-&gt;_m_type; }
+    public function version() { return $this-&gt;_m_version; }
+    public function dateTime() { return $this-&gt;_m_dateTime; }
+
+    /**
+     * h_am, v6 and older only
+     */
+    public function varSize() { return $this-&gt;_m_varSize; }
+
+    /**
+     * 
+     */
+    public function frameData() { return $this-&gt;_m_frameData; }
+    public function _raw_frameData() { return $this-&gt;_m__raw_frameData; }
+}
+
+namespace \NtMdt\Frame;
+
+class FdCurvesNew extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FrameMain $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_blockCount = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_blocksHeaders = [];
+        $n = $this-&gt;blockCount();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_blocksHeaders[] = new \NtMdt\Frame\FdCurvesNew\BlockDescr($this-&gt;_io, $this, $this-&gt;_root);
+        }
+        $this-&gt;_m_blocksNames = [];
+        $n = $this-&gt;blockCount();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_blocksNames[] = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;blocksHeaders()[$i]-&gt;nameLen()), &quot;UTF-8&quot;);
+        }
+        $this-&gt;_m_blocksData = [];
+        $n = $this-&gt;blockCount();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_blocksData[] = $this-&gt;_io-&gt;readBytes($this-&gt;blocksHeaders()[$i]-&gt;len());
+        }
+    }
+    protected $_m_blockCount;
+    protected $_m_blocksHeaders;
+    protected $_m_blocksNames;
+    protected $_m_blocksData;
+    public function blockCount() { return $this-&gt;_m_blockCount; }
+    public function blocksHeaders() { return $this-&gt;_m_blocksHeaders; }
+    public function blocksNames() { return $this-&gt;_m_blocksNames; }
+    public function blocksData() { return $this-&gt;_m_blocksData; }
+}
+
+namespace \NtMdt\Frame\FdCurvesNew;
+
+class BlockDescr extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdCurvesNew $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_nameLen = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_len = $this-&gt;_io-&gt;readU4le();
+    }
+    protected $_m_nameLen;
+    protected $_m_len;
+    public function nameLen() { return $this-&gt;_m_nameLen; }
+    public function len() { return $this-&gt;_m_len; }
+}
+
+namespace \NtMdt\Frame;
+
+class FdMetaData extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FrameMain $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_headSize = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_totLen = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_guids = [];
+        $n = 2;
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_guids[] = new \NtMdt\Uuid($this-&gt;_io, $this, $this-&gt;_root);
+        }
+        $this-&gt;_m_frameStatus = $this-&gt;_io-&gt;readBytes(4);
+        $this-&gt;_m_nameSize = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_commSize = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_viewInfoSize = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_specSize = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_sourceInfoSize = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_varSize = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_dataOffset = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_dataSize = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_title = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;nameSize()), &quot;UTF-8&quot;);
+        $this-&gt;_m_xml = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;commSize()), &quot;UTF-8&quot;);
+        $this-&gt;_m_structLen = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_arraySize = $this-&gt;_io-&gt;readU8le();
+        $this-&gt;_m_cellSize = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_nDimensions = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_nMesurands = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_dimensions = [];
+        $n = $this-&gt;nDimensions();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_dimensions[] = new \NtMdt\Frame\FdMetaData\Calibration($this-&gt;_io, $this, $this-&gt;_root);
+        }
+        $this-&gt;_m_mesurands = [];
+        $n = $this-&gt;nMesurands();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_mesurands[] = new \NtMdt\Frame\FdMetaData\Calibration($this-&gt;_io, $this, $this-&gt;_root);
+        }
+        $this-&gt;_m_image = $this-&gt;_io-&gt;readBytesFull();
+    }
+    protected $_m_headSize;
+    protected $_m_totLen;
+    protected $_m_guids;
+    protected $_m_frameStatus;
+    protected $_m_nameSize;
+    protected $_m_commSize;
+    protected $_m_viewInfoSize;
+    protected $_m_specSize;
+    protected $_m_sourceInfoSize;
+    protected $_m_varSize;
+    protected $_m_dataOffset;
+    protected $_m_dataSize;
+    protected $_m_title;
+    protected $_m_xml;
+    protected $_m_structLen;
+    protected $_m_arraySize;
+    protected $_m_cellSize;
+    protected $_m_nDimensions;
+    protected $_m_nMesurands;
+    protected $_m_dimensions;
+    protected $_m_mesurands;
+    protected $_m_image;
+    public function headSize() { return $this-&gt;_m_headSize; }
+    public function totLen() { return $this-&gt;_m_totLen; }
+    public function guids() { return $this-&gt;_m_guids; }
+    public function frameStatus() { return $this-&gt;_m_frameStatus; }
+    public function nameSize() { return $this-&gt;_m_nameSize; }
+    public function commSize() { return $this-&gt;_m_commSize; }
+    public function viewInfoSize() { return $this-&gt;_m_viewInfoSize; }
+    public function specSize() { return $this-&gt;_m_specSize; }
+    public function sourceInfoSize() { return $this-&gt;_m_sourceInfoSize; }
+    public function varSize() { return $this-&gt;_m_varSize; }
+    public function dataOffset() { return $this-&gt;_m_dataOffset; }
+    public function dataSize() { return $this-&gt;_m_dataSize; }
+    public function title() { return $this-&gt;_m_title; }
+    public function xml() { return $this-&gt;_m_xml; }
+    public function structLen() { return $this-&gt;_m_structLen; }
+    public function arraySize() { return $this-&gt;_m_arraySize; }
+    public function cellSize() { return $this-&gt;_m_cellSize; }
+    public function nDimensions() { return $this-&gt;_m_nDimensions; }
+    public function nMesurands() { return $this-&gt;_m_nMesurands; }
+    public function dimensions() { return $this-&gt;_m_dimensions; }
+    public function mesurands() { return $this-&gt;_m_mesurands; }
+    public function image() { return $this-&gt;_m_image; }
+}
+
+namespace \NtMdt\Frame\FdMetaData;
+
+class Calibration extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdMetaData $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_lenTot = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_lenStruct = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_lenName = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_lenComment = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_lenUnit = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_siUnit = $this-&gt;_io-&gt;readU8le();
+        $this-&gt;_m_accuracy = $this-&gt;_io-&gt;readF8le();
+        $this-&gt;_m_functionIdAndDimensions = $this-&gt;_io-&gt;readU8le();
+        $this-&gt;_m_bias = $this-&gt;_io-&gt;readF8le();
+        $this-&gt;_m_scale = $this-&gt;_io-&gt;readF8le();
+        $this-&gt;_m_minIndex = $this-&gt;_io-&gt;readU8le();
+        $this-&gt;_m_maxIndex = $this-&gt;_io-&gt;readU8le();
+        $this-&gt;_m_dataType = $this-&gt;_io-&gt;readS4le();
+        $this-&gt;_m_lenAuthor = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_name = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;lenName()), &quot;utf-8&quot;);
+        $this-&gt;_m_comment = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;lenComment()), &quot;utf-8&quot;);
+        $this-&gt;_m_unit = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;lenUnit()), &quot;utf-8&quot;);
+        $this-&gt;_m_author = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;lenAuthor()), &quot;utf-8&quot;);
+    }
+    protected $_m_lenTot;
+    protected $_m_lenStruct;
+    protected $_m_lenName;
+    protected $_m_lenComment;
+    protected $_m_lenUnit;
+    protected $_m_siUnit;
+    protected $_m_accuracy;
+    protected $_m_functionIdAndDimensions;
+    protected $_m_bias;
+    protected $_m_scale;
+    protected $_m_minIndex;
+    protected $_m_maxIndex;
+    protected $_m_dataType;
+    protected $_m_lenAuthor;
+    protected $_m_name;
+    protected $_m_comment;
+    protected $_m_unit;
+    protected $_m_author;
+    public function lenTot() { return $this-&gt;_m_lenTot; }
+    public function lenStruct() { return $this-&gt;_m_lenStruct; }
+    public function lenName() { return $this-&gt;_m_lenName; }
+    public function lenComment() { return $this-&gt;_m_lenComment; }
+    public function lenUnit() { return $this-&gt;_m_lenUnit; }
+    public function siUnit() { return $this-&gt;_m_siUnit; }
+    public function accuracy() { return $this-&gt;_m_accuracy; }
+    public function functionIdAndDimensions() { return $this-&gt;_m_functionIdAndDimensions; }
+    public function bias() { return $this-&gt;_m_bias; }
+    public function scale() { return $this-&gt;_m_scale; }
+    public function minIndex() { return $this-&gt;_m_minIndex; }
+    public function maxIndex() { return $this-&gt;_m_maxIndex; }
+    public function dataType() { return $this-&gt;_m_dataType; }
+    public function lenAuthor() { return $this-&gt;_m_lenAuthor; }
+    public function name() { return $this-&gt;_m_name; }
+    public function comment() { return $this-&gt;_m_comment; }
+    public function unit() { return $this-&gt;_m_unit; }
+    public function author() { return $this-&gt;_m_author; }
+}
+
+namespace \NtMdt\Frame;
+
+class FdSpectroscopy extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FrameMain $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m__raw_vars = $this-&gt;_io-&gt;readBytes($this-&gt;_parent()-&gt;varSize());
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_vars);
+        $this-&gt;_m_vars = new \NtMdt\Frame\FdSpectroscopy\Vars($io, $this, $this-&gt;_root);
+        $this-&gt;_m_fmMode = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_fmXres = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_fmYres = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_dots = new \NtMdt\Frame\Dots($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_data = [];
+        $n = ($this-&gt;fmXres() * $this-&gt;fmYres());
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_data[] = $this-&gt;_io-&gt;readS2le();
+        }
+        $this-&gt;_m_title = new \NtMdt\Title($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_xml = new \NtMdt\Xml($this-&gt;_io, $this, $this-&gt;_root);
+    }
+    protected $_m_vars;
+    protected $_m_fmMode;
+    protected $_m_fmXres;
+    protected $_m_fmYres;
+    protected $_m_dots;
+    protected $_m_data;
+    protected $_m_title;
+    protected $_m_xml;
+    protected $_m__raw_vars;
+    public function vars() { return $this-&gt;_m_vars; }
+    public function fmMode() { return $this-&gt;_m_fmMode; }
+    public function fmXres() { return $this-&gt;_m_fmXres; }
+    public function fmYres() { return $this-&gt;_m_fmYres; }
+    public function dots() { return $this-&gt;_m_dots; }
+    public function data() { return $this-&gt;_m_data; }
+    public function title() { return $this-&gt;_m_title; }
+    public function xml() { return $this-&gt;_m_xml; }
+    public function _raw_vars() { return $this-&gt;_m__raw_vars; }
+}
+
+namespace \NtMdt\Frame\FdSpectroscopy;
+
+class Vars extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdSpectroscopy $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_xScale = new \NtMdt\Frame\AxisScale($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_yScale = new \NtMdt\Frame\AxisScale($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_zScale = new \NtMdt\Frame\AxisScale($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_spMode = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_spFilter = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_uBegin = $this-&gt;_io-&gt;readF4le();
+        $this-&gt;_m_uEnd = $this-&gt;_io-&gt;readF4le();
+        $this-&gt;_m_zUp = $this-&gt;_io-&gt;readS2le();
+        $this-&gt;_m_zDown = $this-&gt;_io-&gt;readS2le();
+        $this-&gt;_m_spAveraging = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_spRepeat = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_spBack = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_sp4nx = $this-&gt;_io-&gt;readS2le();
+        $this-&gt;_m_spOsc = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_spN4 = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_sp4x0 = $this-&gt;_io-&gt;readF4le();
+        $this-&gt;_m_sp4xr = $this-&gt;_io-&gt;readF4le();
+        $this-&gt;_m_sp4u = $this-&gt;_io-&gt;readS2le();
+        $this-&gt;_m_sp4i = $this-&gt;_io-&gt;readS2le();
+        $this-&gt;_m_spNx = $this-&gt;_io-&gt;readS2le();
+    }
+    protected $_m_xScale;
+    protected $_m_yScale;
+    protected $_m_zScale;
+    protected $_m_spMode;
+    protected $_m_spFilter;
+    protected $_m_uBegin;
+    protected $_m_uEnd;
+    protected $_m_zUp;
+    protected $_m_zDown;
+    protected $_m_spAveraging;
+    protected $_m_spRepeat;
+    protected $_m_spBack;
+    protected $_m_sp4nx;
+    protected $_m_spOsc;
+    protected $_m_spN4;
+    protected $_m_sp4x0;
+    protected $_m_sp4xr;
+    protected $_m_sp4u;
+    protected $_m_sp4i;
+    protected $_m_spNx;
+    public function xScale() { return $this-&gt;_m_xScale; }
+    public function yScale() { return $this-&gt;_m_yScale; }
+    public function zScale() { return $this-&gt;_m_zScale; }
+    public function spMode() { return $this-&gt;_m_spMode; }
+    public function spFilter() { return $this-&gt;_m_spFilter; }
+    public function uBegin() { return $this-&gt;_m_uBegin; }
+    public function uEnd() { return $this-&gt;_m_uEnd; }
+    public function zUp() { return $this-&gt;_m_zUp; }
+    public function zDown() { return $this-&gt;_m_zDown; }
+    public function spAveraging() { return $this-&gt;_m_spAveraging; }
+    public function spRepeat() { return $this-&gt;_m_spRepeat; }
+    public function spBack() { return $this-&gt;_m_spBack; }
+    public function sp4nx() { return $this-&gt;_m_sp4nx; }
+    public function spOsc() { return $this-&gt;_m_spOsc; }
+    public function spN4() { return $this-&gt;_m_spN4; }
+    public function sp4x0() { return $this-&gt;_m_sp4x0; }
+    public function sp4xr() { return $this-&gt;_m_sp4xr; }
+    public function sp4u() { return $this-&gt;_m_sp4u; }
+    public function sp4i() { return $this-&gt;_m_sp4i; }
+    public function spNx() { return $this-&gt;_m_spNx; }
+}
+
+namespace \NtMdt\Frame;
+
+class DateTime extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FrameMain $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_date = new \NtMdt\Frame\DateTime\Date($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_time = new \NtMdt\Frame\DateTime\Time($this-&gt;_io, $this, $this-&gt;_root);
+    }
+    protected $_m_date;
+    protected $_m_time;
+    public function date() { return $this-&gt;_m_date; }
+    public function time() { return $this-&gt;_m_time; }
+}
+
+namespace \NtMdt\Frame\DateTime;
+
+class Date extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\DateTime $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_year = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_month = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_day = $this-&gt;_io-&gt;readU2le();
+    }
+    protected $_m_year;
+    protected $_m_month;
+    protected $_m_day;
+
+    /**
+     * h_yea
+     */
+    public function year() { return $this-&gt;_m_year; }
+
+    /**
+     * h_mon
+     */
+    public function month() { return $this-&gt;_m_month; }
+
+    /**
+     * h_day
+     */
+    public function day() { return $this-&gt;_m_day; }
+}
+
+namespace \NtMdt\Frame\DateTime;
+
+class Time extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\DateTime $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_hour = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_min = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_sec = $this-&gt;_io-&gt;readU2le();
+    }
+    protected $_m_hour;
+    protected $_m_min;
+    protected $_m_sec;
+
+    /**
+     * h_h
+     */
+    public function hour() { return $this-&gt;_m_hour; }
+
+    /**
+     * h_m
+     */
+    public function min() { return $this-&gt;_m_min; }
+
+    /**
+     * h_s
+     */
+    public function sec() { return $this-&gt;_m_sec; }
+}
+
+namespace \NtMdt\Frame;
+
+class AxisScale extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_offset = $this-&gt;_io-&gt;readF4le();
+        $this-&gt;_m_step = $this-&gt;_io-&gt;readF4le();
+        $this-&gt;_m_unit = $this-&gt;_io-&gt;readS2le();
+    }
+    protected $_m_offset;
+    protected $_m_step;
+    protected $_m_unit;
+
+    /**
+     * x_scale-&gt;offset = gwy_get_gfloat_le(&amp;p);# r0 (physical units)
+     */
+    public function offset() { return $this-&gt;_m_offset; }
+
+    /**
+     * x_scale-&gt;step = gwy_get_gfloat_le(&amp;p); r (physical units) x_scale-&gt;step = fabs(x_scale-&gt;step); if (!x_scale-&gt;step) {
+     *   g_warning(&quot;x_scale.step == 0, changing to 1&quot;);
+     *   x_scale-&gt;step = 1.0;
+     * }
+     */
+    public function step() { return $this-&gt;_m_step; }
+
+    /**
+     * U
+     */
+    public function unit() { return $this-&gt;_m_unit; }
+}
+
+namespace \NtMdt\Frame;
+
+class FdScanned extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FrameMain $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m__raw_vars = $this-&gt;_io-&gt;readBytes($this-&gt;_parent()-&gt;varSize());
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_vars);
+        $this-&gt;_m_vars = new \NtMdt\Frame\FdScanned\Vars($io, $this, $this-&gt;_root);
+        if (false) {
+            $this-&gt;_m_origFormat = $this-&gt;_io-&gt;readU4le();
+        }
+        if (false) {
+            $this-&gt;_m_tune = $this-&gt;_io-&gt;readU4le();
+        }
+        if (false) {
+            $this-&gt;_m_feedbackGain = $this-&gt;_io-&gt;readF8le();
+        }
+        if (false) {
+            $this-&gt;_m_dacScale = $this-&gt;_io-&gt;readS4le();
+        }
+        if (false) {
+            $this-&gt;_m_overscan = $this-&gt;_io-&gt;readS4le();
+        }
+        $this-&gt;_m_fmMode = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_fmXres = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_fmYres = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_dots = new \NtMdt\Frame\Dots($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_image = [];
+        $n = ($this-&gt;fmXres() * $this-&gt;fmYres());
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_image[] = $this-&gt;_io-&gt;readS2le();
+        }
+        $this-&gt;_m_title = new \NtMdt\Title($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_xml = new \NtMdt\Xml($this-&gt;_io, $this, $this-&gt;_root);
+    }
+    protected $_m_vars;
+    protected $_m_origFormat;
+    protected $_m_tune;
+    protected $_m_feedbackGain;
+    protected $_m_dacScale;
+    protected $_m_overscan;
+    protected $_m_fmMode;
+    protected $_m_fmXres;
+    protected $_m_fmYres;
+    protected $_m_dots;
+    protected $_m_image;
+    protected $_m_title;
+    protected $_m_xml;
+    protected $_m__raw_vars;
+    public function vars() { return $this-&gt;_m_vars; }
+
+    /**
+     * s_oem
+     */
+    public function origFormat() { return $this-&gt;_m_origFormat; }
+
+    /**
+     * z_tune
+     */
+    public function tune() { return $this-&gt;_m_tune; }
+
+    /**
+     * s_fbg
+     */
+    public function feedbackGain() { return $this-&gt;_m_feedbackGain; }
+
+    /**
+     * s_s
+     */
+    public function dacScale() { return $this-&gt;_m_dacScale; }
+
+    /**
+     * s_xov (in %)
+     */
+    public function overscan() { return $this-&gt;_m_overscan; }
+
+    /**
+     * m_mode
+     */
+    public function fmMode() { return $this-&gt;_m_fmMode; }
+
+    /**
+     * m_nx
+     */
+    public function fmXres() { return $this-&gt;_m_fmXres; }
+
+    /**
+     * m_ny
+     */
+    public function fmYres() { return $this-&gt;_m_fmYres; }
+    public function dots() { return $this-&gt;_m_dots; }
+    public function image() { return $this-&gt;_m_image; }
+    public function title() { return $this-&gt;_m_title; }
+    public function xml() { return $this-&gt;_m_xml; }
+    public function _raw_vars() { return $this-&gt;_m__raw_vars; }
+}
+
+namespace \NtMdt\Frame\FdScanned;
+
+class Vars extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdScanned $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_xScale = new \NtMdt\Frame\AxisScale($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_yScale = new \NtMdt\Frame\AxisScale($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_zScale = new \NtMdt\Frame\AxisScale($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_channelIndex = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_mode = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_xres = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_yres = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_ndacq = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_stepLength = $this-&gt;_io-&gt;readF4le();
+        $this-&gt;_m_adt = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_adcGainAmpLog10 = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_adcIndex = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_inputSignalOrVersion = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_substrPlaneOrderOrPassNum = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_scanDir = new \NtMdt\Frame\FdScanned\ScanDir($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_powerOf2 = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_velocity = $this-&gt;_io-&gt;readF4le();
+        $this-&gt;_m_setpoint = $this-&gt;_io-&gt;readF4le();
+        $this-&gt;_m_biasVoltage = $this-&gt;_io-&gt;readF4le();
+        $this-&gt;_m_draw = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_reserved = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_xoff = $this-&gt;_io-&gt;readS4le();
+        $this-&gt;_m_yoff = $this-&gt;_io-&gt;readS4le();
+        $this-&gt;_m_nlCorr = $this-&gt;_io-&gt;readU1();
+    }
+    protected $_m_xScale;
+    protected $_m_yScale;
+    protected $_m_zScale;
+    protected $_m_channelIndex;
+    protected $_m_mode;
+    protected $_m_xres;
+    protected $_m_yres;
+    protected $_m_ndacq;
+    protected $_m_stepLength;
+    protected $_m_adt;
+    protected $_m_adcGainAmpLog10;
+    protected $_m_adcIndex;
+    protected $_m_inputSignalOrVersion;
+    protected $_m_substrPlaneOrderOrPassNum;
+    protected $_m_scanDir;
+    protected $_m_powerOf2;
+    protected $_m_velocity;
+    protected $_m_setpoint;
+    protected $_m_biasVoltage;
+    protected $_m_draw;
+    protected $_m_reserved;
+    protected $_m_xoff;
+    protected $_m_yoff;
+    protected $_m_nlCorr;
+    public function xScale() { return $this-&gt;_m_xScale; }
+    public function yScale() { return $this-&gt;_m_yScale; }
+    public function zScale() { return $this-&gt;_m_zScale; }
+
+    /**
+     * s_mode
+     */
+    public function channelIndex() { return $this-&gt;_m_channelIndex; }
+
+    /**
+     * s_dev
+     */
+    public function mode() { return $this-&gt;_m_mode; }
+
+    /**
+     * s_nx
+     */
+    public function xres() { return $this-&gt;_m_xres; }
+
+    /**
+     * s_ny
+     */
+    public function yres() { return $this-&gt;_m_yres; }
+
+    /**
+     * Step (DAC)
+     */
+    public function ndacq() { return $this-&gt;_m_ndacq; }
+
+    /**
+     * s_rs in Angstrom&#39;s (Angstrom*gwy_get_gfloat_le(&amp;p))
+     */
+    public function stepLength() { return $this-&gt;_m_stepLength; }
+
+    /**
+     * s_adt
+     */
+    public function adt() { return $this-&gt;_m_adt; }
+
+    /**
+     * s_adc_a
+     */
+    public function adcGainAmpLog10() { return $this-&gt;_m_adcGainAmpLog10; }
+
+    /**
+     * ADC index
+     */
+    public function adcIndex() { return $this-&gt;_m_adcIndex; }
+
+    /**
+     * MDTInputSignal smp_in; s_smp_in (for signal) s_8xx (for version)
+     */
+    public function inputSignalOrVersion() { return $this-&gt;_m_inputSignalOrVersion; }
+
+    /**
+     * s_spl or z_03
+     */
+    public function substrPlaneOrderOrPassNum() { return $this-&gt;_m_substrPlaneOrderOrPassNum; }
+
+    /**
+     * s_xy TODO: interpretation
+     */
+    public function scanDir() { return $this-&gt;_m_scanDir; }
+
+    /**
+     * s_2n (bool)
+     */
+    public function powerOf2() { return $this-&gt;_m_powerOf2; }
+
+    /**
+     * s_vel (Angstrom/second)
+     */
+    public function velocity() { return $this-&gt;_m_velocity; }
+
+    /**
+     * s_i0
+     */
+    public function setpoint() { return $this-&gt;_m_setpoint; }
+
+    /**
+     * s_ut
+     */
+    public function biasVoltage() { return $this-&gt;_m_biasVoltage; }
+
+    /**
+     * s_draw (bool)
+     */
+    public function draw() { return $this-&gt;_m_draw; }
+    public function reserved() { return $this-&gt;_m_reserved; }
+
+    /**
+     * s_x00 (in DAC quants)
+     */
+    public function xoff() { return $this-&gt;_m_xoff; }
+
+    /**
+     * s_y00 (in DAC quants)
+     */
+    public function yoff() { return $this-&gt;_m_yoff; }
+
+    /**
+     * s_cor (bool)
+     */
+    public function nlCorr() { return $this-&gt;_m_nlCorr; }
+}
+
+namespace \NtMdt\Frame\FdScanned;
+
+class Dot extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_x = $this-&gt;_io-&gt;readS2le();
+        $this-&gt;_m_y = $this-&gt;_io-&gt;readS2le();
+    }
+    protected $_m_x;
+    protected $_m_y;
+    public function x() { return $this-&gt;_m_x; }
+    public function y() { return $this-&gt;_m_y; }
+}
+
+namespace \NtMdt\Frame\FdScanned;
+
+class ScanDir extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdScanned\Vars $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_unkn = $this-&gt;_io-&gt;readBitsInt(4);
+        $this-&gt;_m_doublePass = $this-&gt;_io-&gt;readBitsInt(1) != 0;
+        $this-&gt;_m_bottom = $this-&gt;_io-&gt;readBitsInt(1) != 0;
+        $this-&gt;_m_left = $this-&gt;_io-&gt;readBitsInt(1) != 0;
+        $this-&gt;_m_horizontal = $this-&gt;_io-&gt;readBitsInt(1) != 0;
+    }
+    protected $_m_unkn;
+    protected $_m_doublePass;
+    protected $_m_bottom;
+    protected $_m_left;
+    protected $_m_horizontal;
+    public function unkn() { return $this-&gt;_m_unkn; }
+    public function doublePass() { return $this-&gt;_m_doublePass; }
+
+    /**
+     * Bottom - 1 Top - 0
+     */
+    public function bottom() { return $this-&gt;_m_bottom; }
+
+    /**
+     * Left - 1 Right - 0
+     */
+    public function left() { return $this-&gt;_m_left; }
+
+    /**
+     * Horizontal - 1 Vertical - 0
+     */
+    public function horizontal() { return $this-&gt;_m_horizontal; }
+}
+
+namespace \NtMdt\Frame\FdScanned;
+
+class Mode {
+    const STM = 0;
+    const AFM = 1;
+    const UNKNOWN2 = 2;
+    const UNKNOWN3 = 3;
+    const UNKNOWN4 = 4;
+}
+
+namespace \NtMdt\Frame\FdScanned;
+
+class InputSignal {
+    const EXTENSION_SLOT = 0;
+    const BIAS_V = 1;
+    const GROUND = 2;
+}
+
+namespace \NtMdt\Frame\FdScanned;
+
+class LiftMode {
+    const STEP = 0;
+    const FINE = 1;
+    const SLOPE = 2;
+}
+
+namespace \NtMdt\Frame;
+
+class FrameType {
+    const SCANNED = 0;
+    const SPECTROSCOPY = 1;
+    const TEXT = 3;
+    const OLD_MDA = 105;
+    const MDA = 106;
+    const PALETTE = 107;
+    const CURVES_NEW = 190;
+    const CURVES = 201;
+}
+
+namespace \NtMdt;
+
+class Version extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FrameMain $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_minor = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_major = $this-&gt;_io-&gt;readU1();
+    }
+    protected $_m_minor;
+    protected $_m_major;
+    public function minor() { return $this-&gt;_m_minor; }
+    public function major() { return $this-&gt;_m_major; }
+}
+
+namespace \NtMdt;
+
+class Xml extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_xmlLen = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_xml = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;xmlLen()), &quot;UTF-16LE&quot;);
+    }
+    protected $_m_xmlLen;
+    protected $_m_xml;
+    public function xmlLen() { return $this-&gt;_m_xmlLen; }
+    public function xml() { return $this-&gt;_m_xml; }
+}
+
+namespace \NtMdt;
+
+class Title extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_titleLen = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_title = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;titleLen()), &quot;cp1251&quot;);
+    }
+    protected $_m_titleLen;
+    protected $_m_title;
+    public function titleLen() { return $this-&gt;_m_titleLen; }
+    public function title() { return $this-&gt;_m_title; }
+}
+
+namespace \NtMdt;
+
+class AdcMode {
+    const HEIGHT = 0;
+    const DFL = 1;
+    const LATERAL_F = 2;
+    const BIAS_V = 3;
+    const CURRENT = 4;
+    const FB_OUT = 5;
+    const MAG = 6;
+    const MAG_SIN = 7;
+    const MAG_COS = 8;
+    const RMS = 9;
+    const CALC_MAG = 10;
+    const PHASE1 = 11;
+    const PHASE2 = 12;
+    const CALC_PHASE = 13;
+    const EX1 = 14;
+    const EX2 = 15;
+    const HV_X = 16;
+    const HV_Y = 17;
+    const SNAP_BACK = 18;
+    const FALSE = 255;
+}
+
+namespace \NtMdt;
+
+class XmlScanLocation {
+    const HLT = 0;
+    const HLB = 1;
+    const HRT = 2;
+    const HRB = 3;
+    const VLT = 4;
+    const VLB = 5;
+    const VRT = 6;
+    const VRB = 7;
+}
+
+namespace \NtMdt;
+
+class XmlParamType {
+    const NONE = 0;
+    const LASER_WAVELENGTH = 1;
+    const UNITS = 2;
+    const DATA_ARRAY = 255;
+}
+
+namespace \NtMdt;
+
+class SpmMode {
+    const CONSTANT_FORCE = 0;
+    const CONTACT_CONSTANT_HEIGHT = 1;
+    const CONTACT_ERROR = 2;
+    const LATERAL_FORCE = 3;
+    const FORCE_MODULATION = 4;
+    const SPREADING_RESISTANCE_IMAGING = 5;
+    const SEMICONTACT_TOPOGRAPHY = 6;
+    const SEMICONTACT_ERROR = 7;
+    const PHASE_CONTRAST = 8;
+    const AC_MAGNETIC_FORCE = 9;
+    const DC_MAGNETIC_FORCE = 10;
+    const ELECTROSTATIC_FORCE = 11;
+    const CAPACITANCE_CONTRAST = 12;
+    const KELVIN_PROBE = 13;
+    const CONSTANT_CURRENT = 14;
+    const BARRIER_HEIGHT = 15;
+    const CONSTANT_HEIGHT = 16;
+    const AFAM = 17;
+    const CONTACT_EFM = 18;
+    const SHEAR_FORCE_TOPOGRAPHY = 19;
+    const SFOM = 20;
+    const CONTACT_CAPACITANCE = 21;
+    const SNOM_TRANSMISSION = 22;
+    const SNOM_REFLECTION = 23;
+    const SNOM_ALL = 24;
+    const SNOM = 25;
+}
+
+namespace \NtMdt;
+
+class Unit {
+    const RAMAN_SHIFT = -10;
+    const RESERVED0 = -9;
+    const RESERVED1 = -8;
+    const RESERVED2 = -7;
+    const RESERVED3 = -6;
+    const METER = -5;
+    const CENTI_METER = -4;
+    const MILLI_METER = -3;
+    const MICRO_METER = -2;
+    const NANO_METER = -1;
+    const ANGSTROM = 0;
+    const NANO_AMPERE = 1;
+    const VOLT = 2;
+    const NONE = 3;
+    const KILO_HERTZ = 4;
+    const DEGREES = 5;
+    const PERCENT = 6;
+    const CELSIUM_DEGREE = 7;
+    const VOLT_HIGH = 8;
+    const SECOND = 9;
+    const MILLI_SECOND = 10;
+    const MICRO_SECOND = 11;
+    const NANO_SECOND = 12;
+    const COUNTS = 13;
+    const PIXELS = 14;
+    const RESERVED_SFOM0 = 15;
+    const RESERVED_SFOM1 = 16;
+    const RESERVED_SFOM2 = 17;
+    const RESERVED_SFOM3 = 18;
+    const RESERVED_SFOM4 = 19;
+    const AMPERE2 = 20;
+    const MILLI_AMPERE = 21;
+    const MICRO_AMPERE = 22;
+    const NANO_AMPERE2 = 23;
+    const PICO_AMPERE = 24;
+    const VOLT2 = 25;
+    const MILLI_VOLT = 26;
+    const MICRO_VOLT = 27;
+    const NANO_VOLT = 28;
+    const PICO_VOLT = 29;
+    const NEWTON = 30;
+    const MILLI_NEWTON = 31;
+    const MICRO_NEWTON = 32;
+    const NANO_NEWTON = 33;
+    const PICO_NEWTON = 34;
+    const RESERVED_DOS0 = 35;
+    const RESERVED_DOS1 = 36;
+    const RESERVED_DOS2 = 37;
+    const RESERVED_DOS3 = 38;
+    const RESERVED_DOS4 = 39;
+}
+
+namespace \NtMdt;
+
+class SpmTechnique {
+    const CONTACT_MODE = 0;
+    const SEMICONTACT_MODE = 1;
+    const TUNNEL_CURRENT = 2;
+    const SNOM = 3;
+}
+
+namespace \NtMdt;
+
+class Consts {
+    const FRAME_MODE_SIZE = 8;
+    const FRAME_HEADER_SIZE = 22;
+    const AXIS_SCALES_SIZE = 30;
+    const FILE_HEADER_SIZE = 32;
+    const SPECTRO_VARS_MIN_SIZE = 38;
+    const SCAN_VARS_MIN_SIZE = 77;
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

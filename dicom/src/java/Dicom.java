@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -25,7 +26,7 @@ import java.util.Arrays;
  */
 public class Dicom extends KaitaiStruct {
     public static Dicom fromFile(String fileName) throws IOException {
-        return new Dicom(new KaitaiStream(fileName));
+        return new Dicom(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum Tags {
@@ -4081,13 +4082,17 @@ public class Dicom extends KaitaiStruct {
     private void _read() {
         this.fileHeader = new TFileHeader(this._io, this, _root);
         this.elements = new ArrayList<TDataElementImplicit>();
-        while (!this._io.isEof()) {
-            this.elements.add(new TDataElementImplicit(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.elements.add(new TDataElementImplicit(this._io, this, _root));
+                i++;
+            }
         }
     }
     public static class TFileHeader extends KaitaiStruct {
         public static TFileHeader fromFile(String fileName) throws IOException {
-            return new TFileHeader(new KaitaiStream(fileName));
+            return new TFileHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public TFileHeader(KaitaiStream _io) {
@@ -4123,7 +4128,7 @@ public class Dicom extends KaitaiStruct {
      */
     public static class TDataElementExplicit extends KaitaiStruct {
         public static TDataElementExplicit fromFile(String fileName) throws IOException {
-            return new TDataElementExplicit(new KaitaiStream(fileName));
+            return new TDataElementExplicit(new ByteBufferKaitaiStream(fileName));
         }
 
         public TDataElementExplicit(KaitaiStream _io) {
@@ -4152,7 +4157,7 @@ public class Dicom extends KaitaiStruct {
             {
                 boolean on = isLongLen();
                 if (on == false) {
-                    this.valueLen = this._io.readU2le();
+                    this.valueLen = (long) (this._io.readU2le());
                 }
                 else if (on == true) {
                     this.valueLen = this._io.readU4le();
@@ -4165,16 +4170,22 @@ public class Dicom extends KaitaiStruct {
                 this.items = new ArrayList<SeqItem>();
                 {
                     SeqItem _it;
+                    int i = 0;
                     do {
                         _it = new SeqItem(this._io, this, _root);
                         this.items.add(_it);
+                        i++;
                     } while (!(_it.tagElem() == 57565));
                 }
             }
             if (isTransferSyntaxChangeImplicit()) {
                 this.elementsImplicit = new ArrayList<TDataElementImplicit>();
-                while (!this._io.isEof()) {
-                    this.elementsImplicit.add(new TDataElementImplicit(this._io, this, _root));
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.elementsImplicit.add(new TDataElementImplicit(this._io, this, _root));
+                        i++;
+                    }
                 }
             }
         }
@@ -4213,7 +4224,7 @@ public class Dicom extends KaitaiStruct {
         private int tagElem;
         private String vr;
         private Integer reserved;
-        private long valueLen;
+        private Long valueLen;
         private byte[] value;
         private ArrayList<SeqItem> items;
         private ArrayList<TDataElementImplicit> elementsImplicit;
@@ -4223,7 +4234,7 @@ public class Dicom extends KaitaiStruct {
         public int tagElem() { return tagElem; }
         public String vr() { return vr; }
         public Integer reserved() { return reserved; }
-        public long valueLen() { return valueLen; }
+        public Long valueLen() { return valueLen; }
         public byte[] value() { return value; }
         public ArrayList<SeqItem> items() { return items; }
         public ArrayList<TDataElementImplicit> elementsImplicit() { return elementsImplicit; }
@@ -4236,7 +4247,7 @@ public class Dicom extends KaitaiStruct {
      */
     public static class TDataElementImplicit extends KaitaiStruct {
         public static TDataElementImplicit fromFile(String fileName) throws IOException {
-            return new TDataElementImplicit(new KaitaiStream(fileName));
+            return new TDataElementImplicit(new ByteBufferKaitaiStream(fileName));
         }
 
         public TDataElementImplicit(KaitaiStream _io) {
@@ -4265,7 +4276,7 @@ public class Dicom extends KaitaiStruct {
             {
                 boolean on = (isForcedExplicit() ? isLongLen() : true);
                 if (on == false) {
-                    this.valueLen = this._io.readU2le();
+                    this.valueLen = (long) (this._io.readU2le());
                 }
                 else if (on == true) {
                     this.valueLen = this._io.readU4le();
@@ -4278,16 +4289,22 @@ public class Dicom extends KaitaiStruct {
                 this.items = new ArrayList<SeqItem>();
                 {
                     SeqItem _it;
+                    int i = 0;
                     do {
                         _it = new SeqItem(this._io, this, _root);
                         this.items.add(_it);
+                        i++;
                     } while (!(_it.tagElem() == 57565));
                 }
             }
             if (isTransferSyntaxChangeExplicit()) {
                 this.elements = new ArrayList<TDataElementExplicit>();
-                while (!this._io.isEof()) {
-                    this.elements.add(new TDataElementExplicit(this._io, this, _root));
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.elements.add(new TDataElementExplicit(this._io, this, _root));
+                        i++;
+                    }
                 }
             }
         }
@@ -4334,7 +4351,7 @@ public class Dicom extends KaitaiStruct {
         private int tagElem;
         private String vr;
         private Integer reserved;
-        private long valueLen;
+        private Long valueLen;
         private byte[] value;
         private ArrayList<SeqItem> items;
         private ArrayList<TDataElementExplicit> elements;
@@ -4344,7 +4361,7 @@ public class Dicom extends KaitaiStruct {
         public int tagElem() { return tagElem; }
         public String vr() { return vr; }
         public Integer reserved() { return reserved; }
-        public long valueLen() { return valueLen; }
+        public Long valueLen() { return valueLen; }
         public byte[] value() { return value; }
         public ArrayList<SeqItem> items() { return items; }
         public ArrayList<TDataElementExplicit> elements() { return elements; }
@@ -4353,7 +4370,7 @@ public class Dicom extends KaitaiStruct {
     }
     public static class SeqItem extends KaitaiStruct {
         public static SeqItem fromFile(String fileName) throws IOException {
-            return new SeqItem(new KaitaiStream(fileName));
+            return new SeqItem(new ByteBufferKaitaiStream(fileName));
         }
 
         public SeqItem(KaitaiStream _io) {
@@ -4381,9 +4398,11 @@ public class Dicom extends KaitaiStruct {
                 this.items = new ArrayList<TDataElementExplicit>();
                 {
                     TDataElementExplicit _it;
+                    int i = 0;
                     do {
                         _it = new TDataElementExplicit(this._io, this, _root);
                         this.items.add(_it);
+                        i++;
                     } while (!( ((_it.tagGroup() == 65534) && (_it.tagElem() == 57357)) ));
                 }
             }

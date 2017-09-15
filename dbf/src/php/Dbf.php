@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Dbf extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Dbf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Dbf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -31,8 +31,8 @@ class Dbf extends \Kaitai\Struct\Struct {
 namespace \Dbf;
 
 class Header2 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Dbf $parent = null, \Dbf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Dbf $_parent = null, \Dbf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -60,8 +60,8 @@ class Header2 extends \Kaitai\Struct\Struct {
 namespace \Dbf;
 
 class Field extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Dbf\Header2 $parent = null, \Dbf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Dbf\Header2 $_parent = null, \Dbf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -102,8 +102,8 @@ class Field extends \Kaitai\Struct\Struct {
 namespace \Dbf;
 
 class Header1 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Dbf $parent = null, \Dbf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Dbf $_parent = null, \Dbf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -142,8 +142,8 @@ class Header1 extends \Kaitai\Struct\Struct {
 namespace \Dbf;
 
 class HeaderDbase3 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Dbf\Header2 $parent = null, \Dbf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Dbf\Header2 $_parent = null, \Dbf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -163,8 +163,8 @@ class HeaderDbase3 extends \Kaitai\Struct\Struct {
 namespace \Dbf;
 
 class HeaderDbase7 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Dbf\Header2 $parent = null, \Dbf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Dbf\Header2 $_parent = null, \Dbf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

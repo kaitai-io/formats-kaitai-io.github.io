@@ -233,20 +233,22 @@ namespace Kaitai
             return new MbrPartitionTable(new KaitaiStream(fileName));
         }
 
-        public MbrPartitionTable(KaitaiStream io, KaitaiStruct parent = null, MbrPartitionTable root = null) : base(io)
+        public MbrPartitionTable(KaitaiStream p__io, KaitaiStruct p__parent = null, MbrPartitionTable p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _bootstrapCode = m_io.ReadBytes(446);
             _partitions = new List&lt;PartitionEntry&gt;((int) (4));
-            for (var i = 0; i &lt; 4; i++) {
+            for (var i = 0; i &lt; 4; i++)
+            {
                 _partitions.Add(new PartitionEntry(m_io, this, m_root));
             }
             _bootSignature = m_io.EnsureFixedContents(new byte[] { 85, 170 });
-            }
+        }
         public partial class PartitionEntry : KaitaiStruct
         {
             public static PartitionEntry FromFile(string fileName)
@@ -254,20 +256,21 @@ namespace Kaitai
                 return new PartitionEntry(new KaitaiStream(fileName));
             }
 
-            public PartitionEntry(KaitaiStream io, MbrPartitionTable parent = null, MbrPartitionTable root = null) : base(io)
+            public PartitionEntry(KaitaiStream p__io, MbrPartitionTable p__parent = null, MbrPartitionTable p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _status = m_io.ReadU1();
                 _chsStart = new Chs(m_io, this, m_root);
                 _partitionType = m_io.ReadU1();
                 _chsEnd = new Chs(m_io, this, m_root);
                 _lbaStart = m_io.ReadU4le();
                 _numSectors = m_io.ReadU4le();
-                }
+            }
             private byte _status;
             private Chs _chsStart;
             private byte _partitionType;
@@ -292,19 +295,20 @@ namespace Kaitai
                 return new Chs(new KaitaiStream(fileName));
             }
 
-            public Chs(KaitaiStream io, MbrPartitionTable.PartitionEntry parent = null, MbrPartitionTable root = null) : base(io)
+            public Chs(KaitaiStream p__io, MbrPartitionTable.PartitionEntry p__parent = null, MbrPartitionTable p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_sector = false;
                 f_cylinder = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _head = m_io.ReadU1();
                 _b2 = m_io.ReadU1();
                 _b3 = m_io.ReadU1();
-                }
+            }
             private bool f_sector;
             private int _sector;
             public int Sector

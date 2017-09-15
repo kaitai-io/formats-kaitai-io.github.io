@@ -56,12 +56,14 @@ class Rar(KaitaiStruct):
     def _read(self):
         self.magic = self._root.MagicSignature(self._io, self, self._root)
         self.blocks = []
+        i = 0
         while not self._io.is_eof():
             _on = self.magic.version
             if _on == 0:
                 self.blocks.append(self._root.Block(self._io, self, self._root))
             elif _on == 1:
                 self.blocks.append(self._root.BlockV5(self._io, self, self._root))
+            i += 1
 
 
     class BlockV5(KaitaiStruct):

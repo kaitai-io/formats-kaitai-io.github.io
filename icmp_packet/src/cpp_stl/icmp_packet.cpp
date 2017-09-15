@@ -4,8 +4,8 @@
 
 
 
-icmp_packet_t::icmp_packet_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icmp_packet_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+icmp_packet_t::icmp_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icmp_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -41,9 +41,9 @@ icmp_packet_t::~icmp_packet_t() {
     }
 }
 
-icmp_packet_t::destination_unreachable_msg_t::destination_unreachable_msg_t(kaitai::kstream *p_io, icmp_packet_t* p_parent, icmp_packet_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icmp_packet_t::destination_unreachable_msg_t::destination_unreachable_msg_t(kaitai::kstream* p__io, icmp_packet_t* p__parent, icmp_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -55,9 +55,9 @@ void icmp_packet_t::destination_unreachable_msg_t::_read() {
 icmp_packet_t::destination_unreachable_msg_t::~destination_unreachable_msg_t() {
 }
 
-icmp_packet_t::time_exceeded_msg_t::time_exceeded_msg_t(kaitai::kstream *p_io, icmp_packet_t* p_parent, icmp_packet_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icmp_packet_t::time_exceeded_msg_t::time_exceeded_msg_t(kaitai::kstream* p__io, icmp_packet_t* p__parent, icmp_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -69,9 +69,9 @@ void icmp_packet_t::time_exceeded_msg_t::_read() {
 icmp_packet_t::time_exceeded_msg_t::~time_exceeded_msg_t() {
 }
 
-icmp_packet_t::echo_msg_t::echo_msg_t(kaitai::kstream *p_io, icmp_packet_t* p_parent, icmp_packet_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icmp_packet_t::echo_msg_t::echo_msg_t(kaitai::kstream* p__io, icmp_packet_t* p__parent, icmp_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

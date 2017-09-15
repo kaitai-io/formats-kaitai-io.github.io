@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -19,16 +18,24 @@ public:
     class index_struct_t;
     class index_entry_t;
 
-    quake_pak_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, quake_pak_t* p_root = 0);
+    quake_pak_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, quake_pak_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~quake_pak_t();
 
     class index_struct_t : public kaitai::kstruct {
 
     public:
 
-        index_struct_t(kaitai::kstream* p_io, quake_pak_t* p_parent = 0, quake_pak_t* p_root = 0);
+        index_struct_t(kaitai::kstream* p__io, quake_pak_t* p__parent = 0, quake_pak_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~index_struct_t();
 
     private:
@@ -46,8 +53,12 @@ public:
 
     public:
 
-        index_entry_t(kaitai::kstream* p_io, quake_pak_t::index_struct_t* p_parent = 0, quake_pak_t* p_root = 0);
+        index_entry_t(kaitai::kstream* p__io, quake_pak_t::index_struct_t* p__parent = 0, quake_pak_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~index_entry_t();
 
     private:

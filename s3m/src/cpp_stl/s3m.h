@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -45,16 +44,24 @@ public:
     class instrument_ptr_t;
     class instrument_t;
 
-    s3m_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, s3m_t* p_root = 0);
+    s3m_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, s3m_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~s3m_t();
 
     class channel_pan_t : public kaitai::kstruct {
 
     public:
 
-        channel_pan_t(kaitai::kstream* p_io, s3m_t* p_parent = 0, s3m_t* p_root = 0);
+        channel_pan_t(kaitai::kstream* p__io, s3m_t* p__parent = 0, s3m_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~channel_pan_t();
 
     private:
@@ -84,8 +91,12 @@ public:
 
     public:
 
-        pattern_cell_t(kaitai::kstream* p_io, s3m_t::pattern_cells_t* p_parent = 0, s3m_t* p_root = 0);
+        pattern_cell_t(kaitai::kstream* p__io, s3m_t::pattern_cells_t* p__parent = 0, s3m_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~pattern_cell_t();
 
     private:
@@ -149,8 +160,12 @@ public:
 
     public:
 
-        pattern_cells_t(kaitai::kstream* p_io, s3m_t::pattern_t* p_parent = 0, s3m_t* p_root = 0);
+        pattern_cells_t(kaitai::kstream* p__io, s3m_t::pattern_t* p__parent = 0, s3m_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~pattern_cells_t();
 
     private:
@@ -168,8 +183,12 @@ public:
 
     public:
 
-        channel_t(kaitai::kstream* p_io, s3m_t* p_parent = 0, s3m_t* p_root = 0);
+        channel_t(kaitai::kstream* p__io, s3m_t* p__parent = 0, s3m_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~channel_t();
 
     private:
@@ -197,8 +216,12 @@ public:
 
     public:
 
-        swapped_u3_t(kaitai::kstream* p_io, s3m_t::instrument_t::sampled_t* p_parent = 0, s3m_t* p_root = 0);
+        swapped_u3_t(kaitai::kstream* p__io, s3m_t::instrument_t::sampled_t* p__parent = 0, s3m_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~swapped_u3_t();
 
     private:
@@ -225,8 +248,12 @@ public:
 
     public:
 
-        pattern_t(kaitai::kstream* p_io, s3m_t::pattern_ptr_t* p_parent = 0, s3m_t* p_root = 0);
+        pattern_t(kaitai::kstream* p__io, s3m_t::pattern_ptr_t* p__parent = 0, s3m_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~pattern_t();
 
     private:
@@ -250,8 +277,12 @@ public:
 
     public:
 
-        pattern_ptr_t(kaitai::kstream* p_io, s3m_t* p_parent = 0, s3m_t* p_root = 0);
+        pattern_ptr_t(kaitai::kstream* p__io, s3m_t* p__parent = 0, s3m_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~pattern_ptr_t();
 
     private:
@@ -276,8 +307,12 @@ public:
 
     public:
 
-        instrument_ptr_t(kaitai::kstream* p_io, s3m_t* p_parent = 0, s3m_t* p_root = 0);
+        instrument_ptr_t(kaitai::kstream* p__io, s3m_t* p__parent = 0, s3m_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~instrument_ptr_t();
 
     private:
@@ -314,16 +349,24 @@ public:
             INST_TYPES_HIHAT = 7
         };
 
-        instrument_t(kaitai::kstream* p_io, s3m_t::instrument_ptr_t* p_parent = 0, s3m_t* p_root = 0);
+        instrument_t(kaitai::kstream* p__io, s3m_t::instrument_ptr_t* p__parent = 0, s3m_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~instrument_t();
 
         class sampled_t : public kaitai::kstruct {
 
         public:
 
-            sampled_t(kaitai::kstream* p_io, s3m_t::instrument_t* p_parent = 0, s3m_t* p_root = 0);
+            sampled_t(kaitai::kstream* p__io, s3m_t::instrument_t* p__parent = 0, s3m_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~sampled_t();
 
         private:
@@ -370,8 +413,12 @@ public:
 
         public:
 
-            adlib_t(kaitai::kstream* p_io, s3m_t::instrument_t* p_parent = 0, s3m_t* p_root = 0);
+            adlib_t(kaitai::kstream* p__io, s3m_t::instrument_t* p__parent = 0, s3m_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~adlib_t();
 
         private:

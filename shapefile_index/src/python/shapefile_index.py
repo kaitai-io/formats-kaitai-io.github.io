@@ -35,8 +35,10 @@ class ShapefileIndex(KaitaiStruct):
     def _read(self):
         self.header = self._root.FileHeader(self._io, self, self._root)
         self.records = []
+        i = 0
         while not self._io.is_eof():
             self.records.append(self._root.Record(self._io, self, self._root))
+            i += 1
 
 
     class FileHeader(KaitaiStruct):

@@ -506,16 +506,20 @@ class Elf < Kaitai::Struct::Struct
 
       def _read_le
         @entries = []
+        i = 0
         while not @_io.eof?
           @entries << (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+          i += 1
         end
         self
       end
 
       def _read_be
         @entries = []
+        i = 0
         while not @_io.eof?
           @entries << (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+          i += 1
         end
         self
       end

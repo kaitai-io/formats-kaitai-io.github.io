@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 
@@ -21,16 +20,24 @@ class andes_firmware_t : public kaitai::kstruct {
 public:
     class image_header_t;
 
-    andes_firmware_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, andes_firmware_t* p_root = 0);
+    andes_firmware_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, andes_firmware_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~andes_firmware_t();
 
     class image_header_t : public kaitai::kstruct {
 
     public:
 
-        image_header_t(kaitai::kstream* p_io, andes_firmware_t* p_parent = 0, andes_firmware_t* p_root = 0);
+        image_header_t(kaitai::kstream* p__io, andes_firmware_t* p__parent = 0, andes_firmware_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~image_header_t();
 
     private:

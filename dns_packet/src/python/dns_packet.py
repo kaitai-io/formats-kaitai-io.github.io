@@ -125,11 +125,13 @@ class DnsPacket(KaitaiStruct):
 
         def _read(self):
             self.name = []
+            i = 0
             while True:
                 _ = self._root.Label(self._io, self, self._root)
                 self.name.append(_)
                 if  ((_.length == 0) or (_.length == 192)) :
                     break
+                i += 1
 
 
     class Address(KaitaiStruct):

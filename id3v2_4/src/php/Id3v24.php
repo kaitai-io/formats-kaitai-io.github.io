@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Id3v24 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Id3v24 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Id3v24 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -17,8 +17,8 @@ class Id3v24 extends \Kaitai\Struct\Struct {
 namespace \Id3v24;
 
 class U1beSynchsafe extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Id3v24\U2beSynchsafe $parent = null, \Id3v24 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Id3v24\U2beSynchsafe $_parent = null, \Id3v24 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -35,8 +35,8 @@ class U1beSynchsafe extends \Kaitai\Struct\Struct {
 namespace \Id3v24;
 
 class U2beSynchsafe extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Id3v24\U4beSynchsafe $parent = null, \Id3v24 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Id3v24\U4beSynchsafe $_parent = null, \Id3v24 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -60,8 +60,8 @@ class U2beSynchsafe extends \Kaitai\Struct\Struct {
 namespace \Id3v24;
 
 class Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Id3v24 $parent = null, \Id3v24 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Id3v24 $_parent = null, \Id3v24 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -71,9 +71,11 @@ class Tag extends \Kaitai\Struct\Struct {
             $this->_m_headerEx = new \Id3v24\HeaderEx($this->_io, $this, $this->_root);
         }
         $this->_m_frames = [];
+        $i = 0;
         do {
             $_ = new \Id3v24\Frame($this->_io, $this, $this->_root);
             $this->_m_frames[] = $_;
+            $i++;
         } while (!( ((($this->_io()->pos() + $_->size()->value()) > $this->header()->size()->value()) || ($_->isInvalid())) ));
         if (!($this->header()->flags()->flagFooter())) {
             $this->_m_padding = new \Id3v24\Padding($this->_io, $this, $this->_root);
@@ -97,8 +99,8 @@ class Tag extends \Kaitai\Struct\Struct {
 namespace \Id3v24;
 
 class U4beSynchsafe extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Id3v24 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Id3v24 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -122,8 +124,8 @@ class U4beSynchsafe extends \Kaitai\Struct\Struct {
 namespace \Id3v24;
 
 class Frame extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Id3v24\Tag $parent = null, \Id3v24 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Id3v24\Tag $_parent = null, \Id3v24 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -156,8 +158,8 @@ class Frame extends \Kaitai\Struct\Struct {
 namespace \Id3v24\Frame;
 
 class FlagsStatus extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Id3v24\Frame $parent = null, \Id3v24 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Id3v24\Frame $_parent = null, \Id3v24 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -183,8 +185,8 @@ class FlagsStatus extends \Kaitai\Struct\Struct {
 namespace \Id3v24\Frame;
 
 class FlagsFormat extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Id3v24\Frame $parent = null, \Id3v24 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Id3v24\Frame $_parent = null, \Id3v24 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -216,8 +218,8 @@ class FlagsFormat extends \Kaitai\Struct\Struct {
 namespace \Id3v24;
 
 class HeaderEx extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Id3v24\Tag $parent = null, \Id3v24 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Id3v24\Tag $_parent = null, \Id3v24 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -237,8 +239,8 @@ class HeaderEx extends \Kaitai\Struct\Struct {
 namespace \Id3v24\HeaderEx;
 
 class FlagsEx extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Id3v24\HeaderEx $parent = null, \Id3v24 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Id3v24\HeaderEx $_parent = null, \Id3v24 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -264,8 +266,8 @@ class FlagsEx extends \Kaitai\Struct\Struct {
 namespace \Id3v24;
 
 class Header extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Id3v24\Tag $parent = null, \Id3v24 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Id3v24\Tag $_parent = null, \Id3v24 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -291,8 +293,8 @@ class Header extends \Kaitai\Struct\Struct {
 namespace \Id3v24\Header;
 
 class Flags extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Id3v24\Header $parent = null, \Id3v24 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Id3v24\Header $_parent = null, \Id3v24 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -318,8 +320,8 @@ class Flags extends \Kaitai\Struct\Struct {
 namespace \Id3v24;
 
 class Padding extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Id3v24\Tag $parent = null, \Id3v24 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Id3v24\Tag $_parent = null, \Id3v24 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -333,8 +335,8 @@ class Padding extends \Kaitai\Struct\Struct {
 namespace \Id3v24;
 
 class Footer extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Id3v24\Tag $parent = null, \Id3v24 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Id3v24\Tag $_parent = null, \Id3v24 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -360,8 +362,8 @@ class Footer extends \Kaitai\Struct\Struct {
 namespace \Id3v24\Footer;
 
 class Flags extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Id3v24\Footer $parent = null, \Id3v24 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Id3v24\Footer $_parent = null, \Id3v24 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

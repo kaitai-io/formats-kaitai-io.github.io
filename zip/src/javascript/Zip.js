@@ -92,8 +92,10 @@ var Zip = (function() {
   }
   Zip.prototype._read = function() {
     this.sections = [];
+    var i = 0;
     while (!this._io.isEof()) {
       this.sections.push(new PkSection(this._io, this, this._root));
+      i++;
     }
   }
 
@@ -161,8 +163,10 @@ var Zip = (function() {
       Ntfs.prototype._read = function() {
         this.reserved = this._io.readU4le();
         this.attributes = [];
+        var i = 0;
         while (!this._io.isEof()) {
           this.attributes.push(new Attribute(this._io, this, this._root));
+          i++;
         }
       }
 
@@ -371,8 +375,10 @@ var Zip = (function() {
     }
     Extras.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.entries.push(new ExtraField(this._io, this, this._root));
+        i++;
       }
     }
 

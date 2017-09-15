@@ -15,19 +15,21 @@ namespace Kaitai
             return new JavaClass(new KaitaiStream(fileName));
         }
 
-        public JavaClass(KaitaiStream io, KaitaiStruct parent = null, JavaClass root = null) : base(io)
+        public JavaClass(KaitaiStream p__io, KaitaiStruct p__parent = null, JavaClass p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _magic = m_io.EnsureFixedContents(new byte[] { 202, 254, 186, 190 });
             _versionMinor = m_io.ReadU2be();
             _versionMajor = m_io.ReadU2be();
             _constantPoolCount = m_io.ReadU2be();
             _constantPool = new List<ConstantPoolEntry>((int) ((ConstantPoolCount - 1)));
-            for (var i = 0; i < (ConstantPoolCount - 1); i++) {
+            for (var i = 0; i < (ConstantPoolCount - 1); i++)
+            {
                 _constantPool.Add(new ConstantPoolEntry(m_io, this, m_root));
             }
             _accessFlags = m_io.ReadU2be();
@@ -35,25 +37,29 @@ namespace Kaitai
             _superClass = m_io.ReadU2be();
             _interfacesCount = m_io.ReadU2be();
             _interfaces = new List<ushort>((int) (InterfacesCount));
-            for (var i = 0; i < InterfacesCount; i++) {
+            for (var i = 0; i < InterfacesCount; i++)
+            {
                 _interfaces.Add(m_io.ReadU2be());
             }
             _fieldsCount = m_io.ReadU2be();
             _fields = new List<FieldInfo>((int) (FieldsCount));
-            for (var i = 0; i < FieldsCount; i++) {
+            for (var i = 0; i < FieldsCount; i++)
+            {
                 _fields.Add(new FieldInfo(m_io, this, m_root));
             }
             _methodsCount = m_io.ReadU2be();
             _methods = new List<MethodInfo>((int) (MethodsCount));
-            for (var i = 0; i < MethodsCount; i++) {
+            for (var i = 0; i < MethodsCount; i++)
+            {
                 _methods.Add(new MethodInfo(m_io, this, m_root));
             }
             _attributesCount = m_io.ReadU2be();
             _attributes = new List<AttributeInfo>((int) (AttributesCount));
-            for (var i = 0; i < AttributesCount; i++) {
+            for (var i = 0; i < AttributesCount; i++)
+            {
                 _attributes.Add(new AttributeInfo(m_io, this, m_root));
             }
-            }
+        }
 
         /// <remarks>
         /// Reference: <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5">Source</a>
@@ -65,15 +71,16 @@ namespace Kaitai
                 return new FloatCpInfo(new KaitaiStream(fileName));
             }
 
-            public FloatCpInfo(KaitaiStream io, JavaClass.ConstantPoolEntry parent = null, JavaClass root = null) : base(io)
+            public FloatCpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _value = m_io.ReadF4be();
-                }
+            }
             private float _value;
             private JavaClass m_root;
             private JavaClass.ConstantPoolEntry m_parent;
@@ -92,14 +99,15 @@ namespace Kaitai
                 return new AttributeInfo(new KaitaiStream(fileName));
             }
 
-            public AttributeInfo(KaitaiStream io, KaitaiStruct parent = null, JavaClass root = null) : base(io)
+            public AttributeInfo(KaitaiStream p__io, KaitaiStruct p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_nameAsStr = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _nameIndex = m_io.ReadU2be();
                 _attributeLength = m_io.ReadU4be();
                 switch (NameAsStr) {
@@ -132,7 +140,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
 
             /// <remarks>
             /// Reference: <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">Source</a>
@@ -144,28 +152,31 @@ namespace Kaitai
                     return new AttrBodyCode(new KaitaiStream(fileName));
                 }
 
-                public AttrBodyCode(KaitaiStream io, JavaClass.AttributeInfo parent = null, JavaClass root = null) : base(io)
+                public AttrBodyCode(KaitaiStream p__io, JavaClass.AttributeInfo p__parent = null, JavaClass p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _maxStack = m_io.ReadU2be();
                     _maxLocals = m_io.ReadU2be();
                     _codeLength = m_io.ReadU4be();
                     _code = m_io.ReadBytes(CodeLength);
                     _exceptionTableLength = m_io.ReadU2be();
                     _exceptionTable = new List<ExceptionEntry>((int) (ExceptionTableLength));
-                    for (var i = 0; i < ExceptionTableLength; i++) {
+                    for (var i = 0; i < ExceptionTableLength; i++)
+                    {
                         _exceptionTable.Add(new ExceptionEntry(m_io, this, m_root));
                     }
                     _attributesCount = m_io.ReadU2be();
                     _attributes = new List<AttributeInfo>((int) (AttributesCount));
-                    for (var i = 0; i < AttributesCount; i++) {
+                    for (var i = 0; i < AttributesCount; i++)
+                    {
                         _attributes.Add(new AttributeInfo(m_io, this, m_root));
                     }
-                    }
+                }
 
                 /// <remarks>
                 /// Reference: <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">Source</a>
@@ -177,19 +188,20 @@ namespace Kaitai
                         return new ExceptionEntry(new KaitaiStream(fileName));
                     }
 
-                    public ExceptionEntry(KaitaiStream io, JavaClass.AttributeInfo.AttrBodyCode parent = null, JavaClass root = null) : base(io)
+                    public ExceptionEntry(KaitaiStream p__io, JavaClass.AttributeInfo.AttrBodyCode p__parent = null, JavaClass p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         f_catchException = false;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _startPc = m_io.ReadU2be();
                         _endPc = m_io.ReadU2be();
                         _handlerPc = m_io.ReadU2be();
                         _catchType = m_io.ReadU2be();
-                        }
+                    }
                     private bool f_catchException;
                     private ConstantPoolEntry _catchException;
                     public ConstantPoolEntry CatchException
@@ -270,19 +282,21 @@ namespace Kaitai
                     return new AttrBodyExceptions(new KaitaiStream(fileName));
                 }
 
-                public AttrBodyExceptions(KaitaiStream io, JavaClass.AttributeInfo parent = null, JavaClass root = null) : base(io)
+                public AttrBodyExceptions(KaitaiStream p__io, JavaClass.AttributeInfo p__parent = null, JavaClass p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _numberOfExceptions = m_io.ReadU2be();
                     _exceptions = new List<ExceptionTableEntry>((int) (NumberOfExceptions));
-                    for (var i = 0; i < NumberOfExceptions; i++) {
+                    for (var i = 0; i < NumberOfExceptions; i++)
+                    {
                         _exceptions.Add(new ExceptionTableEntry(m_io, this, m_root));
                     }
-                    }
+                }
                 public partial class ExceptionTableEntry : KaitaiStruct
                 {
                     public static ExceptionTableEntry FromFile(string fileName)
@@ -290,17 +304,18 @@ namespace Kaitai
                         return new ExceptionTableEntry(new KaitaiStream(fileName));
                     }
 
-                    public ExceptionTableEntry(KaitaiStream io, JavaClass.AttributeInfo.AttrBodyExceptions parent = null, JavaClass root = null) : base(io)
+                    public ExceptionTableEntry(KaitaiStream p__io, JavaClass.AttributeInfo.AttrBodyExceptions p__parent = null, JavaClass p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         f_asInfo = false;
                         f_nameAsStr = false;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _index = m_io.ReadU2be();
-                        }
+                    }
                     private bool f_asInfo;
                     private JavaClass.ClassCpInfo _asInfo;
                     public JavaClass.ClassCpInfo AsInfo
@@ -354,16 +369,17 @@ namespace Kaitai
                     return new AttrBodySourceFile(new KaitaiStream(fileName));
                 }
 
-                public AttrBodySourceFile(KaitaiStream io, JavaClass.AttributeInfo parent = null, JavaClass root = null) : base(io)
+                public AttrBodySourceFile(KaitaiStream p__io, JavaClass.AttributeInfo p__parent = null, JavaClass p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     f_sourcefileAsStr = false;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _sourcefileIndex = m_io.ReadU2be();
-                    }
+                }
                 private bool f_sourcefileAsStr;
                 private string _sourcefileAsStr;
                 public string SourcefileAsStr
@@ -395,19 +411,21 @@ namespace Kaitai
                     return new AttrBodyLineNumberTable(new KaitaiStream(fileName));
                 }
 
-                public AttrBodyLineNumberTable(KaitaiStream io, JavaClass.AttributeInfo parent = null, JavaClass root = null) : base(io)
+                public AttrBodyLineNumberTable(KaitaiStream p__io, JavaClass.AttributeInfo p__parent = null, JavaClass p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _lineNumberTableLength = m_io.ReadU2be();
                     _lineNumberTable = new List<LineNumberTableEntry>((int) (LineNumberTableLength));
-                    for (var i = 0; i < LineNumberTableLength; i++) {
+                    for (var i = 0; i < LineNumberTableLength; i++)
+                    {
                         _lineNumberTable.Add(new LineNumberTableEntry(m_io, this, m_root));
                     }
-                    }
+                }
                 public partial class LineNumberTableEntry : KaitaiStruct
                 {
                     public static LineNumberTableEntry FromFile(string fileName)
@@ -415,16 +433,17 @@ namespace Kaitai
                         return new LineNumberTableEntry(new KaitaiStream(fileName));
                     }
 
-                    public LineNumberTableEntry(KaitaiStream io, JavaClass.AttributeInfo.AttrBodyLineNumberTable parent = null, JavaClass root = null) : base(io)
+                    public LineNumberTableEntry(KaitaiStream p__io, JavaClass.AttributeInfo.AttrBodyLineNumberTable p__parent = null, JavaClass p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _startPc = m_io.ReadU2be();
                         _lineNumber = m_io.ReadU2be();
-                        }
+                    }
                     private ushort _startPc;
                     private ushort _lineNumber;
                     private JavaClass m_root;
@@ -480,18 +499,19 @@ namespace Kaitai
                 return new MethodRefCpInfo(new KaitaiStream(fileName));
             }
 
-            public MethodRefCpInfo(KaitaiStream io, JavaClass.ConstantPoolEntry parent = null, JavaClass root = null) : base(io)
+            public MethodRefCpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_classAsInfo = false;
                 f_nameAndTypeAsInfo = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _classIndex = m_io.ReadU2be();
                 _nameAndTypeIndex = m_io.ReadU2be();
-                }
+            }
             private bool f_classAsInfo;
             private JavaClass.ClassCpInfo _classAsInfo;
             public JavaClass.ClassCpInfo ClassAsInfo
@@ -538,23 +558,25 @@ namespace Kaitai
                 return new FieldInfo(new KaitaiStream(fileName));
             }
 
-            public FieldInfo(KaitaiStream io, JavaClass parent = null, JavaClass root = null) : base(io)
+            public FieldInfo(KaitaiStream p__io, JavaClass p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_nameAsStr = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _accessFlags = m_io.ReadU2be();
                 _nameIndex = m_io.ReadU2be();
                 _descriptorIndex = m_io.ReadU2be();
                 _attributesCount = m_io.ReadU2be();
                 _attributes = new List<AttributeInfo>((int) (AttributesCount));
-                for (var i = 0; i < AttributesCount; i++) {
+                for (var i = 0; i < AttributesCount; i++)
+                {
                     _attributes.Add(new AttributeInfo(m_io, this, m_root));
                 }
-                }
+            }
             private bool f_nameAsStr;
             private string _nameAsStr;
             public string NameAsStr
@@ -594,15 +616,16 @@ namespace Kaitai
                 return new DoubleCpInfo(new KaitaiStream(fileName));
             }
 
-            public DoubleCpInfo(KaitaiStream io, JavaClass.ConstantPoolEntry parent = null, JavaClass root = null) : base(io)
+            public DoubleCpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _value = m_io.ReadF8be();
-                }
+            }
             private double _value;
             private JavaClass m_root;
             private JavaClass.ConstantPoolEntry m_parent;
@@ -621,15 +644,16 @@ namespace Kaitai
                 return new LongCpInfo(new KaitaiStream(fileName));
             }
 
-            public LongCpInfo(KaitaiStream io, JavaClass.ConstantPoolEntry parent = null, JavaClass root = null) : base(io)
+            public LongCpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _value = m_io.ReadU8be();
-                }
+            }
             private ulong _value;
             private JavaClass m_root;
             private JavaClass.ConstantPoolEntry m_parent;
@@ -648,16 +672,17 @@ namespace Kaitai
                 return new InvokeDynamicCpInfo(new KaitaiStream(fileName));
             }
 
-            public InvokeDynamicCpInfo(KaitaiStream io, JavaClass.ConstantPoolEntry parent = null, JavaClass root = null) : base(io)
+            public InvokeDynamicCpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _bootstrapMethodAttrIndex = m_io.ReadU2be();
                 _nameAndTypeIndex = m_io.ReadU2be();
-                }
+            }
             private ushort _bootstrapMethodAttrIndex;
             private ushort _nameAndTypeIndex;
             private JavaClass m_root;
@@ -678,6 +703,7 @@ namespace Kaitai
                 return new MethodHandleCpInfo(new KaitaiStream(fileName));
             }
 
+
             public enum ReferenceKindEnum
             {
                 GetField = 1,
@@ -690,17 +716,17 @@ namespace Kaitai
                 NewInvokeSpecial = 8,
                 InvokeInterface = 9,
             }
-
-            public MethodHandleCpInfo(KaitaiStream io, JavaClass.ConstantPoolEntry parent = null, JavaClass root = null) : base(io)
+            public MethodHandleCpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _referenceKind = ((ReferenceKindEnum) m_io.ReadU1());
                 _referenceIndex = m_io.ReadU2be();
-                }
+            }
             private ReferenceKindEnum _referenceKind;
             private ushort _referenceIndex;
             private JavaClass m_root;
@@ -721,20 +747,21 @@ namespace Kaitai
                 return new NameAndTypeCpInfo(new KaitaiStream(fileName));
             }
 
-            public NameAndTypeCpInfo(KaitaiStream io, JavaClass.ConstantPoolEntry parent = null, JavaClass root = null) : base(io)
+            public NameAndTypeCpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_nameAsInfo = false;
                 f_nameAsStr = false;
                 f_descriptorAsInfo = false;
                 f_descriptorAsStr = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _nameIndex = m_io.ReadU2be();
                 _descriptorIndex = m_io.ReadU2be();
-                }
+            }
             private bool f_nameAsInfo;
             private JavaClass.Utf8CpInfo _nameAsInfo;
             public JavaClass.Utf8CpInfo NameAsInfo
@@ -807,16 +834,17 @@ namespace Kaitai
                 return new Utf8CpInfo(new KaitaiStream(fileName));
             }
 
-            public Utf8CpInfo(KaitaiStream io, JavaClass.ConstantPoolEntry parent = null, JavaClass root = null) : base(io)
+            public Utf8CpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _strLen = m_io.ReadU2be();
                 _value = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(StrLen));
-                }
+            }
             private ushort _strLen;
             private string _value;
             private JavaClass m_root;
@@ -837,15 +865,16 @@ namespace Kaitai
                 return new StringCpInfo(new KaitaiStream(fileName));
             }
 
-            public StringCpInfo(KaitaiStream io, JavaClass.ConstantPoolEntry parent = null, JavaClass root = null) : base(io)
+            public StringCpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _stringIndex = m_io.ReadU2be();
-                }
+            }
             private ushort _stringIndex;
             private JavaClass m_root;
             private JavaClass.ConstantPoolEntry m_parent;
@@ -864,15 +893,16 @@ namespace Kaitai
                 return new MethodTypeCpInfo(new KaitaiStream(fileName));
             }
 
-            public MethodTypeCpInfo(KaitaiStream io, JavaClass.ConstantPoolEntry parent = null, JavaClass root = null) : base(io)
+            public MethodTypeCpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _descriptorIndex = m_io.ReadU2be();
-                }
+            }
             private ushort _descriptorIndex;
             private JavaClass m_root;
             private JavaClass.ConstantPoolEntry m_parent;
@@ -891,18 +921,19 @@ namespace Kaitai
                 return new InterfaceMethodRefCpInfo(new KaitaiStream(fileName));
             }
 
-            public InterfaceMethodRefCpInfo(KaitaiStream io, JavaClass.ConstantPoolEntry parent = null, JavaClass root = null) : base(io)
+            public InterfaceMethodRefCpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_classAsInfo = false;
                 f_nameAndTypeAsInfo = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _classIndex = m_io.ReadU2be();
                 _nameAndTypeIndex = m_io.ReadU2be();
-                }
+            }
             private bool f_classAsInfo;
             private JavaClass.ClassCpInfo _classAsInfo;
             public JavaClass.ClassCpInfo ClassAsInfo
@@ -949,17 +980,18 @@ namespace Kaitai
                 return new ClassCpInfo(new KaitaiStream(fileName));
             }
 
-            public ClassCpInfo(KaitaiStream io, JavaClass.ConstantPoolEntry parent = null, JavaClass root = null) : base(io)
+            public ClassCpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_nameAsInfo = false;
                 f_nameAsStr = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _nameIndex = m_io.ReadU2be();
-                }
+            }
             private bool f_nameAsInfo;
             private JavaClass.Utf8CpInfo _nameAsInfo;
             public JavaClass.Utf8CpInfo NameAsInfo
@@ -1004,6 +1036,7 @@ namespace Kaitai
                 return new ConstantPoolEntry(new KaitaiStream(fileName));
             }
 
+
             public enum TagEnum
             {
                 Utf8 = 1,
@@ -1021,14 +1054,14 @@ namespace Kaitai
                 MethodType = 16,
                 InvokeDynamic = 18,
             }
-
-            public ConstantPoolEntry(KaitaiStream io, JavaClass parent = null, JavaClass root = null) : base(io)
+            public ConstantPoolEntry(KaitaiStream p__io, JavaClass p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _tag = ((TagEnum) m_io.ReadU1());
                 switch (Tag) {
                 case TagEnum.String: {
@@ -1088,7 +1121,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private TagEnum _tag;
             private KaitaiStruct _cpInfo;
             private JavaClass m_root;
@@ -1109,23 +1142,25 @@ namespace Kaitai
                 return new MethodInfo(new KaitaiStream(fileName));
             }
 
-            public MethodInfo(KaitaiStream io, JavaClass parent = null, JavaClass root = null) : base(io)
+            public MethodInfo(KaitaiStream p__io, JavaClass p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_nameAsStr = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _accessFlags = m_io.ReadU2be();
                 _nameIndex = m_io.ReadU2be();
                 _descriptorIndex = m_io.ReadU2be();
                 _attributesCount = m_io.ReadU2be();
                 _attributes = new List<AttributeInfo>((int) (AttributesCount));
-                for (var i = 0; i < AttributesCount; i++) {
+                for (var i = 0; i < AttributesCount; i++)
+                {
                     _attributes.Add(new AttributeInfo(m_io, this, m_root));
                 }
-                }
+            }
             private bool f_nameAsStr;
             private string _nameAsStr;
             public string NameAsStr
@@ -1165,15 +1200,16 @@ namespace Kaitai
                 return new IntegerCpInfo(new KaitaiStream(fileName));
             }
 
-            public IntegerCpInfo(KaitaiStream io, JavaClass.ConstantPoolEntry parent = null, JavaClass root = null) : base(io)
+            public IntegerCpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _value = m_io.ReadU4be();
-                }
+            }
             private uint _value;
             private JavaClass m_root;
             private JavaClass.ConstantPoolEntry m_parent;
@@ -1192,18 +1228,19 @@ namespace Kaitai
                 return new FieldRefCpInfo(new KaitaiStream(fileName));
             }
 
-            public FieldRefCpInfo(KaitaiStream io, JavaClass.ConstantPoolEntry parent = null, JavaClass root = null) : base(io)
+            public FieldRefCpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_classAsInfo = false;
                 f_nameAndTypeAsInfo = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _classIndex = m_io.ReadU2be();
                 _nameAndTypeIndex = m_io.ReadU2be();
-                }
+            }
             private bool f_classAsInfo;
             private JavaClass.ClassCpInfo _classAsInfo;
             public JavaClass.ClassCpInfo ClassAsInfo

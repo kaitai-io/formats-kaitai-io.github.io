@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.nio.charset.Charset;
  */
 public class Id3v11 extends KaitaiStruct {
     public static Id3v11 fromFile(String fileName) throws IOException {
-        return new Id3v11(new KaitaiStream(fileName));
+        return new Id3v11(new ByteBufferKaitaiStream(fileName));
     }
 
     public Id3v11(KaitaiStream _io) {
@@ -52,7 +53,7 @@ public class Id3v11 extends KaitaiStruct {
      */
     public static class Id3V11Tag extends KaitaiStruct {
         public static Id3V11Tag fromFile(String fileName) throws IOException {
-            return new Id3V11Tag(new KaitaiStream(fileName));
+            return new Id3V11Tag(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum GenreEnum {

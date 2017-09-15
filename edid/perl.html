@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>edid: Perl parsing library</title>
+  <title>EDID (VESA Enhanced Extended Display Identification Data): Perl parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Hardware Protocols</li>
-        <li class="active">edid</li>
+        <li class="active">EDID (VESA Enhanced Extended Display Identification Data)</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>edid:
+        <h1>EDID (VESA Enhanced Extended Display Identification Data):
             
             Perl parsing library
             
@@ -105,6 +105,16 @@ section#format-index .row {
                     
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
                 </div>
             </div>
         </div>
@@ -112,7 +122,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of edid
+            This page hosts a formal specification of EDID (VESA Enhanced Extended Display Identification Data)
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -123,52 +133,52 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="index.html" title="edid parsing Overview library">Overview</a></li>
+                <a href="index.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="edid parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="edid parsing C# library">C#</a></li>
+                <a href="csharp.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="edid parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="edid parsing Java library">Java</a></li>
+                <a href="java.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title="edid parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="perl.html" title="edid parsing Perl library">Perl</a></li>
+                <a href="perl.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="edid parsing PHP library">PHP</a></li>
+                <a href="php.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing PHP library">PHP</a></li>
                 
                 
                 <li>
                 
-                <a href="python.html" title="edid parsing Python library">Python</a></li>
+                <a href="python.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title="edid parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -181,7 +191,7 @@ section#format-index .row {
     <div class="container">
         <h2>
             
-            Perl source code to parse edid
+            Perl source code to parse EDID (VESA Enhanced Extended Display Identification Data)
             
         </h2>
 
@@ -247,7 +257,13 @@ sub _read {
     $self-&gt;{screen_size_v} = $self-&gt;{_io}-&gt;read_u1();
     $self-&gt;{gamma_mod} = $self-&gt;{_io}-&gt;read_u1();
     $self-&gt;{features_flags} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{chromacity} = $self-&gt;{_io}-&gt;read_bytes(10);
+    $self-&gt;{chromacity} = Edid::ChromacityInfo-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{est_timings} = Edid::EstTimingsInfo-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{std_timings} = ();
+    my $n_std_timings = 8;
+    for (my $i = 0; $i &lt; $n_std_timings; $i++) {
+        $self-&gt;{std_timings}[$i] = Edid::StdTiming-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
 }
 
 sub mfg_year {
@@ -355,6 +371,466 @@ sub features_flags {
 sub chromacity {
     my ($self) = @_;
     return $self-&gt;{chromacity};
+}
+
+sub est_timings {
+    my ($self) = @_;
+    return $self-&gt;{est_timings};
+}
+
+sub std_timings {
+    my ($self) = @_;
+    return $self-&gt;{std_timings};
+}
+
+########################################################################
+package Edid::ChromacityInfo;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{red_x_1_0} = $self-&gt;{_io}-&gt;read_bits_int(2);
+    $self-&gt;{red_y_1_0} = $self-&gt;{_io}-&gt;read_bits_int(2);
+    $self-&gt;{green_x_1_0} = $self-&gt;{_io}-&gt;read_bits_int(2);
+    $self-&gt;{green_y_1_0} = $self-&gt;{_io}-&gt;read_bits_int(2);
+    $self-&gt;{blue_x_1_0} = $self-&gt;{_io}-&gt;read_bits_int(2);
+    $self-&gt;{blue_y_1_0} = $self-&gt;{_io}-&gt;read_bits_int(2);
+    $self-&gt;{white_x_1_0} = $self-&gt;{_io}-&gt;read_bits_int(2);
+    $self-&gt;{white_y_1_0} = $self-&gt;{_io}-&gt;read_bits_int(2);
+    $self-&gt;{_io}-&gt;align_to_byte();
+    $self-&gt;{red_x_9_2} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{red_y_9_2} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{green_x_9_2} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{green_y_9_2} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{blue_x_9_2} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{blue_y_9_2} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{white_x_9_2} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{white_y_9_2} = $self-&gt;{_io}-&gt;read_u1();
+}
+
+sub green_x_int {
+    my ($self) = @_;
+    return $self-&gt;{green_x_int} if ($self-&gt;{green_x_int});
+    $self-&gt;{green_x_int} = (($self-&gt;green_x_9_2() &lt;&lt; 2) | $self-&gt;green_x_1_0());
+    return $self-&gt;{green_x_int};
+}
+
+sub red_y {
+    my ($self) = @_;
+    return $self-&gt;{red_y} if ($self-&gt;{red_y});
+    $self-&gt;{red_y} = ($self-&gt;red_y_int() / 1024.0);
+    return $self-&gt;{red_y};
+}
+
+sub green_y_int {
+    my ($self) = @_;
+    return $self-&gt;{green_y_int} if ($self-&gt;{green_y_int});
+    $self-&gt;{green_y_int} = (($self-&gt;green_y_9_2() &lt;&lt; 2) | $self-&gt;green_y_1_0());
+    return $self-&gt;{green_y_int};
+}
+
+sub white_y {
+    my ($self) = @_;
+    return $self-&gt;{white_y} if ($self-&gt;{white_y});
+    $self-&gt;{white_y} = ($self-&gt;white_y_int() / 1024.0);
+    return $self-&gt;{white_y};
+}
+
+sub red_x {
+    my ($self) = @_;
+    return $self-&gt;{red_x} if ($self-&gt;{red_x});
+    $self-&gt;{red_x} = ($self-&gt;red_x_int() / 1024.0);
+    return $self-&gt;{red_x};
+}
+
+sub white_x {
+    my ($self) = @_;
+    return $self-&gt;{white_x} if ($self-&gt;{white_x});
+    $self-&gt;{white_x} = ($self-&gt;white_x_int() / 1024.0);
+    return $self-&gt;{white_x};
+}
+
+sub blue_x {
+    my ($self) = @_;
+    return $self-&gt;{blue_x} if ($self-&gt;{blue_x});
+    $self-&gt;{blue_x} = ($self-&gt;blue_x_int() / 1024.0);
+    return $self-&gt;{blue_x};
+}
+
+sub white_x_int {
+    my ($self) = @_;
+    return $self-&gt;{white_x_int} if ($self-&gt;{white_x_int});
+    $self-&gt;{white_x_int} = (($self-&gt;white_x_9_2() &lt;&lt; 2) | $self-&gt;white_x_1_0());
+    return $self-&gt;{white_x_int};
+}
+
+sub white_y_int {
+    my ($self) = @_;
+    return $self-&gt;{white_y_int} if ($self-&gt;{white_y_int});
+    $self-&gt;{white_y_int} = (($self-&gt;white_y_9_2() &lt;&lt; 2) | $self-&gt;white_y_1_0());
+    return $self-&gt;{white_y_int};
+}
+
+sub green_x {
+    my ($self) = @_;
+    return $self-&gt;{green_x} if ($self-&gt;{green_x});
+    $self-&gt;{green_x} = ($self-&gt;green_x_int() / 1024.0);
+    return $self-&gt;{green_x};
+}
+
+sub red_x_int {
+    my ($self) = @_;
+    return $self-&gt;{red_x_int} if ($self-&gt;{red_x_int});
+    $self-&gt;{red_x_int} = (($self-&gt;red_x_9_2() &lt;&lt; 2) | $self-&gt;red_x_1_0());
+    return $self-&gt;{red_x_int};
+}
+
+sub red_y_int {
+    my ($self) = @_;
+    return $self-&gt;{red_y_int} if ($self-&gt;{red_y_int});
+    $self-&gt;{red_y_int} = (($self-&gt;red_y_9_2() &lt;&lt; 2) | $self-&gt;red_y_1_0());
+    return $self-&gt;{red_y_int};
+}
+
+sub blue_x_int {
+    my ($self) = @_;
+    return $self-&gt;{blue_x_int} if ($self-&gt;{blue_x_int});
+    $self-&gt;{blue_x_int} = (($self-&gt;blue_x_9_2() &lt;&lt; 2) | $self-&gt;blue_x_1_0());
+    return $self-&gt;{blue_x_int};
+}
+
+sub blue_y {
+    my ($self) = @_;
+    return $self-&gt;{blue_y} if ($self-&gt;{blue_y});
+    $self-&gt;{blue_y} = ($self-&gt;blue_y_int() / 1024.0);
+    return $self-&gt;{blue_y};
+}
+
+sub green_y {
+    my ($self) = @_;
+    return $self-&gt;{green_y} if ($self-&gt;{green_y});
+    $self-&gt;{green_y} = ($self-&gt;green_y_int() / 1024.0);
+    return $self-&gt;{green_y};
+}
+
+sub blue_y_int {
+    my ($self) = @_;
+    return $self-&gt;{blue_y_int} if ($self-&gt;{blue_y_int});
+    $self-&gt;{blue_y_int} = (($self-&gt;blue_y_9_2() &lt;&lt; 2) | $self-&gt;blue_y_1_0());
+    return $self-&gt;{blue_y_int};
+}
+
+sub red_x_1_0 {
+    my ($self) = @_;
+    return $self-&gt;{red_x_1_0};
+}
+
+sub red_y_1_0 {
+    my ($self) = @_;
+    return $self-&gt;{red_y_1_0};
+}
+
+sub green_x_1_0 {
+    my ($self) = @_;
+    return $self-&gt;{green_x_1_0};
+}
+
+sub green_y_1_0 {
+    my ($self) = @_;
+    return $self-&gt;{green_y_1_0};
+}
+
+sub blue_x_1_0 {
+    my ($self) = @_;
+    return $self-&gt;{blue_x_1_0};
+}
+
+sub blue_y_1_0 {
+    my ($self) = @_;
+    return $self-&gt;{blue_y_1_0};
+}
+
+sub white_x_1_0 {
+    my ($self) = @_;
+    return $self-&gt;{white_x_1_0};
+}
+
+sub white_y_1_0 {
+    my ($self) = @_;
+    return $self-&gt;{white_y_1_0};
+}
+
+sub red_x_9_2 {
+    my ($self) = @_;
+    return $self-&gt;{red_x_9_2};
+}
+
+sub red_y_9_2 {
+    my ($self) = @_;
+    return $self-&gt;{red_y_9_2};
+}
+
+sub green_x_9_2 {
+    my ($self) = @_;
+    return $self-&gt;{green_x_9_2};
+}
+
+sub green_y_9_2 {
+    my ($self) = @_;
+    return $self-&gt;{green_y_9_2};
+}
+
+sub blue_x_9_2 {
+    my ($self) = @_;
+    return $self-&gt;{blue_x_9_2};
+}
+
+sub blue_y_9_2 {
+    my ($self) = @_;
+    return $self-&gt;{blue_y_9_2};
+}
+
+sub white_x_9_2 {
+    my ($self) = @_;
+    return $self-&gt;{white_x_9_2};
+}
+
+sub white_y_9_2 {
+    my ($self) = @_;
+    return $self-&gt;{white_y_9_2};
+}
+
+########################################################################
+package Edid::EstTimingsInfo;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{can_720_400_70} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_720_400_88} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_640_480_60} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_640_480_67} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_640_480_72} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_640_480_75} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_800_600_56} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_800_600_60} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_800_600_72} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_800_600_75} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_832_624_75} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_1024_768_87_i} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_1024_768_60} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_1024_768_70} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_1024_768_75} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_1280_1024_75} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{can_1152_870_75} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{reserved} = $self-&gt;{_io}-&gt;read_bits_int(7);
+}
+
+sub can_720_400_70 {
+    my ($self) = @_;
+    return $self-&gt;{can_720_400_70};
+}
+
+sub can_720_400_88 {
+    my ($self) = @_;
+    return $self-&gt;{can_720_400_88};
+}
+
+sub can_640_480_60 {
+    my ($self) = @_;
+    return $self-&gt;{can_640_480_60};
+}
+
+sub can_640_480_67 {
+    my ($self) = @_;
+    return $self-&gt;{can_640_480_67};
+}
+
+sub can_640_480_72 {
+    my ($self) = @_;
+    return $self-&gt;{can_640_480_72};
+}
+
+sub can_640_480_75 {
+    my ($self) = @_;
+    return $self-&gt;{can_640_480_75};
+}
+
+sub can_800_600_56 {
+    my ($self) = @_;
+    return $self-&gt;{can_800_600_56};
+}
+
+sub can_800_600_60 {
+    my ($self) = @_;
+    return $self-&gt;{can_800_600_60};
+}
+
+sub can_800_600_72 {
+    my ($self) = @_;
+    return $self-&gt;{can_800_600_72};
+}
+
+sub can_800_600_75 {
+    my ($self) = @_;
+    return $self-&gt;{can_800_600_75};
+}
+
+sub can_832_624_75 {
+    my ($self) = @_;
+    return $self-&gt;{can_832_624_75};
+}
+
+sub can_1024_768_87_i {
+    my ($self) = @_;
+    return $self-&gt;{can_1024_768_87_i};
+}
+
+sub can_1024_768_60 {
+    my ($self) = @_;
+    return $self-&gt;{can_1024_768_60};
+}
+
+sub can_1024_768_70 {
+    my ($self) = @_;
+    return $self-&gt;{can_1024_768_70};
+}
+
+sub can_1024_768_75 {
+    my ($self) = @_;
+    return $self-&gt;{can_1024_768_75};
+}
+
+sub can_1280_1024_75 {
+    my ($self) = @_;
+    return $self-&gt;{can_1280_1024_75};
+}
+
+sub can_1152_870_75 {
+    my ($self) = @_;
+    return $self-&gt;{can_1152_870_75};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self-&gt;{reserved};
+}
+
+########################################################################
+package Edid::StdTiming;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $ASPECT_RATIOS_RATIO_16_10 = 0;
+our $ASPECT_RATIOS_RATIO_4_3 = 1;
+our $ASPECT_RATIOS_RATIO_5_4 = 2;
+our $ASPECT_RATIOS_RATIO_16_9 = 3;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{horiz_active_pixels_mod} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{aspect_ratio} = $self-&gt;{_io}-&gt;read_bits_int(2);
+    $self-&gt;{refresh_rate_mod} = $self-&gt;{_io}-&gt;read_bits_int(5);
+}
+
+sub horiz_active_pixels {
+    my ($self) = @_;
+    return $self-&gt;{horiz_active_pixels} if ($self-&gt;{horiz_active_pixels});
+    $self-&gt;{horiz_active_pixels} = (($self-&gt;horiz_active_pixels_mod() + 31) * 8);
+    return $self-&gt;{horiz_active_pixels};
+}
+
+sub refresh_rate {
+    my ($self) = @_;
+    return $self-&gt;{refresh_rate} if ($self-&gt;{refresh_rate});
+    $self-&gt;{refresh_rate} = ($self-&gt;refresh_rate_mod() + 60);
+    return $self-&gt;{refresh_rate};
+}
+
+sub horiz_active_pixels_mod {
+    my ($self) = @_;
+    return $self-&gt;{horiz_active_pixels_mod};
+}
+
+sub aspect_ratio {
+    my ($self) = @_;
+    return $self-&gt;{aspect_ratio};
+}
+
+sub refresh_rate_mod {
+    my ($self) = @_;
+    return $self-&gt;{refresh_rate_mod};
 }
 
 1;

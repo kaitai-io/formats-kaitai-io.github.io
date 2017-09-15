@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -50,16 +49,24 @@ public:
         TYPE_TYPE_TXT = 16
     };
 
-    dns_packet_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, dns_packet_t* p_root = 0);
+    dns_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, dns_packet_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~dns_packet_t();
 
     class pointer_struct_t : public kaitai::kstruct {
 
     public:
 
-        pointer_struct_t(kaitai::kstream* p_io, dns_packet_t::label_t* p_parent = 0, dns_packet_t* p_root = 0);
+        pointer_struct_t(kaitai::kstream* p__io, dns_packet_t::label_t* p__parent = 0, dns_packet_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~pointer_struct_t();
 
     private:
@@ -88,8 +95,12 @@ public:
 
     public:
 
-        label_t(kaitai::kstream* p_io, dns_packet_t::domain_name_t* p_parent = 0, dns_packet_t* p_root = 0);
+        label_t(kaitai::kstream* p__io, dns_packet_t::domain_name_t* p__parent = 0, dns_packet_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~label_t();
 
     private:
@@ -138,8 +149,12 @@ public:
 
     public:
 
-        query_t(kaitai::kstream* p_io, dns_packet_t* p_parent = 0, dns_packet_t* p_root = 0);
+        query_t(kaitai::kstream* p__io, dns_packet_t* p__parent = 0, dns_packet_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~query_t();
 
     private:
@@ -161,8 +176,12 @@ public:
 
     public:
 
-        domain_name_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, dns_packet_t* p_root = 0);
+        domain_name_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, dns_packet_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~domain_name_t();
 
     private:
@@ -184,8 +203,12 @@ public:
 
     public:
 
-        address_t(kaitai::kstream* p_io, dns_packet_t::answer_t* p_parent = 0, dns_packet_t* p_root = 0);
+        address_t(kaitai::kstream* p__io, dns_packet_t::answer_t* p__parent = 0, dns_packet_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~address_t();
 
     private:
@@ -203,8 +226,12 @@ public:
 
     public:
 
-        answer_t(kaitai::kstream* p_io, dns_packet_t* p_parent = 0, dns_packet_t* p_root = 0);
+        answer_t(kaitai::kstream* p__io, dns_packet_t* p__parent = 0, dns_packet_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~answer_t();
 
     private:
@@ -254,8 +281,12 @@ public:
 
     public:
 
-        packet_flags_t(kaitai::kstream* p_io, dns_packet_t* p_parent = 0, dns_packet_t* p_root = 0);
+        packet_flags_t(kaitai::kstream* p__io, dns_packet_t* p__parent = 0, dns_packet_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~packet_flags_t();
 
     private:

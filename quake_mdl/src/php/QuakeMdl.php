@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class QuakeMdl extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \QuakeMdl $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \QuakeMdl $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -45,8 +45,8 @@ class QuakeMdl extends \Kaitai\Struct\Struct {
 namespace \QuakeMdl;
 
 class MdlVertex extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \QuakeMdl $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \QuakeMdl $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -67,8 +67,8 @@ class MdlVertex extends \Kaitai\Struct\Struct {
 namespace \QuakeMdl;
 
 class MdlTexcoord extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \QuakeMdl $parent = null, \QuakeMdl $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \QuakeMdl $_parent = null, \QuakeMdl $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -88,8 +88,8 @@ class MdlTexcoord extends \Kaitai\Struct\Struct {
 namespace \QuakeMdl;
 
 class MdlHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \QuakeMdl $parent = null, \QuakeMdl $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \QuakeMdl $_parent = null, \QuakeMdl $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -159,8 +159,8 @@ class MdlHeader extends \Kaitai\Struct\Struct {
 namespace \QuakeMdl;
 
 class MdlSkin extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \QuakeMdl $parent = null, \QuakeMdl $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \QuakeMdl $_parent = null, \QuakeMdl $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -202,8 +202,8 @@ class MdlSkin extends \Kaitai\Struct\Struct {
 namespace \QuakeMdl;
 
 class MdlFrame extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \QuakeMdl $parent = null, \QuakeMdl $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \QuakeMdl $_parent = null, \QuakeMdl $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -250,8 +250,8 @@ class MdlFrame extends \Kaitai\Struct\Struct {
 namespace \QuakeMdl;
 
 class MdlSimpleFrame extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \QuakeMdl\MdlFrame $parent = null, \QuakeMdl $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \QuakeMdl\MdlFrame $_parent = null, \QuakeMdl $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -278,8 +278,8 @@ class MdlSimpleFrame extends \Kaitai\Struct\Struct {
 namespace \QuakeMdl;
 
 class MdlTriangle extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \QuakeMdl $parent = null, \QuakeMdl $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \QuakeMdl $_parent = null, \QuakeMdl $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -300,8 +300,8 @@ class MdlTriangle extends \Kaitai\Struct\Struct {
 namespace \QuakeMdl;
 
 class Vec3 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \QuakeMdl\MdlHeader $parent = null, \QuakeMdl $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \QuakeMdl\MdlHeader $_parent = null, \QuakeMdl $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

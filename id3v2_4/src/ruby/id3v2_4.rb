@@ -61,9 +61,11 @@ class Id3v24 < Kaitai::Struct::Struct
         @header_ex = HeaderEx.new(@_io, self, @_root)
       end
       @frames = []
+      i = 0
       begin
         _ = Frame.new(@_io, self, @_root)
         @frames << _
+        i += 1
       end until  (((_io.pos + _.size.value) > header.size.value) || (_.is_invalid)) 
       if !(header.flags.flag_footer)
         @padding = Padding.new(@_io, self, @_root)

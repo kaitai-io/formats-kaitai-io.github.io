@@ -264,20 +264,22 @@ namespace Kaitai
             return new Ico(new KaitaiStream(fileName));
         }
 
-        public Ico(KaitaiStream io, KaitaiStruct parent = null, Ico root = null) : base(io)
+        public Ico(KaitaiStream p__io, KaitaiStruct p__parent = null, Ico p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _magic = m_io.EnsureFixedContents(new byte[] { 0, 0, 1, 0 });
             _numImages = m_io.ReadU2le();
             _images = new List&lt;IconDirEntry&gt;((int) (NumImages));
-            for (var i = 0; i &lt; NumImages; i++) {
+            for (var i = 0; i &lt; NumImages; i++)
+            {
                 _images.Add(new IconDirEntry(m_io, this, m_root));
             }
-            }
+        }
         public partial class IconDirEntry : KaitaiStruct
         {
             public static IconDirEntry FromFile(string fileName)
@@ -285,16 +287,17 @@ namespace Kaitai
                 return new IconDirEntry(new KaitaiStream(fileName));
             }
 
-            public IconDirEntry(KaitaiStream io, Ico parent = null, Ico root = null) : base(io)
+            public IconDirEntry(KaitaiStream p__io, Ico p__parent = null, Ico p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_img = false;
                 f_pngHeader = false;
                 f_isPng = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _width = m_io.ReadU1();
                 _height = m_io.ReadU1();
                 _numColors = m_io.ReadU1();
@@ -303,7 +306,7 @@ namespace Kaitai
                 _bpp = m_io.ReadU2le();
                 _lenImg = m_io.ReadU4le();
                 _ofsImg = m_io.ReadU4le();
-                }
+            }
             private bool f_img;
             private byte[] _img;
 

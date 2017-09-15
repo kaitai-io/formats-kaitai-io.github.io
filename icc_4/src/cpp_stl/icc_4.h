@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -30,16 +29,24 @@ public:
     class s_15_fixed_16_number_t;
     class position_number_t;
 
-    icc_4_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+    icc_4_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~icc_4_t();
 
     class u_8_fixed_8_number_t : public kaitai::kstruct {
 
     public:
 
-        u_8_fixed_8_number_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+        u_8_fixed_8_number_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~u_8_fixed_8_number_t();
 
     private:
@@ -57,8 +64,12 @@ public:
 
     public:
 
-        u_16_fixed_16_number_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+        u_16_fixed_16_number_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~u_16_fixed_16_number_t();
 
     private:
@@ -88,8 +99,12 @@ public:
             STANDARD_ILLUMINANT_ENCODINGS_F8 = 8
         };
 
-        standard_illuminant_encoding_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+        standard_illuminant_encoding_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~standard_illuminant_encoding_t();
 
     private:
@@ -188,16 +203,24 @@ public:
             DATA_COLOUR_SPACES_CIEYXY = 1501067552
         };
 
-        profile_header_t(kaitai::kstream* p_io, icc_4_t* p_parent = 0, icc_4_t* p_root = 0);
+        profile_header_t(kaitai::kstream* p__io, icc_4_t* p__parent = 0, icc_4_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~profile_header_t();
 
         class version_field_t : public kaitai::kstruct {
 
         public:
 
-            version_field_t(kaitai::kstream* p_io, icc_4_t::profile_header_t* p_parent = 0, icc_4_t* p_root = 0);
+            version_field_t(kaitai::kstream* p__io, icc_4_t::profile_header_t* p__parent = 0, icc_4_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~version_field_t();
 
         private:
@@ -221,8 +244,12 @@ public:
 
         public:
 
-            profile_flags_t(kaitai::kstream* p_io, icc_4_t::profile_header_t* p_parent = 0, icc_4_t* p_root = 0);
+            profile_flags_t(kaitai::kstream* p__io, icc_4_t::profile_header_t* p__parent = 0, icc_4_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~profile_flags_t();
 
         private:
@@ -289,8 +316,12 @@ public:
 
     public:
 
-        xyz_number_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+        xyz_number_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~xyz_number_t();
 
     private:
@@ -312,8 +343,12 @@ public:
 
     public:
 
-        date_time_number_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+        date_time_number_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~date_time_number_t();
 
     private:
@@ -341,8 +376,12 @@ public:
 
     public:
 
-        response_16_number_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+        response_16_number_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~response_16_number_t();
 
     private:
@@ -364,8 +403,12 @@ public:
 
     public:
 
-        u_1_fixed_15_number_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+        u_1_fixed_15_number_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~u_1_fixed_15_number_t();
 
     private:
@@ -384,8 +427,12 @@ public:
     public:
         class tag_definition_t;
 
-        tag_table_t(kaitai::kstream* p_io, icc_4_t* p_parent = 0, icc_4_t* p_root = 0);
+        tag_table_t(kaitai::kstream* p__io, icc_4_t* p__parent = 0, icc_4_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~tag_table_t();
 
         class tag_definition_t : public kaitai::kstruct {
@@ -561,21 +608,35 @@ public:
                 MULTI_PROCESS_ELEMENTS_TYPES_SAMPLED_CURVE_SEGMENT_TYPE = 1935764838
             };
 
-            tag_definition_t(kaitai::kstream* p_io, icc_4_t::tag_table_t* p_parent = 0, icc_4_t* p_root = 0);
+            tag_definition_t(kaitai::kstream* p__io, icc_4_t::tag_table_t* p__parent = 0, icc_4_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~tag_definition_t();
 
             class blue_matrix_column_tag_t : public kaitai::kstruct {
 
             public:
 
-                blue_matrix_column_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                blue_matrix_column_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~blue_matrix_column_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 xyz_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -590,13 +651,23 @@ public:
 
             public:
 
-                device_mfg_desc_tag_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                device_mfg_desc_tag_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~device_mfg_desc_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 multi_localized_unicode_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 kaitai::kstruct* m__parent;
 
@@ -612,16 +683,24 @@ public:
             public:
                 class named_colour_definition_t;
 
-                named_color_2_type_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::named_color_2_tag_t* p_parent = 0, icc_4_t* p_root = 0);
+                named_color_2_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::named_color_2_tag_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~named_color_2_type_t();
 
                 class named_colour_definition_t : public kaitai::kstruct {
 
                 public:
 
-                    named_colour_definition_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::named_color_2_type_t* p_parent = 0, icc_4_t* p_root = 0);
+                    named_colour_definition_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::named_color_2_type_t* p__parent = 0, icc_4_t* p__root = 0);
+
+                private:
                     void _read();
+
+                public:
                     ~named_colour_definition_t();
 
                 private:
@@ -678,13 +757,23 @@ public:
 
             public:
 
-                viewing_conditions_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                viewing_conditions_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~viewing_conditions_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 viewing_conditions_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -699,13 +788,23 @@ public:
 
             public:
 
-                blue_trc_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                blue_trc_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~blue_trc_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 kaitai::kstruct* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -720,8 +819,12 @@ public:
 
             public:
 
-                response_curve_set_16_type_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::output_response_tag_t* p_parent = 0, icc_4_t* p_root = 0);
+                response_curve_set_16_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::output_response_tag_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~response_curve_set_16_type_t();
 
             private:
@@ -747,8 +850,12 @@ public:
 
             public:
 
-                curve_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                curve_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~curve_type_t();
 
             private:
@@ -784,13 +891,23 @@ public:
 
             public:
 
-                saturation_rendering_intent_gamut_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                saturation_rendering_intent_gamut_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~saturation_rendering_intent_gamut_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 signature_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -805,8 +922,12 @@ public:
 
             public:
 
-                xyz_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                xyz_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~xyz_type_t();
 
             private:
@@ -826,8 +947,12 @@ public:
 
             public:
 
-                lut_8_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                lut_8_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~lut_8_type_t();
 
             private:
@@ -865,13 +990,23 @@ public:
 
             public:
 
-                b_to_a_2_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                b_to_a_2_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~b_to_a_2_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 kaitai::kstruct* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -886,8 +1021,12 @@ public:
 
             public:
 
-                lut_a_to_b_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                lut_a_to_b_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~lut_a_to_b_type_t();
 
             private:
@@ -923,13 +1062,23 @@ public:
 
             public:
 
-                b_to_a_0_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                b_to_a_0_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~b_to_a_0_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 kaitai::kstruct* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -944,13 +1093,23 @@ public:
 
             public:
 
-                media_white_point_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                media_white_point_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~media_white_point_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 xyz_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -965,8 +1124,12 @@ public:
 
             public:
 
-                lut_16_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                lut_16_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~lut_16_type_t();
 
             private:
@@ -1004,13 +1167,23 @@ public:
 
             public:
 
-                perceptual_rendering_intent_gamut_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                perceptual_rendering_intent_gamut_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~perceptual_rendering_intent_gamut_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 signature_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1025,8 +1198,12 @@ public:
 
             public:
 
-                u_16_fixed_16_array_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                u_16_fixed_16_array_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~u_16_fixed_16_array_type_t();
 
             private:
@@ -1046,13 +1223,23 @@ public:
 
             public:
 
-                colorant_table_out_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                colorant_table_out_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~colorant_table_out_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 colorant_table_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1067,13 +1254,23 @@ public:
 
             public:
 
-                measurement_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                measurement_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~measurement_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 measurement_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1088,13 +1285,23 @@ public:
 
             public:
 
-                profile_sequence_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                profile_sequence_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~profile_sequence_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 profile_sequence_desc_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1109,13 +1316,23 @@ public:
 
             public:
 
-                technology_tag_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                technology_tag_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~technology_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 signature_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 kaitai::kstruct* m__parent;
 
@@ -1130,13 +1347,23 @@ public:
 
             public:
 
-                a_to_b_0_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                a_to_b_0_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~a_to_b_0_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 kaitai::kstruct* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1151,13 +1378,23 @@ public:
 
             public:
 
-                d_to_b_0_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                d_to_b_0_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~d_to_b_0_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 multi_process_elements_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1172,13 +1409,23 @@ public:
 
             public:
 
-                output_response_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                output_response_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~output_response_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 response_curve_set_16_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1193,13 +1440,23 @@ public:
 
             public:
 
-                green_matrix_column_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                green_matrix_column_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~green_matrix_column_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 xyz_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1214,13 +1471,23 @@ public:
 
             public:
 
-                profile_description_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                profile_description_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~profile_description_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 multi_localized_unicode_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1235,13 +1502,23 @@ public:
 
             public:
 
-                preview_1_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                preview_1_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~preview_1_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 kaitai::kstruct* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1256,13 +1533,23 @@ public:
 
             public:
 
-                red_trc_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                red_trc_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~red_trc_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 kaitai::kstruct* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1277,13 +1564,23 @@ public:
 
             public:
 
-                b_to_d_0_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                b_to_d_0_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~b_to_d_0_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 multi_process_elements_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1298,13 +1595,23 @@ public:
 
             public:
 
-                d_to_b_1_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                d_to_b_1_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~d_to_b_1_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 multi_process_elements_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1319,13 +1626,23 @@ public:
 
             public:
 
-                b_to_a_1_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                b_to_a_1_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~b_to_a_1_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 kaitai::kstruct* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1353,16 +1670,24 @@ public:
                     PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_OB_AX_PLUS_B_CB_TO_POWER_OF_G_PLUS_C = 4
                 };
 
-                parametric_curve_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                parametric_curve_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~parametric_curve_type_t();
 
                 class params_iec_61966_3_t : public kaitai::kstruct {
 
                 public:
 
-                    params_iec_61966_3_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p_parent = 0, icc_4_t* p_root = 0);
+                    params_iec_61966_3_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p__parent = 0, icc_4_t* p__root = 0);
+
+                private:
                     void _read();
+
+                public:
                     ~params_iec_61966_3_t();
 
                 private:
@@ -1386,8 +1711,12 @@ public:
 
                 public:
 
-                    params_iec_61966_2_1_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p_parent = 0, icc_4_t* p_root = 0);
+                    params_iec_61966_2_1_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p__parent = 0, icc_4_t* p__root = 0);
+
+                private:
                     void _read();
+
+                public:
                     ~params_iec_61966_2_1_t();
 
                 private:
@@ -1413,8 +1742,12 @@ public:
 
                 public:
 
-                    params_y_equals_x_to_power_of_g_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p_parent = 0, icc_4_t* p_root = 0);
+                    params_y_equals_x_to_power_of_g_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p__parent = 0, icc_4_t* p__root = 0);
+
+                private:
                     void _read();
+
+                public:
                     ~params_y_equals_x_to_power_of_g_t();
 
                 private:
@@ -1432,8 +1765,12 @@ public:
 
                 public:
 
-                    params_y_equals_ob_ax_plus_b_cb_to_power_of_g_plus_c_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p_parent = 0, icc_4_t* p_root = 0);
+                    params_y_equals_ob_ax_plus_b_cb_to_power_of_g_plus_c_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p__parent = 0, icc_4_t* p__root = 0);
+
+                private:
                     void _read();
+
+                public:
                     ~params_y_equals_ob_ax_plus_b_cb_to_power_of_g_plus_c_t();
 
                 private:
@@ -1463,8 +1800,12 @@ public:
 
                 public:
 
-                    params_cie_122_1996_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p_parent = 0, icc_4_t* p_root = 0);
+                    params_cie_122_1996_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p__parent = 0, icc_4_t* p__root = 0);
+
+                private:
                     void _read();
+
+                public:
                     ~params_cie_122_1996_t();
 
                 private:
@@ -1487,6 +1828,12 @@ public:
                 parametric_curve_type_functions_t m_function_type;
                 std::string m_reserved_2;
                 kaitai::kstruct* m_parameters;
+                bool n_parameters;
+
+            public:
+                bool _is_null_parameters() { parameters(); return n_parameters; };
+
+            private:
                 icc_4_t* m__root;
                 kaitai::kstruct* m__parent;
 
@@ -1503,13 +1850,23 @@ public:
 
             public:
 
-                chromaticity_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                chromaticity_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~chromaticity_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 chromaticity_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1524,13 +1881,23 @@ public:
 
             public:
 
-                chromatic_adaptation_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                chromatic_adaptation_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~chromatic_adaptation_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 s_15_fixed_16_array_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1562,8 +1929,12 @@ public:
                     MEASUREMENT_FLARE_ENCODINGS_ONE_HUNDRED_PERCENT = 65536
                 };
 
-                measurement_type_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::measurement_tag_t* p_parent = 0, icc_4_t* p_root = 0);
+                measurement_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::measurement_tag_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~measurement_type_t();
 
             private:
@@ -1591,8 +1962,12 @@ public:
 
             public:
 
-                text_type_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::char_target_tag_t* p_parent = 0, icc_4_t* p_root = 0);
+                text_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::char_target_tag_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~text_type_t();
 
             private:
@@ -1613,16 +1988,24 @@ public:
             public:
                 class profile_identifier_t;
 
-                profile_sequence_identifier_type_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_tag_t* p_parent = 0, icc_4_t* p_root = 0);
+                profile_sequence_identifier_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_tag_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~profile_sequence_identifier_type_t();
 
                 class profile_identifier_t : public kaitai::kstruct {
 
                 public:
 
-                    profile_identifier_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_type_t* p_parent = 0, icc_4_t* p_root = 0);
+                    profile_identifier_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_type_t* p__parent = 0, icc_4_t* p__root = 0);
+
+                private:
                     void _read();
+
+                public:
                     ~profile_identifier_t();
 
                 private:
@@ -1660,16 +2043,24 @@ public:
             public:
                 class colorant_t;
 
-                colorant_table_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                colorant_table_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~colorant_table_type_t();
 
                 class colorant_t : public kaitai::kstruct {
 
                 public:
 
-                    colorant_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::colorant_table_type_t* p_parent = 0, icc_4_t* p_root = 0);
+                    colorant_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::colorant_table_type_t* p__parent = 0, icc_4_t* p__root = 0);
+
+                private:
                     void _read();
+
+                public:
                     ~colorant_t();
 
                 private:
@@ -1706,8 +2097,12 @@ public:
 
             public:
 
-                signature_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                signature_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~signature_type_t();
 
             private:
@@ -1727,13 +2122,23 @@ public:
 
             public:
 
-                copyright_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                copyright_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~copyright_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 multi_localized_unicode_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1748,13 +2153,23 @@ public:
 
             public:
 
-                preview_0_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                preview_0_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~preview_0_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 kaitai::kstruct* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1769,8 +2184,12 @@ public:
 
             public:
 
-                date_time_type_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::calibration_date_time_tag_t* p_parent = 0, icc_4_t* p_root = 0);
+                date_time_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::calibration_date_time_tag_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~date_time_type_t();
 
             private:
@@ -1790,13 +2209,23 @@ public:
 
             public:
 
-                d_to_b_3_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                d_to_b_3_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~d_to_b_3_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 multi_process_elements_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1811,13 +2240,23 @@ public:
 
             public:
 
-                preview_2_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                preview_2_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~preview_2_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 kaitai::kstruct* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1832,13 +2271,23 @@ public:
 
             public:
 
-                device_model_desc_tag_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                device_model_desc_tag_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~device_model_desc_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 multi_localized_unicode_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 kaitai::kstruct* m__parent;
 
@@ -1853,8 +2302,12 @@ public:
 
             public:
 
-                multi_process_elements_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                multi_process_elements_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~multi_process_elements_type_t();
 
             private:
@@ -1882,8 +2335,12 @@ public:
 
             public:
 
-                u_int_16_array_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                u_int_16_array_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~u_int_16_array_type_t();
 
             private:
@@ -1903,13 +2360,23 @@ public:
 
             public:
 
-                colorant_order_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                colorant_order_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~colorant_order_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 colorant_order_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -1929,8 +2396,12 @@ public:
                     DATA_TYPES_BINARY_DATA = 1
                 };
 
-                data_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                data_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~data_type_t();
 
             private:
@@ -1957,16 +2428,24 @@ public:
                     COLORANT_AND_PHOSPHOR_ENCODINGS_P22 = 4
                 };
 
-                chromaticity_type_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::chromaticity_tag_t* p_parent = 0, icc_4_t* p_root = 0);
+                chromaticity_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::chromaticity_tag_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~chromaticity_type_t();
 
                 class ciexy_coordinate_values_t : public kaitai::kstruct {
 
                 public:
 
-                    ciexy_coordinate_values_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::chromaticity_type_t* p_parent = 0, icc_4_t* p_root = 0);
+                    ciexy_coordinate_values_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::chromaticity_type_t* p__parent = 0, icc_4_t* p__root = 0);
+
+                private:
                     void _read();
+
+                public:
                     ~ciexy_coordinate_values_t();
 
                 private:
@@ -2003,13 +2482,23 @@ public:
 
             public:
 
-                luminance_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                luminance_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~luminance_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 xyz_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2024,8 +2513,12 @@ public:
 
             public:
 
-                s_15_fixed_16_array_type_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::chromatic_adaptation_tag_t* p_parent = 0, icc_4_t* p_root = 0);
+                s_15_fixed_16_array_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::chromatic_adaptation_tag_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~s_15_fixed_16_array_type_t();
 
             private:
@@ -2046,16 +2539,24 @@ public:
             public:
                 class record_t;
 
-                multi_localized_unicode_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                multi_localized_unicode_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~multi_localized_unicode_type_t();
 
                 class record_t : public kaitai::kstruct {
 
                 public:
 
-                    record_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::multi_localized_unicode_type_t* p_parent = 0, icc_4_t* p_root = 0);
+                    record_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::multi_localized_unicode_type_t* p__parent = 0, icc_4_t* p__root = 0);
+
+                private:
                     void _read();
+
+                public:
                     ~record_t();
 
                 private:
@@ -2103,13 +2604,23 @@ public:
 
             public:
 
-                a_to_b_2_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                a_to_b_2_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~a_to_b_2_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 kaitai::kstruct* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2124,13 +2635,23 @@ public:
 
             public:
 
-                a_to_b_1_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                a_to_b_1_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~a_to_b_1_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 kaitai::kstruct* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2145,13 +2666,23 @@ public:
 
             public:
 
-                colorimetric_intent_image_state_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                colorimetric_intent_image_state_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~colorimetric_intent_image_state_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 signature_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2166,13 +2697,23 @@ public:
 
             public:
 
-                char_target_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                char_target_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~char_target_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 text_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2187,13 +2728,23 @@ public:
 
             public:
 
-                colorant_table_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                colorant_table_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~colorant_table_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 colorant_table_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2208,13 +2759,23 @@ public:
 
             public:
 
-                calibration_date_time_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                calibration_date_time_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~calibration_date_time_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 date_time_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2229,13 +2790,23 @@ public:
 
             public:
 
-                named_color_2_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                named_color_2_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~named_color_2_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 named_color_2_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2250,13 +2821,23 @@ public:
 
             public:
 
-                viewing_cond_desc_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                viewing_cond_desc_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~viewing_cond_desc_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 multi_localized_unicode_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2271,13 +2852,23 @@ public:
 
             public:
 
-                b_to_d_3_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                b_to_d_3_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~b_to_d_3_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 multi_process_elements_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2293,16 +2884,24 @@ public:
             public:
                 class profile_description_t;
 
-                profile_sequence_desc_type_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_tag_t* p_parent = 0, icc_4_t* p_root = 0);
+                profile_sequence_desc_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_tag_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~profile_sequence_desc_type_t();
 
                 class profile_description_t : public kaitai::kstruct {
 
                 public:
 
-                    profile_description_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_desc_type_t* p_parent = 0, icc_4_t* p_root = 0);
+                    profile_description_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_desc_type_t* p__parent = 0, icc_4_t* p__root = 0);
+
+                private:
                     void _read();
+
+                public:
                     ~profile_description_t();
 
                 private:
@@ -2345,13 +2944,23 @@ public:
 
             public:
 
-                profile_sequence_identifier_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                profile_sequence_identifier_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~profile_sequence_identifier_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 profile_sequence_identifier_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2366,13 +2975,23 @@ public:
 
             public:
 
-                b_to_d_1_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                b_to_d_1_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~b_to_d_1_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 multi_process_elements_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2387,8 +3006,12 @@ public:
 
             public:
 
-                colorant_order_type_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::colorant_order_tag_t* p_parent = 0, icc_4_t* p_root = 0);
+                colorant_order_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::colorant_order_tag_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~colorant_order_type_t();
 
             private:
@@ -2410,13 +3033,23 @@ public:
 
             public:
 
-                d_to_b_2_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                d_to_b_2_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~d_to_b_2_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 multi_process_elements_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2431,13 +3064,23 @@ public:
 
             public:
 
-                gray_trc_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                gray_trc_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~gray_trc_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 kaitai::kstruct* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2452,8 +3095,12 @@ public:
 
             public:
 
-                viewing_conditions_type_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::viewing_conditions_tag_t* p_parent = 0, icc_4_t* p_root = 0);
+                viewing_conditions_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::viewing_conditions_tag_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~viewing_conditions_type_t();
 
             private:
@@ -2477,8 +3124,12 @@ public:
 
             public:
 
-                lut_b_to_a_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                lut_b_to_a_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~lut_b_to_a_type_t();
 
             private:
@@ -2514,13 +3165,23 @@ public:
 
             public:
 
-                green_trc_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                green_trc_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~green_trc_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 kaitai::kstruct* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2535,8 +3196,12 @@ public:
 
             public:
 
-                u_int_32_array_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                u_int_32_array_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~u_int_32_array_type_t();
 
             private:
@@ -2556,13 +3221,23 @@ public:
 
             public:
 
-                gamut_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                gamut_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~gamut_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 kaitai::kstruct* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2577,8 +3252,12 @@ public:
 
             public:
 
-                u_int_8_array_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                u_int_8_array_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~u_int_8_array_type_t();
 
             private:
@@ -2598,13 +3277,23 @@ public:
 
             public:
 
-                red_matrix_column_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                red_matrix_column_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~red_matrix_column_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 xyz_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2619,8 +3308,12 @@ public:
 
             public:
 
-                u_int_64_array_type_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+                u_int_64_array_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~u_int_64_array_type_t();
 
             private:
@@ -2640,13 +3333,23 @@ public:
 
             public:
 
-                b_to_d_2_tag_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent = 0, icc_4_t* p_root = 0);
+                b_to_d_2_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent = 0, icc_4_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~b_to_d_2_tag_t();
 
             private:
                 tag_type_signatures_t m_tag_type;
                 multi_process_elements_type_t* m_tag_data;
+                bool n_tag_data;
+
+            public:
+                bool _is_null_tag_data() { tag_data(); return n_tag_data; };
+
+            private:
                 icc_4_t* m__root;
                 icc_4_t::tag_table_t::tag_definition_t* m__parent;
 
@@ -2720,8 +3423,12 @@ public:
             DEVICE_ATTRIBUTES_COLOUR_OR_BLACK_AND_WHITE_MEDIA_BLACK_AND_WHITE_MEDIA = 1
         };
 
-        device_attributes_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+        device_attributes_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~device_attributes_t();
 
     private:
@@ -3015,8 +3722,12 @@ public:
             DEVICE_MANUFACTURERS_YXYMASTER_GMBH = 2037938541
         };
 
-        device_manufacturer_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+        device_manufacturer_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~device_manufacturer_t();
 
     private:
@@ -3034,8 +3745,12 @@ public:
 
     public:
 
-        s_15_fixed_16_number_t(kaitai::kstream* p_io, icc_4_t::tag_table_t::tag_definition_t::s_15_fixed_16_array_type_t* p_parent = 0, icc_4_t* p_root = 0);
+        s_15_fixed_16_number_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::s_15_fixed_16_array_type_t* p__parent = 0, icc_4_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~s_15_fixed_16_number_t();
 
     private:
@@ -3053,8 +3768,12 @@ public:
 
     public:
 
-        position_number_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icc_4_t* p_root = 0);
+        position_number_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icc_4_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~position_number_t();
 
     private:

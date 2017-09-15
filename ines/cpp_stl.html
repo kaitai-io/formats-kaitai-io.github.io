@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>.nes / .ines file format: C++/STL parsing library</title>
+  <title>.nes file format: C++/STL parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Firmware</li>
-        <li class="active">.nes / .ines file format</li>
+        <li class="active">.nes file format</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>.nes / .ines file format:
+        <h1>.nes file format:
             
             C++/STL parsing library
             
@@ -108,7 +108,7 @@ section#format-index .row {
                         <h3 class="panel-title">File extension</h3>
                     </div>
                     <div class="panel-body">
-                        ["nes", "ines"]
+                        nes
                     </div>
                     
                     
@@ -129,7 +129,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of .nes / .ines file format
+            This page hosts a formal specification of .nes file format
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -140,52 +140,52 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="index.html" title=".nes / .ines file format parsing Overview library">Overview</a></li>
+                <a href="index.html" title=".nes file format parsing Overview library">Overview</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="cpp_stl.html" title=".nes / .ines file format parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title=".nes file format parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title=".nes / .ines file format parsing C# library">C#</a></li>
+                <a href="csharp.html" title=".nes file format parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title=".nes / .ines file format parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title=".nes file format parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title=".nes / .ines file format parsing Java library">Java</a></li>
+                <a href="java.html" title=".nes file format parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title=".nes / .ines file format parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title=".nes file format parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title=".nes / .ines file format parsing Perl library">Perl</a></li>
+                <a href="perl.html" title=".nes file format parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title=".nes / .ines file format parsing PHP library">PHP</a></li>
+                <a href="php.html" title=".nes file format parsing PHP library">PHP</a></li>
                 
                 
                 <li>
                 
-                <a href="python.html" title=".nes / .ines file format parsing Python library">Python</a></li>
+                <a href="python.html" title=".nes file format parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title=".nes / .ines file format parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title=".nes file format parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -208,7 +208,7 @@ section#format-index .row {
 
 <pre><code class="cpp">#include &lt;fstream&gt;
 
-std::ifstream is("path/to/local/file.["nes", "ines"]", std::ifstream::binary);</code></pre></li>
+std::ifstream is("path/to/local/file.nes", std::ifstream::binary);</code></pre></li>
 
             <li>Or one can prepare a stream for reading from existing <code>std::string str</code>:
 
@@ -249,7 +249,7 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
     <div class="container">
         <h2>
             
-            C++/STL source code to parse .nes / .ines file format
+            C++/STL source code to parse .nes file format
             
         </h2>
 
@@ -271,8 +271,7 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include &lt;kaitai/kaitaistruct.h&gt;
-#include &lt;kaitai/kaitaistream.h&gt;
+#include &quot;kaitai/kaitaistruct.h&quot;
 
 #include &lt;stdint.h&gt;
 
@@ -280,191 +279,272 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
 #error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
 #endif
 
+/**
+ * \sa Source
+ */
+
 class ines_t : public kaitai::kstruct {
 
 public:
-    class f7_t;
-    class f6_t;
-    class f10_t;
-    class f9_t;
     class header_t;
+    class playchoice10_t;
 
-    ines_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, ines_t* p_root = 0);
+    ines_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, ines_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~ines_t();
-
-    class f7_t : public kaitai::kstruct {
-
-    public:
-
-        f7_t(kaitai::kstream* p_io, ines_t::header_t* p_parent = 0, ines_t* p_root = 0);
-        void _read();
-        ~f7_t();
-
-    private:
-        uint64_t m_upper_nibble;
-        uint64_t m_format;
-        bool m_arcade_2;
-        bool m_arcade_1;
-        ines_t* m__root;
-        ines_t::header_t* m__parent;
-
-    public:
-
-        /**
-         * Upper nibble of mapper number (see https://wiki.nesdev.com/w/index.php/Mapper)
-         */
-        uint64_t upper_nibble() const { return m_upper_nibble; }
-
-        /**
-         * If equal to 2, flags 8-15 are in NES 2.0 format
-         */
-        uint64_t format() const { return m_format; }
-
-        /**
-         * Determines if it made for a Nintendo PlayChoice-10 or not
-         */
-        bool arcade_2() const { return m_arcade_2; }
-
-        /**
-         * Determines if it is made for a Nintendo VS Unisystem or not
-         */
-        bool arcade_1() const { return m_arcade_1; }
-        ines_t* _root() const { return m__root; }
-        ines_t::header_t* _parent() const { return m__parent; }
-    };
-
-    class f6_t : public kaitai::kstruct {
-
-    public:
-
-        f6_t(kaitai::kstream* p_io, ines_t::header_t* p_parent = 0, ines_t* p_root = 0);
-        void _read();
-        ~f6_t();
-
-    private:
-        uint64_t m_lower_nibble;
-        bool m_ignore_mirror;
-        bool m_trainer;
-        bool m_has_battery_ram;
-        bool m_mirror;
-        ines_t* m__root;
-        ines_t::header_t* m__parent;
-
-    public:
-
-        /**
-         * Lower nibble of mapper number (see https://wiki.nesdev.com/w/index.php/Mapper)
-         */
-        uint64_t lower_nibble() const { return m_lower_nibble; }
-
-        /**
-         * Ignore mirroring control or above mirroring bit; instead provide four-screen VRAM
-         */
-        bool ignore_mirror() const { return m_ignore_mirror; }
-
-        /**
-         * 512-byte trainer at $7000-$71FF (stored before PRG data)
-         */
-        bool trainer() const { return m_trainer; }
-
-        /**
-         * If on the cartridge contains battery-backed PRG RAM ($6000-7FFF) or other persistent memory
-         */
-        bool has_battery_ram() const { return m_has_battery_ram; }
-
-        /**
-         * if 0, horizontal arrangement. if 1, vertical arrangement
-         */
-        bool mirror() const { return m_mirror; }
-        ines_t* _root() const { return m__root; }
-        ines_t::header_t* _parent() const { return m__parent; }
-    };
-
-    class f10_t : public kaitai::kstruct {
-
-    public:
-
-        f10_t(kaitai::kstream* p_io, ines_t::header_t* p_parent = 0, ines_t* p_root = 0);
-        void _read();
-        ~f10_t();
-
-    private:
-        uint64_t m_nothing1;
-        bool m_bus_conflict;
-        bool m_prg_ram;
-        uint64_t m_nothing2;
-        uint64_t m_tv_system;
-        ines_t* m__root;
-        ines_t::header_t* m__parent;
-
-    public:
-        uint64_t nothing1() const { return m_nothing1; }
-
-        /**
-         * If 0, no bus conflicts. If 1, bus conflicts.
-         */
-        bool bus_conflict() const { return m_bus_conflict; }
-
-        /**
-         * If 0, PRG ram is present. If 1, not present.
-         */
-        bool prg_ram() const { return m_prg_ram; }
-        uint64_t nothing2() const { return m_nothing2; }
-
-        /**
-         * if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
-         */
-        uint64_t tv_system() const { return m_tv_system; }
-        ines_t* _root() const { return m__root; }
-        ines_t::header_t* _parent() const { return m__parent; }
-    };
-
-    class f9_t : public kaitai::kstruct {
-
-    public:
-
-        f9_t(kaitai::kstream* p_io, ines_t::header_t* p_parent = 0, ines_t* p_root = 0);
-        void _read();
-        ~f9_t();
-
-    private:
-        uint64_t m_reserved;
-        bool m_tv_system;
-        ines_t* m__root;
-        ines_t::header_t* m__parent;
-
-    public:
-        uint64_t reserved() const { return m_reserved; }
-
-        /**
-         * if 0, NTSC. If 1, PAL.
-         */
-        bool tv_system() const { return m_tv_system; }
-        ines_t* _root() const { return m__root; }
-        ines_t::header_t* _parent() const { return m__parent; }
-    };
 
     class header_t : public kaitai::kstruct {
 
     public:
+        class f6_t;
+        class f7_t;
+        class f9_t;
+        class f10_t;
 
-        header_t(kaitai::kstream* p_io, ines_t* p_parent = 0, ines_t* p_root = 0);
+        header_t(kaitai::kstream* p__io, ines_t* p__parent = 0, ines_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header_t();
+
+        /**
+         * \sa Source
+         */
+
+        class f6_t : public kaitai::kstruct {
+
+        public:
+
+            enum mirroring_t {
+                MIRRORING_HORIZONTAL = 0,
+                MIRRORING_VERTICAL = 1
+            };
+
+            f6_t(kaitai::kstream* p__io, ines_t::header_t* p__parent = 0, ines_t* p__root = 0);
+
+        private:
+            void _read();
+
+        public:
+            ~f6_t();
+
+        private:
+            uint64_t m_lower_mapper;
+            bool m_four_screen;
+            bool m_trainer;
+            bool m_has_battery_ram;
+            mirroring_t m_mirroring;
+            ines_t* m__root;
+            ines_t::header_t* m__parent;
+
+        public:
+
+            /**
+             * Lower nibble of mapper number
+             */
+            uint64_t lower_mapper() const { return m_lower_mapper; }
+
+            /**
+             * Ignore mirroring control or above mirroring bit; instead provide four-screen VRAM
+             */
+            bool four_screen() const { return m_four_screen; }
+
+            /**
+             * 512-byte trainer at $7000-$71FF (stored before PRG data)
+             */
+            bool trainer() const { return m_trainer; }
+
+            /**
+             * If on the cartridge contains battery-backed PRG RAM ($6000-7FFF) or other persistent memory
+             */
+            bool has_battery_ram() const { return m_has_battery_ram; }
+
+            /**
+             * if 0, horizontal arrangement. if 1, vertical arrangement
+             */
+            mirroring_t mirroring() const { return m_mirroring; }
+            ines_t* _root() const { return m__root; }
+            ines_t::header_t* _parent() const { return m__parent; }
+        };
+
+        /**
+         * \sa Source
+         */
+
+        class f7_t : public kaitai::kstruct {
+
+        public:
+
+            f7_t(kaitai::kstream* p__io, ines_t::header_t* p__parent = 0, ines_t* p__root = 0);
+
+        private:
+            void _read();
+
+        public:
+            ~f7_t();
+
+        private:
+            uint64_t m_upper_mapper;
+            uint64_t m_format;
+            bool m_playchoice10;
+            bool m_vs_unisystem;
+            ines_t* m__root;
+            ines_t::header_t* m__parent;
+
+        public:
+
+            /**
+             * Upper nibble of mapper number
+             */
+            uint64_t upper_mapper() const { return m_upper_mapper; }
+
+            /**
+             * If equal to 2, flags 8-15 are in NES 2.0 format
+             */
+            uint64_t format() const { return m_format; }
+
+            /**
+             * Determines if it made for a Nintendo PlayChoice-10 or not
+             */
+            bool playchoice10() const { return m_playchoice10; }
+
+            /**
+             * Determines if it is made for a Nintendo VS Unisystem or not
+             */
+            bool vs_unisystem() const { return m_vs_unisystem; }
+            ines_t* _root() const { return m__root; }
+            ines_t::header_t* _parent() const { return m__parent; }
+        };
+
+        /**
+         * \sa Source
+         */
+
+        class f9_t : public kaitai::kstruct {
+
+        public:
+
+            enum tv_system_t {
+                TV_SYSTEM_NTSC = 0,
+                TV_SYSTEM_PAL = 1
+            };
+
+            f9_t(kaitai::kstream* p__io, ines_t::header_t* p__parent = 0, ines_t* p__root = 0);
+
+        private:
+            void _read();
+
+        public:
+            ~f9_t();
+
+        private:
+            uint64_t m_reserved;
+            tv_system_t m_tv_system;
+            ines_t* m__root;
+            ines_t::header_t* m__parent;
+
+        public:
+            uint64_t reserved() const { return m_reserved; }
+
+            /**
+             * if 0, NTSC. If 1, PAL.
+             */
+            tv_system_t tv_system() const { return m_tv_system; }
+            ines_t* _root() const { return m__root; }
+            ines_t::header_t* _parent() const { return m__parent; }
+        };
+
+        /**
+         * \sa Source
+         */
+
+        class f10_t : public kaitai::kstruct {
+
+        public:
+
+            enum tv_system_t {
+                TV_SYSTEM_NTSC = 0,
+                TV_SYSTEM_DUAL1 = 1,
+                TV_SYSTEM_PAL = 2,
+                TV_SYSTEM_DUAL2 = 3
+            };
+
+            f10_t(kaitai::kstream* p__io, ines_t::header_t* p__parent = 0, ines_t* p__root = 0);
+
+        private:
+            void _read();
+
+        public:
+            ~f10_t();
+
+        private:
+            uint64_t m_reserved1;
+            bool m_bus_conflict;
+            bool m_prg_ram;
+            uint64_t m_reserved2;
+            tv_system_t m_tv_system;
+            ines_t* m__root;
+            ines_t::header_t* m__parent;
+
+        public:
+            uint64_t reserved1() const { return m_reserved1; }
+
+            /**
+             * If 0, no bus conflicts. If 1, bus conflicts.
+             */
+            bool bus_conflict() const { return m_bus_conflict; }
+
+            /**
+             * If 0, PRG ram is present. If 1, not present.
+             */
+            bool prg_ram() const { return m_prg_ram; }
+            uint64_t reserved2() const { return m_reserved2; }
+
+            /**
+             * if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
+             */
+            tv_system_t tv_system() const { return m_tv_system; }
+            ines_t* _root() const { return m__root; }
+            ines_t::header_t* _parent() const { return m__parent; }
+        };
+
+    private:
+        bool f_mapper;
+        int32_t m_mapper;
+
+    public:
+
+        /**
+         * \sa Source
+         */
+        int32_t mapper();
 
     private:
         std::string m_magic;
-        uint8_t m_prg_rom_size;
-        uint8_t m_chr_rom_size;
+        uint8_t m_len_prg_rom;
+        uint8_t m_len_chr_rom;
         f6_t* m_f6;
         f7_t* m_f7;
-        uint8_t m_prg_ram_size;
+        uint8_t m_len_prg_ram;
         f9_t* m_f9;
         f10_t* m_f10;
-        std::string m_zero_fill;
+        std::string m_reserved;
         ines_t* m__root;
         ines_t* m__parent;
+        std::string m__raw_f6;
+        kaitai::kstream* m__io__raw_f6;
+        std::string m__raw_f7;
+        kaitai::kstream* m__io__raw_f7;
+        std::string m__raw_f9;
+        kaitai::kstream* m__io__raw_f9;
+        std::string m__raw_f10;
+        kaitai::kstream* m__io__raw_f10;
 
     public:
         std::string magic() const { return m_magic; }
@@ -472,48 +552,134 @@ public:
         /**
          * Size of PRG ROM in 16 KB units
          */
-        uint8_t prg_rom_size() const { return m_prg_rom_size; }
+        uint8_t len_prg_rom() const { return m_len_prg_rom; }
 
         /**
          * Size of CHR ROM in 8 KB units (Value 0 means the board uses CHR RAM)
          */
-        uint8_t chr_rom_size() const { return m_chr_rom_size; }
+        uint8_t len_chr_rom() const { return m_len_chr_rom; }
         f6_t* f6() const { return m_f6; }
         f7_t* f7() const { return m_f7; }
 
         /**
          * Size of PRG RAM in 8 KB units (Value 0 infers 8 KB for compatibility; see PRG RAM circuit on nesdev.com)
          */
-        uint8_t prg_ram_size() const { return m_prg_ram_size; }
+        uint8_t len_prg_ram() const { return m_len_prg_ram; }
         f9_t* f9() const { return m_f9; }
 
         /**
          * this one is unofficial
          */
         f10_t* f10() const { return m_f10; }
-        std::string zero_fill() const { return m_zero_fill; }
+        std::string reserved() const { return m_reserved; }
+        ines_t* _root() const { return m__root; }
+        ines_t* _parent() const { return m__parent; }
+        std::string _raw_f6() const { return m__raw_f6; }
+        kaitai::kstream* _io__raw_f6() const { return m__io__raw_f6; }
+        std::string _raw_f7() const { return m__raw_f7; }
+        kaitai::kstream* _io__raw_f7() const { return m__io__raw_f7; }
+        std::string _raw_f9() const { return m__raw_f9; }
+        kaitai::kstream* _io__raw_f9() const { return m__io__raw_f9; }
+        std::string _raw_f10() const { return m__raw_f10; }
+        kaitai::kstream* _io__raw_f10() const { return m__io__raw_f10; }
+    };
+
+    /**
+     * \sa Source
+     */
+
+    class playchoice10_t : public kaitai::kstruct {
+
+    public:
+        class prom_t;
+
+        playchoice10_t(kaitai::kstream* p__io, ines_t* p__parent = 0, ines_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~playchoice10_t();
+
+        class prom_t : public kaitai::kstruct {
+
+        public:
+
+            prom_t(kaitai::kstream* p__io, ines_t::playchoice10_t* p__parent = 0, ines_t* p__root = 0);
+
+        private:
+            void _read();
+
+        public:
+            ~prom_t();
+
+        private:
+            std::string m_data;
+            std::string m_counter_out;
+            ines_t* m__root;
+            ines_t::playchoice10_t* m__parent;
+
+        public:
+            std::string data() const { return m_data; }
+            std::string counter_out() const { return m_counter_out; }
+            ines_t* _root() const { return m__root; }
+            ines_t::playchoice10_t* _parent() const { return m__parent; }
+        };
+
+    private:
+        std::string m_inst_rom;
+        prom_t* m_prom;
+        ines_t* m__root;
+        ines_t* m__parent;
+
+    public:
+        std::string inst_rom() const { return m_inst_rom; }
+        prom_t* prom() const { return m_prom; }
         ines_t* _root() const { return m__root; }
         ines_t* _parent() const { return m__parent; }
     };
 
 private:
-    bool f_mapper;
-    int32_t m_mapper;
+    header_t* m_header;
+    std::string m_trainer;
+    bool n_trainer;
 
 public:
-    int32_t mapper();
+    bool _is_null_trainer() { trainer(); return n_trainer; };
 
 private:
-    header_t* m_header;
-    std::string m_rom;
+    std::string m_prg_rom;
+    std::string m_chr_rom;
+    playchoice10_t* m_playchoice10;
+    bool n_playchoice10;
+
+public:
+    bool _is_null_playchoice10() { playchoice10(); return n_playchoice10; };
+
+private:
+    std::string m_title;
+    bool n_title;
+
+public:
+    bool _is_null_title() { title(); return n_title; };
+
+private:
     ines_t* m__root;
     kaitai::kstruct* m__parent;
+    std::string m__raw_header;
+    kaitai::kstream* m__io__raw_header;
 
 public:
     header_t* header() const { return m_header; }
-    std::string rom() const { return m_rom; }
+    std::string trainer() const { return m_trainer; }
+    std::string prg_rom() const { return m_prg_rom; }
+    std::string chr_rom() const { return m_chr_rom; }
+    playchoice10_t* playchoice10() const { return m_playchoice10; }
+    std::string title() const { return m_title; }
     ines_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
+    std::string _raw_header() const { return m__raw_header; }
+    kaitai::kstream* _io__raw_header() const { return m__io__raw_header; }
 };
 
 #endif  // INES_H_
@@ -539,117 +705,184 @@ public:
 
 
 
-ines_t::ines_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, ines_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+ines_t::ines_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ines_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
-    f_mapper = false;
     _read();
 }
 
 void ines_t::_read() {
-    m_header = new header_t(m__io, this, m__root);
-    m_rom = m__io-&gt;read_bytes_full();
+    m__raw_header = m__io-&gt;read_bytes(16);
+    m__io__raw_header = new kaitai::kstream(m__raw_header);
+    m_header = new header_t(m__io__raw_header, this, m__root);
+    n_trainer = true;
+    if (header()-&gt;f6()-&gt;trainer()) {
+        n_trainer = false;
+        m_trainer = m__io-&gt;read_bytes(512);
+    }
+    m_prg_rom = m__io-&gt;read_bytes((header()-&gt;len_prg_rom() * 16384));
+    m_chr_rom = m__io-&gt;read_bytes((header()-&gt;len_chr_rom() * 8192));
+    n_playchoice10 = true;
+    if (header()-&gt;f7()-&gt;playchoice10()) {
+        n_playchoice10 = false;
+        m_playchoice10 = new playchoice10_t(m__io, this, m__root);
+    }
+    n_title = true;
+    if (!(_io()-&gt;is_eof())) {
+        n_title = false;
+        m_title = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes_full(), std::string(&quot;ASCII&quot;));
+    }
 }
 
 ines_t::~ines_t() {
+    delete m__io__raw_header;
     delete m_header;
+    if (!n_trainer) {
+    }
+    if (!n_playchoice10) {
+        delete m_playchoice10;
+    }
+    if (!n_title) {
+    }
 }
 
-ines_t::f7_t::f7_t(kaitai::kstream *p_io, ines_t::header_t* p_parent, ines_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
-    _read();
-}
-
-void ines_t::f7_t::_read() {
-    m_upper_nibble = m__io-&gt;read_bits_int(4);
-    m_format = m__io-&gt;read_bits_int(2);
-    m_arcade_2 = m__io-&gt;read_bits_int(1);
-    m_arcade_1 = m__io-&gt;read_bits_int(1);
-}
-
-ines_t::f7_t::~f7_t() {
-}
-
-ines_t::f6_t::f6_t(kaitai::kstream *p_io, ines_t::header_t* p_parent, ines_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
-    _read();
-}
-
-void ines_t::f6_t::_read() {
-    m_lower_nibble = m__io-&gt;read_bits_int(4);
-    m_ignore_mirror = m__io-&gt;read_bits_int(1);
-    m_trainer = m__io-&gt;read_bits_int(1);
-    m_has_battery_ram = m__io-&gt;read_bits_int(1);
-    m_mirror = m__io-&gt;read_bits_int(1);
-}
-
-ines_t::f6_t::~f6_t() {
-}
-
-ines_t::f10_t::f10_t(kaitai::kstream *p_io, ines_t::header_t* p_parent, ines_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
-    _read();
-}
-
-void ines_t::f10_t::_read() {
-    m_nothing1 = m__io-&gt;read_bits_int(2);
-    m_bus_conflict = m__io-&gt;read_bits_int(1);
-    m_prg_ram = m__io-&gt;read_bits_int(1);
-    m_nothing2 = m__io-&gt;read_bits_int(2);
-    m_tv_system = m__io-&gt;read_bits_int(2);
-}
-
-ines_t::f10_t::~f10_t() {
-}
-
-ines_t::f9_t::f9_t(kaitai::kstream *p_io, ines_t::header_t* p_parent, ines_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
-    _read();
-}
-
-void ines_t::f9_t::_read() {
-    m_reserved = m__io-&gt;read_bits_int(7);
-    m_tv_system = m__io-&gt;read_bits_int(1);
-}
-
-ines_t::f9_t::~f9_t() {
-}
-
-ines_t::header_t::header_t(kaitai::kstream *p_io, ines_t* p_parent, ines_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ines_t::header_t::header_t(kaitai::kstream* p__io, ines_t* p__parent, ines_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_mapper = false;
     _read();
 }
 
 void ines_t::header_t::_read() {
     m_magic = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x4E\x45\x53\x1A&quot;, 4));
-    m_prg_rom_size = m__io-&gt;read_u1();
-    m_chr_rom_size = m__io-&gt;read_u1();
-    m_f6 = new f6_t(m__io, this, m__root);
-    m_f7 = new f7_t(m__io, this, m__root);
-    m_prg_ram_size = m__io-&gt;read_u1();
-    m_f9 = new f9_t(m__io, this, m__root);
-    m_f10 = new f10_t(m__io, this, m__root);
-    m_zero_fill = m__io-&gt;read_bytes(4);
+    m_len_prg_rom = m__io-&gt;read_u1();
+    m_len_chr_rom = m__io-&gt;read_u1();
+    m__raw_f6 = m__io-&gt;read_bytes(1);
+    m__io__raw_f6 = new kaitai::kstream(m__raw_f6);
+    m_f6 = new f6_t(m__io__raw_f6, this, m__root);
+    m__raw_f7 = m__io-&gt;read_bytes(1);
+    m__io__raw_f7 = new kaitai::kstream(m__raw_f7);
+    m_f7 = new f7_t(m__io__raw_f7, this, m__root);
+    m_len_prg_ram = m__io-&gt;read_u1();
+    m__raw_f9 = m__io-&gt;read_bytes(1);
+    m__io__raw_f9 = new kaitai::kstream(m__raw_f9);
+    m_f9 = new f9_t(m__io__raw_f9, this, m__root);
+    m__raw_f10 = m__io-&gt;read_bytes(1);
+    m__io__raw_f10 = new kaitai::kstream(m__raw_f10);
+    m_f10 = new f10_t(m__io__raw_f10, this, m__root);
+    m_reserved = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x00\x00\x00\x00\x00&quot;, 5));
 }
 
 ines_t::header_t::~header_t() {
+    delete m__io__raw_f6;
     delete m_f6;
+    delete m__io__raw_f7;
     delete m_f7;
+    delete m__io__raw_f9;
     delete m_f9;
+    delete m__io__raw_f10;
     delete m_f10;
 }
 
-int32_t ines_t::mapper() {
+ines_t::header_t::f6_t::f6_t(kaitai::kstream* p__io, ines_t::header_t* p__parent, ines_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void ines_t::header_t::f6_t::_read() {
+    m_lower_mapper = m__io-&gt;read_bits_int(4);
+    m_four_screen = m__io-&gt;read_bits_int(1);
+    m_trainer = m__io-&gt;read_bits_int(1);
+    m_has_battery_ram = m__io-&gt;read_bits_int(1);
+    m_mirroring = static_cast&lt;ines_t::header_t::f6_t::mirroring_t&gt;(m__io-&gt;read_bits_int(1));
+}
+
+ines_t::header_t::f6_t::~f6_t() {
+}
+
+ines_t::header_t::f7_t::f7_t(kaitai::kstream* p__io, ines_t::header_t* p__parent, ines_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void ines_t::header_t::f7_t::_read() {
+    m_upper_mapper = m__io-&gt;read_bits_int(4);
+    m_format = m__io-&gt;read_bits_int(2);
+    m_playchoice10 = m__io-&gt;read_bits_int(1);
+    m_vs_unisystem = m__io-&gt;read_bits_int(1);
+}
+
+ines_t::header_t::f7_t::~f7_t() {
+}
+
+ines_t::header_t::f9_t::f9_t(kaitai::kstream* p__io, ines_t::header_t* p__parent, ines_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void ines_t::header_t::f9_t::_read() {
+    m_reserved = m__io-&gt;read_bits_int(7);
+    m_tv_system = static_cast&lt;ines_t::header_t::f9_t::tv_system_t&gt;(m__io-&gt;read_bits_int(1));
+}
+
+ines_t::header_t::f9_t::~f9_t() {
+}
+
+ines_t::header_t::f10_t::f10_t(kaitai::kstream* p__io, ines_t::header_t* p__parent, ines_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void ines_t::header_t::f10_t::_read() {
+    m_reserved1 = m__io-&gt;read_bits_int(2);
+    m_bus_conflict = m__io-&gt;read_bits_int(1);
+    m_prg_ram = m__io-&gt;read_bits_int(1);
+    m_reserved2 = m__io-&gt;read_bits_int(2);
+    m_tv_system = static_cast&lt;ines_t::header_t::f10_t::tv_system_t&gt;(m__io-&gt;read_bits_int(2));
+}
+
+ines_t::header_t::f10_t::~f10_t() {
+}
+
+int32_t ines_t::header_t::mapper() {
     if (f_mapper)
         return m_mapper;
-    m_mapper = (_root()-&gt;header()-&gt;f6()-&gt;lower_nibble() | (_root()-&gt;header()-&gt;f7()-&gt;upper_nibble() &lt;&lt; 4));
+    m_mapper = (f6()-&gt;lower_mapper() | (f7()-&gt;upper_mapper() &lt;&lt; 4));
     f_mapper = true;
     return m_mapper;
+}
+
+ines_t::playchoice10_t::playchoice10_t(kaitai::kstream* p__io, ines_t* p__parent, ines_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void ines_t::playchoice10_t::_read() {
+    m_inst_rom = m__io-&gt;read_bytes(8192);
+    m_prom = new prom_t(m__io, this, m__root);
+}
+
+ines_t::playchoice10_t::~playchoice10_t() {
+    delete m_prom;
+}
+
+ines_t::playchoice10_t::prom_t::prom_t(kaitai::kstream* p__io, ines_t::playchoice10_t* p__parent, ines_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void ines_t::playchoice10_t::prom_t::_read() {
+    m_data = m__io-&gt;read_bytes(16);
+    m_counter_out = m__io-&gt;read_bytes(16);
+}
+
+ines_t::playchoice10_t::prom_t::~prom_t() {
 }
 </code></pre>
             

@@ -117,8 +117,10 @@ var Avi = (function() {
     }
     Blocks.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.entries.push(new Block(this._io, this, this._root));
+        i++;
       }
     }
 

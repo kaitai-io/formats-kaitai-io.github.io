@@ -11,20 +11,22 @@ namespace Kaitai
             return new Stl(new KaitaiStream(fileName));
         }
 
-        public Stl(KaitaiStream io, KaitaiStruct parent = null, Stl root = null) : base(io)
+        public Stl(KaitaiStream p__io, KaitaiStruct p__parent = null, Stl p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _header = m_io.ReadBytes(80);
             _numTriangles = m_io.ReadU4le();
             _triangles = new List<Triangle>((int) (NumTriangles));
-            for (var i = 0; i < NumTriangles; i++) {
+            for (var i = 0; i < NumTriangles; i++)
+            {
                 _triangles.Add(new Triangle(m_io, this, m_root));
             }
-            }
+        }
         public partial class Triangle : KaitaiStruct
         {
             public static Triangle FromFile(string fileName)
@@ -32,19 +34,21 @@ namespace Kaitai
                 return new Triangle(new KaitaiStream(fileName));
             }
 
-            public Triangle(KaitaiStream io, Stl parent = null, Stl root = null) : base(io)
+            public Triangle(KaitaiStream p__io, Stl p__parent = null, Stl p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _normal = new Vec3d(m_io, this, m_root);
                 _vertices = new List<Vec3d>((int) (3));
-                for (var i = 0; i < 3; i++) {
+                for (var i = 0; i < 3; i++)
+                {
                     _vertices.Add(new Vec3d(m_io, this, m_root));
                 }
-                }
+            }
             private Vec3d _normal;
             private List<Vec3d> _vertices;
             private Stl m_root;
@@ -61,17 +65,18 @@ namespace Kaitai
                 return new Vec3d(new KaitaiStream(fileName));
             }
 
-            public Vec3d(KaitaiStream io, Stl.Triangle parent = null, Stl root = null) : base(io)
+            public Vec3d(KaitaiStream p__io, Stl.Triangle p__parent = null, Stl p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _x = m_io.ReadF4le();
                 _y = m_io.ReadF4le();
                 _z = m_io.ReadF4le();
-                }
+            }
             private float _x;
             private float _y;
             private float _z;

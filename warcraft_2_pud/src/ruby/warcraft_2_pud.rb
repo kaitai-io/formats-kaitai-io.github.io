@@ -150,8 +150,10 @@ class Warcraft2Pud < Kaitai::Struct::Struct
 
   def _read
     @sections = []
+    i = 0
     while not @_io.eof?
       @sections << Section.new(@_io, self, @_root)
+      i += 1
     end
     self
   end
@@ -163,8 +165,10 @@ class Warcraft2Pud < Kaitai::Struct::Struct
 
     def _read
       @resources_by_player = []
+      i = 0
       while not @_io.eof?
         @resources_by_player << @_io.read_u2le
+        i += 1
       end
       self
     end
@@ -250,8 +254,10 @@ class Warcraft2Pud < Kaitai::Struct::Struct
 
     def _read
       @units = []
+      i = 0
       while not @_io.eof?
         @units << Unit.new(@_io, self, @_root)
+        i += 1
       end
       self
     end
@@ -328,8 +334,10 @@ class Warcraft2Pud < Kaitai::Struct::Struct
 
     def _read
       @controller_by_player = []
+      i = 0
       while not @_io.eof?
         @controller_by_player << Kaitai::Struct::Stream::resolve_enum(CONTROLLER, @_io.read_u1)
+        i += 1
       end
       self
     end

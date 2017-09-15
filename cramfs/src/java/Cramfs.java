@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.util.HashMap;
 
 public class Cramfs extends KaitaiStruct {
     public static Cramfs fromFile(String fileName) throws IOException {
-        return new Cramfs(new KaitaiStream(fileName));
+        return new Cramfs(new ByteBufferKaitaiStream(fileName));
     }
 
     public Cramfs(KaitaiStream _io) {
@@ -32,7 +33,7 @@ public class Cramfs extends KaitaiStruct {
     }
     public static class SuperBlockStruct extends KaitaiStruct {
         public static SuperBlockStruct fromFile(String fileName) throws IOException {
-            return new SuperBlockStruct(new KaitaiStream(fileName));
+            return new SuperBlockStruct(new ByteBufferKaitaiStream(fileName));
         }
 
         public SuperBlockStruct(KaitaiStream _io) {
@@ -122,7 +123,7 @@ public class Cramfs extends KaitaiStruct {
     }
     public static class ChunkedDataInode extends KaitaiStruct {
         public static ChunkedDataInode fromFile(String fileName) throws IOException {
-            return new ChunkedDataInode(new KaitaiStream(fileName));
+            return new ChunkedDataInode(new ByteBufferKaitaiStream(fileName));
         }
 
         public ChunkedDataInode(KaitaiStream _io) {
@@ -157,7 +158,7 @@ public class Cramfs extends KaitaiStruct {
     }
     public static class Inode extends KaitaiStruct {
         public static Inode fromFile(String fileName) throws IOException {
-            return new Inode(new KaitaiStream(fileName));
+            return new Inode(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum FileType {
@@ -287,7 +288,7 @@ public class Cramfs extends KaitaiStruct {
             long _pos = io.pos();
             io.seek(offset());
             this._raw_asDir = io.readBytes(size());
-            KaitaiStream _io__raw_asDir = new KaitaiStream(_raw_asDir);
+            KaitaiStream _io__raw_asDir = new ByteBufferKaitaiStream(_raw_asDir);
             this.asDir = new DirInode(_io__raw_asDir, this, _root);
             io.seek(_pos);
             return this.asDir;
@@ -326,7 +327,7 @@ public class Cramfs extends KaitaiStruct {
     }
     public static class DirInode extends KaitaiStruct {
         public static DirInode fromFile(String fileName) throws IOException {
-            return new DirInode(new KaitaiStream(fileName));
+            return new DirInode(new ByteBufferKaitaiStream(fileName));
         }
 
         public DirInode(KaitaiStream _io) {
@@ -346,8 +347,12 @@ public class Cramfs extends KaitaiStruct {
         private void _read() {
             if (_io().size() > 0) {
                 this.children = new ArrayList<Inode>();
-                while (!this._io.isEof()) {
-                    this.children.add(new Inode(this._io, this, _root));
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.children.add(new Inode(this._io, this, _root));
+                        i++;
+                    }
                 }
             }
         }
@@ -360,7 +365,7 @@ public class Cramfs extends KaitaiStruct {
     }
     public static class Info extends KaitaiStruct {
         public static Info fromFile(String fileName) throws IOException {
-            return new Info(new KaitaiStream(fileName));
+            return new Info(new ByteBufferKaitaiStream(fileName));
         }
 
         public Info(KaitaiStream _io) {

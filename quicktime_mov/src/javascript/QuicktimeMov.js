@@ -375,8 +375,10 @@ var QuicktimeMov = (function() {
       this.majorBrand = this._io.readU4be();
       this.minorVersion = this._io.readBytes(4);
       this.compatibleBrands = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.compatibleBrands.push(this._io.readU4be());
+        i++;
       }
     }
 
@@ -545,8 +547,10 @@ var QuicktimeMov = (function() {
     }
     AtomList.prototype._read = function() {
       this.items = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.items.push(new Atom(this._io, this, this._root));
+        i++;
       }
     }
 

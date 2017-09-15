@@ -21,6 +21,7 @@ namespace Kaitai
             return new PythonPyc27(new KaitaiStream(fileName));
         }
 
+
         public enum Version
         {
             V15 = 20121,
@@ -49,19 +50,19 @@ namespace Kaitai
             V27A0d = 62201,
             V27A0e = 62211,
         }
-
-        public PythonPyc27(KaitaiStream io, KaitaiStruct parent = null, PythonPyc27 root = null) : base(io)
+        public PythonPyc27(KaitaiStream p__io, KaitaiStruct p__parent = null, PythonPyc27 p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _versionMagic = ((Version) m_io.ReadU2le());
             _crlf = m_io.ReadU2le();
             _modificationTimestamp = m_io.ReadU4le();
             _body = new PyObject(m_io, this, m_root);
-            }
+        }
         public partial class CodeObject : KaitaiStruct
         {
             public static CodeObject FromFile(string fileName)
@@ -69,20 +70,21 @@ namespace Kaitai
                 return new CodeObject(new KaitaiStream(fileName));
             }
 
+
             public enum FlagsEnum
             {
                 HasArgs = 4,
                 HasKwargs = 8,
                 Generator = 32,
             }
-
-            public CodeObject(KaitaiStream io, PythonPyc27.PyObject parent = null, PythonPyc27 root = null) : base(io)
+            public CodeObject(KaitaiStream p__io, PythonPyc27.PyObject p__parent = null, PythonPyc27 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _argCount = m_io.ReadU4le();
                 _localCount = m_io.ReadU4le();
                 _stackSize = m_io.ReadU4le();
@@ -97,7 +99,7 @@ namespace Kaitai
                 _name = new PyObject(m_io, this, m_root);
                 _firstLineNo = m_io.ReadU4le();
                 _lnotab = new PyObject(m_io, this, m_root);
-                }
+            }
             private uint _argCount;
             private uint _localCount;
             private uint _stackSize;
@@ -138,19 +140,20 @@ namespace Kaitai
                 return new Assembly(new KaitaiStream(fileName));
             }
 
-            public Assembly(KaitaiStream io, PythonPyc27.CodeObject parent = null, PythonPyc27 root = null) : base(io)
+            public Assembly(KaitaiStream p__io, PythonPyc27.CodeObject p__parent = null, PythonPyc27 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _stringMagic = m_io.EnsureFixedContents(new byte[] { 115 });
                 _length = m_io.ReadU4le();
                 __raw_items = m_io.ReadBytes(Length);
                 var io___raw_items = new KaitaiStream(__raw_items);
                 _items = new OpArgs(io___raw_items, this, m_root);
-                }
+            }
             private byte[] _stringMagic;
             private uint _length;
             private OpArgs _items;
@@ -170,6 +173,7 @@ namespace Kaitai
             {
                 return new OpArg(new KaitaiStream(fileName));
             }
+
 
             public enum OpCodeEnum
             {
@@ -293,25 +297,25 @@ namespace Kaitai
                 SetAdd = 146,
                 MapAdd = 147,
             }
-
-            public OpArg(KaitaiStream io, PythonPyc27.OpArgs parent = null, PythonPyc27 root = null) : base(io)
+            public OpArg(KaitaiStream p__io, PythonPyc27.OpArgs p__parent = null, PythonPyc27 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _opCode = ((OpCodeEnum) m_io.ReadU1());
                 if (OpCode >= OpCodeEnum.StoreName) {
                     _arg = m_io.ReadU2le();
                 }
-                }
+            }
             private OpCodeEnum _opCode;
-            private ushort _arg;
+            private ushort? _arg;
             private PythonPyc27 m_root;
             private PythonPyc27.OpArgs m_parent;
             public OpCodeEnum OpCode { get { return _opCode; } }
-            public ushort Arg { get { return _arg; } }
+            public ushort? Arg { get { return _arg; } }
             public PythonPyc27 M_Root { get { return m_root; } }
             public PythonPyc27.OpArgs M_Parent { get { return m_parent; } }
         }
@@ -321,6 +325,7 @@ namespace Kaitai
             {
                 return new PyObject(new KaitaiStream(fileName));
             }
+
 
             public enum ObjectType
             {
@@ -335,14 +340,14 @@ namespace Kaitai
                 Interned = 116,
                 UnicodeString = 117,
             }
-
-            public PyObject(KaitaiStream io, KaitaiStruct parent = null, PythonPyc27 root = null) : base(io)
+            public PyObject(KaitaiStream p__io, KaitaiStruct p__parent = null, PythonPyc27 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _type = ((ObjectType) m_io.ReadU1());
                 switch (Type) {
                 case ObjectType.None: {
@@ -382,7 +387,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             public partial class PyNone : KaitaiStruct
             {
                 public static PyNone FromFile(string fileName)
@@ -390,14 +395,15 @@ namespace Kaitai
                     return new PyNone(new KaitaiStream(fileName));
                 }
 
-                public PyNone(KaitaiStream io, PythonPyc27.PyObject parent = null, PythonPyc27 root = null) : base(io)
+                public PyNone(KaitaiStream p__io, PythonPyc27.PyObject p__parent = null, PythonPyc27 p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
-                    }
+                private void _read()
+                {
+                }
                 private PythonPyc27 m_root;
                 private PythonPyc27.PyObject m_parent;
                 public PythonPyc27 M_Root { get { return m_root; } }
@@ -410,14 +416,15 @@ namespace Kaitai
                     return new PyFalse(new KaitaiStream(fileName));
                 }
 
-                public PyFalse(KaitaiStream io, PythonPyc27.PyObject parent = null, PythonPyc27 root = null) : base(io)
+                public PyFalse(KaitaiStream p__io, PythonPyc27.PyObject p__parent = null, PythonPyc27 p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
-                    }
+                private void _read()
+                {
+                }
                 private PythonPyc27 m_root;
                 private PythonPyc27.PyObject m_parent;
                 public PythonPyc27 M_Root { get { return m_root; } }
@@ -430,15 +437,16 @@ namespace Kaitai
                     return new StringRef(new KaitaiStream(fileName));
                 }
 
-                public StringRef(KaitaiStream io, PythonPyc27.PyObject parent = null, PythonPyc27 root = null) : base(io)
+                public StringRef(KaitaiStream p__io, PythonPyc27.PyObject p__parent = null, PythonPyc27 p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _internedListIndex = m_io.ReadU4le();
-                    }
+                }
                 private uint _internedListIndex;
                 private PythonPyc27 m_root;
                 private PythonPyc27.PyObject m_parent;
@@ -453,14 +461,15 @@ namespace Kaitai
                     return new PyTrue(new KaitaiStream(fileName));
                 }
 
-                public PyTrue(KaitaiStream io, PythonPyc27.PyObject parent = null, PythonPyc27 root = null) : base(io)
+                public PyTrue(KaitaiStream p__io, PythonPyc27.PyObject p__parent = null, PythonPyc27 p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
-                    }
+                private void _read()
+                {
+                }
                 private PythonPyc27 m_root;
                 private PythonPyc27.PyObject m_parent;
                 public PythonPyc27 M_Root { get { return m_root; } }
@@ -473,19 +482,21 @@ namespace Kaitai
                     return new Tuple(new KaitaiStream(fileName));
                 }
 
-                public Tuple(KaitaiStream io, PythonPyc27.PyObject parent = null, PythonPyc27 root = null) : base(io)
+                public Tuple(KaitaiStream p__io, PythonPyc27.PyObject p__parent = null, PythonPyc27 p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _count = m_io.ReadU4le();
                     _items = new List<PyObject>((int) (Count));
-                    for (var i = 0; i < Count; i++) {
+                    for (var i = 0; i < Count; i++)
+                    {
                         _items.Add(new PyObject(m_io, this, m_root));
                     }
-                    }
+                }
                 private uint _count;
                 private List<PyObject> _items;
                 private PythonPyc27 m_root;
@@ -502,16 +513,17 @@ namespace Kaitai
                     return new UnicodeString(new KaitaiStream(fileName));
                 }
 
-                public UnicodeString(KaitaiStream io, KaitaiStruct parent = null, PythonPyc27 root = null) : base(io)
+                public UnicodeString(KaitaiStream p__io, KaitaiStruct p__parent = null, PythonPyc27 p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _length = m_io.ReadU4le();
                     _data = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytes(Length));
-                    }
+                }
                 private uint _length;
                 private string _data;
                 private PythonPyc27 m_root;
@@ -528,16 +540,17 @@ namespace Kaitai
                     return new InternedString(new KaitaiStream(fileName));
                 }
 
-                public InternedString(KaitaiStream io, PythonPyc27.PyObject parent = null, PythonPyc27 root = null) : base(io)
+                public InternedString(KaitaiStream p__io, PythonPyc27.PyObject p__parent = null, PythonPyc27 p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _length = m_io.ReadU4le();
                     _data = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytes(Length));
-                    }
+                }
                 private uint _length;
                 private string _data;
                 private PythonPyc27 m_root;
@@ -554,16 +567,17 @@ namespace Kaitai
                     return new PyString(new KaitaiStream(fileName));
                 }
 
-                public PyString(KaitaiStream io, PythonPyc27.PyObject parent = null, PythonPyc27 root = null) : base(io)
+                public PyString(KaitaiStream p__io, PythonPyc27.PyObject p__parent = null, PythonPyc27 p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _length = m_io.ReadU4le();
                     _data = m_io.ReadBytes(Length);
-                    }
+                }
                 private uint _length;
                 private byte[] _data;
                 private PythonPyc27 m_root;
@@ -589,18 +603,23 @@ namespace Kaitai
                 return new OpArgs(new KaitaiStream(fileName));
             }
 
-            public OpArgs(KaitaiStream io, PythonPyc27.Assembly parent = null, PythonPyc27 root = null) : base(io)
+            public OpArgs(KaitaiStream p__io, PythonPyc27.Assembly p__parent = null, PythonPyc27 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _items = new List<OpArg>();
-                while (!m_io.IsEof) {
-                    _items.Add(new OpArg(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _items.Add(new OpArg(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<OpArg> _items;
             private PythonPyc27 m_root;
             private PythonPyc27.Assembly m_parent;

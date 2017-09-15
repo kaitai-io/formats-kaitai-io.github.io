@@ -1,0 +1,425 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__dex {
+		label="Dex";
+		graph[style=dotted];
+
+		dex__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">112</TD><TD>HeaderItem</TD><TD PORT="header_type">header</TD></TR>
+		</TABLE>>];
+		dex__inst__string_ids [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="string_ids_pos">header.string_ids_off</TD><TD PORT="string_ids_size">4</TD><TD>StringIdItem</TD><TD PORT="string_ids_type">string_ids</TD></TR>
+			<TR><TD COLSPAN="4" PORT="string_ids__repeat">repeat header.string_ids_size times</TD></TR>
+		</TABLE>>];
+		dex__inst__method_ids [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="method_ids_pos">header.method_ids_off</TD><TD PORT="method_ids_size">8</TD><TD>MethodIdItem</TD><TD PORT="method_ids_type">method_ids</TD></TR>
+			<TR><TD COLSPAN="4" PORT="method_ids__repeat">repeat header.method_ids_size times</TD></TR>
+		</TABLE>>];
+		dex__inst__link_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="link_data_pos">header.link_off</TD><TD PORT="link_data_size">header.link_size</TD><TD></TD><TD PORT="link_data_type">link_data</TD></TR>
+		</TABLE>>];
+		dex__inst__map [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="map_pos">header.map_off</TD><TD PORT="map_size">...</TD><TD>MapList</TD><TD PORT="map_type">map</TD></TR>
+		</TABLE>>];
+		dex__inst__class_defs [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="class_defs_pos">header.class_defs_off</TD><TD PORT="class_defs_size">32</TD><TD>ClassDefItem</TD><TD PORT="class_defs_type">class_defs</TD></TR>
+			<TR><TD COLSPAN="4" PORT="class_defs__repeat">repeat header.class_defs_size times</TD></TR>
+		</TABLE>>];
+		dex__inst__data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="data_pos">header.data_off</TD><TD PORT="data_size">header.data_size</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+		</TABLE>>];
+		dex__inst__type_ids [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="type_ids_pos">header.type_ids_off</TD><TD PORT="type_ids_size">4</TD><TD>TypeIdItem</TD><TD PORT="type_ids_type">type_ids</TD></TR>
+			<TR><TD COLSPAN="4" PORT="type_ids__repeat">repeat header.type_ids_size times</TD></TR>
+		</TABLE>>];
+		dex__inst__proto_ids [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="proto_ids_pos">header.proto_ids_off</TD><TD PORT="proto_ids_size">12</TD><TD>ProtoIdItem</TD><TD PORT="proto_ids_type">proto_ids</TD></TR>
+			<TR><TD COLSPAN="4" PORT="proto_ids__repeat">repeat header.proto_ids_size times</TD></TR>
+		</TABLE>>];
+		dex__inst__field_ids [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="field_ids_pos">header.field_ids_off</TD><TD PORT="field_ids_size">8</TD><TD>FieldIdItem</TD><TD PORT="field_ids_type">field_ids</TD></TR>
+			<TR><TD COLSPAN="4" PORT="field_ids__repeat">repeat header.field_ids_size times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__header_item {
+			label="Dex::HeaderItem";
+			graph[style=dotted];
+
+			header_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>64 65 78 0A</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="version_str_pos">4</TD><TD PORT="version_str_size">3</TD><TD>str(ascii)</TD><TD PORT="version_str_type">version_str</TD></TR>
+				<TR><TD PORT="magic2_pos">7</TD><TD PORT="magic2_size">1</TD><TD>00</TD><TD PORT="magic2_type">magic2</TD></TR>
+				<TR><TD PORT="checksum_pos">8</TD><TD PORT="checksum_size">4</TD><TD>u4le</TD><TD PORT="checksum_type">checksum</TD></TR>
+				<TR><TD PORT="signature_pos">12</TD><TD PORT="signature_size">20</TD><TD></TD><TD PORT="signature_type">signature</TD></TR>
+				<TR><TD PORT="file_size_pos">32</TD><TD PORT="file_size_size">4</TD><TD>u4le</TD><TD PORT="file_size_type">file_size</TD></TR>
+				<TR><TD PORT="header_size_pos">36</TD><TD PORT="header_size_size">4</TD><TD>u4le</TD><TD PORT="header_size_type">header_size</TD></TR>
+				<TR><TD PORT="endian_tag_pos">40</TD><TD PORT="endian_tag_size">4</TD><TD>u4le→EndianConstant</TD><TD PORT="endian_tag_type">endian_tag</TD></TR>
+				<TR><TD PORT="link_size_pos">44</TD><TD PORT="link_size_size">4</TD><TD>u4le</TD><TD PORT="link_size_type">link_size</TD></TR>
+				<TR><TD PORT="link_off_pos">48</TD><TD PORT="link_off_size">4</TD><TD>u4le</TD><TD PORT="link_off_type">link_off</TD></TR>
+				<TR><TD PORT="map_off_pos">52</TD><TD PORT="map_off_size">4</TD><TD>u4le</TD><TD PORT="map_off_type">map_off</TD></TR>
+				<TR><TD PORT="string_ids_size_pos">56</TD><TD PORT="string_ids_size_size">4</TD><TD>u4le</TD><TD PORT="string_ids_size_type">string_ids_size</TD></TR>
+				<TR><TD PORT="string_ids_off_pos">60</TD><TD PORT="string_ids_off_size">4</TD><TD>u4le</TD><TD PORT="string_ids_off_type">string_ids_off</TD></TR>
+				<TR><TD PORT="type_ids_size_pos">64</TD><TD PORT="type_ids_size_size">4</TD><TD>u4le</TD><TD PORT="type_ids_size_type">type_ids_size</TD></TR>
+				<TR><TD PORT="type_ids_off_pos">68</TD><TD PORT="type_ids_off_size">4</TD><TD>u4le</TD><TD PORT="type_ids_off_type">type_ids_off</TD></TR>
+				<TR><TD PORT="proto_ids_size_pos">72</TD><TD PORT="proto_ids_size_size">4</TD><TD>u4le</TD><TD PORT="proto_ids_size_type">proto_ids_size</TD></TR>
+				<TR><TD PORT="proto_ids_off_pos">76</TD><TD PORT="proto_ids_off_size">4</TD><TD>u4le</TD><TD PORT="proto_ids_off_type">proto_ids_off</TD></TR>
+				<TR><TD PORT="field_ids_size_pos">80</TD><TD PORT="field_ids_size_size">4</TD><TD>u4le</TD><TD PORT="field_ids_size_type">field_ids_size</TD></TR>
+				<TR><TD PORT="field_ids_off_pos">84</TD><TD PORT="field_ids_off_size">4</TD><TD>u4le</TD><TD PORT="field_ids_off_type">field_ids_off</TD></TR>
+				<TR><TD PORT="method_ids_size_pos">88</TD><TD PORT="method_ids_size_size">4</TD><TD>u4le</TD><TD PORT="method_ids_size_type">method_ids_size</TD></TR>
+				<TR><TD PORT="method_ids_off_pos">92</TD><TD PORT="method_ids_off_size">4</TD><TD>u4le</TD><TD PORT="method_ids_off_type">method_ids_off</TD></TR>
+				<TR><TD PORT="class_defs_size_pos">96</TD><TD PORT="class_defs_size_size">4</TD><TD>u4le</TD><TD PORT="class_defs_size_type">class_defs_size</TD></TR>
+				<TR><TD PORT="class_defs_off_pos">100</TD><TD PORT="class_defs_off_size">4</TD><TD>u4le</TD><TD PORT="class_defs_off_type">class_defs_off</TD></TR>
+				<TR><TD PORT="data_size_pos">104</TD><TD PORT="data_size_size">4</TD><TD>u4le</TD><TD PORT="data_size_type">data_size</TD></TR>
+				<TR><TD PORT="data_off_pos">108</TD><TD PORT="data_off_size">4</TD><TD>u4le</TD><TD PORT="data_off_type">data_off</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__map_list {
+			label="Dex::MapList";
+			graph[style=dotted];
+
+			map_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="size_pos">0</TD><TD PORT="size_size">4</TD><TD>u4le</TD><TD PORT="size_type">size</TD></TR>
+				<TR><TD PORT="list_pos">4</TD><TD PORT="list_size">12</TD><TD>MapItem</TD><TD PORT="list_type">list</TD></TR>
+				<TR><TD COLSPAN="4" PORT="list__repeat">repeat size times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__encoded_value {
+			label="Dex::EncodedValue";
+			graph[style=dotted];
+
+			encoded_value__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="value_arg_pos">0</TD><TD PORT="value_arg_size">3b</TD><TD>b3</TD><TD PORT="value_arg_type">value_arg</TD></TR>
+				<TR><TD PORT="value_type_pos">0:3</TD><TD PORT="value_type_size">5b</TD><TD>b5→ValueTypeEnum</TD><TD PORT="value_type_type">value_type</TD></TR>
+				<TR><TD PORT="value_pos">1</TD><TD PORT="value_size">...</TD><TD>switch (value_type)</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+encoded_value__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:value_type_enum_annotation</TD><TD PORT="case0">EncodedAnnotation</TD></TR>
+	<TR><TD>:value_type_enum_array</TD><TD PORT="case1">EncodedArray</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__call_site_id_item {
+			label="Dex::CallSiteIdItem";
+			graph[style=dotted];
+
+			call_site_id_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="call_site_off_pos">0</TD><TD PORT="call_site_off_size">4</TD><TD>u4le</TD><TD PORT="call_site_off_type">call_site_off</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__method_id_item {
+			label="Dex::MethodIdItem";
+			graph[style=dotted];
+
+			method_id_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="class_idx_pos">0</TD><TD PORT="class_idx_size">2</TD><TD>u2le</TD><TD PORT="class_idx_type">class_idx</TD></TR>
+				<TR><TD PORT="proto_idx_pos">2</TD><TD PORT="proto_idx_size">2</TD><TD>u2le</TD><TD PORT="proto_idx_type">proto_idx</TD></TR>
+				<TR><TD PORT="name_idx_pos">4</TD><TD PORT="name_idx_size">4</TD><TD>u4le</TD><TD PORT="name_idx_type">name_idx</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__uleb128 {
+			label="Dex::Uleb128";
+			graph[style=dotted];
+
+			uleb128__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="b1_pos">0</TD><TD PORT="b1_size">1</TD><TD>u1</TD><TD PORT="b1_type">b1</TD></TR>
+				<TR><TD PORT="b2_pos">1</TD><TD PORT="b2_size">1</TD><TD>u1</TD><TD PORT="b2_type">b2</TD></TR>
+				<TR><TD PORT="b3_pos">2</TD><TD PORT="b3_size">1</TD><TD>u1</TD><TD PORT="b3_type">b3</TD></TR>
+				<TR><TD PORT="b4_pos">3</TD><TD PORT="b4_size">1</TD><TD>u1</TD><TD PORT="b4_type">b4</TD></TR>
+				<TR><TD PORT="b5_pos">4</TD><TD PORT="b5_size">1</TD><TD>u1</TD><TD PORT="b5_type">b5</TD></TR>
+				<TR><TD PORT="b6_pos">5</TD><TD PORT="b6_size">1</TD><TD>u1</TD><TD PORT="b6_type">b6</TD></TR>
+				<TR><TD PORT="b7_pos">6</TD><TD PORT="b7_size">1</TD><TD>u1</TD><TD PORT="b7_type">b7</TD></TR>
+				<TR><TD PORT="b8_pos">7</TD><TD PORT="b8_size">1</TD><TD>u1</TD><TD PORT="b8_type">b8</TD></TR>
+				<TR><TD PORT="b9_pos">8</TD><TD PORT="b9_size">1</TD><TD>u1</TD><TD PORT="b9_type">b9</TD></TR>
+				<TR><TD PORT="b10_pos">9</TD><TD PORT="b10_size">1</TD><TD>u1</TD><TD PORT="b10_type">b10</TD></TR>
+			</TABLE>>];
+			uleb128__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>value</TD><TD>(((b1 % 128) &lt;&lt; 0) + ((b1 &amp; 128) == 0 ? 0 : (((b2 % 128) &lt;&lt; 7) + ((b2 &amp; 128) == 0 ? 0 : (((b3 % 128) &lt;&lt; 14) + ((b3 &amp; 128) == 0 ? 0 : (((b4 % 128) &lt;&lt; 21) + ((b4 &amp; 128) == 0 ? 0 : (((b5 % 128) &lt;&lt; 28) + ((b5 &amp; 128) == 0 ? 0 : (((b6 % 128) &lt;&lt; 35) + ((b6 &amp; 128) == 0 ? 0 : (((b7 % 128) &lt;&lt; 42) + ((b7 &amp; 128) == 0 ? 0 : (((b8 % 128) &lt;&lt; 49) + ((b8 &amp; 128) == 0 ? 0 : (((b9 % 128) &lt;&lt; 56) + ((b8 &amp; 128) == 0 ? 0 : ((b10 % 128) &lt;&lt; 63)))))))))))))))))))</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__type_id_item {
+			label="Dex::TypeIdItem";
+			graph[style=dotted];
+
+			type_id_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="descriptor_idx_pos">0</TD><TD PORT="descriptor_idx_size">4</TD><TD>u4le</TD><TD PORT="descriptor_idx_type">descriptor_idx</TD></TR>
+			</TABLE>>];
+			type_id_item__inst__type_name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>type_name</TD><TD>_root.string_ids[descriptor_idx].value.data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__annotation_element {
+			label="Dex::AnnotationElement";
+			graph[style=dotted];
+
+			annotation_element__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_idx_pos">0</TD><TD PORT="name_idx_size">10</TD><TD>Uleb128</TD><TD PORT="name_idx_type">name_idx</TD></TR>
+				<TR><TD PORT="value_pos">10</TD><TD PORT="value_size">...</TD><TD>EncodedValue</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__encoded_field {
+			label="Dex::EncodedField";
+			graph[style=dotted];
+
+			encoded_field__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="field_idx_diff_pos">0</TD><TD PORT="field_idx_diff_size">10</TD><TD>Uleb128</TD><TD PORT="field_idx_diff_type">field_idx_diff</TD></TR>
+				<TR><TD PORT="access_flags_pos">10</TD><TD PORT="access_flags_size">10</TD><TD>Uleb128</TD><TD PORT="access_flags_type">access_flags</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__encoded_array_item {
+			label="Dex::EncodedArrayItem";
+			graph[style=dotted];
+
+			encoded_array_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">...</TD><TD>EncodedArray</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__class_data_item {
+			label="Dex::ClassDataItem";
+			graph[style=dotted];
+
+			class_data_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="static_fields_size_pos">0</TD><TD PORT="static_fields_size_size">10</TD><TD>Uleb128</TD><TD PORT="static_fields_size_type">static_fields_size</TD></TR>
+				<TR><TD PORT="instance_fields_size_pos">10</TD><TD PORT="instance_fields_size_size">10</TD><TD>Uleb128</TD><TD PORT="instance_fields_size_type">instance_fields_size</TD></TR>
+				<TR><TD PORT="direct_methods_size_pos">20</TD><TD PORT="direct_methods_size_size">10</TD><TD>Uleb128</TD><TD PORT="direct_methods_size_type">direct_methods_size</TD></TR>
+				<TR><TD PORT="virtual_methods_size_pos">30</TD><TD PORT="virtual_methods_size_size">10</TD><TD>Uleb128</TD><TD PORT="virtual_methods_size_type">virtual_methods_size</TD></TR>
+				<TR><TD PORT="static_fields_pos">40</TD><TD PORT="static_fields_size">20</TD><TD>EncodedField</TD><TD PORT="static_fields_type">static_fields</TD></TR>
+				<TR><TD COLSPAN="4" PORT="static_fields__repeat">repeat static_fields_size.value times</TD></TR>
+				<TR><TD PORT="instance_fields_pos">...</TD><TD PORT="instance_fields_size">20</TD><TD>EncodedField</TD><TD PORT="instance_fields_type">instance_fields</TD></TR>
+				<TR><TD COLSPAN="4" PORT="instance_fields__repeat">repeat instance_fields_size.value times</TD></TR>
+				<TR><TD PORT="direct_methods_pos">...</TD><TD PORT="direct_methods_size">30</TD><TD>EncodedMethod</TD><TD PORT="direct_methods_type">direct_methods</TD></TR>
+				<TR><TD COLSPAN="4" PORT="direct_methods__repeat">repeat direct_methods_size.value times</TD></TR>
+				<TR><TD PORT="virtual_methods_pos">...</TD><TD PORT="virtual_methods_size">30</TD><TD>EncodedMethod</TD><TD PORT="virtual_methods_type">virtual_methods</TD></TR>
+				<TR><TD COLSPAN="4" PORT="virtual_methods__repeat">repeat virtual_methods_size.value times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__field_id_item {
+			label="Dex::FieldIdItem";
+			graph[style=dotted];
+
+			field_id_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="class_idx_pos">0</TD><TD PORT="class_idx_size">2</TD><TD>u2le</TD><TD PORT="class_idx_type">class_idx</TD></TR>
+				<TR><TD PORT="type_idx_pos">2</TD><TD PORT="type_idx_size">2</TD><TD>u2le</TD><TD PORT="type_idx_type">type_idx</TD></TR>
+				<TR><TD PORT="name_idx_pos">4</TD><TD PORT="name_idx_size">4</TD><TD>u4le</TD><TD PORT="name_idx_type">name_idx</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__encoded_annotation {
+			label="Dex::EncodedAnnotation";
+			graph[style=dotted];
+
+			encoded_annotation__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_idx_pos">0</TD><TD PORT="type_idx_size">10</TD><TD>Uleb128</TD><TD PORT="type_idx_type">type_idx</TD></TR>
+				<TR><TD PORT="size_pos">10</TD><TD PORT="size_size">10</TD><TD>Uleb128</TD><TD PORT="size_type">size</TD></TR>
+				<TR><TD PORT="elements_pos">20</TD><TD PORT="elements_size">...</TD><TD>AnnotationElement</TD><TD PORT="elements_type">elements</TD></TR>
+				<TR><TD COLSPAN="4" PORT="elements__repeat">repeat size.value times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__class_def_item {
+			label="Dex::ClassDefItem";
+			graph[style=dotted];
+
+			class_def_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="class_idx_pos">0</TD><TD PORT="class_idx_size">4</TD><TD>u4le</TD><TD PORT="class_idx_type">class_idx</TD></TR>
+				<TR><TD PORT="access_flags_pos">4</TD><TD PORT="access_flags_size">4</TD><TD>u4le→ClassAccessFlags</TD><TD PORT="access_flags_type">access_flags</TD></TR>
+				<TR><TD PORT="superclass_idx_pos">8</TD><TD PORT="superclass_idx_size">4</TD><TD>u4le</TD><TD PORT="superclass_idx_type">superclass_idx</TD></TR>
+				<TR><TD PORT="interfaces_off_pos">12</TD><TD PORT="interfaces_off_size">4</TD><TD>u4le</TD><TD PORT="interfaces_off_type">interfaces_off</TD></TR>
+				<TR><TD PORT="source_file_idx_pos">16</TD><TD PORT="source_file_idx_size">4</TD><TD>u4le</TD><TD PORT="source_file_idx_type">source_file_idx</TD></TR>
+				<TR><TD PORT="annotations_off_pos">20</TD><TD PORT="annotations_off_size">4</TD><TD>u4le</TD><TD PORT="annotations_off_type">annotations_off</TD></TR>
+				<TR><TD PORT="class_data_off_pos">24</TD><TD PORT="class_data_off_size">4</TD><TD>u4le</TD><TD PORT="class_data_off_type">class_data_off</TD></TR>
+				<TR><TD PORT="static_values_off_pos">28</TD><TD PORT="static_values_off_size">4</TD><TD>u4le</TD><TD PORT="static_values_off_type">static_values_off</TD></TR>
+			</TABLE>>];
+			class_def_item__inst__type_name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>type_name</TD><TD>_root.type_ids[class_idx].type_name</TD></TR>
+			</TABLE>>];
+			class_def_item__inst__class_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="class_data_pos">class_data_off</TD><TD PORT="class_data_size">...</TD><TD>ClassDataItem</TD><TD PORT="class_data_type">class_data</TD></TR>
+			</TABLE>>];
+			class_def_item__inst__static_values [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="static_values_pos">static_values_off</TD><TD PORT="static_values_size">...</TD><TD>EncodedArrayItem</TD><TD PORT="static_values_type">static_values</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__string_id_item {
+			label="Dex::StringIdItem";
+			graph[style=dotted];
+
+			string_id_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="string_data_off_pos">0</TD><TD PORT="string_data_off_size">4</TD><TD>u4le</TD><TD PORT="string_data_off_type">string_data_off</TD></TR>
+			</TABLE>>];
+			string_id_item__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="value_pos">string_data_off</TD><TD PORT="value_size">...</TD><TD>StringDataItem</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+			subgraph cluster__string_data_item {
+				label="Dex::StringIdItem::StringDataItem";
+				graph[style=dotted];
+
+				string_data_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="utf16_size_pos">0</TD><TD PORT="utf16_size_size">10</TD><TD>Uleb128</TD><TD PORT="utf16_size_type">utf16_size</TD></TR>
+					<TR><TD PORT="data_pos">10</TD><TD PORT="data_size">utf16_size.value</TD><TD>str(ascii)</TD><TD PORT="data_type">data</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__proto_id_item {
+			label="Dex::ProtoIdItem";
+			graph[style=dotted];
+
+			proto_id_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="shorty_idx_pos">0</TD><TD PORT="shorty_idx_size">4</TD><TD>u4le</TD><TD PORT="shorty_idx_type">shorty_idx</TD></TR>
+				<TR><TD PORT="return_type_idx_pos">4</TD><TD PORT="return_type_idx_size">4</TD><TD>u4le</TD><TD PORT="return_type_idx_type">return_type_idx</TD></TR>
+				<TR><TD PORT="parameters_off_pos">8</TD><TD PORT="parameters_off_size">4</TD><TD>u4le</TD><TD PORT="parameters_off_type">parameters_off</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__encoded_method {
+			label="Dex::EncodedMethod";
+			graph[style=dotted];
+
+			encoded_method__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="method_idx_diff_pos">0</TD><TD PORT="method_idx_diff_size">10</TD><TD>Uleb128</TD><TD PORT="method_idx_diff_type">method_idx_diff</TD></TR>
+				<TR><TD PORT="access_flags_pos">10</TD><TD PORT="access_flags_size">10</TD><TD>Uleb128</TD><TD PORT="access_flags_type">access_flags</TD></TR>
+				<TR><TD PORT="code_off_pos">20</TD><TD PORT="code_off_size">10</TD><TD>Uleb128</TD><TD PORT="code_off_type">code_off</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__map_item {
+			label="Dex::MapItem";
+			graph[style=dotted];
+
+			map_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">2</TD><TD>u2le→MapItemType</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="unused_pos">2</TD><TD PORT="unused_size">2</TD><TD>u2le</TD><TD PORT="unused_type">unused</TD></TR>
+				<TR><TD PORT="size_pos">4</TD><TD PORT="size_size">4</TD><TD>u4le</TD><TD PORT="size_type">size</TD></TR>
+				<TR><TD PORT="offset_pos">8</TD><TD PORT="offset_size">4</TD><TD>u4le</TD><TD PORT="offset_type">offset</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__encoded_array {
+			label="Dex::EncodedArray";
+			graph[style=dotted];
+
+			encoded_array__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="size_pos">0</TD><TD PORT="size_size">10</TD><TD>Uleb128</TD><TD PORT="size_type">size</TD></TR>
+				<TR><TD PORT="values_pos">10</TD><TD PORT="values_size">...</TD><TD>EncodedValue</TD><TD PORT="values_type">values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="values__repeat">repeat size.value times</TD></TR>
+			</TABLE>>];
+		}
+	}
+	dex__seq:header_type -> header_item__seq [style=bold];
+	header_item__seq:string_ids_off_type -> dex__inst__string_ids:string_ids_pos [color="#404040"];
+	dex__inst__string_ids:string_ids_type -> string_id_item__seq [style=bold];
+	header_item__seq:string_ids_size_type -> dex__inst__string_ids:string_ids__repeat [color="#404040"];
+	header_item__seq:method_ids_off_type -> dex__inst__method_ids:method_ids_pos [color="#404040"];
+	dex__inst__method_ids:method_ids_type -> method_id_item__seq [style=bold];
+	header_item__seq:method_ids_size_type -> dex__inst__method_ids:method_ids__repeat [color="#404040"];
+	header_item__seq:link_off_type -> dex__inst__link_data:link_data_pos [color="#404040"];
+	header_item__seq:link_size_type -> dex__inst__link_data:link_data_size [color="#404040"];
+	header_item__seq:map_off_type -> dex__inst__map:map_pos [color="#404040"];
+	dex__inst__map:map_type -> map_list__seq [style=bold];
+	header_item__seq:class_defs_off_type -> dex__inst__class_defs:class_defs_pos [color="#404040"];
+	dex__inst__class_defs:class_defs_type -> class_def_item__seq [style=bold];
+	header_item__seq:class_defs_size_type -> dex__inst__class_defs:class_defs__repeat [color="#404040"];
+	header_item__seq:data_off_type -> dex__inst__data:data_pos [color="#404040"];
+	header_item__seq:data_size_type -> dex__inst__data:data_size [color="#404040"];
+	header_item__seq:type_ids_off_type -> dex__inst__type_ids:type_ids_pos [color="#404040"];
+	dex__inst__type_ids:type_ids_type -> type_id_item__seq [style=bold];
+	header_item__seq:type_ids_size_type -> dex__inst__type_ids:type_ids__repeat [color="#404040"];
+	header_item__seq:proto_ids_off_type -> dex__inst__proto_ids:proto_ids_pos [color="#404040"];
+	dex__inst__proto_ids:proto_ids_type -> proto_id_item__seq [style=bold];
+	header_item__seq:proto_ids_size_type -> dex__inst__proto_ids:proto_ids__repeat [color="#404040"];
+	header_item__seq:field_ids_off_type -> dex__inst__field_ids:field_ids_pos [color="#404040"];
+	dex__inst__field_ids:field_ids_type -> field_id_item__seq [style=bold];
+	header_item__seq:field_ids_size_type -> dex__inst__field_ids:field_ids__repeat [color="#404040"];
+	map_list__seq:list_type -> map_item__seq [style=bold];
+	map_list__seq:size_type -> map_list__seq:list__repeat [color="#404040"];
+	encoded_value__seq:value_type -> encoded_value__seq_value_switch [style=bold];
+	encoded_value__seq_value_switch:case0 -> encoded_annotation__seq [style=bold];
+	encoded_value__seq_value_switch:case1 -> encoded_array__seq [style=bold];
+	encoded_value__seq:value_type_type -> encoded_value__seq:value_type [color="#404040"];
+	uleb128__seq:b1_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b1_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b2_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b2_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b3_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b3_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b4_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b4_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b5_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b5_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b6_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b6_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b7_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b7_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b8_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b8_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b9_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b8_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b10_type -> uleb128__inst__value [color="#404040"];
+	string_data_item__seq:data_type -> type_id_item__inst__type_name [color="#404040"];
+	annotation_element__seq:name_idx_type -> uleb128__seq [style=bold];
+	annotation_element__seq:value_type -> encoded_value__seq [style=bold];
+	encoded_field__seq:field_idx_diff_type -> uleb128__seq [style=bold];
+	encoded_field__seq:access_flags_type -> uleb128__seq [style=bold];
+	encoded_array_item__seq:value_type -> encoded_array__seq [style=bold];
+	class_data_item__seq:static_fields_size_type -> uleb128__seq [style=bold];
+	class_data_item__seq:instance_fields_size_type -> uleb128__seq [style=bold];
+	class_data_item__seq:direct_methods_size_type -> uleb128__seq [style=bold];
+	class_data_item__seq:virtual_methods_size_type -> uleb128__seq [style=bold];
+	class_data_item__seq:static_fields_type -> encoded_field__seq [style=bold];
+	uleb128__inst__value:value_type -> class_data_item__seq:static_fields__repeat [color="#404040"];
+	class_data_item__seq:instance_fields_type -> encoded_field__seq [style=bold];
+	uleb128__inst__value:value_type -> class_data_item__seq:instance_fields__repeat [color="#404040"];
+	class_data_item__seq:direct_methods_type -> encoded_method__seq [style=bold];
+	uleb128__inst__value:value_type -> class_data_item__seq:direct_methods__repeat [color="#404040"];
+	class_data_item__seq:virtual_methods_type -> encoded_method__seq [style=bold];
+	uleb128__inst__value:value_type -> class_data_item__seq:virtual_methods__repeat [color="#404040"];
+	encoded_annotation__seq:type_idx_type -> uleb128__seq [style=bold];
+	encoded_annotation__seq:size_type -> uleb128__seq [style=bold];
+	encoded_annotation__seq:elements_type -> annotation_element__seq [style=bold];
+	uleb128__inst__value:value_type -> encoded_annotation__seq:elements__repeat [color="#404040"];
+	type_id_item__inst__type_name:type_name_type -> class_def_item__inst__type_name [color="#404040"];
+	class_def_item__seq:class_data_off_type -> class_def_item__inst__class_data:class_data_pos [color="#404040"];
+	class_def_item__inst__class_data:class_data_type -> class_data_item__seq [style=bold];
+	class_def_item__seq:static_values_off_type -> class_def_item__inst__static_values:static_values_pos [color="#404040"];
+	class_def_item__inst__static_values:static_values_type -> encoded_array_item__seq [style=bold];
+	string_id_item__seq:string_data_off_type -> string_id_item__inst__value:value_pos [color="#404040"];
+	string_id_item__inst__value:value_type -> string_data_item__seq [style=bold];
+	string_data_item__seq:utf16_size_type -> uleb128__seq [style=bold];
+	uleb128__inst__value:value_type -> string_data_item__seq:data_size [color="#404040"];
+	encoded_method__seq:method_idx_diff_type -> uleb128__seq [style=bold];
+	encoded_method__seq:access_flags_type -> uleb128__seq [style=bold];
+	encoded_method__seq:code_off_type -> uleb128__seq [style=bold];
+	encoded_array__seq:size_type -> uleb128__seq [style=bold];
+	encoded_array__seq:values_type -> encoded_value__seq [style=bold];
+	uleb128__inst__value:value_type -> encoded_array__seq:values__repeat [color="#404040"];
+}

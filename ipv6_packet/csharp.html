@@ -243,13 +243,14 @@ namespace Kaitai
             return new Ipv6Packet(new KaitaiStream(fileName));
         }
 
-        public Ipv6Packet(KaitaiStream io, KaitaiStruct parent = null, Ipv6Packet root = null) : base(io)
+        public Ipv6Packet(KaitaiStream p__io, KaitaiStruct p__parent = null, Ipv6Packet p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _version = m_io.ReadBitsInt(4);
             _trafficClass = m_io.ReadBitsInt(8);
             _flowLabel = m_io.ReadBitsInt(20);
@@ -282,7 +283,7 @@ namespace Kaitai
             }
             }
             _rest = m_io.ReadBytesFull();
-            }
+        }
         public partial class NoNextHeader : KaitaiStruct
         {
             public static NoNextHeader FromFile(string fileName)
@@ -290,14 +291,15 @@ namespace Kaitai
                 return new NoNextHeader(new KaitaiStream(fileName));
             }
 
-            public NoNextHeader(KaitaiStream io, KaitaiStruct parent = null, Ipv6Packet root = null) : base(io)
+            public NoNextHeader(KaitaiStream p__io, KaitaiStruct p__parent = null, Ipv6Packet p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
-                }
+            private void _read()
+            {
+            }
             private Ipv6Packet m_root;
             private KaitaiStruct m_parent;
             public Ipv6Packet M_Root { get { return m_root; } }
@@ -310,13 +312,14 @@ namespace Kaitai
                 return new OptionHopByHop(new KaitaiStream(fileName));
             }
 
-            public OptionHopByHop(KaitaiStream io, KaitaiStruct parent = null, Ipv6Packet root = null) : base(io)
+            public OptionHopByHop(KaitaiStream p__io, KaitaiStruct p__parent = null, Ipv6Packet p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _nextHeaderType = m_io.ReadU1();
                 _hdrExtLen = m_io.ReadU1();
                 _body = m_io.ReadBytes((HdrExtLen - 1));
@@ -334,7 +337,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private byte _nextHeaderType;
             private byte _hdrExtLen;
             private byte[] _body;

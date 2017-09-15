@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -35,8 +34,12 @@ public:
         PE_FORMAT_PE32_PLUS = 523
     };
 
-    microsoft_pe_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, microsoft_pe_t* p_root = 0);
+    microsoft_pe_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~microsoft_pe_t();
 
     class optional_header_windows_t : public kaitai::kstruct {
@@ -57,8 +60,12 @@ public:
             SUBSYSTEM_ENUM_XBOX = 14
         };
 
-        optional_header_windows_t(kaitai::kstream* p_io, microsoft_pe_t::optional_header_t* p_parent = 0, microsoft_pe_t* p_root = 0);
+        optional_header_windows_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~optional_header_windows_t();
 
     private:
@@ -186,8 +193,12 @@ public:
 
     public:
 
-        optional_header_data_dirs_t(kaitai::kstream* p_io, microsoft_pe_t::optional_header_t* p_parent = 0, microsoft_pe_t* p_root = 0);
+        optional_header_data_dirs_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~optional_header_data_dirs_t();
 
     private:
@@ -233,8 +244,12 @@ public:
 
     public:
 
-        data_dir_t(kaitai::kstream* p_io, microsoft_pe_t::optional_header_data_dirs_t* p_parent = 0, microsoft_pe_t* p_root = 0);
+        data_dir_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_data_dirs_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~data_dir_t();
 
     private:
@@ -254,8 +269,12 @@ public:
 
     public:
 
-        optional_header_t(kaitai::kstream* p_io, microsoft_pe_t* p_parent = 0, microsoft_pe_t* p_root = 0);
+        optional_header_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~optional_header_t();
 
     private:
@@ -277,8 +296,12 @@ public:
 
     public:
 
-        section_t(kaitai::kstream* p_io, microsoft_pe_t* p_parent = 0, microsoft_pe_t* p_root = 0);
+        section_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~section_t();
 
     private:
@@ -321,8 +344,12 @@ public:
 
     public:
 
-        mz_placeholder_t(kaitai::kstream* p_io, microsoft_pe_t* p_parent = 0, microsoft_pe_t* p_root = 0);
+        mz_placeholder_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~mz_placeholder_t();
 
     private:
@@ -344,8 +371,12 @@ public:
 
     public:
 
-        optional_header_std_t(kaitai::kstream* p_io, microsoft_pe_t::optional_header_t* p_parent = 0, microsoft_pe_t* p_root = 0);
+        optional_header_std_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~optional_header_std_t();
 
     private:
@@ -416,8 +447,12 @@ public:
             MACHINE_TYPE_M32R = 36929
         };
 
-        coff_header_t(kaitai::kstream* p_io, microsoft_pe_t* p_parent = 0, microsoft_pe_t* p_root = 0);
+        coff_header_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~coff_header_t();
 
     private:

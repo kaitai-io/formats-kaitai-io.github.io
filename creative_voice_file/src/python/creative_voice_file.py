@@ -58,8 +58,10 @@ class CreativeVoiceFile(KaitaiStruct):
         self.version = self._io.read_u2le()
         self.checksum = self._io.read_u2le()
         self.blocks = []
+        i = 0
         while not self._io.is_eof():
             self.blocks.append(self._root.Block(self._io, self, self._root))
+            i += 1
 
 
     class BlockMarker(KaitaiStruct):

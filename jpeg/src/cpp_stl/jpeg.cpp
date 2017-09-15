@@ -5,16 +5,20 @@
 
 #include "exif.h"
 
-jpeg_t::jpeg_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, jpeg_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+jpeg_t::jpeg_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
 
 void jpeg_t::_read() {
     m_segments = new std::vector<segment_t*>();
-    while (!m__io->is_eof()) {
-        m_segments->push_back(new segment_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_segments->push_back(new segment_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -25,9 +29,9 @@ jpeg_t::~jpeg_t() {
     delete m_segments;
 }
 
-jpeg_t::segment_t::segment_t(kaitai::kstream *p_io, jpeg_t* p_parent, jpeg_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+jpeg_t::segment_t::segment_t(kaitai::kstream* p__io, jpeg_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -42,30 +46,40 @@ void jpeg_t::segment_t::_read() {
     n_data = true;
     if ( ((marker() != MARKER_ENUM_SOI) && (marker() != MARKER_ENUM_EOI)) ) {
         n_data = false;
+        n_data = true;
         switch (marker()) {
-        case MARKER_ENUM_SOS:
+        case MARKER_ENUM_SOS: {
+            n_data = false;
             m__raw_data = m__io->read_bytes((length() - 2));
             m__io__raw_data = new kaitai::kstream(m__raw_data);
             m_data = new segment_sos_t(m__io__raw_data, this, m__root);
             break;
-        case MARKER_ENUM_APP1:
+        }
+        case MARKER_ENUM_APP1: {
+            n_data = false;
             m__raw_data = m__io->read_bytes((length() - 2));
             m__io__raw_data = new kaitai::kstream(m__raw_data);
             m_data = new segment_app1_t(m__io__raw_data, this, m__root);
             break;
-        case MARKER_ENUM_SOF0:
+        }
+        case MARKER_ENUM_SOF0: {
+            n_data = false;
             m__raw_data = m__io->read_bytes((length() - 2));
             m__io__raw_data = new kaitai::kstream(m__raw_data);
             m_data = new segment_sof0_t(m__io__raw_data, this, m__root);
             break;
-        case MARKER_ENUM_APP0:
+        }
+        case MARKER_ENUM_APP0: {
+            n_data = false;
             m__raw_data = m__io->read_bytes((length() - 2));
             m__io__raw_data = new kaitai::kstream(m__raw_data);
             m_data = new segment_app0_t(m__io__raw_data, this, m__root);
             break;
-        default:
+        }
+        default: {
             m__raw_data = m__io->read_bytes((length() - 2));
             break;
+        }
         }
     }
     n_image_data = true;
@@ -76,11 +90,19 @@ void jpeg_t::segment_t::_read() {
 }
 
 jpeg_t::segment_t::~segment_t() {
+    if (!n_length) {
+    }
+    if (!n_data) {
+        delete m__io__raw_data;
+        delete m_data;
+    }
+    if (!n_image_data) {
+    }
 }
 
-jpeg_t::segment_sos_t::segment_sos_t(kaitai::kstream *p_io, jpeg_t::segment_t* p_parent, jpeg_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+jpeg_t::segment_sos_t::segment_sos_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -104,9 +126,9 @@ jpeg_t::segment_sos_t::~segment_sos_t() {
     delete m_components;
 }
 
-jpeg_t::segment_sos_t::component_t::component_t(kaitai::kstream *p_io, jpeg_t::segment_sos_t* p_parent, jpeg_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+jpeg_t::segment_sos_t::component_t::component_t(kaitai::kstream* p__io, jpeg_t::segment_sos_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -118,28 +140,33 @@ void jpeg_t::segment_sos_t::component_t::_read() {
 jpeg_t::segment_sos_t::component_t::~component_t() {
 }
 
-jpeg_t::segment_app1_t::segment_app1_t(kaitai::kstream *p_io, jpeg_t::segment_t* p_parent, jpeg_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+jpeg_t::segment_app1_t::segment_app1_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void jpeg_t::segment_app1_t::_read() {
     m_magic = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("ASCII"));
+    n_body = true;
     {
         std::string on = magic();
         if (on == std::string("Exif")) {
+            n_body = false;
             m_body = new exif_in_jpeg_t(m__io, this, m__root);
         }
     }
 }
 
 jpeg_t::segment_app1_t::~segment_app1_t() {
+    if (!n_body) {
+        delete m_body;
+    }
 }
 
-jpeg_t::segment_sof0_t::segment_sof0_t(kaitai::kstream *p_io, jpeg_t::segment_t* p_parent, jpeg_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+jpeg_t::segment_sof0_t::segment_sof0_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -163,9 +190,9 @@ jpeg_t::segment_sof0_t::~segment_sof0_t() {
     delete m_components;
 }
 
-jpeg_t::segment_sof0_t::component_t::component_t(kaitai::kstream *p_io, jpeg_t::segment_sof0_t* p_parent, jpeg_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+jpeg_t::segment_sof0_t::component_t::component_t(kaitai::kstream* p__io, jpeg_t::segment_sof0_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_sampling_x = false;
     f_sampling_y = false;
     _read();
@@ -196,9 +223,9 @@ int32_t jpeg_t::segment_sof0_t::component_t::sampling_y() {
     return m_sampling_y;
 }
 
-jpeg_t::exif_in_jpeg_t::exif_in_jpeg_t(kaitai::kstream *p_io, jpeg_t::segment_app1_t* p_parent, jpeg_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+jpeg_t::exif_in_jpeg_t::exif_in_jpeg_t(kaitai::kstream* p__io, jpeg_t::segment_app1_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -214,9 +241,9 @@ jpeg_t::exif_in_jpeg_t::~exif_in_jpeg_t() {
     delete m_data;
 }
 
-jpeg_t::segment_app0_t::segment_app0_t(kaitai::kstream *p_io, jpeg_t::segment_t* p_parent, jpeg_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+jpeg_t::segment_app0_t::segment_app0_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class RenderwareBinaryStream extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -62,8 +62,8 @@ class RenderwareBinaryStream extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class StructClump extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \RenderwareBinaryStream\ListWithHeader $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\ListWithHeader $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -87,8 +87,8 @@ class StructClump extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class StructGeometry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \RenderwareBinaryStream\ListWithHeader $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\ListWithHeader $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -156,8 +156,8 @@ class StructGeometry extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class GeometryNonNative extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \RenderwareBinaryStream\StructGeometry $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\StructGeometry $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -193,8 +193,8 @@ class GeometryNonNative extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class StructGeometryList extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \RenderwareBinaryStream\ListWithHeader $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\ListWithHeader $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -208,8 +208,8 @@ class StructGeometryList extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class Rgba extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \RenderwareBinaryStream\GeometryNonNative $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\GeometryNonNative $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -232,8 +232,8 @@ class Rgba extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class Sphere extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \RenderwareBinaryStream\MorphTarget $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\MorphTarget $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -256,8 +256,8 @@ class Sphere extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class MorphTarget extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \RenderwareBinaryStream\StructGeometry $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\StructGeometry $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -295,8 +295,8 @@ class MorphTarget extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class SurfaceProperties extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \RenderwareBinaryStream\StructGeometry $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\StructGeometry $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -316,8 +316,8 @@ class SurfaceProperties extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class StructFrameList extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \RenderwareBinaryStream\ListWithHeader $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\ListWithHeader $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -338,8 +338,8 @@ class StructFrameList extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class Matrix extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \RenderwareBinaryStream\Frame $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\Frame $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -357,8 +357,8 @@ class Matrix extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class Vector3d extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -387,8 +387,8 @@ class Vector3d extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class ListWithHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \RenderwareBinaryStream $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -427,8 +427,10 @@ class ListWithHeader extends \Kaitai\Struct\Struct {
                 break;
         }
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \RenderwareBinaryStream($this->_io);
+            $i++;
         }
     }
     protected $_m_code;
@@ -448,8 +450,8 @@ class ListWithHeader extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class Triangle extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \RenderwareBinaryStream\GeometryNonNative $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\GeometryNonNative $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -472,8 +474,8 @@ class Triangle extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class Frame extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \RenderwareBinaryStream\StructFrameList $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\StructFrameList $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -496,8 +498,8 @@ class Frame extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class TexCoord extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \RenderwareBinaryStream\GeometryNonNative $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\GeometryNonNative $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -514,8 +516,8 @@ class TexCoord extends \Kaitai\Struct\Struct {
 namespace \RenderwareBinaryStream;
 
 class StructTextureDictionary extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \RenderwareBinaryStream\ListWithHeader $parent = null, \RenderwareBinaryStream $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\ListWithHeader $_parent = null, \RenderwareBinaryStream $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

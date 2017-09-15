@@ -266,7 +266,7 @@ sub _read {
 sub ofs_dir {
     my ($self) = @_;
     return $self-&gt;{ofs_dir} if ($self-&gt;{ofs_dir});
-    $self-&gt;{ofs_dir} = $self-&gt;offsets()[1];
+    $self-&gt;{ofs_dir} = @{$self-&gt;offsets()}[1];
     return $self-&gt;{ofs_dir};
 }
 
@@ -348,7 +348,7 @@ sub _read {
 sub size {
     my ($self) = @_;
     return $self-&gt;{size} if ($self-&gt;{size});
-    $self-&gt;{size} = (($self-&gt;_root()-&gt;offsets()[($self-&gt;offset_idx() + 1)] &amp; 4294965248) - $self-&gt;_root()-&gt;offsets()[$self-&gt;offset_idx()]);
+    $self-&gt;{size} = ((@{$self-&gt;_root()-&gt;offsets()}[($self-&gt;offset_idx() + 1)] &amp; 4294965248) - @{$self-&gt;_root()-&gt;offsets()}[$self-&gt;offset_idx()]);
     return $self-&gt;{size};
 }
 
@@ -357,7 +357,7 @@ sub body {
     return $self-&gt;{body} if ($self-&gt;{body});
     if (!($self-&gt;is_dir())) {
         my $_pos = $self-&gt;{_io}-&gt;pos();
-        $self-&gt;{_io}-&gt;seek(($self-&gt;_root()-&gt;offsets()[$self-&gt;offset_idx()] &amp; 4294965248));
+        $self-&gt;{_io}-&gt;seek((@{$self-&gt;_root()-&gt;offsets()}[$self-&gt;offset_idx()] &amp; 4294965248));
         $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
         $self-&gt;{_io}-&gt;seek($_pos);
     }

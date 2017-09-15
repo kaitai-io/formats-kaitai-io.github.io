@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 
 public class Icc4 extends KaitaiStruct {
     public static Icc4 fromFile(String fileName) throws IOException {
-        return new Icc4(new KaitaiStream(fileName));
+        return new Icc4(new ByteBufferKaitaiStream(fileName));
     }
 
     public Icc4(KaitaiStream _io) {
@@ -33,7 +34,7 @@ public class Icc4 extends KaitaiStruct {
     }
     public static class U8Fixed8Number extends KaitaiStruct {
         public static U8Fixed8Number fromFile(String fileName) throws IOException {
-            return new U8Fixed8Number(new KaitaiStream(fileName));
+            return new U8Fixed8Number(new ByteBufferKaitaiStream(fileName));
         }
 
         public U8Fixed8Number(KaitaiStream _io) {
@@ -62,7 +63,7 @@ public class Icc4 extends KaitaiStruct {
     }
     public static class U16Fixed16Number extends KaitaiStruct {
         public static U16Fixed16Number fromFile(String fileName) throws IOException {
-            return new U16Fixed16Number(new KaitaiStream(fileName));
+            return new U16Fixed16Number(new ByteBufferKaitaiStream(fileName));
         }
 
         public U16Fixed16Number(KaitaiStream _io) {
@@ -91,7 +92,7 @@ public class Icc4 extends KaitaiStruct {
     }
     public static class StandardIlluminantEncoding extends KaitaiStruct {
         public static StandardIlluminantEncoding fromFile(String fileName) throws IOException {
-            return new StandardIlluminantEncoding(new KaitaiStream(fileName));
+            return new StandardIlluminantEncoding(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum StandardIlluminantEncodings {
@@ -142,7 +143,7 @@ public class Icc4 extends KaitaiStruct {
     }
     public static class ProfileHeader extends KaitaiStruct {
         public static ProfileHeader fromFile(String fileName) throws IOException {
-            return new ProfileHeader(new KaitaiStream(fileName));
+            return new ProfileHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum CmmSignatures {
@@ -310,7 +311,7 @@ public class Icc4 extends KaitaiStruct {
         }
         public static class VersionField extends KaitaiStruct {
             public static VersionField fromFile(String fileName) throws IOException {
-                return new VersionField(new KaitaiStream(fileName));
+                return new VersionField(new ByteBufferKaitaiStream(fileName));
             }
 
             public VersionField(KaitaiStream _io) {
@@ -349,7 +350,7 @@ public class Icc4 extends KaitaiStruct {
         }
         public static class ProfileFlags extends KaitaiStruct {
             public static ProfileFlags fromFile(String fileName) throws IOException {
-                return new ProfileFlags(new KaitaiStream(fileName));
+                return new ProfileFlags(new ByteBufferKaitaiStream(fileName));
             }
 
             public ProfileFlags(KaitaiStream _io) {
@@ -425,7 +426,7 @@ public class Icc4 extends KaitaiStruct {
     }
     public static class XyzNumber extends KaitaiStruct {
         public static XyzNumber fromFile(String fileName) throws IOException {
-            return new XyzNumber(new KaitaiStream(fileName));
+            return new XyzNumber(new ByteBufferKaitaiStream(fileName));
         }
 
         public XyzNumber(KaitaiStream _io) {
@@ -460,7 +461,7 @@ public class Icc4 extends KaitaiStruct {
     }
     public static class DateTimeNumber extends KaitaiStruct {
         public static DateTimeNumber fromFile(String fileName) throws IOException {
-            return new DateTimeNumber(new KaitaiStream(fileName));
+            return new DateTimeNumber(new ByteBufferKaitaiStream(fileName));
         }
 
         public DateTimeNumber(KaitaiStream _io) {
@@ -504,7 +505,7 @@ public class Icc4 extends KaitaiStruct {
     }
     public static class Response16Number extends KaitaiStruct {
         public static Response16Number fromFile(String fileName) throws IOException {
-            return new Response16Number(new KaitaiStream(fileName));
+            return new Response16Number(new ByteBufferKaitaiStream(fileName));
         }
 
         public Response16Number(KaitaiStream _io) {
@@ -539,7 +540,7 @@ public class Icc4 extends KaitaiStruct {
     }
     public static class U1Fixed15Number extends KaitaiStruct {
         public static U1Fixed15Number fromFile(String fileName) throws IOException {
-            return new U1Fixed15Number(new KaitaiStream(fileName));
+            return new U1Fixed15Number(new ByteBufferKaitaiStream(fileName));
         }
 
         public U1Fixed15Number(KaitaiStream _io) {
@@ -568,7 +569,7 @@ public class Icc4 extends KaitaiStruct {
     }
     public static class TagTable extends KaitaiStruct {
         public static TagTable fromFile(String fileName) throws IOException {
-            return new TagTable(new KaitaiStream(fileName));
+            return new TagTable(new ByteBufferKaitaiStream(fileName));
         }
 
         public TagTable(KaitaiStream _io) {
@@ -594,7 +595,7 @@ public class Icc4 extends KaitaiStruct {
         }
         public static class TagDefinition extends KaitaiStruct {
             public static TagDefinition fromFile(String fileName) throws IOException {
-                return new TagDefinition(new KaitaiStream(fileName));
+                return new TagDefinition(new ByteBufferKaitaiStream(fileName));
             }
 
             public enum TagSignatures {
@@ -740,7 +741,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class BlueMatrixColumnTag extends KaitaiStruct {
                 public static BlueMatrixColumnTag fromFile(String fileName) throws IOException {
-                    return new BlueMatrixColumnTag(new KaitaiStream(fileName));
+                    return new BlueMatrixColumnTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public BlueMatrixColumnTag(KaitaiStream _io) {
@@ -777,7 +778,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class DeviceMfgDescTag extends KaitaiStruct {
                 public static DeviceMfgDescTag fromFile(String fileName) throws IOException {
-                    return new DeviceMfgDescTag(new KaitaiStream(fileName));
+                    return new DeviceMfgDescTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public DeviceMfgDescTag(KaitaiStream _io) {
@@ -814,7 +815,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class NamedColor2Type extends KaitaiStruct {
                 public static NamedColor2Type fromFile(String fileName) throws IOException {
-                    return new NamedColor2Type(new KaitaiStream(fileName));
+                    return new NamedColor2Type(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public NamedColor2Type(KaitaiStream _io) {
@@ -853,7 +854,7 @@ public class Icc4 extends KaitaiStruct {
                 }
                 public static class NamedColourDefinition extends KaitaiStruct {
                     public static NamedColourDefinition fromFile(String fileName) throws IOException {
-                        return new NamedColourDefinition(new KaitaiStream(fileName));
+                        return new NamedColourDefinition(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public NamedColourDefinition(KaitaiStream _io) {
@@ -922,7 +923,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ViewingConditionsTag extends KaitaiStruct {
                 public static ViewingConditionsTag fromFile(String fileName) throws IOException {
-                    return new ViewingConditionsTag(new KaitaiStream(fileName));
+                    return new ViewingConditionsTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ViewingConditionsTag(KaitaiStream _io) {
@@ -959,7 +960,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class BlueTrcTag extends KaitaiStruct {
                 public static BlueTrcTag fromFile(String fileName) throws IOException {
-                    return new BlueTrcTag(new KaitaiStream(fileName));
+                    return new BlueTrcTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public BlueTrcTag(KaitaiStream _io) {
@@ -1000,7 +1001,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ResponseCurveSet16Type extends KaitaiStruct {
                 public static ResponseCurveSet16Type fromFile(String fileName) throws IOException {
-                    return new ResponseCurveSet16Type(new KaitaiStream(fileName));
+                    return new ResponseCurveSet16Type(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ResponseCurveSet16Type(KaitaiStream _io) {
@@ -1044,7 +1045,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class CurveType extends KaitaiStruct {
                 public static CurveType fromFile(String fileName) throws IOException {
-                    return new CurveType(new KaitaiStream(fileName));
+                    return new CurveType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public CurveType(KaitaiStream _io) {
@@ -1089,7 +1090,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class SaturationRenderingIntentGamutTag extends KaitaiStruct {
                 public static SaturationRenderingIntentGamutTag fromFile(String fileName) throws IOException {
-                    return new SaturationRenderingIntentGamutTag(new KaitaiStream(fileName));
+                    return new SaturationRenderingIntentGamutTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public SaturationRenderingIntentGamutTag(KaitaiStream _io) {
@@ -1126,7 +1127,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class XyzType extends KaitaiStruct {
                 public static XyzType fromFile(String fileName) throws IOException {
-                    return new XyzType(new KaitaiStream(fileName));
+                    return new XyzType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public XyzType(KaitaiStream _io) {
@@ -1146,8 +1147,12 @@ public class Icc4 extends KaitaiStruct {
                 private void _read() {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.values = new ArrayList<XyzNumber>();
-                    while (!this._io.isEof()) {
-                        this.values.add(new XyzNumber(this._io, this, _root));
+                    {
+                        int i = 0;
+                        while (!this._io.isEof()) {
+                            this.values.add(new XyzNumber(this._io, this, _root));
+                            i++;
+                        }
                     }
                 }
                 private byte[] reserved;
@@ -1161,7 +1166,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class Lut8Type extends KaitaiStruct {
                 public static Lut8Type fromFile(String fileName) throws IOException {
-                    return new Lut8Type(new KaitaiStream(fileName));
+                    return new Lut8Type(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public Lut8Type(KaitaiStream _io) {
@@ -1223,7 +1228,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class BToA2Tag extends KaitaiStruct {
                 public static BToA2Tag fromFile(String fileName) throws IOException {
-                    return new BToA2Tag(new KaitaiStream(fileName));
+                    return new BToA2Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public BToA2Tag(KaitaiStream _io) {
@@ -1268,7 +1273,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class LutAToBType extends KaitaiStruct {
                 public static LutAToBType fromFile(String fileName) throws IOException {
-                    return new LutAToBType(new KaitaiStream(fileName));
+                    return new LutAToBType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public LutAToBType(KaitaiStream _io) {
@@ -1324,7 +1329,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class BToA0Tag extends KaitaiStruct {
                 public static BToA0Tag fromFile(String fileName) throws IOException {
-                    return new BToA0Tag(new KaitaiStream(fileName));
+                    return new BToA0Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public BToA0Tag(KaitaiStream _io) {
@@ -1369,7 +1374,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class MediaWhitePointTag extends KaitaiStruct {
                 public static MediaWhitePointTag fromFile(String fileName) throws IOException {
-                    return new MediaWhitePointTag(new KaitaiStream(fileName));
+                    return new MediaWhitePointTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public MediaWhitePointTag(KaitaiStream _io) {
@@ -1406,7 +1411,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class Lut16Type extends KaitaiStruct {
                 public static Lut16Type fromFile(String fileName) throws IOException {
-                    return new Lut16Type(new KaitaiStream(fileName));
+                    return new Lut16Type(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public Lut16Type(KaitaiStream _io) {
@@ -1468,7 +1473,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class PerceptualRenderingIntentGamutTag extends KaitaiStruct {
                 public static PerceptualRenderingIntentGamutTag fromFile(String fileName) throws IOException {
-                    return new PerceptualRenderingIntentGamutTag(new KaitaiStream(fileName));
+                    return new PerceptualRenderingIntentGamutTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public PerceptualRenderingIntentGamutTag(KaitaiStream _io) {
@@ -1505,7 +1510,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class U16Fixed16ArrayType extends KaitaiStruct {
                 public static U16Fixed16ArrayType fromFile(String fileName) throws IOException {
-                    return new U16Fixed16ArrayType(new KaitaiStream(fileName));
+                    return new U16Fixed16ArrayType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public U16Fixed16ArrayType(KaitaiStream _io) {
@@ -1525,8 +1530,12 @@ public class Icc4 extends KaitaiStruct {
                 private void _read() {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.values = new ArrayList<U16Fixed16Number>();
-                    while (!this._io.isEof()) {
-                        this.values.add(new U16Fixed16Number(this._io, this, _root));
+                    {
+                        int i = 0;
+                        while (!this._io.isEof()) {
+                            this.values.add(new U16Fixed16Number(this._io, this, _root));
+                            i++;
+                        }
                     }
                 }
                 private byte[] reserved;
@@ -1540,7 +1549,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ColorantTableOutTag extends KaitaiStruct {
                 public static ColorantTableOutTag fromFile(String fileName) throws IOException {
-                    return new ColorantTableOutTag(new KaitaiStream(fileName));
+                    return new ColorantTableOutTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ColorantTableOutTag(KaitaiStream _io) {
@@ -1577,7 +1586,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class MeasurementTag extends KaitaiStruct {
                 public static MeasurementTag fromFile(String fileName) throws IOException {
-                    return new MeasurementTag(new KaitaiStream(fileName));
+                    return new MeasurementTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public MeasurementTag(KaitaiStream _io) {
@@ -1614,7 +1623,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ProfileSequenceTag extends KaitaiStruct {
                 public static ProfileSequenceTag fromFile(String fileName) throws IOException {
-                    return new ProfileSequenceTag(new KaitaiStream(fileName));
+                    return new ProfileSequenceTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ProfileSequenceTag(KaitaiStream _io) {
@@ -1651,7 +1660,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class TechnologyTag extends KaitaiStruct {
                 public static TechnologyTag fromFile(String fileName) throws IOException {
-                    return new TechnologyTag(new KaitaiStream(fileName));
+                    return new TechnologyTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public TechnologyTag(KaitaiStream _io) {
@@ -1688,7 +1697,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class AToB0Tag extends KaitaiStruct {
                 public static AToB0Tag fromFile(String fileName) throws IOException {
-                    return new AToB0Tag(new KaitaiStream(fileName));
+                    return new AToB0Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public AToB0Tag(KaitaiStream _io) {
@@ -1733,7 +1742,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class DToB0Tag extends KaitaiStruct {
                 public static DToB0Tag fromFile(String fileName) throws IOException {
-                    return new DToB0Tag(new KaitaiStream(fileName));
+                    return new DToB0Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public DToB0Tag(KaitaiStream _io) {
@@ -1770,7 +1779,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class OutputResponseTag extends KaitaiStruct {
                 public static OutputResponseTag fromFile(String fileName) throws IOException {
-                    return new OutputResponseTag(new KaitaiStream(fileName));
+                    return new OutputResponseTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public OutputResponseTag(KaitaiStream _io) {
@@ -1807,7 +1816,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class GreenMatrixColumnTag extends KaitaiStruct {
                 public static GreenMatrixColumnTag fromFile(String fileName) throws IOException {
-                    return new GreenMatrixColumnTag(new KaitaiStream(fileName));
+                    return new GreenMatrixColumnTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public GreenMatrixColumnTag(KaitaiStream _io) {
@@ -1844,7 +1853,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ProfileDescriptionTag extends KaitaiStruct {
                 public static ProfileDescriptionTag fromFile(String fileName) throws IOException {
-                    return new ProfileDescriptionTag(new KaitaiStream(fileName));
+                    return new ProfileDescriptionTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ProfileDescriptionTag(KaitaiStream _io) {
@@ -1881,7 +1890,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class Preview1Tag extends KaitaiStruct {
                 public static Preview1Tag fromFile(String fileName) throws IOException {
-                    return new Preview1Tag(new KaitaiStream(fileName));
+                    return new Preview1Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public Preview1Tag(KaitaiStream _io) {
@@ -1926,7 +1935,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class RedTrcTag extends KaitaiStruct {
                 public static RedTrcTag fromFile(String fileName) throws IOException {
-                    return new RedTrcTag(new KaitaiStream(fileName));
+                    return new RedTrcTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public RedTrcTag(KaitaiStream _io) {
@@ -1967,7 +1976,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class BToD0Tag extends KaitaiStruct {
                 public static BToD0Tag fromFile(String fileName) throws IOException {
-                    return new BToD0Tag(new KaitaiStream(fileName));
+                    return new BToD0Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public BToD0Tag(KaitaiStream _io) {
@@ -2004,7 +2013,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class DToB1Tag extends KaitaiStruct {
                 public static DToB1Tag fromFile(String fileName) throws IOException {
-                    return new DToB1Tag(new KaitaiStream(fileName));
+                    return new DToB1Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public DToB1Tag(KaitaiStream _io) {
@@ -2041,7 +2050,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class BToA1Tag extends KaitaiStruct {
                 public static BToA1Tag fromFile(String fileName) throws IOException {
-                    return new BToA1Tag(new KaitaiStream(fileName));
+                    return new BToA1Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public BToA1Tag(KaitaiStream _io) {
@@ -2086,7 +2095,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ParametricCurveType extends KaitaiStruct {
                 public static ParametricCurveType fromFile(String fileName) throws IOException {
-                    return new ParametricCurveType(new KaitaiStream(fileName));
+                    return new ParametricCurveType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public enum ParametricCurveTypeFunctions {
@@ -2150,7 +2159,7 @@ public class Icc4 extends KaitaiStruct {
                 }
                 public static class ParamsIec619663 extends KaitaiStruct {
                     public static ParamsIec619663 fromFile(String fileName) throws IOException {
-                        return new ParamsIec619663(new KaitaiStream(fileName));
+                        return new ParamsIec619663(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public ParamsIec619663(KaitaiStream _io) {
@@ -2188,7 +2197,7 @@ public class Icc4 extends KaitaiStruct {
                 }
                 public static class ParamsIec6196621 extends KaitaiStruct {
                     public static ParamsIec6196621 fromFile(String fileName) throws IOException {
-                        return new ParamsIec6196621(new KaitaiStream(fileName));
+                        return new ParamsIec6196621(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public ParamsIec6196621(KaitaiStream _io) {
@@ -2229,7 +2238,7 @@ public class Icc4 extends KaitaiStruct {
                 }
                 public static class ParamsYEqualsXToPowerOfG extends KaitaiStruct {
                     public static ParamsYEqualsXToPowerOfG fromFile(String fileName) throws IOException {
-                        return new ParamsYEqualsXToPowerOfG(new KaitaiStream(fileName));
+                        return new ParamsYEqualsXToPowerOfG(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public ParamsYEqualsXToPowerOfG(KaitaiStream _io) {
@@ -2258,7 +2267,7 @@ public class Icc4 extends KaitaiStruct {
                 }
                 public static class ParamsYEqualsObAxPlusBCbToPowerOfGPlusC extends KaitaiStruct {
                     public static ParamsYEqualsObAxPlusBCbToPowerOfGPlusC fromFile(String fileName) throws IOException {
-                        return new ParamsYEqualsObAxPlusBCbToPowerOfGPlusC(new KaitaiStream(fileName));
+                        return new ParamsYEqualsObAxPlusBCbToPowerOfGPlusC(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public ParamsYEqualsObAxPlusBCbToPowerOfGPlusC(KaitaiStream _io) {
@@ -2305,7 +2314,7 @@ public class Icc4 extends KaitaiStruct {
                 }
                 public static class ParamsCie1221996 extends KaitaiStruct {
                     public static ParamsCie1221996 fromFile(String fileName) throws IOException {
-                        return new ParamsCie1221996(new KaitaiStream(fileName));
+                        return new ParamsCie1221996(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public ParamsCie1221996(KaitaiStream _io) {
@@ -2353,7 +2362,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ChromaticityTag extends KaitaiStruct {
                 public static ChromaticityTag fromFile(String fileName) throws IOException {
-                    return new ChromaticityTag(new KaitaiStream(fileName));
+                    return new ChromaticityTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ChromaticityTag(KaitaiStream _io) {
@@ -2390,7 +2399,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ChromaticAdaptationTag extends KaitaiStruct {
                 public static ChromaticAdaptationTag fromFile(String fileName) throws IOException {
-                    return new ChromaticAdaptationTag(new KaitaiStream(fileName));
+                    return new ChromaticAdaptationTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ChromaticAdaptationTag(KaitaiStream _io) {
@@ -2427,7 +2436,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class MeasurementType extends KaitaiStruct {
                 public static MeasurementType fromFile(String fileName) throws IOException {
-                    return new MeasurementType(new KaitaiStream(fileName));
+                    return new MeasurementType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public enum StandardObserverEncodings {
@@ -2518,7 +2527,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class TextType extends KaitaiStruct {
                 public static TextType fromFile(String fileName) throws IOException {
-                    return new TextType(new KaitaiStream(fileName));
+                    return new TextType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public TextType(KaitaiStream _io) {
@@ -2550,7 +2559,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ProfileSequenceIdentifierType extends KaitaiStruct {
                 public static ProfileSequenceIdentifierType fromFile(String fileName) throws IOException {
-                    return new ProfileSequenceIdentifierType(new KaitaiStream(fileName));
+                    return new ProfileSequenceIdentifierType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ProfileSequenceIdentifierType(KaitaiStream _io) {
@@ -2581,7 +2590,7 @@ public class Icc4 extends KaitaiStruct {
                 }
                 public static class ProfileIdentifier extends KaitaiStruct {
                     public static ProfileIdentifier fromFile(String fileName) throws IOException {
-                        return new ProfileIdentifier(new KaitaiStream(fileName));
+                        return new ProfileIdentifier(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public ProfileIdentifier(KaitaiStream _io) {
@@ -2626,7 +2635,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ColorantTableType extends KaitaiStruct {
                 public static ColorantTableType fromFile(String fileName) throws IOException {
-                    return new ColorantTableType(new KaitaiStream(fileName));
+                    return new ColorantTableType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ColorantTableType(KaitaiStream _io) {
@@ -2653,7 +2662,7 @@ public class Icc4 extends KaitaiStruct {
                 }
                 public static class Colorant extends KaitaiStruct {
                     public static Colorant fromFile(String fileName) throws IOException {
-                        return new Colorant(new KaitaiStream(fileName));
+                        return new Colorant(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public Colorant(KaitaiStream _io) {
@@ -2702,7 +2711,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class SignatureType extends KaitaiStruct {
                 public static SignatureType fromFile(String fileName) throws IOException {
-                    return new SignatureType(new KaitaiStream(fileName));
+                    return new SignatureType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public SignatureType(KaitaiStream _io) {
@@ -2734,7 +2743,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class CopyrightTag extends KaitaiStruct {
                 public static CopyrightTag fromFile(String fileName) throws IOException {
-                    return new CopyrightTag(new KaitaiStream(fileName));
+                    return new CopyrightTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public CopyrightTag(KaitaiStream _io) {
@@ -2771,7 +2780,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class Preview0Tag extends KaitaiStruct {
                 public static Preview0Tag fromFile(String fileName) throws IOException {
-                    return new Preview0Tag(new KaitaiStream(fileName));
+                    return new Preview0Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public Preview0Tag(KaitaiStream _io) {
@@ -2820,7 +2829,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class DateTimeType extends KaitaiStruct {
                 public static DateTimeType fromFile(String fileName) throws IOException {
-                    return new DateTimeType(new KaitaiStream(fileName));
+                    return new DateTimeType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public DateTimeType(KaitaiStream _io) {
@@ -2852,7 +2861,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class DToB3Tag extends KaitaiStruct {
                 public static DToB3Tag fromFile(String fileName) throws IOException {
-                    return new DToB3Tag(new KaitaiStream(fileName));
+                    return new DToB3Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public DToB3Tag(KaitaiStream _io) {
@@ -2889,7 +2898,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class Preview2Tag extends KaitaiStruct {
                 public static Preview2Tag fromFile(String fileName) throws IOException {
-                    return new Preview2Tag(new KaitaiStream(fileName));
+                    return new Preview2Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public Preview2Tag(KaitaiStream _io) {
@@ -2934,7 +2943,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class DeviceModelDescTag extends KaitaiStruct {
                 public static DeviceModelDescTag fromFile(String fileName) throws IOException {
-                    return new DeviceModelDescTag(new KaitaiStream(fileName));
+                    return new DeviceModelDescTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public DeviceModelDescTag(KaitaiStream _io) {
@@ -2971,7 +2980,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class MultiProcessElementsType extends KaitaiStruct {
                 public static MultiProcessElementsType fromFile(String fileName) throws IOException {
-                    return new MultiProcessElementsType(new KaitaiStream(fileName));
+                    return new MultiProcessElementsType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public MultiProcessElementsType(KaitaiStream _io) {
@@ -3018,7 +3027,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class UInt16ArrayType extends KaitaiStruct {
                 public static UInt16ArrayType fromFile(String fileName) throws IOException {
-                    return new UInt16ArrayType(new KaitaiStream(fileName));
+                    return new UInt16ArrayType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public UInt16ArrayType(KaitaiStream _io) {
@@ -3038,8 +3047,12 @@ public class Icc4 extends KaitaiStruct {
                 private void _read() {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.values = new ArrayList<Integer>();
-                    while (!this._io.isEof()) {
-                        this.values.add(this._io.readU2be());
+                    {
+                        int i = 0;
+                        while (!this._io.isEof()) {
+                            this.values.add(this._io.readU2be());
+                            i++;
+                        }
                     }
                 }
                 private byte[] reserved;
@@ -3053,7 +3066,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ColorantOrderTag extends KaitaiStruct {
                 public static ColorantOrderTag fromFile(String fileName) throws IOException {
-                    return new ColorantOrderTag(new KaitaiStream(fileName));
+                    return new ColorantOrderTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ColorantOrderTag(KaitaiStream _io) {
@@ -3090,7 +3103,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class DataType extends KaitaiStruct {
                 public static DataType fromFile(String fileName) throws IOException {
-                    return new DataType(new KaitaiStream(fileName));
+                    return new DataType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public enum DataTypes {
@@ -3134,7 +3147,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ChromaticityType extends KaitaiStruct {
                 public static ChromaticityType fromFile(String fileName) throws IOException {
-                    return new ChromaticityType(new KaitaiStream(fileName));
+                    return new ChromaticityType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public enum ColorantAndPhosphorEncodings {
@@ -3180,7 +3193,7 @@ public class Icc4 extends KaitaiStruct {
                 }
                 public static class CiexyCoordinateValues extends KaitaiStruct {
                     public static CiexyCoordinateValues fromFile(String fileName) throws IOException {
-                        return new CiexyCoordinateValues(new KaitaiStream(fileName));
+                        return new CiexyCoordinateValues(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public CiexyCoordinateValues(KaitaiStream _io) {
@@ -3225,7 +3238,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class LuminanceTag extends KaitaiStruct {
                 public static LuminanceTag fromFile(String fileName) throws IOException {
-                    return new LuminanceTag(new KaitaiStream(fileName));
+                    return new LuminanceTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public LuminanceTag(KaitaiStream _io) {
@@ -3262,7 +3275,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class S15Fixed16ArrayType extends KaitaiStruct {
                 public static S15Fixed16ArrayType fromFile(String fileName) throws IOException {
-                    return new S15Fixed16ArrayType(new KaitaiStream(fileName));
+                    return new S15Fixed16ArrayType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public S15Fixed16ArrayType(KaitaiStream _io) {
@@ -3282,8 +3295,12 @@ public class Icc4 extends KaitaiStruct {
                 private void _read() {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.values = new ArrayList<S15Fixed16Number>();
-                    while (!this._io.isEof()) {
-                        this.values.add(new S15Fixed16Number(this._io, this, _root));
+                    {
+                        int i = 0;
+                        while (!this._io.isEof()) {
+                            this.values.add(new S15Fixed16Number(this._io, this, _root));
+                            i++;
+                        }
                     }
                 }
                 private byte[] reserved;
@@ -3297,7 +3314,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class MultiLocalizedUnicodeType extends KaitaiStruct {
                 public static MultiLocalizedUnicodeType fromFile(String fileName) throws IOException {
-                    return new MultiLocalizedUnicodeType(new KaitaiStream(fileName));
+                    return new MultiLocalizedUnicodeType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public MultiLocalizedUnicodeType(KaitaiStream _io) {
@@ -3325,7 +3342,7 @@ public class Icc4 extends KaitaiStruct {
                 }
                 public static class Record extends KaitaiStruct {
                     public static Record fromFile(String fileName) throws IOException {
-                        return new Record(new KaitaiStream(fileName));
+                        return new Record(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public Record(KaitaiStream _io) {
@@ -3386,7 +3403,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class AToB2Tag extends KaitaiStruct {
                 public static AToB2Tag fromFile(String fileName) throws IOException {
-                    return new AToB2Tag(new KaitaiStream(fileName));
+                    return new AToB2Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public AToB2Tag(KaitaiStream _io) {
@@ -3431,7 +3448,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class AToB1Tag extends KaitaiStruct {
                 public static AToB1Tag fromFile(String fileName) throws IOException {
-                    return new AToB1Tag(new KaitaiStream(fileName));
+                    return new AToB1Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public AToB1Tag(KaitaiStream _io) {
@@ -3476,7 +3493,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ColorimetricIntentImageStateTag extends KaitaiStruct {
                 public static ColorimetricIntentImageStateTag fromFile(String fileName) throws IOException {
-                    return new ColorimetricIntentImageStateTag(new KaitaiStream(fileName));
+                    return new ColorimetricIntentImageStateTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ColorimetricIntentImageStateTag(KaitaiStream _io) {
@@ -3513,7 +3530,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class CharTargetTag extends KaitaiStruct {
                 public static CharTargetTag fromFile(String fileName) throws IOException {
-                    return new CharTargetTag(new KaitaiStream(fileName));
+                    return new CharTargetTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public CharTargetTag(KaitaiStream _io) {
@@ -3550,7 +3567,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ColorantTableTag extends KaitaiStruct {
                 public static ColorantTableTag fromFile(String fileName) throws IOException {
-                    return new ColorantTableTag(new KaitaiStream(fileName));
+                    return new ColorantTableTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ColorantTableTag(KaitaiStream _io) {
@@ -3587,7 +3604,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class CalibrationDateTimeTag extends KaitaiStruct {
                 public static CalibrationDateTimeTag fromFile(String fileName) throws IOException {
-                    return new CalibrationDateTimeTag(new KaitaiStream(fileName));
+                    return new CalibrationDateTimeTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public CalibrationDateTimeTag(KaitaiStream _io) {
@@ -3624,7 +3641,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class NamedColor2Tag extends KaitaiStruct {
                 public static NamedColor2Tag fromFile(String fileName) throws IOException {
-                    return new NamedColor2Tag(new KaitaiStream(fileName));
+                    return new NamedColor2Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public NamedColor2Tag(KaitaiStream _io) {
@@ -3661,7 +3678,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ViewingCondDescTag extends KaitaiStruct {
                 public static ViewingCondDescTag fromFile(String fileName) throws IOException {
-                    return new ViewingCondDescTag(new KaitaiStream(fileName));
+                    return new ViewingCondDescTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ViewingCondDescTag(KaitaiStream _io) {
@@ -3698,7 +3715,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class BToD3Tag extends KaitaiStruct {
                 public static BToD3Tag fromFile(String fileName) throws IOException {
-                    return new BToD3Tag(new KaitaiStream(fileName));
+                    return new BToD3Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public BToD3Tag(KaitaiStream _io) {
@@ -3735,7 +3752,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ProfileSequenceDescType extends KaitaiStruct {
                 public static ProfileSequenceDescType fromFile(String fileName) throws IOException {
-                    return new ProfileSequenceDescType(new KaitaiStream(fileName));
+                    return new ProfileSequenceDescType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ProfileSequenceDescType(KaitaiStream _io) {
@@ -3762,7 +3779,7 @@ public class Icc4 extends KaitaiStruct {
                 }
                 public static class ProfileDescription extends KaitaiStruct {
                     public static ProfileDescription fromFile(String fileName) throws IOException {
-                        return new ProfileDescription(new KaitaiStream(fileName));
+                        return new ProfileDescription(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public ProfileDescription(KaitaiStream _io) {
@@ -3817,7 +3834,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ProfileSequenceIdentifierTag extends KaitaiStruct {
                 public static ProfileSequenceIdentifierTag fromFile(String fileName) throws IOException {
-                    return new ProfileSequenceIdentifierTag(new KaitaiStream(fileName));
+                    return new ProfileSequenceIdentifierTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ProfileSequenceIdentifierTag(KaitaiStream _io) {
@@ -3854,7 +3871,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class BToD1Tag extends KaitaiStruct {
                 public static BToD1Tag fromFile(String fileName) throws IOException {
-                    return new BToD1Tag(new KaitaiStream(fileName));
+                    return new BToD1Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public BToD1Tag(KaitaiStream _io) {
@@ -3891,7 +3908,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ColorantOrderType extends KaitaiStruct {
                 public static ColorantOrderType fromFile(String fileName) throws IOException {
-                    return new ColorantOrderType(new KaitaiStream(fileName));
+                    return new ColorantOrderType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ColorantOrderType(KaitaiStream _io) {
@@ -3929,7 +3946,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class DToB2Tag extends KaitaiStruct {
                 public static DToB2Tag fromFile(String fileName) throws IOException {
-                    return new DToB2Tag(new KaitaiStream(fileName));
+                    return new DToB2Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public DToB2Tag(KaitaiStream _io) {
@@ -3966,7 +3983,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class GrayTrcTag extends KaitaiStruct {
                 public static GrayTrcTag fromFile(String fileName) throws IOException {
-                    return new GrayTrcTag(new KaitaiStream(fileName));
+                    return new GrayTrcTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public GrayTrcTag(KaitaiStream _io) {
@@ -4007,7 +4024,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class ViewingConditionsType extends KaitaiStruct {
                 public static ViewingConditionsType fromFile(String fileName) throws IOException {
-                    return new ViewingConditionsType(new KaitaiStream(fileName));
+                    return new ViewingConditionsType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ViewingConditionsType(KaitaiStream _io) {
@@ -4045,7 +4062,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class LutBToAType extends KaitaiStruct {
                 public static LutBToAType fromFile(String fileName) throws IOException {
-                    return new LutBToAType(new KaitaiStream(fileName));
+                    return new LutBToAType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public LutBToAType(KaitaiStream _io) {
@@ -4101,7 +4118,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class GreenTrcTag extends KaitaiStruct {
                 public static GreenTrcTag fromFile(String fileName) throws IOException {
-                    return new GreenTrcTag(new KaitaiStream(fileName));
+                    return new GreenTrcTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public GreenTrcTag(KaitaiStream _io) {
@@ -4142,7 +4159,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class UInt32ArrayType extends KaitaiStruct {
                 public static UInt32ArrayType fromFile(String fileName) throws IOException {
-                    return new UInt32ArrayType(new KaitaiStream(fileName));
+                    return new UInt32ArrayType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public UInt32ArrayType(KaitaiStream _io) {
@@ -4162,8 +4179,12 @@ public class Icc4 extends KaitaiStruct {
                 private void _read() {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.values = new ArrayList<Long>();
-                    while (!this._io.isEof()) {
-                        this.values.add(this._io.readU4be());
+                    {
+                        int i = 0;
+                        while (!this._io.isEof()) {
+                            this.values.add(this._io.readU4be());
+                            i++;
+                        }
                     }
                 }
                 private byte[] reserved;
@@ -4177,7 +4198,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class GamutTag extends KaitaiStruct {
                 public static GamutTag fromFile(String fileName) throws IOException {
-                    return new GamutTag(new KaitaiStream(fileName));
+                    return new GamutTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public GamutTag(KaitaiStream _io) {
@@ -4222,7 +4243,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class UInt8ArrayType extends KaitaiStruct {
                 public static UInt8ArrayType fromFile(String fileName) throws IOException {
-                    return new UInt8ArrayType(new KaitaiStream(fileName));
+                    return new UInt8ArrayType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public UInt8ArrayType(KaitaiStream _io) {
@@ -4242,8 +4263,12 @@ public class Icc4 extends KaitaiStruct {
                 private void _read() {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.values = new ArrayList<Integer>();
-                    while (!this._io.isEof()) {
-                        this.values.add(this._io.readU1());
+                    {
+                        int i = 0;
+                        while (!this._io.isEof()) {
+                            this.values.add(this._io.readU1());
+                            i++;
+                        }
                     }
                 }
                 private byte[] reserved;
@@ -4257,7 +4282,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class RedMatrixColumnTag extends KaitaiStruct {
                 public static RedMatrixColumnTag fromFile(String fileName) throws IOException {
-                    return new RedMatrixColumnTag(new KaitaiStream(fileName));
+                    return new RedMatrixColumnTag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public RedMatrixColumnTag(KaitaiStream _io) {
@@ -4294,7 +4319,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class UInt64ArrayType extends KaitaiStruct {
                 public static UInt64ArrayType fromFile(String fileName) throws IOException {
-                    return new UInt64ArrayType(new KaitaiStream(fileName));
+                    return new UInt64ArrayType(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public UInt64ArrayType(KaitaiStream _io) {
@@ -4314,8 +4339,12 @@ public class Icc4 extends KaitaiStruct {
                 private void _read() {
                     this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0 });
                     this.values = new ArrayList<Long>();
-                    while (!this._io.isEof()) {
-                        this.values.add(this._io.readU8be());
+                    {
+                        int i = 0;
+                        while (!this._io.isEof()) {
+                            this.values.add(this._io.readU8be());
+                            i++;
+                        }
                     }
                 }
                 private byte[] reserved;
@@ -4329,7 +4358,7 @@ public class Icc4 extends KaitaiStruct {
             }
             public static class BToD2Tag extends KaitaiStruct {
                 public static BToD2Tag fromFile(String fileName) throws IOException {
-                    return new BToD2Tag(new KaitaiStream(fileName));
+                    return new BToD2Tag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public BToD2Tag(KaitaiStream _io) {
@@ -4373,295 +4402,295 @@ public class Icc4 extends KaitaiStruct {
                 switch (tagSignature()) {
                 case PROFILE_SEQUENCE_IDENTIFIER: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new ProfileSequenceIdentifierTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case COLORIMETRIC_INTENT_IMAGE_STATE: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new ColorimetricIntentImageStateTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case RED_TRC: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new RedTrcTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case PREVIEW_0: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new Preview0Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case GREEN_TRC: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new GreenTrcTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case B_TO_D_0: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new BToD0Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case COLORANT_TABLE_OUT: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new ColorantTableOutTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case B_TO_A_2: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new BToA2Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case CALIBRATION_DATE_TIME: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new CalibrationDateTimeTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case CHROMATIC_ADAPTATION: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new ChromaticAdaptationTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case COLORANT_TABLE: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new ColorantTableTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case A_TO_B_2: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new AToB2Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case D_TO_B_1: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new DToB1Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case CHROMATICITY: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new ChromaticityTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case BLUE_MATRIX_COLUMN: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new BlueMatrixColumnTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case A_TO_B_0: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new AToB0Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case B_TO_D_2: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new BToD2Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case B_TO_A_1: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new BToA1Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case MEDIA_WHITE_POINT: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new MediaWhitePointTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case D_TO_B_0: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new DToB0Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case NAMED_COLOR_2: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new NamedColor2Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case D_TO_B_2: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new DToB2Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case RED_MATRIX_COLUMN: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new RedMatrixColumnTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case VIEWING_CONDITIONS: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new ViewingConditionsTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case A_TO_B_1: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new AToB1Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case PREVIEW_1: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new Preview1Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case GRAY_TRC: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new GrayTrcTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case DEVICE_MFG_DESC: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new DeviceMfgDescTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case B_TO_D_1: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new BToD1Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case COLORANT_ORDER: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new ColorantOrderTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case COPYRIGHT: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new CopyrightTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case GAMUT: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new GamutTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case CHAR_TARGET: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new CharTargetTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case OUTPUT_RESPONSE: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new OutputResponseTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case TECHNOLOGY: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new TechnologyTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case VIEWING_COND_DESC: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new ViewingCondDescTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case PROFILE_DESCRIPTION: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new ProfileDescriptionTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case LUMINANCE: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new LuminanceTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case D_TO_B_3: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new DToB3Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case B_TO_D_3: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new BToD3Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case B_TO_A_0: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new BToA0Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case PREVIEW_2: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new Preview2Tag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case GREEN_MATRIX_COLUMN: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new GreenMatrixColumnTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case PROFILE_SEQUENCE: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new ProfileSequenceTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case SATURATION_RENDERING_INTENT_GAMUT: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new SaturationRenderingIntentGamutTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case PERCEPTUAL_RENDERING_INTENT_GAMUT: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new PerceptualRenderingIntentGamutTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case BLUE_TRC: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new BlueTrcTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case DEVICE_MODEL_DESC: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new DeviceModelDescTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
                 case MEASUREMENT: {
                     this._raw_tagDataElement = this._io.readBytes(sizeOfDataElement());
-                    KaitaiStream _io__raw_tagDataElement = new KaitaiStream(_raw_tagDataElement);
+                    KaitaiStream _io__raw_tagDataElement = new ByteBufferKaitaiStream(_raw_tagDataElement);
                     this.tagDataElement = new MeasurementTag(_io__raw_tagDataElement, this, _root);
                     break;
                 }
@@ -4697,7 +4726,7 @@ public class Icc4 extends KaitaiStruct {
     }
     public static class DeviceAttributes extends KaitaiStruct {
         public static DeviceAttributes fromFile(String fileName) throws IOException {
-            return new DeviceAttributes(new KaitaiStream(fileName));
+            return new DeviceAttributes(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum DeviceAttributesReflectiveOrTransparency {
@@ -4801,7 +4830,7 @@ public class Icc4 extends KaitaiStruct {
     }
     public static class DeviceManufacturer extends KaitaiStruct {
         public static DeviceManufacturer fromFile(String fileName) throws IOException {
-            return new DeviceManufacturer(new KaitaiStream(fileName));
+            return new DeviceManufacturer(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum DeviceManufacturers {
@@ -5106,7 +5135,7 @@ public class Icc4 extends KaitaiStruct {
     }
     public static class S15Fixed16Number extends KaitaiStruct {
         public static S15Fixed16Number fromFile(String fileName) throws IOException {
-            return new S15Fixed16Number(new KaitaiStream(fileName));
+            return new S15Fixed16Number(new ByteBufferKaitaiStream(fileName));
         }
 
         public S15Fixed16Number(KaitaiStream _io) {
@@ -5135,7 +5164,7 @@ public class Icc4 extends KaitaiStruct {
     }
     public static class PositionNumber extends KaitaiStruct {
         public static PositionNumber fromFile(String fileName) throws IOException {
-            return new PositionNumber(new KaitaiStream(fileName));
+            return new PositionNumber(new ByteBufferKaitaiStream(fileName));
         }
 
         public PositionNumber(KaitaiStream _io) {

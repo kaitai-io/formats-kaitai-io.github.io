@@ -4,8 +4,8 @@
 
 
 
-shapefile_main_t::shapefile_main_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+shapefile_main_t::shapefile_main_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -13,8 +13,12 @@ shapefile_main_t::shapefile_main_t(kaitai::kstream *p_io, kaitai::kstruct* p_par
 void shapefile_main_t::_read() {
     m_header = new file_header_t(m__io, this, m__root);
     m_records = new std::vector<record_t*>();
-    while (!m__io->is_eof()) {
-        m_records->push_back(new record_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_records->push_back(new record_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -26,9 +30,9 @@ shapefile_main_t::~shapefile_main_t() {
     delete m_records;
 }
 
-shapefile_main_t::multi_point_m_t::multi_point_m_t(kaitai::kstream *p_io, shapefile_main_t::record_contents_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::multi_point_m_t::multi_point_m_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -60,9 +64,9 @@ shapefile_main_t::multi_point_m_t::~multi_point_m_t() {
     delete m_m_values;
 }
 
-shapefile_main_t::bounding_box_x_y_z_m_t::bounding_box_x_y_z_m_t(kaitai::kstream *p_io, shapefile_main_t::file_header_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::bounding_box_x_y_z_m_t::bounding_box_x_y_z_m_t(kaitai::kstream* p__io, shapefile_main_t::file_header_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -80,9 +84,9 @@ shapefile_main_t::bounding_box_x_y_z_m_t::~bounding_box_x_y_z_m_t() {
     delete m_m;
 }
 
-shapefile_main_t::point_t::point_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::point_t::point_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -94,9 +98,9 @@ void shapefile_main_t::point_t::_read() {
 shapefile_main_t::point_t::~point_t() {
 }
 
-shapefile_main_t::polygon_t::polygon_t(kaitai::kstream *p_io, shapefile_main_t::record_contents_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::polygon_t::polygon_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -127,9 +131,9 @@ shapefile_main_t::polygon_t::~polygon_t() {
     delete m_points;
 }
 
-shapefile_main_t::bounds_min_max_t::bounds_min_max_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::bounds_min_max_t::bounds_min_max_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -141,9 +145,9 @@ void shapefile_main_t::bounds_min_max_t::_read() {
 shapefile_main_t::bounds_min_max_t::~bounds_min_max_t() {
 }
 
-shapefile_main_t::poly_line_t::poly_line_t(kaitai::kstream *p_io, shapefile_main_t::record_contents_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::poly_line_t::poly_line_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -174,9 +178,9 @@ shapefile_main_t::poly_line_t::~poly_line_t() {
     delete m_points;
 }
 
-shapefile_main_t::multi_point_z_t::multi_point_z_t(kaitai::kstream *p_io, shapefile_main_t::record_contents_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::multi_point_z_t::multi_point_z_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -217,9 +221,9 @@ shapefile_main_t::multi_point_z_t::~multi_point_z_t() {
     delete m_m_values;
 }
 
-shapefile_main_t::poly_line_z_t::poly_line_z_t(kaitai::kstream *p_io, shapefile_main_t::record_contents_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::poly_line_z_t::poly_line_z_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -268,9 +272,9 @@ shapefile_main_t::poly_line_z_t::~poly_line_z_t() {
     delete m_m_values;
 }
 
-shapefile_main_t::polygon_z_t::polygon_z_t(kaitai::kstream *p_io, shapefile_main_t::record_contents_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::polygon_z_t::polygon_z_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -319,9 +323,9 @@ shapefile_main_t::polygon_z_t::~polygon_z_t() {
     delete m_m_values;
 }
 
-shapefile_main_t::bounding_box_x_y_t::bounding_box_x_y_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::bounding_box_x_y_t::bounding_box_x_y_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -335,9 +339,9 @@ shapefile_main_t::bounding_box_x_y_t::~bounding_box_x_y_t() {
     delete m_y;
 }
 
-shapefile_main_t::point_m_t::point_m_t(kaitai::kstream *p_io, shapefile_main_t::record_contents_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::point_m_t::point_m_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -350,9 +354,9 @@ void shapefile_main_t::point_m_t::_read() {
 shapefile_main_t::point_m_t::~point_m_t() {
 }
 
-shapefile_main_t::polygon_m_t::polygon_m_t(kaitai::kstream *p_io, shapefile_main_t::record_contents_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::polygon_m_t::polygon_m_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -392,9 +396,9 @@ shapefile_main_t::polygon_m_t::~polygon_m_t() {
     delete m_m_values;
 }
 
-shapefile_main_t::record_header_t::record_header_t(kaitai::kstream *p_io, shapefile_main_t::record_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::record_header_t::record_header_t(kaitai::kstream* p__io, shapefile_main_t::record_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -406,9 +410,9 @@ void shapefile_main_t::record_header_t::_read() {
 shapefile_main_t::record_header_t::~record_header_t() {
 }
 
-shapefile_main_t::multi_point_t::multi_point_t(kaitai::kstream *p_io, shapefile_main_t::record_contents_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::multi_point_t::multi_point_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -431,9 +435,9 @@ shapefile_main_t::multi_point_t::~multi_point_t() {
     delete m_points;
 }
 
-shapefile_main_t::file_header_t::file_header_t(kaitai::kstream *p_io, shapefile_main_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::file_header_t::file_header_t(kaitai::kstream* p__io, shapefile_main_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -454,9 +458,9 @@ shapefile_main_t::file_header_t::~file_header_t() {
     delete m_bounding_box;
 }
 
-shapefile_main_t::point_z_t::point_z_t(kaitai::kstream *p_io, shapefile_main_t::record_contents_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::point_z_t::point_z_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -470,9 +474,9 @@ void shapefile_main_t::point_z_t::_read() {
 shapefile_main_t::point_z_t::~point_z_t() {
 }
 
-shapefile_main_t::record_t::record_t(kaitai::kstream *p_io, shapefile_main_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::record_t::record_t(kaitai::kstream* p__io, shapefile_main_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -486,9 +490,9 @@ shapefile_main_t::record_t::~record_t() {
     delete m_contents;
 }
 
-shapefile_main_t::record_contents_t::record_contents_t(kaitai::kstream *p_io, shapefile_main_t::record_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::record_contents_t::record_contents_t(kaitai::kstream* p__io, shapefile_main_t::record_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -497,56 +501,86 @@ void shapefile_main_t::record_contents_t::_read() {
     n_shape_parameters = true;
     if (shape_type() != SHAPE_TYPE_NULL_SHAPE) {
         n_shape_parameters = false;
+        n_shape_parameters = true;
         switch (shape_type()) {
-        case SHAPE_TYPE_POINT_M:
+        case SHAPE_TYPE_POINT_M: {
+            n_shape_parameters = false;
             m_shape_parameters = new point_m_t(m__io, this, m__root);
             break;
-        case SHAPE_TYPE_POLYGON_Z:
+        }
+        case SHAPE_TYPE_POLYGON_Z: {
+            n_shape_parameters = false;
             m_shape_parameters = new polygon_z_t(m__io, this, m__root);
             break;
-        case SHAPE_TYPE_MULTI_POINT_M:
+        }
+        case SHAPE_TYPE_MULTI_POINT_M: {
+            n_shape_parameters = false;
             m_shape_parameters = new multi_point_m_t(m__io, this, m__root);
             break;
-        case SHAPE_TYPE_POLY_LINE_Z:
+        }
+        case SHAPE_TYPE_POLY_LINE_Z: {
+            n_shape_parameters = false;
             m_shape_parameters = new poly_line_z_t(m__io, this, m__root);
             break;
-        case SHAPE_TYPE_MULTI_POINT_Z:
+        }
+        case SHAPE_TYPE_MULTI_POINT_Z: {
+            n_shape_parameters = false;
             m_shape_parameters = new multi_point_z_t(m__io, this, m__root);
             break;
-        case SHAPE_TYPE_MULTI_POINT:
+        }
+        case SHAPE_TYPE_MULTI_POINT: {
+            n_shape_parameters = false;
             m_shape_parameters = new multi_point_t(m__io, this, m__root);
             break;
-        case SHAPE_TYPE_POLYGON_M:
+        }
+        case SHAPE_TYPE_POLYGON_M: {
+            n_shape_parameters = false;
             m_shape_parameters = new polygon_m_t(m__io, this, m__root);
             break;
-        case SHAPE_TYPE_POLYGON:
+        }
+        case SHAPE_TYPE_POLYGON: {
+            n_shape_parameters = false;
             m_shape_parameters = new polygon_t(m__io, this, m__root);
             break;
-        case SHAPE_TYPE_POINT:
+        }
+        case SHAPE_TYPE_POINT: {
+            n_shape_parameters = false;
             m_shape_parameters = new point_t(m__io, this, m__root);
             break;
-        case SHAPE_TYPE_POLY_LINE_M:
+        }
+        case SHAPE_TYPE_POLY_LINE_M: {
+            n_shape_parameters = false;
             m_shape_parameters = new poly_line_m_t(m__io, this, m__root);
             break;
-        case SHAPE_TYPE_POLY_LINE:
+        }
+        case SHAPE_TYPE_POLY_LINE: {
+            n_shape_parameters = false;
             m_shape_parameters = new poly_line_t(m__io, this, m__root);
             break;
-        case SHAPE_TYPE_POINT_Z:
+        }
+        case SHAPE_TYPE_POINT_Z: {
+            n_shape_parameters = false;
             m_shape_parameters = new point_z_t(m__io, this, m__root);
             break;
-        case SHAPE_TYPE_MULTI_PATCH:
+        }
+        case SHAPE_TYPE_MULTI_PATCH: {
+            n_shape_parameters = false;
             m_shape_parameters = new multi_patch_t(m__io, this, m__root);
             break;
+        }
         }
     }
 }
 
 shapefile_main_t::record_contents_t::~record_contents_t() {
+    if (!n_shape_parameters) {
+        delete m_shape_parameters;
+    }
 }
 
-shapefile_main_t::multi_patch_t::multi_patch_t(kaitai::kstream *p_io, shapefile_main_t::record_contents_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::multi_patch_t::multi_patch_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -602,9 +636,9 @@ shapefile_main_t::multi_patch_t::~multi_patch_t() {
     delete m_m_values;
 }
 
-shapefile_main_t::poly_line_m_t::poly_line_m_t(kaitai::kstream *p_io, shapefile_main_t::record_contents_t* p_parent, shapefile_main_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_main_t::poly_line_m_t::poly_line_m_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent, shapefile_main_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

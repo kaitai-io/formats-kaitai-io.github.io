@@ -283,9 +283,11 @@ var Id3v23 = (function() {
         this.headerEx = new HeaderEx(this._io, this, this._root);
       }
       this.frames = []
+      var i = 0;
       do {
         var _ = new Frame(this._io, this, this._root);
         this.frames.push(_);
+        i++;
       } while (!( (((this._io.pos + _.size) &gt; this.header.size.value) || (_.isInvalid)) ));
       if (this.header.flags.flagHeaderex) {
         this.padding = this._io.readBytes((this.headerEx.paddingSize - this._io.pos));

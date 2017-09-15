@@ -9,8 +9,8 @@ import struct
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-from ethernet_frame import EthernetFrame
 from packet_ppi import PacketPpi
+from ethernet_frame import EthernetFrame
 class Pcap(KaitaiStruct):
     """
     .. seealso::
@@ -131,8 +131,10 @@ class Pcap(KaitaiStruct):
     def _read(self):
         self.hdr = self._root.Header(self._io, self, self._root)
         self.packets = []
+        i = 0
         while not self._io.is_eof():
             self.packets.append(self._root.Packet(self._io, self, self._root))
+            i += 1
 
 
     class Header(KaitaiStruct):

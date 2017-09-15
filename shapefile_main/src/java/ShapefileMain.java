@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 public class ShapefileMain extends KaitaiStruct {
     public static ShapefileMain fromFile(String fileName) throws IOException {
-        return new ShapefileMain(new KaitaiStream(fileName));
+        return new ShapefileMain(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum ShapeType {
@@ -75,13 +76,17 @@ public class ShapefileMain extends KaitaiStruct {
     private void _read() {
         this.header = new FileHeader(this._io, this, _root);
         this.records = new ArrayList<Record>();
-        while (!this._io.isEof()) {
-            this.records.add(new Record(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.records.add(new Record(this._io, this, _root));
+                i++;
+            }
         }
     }
     public static class MultiPointM extends KaitaiStruct {
         public static MultiPointM fromFile(String fileName) throws IOException {
-            return new MultiPointM(new KaitaiStream(fileName));
+            return new MultiPointM(new ByteBufferKaitaiStream(fileName));
         }
 
         public MultiPointM(KaitaiStream _io) {
@@ -128,7 +133,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class BoundingBoxXYZM extends KaitaiStruct {
         public static BoundingBoxXYZM fromFile(String fileName) throws IOException {
-            return new BoundingBoxXYZM(new KaitaiStream(fileName));
+            return new BoundingBoxXYZM(new ByteBufferKaitaiStream(fileName));
         }
 
         public BoundingBoxXYZM(KaitaiStream _io) {
@@ -166,7 +171,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class Point extends KaitaiStruct {
         public static Point fromFile(String fileName) throws IOException {
-            return new Point(new KaitaiStream(fileName));
+            return new Point(new ByteBufferKaitaiStream(fileName));
         }
 
         public Point(KaitaiStream _io) {
@@ -198,7 +203,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class Polygon extends KaitaiStruct {
         public static Polygon fromFile(String fileName) throws IOException {
-            return new Polygon(new KaitaiStream(fileName));
+            return new Polygon(new ByteBufferKaitaiStream(fileName));
         }
 
         public Polygon(KaitaiStream _io) {
@@ -245,7 +250,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class BoundsMinMax extends KaitaiStruct {
         public static BoundsMinMax fromFile(String fileName) throws IOException {
-            return new BoundsMinMax(new KaitaiStream(fileName));
+            return new BoundsMinMax(new ByteBufferKaitaiStream(fileName));
         }
 
         public BoundsMinMax(KaitaiStream _io) {
@@ -277,7 +282,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class PolyLine extends KaitaiStruct {
         public static PolyLine fromFile(String fileName) throws IOException {
-            return new PolyLine(new KaitaiStream(fileName));
+            return new PolyLine(new ByteBufferKaitaiStream(fileName));
         }
 
         public PolyLine(KaitaiStream _io) {
@@ -324,7 +329,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class MultiPointZ extends KaitaiStruct {
         public static MultiPointZ fromFile(String fileName) throws IOException {
-            return new MultiPointZ(new KaitaiStream(fileName));
+            return new MultiPointZ(new ByteBufferKaitaiStream(fileName));
         }
 
         public MultiPointZ(KaitaiStream _io) {
@@ -380,7 +385,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class PolyLineZ extends KaitaiStruct {
         public static PolyLineZ fromFile(String fileName) throws IOException {
-            return new PolyLineZ(new KaitaiStream(fileName));
+            return new PolyLineZ(new ByteBufferKaitaiStream(fileName));
         }
 
         public PolyLineZ(KaitaiStream _io) {
@@ -445,7 +450,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class PolygonZ extends KaitaiStruct {
         public static PolygonZ fromFile(String fileName) throws IOException {
-            return new PolygonZ(new KaitaiStream(fileName));
+            return new PolygonZ(new ByteBufferKaitaiStream(fileName));
         }
 
         public PolygonZ(KaitaiStream _io) {
@@ -510,7 +515,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class BoundingBoxXY extends KaitaiStruct {
         public static BoundingBoxXY fromFile(String fileName) throws IOException {
-            return new BoundingBoxXY(new KaitaiStream(fileName));
+            return new BoundingBoxXY(new ByteBufferKaitaiStream(fileName));
         }
 
         public BoundingBoxXY(KaitaiStream _io) {
@@ -542,7 +547,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class PointM extends KaitaiStruct {
         public static PointM fromFile(String fileName) throws IOException {
-            return new PointM(new KaitaiStream(fileName));
+            return new PointM(new ByteBufferKaitaiStream(fileName));
         }
 
         public PointM(KaitaiStream _io) {
@@ -577,7 +582,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class PolygonM extends KaitaiStruct {
         public static PolygonM fromFile(String fileName) throws IOException {
-            return new PolygonM(new KaitaiStream(fileName));
+            return new PolygonM(new ByteBufferKaitaiStream(fileName));
         }
 
         public PolygonM(KaitaiStream _io) {
@@ -633,7 +638,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class RecordHeader extends KaitaiStruct {
         public static RecordHeader fromFile(String fileName) throws IOException {
-            return new RecordHeader(new KaitaiStream(fileName));
+            return new RecordHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public RecordHeader(KaitaiStream _io) {
@@ -665,7 +670,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class MultiPoint extends KaitaiStruct {
         public static MultiPoint fromFile(String fileName) throws IOException {
-            return new MultiPoint(new KaitaiStream(fileName));
+            return new MultiPoint(new ByteBufferKaitaiStream(fileName));
         }
 
         public MultiPoint(KaitaiStream _io) {
@@ -703,7 +708,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class FileHeader extends KaitaiStruct {
         public static FileHeader fromFile(String fileName) throws IOException {
-            return new FileHeader(new KaitaiStream(fileName));
+            return new FileHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public FileHeader(KaitaiStream _io) {
@@ -767,7 +772,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class PointZ extends KaitaiStruct {
         public static PointZ fromFile(String fileName) throws IOException {
-            return new PointZ(new KaitaiStream(fileName));
+            return new PointZ(new ByteBufferKaitaiStream(fileName));
         }
 
         public PointZ(KaitaiStream _io) {
@@ -805,7 +810,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class Record extends KaitaiStruct {
         public static Record fromFile(String fileName) throws IOException {
-            return new Record(new KaitaiStream(fileName));
+            return new Record(new ByteBufferKaitaiStream(fileName));
         }
 
         public Record(KaitaiStream _io) {
@@ -841,7 +846,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class RecordContents extends KaitaiStruct {
         public static RecordContents fromFile(String fileName) throws IOException {
-            return new RecordContents(new KaitaiStream(fileName));
+            return new RecordContents(new ByteBufferKaitaiStream(fileName));
         }
 
         public RecordContents(KaitaiStream _io) {
@@ -928,7 +933,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class MultiPatch extends KaitaiStruct {
         public static MultiPatch fromFile(String fileName) throws IOException {
-            return new MultiPatch(new KaitaiStream(fileName));
+            return new MultiPatch(new ByteBufferKaitaiStream(fileName));
         }
 
         public MultiPatch(KaitaiStream _io) {
@@ -999,7 +1004,7 @@ public class ShapefileMain extends KaitaiStruct {
     }
     public static class PolyLineM extends KaitaiStruct {
         public static PolyLineM fromFile(String fileName) throws IOException {
-            return new PolyLineM(new KaitaiStream(fileName));
+            return new PolyLineM(new ByteBufferKaitaiStream(fileName));
         }
 
         public PolyLineM(KaitaiStream _io) {

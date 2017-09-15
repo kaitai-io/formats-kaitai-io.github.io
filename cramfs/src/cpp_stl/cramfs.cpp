@@ -4,8 +4,8 @@
 
 
 
-cramfs_t::cramfs_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, cramfs_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+cramfs_t::cramfs_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, cramfs_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_page_size = false;
     _read();
@@ -19,9 +19,9 @@ cramfs_t::~cramfs_t() {
     delete m_super_block;
 }
 
-cramfs_t::super_block_struct_t::super_block_struct_t(kaitai::kstream *p_io, cramfs_t* p_parent, cramfs_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+cramfs_t::super_block_struct_t::super_block_struct_t(kaitai::kstream* p__io, cramfs_t* p__parent, cramfs_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_flag_fsid_v2 = false;
     f_flag_holes = false;
     f_flag_wrong_signature = false;
@@ -86,9 +86,9 @@ int32_t cramfs_t::super_block_struct_t::flag_shifted_root_offset() {
     return m_flag_shifted_root_offset;
 }
 
-cramfs_t::chunked_data_inode_t::chunked_data_inode_t(kaitai::kstream *p_io, cramfs_t::inode_t* p_parent, cramfs_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+cramfs_t::chunked_data_inode_t::chunked_data_inode_t(kaitai::kstream* p__io, cramfs_t::inode_t* p__parent, cramfs_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -106,9 +106,9 @@ cramfs_t::chunked_data_inode_t::~chunked_data_inode_t() {
     delete m_block_end_index;
 }
 
-cramfs_t::inode_t::inode_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, cramfs_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+cramfs_t::inode_t::inode_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, cramfs_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_attr = false;
     f_as_reg_file = false;
     f_perm_u = false;
@@ -255,9 +255,9 @@ int32_t cramfs_t::inode_t::offset() {
     return m_offset;
 }
 
-cramfs_t::dir_inode_t::dir_inode_t(kaitai::kstream *p_io, cramfs_t::inode_t* p_parent, cramfs_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+cramfs_t::dir_inode_t::dir_inode_t(kaitai::kstream* p__io, cramfs_t::inode_t* p__parent, cramfs_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -266,8 +266,12 @@ void cramfs_t::dir_inode_t::_read() {
     if (_io()->size() > 0) {
         n_children = false;
         m_children = new std::vector<inode_t*>();
-        while (!m__io->is_eof()) {
-            m_children->push_back(new inode_t(m__io, this, m__root));
+        {
+            int i = 0;
+            while (!m__io->is_eof()) {
+                m_children->push_back(new inode_t(m__io, this, m__root));
+                i++;
+            }
         }
     }
 }
@@ -281,9 +285,9 @@ cramfs_t::dir_inode_t::~dir_inode_t() {
     }
 }
 
-cramfs_t::info_t::info_t(kaitai::kstream *p_io, cramfs_t::super_block_struct_t* p_parent, cramfs_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+cramfs_t::info_t::info_t(kaitai::kstream* p__io, cramfs_t::super_block_struct_t* p__parent, cramfs_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

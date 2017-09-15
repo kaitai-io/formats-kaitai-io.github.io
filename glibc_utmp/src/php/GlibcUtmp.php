@@ -2,18 +2,20 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class GlibcUtmp extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \GlibcUtmp $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \GlibcUtmp $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m__raw_records = [];
         $this->_m_records = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m__raw_records[] = $this->_io->readBytes(384);
             $io = new \Kaitai\Struct\Stream(end($this->_m__raw_records));
             $this->_m_records[] = new \GlibcUtmp\Record($io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_records;
@@ -25,8 +27,8 @@ class GlibcUtmp extends \Kaitai\Struct\Struct {
 namespace \GlibcUtmp;
 
 class Record extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \GlibcUtmp $parent = null, \GlibcUtmp $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \GlibcUtmp $_parent = null, \GlibcUtmp $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -110,8 +112,8 @@ class Record extends \Kaitai\Struct\Struct {
 namespace \GlibcUtmp;
 
 class Timeval extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \GlibcUtmp\Record $parent = null, \GlibcUtmp $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \GlibcUtmp\Record $_parent = null, \GlibcUtmp $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

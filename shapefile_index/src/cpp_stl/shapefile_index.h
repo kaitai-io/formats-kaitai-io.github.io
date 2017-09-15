@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -38,16 +37,24 @@ public:
         SHAPE_TYPE_MULTI_PATCH = 31
     };
 
-    shapefile_index_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, shapefile_index_t* p_root = 0);
+    shapefile_index_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, shapefile_index_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~shapefile_index_t();
 
     class file_header_t : public kaitai::kstruct {
 
     public:
 
-        file_header_t(kaitai::kstream* p_io, shapefile_index_t* p_parent = 0, shapefile_index_t* p_root = 0);
+        file_header_t(kaitai::kstream* p__io, shapefile_index_t* p__parent = 0, shapefile_index_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~file_header_t();
 
     private:
@@ -91,8 +98,12 @@ public:
 
     public:
 
-        record_t(kaitai::kstream* p_io, shapefile_index_t* p_parent = 0, shapefile_index_t* p_root = 0);
+        record_t(kaitai::kstream* p__io, shapefile_index_t* p__parent = 0, shapefile_index_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~record_t();
 
     private:
@@ -112,8 +123,12 @@ public:
 
     public:
 
-        bounding_box_x_y_z_m_t(kaitai::kstream* p_io, shapefile_index_t::file_header_t* p_parent = 0, shapefile_index_t* p_root = 0);
+        bounding_box_x_y_z_m_t(kaitai::kstream* p__io, shapefile_index_t::file_header_t* p__parent = 0, shapefile_index_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~bounding_box_x_y_z_m_t();
 
     private:
@@ -137,8 +152,12 @@ public:
 
     public:
 
-        bounds_min_max_t(kaitai::kstream* p_io, shapefile_index_t::bounding_box_x_y_z_m_t* p_parent = 0, shapefile_index_t* p_root = 0);
+        bounds_min_max_t(kaitai::kstream* p__io, shapefile_index_t::bounding_box_x_y_z_m_t* p__parent = 0, shapefile_index_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~bounds_min_max_t();
 
     private:

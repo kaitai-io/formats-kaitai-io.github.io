@@ -4,8 +4,8 @@
 
 
 
-exif_be_t::exif_be_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, exif_be_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+exif_be_t::exif_be_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, exif_be_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_ifd0 = false;
     _read();
@@ -22,9 +22,9 @@ exif_be_t::~exif_be_t() {
     }
 }
 
-exif_be_t::ifd_t::ifd_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, exif_be_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+exif_be_t::ifd_t::ifd_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, exif_be_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_next_ifd = false;
     _read();
 }
@@ -65,9 +65,9 @@ exif_be_t::ifd_t* exif_be_t::ifd_t::next_ifd() {
     return m_next_ifd;
 }
 
-exif_be_t::ifd_field_t::ifd_field_t(kaitai::kstream *p_io, exif_be_t::ifd_t* p_parent, exif_be_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+exif_be_t::ifd_field_t::ifd_field_t(kaitai::kstream* p__io, exif_be_t::ifd_t* p__parent, exif_be_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_type_byte_length = false;
     f_byte_length = false;
     f_is_immediate_data = false;
@@ -83,6 +83,8 @@ void exif_be_t::ifd_field_t::_read() {
 }
 
 exif_be_t::ifd_field_t::~ifd_field_t() {
+    if (f_data && !n_data) {
+    }
 }
 
 int8_t exif_be_t::ifd_field_t::type_byte_length() {

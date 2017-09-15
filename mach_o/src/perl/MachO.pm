@@ -50,12 +50,10 @@ our $LOAD_COMMAND_TYPE_SEGMENT_SPLIT_INFO = 30;
 our $LOAD_COMMAND_TYPE_LAZY_LOAD_DYLIB = 32;
 our $LOAD_COMMAND_TYPE_ENCRYPTION_INFO = 33;
 our $LOAD_COMMAND_TYPE_DYLD_INFO = 34;
-our $LOAD_COMMAND_TYPE_LOAD_UPWARD_DYLIB = 35;
 our $LOAD_COMMAND_TYPE_VERSION_MIN_MACOSX = 36;
 our $LOAD_COMMAND_TYPE_VERSION_MIN_IPHONEOS = 37;
 our $LOAD_COMMAND_TYPE_FUNCTION_STARTS = 38;
 our $LOAD_COMMAND_TYPE_DYLD_ENVIRONMENT = 39;
-our $LOAD_COMMAND_TYPE_MAIN = 40;
 our $LOAD_COMMAND_TYPE_DATA_IN_CODE = 41;
 our $LOAD_COMMAND_TYPE_SOURCE_VERSION = 42;
 our $LOAD_COMMAND_TYPE_DYLIB_CODE_SIGN_DRS = 43;
@@ -69,7 +67,8 @@ our $LOAD_COMMAND_TYPE_LOAD_WEAK_DYLIB = 2147483672;
 our $LOAD_COMMAND_TYPE_RPATH = 2147483676;
 our $LOAD_COMMAND_TYPE_REEXPORT_DYLIB = 2147483679;
 our $LOAD_COMMAND_TYPE_DYLD_INFO_ONLY = 2147483682;
-our $LOAD_COMMAND_TYPE_MAIN2 = 2147483688;
+our $LOAD_COMMAND_TYPE_LOAD_UPWARD_DYLIB = 2147483683;
+our $LOAD_COMMAND_TYPE_MAIN = 2147483688;
 
 our $MACHO_FLAGS_NO_UNDEFS = 1;
 our $MACHO_FLAGS_INCR_LINK = 2;
@@ -97,13 +96,6 @@ our $MACHO_FLAGS_DEAD_STRIPPABLE_DYLIB = 4194304;
 our $MACHO_FLAGS_HAS_TLV_DESCRIPTORS = 8388608;
 our $MACHO_FLAGS_NO_HEAP_EXECUTION = 16777216;
 our $MACHO_FLAGS_APP_EXTENSION_SAFE = 33554432;
-
-our $VM_PROT_NONE = 0;
-our $VM_PROT_READ = 1;
-our $VM_PROT_WRITE = 2;
-our $VM_PROT_EXECUTE = 4;
-our $VM_PROT_NO_CHANGE = 8;
-our $VM_PROT_COPY = 16;
 
 our $MAGIC_TYPE_FAT_LE = 3199925962;
 our $MAGIC_TYPE_FAT_BE = 3405691582;
@@ -141,6 +133,7 @@ our $CPU_TYPE_RS6000 = 17;
 our $CPU_TYPE_POWERPC = 18;
 our $CPU_TYPE_ABI64 = 16777216;
 our $CPU_TYPE_X86_64 = 16777223;
+our $CPU_TYPE_ARM64 = 16777228;
 our $CPU_TYPE_POWERPC64 = 16777234;
 our $CPU_TYPE_ANY = 4294967295;
 
@@ -1630,6 +1623,154 @@ sub items {
 }
 
 ########################################################################
+package MachO::RoutinesCommand;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{init_address} = $self->{_io}->read_u4le();
+    $self->{init_module} = $self->{_io}->read_u4le();
+    $self->{reserved} = $self->{_io}->read_bytes(24);
+}
+
+sub init_address {
+    my ($self) = @_;
+    return $self->{init_address};
+}
+
+sub init_module {
+    my ($self) = @_;
+    return $self->{init_module};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+########################################################################
+package MachO::RoutinesCommand64;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{init_address} = $self->{_io}->read_u8le();
+    $self->{init_module} = $self->{_io}->read_u8le();
+    $self->{reserved} = $self->{_io}->read_bytes(48);
+}
+
+sub init_address {
+    my ($self) = @_;
+    return $self->{init_address};
+}
+
+sub init_module {
+    my ($self) = @_;
+    return $self->{init_module};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+########################################################################
+package MachO::LinkerOptionCommand;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{num_strings} = $self->{_io}->read_u4le();
+    $self->{strings} = ();
+    my $n_strings = $self->num_strings();
+    for (my $i = 0; $i < $n_strings; $i++) {
+        $self->{strings}[$i] = Encode::decode("utf-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+    }
+}
+
+sub num_strings {
+    my ($self) = @_;
+    return $self->{num_strings};
+}
+
+sub strings {
+    my ($self) = @_;
+    return $self->{strings};
+}
+
+########################################################################
 package MachO::SegmentCommand64;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1664,8 +1805,8 @@ sub _read {
     $self->{vmsize} = $self->{_io}->read_u8le();
     $self->{fileoff} = $self->{_io}->read_u8le();
     $self->{filesize} = $self->{_io}->read_u8le();
-    $self->{maxprot} = $self->{_io}->read_u4le();
-    $self->{initprot} = $self->{_io}->read_u4le();
+    $self->{maxprot} = MachO::VmProt->new($self->{_io}, $self, $self->{_root});
+    $self->{initprot} = MachO::VmProt->new($self->{_io}, $self, $self->{_root});
     $self->{nsects} = $self->{_io}->read_u4le();
     $self->{flags} = $self->{_io}->read_u4le();
     $self->{sections} = ();
@@ -2389,6 +2530,92 @@ sub strings {
 }
 
 ########################################################################
+package MachO::VmProt;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{strip_read} = $self->{_io}->read_bits_int(1);
+    $self->{is_mask} = $self->{_io}->read_bits_int(1);
+    $self->{reserved0} = $self->{_io}->read_bits_int(1);
+    $self->{copy} = $self->{_io}->read_bits_int(1);
+    $self->{no_change} = $self->{_io}->read_bits_int(1);
+    $self->{execute} = $self->{_io}->read_bits_int(1);
+    $self->{write} = $self->{_io}->read_bits_int(1);
+    $self->{read} = $self->{_io}->read_bits_int(1);
+    $self->{reserved1} = $self->{_io}->read_bits_int(24);
+}
+
+sub strip_read {
+    my ($self) = @_;
+    return $self->{strip_read};
+}
+
+sub is_mask {
+    my ($self) = @_;
+    return $self->{is_mask};
+}
+
+sub reserved0 {
+    my ($self) = @_;
+    return $self->{reserved0};
+}
+
+sub copy {
+    my ($self) = @_;
+    return $self->{copy};
+}
+
+sub no_change {
+    my ($self) = @_;
+    return $self->{no_change};
+}
+
+sub execute {
+    my ($self) = @_;
+    return $self->{execute};
+}
+
+sub write {
+    my ($self) = @_;
+    return $self->{write};
+}
+
+sub read {
+    my ($self) = @_;
+    return $self->{read};
+}
+
+sub reserved1 {
+    my ($self) = @_;
+    return $self->{reserved1};
+}
+
+########################################################################
 package MachO::DysymtabCommand;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -2664,6 +2891,88 @@ sub data_size {
 }
 
 ########################################################################
+package MachO::SubCommand;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{name} = MachO::LcStr->new($self->{_io}, $self, $self->{_root});
+}
+
+sub name {
+    my ($self) = @_;
+    return $self->{name};
+}
+
+########################################################################
+package MachO::TwolevelHintsCommand;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{offset} = $self->{_io}->read_u4le();
+    $self->{num_hints} = $self->{_io}->read_u4le();
+}
+
+sub offset {
+    my ($self) = @_;
+    return $self->{offset};
+}
+
+sub num_hints {
+    my ($self) = @_;
+    return $self->{num_hints};
+}
+
+########################################################################
 package MachO::Version;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -2717,6 +3026,64 @@ sub major {
 sub release {
     my ($self) = @_;
     return $self->{release};
+}
+
+########################################################################
+package MachO::EncryptionInfoCommand;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{cryptoff} = $self->{_io}->read_u4le();
+    $self->{cryptsize} = $self->{_io}->read_u4le();
+    $self->{cryptid} = $self->{_io}->read_u4le();
+    if ( (($self->_root()->magic() == $MAGIC_TYPE_MACHO_BE_X64) || ($self->_root()->magic() == $MAGIC_TYPE_MACHO_LE_X64)) ) {
+        $self->{pad} = $self->{_io}->read_u4le();
+    }
+}
+
+sub cryptoff {
+    my ($self) = @_;
+    return $self->{cryptoff};
+}
+
+sub cryptsize {
+    my ($self) = @_;
+    return $self->{cryptsize};
+}
+
+sub cryptid {
+    my ($self) = @_;
+    return $self->{cryptid};
+}
+
+sub pad {
+    my ($self) = @_;
+    return $self->{pad};
 }
 
 ########################################################################
@@ -3529,7 +3896,17 @@ sub _read {
     $self->{type} = $self->{_io}->read_u4le();
     $self->{size} = $self->{_io}->read_u4le();
     my $_on = $self->type();
-    if ($_on == $LOAD_COMMAND_TYPE_RPATH) {
+    if ($_on == $LOAD_COMMAND_TYPE_SUB_LIBRARY) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::SubCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_SEGMENT_SPLIT_INFO) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::LinkeditDataCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_RPATH) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::RpathCommand->new($io__raw_body, $self, $self->{_root});
@@ -3539,15 +3916,80 @@ sub _read {
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::SourceVersionCommand->new($io__raw_body, $self, $self->{_root});
     }
+    elsif ($_on == $LOAD_COMMAND_TYPE_ENCRYPTION_INFO_64) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::EncryptionInfoCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_VERSION_MIN_TVOS) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::VersionMinCommand->new($io__raw_body, $self, $self->{_root});
+    }
     elsif ($_on == $LOAD_COMMAND_TYPE_LOAD_DYLINKER) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::DylinkerCommand->new($io__raw_body, $self, $self->{_root});
     }
+    elsif ($_on == $LOAD_COMMAND_TYPE_SUB_FRAMEWORK) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::SubCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_LOAD_WEAK_DYLIB) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::DylibCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_VERSION_MIN_IPHONEOS) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::VersionMinCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_LINKER_OPTIMIZATION_HINT) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::LinkeditDataCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_DYLD_ENVIRONMENT) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::DylinkerCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_LOAD_UPWARD_DYLIB) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::DylibCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_DYLIB_CODE_SIGN_DRS) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::LinkeditDataCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_DYLD_INFO) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::DyldInfoCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_REEXPORT_DYLIB) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::DylibCommand->new($io__raw_body, $self, $self->{_root});
+    }
     elsif ($_on == $LOAD_COMMAND_TYPE_SYMTAB) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::SymtabCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_ROUTINES_64) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::RoutinesCommand64->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_ID_DYLINKER) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::DylinkerCommand->new($io__raw_body, $self, $self->{_root});
     }
     elsif ($_on == $LOAD_COMMAND_TYPE_MAIN) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
@@ -3569,6 +4011,31 @@ sub _read {
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::LinkeditDataCommand->new($io__raw_body, $self, $self->{_root});
     }
+    elsif ($_on == $LOAD_COMMAND_TYPE_VERSION_MIN_WATCHOS) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::VersionMinCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_ENCRYPTION_INFO) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::EncryptionInfoCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_SUB_UMBRELLA) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::SubCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_LINKER_OPTION) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::LinkerOptionCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_TWOLEVEL_HINTS) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::TwolevelHintsCommand->new($io__raw_body, $self, $self->{_root});
+    }
     elsif ($_on == $LOAD_COMMAND_TYPE_UUID) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
@@ -3578,6 +4045,21 @@ sub _read {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::DyldInfoCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_LAZY_LOAD_DYLIB) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::DylibCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_SUB_CLIENT) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::SubCommand->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_ROUTINES) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::RoutinesCommand->new($io__raw_body, $self, $self->{_root});
     }
     elsif ($_on == $LOAD_COMMAND_TYPE_CODE_SIGNATURE) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
@@ -3598,6 +4080,11 @@ sub _read {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::SegmentCommand64->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_ID_DYLIB) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::DylibCommand->new($io__raw_body, $self, $self->{_root});
     }
     else {
         $self->{body} = $self->{_io}->read_bytes(($self->size() - 8));
@@ -3892,7 +4379,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{version} = MachO::Version->new($self->{_io}, $self, $self->{_root});
-    $self->{reserved} = MachO::Version->new($self->{_io}, $self, $self->{_root});
+    $self->{sdk} = MachO::Version->new($self->{_io}, $self, $self->{_root});
 }
 
 sub version {
@@ -3900,9 +4387,9 @@ sub version {
     return $self->{version};
 }
 
-sub reserved {
+sub sdk {
     my ($self) = @_;
-    return $self->{reserved};
+    return $self->{sdk};
 }
 
 ########################################################################

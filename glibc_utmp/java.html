@@ -222,6 +222,7 @@ GlibcUtmp data = new GlibcUtmp(new KaitaiStream(someArray));</code></pre>
         <div class="row">
             <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -232,7 +233,7 @@ import java.nio.charset.Charset;
 
 public class GlibcUtmp extends KaitaiStruct {
     public static GlibcUtmp fromFile(String fileName) throws IOException {
-        return new GlibcUtmp(new KaitaiStream(fileName));
+        return new GlibcUtmp(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum EntryType {
@@ -275,15 +276,19 @@ public class GlibcUtmp extends KaitaiStruct {
     private void _read() {
         this._raw_records = new ArrayList&lt;byte[]&gt;();
         this.records = new ArrayList&lt;Record&gt;();
-        while (!this._io.isEof()) {
-            this._raw_records.add(this._io.readBytes(384));
-            KaitaiStream _io__raw_records = new KaitaiStream(_raw_records.get(_raw_records.size() - 1));
-            this.records.add(new Record(_io__raw_records, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this._raw_records.add(this._io.readBytes(384));
+                KaitaiStream _io__raw_records = new ByteBufferKaitaiStream(_raw_records.get(_raw_records.size() - 1));
+                this.records.add(new Record(_io__raw_records, this, _root));
+                i++;
+            }
         }
     }
     public static class Record extends KaitaiStruct {
         public static Record fromFile(String fileName) throws IOException {
-            return new Record(new KaitaiStream(fileName));
+            return new Record(new ByteBufferKaitaiStream(fileName));
         }
 
         public Record(KaitaiStream _io) {
@@ -382,7 +387,7 @@ public class GlibcUtmp extends KaitaiStruct {
     }
     public static class Timeval extends KaitaiStruct {
         public static Timeval fromFile(String fileName) throws IOException {
-            return new Timeval(new KaitaiStream(fileName));
+            return new Timeval(new ByteBufferKaitaiStream(fileName));
         }
 
         public Timeval(KaitaiStream _io) {

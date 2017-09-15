@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Png extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -14,9 +14,11 @@ class Png extends \Kaitai\Struct\Struct {
         $this->_m_ihdr = new \Png\IhdrChunk($this->_io, $this, $this->_root);
         $this->_m_ihdrCrc = $this->_io->readBytes(4);
         $this->_m_chunks = [];
+        $i = 0;
         do {
             $_ = new \Png\Chunk($this->_io, $this, $this->_root);
             $this->_m_chunks[] = $_;
+            $i++;
         } while (!( (($_->type() == "IEND") || ($this->_io()->isEof())) ));
     }
     protected $_m_magic;
@@ -36,8 +38,8 @@ class Png extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class Rgb extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png\PlteChunk $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png\PlteChunk $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -57,8 +59,8 @@ class Rgb extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class Chunk extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -137,8 +139,8 @@ class Chunk extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class BkgdIndexed extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png\BkgdChunk $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png\BkgdChunk $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -152,8 +154,8 @@ class BkgdIndexed extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class Point extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png\ChrmChunk $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png\ChrmChunk $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -184,8 +186,8 @@ class Point extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class BkgdGreyscale extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png\BkgdChunk $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png\BkgdChunk $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -199,8 +201,8 @@ class BkgdGreyscale extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class ChrmChunk extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png\Chunk $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png\Chunk $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -223,8 +225,8 @@ class ChrmChunk extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class IhdrChunk extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -256,15 +258,17 @@ class IhdrChunk extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class PlteChunk extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png\Chunk $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png\Chunk $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \Png\Rgb($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -274,8 +278,8 @@ class PlteChunk extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class SrgbChunk extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png\Chunk $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png\Chunk $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -298,8 +302,8 @@ class Intent {
 namespace \Png;
 
 class CompressedTextChunk extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png\Chunk $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png\Chunk $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -322,8 +326,8 @@ class CompressedTextChunk extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class BkgdTruecolor extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png\BkgdChunk $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png\BkgdChunk $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -343,8 +347,8 @@ class BkgdTruecolor extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class GamaChunk extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png\Chunk $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png\Chunk $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -365,8 +369,8 @@ class GamaChunk extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class BkgdChunk extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png\Chunk $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png\Chunk $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -396,8 +400,8 @@ class BkgdChunk extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class PhysChunk extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png\Chunk $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png\Chunk $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -417,8 +421,8 @@ class PhysChunk extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class InternationalTextChunk extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png\Chunk $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png\Chunk $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -447,8 +451,8 @@ class InternationalTextChunk extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class TextChunk extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png\Chunk $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png\Chunk $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -465,8 +469,8 @@ class TextChunk extends \Kaitai\Struct\Struct {
 namespace \Png;
 
 class TimeChunk extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Png\Chunk $parent = null, \Png $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Png\Chunk $_parent = null, \Png $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

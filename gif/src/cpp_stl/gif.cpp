@@ -4,8 +4,8 @@
 
 
 
-gif_t::gif_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, gif_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+gif_t::gif_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -21,8 +21,12 @@ void gif_t::_read() {
         m_global_color_table = new color_table_t(m__io__raw_global_color_table, this, m__root);
     }
     m_blocks = new std::vector<block_t*>();
-    while (!m__io->is_eof()) {
-        m_blocks->push_back(new block_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_blocks->push_back(new block_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -39,9 +43,9 @@ gif_t::~gif_t() {
     delete m_blocks;
 }
 
-gif_t::image_data_t::image_data_t(kaitai::kstream *p_io, gif_t::local_image_descriptor_t* p_parent, gif_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+gif_t::image_data_t::image_data_t(kaitai::kstream* p__io, gif_t::local_image_descriptor_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -54,9 +58,9 @@ gif_t::image_data_t::~image_data_t() {
     delete m_subblocks;
 }
 
-gif_t::color_table_entry_t::color_table_entry_t(kaitai::kstream *p_io, gif_t::color_table_t* p_parent, gif_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+gif_t::color_table_entry_t::color_table_entry_t(kaitai::kstream* p__io, gif_t::color_table_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -69,9 +73,9 @@ void gif_t::color_table_entry_t::_read() {
 gif_t::color_table_entry_t::~color_table_entry_t() {
 }
 
-gif_t::logical_screen_descriptor_struct_t::logical_screen_descriptor_struct_t(kaitai::kstream *p_io, gif_t* p_parent, gif_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+gif_t::logical_screen_descriptor_struct_t::logical_screen_descriptor_struct_t(kaitai::kstream* p__io, gif_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_has_color_table = false;
     f_color_table_size = false;
     _read();
@@ -104,9 +108,9 @@ int32_t gif_t::logical_screen_descriptor_struct_t::color_table_size() {
     return m_color_table_size;
 }
 
-gif_t::local_image_descriptor_t::local_image_descriptor_t(kaitai::kstream *p_io, gif_t::block_t* p_parent, gif_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+gif_t::local_image_descriptor_t::local_image_descriptor_t(kaitai::kstream* p__io, gif_t::block_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_has_color_table = false;
     f_has_interlace = false;
     f_has_sorted_color_table = false;
@@ -170,37 +174,49 @@ int32_t gif_t::local_image_descriptor_t::color_table_size() {
     return m_color_table_size;
 }
 
-gif_t::block_t::block_t(kaitai::kstream *p_io, gif_t* p_parent, gif_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+gif_t::block_t::block_t(kaitai::kstream* p__io, gif_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void gif_t::block_t::_read() {
     m_block_type = static_cast<gif_t::block_type_t>(m__io->read_u1());
+    n_body = true;
     switch (block_type()) {
-    case BLOCK_TYPE_EXTENSION:
+    case BLOCK_TYPE_EXTENSION: {
+        n_body = false;
         m_body = new extension_t(m__io, this, m__root);
         break;
-    case BLOCK_TYPE_LOCAL_IMAGE_DESCRIPTOR:
+    }
+    case BLOCK_TYPE_LOCAL_IMAGE_DESCRIPTOR: {
+        n_body = false;
         m_body = new local_image_descriptor_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 gif_t::block_t::~block_t() {
+    if (!n_body) {
+        delete m_body;
+    }
 }
 
-gif_t::color_table_t::color_table_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, gif_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+gif_t::color_table_t::color_table_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void gif_t::color_table_t::_read() {
     m_entries = new std::vector<color_table_entry_t*>();
-    while (!m__io->is_eof()) {
-        m_entries->push_back(new color_table_entry_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new color_table_entry_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -211,9 +227,9 @@ gif_t::color_table_t::~color_table_t() {
     delete m_entries;
 }
 
-gif_t::header_t::header_t(kaitai::kstream *p_io, gif_t* p_parent, gif_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+gif_t::header_t::header_t(kaitai::kstream* p__io, gif_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -225,9 +241,9 @@ void gif_t::header_t::_read() {
 gif_t::header_t::~header_t() {
 }
 
-gif_t::ext_graphic_control_t::ext_graphic_control_t(kaitai::kstream *p_io, gif_t::extension_t* p_parent, gif_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+gif_t::ext_graphic_control_t::ext_graphic_control_t(kaitai::kstream* p__io, gif_t::extension_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_transparent_color_flag = false;
     f_user_input_flag = false;
     _read();
@@ -260,9 +276,9 @@ bool gif_t::ext_graphic_control_t::user_input_flag() {
     return m_user_input_flag;
 }
 
-gif_t::subblock_t::subblock_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, gif_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+gif_t::subblock_t::subblock_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -274,9 +290,9 @@ void gif_t::subblock_t::_read() {
 gif_t::subblock_t::~subblock_t() {
 }
 
-gif_t::ext_application_t::ext_application_t(kaitai::kstream *p_io, gif_t::extension_t* p_parent, gif_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+gif_t::ext_application_t::ext_application_t(kaitai::kstream* p__io, gif_t::extension_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -284,10 +300,12 @@ void gif_t::ext_application_t::_read() {
     m_application_id = new subblock_t(m__io, this, m__root);
     m_subblocks = new std::vector<subblock_t*>();
     {
+        int i = 0;
         subblock_t* _;
         do {
             _ = new subblock_t(m__io, this, m__root);
             m_subblocks->push_back(_);
+            i++;
         } while (!(_->num_bytes() == 0));
     }
 }
@@ -300,19 +318,21 @@ gif_t::ext_application_t::~ext_application_t() {
     delete m_subblocks;
 }
 
-gif_t::subblocks_t::subblocks_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, gif_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+gif_t::subblocks_t::subblocks_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void gif_t::subblocks_t::_read() {
     m_entries = new std::vector<subblock_t*>();
     {
+        int i = 0;
         subblock_t* _;
         do {
             _ = new subblock_t(m__io, this, m__root);
             m_entries->push_back(_);
+            i++;
         } while (!(_->num_bytes() == 0));
     }
 }
@@ -324,29 +344,34 @@ gif_t::subblocks_t::~subblocks_t() {
     delete m_entries;
 }
 
-gif_t::extension_t::extension_t(kaitai::kstream *p_io, gif_t::block_t* p_parent, gif_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+gif_t::extension_t::extension_t(kaitai::kstream* p__io, gif_t::block_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void gif_t::extension_t::_read() {
     m_label = static_cast<gif_t::extension_label_t>(m__io->read_u1());
     switch (label()) {
-    case EXTENSION_LABEL_APPLICATION:
+    case EXTENSION_LABEL_APPLICATION: {
         m_body = new ext_application_t(m__io, this, m__root);
         break;
-    case EXTENSION_LABEL_COMMENT:
+    }
+    case EXTENSION_LABEL_COMMENT: {
         m_body = new subblocks_t(m__io, this, m__root);
         break;
-    case EXTENSION_LABEL_GRAPHIC_CONTROL:
+    }
+    case EXTENSION_LABEL_GRAPHIC_CONTROL: {
         m_body = new ext_graphic_control_t(m__io, this, m__root);
         break;
-    default:
+    }
+    default: {
         m_body = new subblocks_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 gif_t::extension_t::~extension_t() {
+    delete m_body;
 }

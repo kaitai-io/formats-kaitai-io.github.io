@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Icc4 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -20,8 +20,8 @@ class Icc4 extends \Kaitai\Struct\Struct {
 namespace \Icc4;
 
 class U8Fixed8Number extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -35,8 +35,8 @@ class U8Fixed8Number extends \Kaitai\Struct\Struct {
 namespace \Icc4;
 
 class U16Fixed16Number extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -50,8 +50,8 @@ class U16Fixed16Number extends \Kaitai\Struct\Struct {
 namespace \Icc4;
 
 class StandardIlluminantEncoding extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -79,8 +79,8 @@ class StandardIlluminantEncodings {
 namespace \Icc4;
 
 class ProfileHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4 $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4 $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -145,8 +145,8 @@ class ProfileHeader extends \Kaitai\Struct\Struct {
 namespace \Icc4\ProfileHeader;
 
 class VersionField extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\ProfileHeader $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\ProfileHeader $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -170,8 +170,8 @@ class VersionField extends \Kaitai\Struct\Struct {
 namespace \Icc4\ProfileHeader;
 
 class ProfileFlags extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\ProfileHeader $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\ProfileHeader $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -280,8 +280,8 @@ class DataColourSpaces {
 namespace \Icc4;
 
 class XyzNumber extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -301,8 +301,8 @@ class XyzNumber extends \Kaitai\Struct\Struct {
 namespace \Icc4;
 
 class DateTimeNumber extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -331,8 +331,8 @@ class DateTimeNumber extends \Kaitai\Struct\Struct {
 namespace \Icc4;
 
 class Response16Number extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -352,8 +352,8 @@ class Response16Number extends \Kaitai\Struct\Struct {
 namespace \Icc4;
 
 class U1Fixed15Number extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -367,8 +367,8 @@ class U1Fixed15Number extends \Kaitai\Struct\Struct {
 namespace \Icc4;
 
 class TagTable extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4 $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4 $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -389,8 +389,8 @@ class TagTable extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable;
 
 class TagDefinition extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -671,8 +671,8 @@ class TagDefinition extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class BlueMatrixColumnTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -693,8 +693,8 @@ class BlueMatrixColumnTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class DeviceMfgDescTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -715,8 +715,8 @@ class DeviceMfgDescTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class NamedColor2Type extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\NamedColor2Tag $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\NamedColor2Tag $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -766,8 +766,8 @@ class NamedColor2Type extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition\NamedColor2Type;
 
 class NamedColourDefinition extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\NamedColor2Type $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\NamedColor2Type $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -800,8 +800,8 @@ class NamedColourDefinition extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ViewingConditionsTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -822,8 +822,8 @@ class ViewingConditionsTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class BlueTrcTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -847,8 +847,8 @@ class BlueTrcTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ResponseCurveSet16Type extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\OutputResponseTag $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\OutputResponseTag $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -878,8 +878,8 @@ class ResponseCurveSet16Type extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class CurveType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -910,8 +910,8 @@ class CurveType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class SaturationRenderingIntentGamutTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -932,16 +932,18 @@ class SaturationRenderingIntentGamutTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class XyzType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_reserved = $this->_io->ensureFixedContents("\x00\x00\x00\x00");
         $this->_m_values = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_values[] = new \Icc4\XyzNumber($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_reserved;
@@ -953,8 +955,8 @@ class XyzType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class Lut8Type extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1002,8 +1004,8 @@ class Lut8Type extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class BToA2Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1030,8 +1032,8 @@ class BToA2Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class LutAToBType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1072,8 +1074,8 @@ class LutAToBType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class BToA0Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1100,8 +1102,8 @@ class BToA0Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class MediaWhitePointTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1122,8 +1124,8 @@ class MediaWhitePointTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class Lut16Type extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1171,8 +1173,8 @@ class Lut16Type extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class PerceptualRenderingIntentGamutTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1193,16 +1195,18 @@ class PerceptualRenderingIntentGamutTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class U16Fixed16ArrayType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_reserved = $this->_io->ensureFixedContents("\x00\x00\x00\x00");
         $this->_m_values = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_values[] = new \Icc4\U16Fixed16Number($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_reserved;
@@ -1214,8 +1218,8 @@ class U16Fixed16ArrayType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ColorantTableOutTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1236,8 +1240,8 @@ class ColorantTableOutTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class MeasurementTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1258,8 +1262,8 @@ class MeasurementTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ProfileSequenceTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1280,8 +1284,8 @@ class ProfileSequenceTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class TechnologyTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1302,8 +1306,8 @@ class TechnologyTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class AToB0Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1330,8 +1334,8 @@ class AToB0Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class DToB0Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1352,8 +1356,8 @@ class DToB0Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class OutputResponseTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1374,8 +1378,8 @@ class OutputResponseTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class GreenMatrixColumnTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1396,8 +1400,8 @@ class GreenMatrixColumnTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ProfileDescriptionTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1418,8 +1422,8 @@ class ProfileDescriptionTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class Preview1Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1446,8 +1450,8 @@ class Preview1Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class RedTrcTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1471,8 +1475,8 @@ class RedTrcTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class BToD0Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1493,8 +1497,8 @@ class BToD0Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class DToB1Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1515,8 +1519,8 @@ class DToB1Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class BToA1Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1543,8 +1547,8 @@ class BToA1Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ParametricCurveType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1583,8 +1587,8 @@ class ParametricCurveType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition\ParametricCurveType;
 
 class ParamsIec619663 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\ParametricCurveType $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\ParametricCurveType $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1607,8 +1611,8 @@ class ParamsIec619663 extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition\ParametricCurveType;
 
 class ParamsIec6196621 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\ParametricCurveType $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\ParametricCurveType $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1634,8 +1638,8 @@ class ParamsIec6196621 extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition\ParametricCurveType;
 
 class ParamsYEqualsXToPowerOfG extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\ParametricCurveType $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\ParametricCurveType $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1649,8 +1653,8 @@ class ParamsYEqualsXToPowerOfG extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition\ParametricCurveType;
 
 class ParamsYEqualsObAxPlusBCbToPowerOfGPlusC extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\ParametricCurveType $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\ParametricCurveType $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1682,8 +1686,8 @@ class ParamsYEqualsObAxPlusBCbToPowerOfGPlusC extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition\ParametricCurveType;
 
 class ParamsCie1221996 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\ParametricCurveType $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\ParametricCurveType $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1713,8 +1717,8 @@ class ParametricCurveTypeFunctions {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ChromaticityTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1735,8 +1739,8 @@ class ChromaticityTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ChromaticAdaptationTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1757,8 +1761,8 @@ class ChromaticAdaptationTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class MeasurementType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\MeasurementTag $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\MeasurementTag $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1810,8 +1814,8 @@ class MeasurementFlareEncodings {
 namespace \Icc4\TagTable\TagDefinition;
 
 class TextType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\CharTargetTag $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\CharTargetTag $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1828,8 +1832,8 @@ class TextType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ProfileSequenceIdentifierType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\ProfileSequenceIdentifierTag $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\ProfileSequenceIdentifierTag $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1860,8 +1864,8 @@ class ProfileSequenceIdentifierType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition\ProfileSequenceIdentifierType;
 
 class ProfileIdentifier extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\ProfileSequenceIdentifierType $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\ProfileSequenceIdentifierType $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1878,8 +1882,8 @@ class ProfileIdentifier extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ColorantTableType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1903,8 +1907,8 @@ class ColorantTableType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition\ColorantTableType;
 
 class Colorant extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\ColorantTableType $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\ColorantTableType $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1928,8 +1932,8 @@ class Colorant extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class SignatureType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1946,8 +1950,8 @@ class SignatureType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class CopyrightTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1968,8 +1972,8 @@ class CopyrightTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class Preview0Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1999,8 +2003,8 @@ class Preview0Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class DateTimeType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\CalibrationDateTimeTag $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\CalibrationDateTimeTag $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2017,8 +2021,8 @@ class DateTimeType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class DToB3Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2039,8 +2043,8 @@ class DToB3Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class Preview2Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2067,8 +2071,8 @@ class Preview2Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class DeviceModelDescTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2089,8 +2093,8 @@ class DeviceModelDescTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class MultiProcessElementsType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2123,16 +2127,18 @@ class MultiProcessElementsType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class UInt16ArrayType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_reserved = $this->_io->ensureFixedContents("\x00\x00\x00\x00");
         $this->_m_values = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_values[] = $this->_io->readU2be();
+            $i++;
         }
     }
     protected $_m_reserved;
@@ -2144,8 +2150,8 @@ class UInt16ArrayType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ColorantOrderTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2166,8 +2172,8 @@ class ColorantOrderTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class DataType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2188,8 +2194,8 @@ class DataTypes {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ChromaticityType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\ChromaticityTag $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\ChromaticityTag $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2216,8 +2222,8 @@ class ChromaticityType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition\ChromaticityType;
 
 class CiexyCoordinateValues extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\ChromaticityType $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\ChromaticityType $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2244,8 +2250,8 @@ class ColorantAndPhosphorEncodings {
 namespace \Icc4\TagTable\TagDefinition;
 
 class LuminanceTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2266,16 +2272,18 @@ class LuminanceTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class S15Fixed16ArrayType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\ChromaticAdaptationTag $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\ChromaticAdaptationTag $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_reserved = $this->_io->ensureFixedContents("\x00\x00\x00\x00");
         $this->_m_values = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_values[] = new \Icc4\S15Fixed16Number($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_reserved;
@@ -2287,8 +2295,8 @@ class S15Fixed16ArrayType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class MultiLocalizedUnicodeType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2315,8 +2323,8 @@ class MultiLocalizedUnicodeType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition\MultiLocalizedUnicodeType;
 
 class Record extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\MultiLocalizedUnicodeType $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\MultiLocalizedUnicodeType $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2349,8 +2357,8 @@ class Record extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class AToB2Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2377,8 +2385,8 @@ class AToB2Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class AToB1Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2405,8 +2413,8 @@ class AToB1Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ColorimetricIntentImageStateTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2427,8 +2435,8 @@ class ColorimetricIntentImageStateTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class CharTargetTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2449,8 +2457,8 @@ class CharTargetTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ColorantTableTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2471,8 +2479,8 @@ class ColorantTableTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class CalibrationDateTimeTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2493,8 +2501,8 @@ class CalibrationDateTimeTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class NamedColor2Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2515,8 +2523,8 @@ class NamedColor2Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ViewingCondDescTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2537,8 +2545,8 @@ class ViewingCondDescTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class BToD3Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2559,8 +2567,8 @@ class BToD3Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ProfileSequenceDescType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\ProfileSequenceTag $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\ProfileSequenceTag $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2584,8 +2592,8 @@ class ProfileSequenceDescType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition\ProfileSequenceDescType;
 
 class ProfileDescription extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\ProfileSequenceDescType $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\ProfileSequenceDescType $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2614,8 +2622,8 @@ class ProfileDescription extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ProfileSequenceIdentifierTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2636,8 +2644,8 @@ class ProfileSequenceIdentifierTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class BToD1Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2658,8 +2666,8 @@ class BToD1Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ColorantOrderType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\ColorantOrderTag $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\ColorantOrderTag $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2683,8 +2691,8 @@ class ColorantOrderType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class DToB2Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2705,8 +2713,8 @@ class DToB2Tag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class GrayTrcTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2730,8 +2738,8 @@ class GrayTrcTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class ViewingConditionsType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\ViewingConditionsTag $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\ViewingConditionsTag $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2754,8 +2762,8 @@ class ViewingConditionsType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class LutBToAType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2796,8 +2804,8 @@ class LutBToAType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class GreenTrcTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2821,16 +2829,18 @@ class GreenTrcTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class UInt32ArrayType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_reserved = $this->_io->ensureFixedContents("\x00\x00\x00\x00");
         $this->_m_values = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_values[] = $this->_io->readU4be();
+            $i++;
         }
     }
     protected $_m_reserved;
@@ -2842,8 +2852,8 @@ class UInt32ArrayType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class GamutTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2870,16 +2880,18 @@ class GamutTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class UInt8ArrayType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_reserved = $this->_io->ensureFixedContents("\x00\x00\x00\x00");
         $this->_m_values = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_values[] = $this->_io->readU1();
+            $i++;
         }
     }
     protected $_m_reserved;
@@ -2891,8 +2903,8 @@ class UInt8ArrayType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class RedMatrixColumnTag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -2913,16 +2925,18 @@ class RedMatrixColumnTag extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class UInt64ArrayType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_reserved = $this->_io->ensureFixedContents("\x00\x00\x00\x00");
         $this->_m_values = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_values[] = $this->_io->readU8be();
+            $i++;
         }
     }
     protected $_m_reserved;
@@ -2934,8 +2948,8 @@ class UInt64ArrayType extends \Kaitai\Struct\Struct {
 namespace \Icc4\TagTable\TagDefinition;
 
 class BToD2Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -3054,8 +3068,8 @@ class MultiProcessElementsTypes {
 namespace \Icc4;
 
 class DeviceAttributes extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -3112,8 +3126,8 @@ class DeviceAttributesColourOrBlackAndWhiteMedia {
 namespace \Icc4;
 
 class DeviceManufacturer extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -3395,8 +3409,8 @@ class DeviceManufacturers {
 namespace \Icc4;
 
 class S15Fixed16Number extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Icc4\TagTable\TagDefinition\S15Fixed16ArrayType $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Icc4\TagTable\TagDefinition\S15Fixed16ArrayType $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -3410,8 +3424,8 @@ class S15Fixed16Number extends \Kaitai\Struct\Struct {
 namespace \Icc4;
 
 class PositionNumber extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Icc4 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Icc4 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

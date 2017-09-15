@@ -4,16 +4,20 @@
 
 
 
-windows_resource_file_t::windows_resource_file_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, windows_resource_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+windows_resource_file_t::windows_resource_file_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, windows_resource_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
 
 void windows_resource_file_t::_read() {
     m_resources = new std::vector<resource_t*>();
-    while (!m__io->is_eof()) {
-        m_resources->push_back(new resource_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_resources->push_back(new resource_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -24,9 +28,9 @@ windows_resource_file_t::~windows_resource_file_t() {
     delete m_resources;
 }
 
-windows_resource_file_t::resource_t::resource_t(kaitai::kstream *p_io, windows_resource_file_t* p_parent, windows_resource_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+windows_resource_file_t::resource_t::resource_t(kaitai::kstream* p__io, windows_resource_file_t* p__parent, windows_resource_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_type_as_predef = false;
     _read();
 }
@@ -63,9 +67,9 @@ windows_resource_file_t::resource_t::predef_types_t windows_resource_file_t::res
     return m_type_as_predef;
 }
 
-windows_resource_file_t::unicode_or_id_t::unicode_or_id_t(kaitai::kstream *p_io, windows_resource_file_t::resource_t* p_parent, windows_resource_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+windows_resource_file_t::unicode_or_id_t::unicode_or_id_t(kaitai::kstream* p__io, windows_resource_file_t::resource_t* p__parent, windows_resource_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_save_pos1 = false;
     f_save_pos2 = false;
     f_is_string = false;
@@ -89,10 +93,12 @@ void windows_resource_file_t::unicode_or_id_t::_read() {
         n_rest = false;
         m_rest = new std::vector<uint16_t>();
         {
+            int i = 0;
             uint16_t _;
             do {
                 _ = m__io->read_u2le();
                 m_rest->push_back(_);
+                i++;
             } while (!(_ == 0));
         }
     }
@@ -104,7 +110,17 @@ void windows_resource_file_t::unicode_or_id_t::_read() {
 }
 
 windows_resource_file_t::unicode_or_id_t::~unicode_or_id_t() {
-    delete m_rest;
+    if (!n_first) {
+    }
+    if (!n_as_numeric) {
+    }
+    if (!n_rest) {
+        delete m_rest;
+    }
+    if (!n_noop) {
+    }
+    if (f_as_string && !n_as_string) {
+    }
 }
 
 int32_t windows_resource_file_t::unicode_or_id_t::save_pos1() {

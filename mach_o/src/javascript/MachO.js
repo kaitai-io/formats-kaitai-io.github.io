@@ -33,12 +33,10 @@ var MachO = (function() {
     LAZY_LOAD_DYLIB: 32,
     ENCRYPTION_INFO: 33,
     DYLD_INFO: 34,
-    LOAD_UPWARD_DYLIB: 35,
     VERSION_MIN_MACOSX: 36,
     VERSION_MIN_IPHONEOS: 37,
     FUNCTION_STARTS: 38,
     DYLD_ENVIRONMENT: 39,
-    MAIN: 40,
     DATA_IN_CODE: 41,
     SOURCE_VERSION: 42,
     DYLIB_CODE_SIGN_DRS: 43,
@@ -52,7 +50,8 @@ var MachO = (function() {
     RPATH: 2147483676,
     REEXPORT_DYLIB: 2147483679,
     DYLD_INFO_ONLY: 2147483682,
-    MAIN2: 2147483688,
+    LOAD_UPWARD_DYLIB: 2147483683,
+    MAIN: 2147483688,
 
     1: "SEGMENT",
     2: "SYMTAB",
@@ -85,12 +84,10 @@ var MachO = (function() {
     32: "LAZY_LOAD_DYLIB",
     33: "ENCRYPTION_INFO",
     34: "DYLD_INFO",
-    35: "LOAD_UPWARD_DYLIB",
     36: "VERSION_MIN_MACOSX",
     37: "VERSION_MIN_IPHONEOS",
     38: "FUNCTION_STARTS",
     39: "DYLD_ENVIRONMENT",
-    40: "MAIN",
     41: "DATA_IN_CODE",
     42: "SOURCE_VERSION",
     43: "DYLIB_CODE_SIGN_DRS",
@@ -104,7 +101,8 @@ var MachO = (function() {
     2147483676: "RPATH",
     2147483679: "REEXPORT_DYLIB",
     2147483682: "DYLD_INFO_ONLY",
-    2147483688: "MAIN2",
+    2147483683: "LOAD_UPWARD_DYLIB",
+    2147483688: "MAIN",
   });
 
   MachO.MachoFlags = Object.freeze({
@@ -161,22 +159,6 @@ var MachO = (function() {
     8388608: "HAS_TLV_DESCRIPTORS",
     16777216: "NO_HEAP_EXECUTION",
     33554432: "APP_EXTENSION_SAFE",
-  });
-
-  MachO.VmProt = Object.freeze({
-    NONE: 0,
-    READ: 1,
-    WRITE: 2,
-    EXECUTE: 4,
-    NO_CHANGE: 8,
-    COPY: 16,
-
-    0: "NONE",
-    1: "READ",
-    2: "WRITE",
-    4: "EXECUTE",
-    8: "NO_CHANGE",
-    16: "COPY",
   });
 
   MachO.MagicType = Object.freeze({
@@ -239,6 +221,7 @@ var MachO = (function() {
     POWERPC: 18,
     ABI64: 16777216,
     X86_64: 16777223,
+    ARM64: 16777228,
     POWERPC64: 16777234,
     ANY: 4294967295,
 
@@ -259,6 +242,7 @@ var MachO = (function() {
     18: "POWERPC",
     16777216: "ABI64",
     16777223: "X86_64",
+    16777228: "ARM64",
     16777234: "POWERPC64",
     4294967295: "ANY",
   });
@@ -1000,6 +984,59 @@ var MachO = (function() {
     return CsBlob;
   })();
 
+  var RoutinesCommand = MachO.RoutinesCommand = (function() {
+    function RoutinesCommand(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    RoutinesCommand.prototype._read = function() {
+      this.initAddress = this._io.readU4le();
+      this.initModule = this._io.readU4le();
+      this.reserved = this._io.readBytes(24);
+    }
+
+    return RoutinesCommand;
+  })();
+
+  var RoutinesCommand64 = MachO.RoutinesCommand64 = (function() {
+    function RoutinesCommand64(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    RoutinesCommand64.prototype._read = function() {
+      this.initAddress = this._io.readU8le();
+      this.initModule = this._io.readU8le();
+      this.reserved = this._io.readBytes(48);
+    }
+
+    return RoutinesCommand64;
+  })();
+
+  var LinkerOptionCommand = MachO.LinkerOptionCommand = (function() {
+    function LinkerOptionCommand(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    LinkerOptionCommand.prototype._read = function() {
+      this.numStrings = this._io.readU4le();
+      this.strings = new Array(this.numStrings);
+      for (var i = 0; i < this.numStrings; i++) {
+        this.strings[i] = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "utf-8");
+      }
+    }
+
+    return LinkerOptionCommand;
+  })();
+
   var SegmentCommand64 = MachO.SegmentCommand64 = (function() {
     function SegmentCommand64(_io, _parent, _root) {
       this._io = _io;
@@ -1014,8 +1051,8 @@ var MachO = (function() {
       this.vmsize = this._io.readU8le();
       this.fileoff = this._io.readU8le();
       this.filesize = this._io.readU8le();
-      this.maxprot = this._io.readU4le();
-      this.initprot = this._io.readU4le();
+      this.maxprot = new VmProt(this._io, this, this._root);
+      this.initprot = new VmProt(this._io, this, this._root);
       this.nsects = this._io.readU4le();
       this.flags = this._io.readU4le();
       this.sections = new Array(this.nsects);
@@ -1057,8 +1094,10 @@ var MachO = (function() {
         }
         CfStringList.prototype._read = function() {
           this.items = [];
+          var i = 0;
           while (!this._io.isEof()) {
             this.items.push(new CfString(this._io, this, this._root));
+            i++;
           }
         }
 
@@ -1182,8 +1221,10 @@ var MachO = (function() {
         }
         EhFrame.prototype._read = function() {
           this.items = [];
+          var i = 0;
           while (!this._io.isEof()) {
             this.items.push(new EhFrameItem(this._io, this, this._root));
+            i++;
           }
         }
 
@@ -1200,8 +1241,10 @@ var MachO = (function() {
         }
         PointerList.prototype._read = function() {
           this.items = [];
+          var i = 0;
           while (!this._io.isEof()) {
             this.items.push(this._io.readU8le());
+            i++;
           }
         }
 
@@ -1218,8 +1261,10 @@ var MachO = (function() {
         }
         StringList.prototype._read = function() {
           this.strings = [];
+          var i = 0;
           while (!this._io.isEof()) {
             this.strings.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ascii"));
+            i++;
           }
         }
 
@@ -1333,6 +1378,65 @@ var MachO = (function() {
     return SegmentCommand64;
   })();
 
+  var VmProt = MachO.VmProt = (function() {
+    function VmProt(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    VmProt.prototype._read = function() {
+      this.stripRead = this._io.readBitsInt(1) != 0;
+      this.isMask = this._io.readBitsInt(1) != 0;
+      this.reserved0 = this._io.readBitsInt(1) != 0;
+      this.copy = this._io.readBitsInt(1) != 0;
+      this.noChange = this._io.readBitsInt(1) != 0;
+      this.execute = this._io.readBitsInt(1) != 0;
+      this.write = this._io.readBitsInt(1) != 0;
+      this.read = this._io.readBitsInt(1) != 0;
+      this.reserved1 = this._io.readBitsInt(24);
+    }
+
+    /**
+     * Special marker to support execute-only protection.
+     */
+
+    /**
+     * Indicates to use value as a mask against the actual protection bits.
+     */
+
+    /**
+     * Reserved (unused) bit.
+     */
+
+    /**
+     * Used when write permission can not be obtained, to mark the entry as COW.
+     */
+
+    /**
+     * Used only by memory_object_lock_request to indicate no change to page locks.
+     */
+
+    /**
+     * Execute permission.
+     */
+
+    /**
+     * Write permission.
+     */
+
+    /**
+     * Read permission.
+     */
+
+    /**
+     * Reserved (unused) bits.
+     */
+
+    return VmProt;
+  })();
+
   var DysymtabCommand = MachO.DysymtabCommand = (function() {
     function DysymtabCommand(_io, _parent, _root) {
       this._io = _io;
@@ -1419,6 +1523,37 @@ var MachO = (function() {
     return LinkeditDataCommand;
   })();
 
+  var SubCommand = MachO.SubCommand = (function() {
+    function SubCommand(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    SubCommand.prototype._read = function() {
+      this.name = new LcStr(this._io, this, this._root);
+    }
+
+    return SubCommand;
+  })();
+
+  var TwolevelHintsCommand = MachO.TwolevelHintsCommand = (function() {
+    function TwolevelHintsCommand(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    TwolevelHintsCommand.prototype._read = function() {
+      this.offset = this._io.readU4le();
+      this.numHints = this._io.readU4le();
+    }
+
+    return TwolevelHintsCommand;
+  })();
+
   var Version = MachO.Version = (function() {
     function Version(_io, _parent, _root) {
       this._io = _io;
@@ -1435,6 +1570,26 @@ var MachO = (function() {
     }
 
     return Version;
+  })();
+
+  var EncryptionInfoCommand = MachO.EncryptionInfoCommand = (function() {
+    function EncryptionInfoCommand(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    EncryptionInfoCommand.prototype._read = function() {
+      this.cryptoff = this._io.readU4le();
+      this.cryptsize = this._io.readU4le();
+      this.cryptid = this._io.readU4le();
+      if ( ((this._root.magic == MachO.MagicType.MACHO_BE_X64) || (this._root.magic == MachO.MagicType.MACHO_LE_X64)) ) {
+        this.pad = this._io.readU4le();
+      }
+    }
+
+    return EncryptionInfoCommand;
   })();
 
   var CodeSignatureCommand = MachO.CodeSignatureCommand = (function() {
@@ -1590,9 +1745,11 @@ var MachO = (function() {
       }
       RebaseData.prototype._read = function() {
         this.items = []
+        var i = 0;
         do {
           var _ = new RebaseItem(this._io, this, this._root);
           this.items.push(_);
+          i++;
         } while (!(_.opcode == MachO.DyldInfoCommand.RebaseData.Opcode.DONE));
       }
 
@@ -1694,9 +1851,11 @@ var MachO = (function() {
       }
       BindData.prototype._read = function() {
         this.items = []
+        var i = 0;
         do {
           var _ = new BindItem(this._io, this, this._root);
           this.items.push(_);
+          i++;
         } while (!(_.opcode == MachO.DyldInfoCommand.BindOpcode.DONE));
       }
 
@@ -1713,8 +1872,10 @@ var MachO = (function() {
       }
       LazyBindData.prototype._read = function() {
         this.items = [];
+        var i = 0;
         while (!this._io.isEof()) {
           this.items.push(new BindItem(this._io, this, this._root));
+          i++;
         }
       }
 
@@ -1842,6 +2003,16 @@ var MachO = (function() {
       this.type = this._io.readU4le();
       this.size = this._io.readU4le();
       switch (this.type) {
+      case MachO.LoadCommandType.SUB_LIBRARY:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SubCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.SEGMENT_SPLIT_INFO:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new LinkeditDataCommand(_io__raw_body, this, this._root);
+        break;
       case MachO.LoadCommandType.RPATH:
         this._raw_body = this._io.readBytes((this.size - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -1852,15 +2023,80 @@ var MachO = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new SourceVersionCommand(_io__raw_body, this, this._root);
         break;
+      case MachO.LoadCommandType.ENCRYPTION_INFO_64:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new EncryptionInfoCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.VERSION_MIN_TVOS:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new VersionMinCommand(_io__raw_body, this, this._root);
+        break;
       case MachO.LoadCommandType.LOAD_DYLINKER:
         this._raw_body = this._io.readBytes((this.size - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new DylinkerCommand(_io__raw_body, this, this._root);
         break;
+      case MachO.LoadCommandType.SUB_FRAMEWORK:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SubCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.LOAD_WEAK_DYLIB:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DylibCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.VERSION_MIN_IPHONEOS:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new VersionMinCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.LINKER_OPTIMIZATION_HINT:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new LinkeditDataCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.DYLD_ENVIRONMENT:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DylinkerCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.LOAD_UPWARD_DYLIB:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DylibCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.DYLIB_CODE_SIGN_DRS:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new LinkeditDataCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.DYLD_INFO:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DyldInfoCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.REEXPORT_DYLIB:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DylibCommand(_io__raw_body, this, this._root);
+        break;
       case MachO.LoadCommandType.SYMTAB:
         this._raw_body = this._io.readBytes((this.size - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new SymtabCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.ROUTINES_64:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new RoutinesCommand64(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.ID_DYLINKER:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DylinkerCommand(_io__raw_body, this, this._root);
         break;
       case MachO.LoadCommandType.MAIN:
         this._raw_body = this._io.readBytes((this.size - 8));
@@ -1882,6 +2118,31 @@ var MachO = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new LinkeditDataCommand(_io__raw_body, this, this._root);
         break;
+      case MachO.LoadCommandType.VERSION_MIN_WATCHOS:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new VersionMinCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.ENCRYPTION_INFO:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new EncryptionInfoCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.SUB_UMBRELLA:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SubCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.LINKER_OPTION:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new LinkerOptionCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.TWOLEVEL_HINTS:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new TwolevelHintsCommand(_io__raw_body, this, this._root);
+        break;
       case MachO.LoadCommandType.UUID:
         this._raw_body = this._io.readBytes((this.size - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -1891,6 +2152,21 @@ var MachO = (function() {
         this._raw_body = this._io.readBytes((this.size - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new DyldInfoCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.LAZY_LOAD_DYLIB:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DylibCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.SUB_CLIENT:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SubCommand(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.ROUTINES:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new RoutinesCommand(_io__raw_body, this, this._root);
         break;
       case MachO.LoadCommandType.CODE_SIGNATURE:
         this._raw_body = this._io.readBytes((this.size - 8));
@@ -1911,6 +2187,11 @@ var MachO = (function() {
         this._raw_body = this._io.readBytes((this.size - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new SegmentCommand64(_io__raw_body, this, this._root);
+        break;
+      case MachO.LoadCommandType.ID_DYLIB:
+        this._raw_body = this._io.readBytes((this.size - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DylibCommand(_io__raw_body, this, this._root);
         break;
       default:
         this.body = this._io.readBytes((this.size - 8));
@@ -1962,9 +2243,11 @@ var MachO = (function() {
       StrTable.prototype._read = function() {
         this.unknown = this._io.readU4le();
         this.items = []
+        var i = 0;
         do {
           var _ = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ascii");
           this.items.push(_);
+          i++;
         } while (!(_ == ""));
       }
 
@@ -2032,7 +2315,7 @@ var MachO = (function() {
     }
     VersionMinCommand.prototype._read = function() {
       this.version = new Version(this._io, this, this._root);
-      this.reserved = new Version(this._io, this, this._root);
+      this.sdk = new Version(this._io, this, this._root);
     }
 
     return VersionMinCommand;

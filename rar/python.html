@@ -219,10 +219,10 @@ how to process a certain block type.</p>
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = Rar(KaitaiStream(raw))</code></pre>
+data = Rar(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -311,12 +311,14 @@ class Rar(KaitaiStruct):
     def _read(self):
         self.magic = self._root.MagicSignature(self._io, self, self._root)
         self.blocks = []
+        i = 0
         while not self._io.is_eof():
             _on = self.magic.version
             if _on == 0:
                 self.blocks.append(self._root.Block(self._io, self, self._root))
             elif _on == 1:
                 self.blocks.append(self._root.BlockV5(self._io, self, self._root))
+            i += 1
 
 
     class BlockV5(KaitaiStruct):

@@ -14,8 +14,8 @@
  */
 
 class GenmidiOp2 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \GenmidiOp2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \GenmidiOp2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -43,8 +43,8 @@ class GenmidiOp2 extends \Kaitai\Struct\Struct {
 namespace \GenmidiOp2;
 
 class InstrumentEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \GenmidiOp2 $parent = null, \GenmidiOp2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \GenmidiOp2 $_parent = null, \GenmidiOp2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -75,8 +75,8 @@ class InstrumentEntry extends \Kaitai\Struct\Struct {
 namespace \GenmidiOp2;
 
 class Instrument extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \GenmidiOp2\InstrumentEntry $parent = null, \GenmidiOp2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \GenmidiOp2\InstrumentEntry $_parent = null, \GenmidiOp2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -114,8 +114,8 @@ class Instrument extends \Kaitai\Struct\Struct {
 namespace \GenmidiOp2;
 
 class OpSettings extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \GenmidiOp2\Instrument $parent = null, \GenmidiOp2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \GenmidiOp2\Instrument $_parent = null, \GenmidiOp2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

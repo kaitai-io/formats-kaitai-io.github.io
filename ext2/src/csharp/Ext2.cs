@@ -11,22 +11,24 @@ namespace Kaitai
             return new Ext2(new KaitaiStream(fileName));
         }
 
-        public Ext2(KaitaiStream io, KaitaiStruct parent = null, Ext2 root = null) : base(io)
+        public Ext2(KaitaiStream p__io, KaitaiStruct p__parent = null, Ext2 p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_bg1 = false;
             f_rootDir = false;
             _read();
         }
-        private void _read() {
-            }
+        private void _read()
+        {
+        }
         public partial class SuperBlockStruct : KaitaiStruct
         {
             public static SuperBlockStruct FromFile(string fileName)
             {
                 return new SuperBlockStruct(new KaitaiStream(fileName));
             }
+
 
             public enum StateEnum
             {
@@ -40,16 +42,16 @@ namespace Kaitai
                 ActRo = 2,
                 ActPanic = 3,
             }
-
-            public SuperBlockStruct(KaitaiStream io, Ext2.BlockGroup parent = null, Ext2 root = null) : base(io)
+            public SuperBlockStruct(KaitaiStream p__io, Ext2.BlockGroup p__parent = null, Ext2 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_blockSize = false;
                 f_blockGroupCount = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _inodesCount = m_io.ReadU4le();
                 _blocksCount = m_io.ReadU4le();
                 _rBlocksCount = m_io.ReadU4le();
@@ -93,11 +95,12 @@ namespace Kaitai
                 _journalDev = m_io.ReadU4le();
                 _lastOrphan = m_io.ReadU4le();
                 _hashSeed = new List<uint>((int) (4));
-                for (var i = 0; i < 4; i++) {
+                for (var i = 0; i < 4; i++)
+                {
                     _hashSeed.Add(m_io.ReadU4le());
                 }
                 _defHashVersion = m_io.ReadU1();
-                }
+            }
             private bool f_blockSize;
             private int _blockSize;
             public int BlockSize
@@ -224,6 +227,7 @@ namespace Kaitai
                 return new DirEntry(new KaitaiStream(fileName));
             }
 
+
             public enum FileTypeEnum
             {
                 Unknown = 0,
@@ -235,22 +239,22 @@ namespace Kaitai
                 Sock = 6,
                 Symlink = 7,
             }
-
-            public DirEntry(KaitaiStream io, Ext2.Dir parent = null, Ext2 root = null) : base(io)
+            public DirEntry(KaitaiStream p__io, Ext2.Dir p__parent = null, Ext2 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_inode = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _inodePtr = m_io.ReadU4le();
                 _recLen = m_io.ReadU2le();
                 _nameLen = m_io.ReadU1();
                 _fileType = ((FileTypeEnum) m_io.ReadU1());
                 _name = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(NameLen));
                 _padding = m_io.ReadBytes(((RecLen - NameLen) - 8));
-                }
+            }
             private bool f_inode;
             private Inode _inode;
             public Inode Inode
@@ -288,14 +292,15 @@ namespace Kaitai
                 return new Inode(new KaitaiStream(fileName));
             }
 
-            public Inode(KaitaiStream io, Ext2.Bgd parent = null, Ext2 root = null) : base(io)
+            public Inode(KaitaiStream p__io, Ext2.Bgd p__parent = null, Ext2 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_asDir = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _mode = m_io.ReadU2le();
                 _uid = m_io.ReadU2le();
                 _size = m_io.ReadU4le();
@@ -309,7 +314,8 @@ namespace Kaitai
                 _flags = m_io.ReadU4le();
                 _osd1 = m_io.ReadU4le();
                 _block = new List<BlockPtr>((int) (15));
-                for (var i = 0; i < 15; i++) {
+                for (var i = 0; i < 15; i++)
+                {
                     _block.Add(new BlockPtr(m_io, this, m_root));
                 }
                 _generation = m_io.ReadU4le();
@@ -317,7 +323,7 @@ namespace Kaitai
                 _dirAcl = m_io.ReadU4le();
                 _faddr = m_io.ReadU4le();
                 _osd2 = m_io.ReadBytes(12);
-                }
+            }
             private bool f_asDir;
             private Dir _asDir;
             public Dir AsDir
@@ -383,16 +389,17 @@ namespace Kaitai
                 return new BlockPtr(new KaitaiStream(fileName));
             }
 
-            public BlockPtr(KaitaiStream io, Ext2.Inode parent = null, Ext2 root = null) : base(io)
+            public BlockPtr(KaitaiStream p__io, Ext2.Inode p__parent = null, Ext2 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_body = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _ptr = m_io.ReadU4le();
-                }
+            }
             private bool f_body;
             private RawBlock _body;
             public RawBlock Body
@@ -427,18 +434,23 @@ namespace Kaitai
                 return new Dir(new KaitaiStream(fileName));
             }
 
-            public Dir(KaitaiStream io, Ext2.Inode parent = null, Ext2 root = null) : base(io)
+            public Dir(KaitaiStream p__io, Ext2.Inode p__parent = null, Ext2 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List<DirEntry>();
-                while (!m_io.IsEof) {
-                    _entries.Add(new DirEntry(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new DirEntry(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<DirEntry> _entries;
             private Ext2 m_root;
             private Ext2.Inode m_parent;
@@ -453,21 +465,23 @@ namespace Kaitai
                 return new BlockGroup(new KaitaiStream(fileName));
             }
 
-            public BlockGroup(KaitaiStream io, Ext2 parent = null, Ext2 root = null) : base(io)
+            public BlockGroup(KaitaiStream p__io, Ext2 p__parent = null, Ext2 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 __raw_superBlock = m_io.ReadBytes(1024);
                 var io___raw_superBlock = new KaitaiStream(__raw_superBlock);
                 _superBlock = new SuperBlockStruct(io___raw_superBlock, this, m_root);
                 _blockGroups = new List<Bgd>((int) (SuperBlock.BlockGroupCount));
-                for (var i = 0; i < SuperBlock.BlockGroupCount; i++) {
+                for (var i = 0; i < SuperBlock.BlockGroupCount; i++)
+                {
                     _blockGroups.Add(new Bgd(m_io, this, m_root));
                 }
-                }
+            }
             private SuperBlockStruct _superBlock;
             private List<Bgd> _blockGroups;
             private Ext2 m_root;
@@ -486,16 +500,17 @@ namespace Kaitai
                 return new Bgd(new KaitaiStream(fileName));
             }
 
-            public Bgd(KaitaiStream io, Ext2.BlockGroup parent = null, Ext2 root = null) : base(io)
+            public Bgd(KaitaiStream p__io, Ext2.BlockGroup p__parent = null, Ext2 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_blockBitmap = false;
                 f_inodeBitmap = false;
                 f_inodes = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _blockBitmapBlock = m_io.ReadU4le();
                 _inodeBitmapBlock = m_io.ReadU4le();
                 _inodeTableBlock = m_io.ReadU4le();
@@ -503,7 +518,7 @@ namespace Kaitai
                 _freeInodesCount = m_io.ReadU2le();
                 _usedDirsCount = m_io.ReadU2le();
                 _padReserved = m_io.ReadBytes((2 + 12));
-                }
+            }
             private bool f_blockBitmap;
             private byte[] _blockBitmap;
             public byte[] BlockBitmap
@@ -547,7 +562,8 @@ namespace Kaitai
                     long _pos = m_io.Pos;
                     m_io.Seek((InodeTableBlock * M_Root.Bg1.SuperBlock.BlockSize));
                     _inodes = new List<Inode>((int) (M_Root.Bg1.SuperBlock.InodesPerGroup));
-                    for (var i = 0; i < M_Root.Bg1.SuperBlock.InodesPerGroup; i++) {
+                    for (var i = 0; i < M_Root.Bg1.SuperBlock.InodesPerGroup; i++)
+                    {
                         _inodes.Add(new Inode(m_io, this, m_root));
                     }
                     m_io.Seek(_pos);
@@ -581,15 +597,16 @@ namespace Kaitai
                 return new RawBlock(new KaitaiStream(fileName));
             }
 
-            public RawBlock(KaitaiStream io, Ext2.BlockPtr parent = null, Ext2 root = null) : base(io)
+            public RawBlock(KaitaiStream p__io, Ext2.BlockPtr p__parent = null, Ext2 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _body = m_io.ReadBytes(M_Root.Bg1.SuperBlock.BlockSize);
-                }
+            }
             private byte[] _body;
             private Ext2 m_root;
             private Ext2.BlockPtr m_parent;

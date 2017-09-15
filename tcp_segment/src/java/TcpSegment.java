@@ -1,12 +1,13 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 
 public class TcpSegment extends KaitaiStruct {
     public static TcpSegment fromFile(String fileName) throws IOException {
-        return new TcpSegment(new KaitaiStream(fileName));
+        return new TcpSegment(new ByteBufferKaitaiStream(fileName));
     }
 
     public TcpSegment(KaitaiStream _io) {

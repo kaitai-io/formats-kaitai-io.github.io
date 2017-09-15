@@ -4,8 +4,8 @@
 
 
 
-ico_t::ico_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, ico_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+ico_t::ico_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ico_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -28,9 +28,9 @@ ico_t::~ico_t() {
     delete m_images;
 }
 
-ico_t::icon_dir_entry_t::icon_dir_entry_t(kaitai::kstream *p_io, ico_t* p_parent, ico_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ico_t::icon_dir_entry_t::icon_dir_entry_t(kaitai::kstream* p__io, ico_t* p__parent, ico_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_img = false;
     f_png_header = false;
     f_is_png = false;
@@ -49,6 +49,10 @@ void ico_t::icon_dir_entry_t::_read() {
 }
 
 ico_t::icon_dir_entry_t::~icon_dir_entry_t() {
+    if (f_img) {
+    }
+    if (f_png_header) {
+    }
 }
 
 std::string ico_t::icon_dir_entry_t::img() {

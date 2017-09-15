@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -26,16 +25,24 @@ class ico_t : public kaitai::kstruct {
 public:
     class icon_dir_entry_t;
 
-    ico_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, ico_t* p_root = 0);
+    ico_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, ico_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~ico_t();
 
     class icon_dir_entry_t : public kaitai::kstruct {
 
     public:
 
-        icon_dir_entry_t(kaitai::kstream* p_io, ico_t* p_parent = 0, ico_t* p_root = 0);
+        icon_dir_entry_t(kaitai::kstream* p__io, ico_t* p__parent = 0, ico_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~icon_dir_entry_t();
 
     private:

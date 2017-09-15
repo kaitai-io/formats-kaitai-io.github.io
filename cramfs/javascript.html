@@ -244,7 +244,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_flagFsidV2 !== undefined)
           return this._m_flagFsidV2;
-        this._m_flagFsidV2 = ((this.flags &gt;&gt; 0) &amp; 1);
+        this._m_flagFsidV2 = ((this.flags &gt;&gt;&gt; 0) &amp; 1);
         return this._m_flagFsidV2;
       }
     });
@@ -252,7 +252,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_flagHoles !== undefined)
           return this._m_flagHoles;
-        this._m_flagHoles = ((this.flags &gt;&gt; 8) &amp; 1);
+        this._m_flagHoles = ((this.flags &gt;&gt;&gt; 8) &amp; 1);
         return this._m_flagHoles;
       }
     });
@@ -260,7 +260,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_flagWrongSignature !== undefined)
           return this._m_flagWrongSignature;
-        this._m_flagWrongSignature = ((this.flags &gt;&gt; 9) &amp; 1);
+        this._m_flagWrongSignature = ((this.flags &gt;&gt;&gt; 9) &amp; 1);
         return this._m_flagWrongSignature;
       }
     });
@@ -268,7 +268,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_flagSortedDirs !== undefined)
           return this._m_flagSortedDirs;
-        this._m_flagSortedDirs = ((this.flags &gt;&gt; 1) &amp; 1);
+        this._m_flagSortedDirs = ((this.flags &gt;&gt;&gt; 1) &amp; 1);
         return this._m_flagSortedDirs;
       }
     });
@@ -276,7 +276,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_flagShiftedRootOffset !== undefined)
           return this._m_flagShiftedRootOffset;
-        this._m_flagShiftedRootOffset = ((this.flags &gt;&gt; 10) &amp; 1);
+        this._m_flagShiftedRootOffset = ((this.flags &gt;&gt;&gt; 10) &amp; 1);
         return this._m_flagShiftedRootOffset;
       }
     });
@@ -340,7 +340,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_attr !== undefined)
           return this._m_attr;
-        this._m_attr = ((this.mode &gt;&gt; 9) &amp; 7);
+        this._m_attr = ((this.mode &gt;&gt;&gt; 9) &amp; 7);
         return this._m_attr;
       }
     });
@@ -360,7 +360,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_permU !== undefined)
           return this._m_permU;
-        this._m_permU = ((this.mode &gt;&gt; 6) &amp; 7);
+        this._m_permU = ((this.mode &gt;&gt;&gt; 6) &amp; 7);
         return this._m_permU;
       }
     });
@@ -396,7 +396,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_gid !== undefined)
           return this._m_gid;
-        this._m_gid = (this.sizeGid &gt;&gt; 24);
+        this._m_gid = (this.sizeGid &gt;&gt;&gt; 24);
         return this._m_gid;
       }
     });
@@ -404,7 +404,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_permG !== undefined)
           return this._m_permG;
-        this._m_permG = ((this.mode &gt;&gt; 3) &amp; 7);
+        this._m_permG = ((this.mode &gt;&gt;&gt; 3) &amp; 7);
         return this._m_permG;
       }
     });
@@ -434,7 +434,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_type !== undefined)
           return this._m_type;
-        this._m_type = ((this.mode &gt;&gt; 12) &amp; 15);
+        this._m_type = ((this.mode &gt;&gt;&gt; 12) &amp; 15);
         return this._m_type;
       }
     });
@@ -442,7 +442,7 @@ var Cramfs = (function() {
       get: function() {
         if (this._m_offset !== undefined)
           return this._m_offset;
-        this._m_offset = (((this.namelenOffset &gt;&gt; 6) &amp; 67108863) &lt;&lt; 2);
+        this._m_offset = (((this.namelenOffset &gt;&gt;&gt; 6) &amp; 67108863) &lt;&lt; 2);
         return this._m_offset;
       }
     });
@@ -461,8 +461,10 @@ var Cramfs = (function() {
     DirInode.prototype._read = function() {
       if (this._io.size &gt; 0) {
         this.children = [];
+        var i = 0;
         while (!this._io.isEof()) {
           this.children.push(new Inode(this._io, this, this._root));
+          i++;
         }
       }
     }

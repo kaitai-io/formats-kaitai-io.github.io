@@ -4,8 +4,8 @@
 
 
 
-mbr_partition_table_t::mbr_partition_table_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, mbr_partition_table_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+mbr_partition_table_t::mbr_partition_table_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, mbr_partition_table_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -28,9 +28,9 @@ mbr_partition_table_t::~mbr_partition_table_t() {
     delete m_partitions;
 }
 
-mbr_partition_table_t::partition_entry_t::partition_entry_t(kaitai::kstream *p_io, mbr_partition_table_t* p_parent, mbr_partition_table_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+mbr_partition_table_t::partition_entry_t::partition_entry_t(kaitai::kstream* p__io, mbr_partition_table_t* p__parent, mbr_partition_table_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -48,9 +48,9 @@ mbr_partition_table_t::partition_entry_t::~partition_entry_t() {
     delete m_chs_end;
 }
 
-mbr_partition_table_t::chs_t::chs_t(kaitai::kstream *p_io, mbr_partition_table_t::partition_entry_t* p_parent, mbr_partition_table_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+mbr_partition_table_t::chs_t::chs_t(kaitai::kstream* p__io, mbr_partition_table_t::partition_entry_t* p__parent, mbr_partition_table_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_sector = false;
     f_cylinder = false;
     _read();

@@ -13,8 +13,8 @@
  */
 
 class Tsm extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Tsm $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Tsm $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -38,8 +38,8 @@ class Tsm extends \Kaitai\Struct\Struct {
 namespace \Tsm;
 
 class Header extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Tsm $parent = null, \Tsm $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Tsm $_parent = null, \Tsm $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -56,8 +56,8 @@ class Header extends \Kaitai\Struct\Struct {
 namespace \Tsm;
 
 class Index extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Tsm $parent = null, \Tsm $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Tsm $_parent = null, \Tsm $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -71,9 +71,11 @@ class Index extends \Kaitai\Struct\Struct {
         $_pos = $this->_io->pos();
         $this->_io->seek($this->offset());
         $this->_m_entries = [];
+        $i = 0;
         do {
             $_ = new \Tsm\Index\IndexHeader($this->_io, $this, $this->_root);
             $this->_m_entries[] = $_;
+            $i++;
         } while (!($this->_io()->pos() == ($this->_io()->size() - 8)));
         $this->_io->seek($_pos);
         return $this->_m_entries;
@@ -85,8 +87,8 @@ class Index extends \Kaitai\Struct\Struct {
 namespace \Tsm\Index;
 
 class IndexHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Tsm\Index $parent = null, \Tsm $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Tsm\Index $_parent = null, \Tsm $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -116,8 +118,8 @@ class IndexHeader extends \Kaitai\Struct\Struct {
 namespace \Tsm\Index\IndexHeader;
 
 class IndexEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Tsm\Index\IndexHeader $parent = null, \Tsm $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Tsm\Index\IndexHeader $_parent = null, \Tsm $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -151,8 +153,8 @@ class IndexEntry extends \Kaitai\Struct\Struct {
 namespace \Tsm\Index\IndexHeader\IndexEntry;
 
 class BlockEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Tsm\Index\IndexHeader\IndexEntry $parent = null, \Tsm $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Tsm\Index\IndexHeader\IndexEntry $_parent = null, \Tsm $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

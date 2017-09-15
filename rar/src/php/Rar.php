@@ -13,14 +13,15 @@
  */
 
 class Rar extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Rar $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Rar $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_magic = new \Rar\MagicSignature($this->_io, $this, $this->_root);
         $this->_m_blocks = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             switch ($this->magic()->version()) {
                 case 0:
@@ -30,6 +31,7 @@ class Rar extends \Kaitai\Struct\Struct {
                     $this->_m_blocks[] = new \Rar\BlockV5($this->_io, $this, $this->_root);
                     break;
             }
+            $i++;
         }
     }
     protected $_m_magic;
@@ -49,8 +51,8 @@ class Rar extends \Kaitai\Struct\Struct {
 namespace \Rar;
 
 class BlockV5 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Rar $parent = null, \Rar $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Rar $_parent = null, \Rar $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -67,8 +69,8 @@ class BlockV5 extends \Kaitai\Struct\Struct {
 namespace \Rar;
 
 class Block extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Rar $parent = null, \Rar $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Rar $_parent = null, \Rar $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -156,8 +158,8 @@ class Block extends \Kaitai\Struct\Struct {
 namespace \Rar;
 
 class BlockFileHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Rar\Block $parent = null, \Rar $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Rar\Block $_parent = null, \Rar $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -247,8 +249,8 @@ class BlockFileHeader extends \Kaitai\Struct\Struct {
 namespace \Rar;
 
 class MagicSignature extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Rar $parent = null, \Rar $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Rar $_parent = null, \Rar $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -283,8 +285,8 @@ class MagicSignature extends \Kaitai\Struct\Struct {
 namespace \Rar;
 
 class DosTime extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Rar\BlockFileHeader $parent = null, \Rar $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Rar\BlockFileHeader $_parent = null, \Rar $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

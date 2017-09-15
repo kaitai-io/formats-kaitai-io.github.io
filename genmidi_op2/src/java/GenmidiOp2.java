@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -21,7 +22,7 @@ import java.nio.charset.Charset;
  */
 public class GenmidiOp2 extends KaitaiStruct {
     public static GenmidiOp2 fromFile(String fileName) throws IOException {
-        return new GenmidiOp2(new KaitaiStream(fileName));
+        return new GenmidiOp2(new ByteBufferKaitaiStream(fileName));
     }
 
     public GenmidiOp2(KaitaiStream _io) {
@@ -51,7 +52,7 @@ public class GenmidiOp2 extends KaitaiStruct {
     }
     public static class InstrumentEntry extends KaitaiStruct {
         public static InstrumentEntry fromFile(String fileName) throws IOException {
-            return new InstrumentEntry(new KaitaiStream(fileName));
+            return new InstrumentEntry(new ByteBufferKaitaiStream(fileName));
         }
 
         public InstrumentEntry(KaitaiStream _io) {
@@ -96,7 +97,7 @@ public class GenmidiOp2 extends KaitaiStruct {
     }
     public static class Instrument extends KaitaiStruct {
         public static Instrument fromFile(String fileName) throws IOException {
-            return new Instrument(new KaitaiStream(fileName));
+            return new Instrument(new ByteBufferKaitaiStream(fileName));
         }
 
         public Instrument(KaitaiStream _io) {
@@ -149,7 +150,7 @@ public class GenmidiOp2 extends KaitaiStruct {
      */
     public static class OpSettings extends KaitaiStruct {
         public static OpSettings fromFile(String fileName) throws IOException {
-            return new OpSettings(new KaitaiStream(fileName));
+            return new OpSettings(new ByteBufferKaitaiStream(fileName));
         }
 
         public OpSettings(KaitaiStream _io) {

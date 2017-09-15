@@ -11,13 +11,14 @@ namespace Kaitai
             return new Exif(new KaitaiStream(fileName));
         }
 
-        public Exif(KaitaiStream io, KaitaiStruct parent = null, Exif root = null) : base(io)
+        public Exif(KaitaiStream p__io, KaitaiStruct p__parent = null, Exif p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _endianness = m_io.ReadU2le();
             switch (Endianness) {
             case 18761: {
@@ -29,7 +30,7 @@ namespace Kaitai
                 break;
             }
             }
-            }
+        }
         private ushort _endianness;
         private KaitaiStruct _body;
         private Exif m_root;

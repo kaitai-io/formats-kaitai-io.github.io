@@ -2,15 +2,17 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Zip extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Zip $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Zip $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_sections = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_sections[] = new \Zip\PkSection($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_sections;
@@ -20,8 +22,8 @@ class Zip extends \Kaitai\Struct\Struct {
 namespace \Zip;
 
 class LocalFile extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Zip\PkSection $parent = null, \Zip $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Zip\PkSection $_parent = null, \Zip $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -38,8 +40,8 @@ class LocalFile extends \Kaitai\Struct\Struct {
 namespace \Zip;
 
 class ExtraField extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Zip\Extras $parent = null, \Zip $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Zip\Extras $_parent = null, \Zip $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -80,16 +82,18 @@ class ExtraField extends \Kaitai\Struct\Struct {
 namespace \Zip\ExtraField;
 
 class Ntfs extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Zip\ExtraField $parent = null, \Zip $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Zip\ExtraField $_parent = null, \Zip $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_reserved = $this->_io->readU4le();
         $this->_m_attributes = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_attributes[] = new \Zip\ExtraField\Ntfs\Attribute($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_reserved;
@@ -101,8 +105,8 @@ class Ntfs extends \Kaitai\Struct\Struct {
 namespace \Zip\ExtraField\Ntfs;
 
 class Attribute extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Zip\ExtraField\Ntfs $parent = null, \Zip $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Zip\ExtraField\Ntfs $_parent = null, \Zip $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -133,8 +137,8 @@ class Attribute extends \Kaitai\Struct\Struct {
 namespace \Zip\ExtraField\Ntfs;
 
 class Attribute1 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Zip\ExtraField\Ntfs\Attribute $parent = null, \Zip $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Zip\ExtraField\Ntfs\Attribute $_parent = null, \Zip $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -154,8 +158,8 @@ class Attribute1 extends \Kaitai\Struct\Struct {
 namespace \Zip\ExtraField;
 
 class ExtendedTimestamp extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Zip\ExtraField $parent = null, \Zip $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Zip\ExtraField $_parent = null, \Zip $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -182,8 +186,8 @@ class ExtendedTimestamp extends \Kaitai\Struct\Struct {
 namespace \Zip\ExtraField;
 
 class InfozipUnixVarSize extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Zip\ExtraField $parent = null, \Zip $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Zip\ExtraField $_parent = null, \Zip $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -229,8 +233,8 @@ class InfozipUnixVarSize extends \Kaitai\Struct\Struct {
 namespace \Zip;
 
 class CentralDirEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Zip\PkSection $parent = null, \Zip $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Zip\PkSection $_parent = null, \Zip $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -312,8 +316,8 @@ class CentralDirEntry extends \Kaitai\Struct\Struct {
 namespace \Zip;
 
 class PkSection extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Zip $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Zip $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -343,15 +347,17 @@ class PkSection extends \Kaitai\Struct\Struct {
 namespace \Zip;
 
 class Extras extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Zip $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Zip $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \Zip\ExtraField($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -361,8 +367,8 @@ class Extras extends \Kaitai\Struct\Struct {
 namespace \Zip;
 
 class LocalFileHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Zip\LocalFile $parent = null, \Zip $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Zip\LocalFile $_parent = null, \Zip $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -413,8 +419,8 @@ class LocalFileHeader extends \Kaitai\Struct\Struct {
 namespace \Zip;
 
 class EndOfCentralDir extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Zip\PkSection $parent = null, \Zip $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Zip\PkSection $_parent = null, \Zip $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

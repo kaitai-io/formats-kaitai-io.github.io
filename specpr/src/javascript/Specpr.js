@@ -34,8 +34,10 @@ var Specpr = (function() {
   }
   Specpr.prototype._read = function() {
     this.records = [];
+    var i = 0;
     while (!this._io.isEof()) {
       this.records.push(new Record(this._io, this, this._root));
+      i++;
     }
   }
 

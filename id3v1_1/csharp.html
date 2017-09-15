@@ -260,15 +260,16 @@ namespace Kaitai
             return new Id3v11(new KaitaiStream(fileName));
         }
 
-        public Id3v11(KaitaiStream io, KaitaiStruct parent = null, Id3v11 root = null) : base(io)
+        public Id3v11(KaitaiStream p__io, KaitaiStruct p__parent = null, Id3v11 p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_id3v1Tag = false;
             _read();
         }
-        private void _read() {
-            }
+        private void _read()
+        {
+        }
 
         /// &lt;summary&gt;
         /// ID3v1.1 tag itself, a fixed size 128 byte structure. Contains
@@ -287,6 +288,7 @@ namespace Kaitai
             {
                 return new Id3V11Tag(new KaitaiStream(fileName));
             }
+
 
             public enum GenreEnum
             {
@@ -417,14 +419,14 @@ namespace Kaitai
                 EuroHouse = 124,
                 DanceHall = 125,
             }
-
-            public Id3V11Tag(KaitaiStream io, Id3v11 parent = null, Id3v11 root = null) : base(io)
+            public Id3V11Tag(KaitaiStream p__io, Id3v11 p__parent = null, Id3v11 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.EnsureFixedContents(new byte[] { 84, 65, 71 });
                 _title = m_io.ReadBytes(30);
                 _artist = m_io.ReadBytes(30);
@@ -432,7 +434,7 @@ namespace Kaitai
                 _year = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytes(4));
                 _comment = m_io.ReadBytes(30);
                 _genre = ((GenreEnum) m_io.ReadU1());
-                }
+            }
             private byte[] _magic;
             private byte[] _title;
             private byte[] _artist;

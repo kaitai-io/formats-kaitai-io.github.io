@@ -29,8 +29,10 @@ var StandardMidiFile = (function() {
     }
     TrackEvents.prototype._read = function() {
       this.event = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.event.push(new TrackEvent(this._io, this, this._root));
+        i++;
       }
     }
 
@@ -46,7 +48,7 @@ var StandardMidiFile = (function() {
       this._read();
     }
     TrackEvent.prototype._read = function() {
-      this.vTime = new VlqBase128Be(this._io);
+      this.vTime = new VlqBase128Be(this._io, this, null);
       this.eventHeader = this._io.readU1();
       if (this.eventHeader == 255) {
         this.metaEventBody = new MetaEventBody(this._io, this, this._root);
@@ -242,7 +244,7 @@ var StandardMidiFile = (function() {
     }
     MetaEventBody.prototype._read = function() {
       this.metaType = this._io.readU1();
-      this.len = new VlqBase128Be(this._io);
+      this.len = new VlqBase128Be(this._io, this, null);
       this.body = this._io.readBytes(this.len.value);
     }
 
@@ -293,7 +295,7 @@ var StandardMidiFile = (function() {
       this._read();
     }
     SysexEventBody.prototype._read = function() {
-      this.len = new VlqBase128Be(this._io);
+      this.len = new VlqBase128Be(this._io, this, null);
       this.data = this._io.readBytes(this.len.value);
     }
 

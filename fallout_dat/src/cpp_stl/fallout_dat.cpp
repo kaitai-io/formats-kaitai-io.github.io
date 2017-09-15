@@ -4,8 +4,8 @@
 
 
 
-fallout_dat_t::fallout_dat_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, fallout_dat_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+fallout_dat_t::fallout_dat_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, fallout_dat_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -40,9 +40,9 @@ fallout_dat_t::~fallout_dat_t() {
     delete m_folders;
 }
 
-fallout_dat_t::pstr_t::pstr_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, fallout_dat_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+fallout_dat_t::pstr_t::pstr_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, fallout_dat_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -54,9 +54,9 @@ void fallout_dat_t::pstr_t::_read() {
 fallout_dat_t::pstr_t::~pstr_t() {
 }
 
-fallout_dat_t::folder_t::folder_t(kaitai::kstream *p_io, fallout_dat_t* p_parent, fallout_dat_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+fallout_dat_t::folder_t::folder_t(kaitai::kstream* p__io, fallout_dat_t* p__parent, fallout_dat_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -80,9 +80,9 @@ fallout_dat_t::folder_t::~folder_t() {
     delete m_files;
 }
 
-fallout_dat_t::file_t::file_t(kaitai::kstream *p_io, fallout_dat_t::folder_t* p_parent, fallout_dat_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+fallout_dat_t::file_t::file_t(kaitai::kstream* p__io, fallout_dat_t::folder_t* p__parent, fallout_dat_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_contents = false;
     _read();
 }
@@ -97,6 +97,8 @@ void fallout_dat_t::file_t::_read() {
 
 fallout_dat_t::file_t::~file_t() {
     delete m_name;
+    if (f_contents) {
+    }
 }
 
 std::string fallout_dat_t::file_t::contents() {

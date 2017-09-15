@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>ruby_marshal: Python parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Serialization Protocols</li>
+        <li class="active">ruby_marshal</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>ruby_marshal:
+            
+            Python parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Ruby's Marshal module allows serialization and deserialization of
+many standard and arbitrary Ruby objects in a compact binary
+format. It is relatively fast, available in stdlibs standard and
+allows conservation of language-specific properties (such as symbols
+or encoding-aware strings).</p>
+<p>Feature-wise, it is comparable to other language-specific
+implementations, such as:</p>
+<ul>
+<li>Java's
+<a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html">Serializable</a></li>
+<li>.NET
+<a href="https://docs.microsoft.com/en-us/dotnet/api/system.runtime.serialization.formatters.binary.binaryformatter">BinaryFormatter</a></li>
+<li>Python's
+<a href="https://docs.python.org/3/library/marshal.html">marshal</a>,
+<a href="https://docs.python.org/3/library/pickle.html">pickle</a> and
+<a href="https://docs.python.org/3/library/shelve.html">shelve</a></li>
+</ul>
+<p>From internal perspective, serialized stream consists of a simple
+magic header and a record.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of ruby_marshal
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="ruby_marshal parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="ruby_marshal parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="ruby_marshal parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="ruby_marshal parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="ruby_marshal parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="ruby_marshal parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="ruby_marshal parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="ruby_marshal parsing PHP library">PHP</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="python.html" title="ruby_marshal parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="ruby_marshal parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="python">data = RubyMarshal.from_file("path/to/local/file.ruby_marshal")</code></pre>
+
+<p>Or parse structure from a bytes:</p>
+
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
+
+raw = b"\x00\x01\x02..."
+data = RubyMarshal(KaitaiStream(BytesIO(raw)))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="python">data.version # => get version</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Python source code to parse ruby_marshal
+            
+        </h2>
+
+        
+
+        <h3>ruby_marshal.py</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/python/ruby_marshal.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+from pkg_resources import parse_version
+from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+from enum import Enum
+import struct
+
+
+if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
+    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
+
+class RubyMarshal(KaitaiStruct):
+    &quot;&quot;&quot;Ruby&#39;s Marshal module allows serialization and deserialization of
+    many standard and arbitrary Ruby objects in a compact binary
+    format. It is relatively fast, available in stdlibs standard and
+    allows conservation of language-specific properties (such as symbols
+    or encoding-aware strings).
+    
+    Feature-wise, it is comparable to other language-specific
+    implementations, such as:
+    
+    * Java&#39;s
+      [Serializable](https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html)
+    * .NET
+      [BinaryFormatter](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.serialization.formatters.binary.binaryformatter)
+    * Python&#39;s
+      [marshal](https://docs.python.org/3/library/marshal.html),
+      [pickle](https://docs.python.org/3/library/pickle.html) and
+      [shelve](https://docs.python.org/3/library/shelve.html)
+    
+    From internal perspective, serialized stream consists of a simple
+    magic header and a record.
+    
+    .. seealso::
+       Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Stream+Format
+    &quot;&quot;&quot;
+
+    class Codes(Enum):
+        ruby_string = 34
+        const_nil = 48
+        ruby_symbol = 58
+        ruby_symbol_link = 59
+        const_false = 70
+        instance_var = 73
+        ruby_struct = 83
+        const_true = 84
+        ruby_array = 91
+        packed_int = 105
+        bignum = 108
+        ruby_hash = 123
+    def __init__(self, _io, _parent=None, _root=None):
+        self._io = _io
+        self._parent = _parent
+        self._root = _root if _root else self
+        self._read()
+
+    def _read(self):
+        self.version = self._io.ensure_fixed_contents(struct.pack(&#39;2b&#39;, 4, 8))
+        self.records = self._root.Record(self._io, self, self._root)
+
+    class RubyArray(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.num_elements = self._root.PackedInt(self._io, self, self._root)
+            self.elements = [None] * (self.num_elements.value)
+            for i in range(self.num_elements.value):
+                self.elements[i] = self._root.Record(self._io, self, self._root)
+
+
+
+    class Bignum(KaitaiStruct):
+        &quot;&quot;&quot;
+        .. seealso::
+           Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Bignum
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.sign = self._io.read_u1()
+            self.len_div_2 = self._root.PackedInt(self._io, self, self._root)
+            self.body = self._io.read_bytes((self.len_div_2.value * 2))
+
+
+    class RubyStruct(KaitaiStruct):
+        &quot;&quot;&quot;
+        .. seealso::
+           Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.name = self._root.Record(self._io, self, self._root)
+            self.num_members = self._root.PackedInt(self._io, self, self._root)
+            self.members = [None] * (self.num_members.value)
+            for i in range(self.num_members.value):
+                self.members[i] = self._root.Pair(self._io, self, self._root)
+
+
+
+    class RubySymbol(KaitaiStruct):
+        &quot;&quot;&quot;
+        .. seealso::
+           Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.len = self._root.PackedInt(self._io, self, self._root)
+            self.name = (self._io.read_bytes(self.len.value)).decode(u&quot;UTF-8&quot;)
+
+
+    class PackedInt(KaitaiStruct):
+        &quot;&quot;&quot;Ruby uses sophisticated system to pack integers: first `code`
+        byte either determines packing scheme or carries encoded
+        immediate value (thus allowing smaller values from -123 to 122
+        (inclusive) to take only one byte. There are 11 encoding schemes
+        in total:
+        
+        * 0 is encoded specially (as 0)
+        * 1..122 are encoded as immediate value with a shift
+        * 123..255 are encoded with code of 0x01 and 1 extra byte
+        * 0x100..0xffff are encoded with code of 0x02 and 2 extra bytes
+        * 0x10000..0xffffff are encoded with code of 0x03 and 3 extra
+          bytes
+        * 0x1000000..0xffffffff are encoded with code of 0x04 and 4
+          extra bytes
+        * -123..-1 are encoded as immediate value with another shift
+        * -256..-124 are encoded with code of 0xff and 1 extra byte
+        * -0x10000..-257 are encoded with code of 0xfe and 2 extra bytes
+        * -0x1000000..0x10001 are encoded with code of 0xfd and 3 extra
+           bytes
+        * -0x40000000..-0x1000001 are encoded with code of 0xfc and 4
+           extra bytes
+        
+        Values beyond that are serialized as bignum (even if they
+        technically might be not Bignum class in Ruby implementation,
+        i.e. if they fit into 64 bits on a 64-bit platform).
+        
+        .. seealso::
+           Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Fixnum+and+long
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.code = self._io.read_u1()
+            _on = self.code
+            if _on == 4:
+                self.encoded = self._io.read_u4le()
+            elif _on == 1:
+                self.encoded = self._io.read_u1()
+            elif _on == 252:
+                self.encoded = self._io.read_u4le()
+            elif _on == 253:
+                self.encoded = self._io.read_u2le()
+            elif _on == 3:
+                self.encoded = self._io.read_u2le()
+            elif _on == 2:
+                self.encoded = self._io.read_u2le()
+            elif _on == 255:
+                self.encoded = self._io.read_u1()
+            elif _on == 254:
+                self.encoded = self._io.read_u2le()
+            _on = self.code
+            if _on == 3:
+                self.encoded2 = self._io.read_u1()
+            elif _on == 253:
+                self.encoded2 = self._io.read_u1()
+
+        @property
+        def is_immediate(self):
+            if hasattr(self, &#39;_m_is_immediate&#39;):
+                return self._m_is_immediate if hasattr(self, &#39;_m_is_immediate&#39;) else None
+
+            self._m_is_immediate =  ((self.code &gt; 4) and (self.code &lt; 252)) 
+            return self._m_is_immediate if hasattr(self, &#39;_m_is_immediate&#39;) else None
+
+        @property
+        def value(self):
+            if hasattr(self, &#39;_m_value&#39;):
+                return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+
+            self._m_value = (((self.code - 5) if self.code &lt; 128 else (4 - (~(self.code) &amp; 127))) if self.is_immediate else (0 if self.code == 0 else ((self.encoded - 256) if self.code == 255 else ((self.encoded - 65536) if self.code == 254 else ((((self.encoded2 &lt;&lt; 16) | self.encoded) - 16777216) if self.code == 253 else (((self.encoded2 &lt;&lt; 16) | self.encoded) if self.code == 3 else self.encoded))))))
+            return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+
+
+    class Pair(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.key = self._root.Record(self._io, self, self._root)
+            self.value = self._root.Record(self._io, self, self._root)
+
+
+    class InstanceVar(KaitaiStruct):
+        &quot;&quot;&quot;
+        .. seealso::
+           Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.obj = self._root.Record(self._io, self, self._root)
+            self.num_vars = self._root.PackedInt(self._io, self, self._root)
+            self.vars = [None] * (self.num_vars.value)
+            for i in range(self.num_vars.value):
+                self.vars[i] = self._root.Pair(self._io, self, self._root)
+
+
+
+    class Record(KaitaiStruct):
+        &quot;&quot;&quot;Each record starts with a single byte that determines its type
+        (`code`) and contents. If necessary, additional info as parsed
+        as `body`, to be determined by `code`.
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.code = self._root.Codes(self._io.read_u1())
+            _on = self.code
+            if _on == self._root.Codes.bignum:
+                self.body = self._root.Bignum(self._io, self, self._root)
+            elif _on == self._root.Codes.ruby_hash:
+                self.body = self._root.RubyHash(self._io, self, self._root)
+            elif _on == self._root.Codes.ruby_array:
+                self.body = self._root.RubyArray(self._io, self, self._root)
+            elif _on == self._root.Codes.ruby_symbol:
+                self.body = self._root.RubySymbol(self._io, self, self._root)
+            elif _on == self._root.Codes.instance_var:
+                self.body = self._root.InstanceVar(self._io, self, self._root)
+            elif _on == self._root.Codes.ruby_string:
+                self.body = self._root.RubyString(self._io, self, self._root)
+            elif _on == self._root.Codes.packed_int:
+                self.body = self._root.PackedInt(self._io, self, self._root)
+            elif _on == self._root.Codes.ruby_struct:
+                self.body = self._root.RubyStruct(self._io, self, self._root)
+            elif _on == self._root.Codes.ruby_symbol_link:
+                self.body = self._root.PackedInt(self._io, self, self._root)
+
+
+    class RubyHash(KaitaiStruct):
+        &quot;&quot;&quot;
+        .. seealso::
+           Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Hash+and+Hash+with+Default+Value
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.num_pairs = self._root.PackedInt(self._io, self, self._root)
+            self.pairs = [None] * (self.num_pairs.value)
+            for i in range(self.num_pairs.value):
+                self.pairs[i] = self._root.Pair(self._io, self, self._root)
+
+
+
+    class RubyString(KaitaiStruct):
+        &quot;&quot;&quot;
+        .. seealso::
+           Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-String
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.len = self._root.PackedInt(self._io, self, self._root)
+            self.body = self._io.read_bytes(self.len.value)
+
+
+
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

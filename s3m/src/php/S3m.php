@@ -20,8 +20,8 @@
  */
 
 class S3m extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \S3m $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \S3m $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -150,8 +150,8 @@ class S3m extends \Kaitai\Struct\Struct {
 namespace \S3m;
 
 class ChannelPan extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \S3m $parent = null, \S3m $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \S3m $_parent = null, \S3m $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -180,8 +180,8 @@ class ChannelPan extends \Kaitai\Struct\Struct {
 namespace \S3m;
 
 class PatternCell extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \S3m\PatternCells $parent = null, \S3m $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \S3m\PatternCells $_parent = null, \S3m $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -230,15 +230,17 @@ class PatternCell extends \Kaitai\Struct\Struct {
 namespace \S3m;
 
 class PatternCells extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \S3m\Pattern $parent = null, \S3m $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \S3m\Pattern $_parent = null, \S3m $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_cells = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_cells[] = new \S3m\PatternCell($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_cells;
@@ -248,8 +250,8 @@ class PatternCells extends \Kaitai\Struct\Struct {
 namespace \S3m;
 
 class Channel extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \S3m $parent = null, \S3m $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \S3m $_parent = null, \S3m $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -274,8 +276,8 @@ class Channel extends \Kaitai\Struct\Struct {
 namespace \S3m;
 
 class SwappedU3 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \S3m\Instrument\Sampled $parent = null, \S3m $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \S3m\Instrument\Sampled $_parent = null, \S3m $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -299,8 +301,8 @@ class SwappedU3 extends \Kaitai\Struct\Struct {
 namespace \S3m;
 
 class Pattern extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \S3m\PatternPtr $parent = null, \S3m $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \S3m\PatternPtr $_parent = null, \S3m $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -321,8 +323,8 @@ class Pattern extends \Kaitai\Struct\Struct {
 namespace \S3m;
 
 class PatternPtr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \S3m $parent = null, \S3m $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \S3m $_parent = null, \S3m $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -346,8 +348,8 @@ class PatternPtr extends \Kaitai\Struct\Struct {
 namespace \S3m;
 
 class InstrumentPtr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \S3m $parent = null, \S3m $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \S3m $_parent = null, \S3m $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -371,8 +373,8 @@ class InstrumentPtr extends \Kaitai\Struct\Struct {
 namespace \S3m;
 
 class Instrument extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \S3m\InstrumentPtr $parent = null, \S3m $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \S3m\InstrumentPtr $_parent = null, \S3m $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -411,8 +413,8 @@ class Instrument extends \Kaitai\Struct\Struct {
 namespace \S3m\Instrument;
 
 class Sampled extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \S3m\Instrument $parent = null, \S3m $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \S3m\Instrument $_parent = null, \S3m $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -465,8 +467,8 @@ class Sampled extends \Kaitai\Struct\Struct {
 namespace \S3m\Instrument;
 
 class Adlib extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \S3m\Instrument $parent = null, \S3m $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \S3m\Instrument $_parent = null, \S3m $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

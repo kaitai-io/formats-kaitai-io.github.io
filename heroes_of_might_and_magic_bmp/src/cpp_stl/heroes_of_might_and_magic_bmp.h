@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 
@@ -16,8 +15,12 @@ class heroes_of_might_and_magic_bmp_t : public kaitai::kstruct {
 
 public:
 
-    heroes_of_might_and_magic_bmp_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, heroes_of_might_and_magic_bmp_t* p_root = 0);
+    heroes_of_might_and_magic_bmp_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, heroes_of_might_and_magic_bmp_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~heroes_of_might_and_magic_bmp_t();
 
 private:

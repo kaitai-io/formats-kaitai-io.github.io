@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -12,8 +11,8 @@
 #if KAITAI_STRUCT_VERSION < 7000L
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
-class ethernet_frame_t;
 class packet_ppi_t;
+class ethernet_frame_t;
 
 /**
  * \sa Source
@@ -132,8 +131,12 @@ public:
         LINKTYPE_ISO_14443 = 264
     };
 
-    pcap_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, pcap_t* p_root = 0);
+    pcap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, pcap_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~pcap_t();
 
     /**
@@ -144,8 +147,12 @@ public:
 
     public:
 
-        header_t(kaitai::kstream* p_io, pcap_t* p_parent = 0, pcap_t* p_root = 0);
+        header_t(kaitai::kstream* p__io, pcap_t* p__parent = 0, pcap_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header_t();
 
     private:
@@ -200,8 +207,12 @@ public:
 
     public:
 
-        packet_t(kaitai::kstream* p_io, pcap_t* p_parent = 0, pcap_t* p_root = 0);
+        packet_t(kaitai::kstream* p__io, pcap_t* p__parent = 0, pcap_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~packet_t();
 
     private:
@@ -210,6 +221,12 @@ public:
         uint32_t m_incl_len;
         uint32_t m_orig_len;
         kaitai::kstruct* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
         pcap_t* m__root;
         pcap_t* m__parent;
         std::string m__raw_body;

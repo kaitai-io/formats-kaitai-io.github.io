@@ -20,8 +20,8 @@
  */
 
 class Regf extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Regf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Regf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -29,10 +29,12 @@ class Regf extends \Kaitai\Struct\Struct {
         $this->_m_header = new \Regf\FileHeader($this->_io, $this, $this->_root);
         $this->_m__raw_hiveBins = [];
         $this->_m_hiveBins = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m__raw_hiveBins[] = $this->_io->readBytes(4096);
             $io = new \Kaitai\Struct\Stream(end($this->_m__raw_hiveBins));
             $this->_m_hiveBins[] = new \Regf\HiveBin($io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_header;
@@ -46,8 +48,8 @@ class Regf extends \Kaitai\Struct\Struct {
 namespace \Regf;
 
 class Filetime extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Regf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Regf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -61,16 +63,18 @@ class Filetime extends \Kaitai\Struct\Struct {
 namespace \Regf;
 
 class HiveBin extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Regf $parent = null, \Regf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Regf $_parent = null, \Regf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_header = new \Regf\HiveBinHeader($this->_io, $this, $this->_root);
         $this->_m_cells = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_cells[] = new \Regf\HiveBinCell($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_header;
@@ -82,8 +86,8 @@ class HiveBin extends \Kaitai\Struct\Struct {
 namespace \Regf;
 
 class HiveBinHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Regf\HiveBin $parent = null, \Regf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBin $_parent = null, \Regf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -140,8 +144,8 @@ class HiveBinHeader extends \Kaitai\Struct\Struct {
 namespace \Regf;
 
 class HiveBinCell extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Regf\HiveBin $parent = null, \Regf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBin $_parent = null, \Regf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -216,8 +220,8 @@ class HiveBinCell extends \Kaitai\Struct\Struct {
 namespace \Regf\HiveBinCell;
 
 class SubKeyListVk extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Regf\HiveBinCell $parent = null, \Regf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell $_parent = null, \Regf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -274,8 +278,8 @@ class VkFlags {
 namespace \Regf\HiveBinCell;
 
 class SubKeyListLhLf extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Regf\HiveBinCell $parent = null, \Regf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell $_parent = null, \Regf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -296,8 +300,8 @@ class SubKeyListLhLf extends \Kaitai\Struct\Struct {
 namespace \Regf\HiveBinCell\SubKeyListLhLf;
 
 class Item extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Regf\HiveBinCell\SubKeyListLhLf $parent = null, \Regf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell\SubKeyListLhLf $_parent = null, \Regf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -314,8 +318,8 @@ class Item extends \Kaitai\Struct\Struct {
 namespace \Regf\HiveBinCell;
 
 class SubKeyListSk extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Regf\HiveBinCell $parent = null, \Regf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell $_parent = null, \Regf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -338,8 +342,8 @@ class SubKeyListSk extends \Kaitai\Struct\Struct {
 namespace \Regf\HiveBinCell;
 
 class SubKeyListLi extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Regf\HiveBinCell $parent = null, \Regf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell $_parent = null, \Regf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -360,8 +364,8 @@ class SubKeyListLi extends \Kaitai\Struct\Struct {
 namespace \Regf\HiveBinCell\SubKeyListLi;
 
 class Item extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Regf\HiveBinCell\SubKeyListLi $parent = null, \Regf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell\SubKeyListLi $_parent = null, \Regf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -375,8 +379,8 @@ class Item extends \Kaitai\Struct\Struct {
 namespace \Regf\HiveBinCell;
 
 class NamedKey extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Regf\HiveBinCell $parent = null, \Regf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell $_parent = null, \Regf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -464,8 +468,8 @@ class NkFlags {
 namespace \Regf\HiveBinCell;
 
 class SubKeyListRi extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Regf\HiveBinCell $parent = null, \Regf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell $_parent = null, \Regf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -486,8 +490,8 @@ class SubKeyListRi extends \Kaitai\Struct\Struct {
 namespace \Regf\HiveBinCell\SubKeyListRi;
 
 class Item extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Regf\HiveBinCell\SubKeyListRi $parent = null, \Regf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell\SubKeyListRi $_parent = null, \Regf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -501,8 +505,8 @@ class Item extends \Kaitai\Struct\Struct {
 namespace \Regf;
 
 class FileHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Regf $parent = null, \Regf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Regf $_parent = null, \Regf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

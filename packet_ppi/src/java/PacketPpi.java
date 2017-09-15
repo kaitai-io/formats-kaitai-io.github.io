@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  */
 public class PacketPpi extends KaitaiStruct {
     public static PacketPpi fromFile(String fileName) throws IOException {
-        return new PacketPpi(new KaitaiStream(fileName));
+        return new PacketPpi(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum PfhType {
@@ -175,18 +176,18 @@ public class PacketPpi extends KaitaiStruct {
     private void _read() {
         this.header = new PacketPpiHeader(this._io, this, _root);
         this._raw_fields = this._io.readBytes((header().pphLen() - 8));
-        KaitaiStream _io__raw_fields = new KaitaiStream(_raw_fields);
+        KaitaiStream _io__raw_fields = new ByteBufferKaitaiStream(_raw_fields);
         this.fields = new PacketPpiFields(_io__raw_fields, this, _root);
         switch (header().pphDlt()) {
         case PPI: {
             this._raw_body = this._io.readBytesFull();
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new PacketPpi(_io__raw_body);
             break;
         }
         case ETHERNET: {
             this._raw_body = this._io.readBytesFull();
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new EthernetFrame(_io__raw_body);
             break;
         }
@@ -198,7 +199,7 @@ public class PacketPpi extends KaitaiStruct {
     }
     public static class PacketPpiFields extends KaitaiStruct {
         public static PacketPpiFields fromFile(String fileName) throws IOException {
-            return new PacketPpiFields(new KaitaiStream(fileName));
+            return new PacketPpiFields(new ByteBufferKaitaiStream(fileName));
         }
 
         public PacketPpiFields(KaitaiStream _io) {
@@ -217,8 +218,12 @@ public class PacketPpi extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<PacketPpiField>();
-            while (!this._io.isEof()) {
-                this.entries.add(new PacketPpiField(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new PacketPpiField(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<PacketPpiField> entries;
@@ -234,7 +239,7 @@ public class PacketPpi extends KaitaiStruct {
      */
     public static class Radio80211nMacExtBody extends KaitaiStruct {
         public static Radio80211nMacExtBody fromFile(String fileName) throws IOException {
-            return new Radio80211nMacExtBody(new KaitaiStream(fileName));
+            return new Radio80211nMacExtBody(new ByteBufferKaitaiStream(fileName));
         }
 
         public Radio80211nMacExtBody(KaitaiStream _io) {
@@ -272,7 +277,7 @@ public class PacketPpi extends KaitaiStruct {
     }
     public static class MacFlags extends KaitaiStruct {
         public static MacFlags fromFile(String fileName) throws IOException {
-            return new MacFlags(new KaitaiStream(fileName));
+            return new MacFlags(new ByteBufferKaitaiStream(fileName));
         }
 
         public MacFlags(KaitaiStream _io) {
@@ -358,7 +363,7 @@ public class PacketPpi extends KaitaiStruct {
      */
     public static class PacketPpiHeader extends KaitaiStruct {
         public static PacketPpiHeader fromFile(String fileName) throws IOException {
-            return new PacketPpiHeader(new KaitaiStream(fileName));
+            return new PacketPpiHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public PacketPpiHeader(KaitaiStream _io) {
@@ -400,7 +405,7 @@ public class PacketPpi extends KaitaiStruct {
      */
     public static class Radio80211CommonBody extends KaitaiStruct {
         public static Radio80211CommonBody fromFile(String fileName) throws IOException {
-            return new Radio80211CommonBody(new KaitaiStream(fileName));
+            return new Radio80211CommonBody(new ByteBufferKaitaiStream(fileName));
         }
 
         public Radio80211CommonBody(KaitaiStream _io) {
@@ -457,7 +462,7 @@ public class PacketPpi extends KaitaiStruct {
      */
     public static class PacketPpiField extends KaitaiStruct {
         public static PacketPpiField fromFile(String fileName) throws IOException {
-            return new PacketPpiField(new KaitaiStream(fileName));
+            return new PacketPpiField(new ByteBufferKaitaiStream(fileName));
         }
 
         public PacketPpiField(KaitaiStream _io) {
@@ -480,19 +485,19 @@ public class PacketPpi extends KaitaiStruct {
             switch (pfhType()) {
             case RADIO_802_11_COMMON: {
                 this._raw_body = this._io.readBytes(pfhDatalen());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new Radio80211CommonBody(_io__raw_body, this, _root);
                 break;
             }
             case RADIO_802_11N_MAC_EXT: {
                 this._raw_body = this._io.readBytes(pfhDatalen());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new Radio80211nMacExtBody(_io__raw_body, this, _root);
                 break;
             }
             case RADIO_802_11N_MAC_PHY_EXT: {
                 this._raw_body = this._io.readBytes(pfhDatalen());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new Radio80211nMacPhyExtBody(_io__raw_body, this, _root);
                 break;
             }
@@ -521,7 +526,7 @@ public class PacketPpi extends KaitaiStruct {
      */
     public static class Radio80211nMacPhyExtBody extends KaitaiStruct {
         public static Radio80211nMacPhyExtBody fromFile(String fileName) throws IOException {
-            return new Radio80211nMacPhyExtBody(new KaitaiStream(fileName));
+            return new Radio80211nMacPhyExtBody(new ByteBufferKaitaiStream(fileName));
         }
 
         public Radio80211nMacPhyExtBody(KaitaiStream _io) {
@@ -566,7 +571,7 @@ public class PacketPpi extends KaitaiStruct {
         }
         public static class ChannelFlags extends KaitaiStruct {
             public static ChannelFlags fromFile(String fileName) throws IOException {
-                return new ChannelFlags(new KaitaiStream(fileName));
+                return new ChannelFlags(new ByteBufferKaitaiStream(fileName));
             }
 
             public ChannelFlags(KaitaiStream _io) {
@@ -651,7 +656,7 @@ public class PacketPpi extends KaitaiStruct {
          */
         public static class SignalNoise extends KaitaiStruct {
             public static SignalNoise fromFile(String fileName) throws IOException {
-                return new SignalNoise(new KaitaiStream(fileName));
+                return new SignalNoise(new ByteBufferKaitaiStream(fileName));
             }
 
             public SignalNoise(KaitaiStream _io) {

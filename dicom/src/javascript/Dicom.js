@@ -8075,8 +8075,10 @@ var Dicom = (function() {
   Dicom.prototype._read = function() {
     this.fileHeader = new TFileHeader(this._io, this, this._root);
     this.elements = [];
+    var i = 0;
     while (!this._io.isEof()) {
       this.elements.push(new TDataElementImplicit(this._io, this, this._root));
+      i++;
     }
   }
 
@@ -8130,15 +8132,19 @@ var Dicom = (function() {
       }
       if ( ((this.vr == "SQ") && (this.valueLen == 4294967295)) ) {
         this.items = []
+        var i = 0;
         do {
           var _ = new SeqItem(this._io, this, this._root);
           this.items.push(_);
+          i++;
         } while (!(_.tagElem == 57565));
       }
       if (this.isTransferSyntaxChangeImplicit) {
         this.elementsImplicit = [];
+        var i = 0;
         while (!this._io.isEof()) {
           this.elementsImplicit.push(new TDataElementImplicit(this._io, this, this._root));
+          i++;
         }
       }
     }
@@ -8212,15 +8218,19 @@ var Dicom = (function() {
       }
       if ( ((this.vr == "SQ") && (this.valueLen == 4294967295)) ) {
         this.items = []
+        var i = 0;
         do {
           var _ = new SeqItem(this._io, this, this._root);
           this.items.push(_);
+          i++;
         } while (!(_.tagElem == 57565));
       }
       if (this.isTransferSyntaxChangeExplicit) {
         this.elements = [];
+        var i = 0;
         while (!this._io.isEof()) {
           this.elements.push(new TDataElementExplicit(this._io, this, this._root));
+          i++;
         }
       }
     }
@@ -8285,9 +8295,11 @@ var Dicom = (function() {
       }
       if (this.valueLen == 4294967295) {
         this.items = []
+        var i = 0;
         do {
           var _ = new TDataElementExplicit(this._io, this, this._root);
           this.items.push(_);
+          i++;
         } while (!( ((_.tagGroup == 65534) && (_.tagElem == 57357)) ));
       }
     }

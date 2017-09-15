@@ -23,8 +23,10 @@ class Jpeg < Kaitai::Struct::Struct
 
   def _read
     @segments = []
+    i = 0
     while not @_io.eof?
       @segments << Segment.new(@_io, self, @_root)
+      i += 1
     end
     self
   end

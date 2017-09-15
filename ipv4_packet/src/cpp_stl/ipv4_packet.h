@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -13,9 +12,9 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 class tcp_segment_t;
+class ipv6_packet_t;
 class udp_datagram_t;
 class icmp_packet_t;
-class ipv6_packet_t;
 
 class ipv4_packet_t : public kaitai::kstruct {
 
@@ -170,16 +169,24 @@ public:
         PROTOCOL_ENUM_RESERVED_255 = 255
     };
 
-    ipv4_packet_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, ipv4_packet_t* p_root = 0);
+    ipv4_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, ipv4_packet_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~ipv4_packet_t();
 
     class ipv4_options_t : public kaitai::kstruct {
 
     public:
 
-        ipv4_options_t(kaitai::kstream* p_io, ipv4_packet_t* p_parent = 0, ipv4_packet_t* p_root = 0);
+        ipv4_options_t(kaitai::kstream* p__io, ipv4_packet_t* p__parent = 0, ipv4_packet_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~ipv4_options_t();
 
     private:
@@ -197,8 +204,12 @@ public:
 
     public:
 
-        ipv4_option_t(kaitai::kstream* p_io, ipv4_packet_t::ipv4_options_t* p_parent = 0, ipv4_packet_t* p_root = 0);
+        ipv4_option_t(kaitai::kstream* p__io, ipv4_packet_t::ipv4_options_t* p__parent = 0, ipv4_packet_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~ipv4_option_t();
 
     private:
@@ -271,6 +282,12 @@ private:
     std::string m_dst_ip_addr;
     ipv4_options_t* m_options;
     kaitai::kstruct* m_body;
+    bool n_body;
+
+public:
+    bool _is_null_body() { body(); return n_body; };
+
+private:
     ipv4_packet_t* m__root;
     kaitai::kstruct* m__parent;
     std::string m__raw_options;

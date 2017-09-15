@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class IcmpPacket extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \IcmpPacket $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \IcmpPacket $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -32,8 +32,8 @@ class IcmpPacket extends \Kaitai\Struct\Struct {
 namespace \IcmpPacket;
 
 class DestinationUnreachableMsg extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \IcmpPacket $parent = null, \IcmpPacket $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \IcmpPacket $_parent = null, \IcmpPacket $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -61,8 +61,8 @@ class DestinationUnreachableCode {
 namespace \IcmpPacket;
 
 class TimeExceededMsg extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \IcmpPacket $parent = null, \IcmpPacket $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \IcmpPacket $_parent = null, \IcmpPacket $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -86,8 +86,8 @@ class TimeExceededCode {
 namespace \IcmpPacket;
 
 class EchoMsg extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \IcmpPacket $parent = null, \IcmpPacket $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \IcmpPacket $_parent = null, \IcmpPacket $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

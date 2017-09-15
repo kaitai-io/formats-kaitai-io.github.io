@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class QuakePak extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \QuakePak $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \QuakePak $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -37,15 +37,17 @@ class QuakePak extends \Kaitai\Struct\Struct {
 namespace \QuakePak;
 
 class IndexStruct extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \QuakePak $parent = null, \QuakePak $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \QuakePak $_parent = null, \QuakePak $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \QuakePak\IndexEntry($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -55,8 +57,8 @@ class IndexStruct extends \Kaitai\Struct\Struct {
 namespace \QuakePak;
 
 class IndexEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \QuakePak\IndexStruct $parent = null, \QuakePak $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \QuakePak\IndexStruct $_parent = null, \QuakePak $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

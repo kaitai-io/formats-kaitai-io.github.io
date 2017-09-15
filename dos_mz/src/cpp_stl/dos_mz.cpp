@@ -4,8 +4,8 @@
 
 
 
-dos_mz_t::dos_mz_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, dos_mz_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+dos_mz_t::dos_mz_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dos_mz_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -30,9 +30,9 @@ dos_mz_t::~dos_mz_t() {
     delete m_relocations;
 }
 
-dos_mz_t::mz_header_t::mz_header_t(kaitai::kstream *p_io, dos_mz_t* p_parent, dos_mz_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dos_mz_t::mz_header_t::mz_header_t(kaitai::kstream* p__io, dos_mz_t* p__parent, dos_mz_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -56,9 +56,9 @@ void dos_mz_t::mz_header_t::_read() {
 dos_mz_t::mz_header_t::~mz_header_t() {
 }
 
-dos_mz_t::relocation_t::relocation_t(kaitai::kstream *p_io, dos_mz_t* p_parent, dos_mz_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dos_mz_t::relocation_t::relocation_t(kaitai::kstream* p__io, dos_mz_t* p__parent, dos_mz_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

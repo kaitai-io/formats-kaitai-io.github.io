@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class JavaClass extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -82,8 +82,8 @@ class JavaClass extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class FloatCpInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\ConstantPoolEntry $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -97,8 +97,8 @@ class FloatCpInfo extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class AttributeInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -151,8 +151,8 @@ class AttributeInfo extends \Kaitai\Struct\Struct {
 namespace \JavaClass\AttributeInfo;
 
 class AttrBodyCode extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\AttributeInfo $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\AttributeInfo $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -195,8 +195,8 @@ class AttrBodyCode extends \Kaitai\Struct\Struct {
 namespace \JavaClass\AttributeInfo\AttrBodyCode;
 
 class ExceptionEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\AttributeInfo\AttrBodyCode $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\AttributeInfo\AttrBodyCode $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -248,8 +248,8 @@ class ExceptionEntry extends \Kaitai\Struct\Struct {
 namespace \JavaClass\AttributeInfo;
 
 class AttrBodyExceptions extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\AttributeInfo $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\AttributeInfo $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -270,8 +270,8 @@ class AttrBodyExceptions extends \Kaitai\Struct\Struct {
 namespace \JavaClass\AttributeInfo\AttrBodyExceptions;
 
 class ExceptionTableEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\AttributeInfo\AttrBodyExceptions $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\AttributeInfo\AttrBodyExceptions $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -299,8 +299,8 @@ class ExceptionTableEntry extends \Kaitai\Struct\Struct {
 namespace \JavaClass\AttributeInfo;
 
 class AttrBodySourceFile extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\AttributeInfo $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\AttributeInfo $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -321,8 +321,8 @@ class AttrBodySourceFile extends \Kaitai\Struct\Struct {
 namespace \JavaClass\AttributeInfo;
 
 class AttrBodyLineNumberTable extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\AttributeInfo $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\AttributeInfo $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -343,8 +343,8 @@ class AttrBodyLineNumberTable extends \Kaitai\Struct\Struct {
 namespace \JavaClass\AttributeInfo\AttrBodyLineNumberTable;
 
 class LineNumberTableEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\AttributeInfo\AttrBodyLineNumberTable $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\AttributeInfo\AttrBodyLineNumberTable $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -361,8 +361,8 @@ class LineNumberTableEntry extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class MethodRefCpInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\ConstantPoolEntry $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -393,8 +393,8 @@ class MethodRefCpInfo extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class FieldInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -431,8 +431,8 @@ class FieldInfo extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class DoubleCpInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\ConstantPoolEntry $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -446,8 +446,8 @@ class DoubleCpInfo extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class LongCpInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\ConstantPoolEntry $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -461,8 +461,8 @@ class LongCpInfo extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class InvokeDynamicCpInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\ConstantPoolEntry $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -479,8 +479,8 @@ class InvokeDynamicCpInfo extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class MethodHandleCpInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\ConstantPoolEntry $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -511,8 +511,8 @@ class ReferenceKindEnum {
 namespace \JavaClass;
 
 class NameAndTypeCpInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\ConstantPoolEntry $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -557,8 +557,8 @@ class NameAndTypeCpInfo extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class Utf8CpInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\ConstantPoolEntry $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -575,8 +575,8 @@ class Utf8CpInfo extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class StringCpInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\ConstantPoolEntry $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -590,8 +590,8 @@ class StringCpInfo extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class MethodTypeCpInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\ConstantPoolEntry $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -605,8 +605,8 @@ class MethodTypeCpInfo extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class InterfaceMethodRefCpInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\ConstantPoolEntry $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -637,8 +637,8 @@ class InterfaceMethodRefCpInfo extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class ClassCpInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\ConstantPoolEntry $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -666,8 +666,8 @@ class ClassCpInfo extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class ConstantPoolEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -746,8 +746,8 @@ class TagEnum {
 namespace \JavaClass;
 
 class MethodInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -784,8 +784,8 @@ class MethodInfo extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class IntegerCpInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\ConstantPoolEntry $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -799,8 +799,8 @@ class IntegerCpInfo extends \Kaitai\Struct\Struct {
 namespace \JavaClass;
 
 class FieldRefCpInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \JavaClass\ConstantPoolEntry $parent = null, \JavaClass $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

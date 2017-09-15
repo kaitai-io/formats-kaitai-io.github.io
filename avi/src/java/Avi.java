@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  */
 public class Avi extends KaitaiStruct {
     public static Avi fromFile(String fileName) throws IOException {
-        return new Avi(new KaitaiStream(fileName));
+        return new Avi(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum ChunkType {
@@ -94,12 +95,12 @@ public class Avi extends KaitaiStruct {
         this.fileSize = this._io.readU4le();
         this.magic2 = this._io.ensureFixedContents(new byte[] { 65, 86, 73, 32 });
         this._raw_data = this._io.readBytes((fileSize() - 4));
-        KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
         this.data = new Blocks(_io__raw_data, this, _root);
     }
     public static class ListBody extends KaitaiStruct {
         public static ListBody fromFile(String fileName) throws IOException {
-            return new ListBody(new KaitaiStream(fileName));
+            return new ListBody(new ByteBufferKaitaiStream(fileName));
         }
 
         public ListBody(KaitaiStream _io) {
@@ -131,7 +132,7 @@ public class Avi extends KaitaiStruct {
     }
     public static class Rect extends KaitaiStruct {
         public static Rect fromFile(String fileName) throws IOException {
-            return new Rect(new KaitaiStream(fileName));
+            return new Rect(new ByteBufferKaitaiStream(fileName));
         }
 
         public Rect(KaitaiStream _io) {
@@ -169,7 +170,7 @@ public class Avi extends KaitaiStruct {
     }
     public static class Blocks extends KaitaiStruct {
         public static Blocks fromFile(String fileName) throws IOException {
-            return new Blocks(new KaitaiStream(fileName));
+            return new Blocks(new ByteBufferKaitaiStream(fileName));
         }
 
         public Blocks(KaitaiStream _io) {
@@ -188,8 +189,12 @@ public class Avi extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<Block>();
-            while (!this._io.isEof()) {
-                this.entries.add(new Block(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Block(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<Block> entries;
@@ -206,7 +211,7 @@ public class Avi extends KaitaiStruct {
      */
     public static class AvihBody extends KaitaiStruct {
         public static AvihBody fromFile(String fileName) throws IOException {
-            return new AvihBody(new KaitaiStream(fileName));
+            return new AvihBody(new ByteBufferKaitaiStream(fileName));
         }
 
         public AvihBody(KaitaiStream _io) {
@@ -265,7 +270,7 @@ public class Avi extends KaitaiStruct {
     }
     public static class Block extends KaitaiStruct {
         public static Block fromFile(String fileName) throws IOException {
-            return new Block(new KaitaiStream(fileName));
+            return new Block(new ByteBufferKaitaiStream(fileName));
         }
 
         public Block(KaitaiStream _io) {
@@ -288,19 +293,19 @@ public class Avi extends KaitaiStruct {
             switch (fourCc()) {
             case LIST: {
                 this._raw_data = this._io.readBytes(blockSize());
-                KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                 this.data = new ListBody(_io__raw_data, this, _root);
                 break;
             }
             case AVIH: {
                 this._raw_data = this._io.readBytes(blockSize());
-                KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                 this.data = new AvihBody(_io__raw_data, this, _root);
                 break;
             }
             case STRH: {
                 this._raw_data = this._io.readBytes(blockSize());
-                KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                 this.data = new StrhBody(_io__raw_data, this, _root);
                 break;
             }
@@ -330,7 +335,7 @@ public class Avi extends KaitaiStruct {
      */
     public static class StrhBody extends KaitaiStruct {
         public static StrhBody fromFile(String fileName) throws IOException {
-            return new StrhBody(new KaitaiStream(fileName));
+            return new StrhBody(new ByteBufferKaitaiStream(fileName));
         }
 
         public StrhBody(KaitaiStream _io) {
@@ -410,7 +415,7 @@ public class Avi extends KaitaiStruct {
      */
     public static class StrfBody extends KaitaiStruct {
         public static StrfBody fromFile(String fileName) throws IOException {
-            return new StrfBody(new KaitaiStream(fileName));
+            return new StrfBody(new ByteBufferKaitaiStream(fileName));
         }
 
         public StrfBody(KaitaiStream _io) {

@@ -37,9 +37,11 @@ var Png = (function() {
     this.ihdr = new IhdrChunk(this._io, this, this._root);
     this.ihdrCrc = this._io.readBytes(4);
     this.chunks = []
+    var i = 0;
     do {
       var _ = new Chunk(this._io, this, this._root);
       this.chunks.push(_);
+      i++;
     } while (!( ((_.type == "IEND") || (this._io.isEof())) ));
   }
 
@@ -243,8 +245,10 @@ var Png = (function() {
     }
     PlteChunk.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.entries.push(new Rgb(this._io, this, this._root));
+        i++;
       }
     }
 

@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -26,16 +25,24 @@ public:
         COMPRESSION_ZLIB = 1
     };
 
-    fallout2_dat_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, fallout2_dat_t* p_root = 0);
+    fallout2_dat_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, fallout2_dat_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~fallout2_dat_t();
 
     class pstr_t : public kaitai::kstruct {
 
     public:
 
-        pstr_t(kaitai::kstream* p_io, fallout2_dat_t::file_t* p_parent = 0, fallout2_dat_t* p_root = 0);
+        pstr_t(kaitai::kstream* p__io, fallout2_dat_t::file_t* p__parent = 0, fallout2_dat_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~pstr_t();
 
     private:
@@ -55,8 +62,12 @@ public:
 
     public:
 
-        footer_t(kaitai::kstream* p_io, fallout2_dat_t* p_parent = 0, fallout2_dat_t* p_root = 0);
+        footer_t(kaitai::kstream* p__io, fallout2_dat_t* p__parent = 0, fallout2_dat_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~footer_t();
 
     private:
@@ -76,8 +87,12 @@ public:
 
     public:
 
-        index_t(kaitai::kstream* p_io, fallout2_dat_t* p_parent = 0, fallout2_dat_t* p_root = 0);
+        index_t(kaitai::kstream* p__io, fallout2_dat_t* p__parent = 0, fallout2_dat_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~index_t();
 
     private:
@@ -97,8 +112,12 @@ public:
 
     public:
 
-        file_t(kaitai::kstream* p_io, fallout2_dat_t::index_t* p_parent = 0, fallout2_dat_t* p_root = 0);
+        file_t(kaitai::kstream* p__io, fallout2_dat_t::index_t* p__parent = 0, fallout2_dat_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~file_t();
 
     private:

@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -4061,16 +4060,24 @@ public:
         TAGS_SEQUENCE_DELIMITATION_ITEM = 4294893789
     };
 
-    dicom_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, dicom_t* p_root = 0);
+    dicom_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, dicom_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~dicom_t();
 
     class t_file_header_t : public kaitai::kstruct {
 
     public:
 
-        t_file_header_t(kaitai::kstream* p_io, dicom_t* p_parent = 0, dicom_t* p_root = 0);
+        t_file_header_t(kaitai::kstream* p__io, dicom_t* p__parent = 0, dicom_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~t_file_header_t();
 
     private:
@@ -4094,8 +4101,12 @@ public:
 
     public:
 
-        t_data_element_explicit_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, dicom_t* p_root = 0);
+        t_data_element_explicit_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, dicom_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~t_data_element_explicit_t();
 
     private:
@@ -4144,6 +4155,12 @@ public:
 
     private:
         uint32_t m_value_len;
+        bool n_value_len;
+
+    public:
+        bool _is_null_value_len() { value_len(); return n_value_len; };
+
+    private:
         std::string m_value;
         bool n_value;
 
@@ -4189,8 +4206,12 @@ public:
 
     public:
 
-        t_data_element_implicit_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, dicom_t* p_root = 0);
+        t_data_element_implicit_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, dicom_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~t_data_element_implicit_t();
 
     private:
@@ -4246,6 +4267,12 @@ public:
 
     private:
         uint32_t m_value_len;
+        bool n_value_len;
+
+    public:
+        bool _is_null_value_len() { value_len(); return n_value_len; };
+
+    private:
         std::string m_value;
         bool n_value;
 
@@ -4287,8 +4314,12 @@ public:
 
     public:
 
-        seq_item_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, dicom_t* p_root = 0);
+        seq_item_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, dicom_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~seq_item_t();
 
     private:

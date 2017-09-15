@@ -1,0 +1,204 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__ruby_marshal {
+		label="RubyMarshal";
+		graph[style=dotted];
+
+		ruby_marshal__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">2</TD><TD>04 08</TD><TD PORT="version_type">version</TD></TR>
+			<TR><TD PORT="records_pos">2</TD><TD PORT="records_size">...</TD><TD>Record</TD><TD PORT="records_type">records</TD></TR>
+		</TABLE>>];
+		subgraph cluster__ruby_array {
+			label="RubyMarshal::RubyArray";
+			graph[style=dotted];
+
+			ruby_array__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_elements_pos">0</TD><TD PORT="num_elements_size">...</TD><TD>PackedInt</TD><TD PORT="num_elements_type">num_elements</TD></TR>
+				<TR><TD PORT="elements_pos">...</TD><TD PORT="elements_size">...</TD><TD>Record</TD><TD PORT="elements_type">elements</TD></TR>
+				<TR><TD COLSPAN="4" PORT="elements__repeat">repeat num_elements.value times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bignum {
+			label="RubyMarshal::Bignum";
+			graph[style=dotted];
+
+			bignum__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="sign_pos">0</TD><TD PORT="sign_size">1</TD><TD>u1</TD><TD PORT="sign_type">sign</TD></TR>
+				<TR><TD PORT="len_div_2_pos">1</TD><TD PORT="len_div_2_size">...</TD><TD>PackedInt</TD><TD PORT="len_div_2_type">len_div_2</TD></TR>
+				<TR><TD PORT="body_pos">...</TD><TD PORT="body_size">(len_div_2.value * 2)</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__ruby_struct {
+			label="RubyMarshal::RubyStruct";
+			graph[style=dotted];
+
+			ruby_struct__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">...</TD><TD>Record</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="num_members_pos">...</TD><TD PORT="num_members_size">...</TD><TD>PackedInt</TD><TD PORT="num_members_type">num_members</TD></TR>
+				<TR><TD PORT="members_pos">...</TD><TD PORT="members_size">...</TD><TD>Pair</TD><TD PORT="members_type">members</TD></TR>
+				<TR><TD COLSPAN="4" PORT="members__repeat">repeat num_members.value times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__ruby_symbol {
+			label="RubyMarshal::RubySymbol";
+			graph[style=dotted];
+
+			ruby_symbol__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">...</TD><TD>PackedInt</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="name_pos">...</TD><TD PORT="name_size">len.value</TD><TD>str(UTF-8)</TD><TD PORT="name_type">name</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__packed_int {
+			label="RubyMarshal::PackedInt";
+			graph[style=dotted];
+
+			packed_int__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="code_pos">0</TD><TD PORT="code_size">1</TD><TD>u1</TD><TD PORT="code_type">code</TD></TR>
+				<TR><TD PORT="encoded_pos">1</TD><TD PORT="encoded_size">...</TD><TD>switch (code)</TD><TD PORT="encoded_type">encoded</TD></TR>
+				<TR><TD PORT="encoded2_pos">...</TD><TD PORT="encoded2_size">...</TD><TD>switch (code)</TD><TD PORT="encoded2_type">encoded2</TD></TR>
+			</TABLE>>];
+			packed_int__inst__is_immediate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_immediate</TD><TD> ((code &gt; 4) &amp;&amp; (code &lt; 252)) </TD></TR>
+			</TABLE>>];
+			packed_int__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>value</TD><TD>(is_immediate ? (code &lt; 128 ? (code - 5) : (4 - (~(code) &amp; 127))) : (code == 0 ? 0 : (code == 255 ? (encoded - 256) : (code == 254 ? (encoded - 65536) : (code == 253 ? (((encoded2 &lt;&lt; 16) | encoded) - 16777216) : (code == 3 ? ((encoded2 &lt;&lt; 16) | encoded) : encoded))))))</TD></TR>
+			</TABLE>>];
+packed_int__seq_encoded_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+</TABLE>>];
+packed_int__seq_encoded2_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__pair {
+			label="RubyMarshal::Pair";
+			graph[style=dotted];
+
+			pair__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="key_pos">0</TD><TD PORT="key_size">...</TD><TD>Record</TD><TD PORT="key_type">key</TD></TR>
+				<TR><TD PORT="value_pos">...</TD><TD PORT="value_size">...</TD><TD>Record</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__instance_var {
+			label="RubyMarshal::InstanceVar";
+			graph[style=dotted];
+
+			instance_var__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="obj_pos">0</TD><TD PORT="obj_size">...</TD><TD>Record</TD><TD PORT="obj_type">obj</TD></TR>
+				<TR><TD PORT="num_vars_pos">...</TD><TD PORT="num_vars_size">...</TD><TD>PackedInt</TD><TD PORT="num_vars_type">num_vars</TD></TR>
+				<TR><TD PORT="vars_pos">...</TD><TD PORT="vars_size">...</TD><TD>Pair</TD><TD PORT="vars_type">vars</TD></TR>
+				<TR><TD COLSPAN="4" PORT="vars__repeat">repeat num_vars.value times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__record {
+			label="RubyMarshal::Record";
+			graph[style=dotted];
+
+			record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="code_pos">0</TD><TD PORT="code_size">1</TD><TD>u1→Codes</TD><TD PORT="code_type">code</TD></TR>
+				<TR><TD PORT="body_pos">1</TD><TD PORT="body_size">...</TD><TD>switch (code)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+record__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:codes_bignum</TD><TD PORT="case0">Bignum</TD></TR>
+	<TR><TD>:codes_ruby_hash</TD><TD PORT="case1">RubyHash</TD></TR>
+	<TR><TD>:codes_ruby_array</TD><TD PORT="case2">RubyArray</TD></TR>
+	<TR><TD>:codes_ruby_symbol</TD><TD PORT="case3">RubySymbol</TD></TR>
+	<TR><TD>:codes_instance_var</TD><TD PORT="case4">InstanceVar</TD></TR>
+	<TR><TD>:codes_ruby_string</TD><TD PORT="case5">RubyString</TD></TR>
+	<TR><TD>:codes_packed_int</TD><TD PORT="case6">PackedInt</TD></TR>
+	<TR><TD>:codes_ruby_struct</TD><TD PORT="case7">RubyStruct</TD></TR>
+	<TR><TD>:codes_ruby_symbol_link</TD><TD PORT="case8">PackedInt</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__ruby_hash {
+			label="RubyMarshal::RubyHash";
+			graph[style=dotted];
+
+			ruby_hash__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_pairs_pos">0</TD><TD PORT="num_pairs_size">...</TD><TD>PackedInt</TD><TD PORT="num_pairs_type">num_pairs</TD></TR>
+				<TR><TD PORT="pairs_pos">...</TD><TD PORT="pairs_size">...</TD><TD>Pair</TD><TD PORT="pairs_type">pairs</TD></TR>
+				<TR><TD COLSPAN="4" PORT="pairs__repeat">repeat num_pairs.value times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__ruby_string {
+			label="RubyMarshal::RubyString";
+			graph[style=dotted];
+
+			ruby_string__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">...</TD><TD>PackedInt</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="body_pos">...</TD><TD PORT="body_size">len.value</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+		}
+	}
+	ruby_marshal__seq:records_type -> record__seq [style=bold];
+	ruby_array__seq:num_elements_type -> packed_int__seq [style=bold];
+	ruby_array__seq:elements_type -> record__seq [style=bold];
+	packed_int__inst__value:value_type -> ruby_array__seq:elements__repeat [color="#404040"];
+	bignum__seq:len_div_2_type -> packed_int__seq [style=bold];
+	packed_int__inst__value:value_type -> bignum__seq:body_size [color="#404040"];
+	ruby_struct__seq:name_type -> record__seq [style=bold];
+	ruby_struct__seq:num_members_type -> packed_int__seq [style=bold];
+	ruby_struct__seq:members_type -> pair__seq [style=bold];
+	packed_int__inst__value:value_type -> ruby_struct__seq:members__repeat [color="#404040"];
+	ruby_symbol__seq:len_type -> packed_int__seq [style=bold];
+	packed_int__inst__value:value_type -> ruby_symbol__seq:name_size [color="#404040"];
+	packed_int__seq:encoded_type -> packed_int__seq_encoded_switch [style=bold];
+	packed_int__seq:code_type -> packed_int__seq:encoded_type [color="#404040"];
+	packed_int__seq:encoded2_type -> packed_int__seq_encoded2_switch [style=bold];
+	packed_int__seq:code_type -> packed_int__seq:encoded2_type [color="#404040"];
+	packed_int__seq:code_type -> packed_int__inst__is_immediate [color="#404040"];
+	packed_int__seq:code_type -> packed_int__inst__is_immediate [color="#404040"];
+	packed_int__inst__is_immediate:is_immediate_type -> packed_int__inst__value [color="#404040"];
+	packed_int__seq:code_type -> packed_int__inst__value [color="#404040"];
+	packed_int__seq:code_type -> packed_int__inst__value [color="#404040"];
+	packed_int__seq:code_type -> packed_int__inst__value [color="#404040"];
+	packed_int__seq:code_type -> packed_int__inst__value [color="#404040"];
+	packed_int__seq:code_type -> packed_int__inst__value [color="#404040"];
+	packed_int__seq:encoded_type -> packed_int__inst__value [color="#404040"];
+	packed_int__seq:code_type -> packed_int__inst__value [color="#404040"];
+	packed_int__seq:encoded_type -> packed_int__inst__value [color="#404040"];
+	packed_int__seq:code_type -> packed_int__inst__value [color="#404040"];
+	packed_int__seq:encoded2_type -> packed_int__inst__value [color="#404040"];
+	packed_int__seq:encoded_type -> packed_int__inst__value [color="#404040"];
+	packed_int__seq:code_type -> packed_int__inst__value [color="#404040"];
+	packed_int__seq:encoded2_type -> packed_int__inst__value [color="#404040"];
+	packed_int__seq:encoded_type -> packed_int__inst__value [color="#404040"];
+	packed_int__seq:encoded_type -> packed_int__inst__value [color="#404040"];
+	pair__seq:key_type -> record__seq [style=bold];
+	pair__seq:value_type -> record__seq [style=bold];
+	instance_var__seq:obj_type -> record__seq [style=bold];
+	instance_var__seq:num_vars_type -> packed_int__seq [style=bold];
+	instance_var__seq:vars_type -> pair__seq [style=bold];
+	packed_int__inst__value:value_type -> instance_var__seq:vars__repeat [color="#404040"];
+	record__seq:body_type -> record__seq_body_switch [style=bold];
+	record__seq_body_switch:case0 -> bignum__seq [style=bold];
+	record__seq_body_switch:case1 -> ruby_hash__seq [style=bold];
+	record__seq_body_switch:case2 -> ruby_array__seq [style=bold];
+	record__seq_body_switch:case3 -> ruby_symbol__seq [style=bold];
+	record__seq_body_switch:case4 -> instance_var__seq [style=bold];
+	record__seq_body_switch:case5 -> ruby_string__seq [style=bold];
+	record__seq_body_switch:case6 -> packed_int__seq [style=bold];
+	record__seq_body_switch:case7 -> ruby_struct__seq [style=bold];
+	record__seq_body_switch:case8 -> packed_int__seq [style=bold];
+	record__seq:code_type -> record__seq:body_type [color="#404040"];
+	ruby_hash__seq:num_pairs_type -> packed_int__seq [style=bold];
+	ruby_hash__seq:pairs_type -> pair__seq [style=bold];
+	packed_int__inst__value:value_type -> ruby_hash__seq:pairs__repeat [color="#404040"];
+	ruby_string__seq:len_type -> packed_int__seq [style=bold];
+	packed_int__inst__value:value_type -> ruby_string__seq:body_size [color="#404040"];
+}

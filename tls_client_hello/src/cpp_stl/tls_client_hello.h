@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -28,16 +27,24 @@ public:
     class protocol_t;
     class extension_t;
 
-    tls_client_hello_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, tls_client_hello_t* p_root = 0);
+    tls_client_hello_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, tls_client_hello_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~tls_client_hello_t();
 
     class server_name_t : public kaitai::kstruct {
 
     public:
 
-        server_name_t(kaitai::kstream* p_io, tls_client_hello_t::sni_t* p_parent = 0, tls_client_hello_t* p_root = 0);
+        server_name_t(kaitai::kstream* p__io, tls_client_hello_t::sni_t* p__parent = 0, tls_client_hello_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~server_name_t();
 
     private:
@@ -59,8 +66,12 @@ public:
 
     public:
 
-        random_t(kaitai::kstream* p_io, tls_client_hello_t* p_parent = 0, tls_client_hello_t* p_root = 0);
+        random_t(kaitai::kstream* p__io, tls_client_hello_t* p__parent = 0, tls_client_hello_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~random_t();
 
     private:
@@ -80,8 +91,12 @@ public:
 
     public:
 
-        session_id_t(kaitai::kstream* p_io, tls_client_hello_t* p_parent = 0, tls_client_hello_t* p_root = 0);
+        session_id_t(kaitai::kstream* p__io, tls_client_hello_t* p__parent = 0, tls_client_hello_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~session_id_t();
 
     private:
@@ -101,8 +116,12 @@ public:
 
     public:
 
-        sni_t(kaitai::kstream* p_io, tls_client_hello_t::extension_t* p_parent = 0, tls_client_hello_t* p_root = 0);
+        sni_t(kaitai::kstream* p__io, tls_client_hello_t::extension_t* p__parent = 0, tls_client_hello_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~sni_t();
 
     private:
@@ -122,8 +141,12 @@ public:
 
     public:
 
-        cipher_suites_t(kaitai::kstream* p_io, tls_client_hello_t* p_parent = 0, tls_client_hello_t* p_root = 0);
+        cipher_suites_t(kaitai::kstream* p__io, tls_client_hello_t* p__parent = 0, tls_client_hello_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~cipher_suites_t();
 
     private:
@@ -143,8 +166,12 @@ public:
 
     public:
 
-        compression_methods_t(kaitai::kstream* p_io, tls_client_hello_t* p_parent = 0, tls_client_hello_t* p_root = 0);
+        compression_methods_t(kaitai::kstream* p__io, tls_client_hello_t* p__parent = 0, tls_client_hello_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~compression_methods_t();
 
     private:
@@ -164,8 +191,12 @@ public:
 
     public:
 
-        alpn_t(kaitai::kstream* p_io, tls_client_hello_t::extension_t* p_parent = 0, tls_client_hello_t* p_root = 0);
+        alpn_t(kaitai::kstream* p__io, tls_client_hello_t::extension_t* p__parent = 0, tls_client_hello_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~alpn_t();
 
     private:
@@ -185,8 +216,12 @@ public:
 
     public:
 
-        extensions_t(kaitai::kstream* p_io, tls_client_hello_t* p_parent = 0, tls_client_hello_t* p_root = 0);
+        extensions_t(kaitai::kstream* p__io, tls_client_hello_t* p__parent = 0, tls_client_hello_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~extensions_t();
 
     private:
@@ -206,8 +241,12 @@ public:
 
     public:
 
-        version_t(kaitai::kstream* p_io, tls_client_hello_t* p_parent = 0, tls_client_hello_t* p_root = 0);
+        version_t(kaitai::kstream* p__io, tls_client_hello_t* p__parent = 0, tls_client_hello_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~version_t();
 
     private:
@@ -227,8 +266,12 @@ public:
 
     public:
 
-        protocol_t(kaitai::kstream* p_io, tls_client_hello_t::alpn_t* p_parent = 0, tls_client_hello_t* p_root = 0);
+        protocol_t(kaitai::kstream* p__io, tls_client_hello_t::alpn_t* p__parent = 0, tls_client_hello_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~protocol_t();
 
     private:
@@ -248,14 +291,24 @@ public:
 
     public:
 
-        extension_t(kaitai::kstream* p_io, tls_client_hello_t::extensions_t* p_parent = 0, tls_client_hello_t* p_root = 0);
+        extension_t(kaitai::kstream* p__io, tls_client_hello_t::extensions_t* p__parent = 0, tls_client_hello_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~extension_t();
 
     private:
         uint16_t m_type;
         uint16_t m_len;
         kaitai::kstruct* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
         tls_client_hello_t* m__root;
         tls_client_hello_t::extensions_t* m__parent;
         std::string m__raw_body;

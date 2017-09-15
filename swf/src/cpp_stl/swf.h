@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -27,16 +26,24 @@ public:
         TAG_TYPE_ABC_TAG = 82
     };
 
-    swf_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, swf_t* p_root = 0);
+    swf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, swf_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~swf_t();
 
     class swf_body_t : public kaitai::kstruct {
 
     public:
 
-        swf_body_t(kaitai::kstream* p_io, swf_t* p_parent = 0, swf_t* p_root = 0);
+        swf_body_t(kaitai::kstream* p__io, swf_t* p__parent = 0, swf_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~swf_body_t();
 
     private:
@@ -60,8 +67,12 @@ public:
 
     public:
 
-        rect_t(kaitai::kstream* p_io, swf_t::swf_body_t* p_parent = 0, swf_t* p_root = 0);
+        rect_t(kaitai::kstream* p__io, swf_t::swf_body_t* p__parent = 0, swf_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~rect_t();
 
     private:
@@ -95,13 +106,23 @@ public:
 
     public:
 
-        tag_t(kaitai::kstream* p_io, swf_t::swf_body_t* p_parent = 0, swf_t* p_root = 0);
+        tag_t(kaitai::kstream* p__io, swf_t::swf_body_t* p__parent = 0, swf_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~tag_t();
 
     private:
         record_header_t* m_record_header;
         abc_tag_body_t* m_tag_body;
+        bool n_tag_body;
+
+    public:
+        bool _is_null_tag_body() { tag_body(); return n_tag_body; };
+
+    private:
         swf_t* m__root;
         swf_t::swf_body_t* m__parent;
         std::string m__raw_tag_body;
@@ -120,8 +141,12 @@ public:
 
     public:
 
-        abc_tag_body_t(kaitai::kstream* p_io, swf_t::tag_t* p_parent = 0, swf_t* p_root = 0);
+        abc_tag_body_t(kaitai::kstream* p__io, swf_t::tag_t* p__parent = 0, swf_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~abc_tag_body_t();
 
     private:
@@ -143,8 +168,12 @@ public:
 
     public:
 
-        record_header_t(kaitai::kstream* p_io, swf_t::tag_t* p_parent = 0, swf_t* p_root = 0);
+        record_header_t(kaitai::kstream* p__io, swf_t::tag_t* p__parent = 0, swf_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~record_header_t();
 
     private:

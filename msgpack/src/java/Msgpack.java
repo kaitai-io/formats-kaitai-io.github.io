@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  */
 public class Msgpack extends KaitaiStruct {
     public static Msgpack fromFile(String fileName) throws IOException {
-        return new Msgpack(new KaitaiStream(fileName));
+        return new Msgpack(new ByteBufferKaitaiStream(fileName));
     }
 
     public Msgpack(KaitaiStream _io) {
@@ -35,35 +36,35 @@ public class Msgpack extends KaitaiStruct {
         this.b1 = this._io.readU1();
         switch (b1()) {
         case 211: {
-            this.intExtra = this._io.readS8be();
+            this.intExtra = (int) (this._io.readS8be());
             break;
         }
         case 209: {
-            this.intExtra = this._io.readS2be();
+            this.intExtra = (int) (this._io.readS2be());
             break;
         }
         case 210: {
-            this.intExtra = this._io.readS4be();
+            this.intExtra = (int) (this._io.readS4be());
             break;
         }
         case 208: {
-            this.intExtra = this._io.readS1();
+            this.intExtra = (int) (this._io.readS1());
             break;
         }
         case 205: {
-            this.intExtra = this._io.readU2be();
+            this.intExtra = (int) (this._io.readU2be());
             break;
         }
         case 207: {
-            this.intExtra = this._io.readU8be();
+            this.intExtra = (int) (this._io.readU8be());
             break;
         }
         case 204: {
-            this.intExtra = this._io.readU1();
+            this.intExtra = (int) (this._io.readU1());
             break;
         }
         case 206: {
-            this.intExtra = this._io.readU4be();
+            this.intExtra = (int) (this._io.readU4be());
             break;
         }
         }
@@ -112,7 +113,7 @@ public class Msgpack extends KaitaiStruct {
     }
     public static class MapTuple extends KaitaiStruct {
         public static MapTuple fromFile(String fileName) throws IOException {
-            return new MapTuple(new KaitaiStream(fileName));
+            return new MapTuple(new ByteBufferKaitaiStream(fileName));
         }
 
         public MapTuple(KaitaiStream _io) {
@@ -463,7 +464,7 @@ public class Msgpack extends KaitaiStruct {
         return this.isMap32;
     }
     private int b1;
-    private int intExtra;
+    private Integer intExtra;
     private Float float32Value;
     private Double float64Value;
     private Integer strLen8;
@@ -485,7 +486,7 @@ public class Msgpack extends KaitaiStruct {
      * structures.
      */
     public int b1() { return b1; }
-    public int intExtra() { return intExtra; }
+    public Integer intExtra() { return intExtra; }
     public Float float32Value() { return float32Value; }
     public Double float64Value() { return float64Value; }
     public Integer strLen8() { return strLen8; }

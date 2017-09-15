@@ -202,33 +202,278 @@ section#format-index .row {
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Wmf extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Wmf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Wmf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
 
     private function _read() {
-        $this-&gt;_m_specialHdr = new \Wmf\SpecialHeader($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_header = new \Wmf\WmfHeader($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_specialHeader = new \Wmf\SpecialHeader($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_header = new \Wmf\Header($this-&gt;_io, $this, $this-&gt;_root);
         $this-&gt;_m_records = [];
+        $i = 0;
         do {
             $_ = new \Wmf\Record($this-&gt;_io, $this, $this-&gt;_root);
             $this-&gt;_m_records[] = $_;
+            $i++;
         } while (!($_-&gt;function() == \Wmf\Func::EOF));
     }
-    protected $_m_specialHdr;
+    protected $_m_specialHeader;
     protected $_m_header;
     protected $_m_records;
-    public function specialHdr() { return $this-&gt;_m_specialHdr; }
+    public function specialHeader() { return $this-&gt;_m_specialHeader; }
     public function header() { return $this-&gt;_m_header; }
     public function records() { return $this-&gt;_m_records; }
 }
 
 namespace \Wmf;
 
+class ParamsSetwindoworg extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_y = $this-&gt;_io-&gt;readS2le();
+        $this-&gt;_m_x = $this-&gt;_io-&gt;readS2le();
+    }
+    protected $_m_y;
+    protected $_m_x;
+
+    /**
+     * Y coordinate of the window origin, in logical units.
+     */
+    public function y() { return $this-&gt;_m_y; }
+
+    /**
+     * X coordinate of the window origin, in logical units.
+     */
+    public function x() { return $this-&gt;_m_x; }
+}
+
+namespace \Wmf;
+
+class ParamsSetbkmode extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_bkMode = $this-&gt;_io-&gt;readU2le();
+    }
+    protected $_m_bkMode;
+
+    /**
+     * Defines current graphic context background mix mode.
+     */
+    public function bkMode() { return $this-&gt;_m_bkMode; }
+}
+
+namespace \Wmf;
+
+class PointS extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Wmf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_x = $this-&gt;_io-&gt;readS2le();
+        $this-&gt;_m_y = $this-&gt;_io-&gt;readS2le();
+    }
+    protected $_m_x;
+    protected $_m_y;
+
+    /**
+     * X coordinate of the point, in logical units.
+     */
+    public function x() { return $this-&gt;_m_x; }
+
+    /**
+     * Y coordinate of the point, in logical units.
+     */
+    public function y() { return $this-&gt;_m_y; }
+}
+
+namespace \Wmf;
+
+class ParamsSetwindowext extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_y = $this-&gt;_io-&gt;readS2le();
+        $this-&gt;_m_x = $this-&gt;_io-&gt;readS2le();
+    }
+    protected $_m_y;
+    protected $_m_x;
+
+    /**
+     * Vertical extent of the window in logical units.
+     */
+    public function y() { return $this-&gt;_m_y; }
+
+    /**
+     * Horizontal extent of the window in logical units.
+     */
+    public function x() { return $this-&gt;_m_x; }
+}
+
+namespace \Wmf;
+
+class ParamsPolygon extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_numPoints = $this-&gt;_io-&gt;readS2le();
+        $this-&gt;_m_points = [];
+        $n = $this-&gt;numPoints();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_points[] = new \Wmf\PointS($this-&gt;_io, $this, $this-&gt;_root);
+        }
+    }
+    protected $_m_numPoints;
+    protected $_m_points;
+    public function numPoints() { return $this-&gt;_m_numPoints; }
+    public function points() { return $this-&gt;_m_points; }
+}
+
+namespace \Wmf;
+
+class Header extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Wmf $_parent = null, \Wmf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_metafileType = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_headerSize = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_version = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_size = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_numberOfObjects = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_maxRecord = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_numberOfMembers = $this-&gt;_io-&gt;readU2le();
+    }
+    protected $_m_metafileType;
+    protected $_m_headerSize;
+    protected $_m_version;
+    protected $_m_size;
+    protected $_m_numberOfObjects;
+    protected $_m_maxRecord;
+    protected $_m_numberOfMembers;
+    public function metafileType() { return $this-&gt;_m_metafileType; }
+    public function headerSize() { return $this-&gt;_m_headerSize; }
+    public function version() { return $this-&gt;_m_version; }
+    public function size() { return $this-&gt;_m_size; }
+    public function numberOfObjects() { return $this-&gt;_m_numberOfObjects; }
+    public function maxRecord() { return $this-&gt;_m_maxRecord; }
+    public function numberOfMembers() { return $this-&gt;_m_numberOfMembers; }
+}
+
+namespace \Wmf\Header;
+
+class MetafileType {
+    const MEMORY_METAFILE = 1;
+    const DISK_METAFILE = 2;
+}
+
+namespace \Wmf;
+
+class ColorRef extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_red = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_green = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_blue = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_reserved = $this-&gt;_io-&gt;readU1();
+    }
+    protected $_m_red;
+    protected $_m_green;
+    protected $_m_blue;
+    protected $_m_reserved;
+    public function red() { return $this-&gt;_m_red; }
+    public function green() { return $this-&gt;_m_green; }
+    public function blue() { return $this-&gt;_m_blue; }
+    public function reserved() { return $this-&gt;_m_reserved; }
+}
+
+namespace \Wmf;
+
+class ParamsSetrop2 extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_drawMode = $this-&gt;_io-&gt;readU2le();
+    }
+    protected $_m_drawMode;
+
+    /**
+     * Defines current foreground binary raster operation mixing mode.
+     */
+    public function drawMode() { return $this-&gt;_m_drawMode; }
+}
+
+namespace \Wmf;
+
+class ParamsSetpolyfillmode extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_polyFillMode = $this-&gt;_io-&gt;readU2le();
+    }
+    protected $_m_polyFillMode;
+
+    /**
+     * Defines current polygon fill mode.
+     */
+    public function polyFillMode() { return $this-&gt;_m_polyFillMode; }
+}
+
+namespace \Wmf;
+
+class ParamsPolyline extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_numPoints = $this-&gt;_io-&gt;readS2le();
+        $this-&gt;_m_points = [];
+        $n = $this-&gt;numPoints();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_points[] = new \Wmf\PointS($this-&gt;_io, $this, $this-&gt;_root);
+        }
+    }
+    protected $_m_numPoints;
+    protected $_m_points;
+    public function numPoints() { return $this-&gt;_m_numPoints; }
+    public function points() { return $this-&gt;_m_points; }
+}
+
+namespace \Wmf;
+
 class SpecialHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Wmf $parent = null, \Wmf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Wmf $_parent = null, \Wmf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
 
@@ -265,63 +510,69 @@ class SpecialHeader extends \Kaitai\Struct\Struct {
 
 namespace \Wmf;
 
-class WmfHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Wmf $parent = null, \Wmf $root = null) {
-        parent::__construct($io, $parent, $root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_type = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_headerSize = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_version = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_size = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_numberOfObjects = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_maxRecord = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_numberOfMembers = $this-&gt;_io-&gt;readU2le();
-    }
-    protected $_m_type;
-    protected $_m_headerSize;
-    protected $_m_version;
-    protected $_m_size;
-    protected $_m_numberOfObjects;
-    protected $_m_maxRecord;
-    protected $_m_numberOfMembers;
-    public function type() { return $this-&gt;_m_type; }
-    public function headerSize() { return $this-&gt;_m_headerSize; }
-    public function version() { return $this-&gt;_m_version; }
-    public function size() { return $this-&gt;_m_size; }
-    public function numberOfObjects() { return $this-&gt;_m_numberOfObjects; }
-    public function maxRecord() { return $this-&gt;_m_maxRecord; }
-    public function numberOfMembers() { return $this-&gt;_m_numberOfMembers; }
-}
-
-namespace \Wmf\WmfHeader;
-
-class MetafileType {
-    const MEMORY_METAFILE = 1;
-    const DISK_METAFILE = 2;
-}
-
-namespace \Wmf;
-
 class Record extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Wmf $parent = null, \Wmf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Wmf $_parent = null, \Wmf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
 
     private function _read() {
         $this-&gt;_m_size = $this-&gt;_io-&gt;readU4le();
         $this-&gt;_m_function = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_params = $this-&gt;_io-&gt;readBytes((($this-&gt;size() - 3) * 2));
+        switch ($this-&gt;function()) {
+            case \Wmf\Func::SETBKMODE:
+                $this-&gt;_m__raw_params = $this-&gt;_io-&gt;readBytes((($this-&gt;size() - 3) * 2));
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_params);
+                $this-&gt;_m_params = new \Wmf\ParamsSetbkmode($io, $this, $this-&gt;_root);
+                break;
+            case \Wmf\Func::SETBKCOLOR:
+                $this-&gt;_m__raw_params = $this-&gt;_io-&gt;readBytes((($this-&gt;size() - 3) * 2));
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_params);
+                $this-&gt;_m_params = new \Wmf\ColorRef($io, $this, $this-&gt;_root);
+                break;
+            case \Wmf\Func::SETROP2:
+                $this-&gt;_m__raw_params = $this-&gt;_io-&gt;readBytes((($this-&gt;size() - 3) * 2));
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_params);
+                $this-&gt;_m_params = new \Wmf\ParamsSetrop2($io, $this, $this-&gt;_root);
+                break;
+            case \Wmf\Func::POLYLINE:
+                $this-&gt;_m__raw_params = $this-&gt;_io-&gt;readBytes((($this-&gt;size() - 3) * 2));
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_params);
+                $this-&gt;_m_params = new \Wmf\ParamsPolyline($io, $this, $this-&gt;_root);
+                break;
+            case \Wmf\Func::SETWINDOWORG:
+                $this-&gt;_m__raw_params = $this-&gt;_io-&gt;readBytes((($this-&gt;size() - 3) * 2));
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_params);
+                $this-&gt;_m_params = new \Wmf\ParamsSetwindoworg($io, $this, $this-&gt;_root);
+                break;
+            case \Wmf\Func::POLYGON:
+                $this-&gt;_m__raw_params = $this-&gt;_io-&gt;readBytes((($this-&gt;size() - 3) * 2));
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_params);
+                $this-&gt;_m_params = new \Wmf\ParamsPolygon($io, $this, $this-&gt;_root);
+                break;
+            case \Wmf\Func::SETWINDOWEXT:
+                $this-&gt;_m__raw_params = $this-&gt;_io-&gt;readBytes((($this-&gt;size() - 3) * 2));
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_params);
+                $this-&gt;_m_params = new \Wmf\ParamsSetwindowext($io, $this, $this-&gt;_root);
+                break;
+            case \Wmf\Func::SETPOLYFILLMODE:
+                $this-&gt;_m__raw_params = $this-&gt;_io-&gt;readBytes((($this-&gt;size() - 3) * 2));
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_params);
+                $this-&gt;_m_params = new \Wmf\ParamsSetpolyfillmode($io, $this, $this-&gt;_root);
+                break;
+            default:
+                $this-&gt;_m_params = $this-&gt;_io-&gt;readBytes((($this-&gt;size() - 3) * 2));
+                break;
+        }
     }
     protected $_m_size;
     protected $_m_function;
     protected $_m_params;
+    protected $_m__raw_params;
     public function size() { return $this-&gt;_m_size; }
     public function function() { return $this-&gt;_m_function; }
     public function params() { return $this-&gt;_m_params; }
+    public function _raw_params() { return $this-&gt;_m__raw_params; }
 }
 
 namespace \Wmf;
@@ -397,6 +648,41 @@ class Func {
     const DIBSTRETCHBLT = 2881;
     const SETDIBTODEV = 3379;
     const STRETCHDIB = 3907;
+}
+
+namespace \Wmf;
+
+class BinRasterOp {
+    const BLACK = 1;
+    const NOTMERGEPEN = 2;
+    const MASKNOTPEN = 3;
+    const NOTCOPYPEN = 4;
+    const MASKPENNOT = 5;
+    const NOT = 6;
+    const XORPEN = 7;
+    const NOTMASKPEN = 8;
+    const MASKPEN = 9;
+    const NOTXORPEN = 10;
+    const NOP = 11;
+    const MERGENOTPEN = 12;
+    const COPYPEN = 13;
+    const MERGEPENNOT = 14;
+    const MERGEPEN = 15;
+    const WHITE = 16;
+}
+
+namespace \Wmf;
+
+class MixMode {
+    const TRANSPARENT = 1;
+    const OPAQUE = 2;
+}
+
+namespace \Wmf;
+
+class PolyFillMode {
+    const ALTERNATE = 1;
+    const WINDING = 2;
 }
 </code></pre>
             

@@ -11,17 +11,18 @@ namespace Kaitai
             return new ExifLe(new KaitaiStream(fileName));
         }
 
-        public ExifLe(KaitaiStream io, KaitaiStruct parent = null, ExifLe root = null) : base(io)
+        public ExifLe(KaitaiStream p__io, KaitaiStruct p__parent = null, ExifLe p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_ifd0 = false;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _version = m_io.ReadU2le();
             _ifd0Ofs = m_io.ReadU4le();
-            }
+        }
         public partial class Ifd : KaitaiStruct
         {
             public static Ifd FromFile(string fileName)
@@ -29,21 +30,23 @@ namespace Kaitai
                 return new Ifd(new KaitaiStream(fileName));
             }
 
-            public Ifd(KaitaiStream io, KaitaiStruct parent = null, ExifLe root = null) : base(io)
+            public Ifd(KaitaiStream p__io, KaitaiStruct p__parent = null, ExifLe p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_nextIfd = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _numFields = m_io.ReadU2le();
                 _fields = new List<IfdField>((int) (NumFields));
-                for (var i = 0; i < NumFields; i++) {
+                for (var i = 0; i < NumFields; i++)
+                {
                     _fields.Add(new IfdField(m_io, this, m_root));
                 }
                 _nextIfdOfs = m_io.ReadU4le();
-                }
+            }
             private bool f_nextIfd;
             private Ifd _nextIfd;
             public Ifd NextIfd
@@ -79,6 +82,7 @@ namespace Kaitai
             {
                 return new IfdField(new KaitaiStream(fileName));
             }
+
 
             public enum FieldTypeEnum
             {
@@ -550,23 +554,23 @@ namespace Kaitai
                 Smoothness = 65111,
                 MoireFilter = 65112,
             }
-
-            public IfdField(KaitaiStream io, ExifLe.Ifd parent = null, ExifLe root = null) : base(io)
+            public IfdField(KaitaiStream p__io, ExifLe.Ifd p__parent = null, ExifLe p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_typeByteLength = false;
                 f_byteLength = false;
                 f_isImmediateData = false;
                 f_data = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _tag = ((TagEnum) m_io.ReadU2le());
                 _fieldType = ((FieldTypeEnum) m_io.ReadU2le());
                 _length = m_io.ReadU4le();
                 _ofsOrData = m_io.ReadU4le();
-                }
+            }
             private bool f_typeByteLength;
             private sbyte _typeByteLength;
             public sbyte TypeByteLength

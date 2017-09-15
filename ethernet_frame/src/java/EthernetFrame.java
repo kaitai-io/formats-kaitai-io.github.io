@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.util.HashMap;
 
 public class EthernetFrame extends KaitaiStruct {
     public static EthernetFrame fromFile(String fileName) throws IOException {
-        return new EthernetFrame(new KaitaiStream(fileName));
+        return new EthernetFrame(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum EtherTypeEnum {
@@ -53,13 +54,13 @@ public class EthernetFrame extends KaitaiStruct {
         switch (etherType()) {
         case IPV4: {
             this._raw_body = this._io.readBytesFull();
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new Ipv4Packet(_io__raw_body);
             break;
         }
         case IPV6: {
             this._raw_body = this._io.readBytesFull();
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new Ipv6Packet(_io__raw_body);
             break;
         }

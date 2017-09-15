@@ -3,16 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 
 #if KAITAI_STRUCT_VERSION < 7000L
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
-class ipv4_packet_t;
 class ipv6_packet_t;
+class ipv4_packet_t;
 
 class ethernet_frame_t : public kaitai::kstruct {
 
@@ -29,8 +28,12 @@ public:
         ETHER_TYPE_ENUM_IPV6 = 34525
     };
 
-    ethernet_frame_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, ethernet_frame_t* p_root = 0);
+    ethernet_frame_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, ethernet_frame_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~ethernet_frame_t();
 
 private:
@@ -38,6 +41,12 @@ private:
     std::string m_src_mac;
     ether_type_enum_t m_ether_type;
     kaitai::kstruct* m_body;
+    bool n_body;
+
+public:
+    bool _is_null_body() { body(); return n_body; };
+
+private:
     ethernet_frame_t* m__root;
     kaitai::kstruct* m__parent;
     std::string m__raw_body;

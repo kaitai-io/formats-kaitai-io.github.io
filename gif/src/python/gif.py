@@ -53,8 +53,10 @@ class Gif(KaitaiStruct):
             self.global_color_table = self._root.ColorTable(io, self, self._root)
 
         self.blocks = []
+        i = 0
         while not self._io.is_eof():
             self.blocks.append(self._root.Block(self._io, self, self._root))
+            i += 1
 
 
     class ImageData(KaitaiStruct):
@@ -203,8 +205,10 @@ class Gif(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.ColorTableEntry(self._io, self, self._root))
+                i += 1
 
 
 
@@ -281,11 +285,13 @@ class Gif(KaitaiStruct):
         def _read(self):
             self.application_id = self._root.Subblock(self._io, self, self._root)
             self.subblocks = []
+            i = 0
             while True:
                 _ = self._root.Subblock(self._io, self, self._root)
                 self.subblocks.append(_)
                 if _.num_bytes == 0:
                     break
+                i += 1
 
 
     class Subblocks(KaitaiStruct):
@@ -297,11 +303,13 @@ class Gif(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while True:
                 _ = self._root.Subblock(self._io, self, self._root)
                 self.entries.append(_)
                 if _.num_bytes == 0:
                     break
+                i += 1
 
 
     class Extension(KaitaiStruct):

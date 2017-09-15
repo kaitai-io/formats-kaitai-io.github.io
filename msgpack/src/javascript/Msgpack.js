@@ -69,7 +69,7 @@ var Msgpack = (function() {
     if (this.isArray) {
       this.arrayElements = new Array(this.numArrayElements);
       for (var i = 0; i < this.numArrayElements; i++) {
-        this.arrayElements[i] = new Msgpack(this._io);
+        this.arrayElements[i] = new Msgpack(this._io, this, null);
       }
     }
     if (this.isMap16) {
@@ -95,8 +95,8 @@ var Msgpack = (function() {
       this._read();
     }
     MapTuple.prototype._read = function() {
-      this.key = new Msgpack(this._io);
-      this.value = new Msgpack(this._io);
+      this.key = new Msgpack(this._io, this, null);
+      this.value = new Msgpack(this._io, this, null);
     }
 
     return MapTuple;

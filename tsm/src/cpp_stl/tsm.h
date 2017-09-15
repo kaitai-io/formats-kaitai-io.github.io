@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -30,16 +29,24 @@ public:
     class header_t;
     class index_t;
 
-    tsm_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, tsm_t* p_root = 0);
+    tsm_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, tsm_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~tsm_t();
 
     class header_t : public kaitai::kstruct {
 
     public:
 
-        header_t(kaitai::kstream* p_io, tsm_t* p_parent = 0, tsm_t* p_root = 0);
+        header_t(kaitai::kstream* p__io, tsm_t* p__parent = 0, tsm_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header_t();
 
     private:
@@ -60,8 +67,12 @@ public:
     public:
         class index_header_t;
 
-        index_t(kaitai::kstream* p_io, tsm_t* p_parent = 0, tsm_t* p_root = 0);
+        index_t(kaitai::kstream* p__io, tsm_t* p__parent = 0, tsm_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~index_t();
 
         class index_header_t : public kaitai::kstruct {
@@ -69,8 +80,12 @@ public:
         public:
             class index_entry_t;
 
-            index_header_t(kaitai::kstream* p_io, tsm_t::index_t* p_parent = 0, tsm_t* p_root = 0);
+            index_header_t(kaitai::kstream* p__io, tsm_t::index_t* p__parent = 0, tsm_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~index_header_t();
 
             class index_entry_t : public kaitai::kstruct {
@@ -78,16 +93,24 @@ public:
             public:
                 class block_entry_t;
 
-                index_entry_t(kaitai::kstream* p_io, tsm_t::index_t::index_header_t* p_parent = 0, tsm_t* p_root = 0);
+                index_entry_t(kaitai::kstream* p__io, tsm_t::index_t::index_header_t* p__parent = 0, tsm_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~index_entry_t();
 
                 class block_entry_t : public kaitai::kstruct {
 
                 public:
 
-                    block_entry_t(kaitai::kstream* p_io, tsm_t::index_t::index_header_t::index_entry_t* p_parent = 0, tsm_t* p_root = 0);
+                    block_entry_t(kaitai::kstream* p__io, tsm_t::index_t::index_header_t::index_entry_t* p__parent = 0, tsm_t* p__root = 0);
+
+                private:
                     void _read();
+
+                public:
                     ~block_entry_t();
 
                 private:

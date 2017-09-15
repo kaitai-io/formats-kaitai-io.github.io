@@ -15,6 +15,7 @@ namespace Kaitai
             return new RenderwareBinaryStream(new KaitaiStream(fileName));
         }
 
+
         public enum Sections
         {
             Struct = 1,
@@ -185,14 +186,14 @@ namespace Kaitai
             Frame = 39056126,
             Unused16 = 39056127,
         }
-
-        public RenderwareBinaryStream(KaitaiStream io, KaitaiStruct parent = null, RenderwareBinaryStream root = null) : base(io)
+        public RenderwareBinaryStream(KaitaiStream p__io, KaitaiStruct p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _code = ((Sections) m_io.ReadU4le());
             _size = m_io.ReadU4le();
             _version = m_io.ReadU4le();
@@ -238,7 +239,7 @@ namespace Kaitai
                 break;
             }
             }
-            }
+        }
 
         /// <remarks>
         /// Reference: <a href="https://www.gtamodding.com/wiki/RpClump">Source</a>
@@ -250,13 +251,14 @@ namespace Kaitai
                 return new StructClump(new KaitaiStream(fileName));
             }
 
-            public StructClump(KaitaiStream io, RenderwareBinaryStream.ListWithHeader parent = null, RenderwareBinaryStream root = null) : base(io)
+            public StructClump(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _numAtomics = m_io.ReadU4le();
                 if (M_Parent.Version >= 208896) {
                     _numLights = m_io.ReadU4le();
@@ -264,15 +266,15 @@ namespace Kaitai
                 if (M_Parent.Version >= 208896) {
                     _numCameras = m_io.ReadU4le();
                 }
-                }
+            }
             private uint _numAtomics;
-            private uint _numLights;
-            private uint _numCameras;
+            private uint? _numLights;
+            private uint? _numCameras;
             private RenderwareBinaryStream m_root;
             private RenderwareBinaryStream.ListWithHeader m_parent;
             public uint NumAtomics { get { return _numAtomics; } }
-            public uint NumLights { get { return _numLights; } }
-            public uint NumCameras { get { return _numCameras; } }
+            public uint? NumLights { get { return _numLights; } }
+            public uint? NumCameras { get { return _numCameras; } }
             public RenderwareBinaryStream M_Root { get { return m_root; } }
             public RenderwareBinaryStream.ListWithHeader M_Parent { get { return m_parent; } }
         }
@@ -287,17 +289,18 @@ namespace Kaitai
                 return new StructGeometry(new KaitaiStream(fileName));
             }
 
-            public StructGeometry(KaitaiStream io, RenderwareBinaryStream.ListWithHeader parent = null, RenderwareBinaryStream root = null) : base(io)
+            public StructGeometry(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_isTextured = false;
                 f_isPrelit = false;
                 f_isTextured2 = false;
                 f_isNative = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _format = m_io.ReadU4le();
                 _numTriangles = m_io.ReadU4le();
                 _numVertices = m_io.ReadU4le();
@@ -309,10 +312,11 @@ namespace Kaitai
                     _geometry = new GeometryNonNative(m_io, this, m_root);
                 }
                 _morphTargets = new List<MorphTarget>((int) (NumMorphTargets));
-                for (var i = 0; i < NumMorphTargets; i++) {
+                for (var i = 0; i < NumMorphTargets; i++)
+                {
                     _morphTargets.Add(new MorphTarget(m_io, this, m_root));
                 }
-                }
+            }
             private bool f_isTextured;
             private bool _isTextured;
             public bool IsTextured
@@ -391,30 +395,34 @@ namespace Kaitai
                 return new GeometryNonNative(new KaitaiStream(fileName));
             }
 
-            public GeometryNonNative(KaitaiStream io, RenderwareBinaryStream.StructGeometry parent = null, RenderwareBinaryStream root = null) : base(io)
+            public GeometryNonNative(KaitaiStream p__io, RenderwareBinaryStream.StructGeometry p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 if (M_Parent.IsPrelit) {
                     _prelitColors = new List<Rgba>((int) (M_Parent.NumVertices));
-                    for (var i = 0; i < M_Parent.NumVertices; i++) {
+                    for (var i = 0; i < M_Parent.NumVertices; i++)
+                    {
                         _prelitColors.Add(new Rgba(m_io, this, m_root));
                     }
                 }
                 if ( ((M_Parent.IsTextured) || (M_Parent.IsTextured2)) ) {
                     _texCoords = new List<TexCoord>((int) (M_Parent.NumVertices));
-                    for (var i = 0; i < M_Parent.NumVertices; i++) {
+                    for (var i = 0; i < M_Parent.NumVertices; i++)
+                    {
                         _texCoords.Add(new TexCoord(m_io, this, m_root));
                     }
                 }
                 _triangles = new List<Triangle>((int) (M_Parent.NumTriangles));
-                for (var i = 0; i < M_Parent.NumTriangles; i++) {
+                for (var i = 0; i < M_Parent.NumTriangles; i++)
+                {
                     _triangles.Add(new Triangle(m_io, this, m_root));
                 }
-                }
+            }
             private List<Rgba> _prelitColors;
             private List<TexCoord> _texCoords;
             private List<Triangle> _triangles;
@@ -437,15 +445,16 @@ namespace Kaitai
                 return new StructGeometryList(new KaitaiStream(fileName));
             }
 
-            public StructGeometryList(KaitaiStream io, RenderwareBinaryStream.ListWithHeader parent = null, RenderwareBinaryStream root = null) : base(io)
+            public StructGeometryList(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _numGeometries = m_io.ReadU4le();
-                }
+            }
             private uint _numGeometries;
             private RenderwareBinaryStream m_root;
             private RenderwareBinaryStream.ListWithHeader m_parent;
@@ -460,18 +469,19 @@ namespace Kaitai
                 return new Rgba(new KaitaiStream(fileName));
             }
 
-            public Rgba(KaitaiStream io, RenderwareBinaryStream.GeometryNonNative parent = null, RenderwareBinaryStream root = null) : base(io)
+            public Rgba(KaitaiStream p__io, RenderwareBinaryStream.GeometryNonNative p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _r = m_io.ReadU1();
                 _g = m_io.ReadU1();
                 _b = m_io.ReadU1();
                 _a = m_io.ReadU1();
-                }
+            }
             private byte _r;
             private byte _g;
             private byte _b;
@@ -492,18 +502,19 @@ namespace Kaitai
                 return new Sphere(new KaitaiStream(fileName));
             }
 
-            public Sphere(KaitaiStream io, RenderwareBinaryStream.MorphTarget parent = null, RenderwareBinaryStream root = null) : base(io)
+            public Sphere(KaitaiStream p__io, RenderwareBinaryStream.MorphTarget p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _x = m_io.ReadF4le();
                 _y = m_io.ReadF4le();
                 _z = m_io.ReadF4le();
                 _radius = m_io.ReadF4le();
-                }
+            }
             private float _x;
             private float _y;
             private float _z;
@@ -524,29 +535,32 @@ namespace Kaitai
                 return new MorphTarget(new KaitaiStream(fileName));
             }
 
-            public MorphTarget(KaitaiStream io, RenderwareBinaryStream.StructGeometry parent = null, RenderwareBinaryStream root = null) : base(io)
+            public MorphTarget(KaitaiStream p__io, RenderwareBinaryStream.StructGeometry p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _boundingSphere = new Sphere(m_io, this, m_root);
                 _hasVertices = m_io.ReadU4le();
                 _hasNormals = m_io.ReadU4le();
                 if (HasVertices != 0) {
                     _vertices = new List<Vector3d>((int) (M_Parent.NumVertices));
-                    for (var i = 0; i < M_Parent.NumVertices; i++) {
+                    for (var i = 0; i < M_Parent.NumVertices; i++)
+                    {
                         _vertices.Add(new Vector3d(m_io, this, m_root));
                     }
                 }
                 if (HasNormals != 0) {
                     _normals = new List<Vector3d>((int) (M_Parent.NumVertices));
-                    for (var i = 0; i < M_Parent.NumVertices; i++) {
+                    for (var i = 0; i < M_Parent.NumVertices; i++)
+                    {
                         _normals.Add(new Vector3d(m_io, this, m_root));
                     }
                 }
-                }
+            }
             private Sphere _boundingSphere;
             private uint _hasVertices;
             private uint _hasNormals;
@@ -573,17 +587,18 @@ namespace Kaitai
                 return new SurfaceProperties(new KaitaiStream(fileName));
             }
 
-            public SurfaceProperties(KaitaiStream io, RenderwareBinaryStream.StructGeometry parent = null, RenderwareBinaryStream root = null) : base(io)
+            public SurfaceProperties(KaitaiStream p__io, RenderwareBinaryStream.StructGeometry p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _ambient = m_io.ReadF4le();
                 _specular = m_io.ReadF4le();
                 _diffuse = m_io.ReadF4le();
-                }
+            }
             private float _ambient;
             private float _specular;
             private float _diffuse;
@@ -606,19 +621,21 @@ namespace Kaitai
                 return new StructFrameList(new KaitaiStream(fileName));
             }
 
-            public StructFrameList(KaitaiStream io, RenderwareBinaryStream.ListWithHeader parent = null, RenderwareBinaryStream root = null) : base(io)
+            public StructFrameList(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _numFrames = m_io.ReadU4le();
                 _frames = new List<Frame>((int) (NumFrames));
-                for (var i = 0; i < NumFrames; i++) {
+                for (var i = 0; i < NumFrames; i++)
+                {
                     _frames.Add(new Frame(m_io, this, m_root));
                 }
-                }
+            }
             private uint _numFrames;
             private List<Frame> _frames;
             private RenderwareBinaryStream m_root;
@@ -639,18 +656,20 @@ namespace Kaitai
                 return new Matrix(new KaitaiStream(fileName));
             }
 
-            public Matrix(KaitaiStream io, RenderwareBinaryStream.Frame parent = null, RenderwareBinaryStream root = null) : base(io)
+            public Matrix(KaitaiStream p__io, RenderwareBinaryStream.Frame p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List<Vector3d>((int) (3));
-                for (var i = 0; i < 3; i++) {
+                for (var i = 0; i < 3; i++)
+                {
                     _entries.Add(new Vector3d(m_io, this, m_root));
                 }
-                }
+            }
             private List<Vector3d> _entries;
             private RenderwareBinaryStream m_root;
             private RenderwareBinaryStream.Frame m_parent;
@@ -669,17 +688,18 @@ namespace Kaitai
                 return new Vector3d(new KaitaiStream(fileName));
             }
 
-            public Vector3d(KaitaiStream io, KaitaiStruct parent = null, RenderwareBinaryStream root = null) : base(io)
+            public Vector3d(KaitaiStream p__io, KaitaiStruct p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _x = m_io.ReadF4le();
                 _y = m_io.ReadF4le();
                 _z = m_io.ReadF4le();
-                }
+            }
             private float _x;
             private float _y;
             private float _z;
@@ -707,13 +727,14 @@ namespace Kaitai
                 return new ListWithHeader(new KaitaiStream(fileName));
             }
 
-            public ListWithHeader(KaitaiStream io, RenderwareBinaryStream parent = null, RenderwareBinaryStream root = null) : base(io)
+            public ListWithHeader(KaitaiStream p__io, RenderwareBinaryStream p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _code = m_io.EnsureFixedContents(new byte[] { 1, 0, 0, 0 });
                 _headerSize = m_io.ReadU4le();
                 _version = m_io.ReadU4le();
@@ -754,10 +775,14 @@ namespace Kaitai
                 }
                 }
                 _entries = new List<RenderwareBinaryStream>();
-                while (!m_io.IsEof) {
-                    _entries.Add(new RenderwareBinaryStream(m_io));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new RenderwareBinaryStream(m_io));
+                        i++;
+                    }
                 }
-                }
+            }
             private byte[] _code;
             private uint _headerSize;
             private uint _version;
@@ -782,18 +807,19 @@ namespace Kaitai
                 return new Triangle(new KaitaiStream(fileName));
             }
 
-            public Triangle(KaitaiStream io, RenderwareBinaryStream.GeometryNonNative parent = null, RenderwareBinaryStream root = null) : base(io)
+            public Triangle(KaitaiStream p__io, RenderwareBinaryStream.GeometryNonNative p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _vertex2 = m_io.ReadU2le();
                 _vertex1 = m_io.ReadU2le();
                 _materialId = m_io.ReadU2le();
                 _vertex3 = m_io.ReadU2le();
-                }
+            }
             private ushort _vertex2;
             private ushort _vertex1;
             private ushort _materialId;
@@ -818,18 +844,19 @@ namespace Kaitai
                 return new Frame(new KaitaiStream(fileName));
             }
 
-            public Frame(KaitaiStream io, RenderwareBinaryStream.StructFrameList parent = null, RenderwareBinaryStream root = null) : base(io)
+            public Frame(KaitaiStream p__io, RenderwareBinaryStream.StructFrameList p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _rotationMatrix = new Matrix(m_io, this, m_root);
                 _position = new Vector3d(m_io, this, m_root);
                 _curFrameIdx = m_io.ReadS4le();
                 _matrixCreationFlags = m_io.ReadU4le();
-                }
+            }
             private Matrix _rotationMatrix;
             private Vector3d _position;
             private int _curFrameIdx;
@@ -850,16 +877,17 @@ namespace Kaitai
                 return new TexCoord(new KaitaiStream(fileName));
             }
 
-            public TexCoord(KaitaiStream io, RenderwareBinaryStream.GeometryNonNative parent = null, RenderwareBinaryStream root = null) : base(io)
+            public TexCoord(KaitaiStream p__io, RenderwareBinaryStream.GeometryNonNative p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _u = m_io.ReadF4le();
                 _v = m_io.ReadF4le();
-                }
+            }
             private float _u;
             private float _v;
             private RenderwareBinaryStream m_root;
@@ -876,15 +904,16 @@ namespace Kaitai
                 return new StructTextureDictionary(new KaitaiStream(fileName));
             }
 
-            public StructTextureDictionary(KaitaiStream io, RenderwareBinaryStream.ListWithHeader parent = null, RenderwareBinaryStream root = null) : base(io)
+            public StructTextureDictionary(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _numTextures = m_io.ReadU4le();
-                }
+            }
             private uint _numTextures;
             private RenderwareBinaryStream m_root;
             private RenderwareBinaryStream.ListWithHeader m_parent;

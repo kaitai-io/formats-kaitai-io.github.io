@@ -4,8 +4,8 @@
 
 
 
-swf_t::swf_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, swf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+swf_t::swf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, swf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -24,9 +24,9 @@ swf_t::~swf_t() {
     delete m_body;
 }
 
-swf_t::swf_body_t::swf_body_t(kaitai::kstream *p_io, swf_t* p_parent, swf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+swf_t::swf_body_t::swf_body_t(kaitai::kstream* p__io, swf_t* p__parent, swf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -35,8 +35,12 @@ void swf_t::swf_body_t::_read() {
     m_frame_rate = m__io->read_u2le();
     m_frame_count = m__io->read_u2le();
     m_tags = new std::vector<tag_t*>();
-    while (!m__io->is_eof()) {
-        m_tags->push_back(new tag_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_tags->push_back(new tag_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -48,9 +52,9 @@ swf_t::swf_body_t::~swf_body_t() {
     delete m_tags;
 }
 
-swf_t::rect_t::rect_t(kaitai::kstream *p_io, swf_t::swf_body_t* p_parent, swf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+swf_t::rect_t::rect_t(kaitai::kstream* p__io, swf_t::swf_body_t* p__parent, swf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_num_bits = false;
     f_num_bytes = false;
     _read();
@@ -80,33 +84,41 @@ int32_t swf_t::rect_t::num_bytes() {
     return m_num_bytes;
 }
 
-swf_t::tag_t::tag_t(kaitai::kstream *p_io, swf_t::swf_body_t* p_parent, swf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+swf_t::tag_t::tag_t(kaitai::kstream* p__io, swf_t::swf_body_t* p__parent, swf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void swf_t::tag_t::_read() {
     m_record_header = new record_header_t(m__io, this, m__root);
+    n_tag_body = true;
     switch (record_header()->tag_type()) {
-    case TAG_TYPE_ABC_TAG:
+    case TAG_TYPE_ABC_TAG: {
+        n_tag_body = false;
         m__raw_tag_body = m__io->read_bytes(record_header()->len());
         m__io__raw_tag_body = new kaitai::kstream(m__raw_tag_body);
         m_tag_body = new abc_tag_body_t(m__io__raw_tag_body, this, m__root);
         break;
-    default:
+    }
+    default: {
         m__raw_tag_body = m__io->read_bytes(record_header()->len());
         break;
+    }
     }
 }
 
 swf_t::tag_t::~tag_t() {
     delete m_record_header;
+    if (!n_tag_body) {
+        delete m__io__raw_tag_body;
+        delete m_tag_body;
+    }
 }
 
-swf_t::abc_tag_body_t::abc_tag_body_t(kaitai::kstream *p_io, swf_t::tag_t* p_parent, swf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+swf_t::abc_tag_body_t::abc_tag_body_t(kaitai::kstream* p__io, swf_t::tag_t* p__parent, swf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -119,9 +131,9 @@ void swf_t::abc_tag_body_t::_read() {
 swf_t::abc_tag_body_t::~abc_tag_body_t() {
 }
 
-swf_t::record_header_t::record_header_t(kaitai::kstream *p_io, swf_t::tag_t* p_parent, swf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+swf_t::record_header_t::record_header_t(kaitai::kstream* p__io, swf_t::tag_t* p__parent, swf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_tag_type = false;
     f_small_len = false;
     f_len = false;
@@ -138,6 +150,8 @@ void swf_t::record_header_t::_read() {
 }
 
 swf_t::record_header_t::~record_header_t() {
+    if (!n_big_len) {
+    }
 }
 
 swf_t::tag_type_t swf_t::record_header_t::tag_type() {

@@ -161,8 +161,10 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.FrameIndexEntry(self._io, self, self._root))
+                i += 1
 
 
 

@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 
@@ -27,8 +26,12 @@ class id3v1_1_t : public kaitai::kstruct {
 public:
     class id3_v1_1_tag_t;
 
-    id3v1_1_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, id3v1_1_t* p_root = 0);
+    id3v1_1_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, id3v1_1_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~id3v1_1_t();
 
     /**
@@ -176,8 +179,12 @@ public:
             GENRE_ENUM_DANCE_HALL = 125
         };
 
-        id3_v1_1_tag_t(kaitai::kstream* p_io, id3v1_1_t* p_parent = 0, id3v1_1_t* p_root = 0);
+        id3_v1_1_tag_t(kaitai::kstream* p__io, id3v1_1_t* p__parent = 0, id3v1_1_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~id3_v1_1_tag_t();
 
     private:

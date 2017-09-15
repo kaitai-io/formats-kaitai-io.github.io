@@ -4,8 +4,8 @@
 
 
 
-ftl_dat_t::ftl_dat_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, ftl_dat_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+ftl_dat_t::ftl_dat_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ftl_dat_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -27,9 +27,9 @@ ftl_dat_t::~ftl_dat_t() {
     delete m_files;
 }
 
-ftl_dat_t::file_t::file_t(kaitai::kstream *p_io, ftl_dat_t* p_parent, ftl_dat_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ftl_dat_t::file_t::file_t(kaitai::kstream* p__io, ftl_dat_t* p__parent, ftl_dat_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_meta = false;
     _read();
 }
@@ -59,9 +59,9 @@ ftl_dat_t::meta_t* ftl_dat_t::file_t::meta() {
     return m_meta;
 }
 
-ftl_dat_t::meta_t::meta_t(kaitai::kstream *p_io, ftl_dat_t::file_t* p_parent, ftl_dat_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ftl_dat_t::meta_t::meta_t(kaitai::kstream* p__io, ftl_dat_t::file_t* p__parent, ftl_dat_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class FtlDat extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \FtlDat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \FtlDat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -28,8 +28,8 @@ class FtlDat extends \Kaitai\Struct\Struct {
 namespace \FtlDat;
 
 class File extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \FtlDat $parent = null, \FtlDat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \FtlDat $_parent = null, \FtlDat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -55,8 +55,8 @@ class File extends \Kaitai\Struct\Struct {
 namespace \FtlDat;
 
 class Meta extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \FtlDat\File $parent = null, \FtlDat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \FtlDat\File $_parent = null, \FtlDat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>.nes / .ines file format: Perl parsing library</title>
+  <title>.nes file format: Perl parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Firmware</li>
-        <li class="active">.nes / .ines file format</li>
+        <li class="active">.nes file format</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>.nes / .ines file format:
+        <h1>.nes file format:
             
             Perl parsing library
             
@@ -108,7 +108,7 @@ section#format-index .row {
                         <h3 class="panel-title">File extension</h3>
                     </div>
                     <div class="panel-body">
-                        ["nes", "ines"]
+                        nes
                     </div>
                     
                     
@@ -129,7 +129,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of .nes / .ines file format
+            This page hosts a formal specification of .nes file format
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -140,52 +140,52 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="index.html" title=".nes / .ines file format parsing Overview library">Overview</a></li>
+                <a href="index.html" title=".nes file format parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title=".nes / .ines file format parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title=".nes file format parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title=".nes / .ines file format parsing C# library">C#</a></li>
+                <a href="csharp.html" title=".nes file format parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title=".nes / .ines file format parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title=".nes file format parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title=".nes / .ines file format parsing Java library">Java</a></li>
+                <a href="java.html" title=".nes file format parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title=".nes / .ines file format parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title=".nes file format parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="perl.html" title=".nes / .ines file format parsing Perl library">Perl</a></li>
+                <a href="perl.html" title=".nes file format parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title=".nes / .ines file format parsing PHP library">PHP</a></li>
+                <a href="php.html" title=".nes file format parsing PHP library">PHP</a></li>
                 
                 
                 <li>
                 
-                <a href="python.html" title=".nes / .ines file format parsing Python library">Python</a></li>
+                <a href="python.html" title=".nes file format parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title=".nes / .ines file format parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title=".nes file format parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -198,7 +198,7 @@ section#format-index .row {
     <div class="container">
         <h2>
             
-            Perl source code to parse .nes / .ines file format
+            Perl source code to parse .nes file format
             
         </h2>
 
@@ -220,6 +220,7 @@ section#format-index .row {
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
+use Encode;
 
 ########################################################################
 package Ines;
@@ -251,15 +252,20 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{header} = Ines::Header-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{rom} = $self-&gt;{_io}-&gt;read_bytes_full();
-}
-
-sub mapper {
-    my ($self) = @_;
-    return $self-&gt;{mapper} if ($self-&gt;{mapper});
-    $self-&gt;{mapper} = ($self-&gt;_root()-&gt;header()-&gt;f6()-&gt;lower_nibble() | ($self-&gt;_root()-&gt;header()-&gt;f7()-&gt;upper_nibble() &lt;&lt; 4));
-    return $self-&gt;{mapper};
+    $self-&gt;{_raw_header} = $self-&gt;{_io}-&gt;read_bytes(16);
+    my $io__raw_header = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_header});
+    $self-&gt;{header} = Ines::Header-&gt;new($io__raw_header, $self, $self-&gt;{_root});
+    if ($self-&gt;header()-&gt;f6()-&gt;trainer()) {
+        $self-&gt;{trainer} = $self-&gt;{_io}-&gt;read_bytes(512);
+    }
+    $self-&gt;{prg_rom} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;header()-&gt;len_prg_rom() * 16384));
+    $self-&gt;{chr_rom} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;header()-&gt;len_chr_rom() * 8192));
+    if ($self-&gt;header()-&gt;f7()-&gt;playchoice10()) {
+        $self-&gt;{playchoice10} = Ines::Playchoice10-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    if (!($self-&gt;_io()-&gt;is_eof())) {
+        $self-&gt;{title} = Encode::decode(&quot;ASCII&quot;, $self-&gt;{_io}-&gt;read_bytes_full());
+    }
 }
 
 sub header {
@@ -267,233 +273,34 @@ sub header {
     return $self-&gt;{header};
 }
 
-sub rom {
-    my ($self) = @_;
-    return $self-&gt;{rom};
-}
-
-########################################################################
-package Ines::F7;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{upper_nibble} = $self-&gt;{_io}-&gt;read_bits_int(4);
-    $self-&gt;{format} = $self-&gt;{_io}-&gt;read_bits_int(2);
-    $self-&gt;{arcade_2} = $self-&gt;{_io}-&gt;read_bits_int(1);
-    $self-&gt;{arcade_1} = $self-&gt;{_io}-&gt;read_bits_int(1);
-}
-
-sub upper_nibble {
-    my ($self) = @_;
-    return $self-&gt;{upper_nibble};
-}
-
-sub format {
-    my ($self) = @_;
-    return $self-&gt;{format};
-}
-
-sub arcade_2 {
-    my ($self) = @_;
-    return $self-&gt;{arcade_2};
-}
-
-sub arcade_1 {
-    my ($self) = @_;
-    return $self-&gt;{arcade_1};
-}
-
-########################################################################
-package Ines::F6;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{lower_nibble} = $self-&gt;{_io}-&gt;read_bits_int(4);
-    $self-&gt;{ignore_mirror} = $self-&gt;{_io}-&gt;read_bits_int(1);
-    $self-&gt;{trainer} = $self-&gt;{_io}-&gt;read_bits_int(1);
-    $self-&gt;{has_battery_ram} = $self-&gt;{_io}-&gt;read_bits_int(1);
-    $self-&gt;{mirror} = $self-&gt;{_io}-&gt;read_bits_int(1);
-}
-
-sub lower_nibble {
-    my ($self) = @_;
-    return $self-&gt;{lower_nibble};
-}
-
-sub ignore_mirror {
-    my ($self) = @_;
-    return $self-&gt;{ignore_mirror};
-}
-
 sub trainer {
     my ($self) = @_;
     return $self-&gt;{trainer};
 }
 
-sub has_battery_ram {
+sub prg_rom {
     my ($self) = @_;
-    return $self-&gt;{has_battery_ram};
+    return $self-&gt;{prg_rom};
 }
 
-sub mirror {
+sub chr_rom {
     my ($self) = @_;
-    return $self-&gt;{mirror};
+    return $self-&gt;{chr_rom};
 }
 
-########################################################################
-package Ines::F10;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
+sub playchoice10 {
     my ($self) = @_;
-
-    $self-&gt;{nothing1} = $self-&gt;{_io}-&gt;read_bits_int(2);
-    $self-&gt;{bus_conflict} = $self-&gt;{_io}-&gt;read_bits_int(1);
-    $self-&gt;{prg_ram} = $self-&gt;{_io}-&gt;read_bits_int(1);
-    $self-&gt;{nothing2} = $self-&gt;{_io}-&gt;read_bits_int(2);
-    $self-&gt;{tv_system} = $self-&gt;{_io}-&gt;read_bits_int(2);
+    return $self-&gt;{playchoice10};
 }
 
-sub nothing1 {
+sub title {
     my ($self) = @_;
-    return $self-&gt;{nothing1};
+    return $self-&gt;{title};
 }
 
-sub bus_conflict {
+sub _raw_header {
     my ($self) = @_;
-    return $self-&gt;{bus_conflict};
-}
-
-sub prg_ram {
-    my ($self) = @_;
-    return $self-&gt;{prg_ram};
-}
-
-sub nothing2 {
-    my ($self) = @_;
-    return $self-&gt;{nothing2};
-}
-
-sub tv_system {
-    my ($self) = @_;
-    return $self-&gt;{tv_system};
-}
-
-########################################################################
-package Ines::F9;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{reserved} = $self-&gt;{_io}-&gt;read_bits_int(7);
-    $self-&gt;{tv_system} = $self-&gt;{_io}-&gt;read_bits_int(1);
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self-&gt;{reserved};
-}
-
-sub tv_system {
-    my ($self) = @_;
-    return $self-&gt;{tv_system};
+    return $self-&gt;{_raw_header};
 }
 
 ########################################################################
@@ -527,14 +334,29 @@ sub _read {
     my ($self) = @_;
 
     $self-&gt;{magic} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (78, 69, 83, 26)));
-    $self-&gt;{prg_rom_size} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{chr_rom_size} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{f6} = Ines::F6-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{f7} = Ines::F7-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{prg_ram_size} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{f9} = Ines::F9-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{f10} = Ines::F10-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{zero_fill} = $self-&gt;{_io}-&gt;read_bytes(4);
+    $self-&gt;{len_prg_rom} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{len_chr_rom} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{_raw_f6} = $self-&gt;{_io}-&gt;read_bytes(1);
+    my $io__raw_f6 = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_f6});
+    $self-&gt;{f6} = Ines::Header::F6-&gt;new($io__raw_f6, $self, $self-&gt;{_root});
+    $self-&gt;{_raw_f7} = $self-&gt;{_io}-&gt;read_bytes(1);
+    my $io__raw_f7 = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_f7});
+    $self-&gt;{f7} = Ines::Header::F7-&gt;new($io__raw_f7, $self, $self-&gt;{_root});
+    $self-&gt;{len_prg_ram} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{_raw_f9} = $self-&gt;{_io}-&gt;read_bytes(1);
+    my $io__raw_f9 = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_f9});
+    $self-&gt;{f9} = Ines::Header::F9-&gt;new($io__raw_f9, $self, $self-&gt;{_root});
+    $self-&gt;{_raw_f10} = $self-&gt;{_io}-&gt;read_bytes(1);
+    my $io__raw_f10 = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_f10});
+    $self-&gt;{f10} = Ines::Header::F10-&gt;new($io__raw_f10, $self, $self-&gt;{_root});
+    $self-&gt;{reserved} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (0, 0, 0, 0, 0)));
+}
+
+sub mapper {
+    my ($self) = @_;
+    return $self-&gt;{mapper} if ($self-&gt;{mapper});
+    $self-&gt;{mapper} = ($self-&gt;f6()-&gt;lower_mapper() | ($self-&gt;f7()-&gt;upper_mapper() &lt;&lt; 4));
+    return $self-&gt;{mapper};
 }
 
 sub magic {
@@ -542,14 +364,14 @@ sub magic {
     return $self-&gt;{magic};
 }
 
-sub prg_rom_size {
+sub len_prg_rom {
     my ($self) = @_;
-    return $self-&gt;{prg_rom_size};
+    return $self-&gt;{len_prg_rom};
 }
 
-sub chr_rom_size {
+sub len_chr_rom {
     my ($self) = @_;
-    return $self-&gt;{chr_rom_size};
+    return $self-&gt;{len_chr_rom};
 }
 
 sub f6 {
@@ -562,9 +384,9 @@ sub f7 {
     return $self-&gt;{f7};
 }
 
-sub prg_ram_size {
+sub len_prg_ram {
     my ($self) = @_;
-    return $self-&gt;{prg_ram_size};
+    return $self-&gt;{len_prg_ram};
 }
 
 sub f9 {
@@ -577,9 +399,352 @@ sub f10 {
     return $self-&gt;{f10};
 }
 
-sub zero_fill {
+sub reserved {
     my ($self) = @_;
-    return $self-&gt;{zero_fill};
+    return $self-&gt;{reserved};
+}
+
+sub _raw_f6 {
+    my ($self) = @_;
+    return $self-&gt;{_raw_f6};
+}
+
+sub _raw_f7 {
+    my ($self) = @_;
+    return $self-&gt;{_raw_f7};
+}
+
+sub _raw_f9 {
+    my ($self) = @_;
+    return $self-&gt;{_raw_f9};
+}
+
+sub _raw_f10 {
+    my ($self) = @_;
+    return $self-&gt;{_raw_f10};
+}
+
+########################################################################
+package Ines::Header::F6;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $MIRRORING_HORIZONTAL = 0;
+our $MIRRORING_VERTICAL = 1;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{lower_mapper} = $self-&gt;{_io}-&gt;read_bits_int(4);
+    $self-&gt;{four_screen} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{trainer} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{has_battery_ram} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{mirroring} = $self-&gt;{_io}-&gt;read_bits_int(1);
+}
+
+sub lower_mapper {
+    my ($self) = @_;
+    return $self-&gt;{lower_mapper};
+}
+
+sub four_screen {
+    my ($self) = @_;
+    return $self-&gt;{four_screen};
+}
+
+sub trainer {
+    my ($self) = @_;
+    return $self-&gt;{trainer};
+}
+
+sub has_battery_ram {
+    my ($self) = @_;
+    return $self-&gt;{has_battery_ram};
+}
+
+sub mirroring {
+    my ($self) = @_;
+    return $self-&gt;{mirroring};
+}
+
+########################################################################
+package Ines::Header::F7;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{upper_mapper} = $self-&gt;{_io}-&gt;read_bits_int(4);
+    $self-&gt;{format} = $self-&gt;{_io}-&gt;read_bits_int(2);
+    $self-&gt;{playchoice10} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{vs_unisystem} = $self-&gt;{_io}-&gt;read_bits_int(1);
+}
+
+sub upper_mapper {
+    my ($self) = @_;
+    return $self-&gt;{upper_mapper};
+}
+
+sub format {
+    my ($self) = @_;
+    return $self-&gt;{format};
+}
+
+sub playchoice10 {
+    my ($self) = @_;
+    return $self-&gt;{playchoice10};
+}
+
+sub vs_unisystem {
+    my ($self) = @_;
+    return $self-&gt;{vs_unisystem};
+}
+
+########################################################################
+package Ines::Header::F9;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $TV_SYSTEM_NTSC = 0;
+our $TV_SYSTEM_PAL = 1;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{reserved} = $self-&gt;{_io}-&gt;read_bits_int(7);
+    $self-&gt;{tv_system} = $self-&gt;{_io}-&gt;read_bits_int(1);
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self-&gt;{reserved};
+}
+
+sub tv_system {
+    my ($self) = @_;
+    return $self-&gt;{tv_system};
+}
+
+########################################################################
+package Ines::Header::F10;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $TV_SYSTEM_NTSC = 0;
+our $TV_SYSTEM_DUAL1 = 1;
+our $TV_SYSTEM_PAL = 2;
+our $TV_SYSTEM_DUAL2 = 3;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{reserved1} = $self-&gt;{_io}-&gt;read_bits_int(2);
+    $self-&gt;{bus_conflict} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{prg_ram} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{reserved2} = $self-&gt;{_io}-&gt;read_bits_int(2);
+    $self-&gt;{tv_system} = $self-&gt;{_io}-&gt;read_bits_int(2);
+}
+
+sub reserved1 {
+    my ($self) = @_;
+    return $self-&gt;{reserved1};
+}
+
+sub bus_conflict {
+    my ($self) = @_;
+    return $self-&gt;{bus_conflict};
+}
+
+sub prg_ram {
+    my ($self) = @_;
+    return $self-&gt;{prg_ram};
+}
+
+sub reserved2 {
+    my ($self) = @_;
+    return $self-&gt;{reserved2};
+}
+
+sub tv_system {
+    my ($self) = @_;
+    return $self-&gt;{tv_system};
+}
+
+########################################################################
+package Ines::Playchoice10;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{inst_rom} = $self-&gt;{_io}-&gt;read_bytes(8192);
+    $self-&gt;{prom} = Ines::Playchoice10::Prom-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub inst_rom {
+    my ($self) = @_;
+    return $self-&gt;{inst_rom};
+}
+
+sub prom {
+    my ($self) = @_;
+    return $self-&gt;{prom};
+}
+
+########################################################################
+package Ines::Playchoice10::Prom;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{data} = $self-&gt;{_io}-&gt;read_bytes(16);
+    $self-&gt;{counter_out} = $self-&gt;{_io}-&gt;read_bytes(16);
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data};
+}
+
+sub counter_out {
+    my ($self) = @_;
+    return $self-&gt;{counter_out};
 }
 
 1;

@@ -27,8 +27,10 @@ class BlenderBlend < Kaitai::Struct::Struct
   def _read
     @hdr = Header.new(@_io, self, @_root)
     @blocks = []
+    i = 0
     while not @_io.eof?
       @blocks << FileBlock.new(@_io, self, @_root)
+      i += 1
     end
     self
   end

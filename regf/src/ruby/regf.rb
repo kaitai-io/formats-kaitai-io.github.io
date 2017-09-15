@@ -34,10 +34,12 @@ class Regf < Kaitai::Struct::Struct
     @header = FileHeader.new(@_io, self, @_root)
     @_raw_hive_bins = []
     @hive_bins = []
+    i = 0
     while not @_io.eof?
       @_raw_hive_bins << @_io.read_bytes(4096)
       io = Kaitai::Struct::Stream.new(@_raw_hive_bins.last)
       @hive_bins << HiveBin.new(io, self, @_root)
+      i += 1
     end
     self
   end
@@ -62,8 +64,10 @@ class Regf < Kaitai::Struct::Struct
     def _read
       @header = HiveBinHeader.new(@_io, self, @_root)
       @cells = []
+      i = 0
       while not @_io.eof?
         @cells << HiveBinCell.new(@_io, self, @_root)
+        i += 1
       end
       self
     end

@@ -23,6 +23,7 @@ namespace Kaitai
             return new Specpr(new KaitaiStream(fileName));
         }
 
+
         public enum RecordType
         {
             DataInitial = 0,
@@ -30,19 +31,23 @@ namespace Kaitai
             DataContinuation = 2,
             TextContinuation = 3,
         }
-
-        public Specpr(KaitaiStream io, KaitaiStruct parent = null, Specpr root = null) : base(io)
+        public Specpr(KaitaiStream p__io, KaitaiStruct p__parent = null, Specpr p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _records = new List<Record>();
-            while (!m_io.IsEof) {
-                _records.Add(new Record(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _records.Add(new Record(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
         public partial class DataInitial : KaitaiStruct
         {
             public static DataInitial FromFile(string fileName)
@@ -50,14 +55,15 @@ namespace Kaitai
                 return new DataInitial(new KaitaiStream(fileName));
             }
 
-            public DataInitial(KaitaiStream io, Specpr.Record parent = null, Specpr root = null) : base(io)
+            public DataInitial(KaitaiStream p__io, Specpr.Record p__parent = null, Specpr p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_phaseAngleArcsec = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _ids = new Identifiers(m_io, this, m_root);
                 _iscta = new CoarseTimestamp(m_io, this, m_root);
                 _isctb = new CoarseTimestamp(m_io, this, m_root);
@@ -70,7 +76,8 @@ namespace Kaitai
                 _irmas = m_io.ReadS4be();
                 _revs = m_io.ReadS4be();
                 _iband = new List<int>((int) (2));
-                for (var i = 0; i < 2; i++) {
+                for (var i = 0; i < 2; i++)
+                {
                     _iband.Add(m_io.ReadS4be());
                 }
                 _irwav = m_io.ReadS4be();
@@ -79,7 +86,8 @@ namespace Kaitai
                 _itpntr = m_io.ReadS4be();
                 _ihist = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(60), 32));
                 _mhist = new List<string>((int) (4));
-                for (var i = 0; i < 4; i++) {
+                for (var i = 0; i < 4; i++)
+                {
                     _mhist.Add(System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(74)));
                 }
                 _nruns = m_io.ReadS4be();
@@ -93,10 +101,11 @@ namespace Kaitai
                 _timint = m_io.ReadF4be();
                 _tempd = m_io.ReadF4be();
                 _data = new List<float>((int) (256));
-                for (var i = 0; i < 256; i++) {
+                for (var i = 0; i < 256; i++)
+                {
                     _data.Add(m_io.ReadF4be());
                 }
-                }
+            }
             private bool f_phaseAngleArcsec;
             private double _phaseAngleArcsec;
 
@@ -301,16 +310,17 @@ namespace Kaitai
                 return new CoarseTimestamp(new KaitaiStream(fileName));
             }
 
-            public CoarseTimestamp(KaitaiStream io, Specpr.DataInitial parent = null, Specpr root = null) : base(io)
+            public CoarseTimestamp(KaitaiStream p__io, Specpr.DataInitial p__parent = null, Specpr p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_seconds = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _scaledSeconds = m_io.ReadS4be();
-                }
+            }
             private bool f_seconds;
             private double _seconds;
             public double Seconds
@@ -342,14 +352,15 @@ namespace Kaitai
                 return new Icflag(new KaitaiStream(fileName));
             }
 
-            public Icflag(KaitaiStream io, Specpr.Record parent = null, Specpr root = null) : base(io)
+            public Icflag(KaitaiStream p__io, Specpr.Record p__parent = null, Specpr p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_type = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _reserved = m_io.ReadBitsInt(26);
                 _isctbType = m_io.ReadBitsInt(1) != 0;
                 _isctaType = m_io.ReadBitsInt(1) != 0;
@@ -357,7 +368,7 @@ namespace Kaitai
                 _errors = m_io.ReadBitsInt(1) != 0;
                 _text = m_io.ReadBitsInt(1) != 0;
                 _continuation = m_io.ReadBitsInt(1) != 0;
-                }
+            }
             private bool f_type;
             private RecordType _type;
             public RecordType Type
@@ -434,18 +445,20 @@ namespace Kaitai
                 return new DataContinuation(new KaitaiStream(fileName));
             }
 
-            public DataContinuation(KaitaiStream io, Specpr.Record parent = null, Specpr root = null) : base(io)
+            public DataContinuation(KaitaiStream p__io, Specpr.Record p__parent = null, Specpr p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _cdata = new List<float>((int) (383));
-                for (var i = 0; i < 383; i++) {
+                for (var i = 0; i < 383; i++)
+                {
                     _cdata.Add(m_io.ReadF4be());
                 }
-                }
+            }
             private List<float> _cdata;
             private Specpr m_root;
             private Specpr.Record m_parent;
@@ -464,16 +477,17 @@ namespace Kaitai
                 return new Identifiers(new KaitaiStream(fileName));
             }
 
-            public Identifiers(KaitaiStream io, KaitaiStruct parent = null, Specpr root = null) : base(io)
+            public Identifiers(KaitaiStream p__io, KaitaiStruct p__parent = null, Specpr p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _ititle = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(40), 32));
                 _usernm = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(8));
-                }
+            }
             private string _ititle;
             private string _usernm;
             private Specpr m_root;
@@ -498,18 +512,19 @@ namespace Kaitai
                 return new IllumAngle(new KaitaiStream(fileName));
             }
 
-            public IllumAngle(KaitaiStream io, Specpr.DataInitial parent = null, Specpr root = null) : base(io)
+            public IllumAngle(KaitaiStream p__io, Specpr.DataInitial p__parent = null, Specpr p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_secondsTotal = false;
                 f_minutesTotal = false;
                 f_degreesTotal = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _angl = m_io.ReadS4be();
-                }
+            }
             private bool f_secondsTotal;
             private int _secondsTotal;
             public int SecondsTotal
@@ -567,18 +582,19 @@ namespace Kaitai
                 return new TextInitial(new KaitaiStream(fileName));
             }
 
-            public TextInitial(KaitaiStream io, Specpr.Record parent = null, Specpr root = null) : base(io)
+            public TextInitial(KaitaiStream p__io, Specpr.Record p__parent = null, Specpr p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _ids = new Identifiers(m_io, this, m_root);
                 _itxtpt = m_io.ReadU4be();
                 _itxtch = m_io.ReadS4be();
                 _itext = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(1476));
-                }
+            }
             private Identifiers _ids;
             private uint _itxtpt;
             private int _itxtch;
@@ -611,13 +627,14 @@ namespace Kaitai
                 return new Record(new KaitaiStream(fileName));
             }
 
-            public Record(KaitaiStream io, Specpr parent = null, Specpr root = null) : base(io)
+            public Record(KaitaiStream p__io, Specpr p__parent = null, Specpr p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _icflag = new Icflag(m_io, this, m_root);
                 switch (Icflag.Type) {
                 case Specpr.RecordType.DataInitial: {
@@ -649,7 +666,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private Icflag _icflag;
             private object _content;
             private Specpr m_root;
@@ -672,15 +689,16 @@ namespace Kaitai
                 return new TextContinuation(new KaitaiStream(fileName));
             }
 
-            public TextContinuation(KaitaiStream io, Specpr.Record parent = null, Specpr root = null) : base(io)
+            public TextContinuation(KaitaiStream p__io, Specpr.Record p__parent = null, Specpr p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _tdata = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(1532));
-                }
+            }
             private string _tdata;
             private Specpr m_root;
             private Specpr.Record m_parent;

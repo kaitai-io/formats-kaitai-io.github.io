@@ -109,8 +109,10 @@ class MicrosoftCfb < Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries << @_io.read_s4le
+        i += 1
       end
       self
     end
@@ -163,6 +165,39 @@ class MicrosoftCfb < Kaitai::Struct::Struct
       end
       @mini_stream
     end
+    def child
+      return @child unless @child.nil?
+      if child_id != -1
+        io = _root._io
+        _pos = io.pos
+        io.seek((((_root.header.ofs_dir + 1) * _root.sector_size) + (child_id * 128)))
+        @child = DirEntry.new(io, self, @_root)
+        io.seek(_pos)
+      end
+      @child
+    end
+    def left_sibling
+      return @left_sibling unless @left_sibling.nil?
+      if left_sibling_id != -1
+        io = _root._io
+        _pos = io.pos
+        io.seek((((_root.header.ofs_dir + 1) * _root.sector_size) + (left_sibling_id * 128)))
+        @left_sibling = DirEntry.new(io, self, @_root)
+        io.seek(_pos)
+      end
+      @left_sibling
+    end
+    def right_sibling
+      return @right_sibling unless @right_sibling.nil?
+      if right_sibling_id != -1
+        io = _root._io
+        _pos = io.pos
+        io.seek((((_root.header.ofs_dir + 1) * _root.sector_size) + (right_sibling_id * 128)))
+        @right_sibling = DirEntry.new(io, self, @_root)
+        io.seek(_pos)
+      end
+      @right_sibling
+    end
     attr_reader :name
     attr_reader :name_len
     attr_reader :object_type
@@ -211,13 +246,10 @@ class MicrosoftCfb < Kaitai::Struct::Struct
     return @dir unless @dir.nil?
     _pos = @_io.pos
     @_io.seek(((header.ofs_dir + 1) * sector_size))
-    @_raw_dir = @_io.read_bytes(128)
-    io = Kaitai::Struct::Stream.new(@_raw_dir)
-    @dir = DirEntry.new(io, self, @_root)
+    @dir = DirEntry.new(@_io, self, @_root)
     @_io.seek(_pos)
     @dir
   end
   attr_reader :header
   attr_reader :_raw_fat
-  attr_reader :_raw_dir
 end

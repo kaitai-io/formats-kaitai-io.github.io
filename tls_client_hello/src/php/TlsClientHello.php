@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class TlsClientHello extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \TlsClientHello $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \TlsClientHello $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -34,8 +34,8 @@ class TlsClientHello extends \Kaitai\Struct\Struct {
 namespace \TlsClientHello;
 
 class ServerName extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \TlsClientHello\Sni $parent = null, \TlsClientHello $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \TlsClientHello\Sni $_parent = null, \TlsClientHello $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -55,8 +55,8 @@ class ServerName extends \Kaitai\Struct\Struct {
 namespace \TlsClientHello;
 
 class Random extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \TlsClientHello $parent = null, \TlsClientHello $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \TlsClientHello $_parent = null, \TlsClientHello $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -73,8 +73,8 @@ class Random extends \Kaitai\Struct\Struct {
 namespace \TlsClientHello;
 
 class SessionId extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \TlsClientHello $parent = null, \TlsClientHello $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \TlsClientHello $_parent = null, \TlsClientHello $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -91,16 +91,18 @@ class SessionId extends \Kaitai\Struct\Struct {
 namespace \TlsClientHello;
 
 class Sni extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \TlsClientHello\Extension $parent = null, \TlsClientHello $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \TlsClientHello\Extension $_parent = null, \TlsClientHello $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_listLength = $this->_io->readU2be();
         $this->_m_serverNames = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_serverNames[] = new \TlsClientHello\ServerName($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_listLength;
@@ -112,8 +114,8 @@ class Sni extends \Kaitai\Struct\Struct {
 namespace \TlsClientHello;
 
 class CipherSuites extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \TlsClientHello $parent = null, \TlsClientHello $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \TlsClientHello $_parent = null, \TlsClientHello $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -134,8 +136,8 @@ class CipherSuites extends \Kaitai\Struct\Struct {
 namespace \TlsClientHello;
 
 class CompressionMethods extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \TlsClientHello $parent = null, \TlsClientHello $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \TlsClientHello $_parent = null, \TlsClientHello $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -152,16 +154,18 @@ class CompressionMethods extends \Kaitai\Struct\Struct {
 namespace \TlsClientHello;
 
 class Alpn extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \TlsClientHello\Extension $parent = null, \TlsClientHello $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \TlsClientHello\Extension $_parent = null, \TlsClientHello $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_extLen = $this->_io->readU2be();
         $this->_m_alpnProtocols = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_alpnProtocols[] = new \TlsClientHello\Protocol($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_extLen;
@@ -173,16 +177,18 @@ class Alpn extends \Kaitai\Struct\Struct {
 namespace \TlsClientHello;
 
 class Extensions extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \TlsClientHello $parent = null, \TlsClientHello $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \TlsClientHello $_parent = null, \TlsClientHello $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_len = $this->_io->readU2be();
         $this->_m_extensions = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_extensions[] = new \TlsClientHello\Extension($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_len;
@@ -194,8 +200,8 @@ class Extensions extends \Kaitai\Struct\Struct {
 namespace \TlsClientHello;
 
 class Version extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \TlsClientHello $parent = null, \TlsClientHello $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \TlsClientHello $_parent = null, \TlsClientHello $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -212,8 +218,8 @@ class Version extends \Kaitai\Struct\Struct {
 namespace \TlsClientHello;
 
 class Protocol extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \TlsClientHello\Alpn $parent = null, \TlsClientHello $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \TlsClientHello\Alpn $_parent = null, \TlsClientHello $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -230,8 +236,8 @@ class Protocol extends \Kaitai\Struct\Struct {
 namespace \TlsClientHello;
 
 class Extension extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \TlsClientHello\Extensions $parent = null, \TlsClientHello $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \TlsClientHello\Extensions $_parent = null, \TlsClientHello $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

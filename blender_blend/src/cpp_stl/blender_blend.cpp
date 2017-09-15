@@ -4,8 +4,8 @@
 
 
 
-blender_blend_t::blender_blend_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, blender_blend_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+blender_blend_t::blender_blend_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, blender_blend_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -13,8 +13,12 @@ blender_blend_t::blender_blend_t(kaitai::kstream *p_io, kaitai::kstruct* p_paren
 void blender_blend_t::_read() {
     m_hdr = new header_t(m__io, this, m__root);
     m_blocks = new std::vector<file_block_t*>();
-    while (!m__io->is_eof()) {
-        m_blocks->push_back(new file_block_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_blocks->push_back(new file_block_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -26,9 +30,9 @@ blender_blend_t::~blender_blend_t() {
     delete m_blocks;
 }
 
-blender_blend_t::header_t::header_t(kaitai::kstream *p_io, blender_blend_t* p_parent, blender_blend_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+blender_blend_t::header_t::header_t(kaitai::kstream* p__io, blender_blend_t* p__parent, blender_blend_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_psize = false;
     _read();
 }
@@ -51,9 +55,9 @@ int8_t blender_blend_t::header_t::psize() {
     return m_psize;
 }
 
-blender_blend_t::file_block_t::file_block_t(kaitai::kstream *p_io, blender_blend_t* p_parent, blender_blend_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+blender_blend_t::file_block_t::file_block_t(kaitai::kstream* p__io, blender_blend_t* p__parent, blender_blend_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

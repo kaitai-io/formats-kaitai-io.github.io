@@ -138,8 +138,10 @@ var S3m = (function() {
     }
     PatternCells.prototype._read = function() {
       this.cells = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.cells.push(new PatternCell(this._io, this, this._root));
+        i++;
       }
     }
 

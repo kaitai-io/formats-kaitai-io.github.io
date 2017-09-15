@@ -6,6 +6,9 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# @see http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf Source
 class Wmf < Kaitai::Struct::Struct
 
   FUNC = {
@@ -81,20 +84,241 @@ class Wmf < Kaitai::Struct::Struct
     3907 => :func_stretchdib,
   }
   I__FUNC = FUNC.invert
+
+  BIN_RASTER_OP = {
+    1 => :bin_raster_op_black,
+    2 => :bin_raster_op_notmergepen,
+    3 => :bin_raster_op_masknotpen,
+    4 => :bin_raster_op_notcopypen,
+    5 => :bin_raster_op_maskpennot,
+    6 => :bin_raster_op_not,
+    7 => :bin_raster_op_xorpen,
+    8 => :bin_raster_op_notmaskpen,
+    9 => :bin_raster_op_maskpen,
+    10 => :bin_raster_op_notxorpen,
+    11 => :bin_raster_op_nop,
+    12 => :bin_raster_op_mergenotpen,
+    13 => :bin_raster_op_copypen,
+    14 => :bin_raster_op_mergepennot,
+    15 => :bin_raster_op_mergepen,
+    16 => :bin_raster_op_white,
+  }
+  I__BIN_RASTER_OP = BIN_RASTER_OP.invert
+
+  MIX_MODE = {
+    1 => :mix_mode_transparent,
+    2 => :mix_mode_opaque,
+  }
+  I__MIX_MODE = MIX_MODE.invert
+
+  POLY_FILL_MODE = {
+    1 => :poly_fill_mode_alternate,
+    2 => :poly_fill_mode_winding,
+  }
+  I__POLY_FILL_MODE = POLY_FILL_MODE.invert
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
     _read
   end
 
   def _read
-    @special_hdr = SpecialHeader.new(@_io, self, @_root)
-    @header = WmfHeader.new(@_io, self, @_root)
+    @special_header = SpecialHeader.new(@_io, self, @_root)
+    @header = Header.new(@_io, self, @_root)
     @records = []
+    i = 0
     begin
       _ = Record.new(@_io, self, @_root)
       @records << _
+      i += 1
     end until _.function == :func_eof
     self
+  end
+  class ParamsSetwindoworg < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @y = @_io.read_s2le
+      @x = @_io.read_s2le
+      self
+    end
+
+    ##
+    # Y coordinate of the window origin, in logical units.
+    attr_reader :y
+
+    ##
+    # X coordinate of the window origin, in logical units.
+    attr_reader :x
+  end
+  class ParamsSetbkmode < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @bk_mode = Kaitai::Struct::Stream::resolve_enum(MIX_MODE, @_io.read_u2le)
+      self
+    end
+
+    ##
+    # Defines current graphic context background mix mode.
+    attr_reader :bk_mode
+  end
+  class PointS < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @x = @_io.read_s2le
+      @y = @_io.read_s2le
+      self
+    end
+
+    ##
+    # X coordinate of the point, in logical units.
+    attr_reader :x
+
+    ##
+    # Y coordinate of the point, in logical units.
+    attr_reader :y
+  end
+  class ParamsSetwindowext < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @y = @_io.read_s2le
+      @x = @_io.read_s2le
+      self
+    end
+
+    ##
+    # Vertical extent of the window in logical units.
+    attr_reader :y
+
+    ##
+    # Horizontal extent of the window in logical units.
+    attr_reader :x
+  end
+  class ParamsPolygon < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @num_points = @_io.read_s2le
+      @points = Array.new(num_points)
+      (num_points).times { |i|
+        @points[i] = PointS.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :num_points
+    attr_reader :points
+  end
+  class Header < Kaitai::Struct::Struct
+
+    METAFILE_TYPE = {
+      1 => :metafile_type_memory_metafile,
+      2 => :metafile_type_disk_metafile,
+    }
+    I__METAFILE_TYPE = METAFILE_TYPE.invert
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @metafile_type = Kaitai::Struct::Stream::resolve_enum(METAFILE_TYPE, @_io.read_u2le)
+      @header_size = @_io.read_u2le
+      @version = @_io.read_u2le
+      @size = @_io.read_u4le
+      @number_of_objects = @_io.read_u2le
+      @max_record = @_io.read_u4le
+      @number_of_members = @_io.read_u2le
+      self
+    end
+    attr_reader :metafile_type
+    attr_reader :header_size
+    attr_reader :version
+    attr_reader :size
+    attr_reader :number_of_objects
+    attr_reader :max_record
+    attr_reader :number_of_members
+  end
+  class ColorRef < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @red = @_io.read_u1
+      @green = @_io.read_u1
+      @blue = @_io.read_u1
+      @reserved = @_io.read_u1
+      self
+    end
+    attr_reader :red
+    attr_reader :green
+    attr_reader :blue
+    attr_reader :reserved
+  end
+  class ParamsSetrop2 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @draw_mode = Kaitai::Struct::Stream::resolve_enum(BIN_RASTER_OP, @_io.read_u2le)
+      self
+    end
+
+    ##
+    # Defines current foreground binary raster operation mixing mode.
+    attr_reader :draw_mode
+  end
+  class ParamsSetpolyfillmode < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @poly_fill_mode = Kaitai::Struct::Stream::resolve_enum(POLY_FILL_MODE, @_io.read_u2le)
+      self
+    end
+
+    ##
+    # Defines current polygon fill mode.
+    attr_reader :poly_fill_mode
+  end
+  class ParamsPolyline < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @num_points = @_io.read_s2le
+      @points = Array.new(num_points)
+      (num_points).times { |i|
+        @points[i] = PointS.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :num_points
+    attr_reader :points
   end
   class SpecialHeader < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -124,36 +348,6 @@ class Wmf < Kaitai::Struct::Struct
     attr_reader :reserved
     attr_reader :checksum
   end
-  class WmfHeader < Kaitai::Struct::Struct
-
-    METAFILE_TYPE = {
-      1 => :metafile_type_memory_metafile,
-      2 => :metafile_type_disk_metafile,
-    }
-    I__METAFILE_TYPE = METAFILE_TYPE.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @type = Kaitai::Struct::Stream::resolve_enum(METAFILE_TYPE, @_io.read_u2le)
-      @header_size = @_io.read_u2le
-      @version = @_io.read_u2le
-      @size = @_io.read_u4le
-      @number_of_objects = @_io.read_u2le
-      @max_record = @_io.read_u4le
-      @number_of_members = @_io.read_u2le
-      self
-    end
-    attr_reader :type
-    attr_reader :header_size
-    attr_reader :version
-    attr_reader :size
-    attr_reader :number_of_objects
-    attr_reader :max_record
-    attr_reader :number_of_members
-  end
   class Record < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -163,14 +357,50 @@ class Wmf < Kaitai::Struct::Struct
     def _read
       @size = @_io.read_u4le
       @function = Kaitai::Struct::Stream::resolve_enum(FUNC, @_io.read_u2le)
-      @params = @_io.read_bytes(((size - 3) * 2))
+      case function
+      when :func_setbkmode
+        @_raw_params = @_io.read_bytes(((size - 3) * 2))
+        io = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ParamsSetbkmode.new(io, self, @_root)
+      when :func_setbkcolor
+        @_raw_params = @_io.read_bytes(((size - 3) * 2))
+        io = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ColorRef.new(io, self, @_root)
+      when :func_setrop2
+        @_raw_params = @_io.read_bytes(((size - 3) * 2))
+        io = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ParamsSetrop2.new(io, self, @_root)
+      when :func_polyline
+        @_raw_params = @_io.read_bytes(((size - 3) * 2))
+        io = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ParamsPolyline.new(io, self, @_root)
+      when :func_setwindoworg
+        @_raw_params = @_io.read_bytes(((size - 3) * 2))
+        io = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ParamsSetwindoworg.new(io, self, @_root)
+      when :func_polygon
+        @_raw_params = @_io.read_bytes(((size - 3) * 2))
+        io = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ParamsPolygon.new(io, self, @_root)
+      when :func_setwindowext
+        @_raw_params = @_io.read_bytes(((size - 3) * 2))
+        io = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ParamsSetwindowext.new(io, self, @_root)
+      when :func_setpolyfillmode
+        @_raw_params = @_io.read_bytes(((size - 3) * 2))
+        io = Kaitai::Struct::Stream.new(@_raw_params)
+        @params = ParamsSetpolyfillmode.new(io, self, @_root)
+      else
+        @params = @_io.read_bytes(((size - 3) * 2))
+      end
       self
     end
     attr_reader :size
     attr_reader :function
     attr_reader :params
+    attr_reader :_raw_params
   end
-  attr_reader :special_hdr
+  attr_reader :special_header
   attr_reader :header
   attr_reader :records
 end

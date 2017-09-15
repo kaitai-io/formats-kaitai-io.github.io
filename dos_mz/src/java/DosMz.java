@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  */
 public class DosMz extends KaitaiStruct {
     public static DosMz fromFile(String fileName) throws IOException {
-        return new DosMz(new KaitaiStream(fileName));
+        return new DosMz(new ByteBufferKaitaiStream(fileName));
     }
 
     public DosMz(KaitaiStream _io) {
@@ -46,7 +47,7 @@ public class DosMz extends KaitaiStruct {
     }
     public static class MzHeader extends KaitaiStruct {
         public static MzHeader fromFile(String fileName) throws IOException {
-            return new MzHeader(new KaitaiStream(fileName));
+            return new MzHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public MzHeader(KaitaiStream _io) {
@@ -114,7 +115,7 @@ public class DosMz extends KaitaiStruct {
     }
     public static class Relocation extends KaitaiStruct {
         public static Relocation fromFile(String fileName) throws IOException {
-            return new Relocation(new KaitaiStream(fileName));
+            return new Relocation(new ByteBufferKaitaiStream(fileName));
         }
 
         public Relocation(KaitaiStream _io) {

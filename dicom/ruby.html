@@ -219,7 +219,7 @@ data = Dicom.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="ruby">data.fileHeader # => get file header</code></pre>
+<pre><code class="ruby">data.file_header # => get file header</code></pre>
 
     </div>
 </section>
@@ -4303,8 +4303,10 @@ class Dicom &lt; Kaitai::Struct::Struct
   def _read
     @file_header = TFileHeader.new(@_io, self, @_root)
     @elements = []
+    i = 0
     while not @_io.eof?
       @elements &lt;&lt; TDataElementImplicit.new(@_io, self, @_root)
+      i += 1
     end
     self
   end
@@ -4351,15 +4353,19 @@ class Dicom &lt; Kaitai::Struct::Struct
       end
       if  ((vr == &quot;SQ&quot;) &amp;&amp; (value_len == 4294967295)) 
         @items = []
+        i = 0
         begin
           _ = SeqItem.new(@_io, self, @_root)
           @items &lt;&lt; _
+          i += 1
         end until _.tag_elem == 57565
       end
       if is_transfer_syntax_change_implicit
         @elements_implicit = []
+        i = 0
         while not @_io.eof?
           @elements_implicit &lt;&lt; TDataElementImplicit.new(@_io, self, @_root)
+          i += 1
         end
       end
       self
@@ -4422,15 +4428,19 @@ class Dicom &lt; Kaitai::Struct::Struct
       end
       if  ((vr == &quot;SQ&quot;) &amp;&amp; (value_len == 4294967295)) 
         @items = []
+        i = 0
         begin
           _ = SeqItem.new(@_io, self, @_root)
           @items &lt;&lt; _
+          i += 1
         end until _.tag_elem == 57565
       end
       if is_transfer_syntax_change_explicit
         @elements = []
+        i = 0
         while not @_io.eof?
           @elements &lt;&lt; TDataElementExplicit.new(@_io, self, @_root)
+          i += 1
         end
       end
       self
@@ -4484,9 +4494,11 @@ class Dicom &lt; Kaitai::Struct::Struct
       end
       if value_len == 4294967295
         @items = []
+        i = 0
         begin
           _ = TDataElementExplicit.new(@_io, self, @_root)
           @items &lt;&lt; _
+          i += 1
         end until  ((_.tag_group == 65534) &amp;&amp; (_.tag_elem == 57357)) 
       end
       self

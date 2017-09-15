@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
  */
 public class Rar extends KaitaiStruct {
     public static Rar fromFile(String fileName) throws IOException {
-        return new Rar(new KaitaiStream(fileName));
+        return new Rar(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum BlockTypes {
@@ -101,22 +102,26 @@ public class Rar extends KaitaiStruct {
     private void _read() {
         this.magic = new MagicSignature(this._io, this, _root);
         this.blocks = new ArrayList<KaitaiStruct>();
-        while (!this._io.isEof()) {
-            switch (magic().version()) {
-            case 0: {
-                this.blocks.add(new Block(this._io, this, _root));
-                break;
-            }
-            case 1: {
-                this.blocks.add(new BlockV5(this._io, this, _root));
-                break;
-            }
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                switch (magic().version()) {
+                case 0: {
+                    this.blocks.add(new Block(this._io, this, _root));
+                    break;
+                }
+                case 1: {
+                    this.blocks.add(new BlockV5(this._io, this, _root));
+                    break;
+                }
+                }
+                i++;
             }
         }
     }
     public static class BlockV5 extends KaitaiStruct {
         public static BlockV5 fromFile(String fileName) throws IOException {
-            return new BlockV5(new KaitaiStream(fileName));
+            return new BlockV5(new ByteBufferKaitaiStream(fileName));
         }
 
         public BlockV5(KaitaiStream _io) {
@@ -148,7 +153,7 @@ public class Rar extends KaitaiStruct {
      */
     public static class Block extends KaitaiStruct {
         public static Block fromFile(String fileName) throws IOException {
-            return new Block(new KaitaiStream(fileName));
+            return new Block(new ByteBufferKaitaiStream(fileName));
         }
 
         public Block(KaitaiStream _io) {
@@ -176,7 +181,7 @@ public class Rar extends KaitaiStruct {
             switch (blockType()) {
             case FILE_HEADER: {
                 this._raw_body = this._io.readBytes(bodySize());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new BlockFileHeader(_io__raw_body, this, _root);
                 break;
             }
@@ -256,7 +261,7 @@ public class Rar extends KaitaiStruct {
     }
     public static class BlockFileHeader extends KaitaiStruct {
         public static BlockFileHeader fromFile(String fileName) throws IOException {
-            return new BlockFileHeader(new KaitaiStream(fileName));
+            return new BlockFileHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public BlockFileHeader(KaitaiStream _io) {
@@ -361,7 +366,7 @@ public class Rar extends KaitaiStruct {
      */
     public static class MagicSignature extends KaitaiStruct {
         public static MagicSignature fromFile(String fileName) throws IOException {
-            return new MagicSignature(new KaitaiStream(fileName));
+            return new MagicSignature(new ByteBufferKaitaiStream(fileName));
         }
 
         public MagicSignature(KaitaiStream _io) {
@@ -411,7 +416,7 @@ public class Rar extends KaitaiStruct {
     }
     public static class DosTime extends KaitaiStruct {
         public static DosTime fromFile(String fileName) throws IOException {
-            return new DosTime(new KaitaiStream(fileName));
+            return new DosTime(new ByteBufferKaitaiStream(fileName));
         }
 
         public DosTime(KaitaiStream _io) {

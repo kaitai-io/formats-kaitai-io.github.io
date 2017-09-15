@@ -11,6 +11,7 @@ namespace Kaitai
             return new ShapefileIndex(new KaitaiStream(fileName));
         }
 
+
         public enum ShapeType
         {
             NullShape = 0,
@@ -28,20 +29,24 @@ namespace Kaitai
             MultiPointM = 28,
             MultiPatch = 31,
         }
-
-        public ShapefileIndex(KaitaiStream io, KaitaiStruct parent = null, ShapefileIndex root = null) : base(io)
+        public ShapefileIndex(KaitaiStream p__io, KaitaiStruct p__parent = null, ShapefileIndex p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _header = new FileHeader(m_io, this, m_root);
             _records = new List<Record>();
-            while (!m_io.IsEof) {
-                _records.Add(new Record(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _records.Add(new Record(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
         public partial class FileHeader : KaitaiStruct
         {
             public static FileHeader FromFile(string fileName)
@@ -49,13 +54,14 @@ namespace Kaitai
                 return new FileHeader(new KaitaiStream(fileName));
             }
 
-            public FileHeader(KaitaiStream io, ShapefileIndex parent = null, ShapefileIndex root = null) : base(io)
+            public FileHeader(KaitaiStream p__io, ShapefileIndex p__parent = null, ShapefileIndex p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _fileCode = m_io.EnsureFixedContents(new byte[] { 0, 0, 39, 10 });
                 _unusedField1 = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                 _unusedField2 = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
@@ -66,7 +72,7 @@ namespace Kaitai
                 _version = m_io.EnsureFixedContents(new byte[] { 232, 3, 0, 0 });
                 _shapeType = ((ShapefileIndex.ShapeType) m_io.ReadS4le());
                 _boundingBox = new BoundingBoxXYZM(m_io, this, m_root);
-                }
+            }
             private byte[] _fileCode;
             private byte[] _unusedField1;
             private byte[] _unusedField2;
@@ -107,16 +113,17 @@ namespace Kaitai
                 return new Record(new KaitaiStream(fileName));
             }
 
-            public Record(KaitaiStream io, ShapefileIndex parent = null, ShapefileIndex root = null) : base(io)
+            public Record(KaitaiStream p__io, ShapefileIndex p__parent = null, ShapefileIndex p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _offset = m_io.ReadS4be();
                 _contentLength = m_io.ReadS4be();
-                }
+            }
             private int _offset;
             private int _contentLength;
             private ShapefileIndex m_root;
@@ -133,18 +140,19 @@ namespace Kaitai
                 return new BoundingBoxXYZM(new KaitaiStream(fileName));
             }
 
-            public BoundingBoxXYZM(KaitaiStream io, ShapefileIndex.FileHeader parent = null, ShapefileIndex root = null) : base(io)
+            public BoundingBoxXYZM(KaitaiStream p__io, ShapefileIndex.FileHeader p__parent = null, ShapefileIndex p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _x = new BoundsMinMax(m_io, this, m_root);
                 _y = new BoundsMinMax(m_io, this, m_root);
                 _z = new BoundsMinMax(m_io, this, m_root);
                 _m = new BoundsMinMax(m_io, this, m_root);
-                }
+            }
             private BoundsMinMax _x;
             private BoundsMinMax _y;
             private BoundsMinMax _z;
@@ -165,16 +173,17 @@ namespace Kaitai
                 return new BoundsMinMax(new KaitaiStream(fileName));
             }
 
-            public BoundsMinMax(KaitaiStream io, ShapefileIndex.BoundingBoxXYZM parent = null, ShapefileIndex root = null) : base(io)
+            public BoundsMinMax(KaitaiStream p__io, ShapefileIndex.BoundingBoxXYZM p__parent = null, ShapefileIndex p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _min = m_io.ReadF8be();
                 _max = m_io.ReadF8be();
-                }
+            }
             private double _min;
             private double _max;
             private ShapefileIndex m_root;

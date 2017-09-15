@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.nio.charset.Charset;
  */
 public class Zip extends KaitaiStruct {
     public static Zip fromFile(String fileName) throws IOException {
-        return new Zip(new KaitaiStream(fileName));
+        return new Zip(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum Compression {
@@ -94,13 +95,17 @@ public class Zip extends KaitaiStruct {
     }
     private void _read() {
         this.sections = new ArrayList<PkSection>();
-        while (!this._io.isEof()) {
-            this.sections.add(new PkSection(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.sections.add(new PkSection(this._io, this, _root));
+                i++;
+            }
         }
     }
     public static class LocalFile extends KaitaiStruct {
         public static LocalFile fromFile(String fileName) throws IOException {
-            return new LocalFile(new KaitaiStream(fileName));
+            return new LocalFile(new ByteBufferKaitaiStream(fileName));
         }
 
         public LocalFile(KaitaiStream _io) {
@@ -132,7 +137,7 @@ public class Zip extends KaitaiStruct {
     }
     public static class ExtraField extends KaitaiStruct {
         public static ExtraField fromFile(String fileName) throws IOException {
-            return new ExtraField(new KaitaiStream(fileName));
+            return new ExtraField(new ByteBufferKaitaiStream(fileName));
         }
 
         public ExtraField(KaitaiStream _io) {
@@ -155,19 +160,19 @@ public class Zip extends KaitaiStruct {
             switch (code()) {
             case NTFS: {
                 this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new Ntfs(_io__raw_body, this, _root);
                 break;
             }
             case EXTENDED_TIMESTAMP: {
                 this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new ExtendedTimestamp(_io__raw_body, this, _root);
                 break;
             }
             case INFOZIP_UNIX_VAR_SIZE: {
                 this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new InfozipUnixVarSize(_io__raw_body, this, _root);
                 break;
             }
@@ -183,7 +188,7 @@ public class Zip extends KaitaiStruct {
          */
         public static class Ntfs extends KaitaiStruct {
             public static Ntfs fromFile(String fileName) throws IOException {
-                return new Ntfs(new KaitaiStream(fileName));
+                return new Ntfs(new ByteBufferKaitaiStream(fileName));
             }
 
             public Ntfs(KaitaiStream _io) {
@@ -203,13 +208,17 @@ public class Zip extends KaitaiStruct {
             private void _read() {
                 this.reserved = this._io.readU4le();
                 this.attributes = new ArrayList<Attribute>();
-                while (!this._io.isEof()) {
-                    this.attributes.add(new Attribute(this._io, this, _root));
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.attributes.add(new Attribute(this._io, this, _root));
+                        i++;
+                    }
                 }
             }
             public static class Attribute extends KaitaiStruct {
                 public static Attribute fromFile(String fileName) throws IOException {
-                    return new Attribute(new KaitaiStream(fileName));
+                    return new Attribute(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public Attribute(KaitaiStream _io) {
@@ -232,7 +241,7 @@ public class Zip extends KaitaiStruct {
                     switch (tag()) {
                     case 1: {
                         this._raw_body = this._io.readBytes(size());
-                        KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                         this.body = new Attribute1(_io__raw_body, this, _root);
                         break;
                     }
@@ -257,7 +266,7 @@ public class Zip extends KaitaiStruct {
             }
             public static class Attribute1 extends KaitaiStruct {
                 public static Attribute1 fromFile(String fileName) throws IOException {
-                    return new Attribute1(new KaitaiStream(fileName));
+                    return new Attribute1(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public Attribute1(KaitaiStream _io) {
@@ -305,7 +314,7 @@ public class Zip extends KaitaiStruct {
          */
         public static class ExtendedTimestamp extends KaitaiStruct {
             public static ExtendedTimestamp fromFile(String fileName) throws IOException {
-                return new ExtendedTimestamp(new KaitaiStream(fileName));
+                return new ExtendedTimestamp(new ByteBufferKaitaiStream(fileName));
             }
 
             public ExtendedTimestamp(KaitaiStream _io) {
@@ -351,7 +360,7 @@ public class Zip extends KaitaiStruct {
          */
         public static class InfozipUnixVarSize extends KaitaiStruct {
             public static InfozipUnixVarSize fromFile(String fileName) throws IOException {
-                return new InfozipUnixVarSize(new KaitaiStream(fileName));
+                return new InfozipUnixVarSize(new ByteBufferKaitaiStream(fileName));
             }
 
             public InfozipUnixVarSize(KaitaiStream _io) {
@@ -429,7 +438,7 @@ public class Zip extends KaitaiStruct {
      */
     public static class CentralDirEntry extends KaitaiStruct {
         public static CentralDirEntry fromFile(String fileName) throws IOException {
-            return new CentralDirEntry(new KaitaiStream(fileName));
+            return new CentralDirEntry(new ByteBufferKaitaiStream(fileName));
         }
 
         public CentralDirEntry(KaitaiStream _io) {
@@ -465,7 +474,7 @@ public class Zip extends KaitaiStruct {
             this.localHeaderOffset = this._io.readS4le();
             this.fileName = new String(this._io.readBytes(fileNameLen()), Charset.forName("UTF-8"));
             this._raw_extra = this._io.readBytes(extraLen());
-            KaitaiStream _io__raw_extra = new KaitaiStream(_raw_extra);
+            KaitaiStream _io__raw_extra = new ByteBufferKaitaiStream(_raw_extra);
             this.extra = new Extras(_io__raw_extra, this, _root);
             this.comment = new String(this._io.readBytes(commentLen()), Charset.forName("UTF-8"));
         }
@@ -526,7 +535,7 @@ public class Zip extends KaitaiStruct {
     }
     public static class PkSection extends KaitaiStruct {
         public static PkSection fromFile(String fileName) throws IOException {
-            return new PkSection(new KaitaiStream(fileName));
+            return new PkSection(new ByteBufferKaitaiStream(fileName));
         }
 
         public PkSection(KaitaiStream _io) {
@@ -574,7 +583,7 @@ public class Zip extends KaitaiStruct {
     }
     public static class Extras extends KaitaiStruct {
         public static Extras fromFile(String fileName) throws IOException {
-            return new Extras(new KaitaiStream(fileName));
+            return new Extras(new ByteBufferKaitaiStream(fileName));
         }
 
         public Extras(KaitaiStream _io) {
@@ -593,8 +602,12 @@ public class Zip extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<ExtraField>();
-            while (!this._io.isEof()) {
-                this.entries.add(new ExtraField(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new ExtraField(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<ExtraField> entries;
@@ -606,7 +619,7 @@ public class Zip extends KaitaiStruct {
     }
     public static class LocalFileHeader extends KaitaiStruct {
         public static LocalFileHeader fromFile(String fileName) throws IOException {
-            return new LocalFileHeader(new KaitaiStream(fileName));
+            return new LocalFileHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public LocalFileHeader(KaitaiStream _io) {
@@ -636,7 +649,7 @@ public class Zip extends KaitaiStruct {
             this.extraLen = this._io.readU2le();
             this.fileName = new String(this._io.readBytes(fileNameLen()), Charset.forName("UTF-8"));
             this._raw_extra = this._io.readBytes(extraLen());
-            KaitaiStream _io__raw_extra = new KaitaiStream(_raw_extra);
+            KaitaiStream _io__raw_extra = new ByteBufferKaitaiStream(_raw_extra);
             this.extra = new Extras(_io__raw_extra, this, _root);
         }
         private int version;
@@ -672,7 +685,7 @@ public class Zip extends KaitaiStruct {
     }
     public static class EndOfCentralDir extends KaitaiStruct {
         public static EndOfCentralDir fromFile(String fileName) throws IOException {
-            return new EndOfCentralDir(new KaitaiStream(fileName));
+            return new EndOfCentralDir(new ByteBufferKaitaiStream(fileName));
         }
 
         public EndOfCentralDir(KaitaiStream _io) {

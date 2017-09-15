@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.nio.charset.Charset;
 
 public class Jpeg extends KaitaiStruct {
     public static Jpeg fromFile(String fileName) throws IOException {
-        return new Jpeg(new KaitaiStream(fileName));
+        return new Jpeg(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum ComponentId {
@@ -47,13 +48,17 @@ public class Jpeg extends KaitaiStruct {
     }
     private void _read() {
         this.segments = new ArrayList<Segment>();
-        while (!this._io.isEof()) {
-            this.segments.add(new Segment(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.segments.add(new Segment(this._io, this, _root));
+                i++;
+            }
         }
     }
     public static class Segment extends KaitaiStruct {
         public static Segment fromFile(String fileName) throws IOException {
-            return new Segment(new KaitaiStream(fileName));
+            return new Segment(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum MarkerEnum {
@@ -126,25 +131,25 @@ public class Jpeg extends KaitaiStruct {
                 switch (marker()) {
                 case SOS: {
                     this._raw_data = this._io.readBytes((length() - 2));
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new SegmentSos(_io__raw_data, this, _root);
                     break;
                 }
                 case APP1: {
                     this._raw_data = this._io.readBytes((length() - 2));
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new SegmentApp1(_io__raw_data, this, _root);
                     break;
                 }
                 case SOF0: {
                     this._raw_data = this._io.readBytes((length() - 2));
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new SegmentSof0(_io__raw_data, this, _root);
                     break;
                 }
                 case APP0: {
                     this._raw_data = this._io.readBytes((length() - 2));
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new SegmentApp0(_io__raw_data, this, _root);
                     break;
                 }
@@ -177,7 +182,7 @@ public class Jpeg extends KaitaiStruct {
     }
     public static class SegmentSos extends KaitaiStruct {
         public static SegmentSos fromFile(String fileName) throws IOException {
-            return new SegmentSos(new KaitaiStream(fileName));
+            return new SegmentSos(new ByteBufferKaitaiStream(fileName));
         }
 
         public SegmentSos(KaitaiStream _io) {
@@ -206,7 +211,7 @@ public class Jpeg extends KaitaiStruct {
         }
         public static class Component extends KaitaiStruct {
             public static Component fromFile(String fileName) throws IOException {
-                return new Component(new KaitaiStream(fileName));
+                return new Component(new ByteBufferKaitaiStream(fileName));
             }
 
             public Component(KaitaiStream _io) {
@@ -277,7 +282,7 @@ public class Jpeg extends KaitaiStruct {
     }
     public static class SegmentApp1 extends KaitaiStruct {
         public static SegmentApp1 fromFile(String fileName) throws IOException {
-            return new SegmentApp1(new KaitaiStream(fileName));
+            return new SegmentApp1(new ByteBufferKaitaiStream(fileName));
         }
 
         public SegmentApp1(KaitaiStream _io) {
@@ -314,7 +319,7 @@ public class Jpeg extends KaitaiStruct {
     }
     public static class SegmentSof0 extends KaitaiStruct {
         public static SegmentSof0 fromFile(String fileName) throws IOException {
-            return new SegmentSof0(new KaitaiStream(fileName));
+            return new SegmentSof0(new ByteBufferKaitaiStream(fileName));
         }
 
         public SegmentSof0(KaitaiStream _io) {
@@ -343,7 +348,7 @@ public class Jpeg extends KaitaiStruct {
         }
         public static class Component extends KaitaiStruct {
             public static Component fromFile(String fileName) throws IOException {
-                return new Component(new KaitaiStream(fileName));
+                return new Component(new ByteBufferKaitaiStream(fileName));
             }
 
             public Component(KaitaiStream _io) {
@@ -413,7 +418,7 @@ public class Jpeg extends KaitaiStruct {
     }
     public static class ExifInJpeg extends KaitaiStruct {
         public static ExifInJpeg fromFile(String fileName) throws IOException {
-            return new ExifInJpeg(new KaitaiStream(fileName));
+            return new ExifInJpeg(new ByteBufferKaitaiStream(fileName));
         }
 
         public ExifInJpeg(KaitaiStream _io) {
@@ -433,7 +438,7 @@ public class Jpeg extends KaitaiStruct {
         private void _read() {
             this.extraZero = this._io.ensureFixedContents(new byte[] { 0 });
             this._raw_data = this._io.readBytesFull();
-            KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+            KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
             this.data = new Exif(_io__raw_data);
         }
         private byte[] extraZero;
@@ -449,7 +454,7 @@ public class Jpeg extends KaitaiStruct {
     }
     public static class SegmentApp0 extends KaitaiStruct {
         public static SegmentApp0 fromFile(String fileName) throws IOException {
-            return new SegmentApp0(new KaitaiStream(fileName));
+            return new SegmentApp0(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum DensityUnit {

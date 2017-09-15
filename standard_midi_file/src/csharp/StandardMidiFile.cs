@@ -11,19 +11,21 @@ namespace Kaitai
             return new StandardMidiFile(new KaitaiStream(fileName));
         }
 
-        public StandardMidiFile(KaitaiStream io, KaitaiStruct parent = null, StandardMidiFile root = null) : base(io)
+        public StandardMidiFile(KaitaiStream p__io, KaitaiStruct p__parent = null, StandardMidiFile p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _hdr = new Header(m_io, this, m_root);
             _tracks = new List<Track>((int) (Hdr.QtyTracks));
-            for (var i = 0; i < Hdr.QtyTracks; i++) {
+            for (var i = 0; i < Hdr.QtyTracks; i++)
+            {
                 _tracks.Add(new Track(m_io, this, m_root));
             }
-            }
+        }
         public partial class TrackEvents : KaitaiStruct
         {
             public static TrackEvents FromFile(string fileName)
@@ -31,18 +33,23 @@ namespace Kaitai
                 return new TrackEvents(new KaitaiStream(fileName));
             }
 
-            public TrackEvents(KaitaiStream io, StandardMidiFile.Track parent = null, StandardMidiFile root = null) : base(io)
+            public TrackEvents(KaitaiStream p__io, StandardMidiFile.Track p__parent = null, StandardMidiFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _event = new List<TrackEvent>();
-                while (!m_io.IsEof) {
-                    _event.Add(new TrackEvent(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _event.Add(new TrackEvent(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<TrackEvent> _event;
             private StandardMidiFile m_root;
             private StandardMidiFile.Track m_parent;
@@ -57,15 +64,16 @@ namespace Kaitai
                 return new TrackEvent(new KaitaiStream(fileName));
             }
 
-            public TrackEvent(KaitaiStream io, StandardMidiFile.TrackEvents parent = null, StandardMidiFile root = null) : base(io)
+            public TrackEvent(KaitaiStream p__io, StandardMidiFile.TrackEvents p__parent = null, StandardMidiFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_eventType = false;
                 f_channel = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _vTime = new VlqBase128Be(m_io);
                 _eventHeader = m_io.ReadU1();
                 if (EventHeader == 255) {
@@ -104,7 +112,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private bool f_eventType;
             private int _eventType;
             public int EventType
@@ -119,8 +127,8 @@ namespace Kaitai
                 }
             }
             private bool f_channel;
-            private int _channel;
-            public int Channel
+            private int? _channel;
+            public int? Channel
             {
                 get
                 {
@@ -155,18 +163,19 @@ namespace Kaitai
                 return new PitchBendEvent(new KaitaiStream(fileName));
             }
 
-            public PitchBendEvent(KaitaiStream io, StandardMidiFile.TrackEvent parent = null, StandardMidiFile root = null) : base(io)
+            public PitchBendEvent(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_bendValue = false;
                 f_adjBendValue = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _b1 = m_io.ReadU1();
                 _b2 = m_io.ReadU1();
-                }
+            }
             private bool f_bendValue;
             private int _bendValue;
             public int BendValue
@@ -209,15 +218,16 @@ namespace Kaitai
                 return new ProgramChangeEvent(new KaitaiStream(fileName));
             }
 
-            public ProgramChangeEvent(KaitaiStream io, StandardMidiFile.TrackEvent parent = null, StandardMidiFile root = null) : base(io)
+            public ProgramChangeEvent(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _program = m_io.ReadU1();
-                }
+            }
             private byte _program;
             private StandardMidiFile m_root;
             private StandardMidiFile.TrackEvent m_parent;
@@ -232,16 +242,17 @@ namespace Kaitai
                 return new NoteOnEvent(new KaitaiStream(fileName));
             }
 
-            public NoteOnEvent(KaitaiStream io, StandardMidiFile.TrackEvent parent = null, StandardMidiFile root = null) : base(io)
+            public NoteOnEvent(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _note = m_io.ReadU1();
                 _velocity = m_io.ReadU1();
-                }
+            }
             private byte _note;
             private byte _velocity;
             private StandardMidiFile m_root;
@@ -258,16 +269,17 @@ namespace Kaitai
                 return new PolyphonicPressureEvent(new KaitaiStream(fileName));
             }
 
-            public PolyphonicPressureEvent(KaitaiStream io, StandardMidiFile.TrackEvent parent = null, StandardMidiFile root = null) : base(io)
+            public PolyphonicPressureEvent(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _note = m_io.ReadU1();
                 _pressure = m_io.ReadU1();
-                }
+            }
             private byte _note;
             private byte _pressure;
             private StandardMidiFile m_root;
@@ -284,19 +296,20 @@ namespace Kaitai
                 return new Track(new KaitaiStream(fileName));
             }
 
-            public Track(KaitaiStream io, StandardMidiFile parent = null, StandardMidiFile root = null) : base(io)
+            public Track(KaitaiStream p__io, StandardMidiFile p__parent = null, StandardMidiFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.EnsureFixedContents(new byte[] { 77, 84, 114, 107 });
                 _trackLength = m_io.ReadU4be();
                 __raw_events = m_io.ReadBytes(TrackLength);
                 var io___raw_events = new KaitaiStream(__raw_events);
                 _events = new TrackEvents(io___raw_events, this, m_root);
-                }
+            }
             private byte[] _magic;
             private uint _trackLength;
             private TrackEvents _events;
@@ -317,6 +330,7 @@ namespace Kaitai
                 return new MetaEventBody(new KaitaiStream(fileName));
             }
 
+
             public enum MetaTypeEnum
             {
                 SequenceNumber = 0,
@@ -335,18 +349,18 @@ namespace Kaitai
                 KeySignature = 89,
                 SequencerSpecificEvent = 127,
             }
-
-            public MetaEventBody(KaitaiStream io, StandardMidiFile.TrackEvent parent = null, StandardMidiFile root = null) : base(io)
+            public MetaEventBody(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _metaType = ((MetaTypeEnum) m_io.ReadU1());
                 _len = new VlqBase128Be(m_io);
                 _body = m_io.ReadBytes(Len.Value);
-                }
+            }
             private MetaTypeEnum _metaType;
             private VlqBase128Be _len;
             private byte[] _body;
@@ -365,16 +379,17 @@ namespace Kaitai
                 return new ControllerEvent(new KaitaiStream(fileName));
             }
 
-            public ControllerEvent(KaitaiStream io, StandardMidiFile.TrackEvent parent = null, StandardMidiFile root = null) : base(io)
+            public ControllerEvent(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _controller = m_io.ReadU1();
                 _value = m_io.ReadU1();
-                }
+            }
             private byte _controller;
             private byte _value;
             private StandardMidiFile m_root;
@@ -391,19 +406,20 @@ namespace Kaitai
                 return new Header(new KaitaiStream(fileName));
             }
 
-            public Header(KaitaiStream io, StandardMidiFile parent = null, StandardMidiFile root = null) : base(io)
+            public Header(KaitaiStream p__io, StandardMidiFile p__parent = null, StandardMidiFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.EnsureFixedContents(new byte[] { 77, 84, 104, 100 });
                 _headerLength = m_io.ReadU4be();
                 _format = m_io.ReadU2be();
                 _qtyTracks = m_io.ReadU2be();
                 _division = m_io.ReadS2be();
-                }
+            }
             private byte[] _magic;
             private uint _headerLength;
             private ushort _format;
@@ -426,16 +442,17 @@ namespace Kaitai
                 return new SysexEventBody(new KaitaiStream(fileName));
             }
 
-            public SysexEventBody(KaitaiStream io, StandardMidiFile.TrackEvent parent = null, StandardMidiFile root = null) : base(io)
+            public SysexEventBody(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _len = new VlqBase128Be(m_io);
                 _data = m_io.ReadBytes(Len.Value);
-                }
+            }
             private VlqBase128Be _len;
             private byte[] _data;
             private StandardMidiFile m_root;
@@ -452,16 +469,17 @@ namespace Kaitai
                 return new NoteOffEvent(new KaitaiStream(fileName));
             }
 
-            public NoteOffEvent(KaitaiStream io, StandardMidiFile.TrackEvent parent = null, StandardMidiFile root = null) : base(io)
+            public NoteOffEvent(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _note = m_io.ReadU1();
                 _velocity = m_io.ReadU1();
-                }
+            }
             private byte _note;
             private byte _velocity;
             private StandardMidiFile m_root;
@@ -478,15 +496,16 @@ namespace Kaitai
                 return new ChannelPressureEvent(new KaitaiStream(fileName));
             }
 
-            public ChannelPressureEvent(KaitaiStream io, StandardMidiFile.TrackEvent parent = null, StandardMidiFile root = null) : base(io)
+            public ChannelPressureEvent(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _pressure = m_io.ReadU1();
-                }
+            }
             private byte _pressure;
             private StandardMidiFile m_root;
             private StandardMidiFile.TrackEvent m_parent;

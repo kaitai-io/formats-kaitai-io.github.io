@@ -2,15 +2,17 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class CpioOldLe extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \CpioOldLe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \CpioOldLe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_files = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_files[] = new \CpioOldLe\File($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_files;
@@ -20,8 +22,8 @@ class CpioOldLe extends \Kaitai\Struct\Struct {
 namespace \CpioOldLe;
 
 class File extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \CpioOldLe $parent = null, \CpioOldLe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \CpioOldLe $_parent = null, \CpioOldLe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -59,8 +61,8 @@ class File extends \Kaitai\Struct\Struct {
 namespace \CpioOldLe;
 
 class FileHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \CpioOldLe\File $parent = null, \CpioOldLe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \CpioOldLe\File $_parent = null, \CpioOldLe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -104,8 +106,8 @@ class FileHeader extends \Kaitai\Struct\Struct {
 namespace \CpioOldLe;
 
 class FourByteUnsignedInteger extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \CpioOldLe\FileHeader $parent = null, \CpioOldLe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \CpioOldLe\FileHeader $_parent = null, \CpioOldLe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

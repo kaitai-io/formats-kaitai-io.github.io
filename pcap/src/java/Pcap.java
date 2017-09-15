@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  */
 public class Pcap extends KaitaiStruct {
     public static Pcap fromFile(String fileName) throws IOException {
-        return new Pcap(new KaitaiStream(fileName));
+        return new Pcap(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum Linktype {
@@ -150,8 +151,12 @@ public class Pcap extends KaitaiStruct {
     private void _read() {
         this.hdr = new Header(this._io, this, _root);
         this.packets = new ArrayList<Packet>();
-        while (!this._io.isEof()) {
-            this.packets.add(new Packet(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.packets.add(new Packet(this._io, this, _root));
+                i++;
+            }
         }
     }
 
@@ -160,7 +165,7 @@ public class Pcap extends KaitaiStruct {
      */
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
-            return new Header(new KaitaiStream(fileName));
+            return new Header(new ByteBufferKaitaiStream(fileName));
         }
 
         public Header(KaitaiStream _io) {
@@ -232,7 +237,7 @@ public class Pcap extends KaitaiStruct {
      */
     public static class Packet extends KaitaiStruct {
         public static Packet fromFile(String fileName) throws IOException {
-            return new Packet(new KaitaiStream(fileName));
+            return new Packet(new ByteBufferKaitaiStream(fileName));
         }
 
         public Packet(KaitaiStream _io) {
@@ -257,13 +262,13 @@ public class Pcap extends KaitaiStruct {
             switch (_root.hdr().network()) {
             case PPI: {
                 this._raw_body = this._io.readBytes(inclLen());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new PacketPpi(_io__raw_body);
                 break;
             }
             case ETHERNET: {
                 this._raw_body = this._io.readBytes(inclLen());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new EthernetFrame(_io__raw_body);
                 break;
             }

@@ -14,8 +14,8 @@
  */
 
 class Xwd extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Xwd $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Xwd $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -52,8 +52,8 @@ class Xwd extends \Kaitai\Struct\Struct {
 namespace \Xwd;
 
 class Header extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Xwd $parent = null, \Xwd $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Xwd $_parent = null, \Xwd $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -239,8 +239,8 @@ class Header extends \Kaitai\Struct\Struct {
 namespace \Xwd;
 
 class ColorMapEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Xwd $parent = null, \Xwd $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Xwd $_parent = null, \Xwd $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

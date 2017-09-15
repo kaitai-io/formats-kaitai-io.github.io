@@ -299,8 +299,10 @@ class Zip &lt; Kaitai::Struct::Struct
 
   def _read
     @sections = []
+    i = 0
     while not @_io.eof?
       @sections &lt;&lt; PkSection.new(@_io, self, @_root)
+      i += 1
     end
     self
   end
@@ -357,8 +359,10 @@ class Zip &lt; Kaitai::Struct::Struct
       def _read
         @reserved = @_io.read_u4le
         @attributes = []
+        i = 0
         while not @_io.eof?
           @attributes &lt;&lt; Attribute.new(@_io, self, @_root)
+          i += 1
         end
         self
       end
@@ -566,8 +570,10 @@ class Zip &lt; Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries &lt;&lt; ExtraField.new(@_io, self, @_root)
+        i += 1
       end
       self
     end

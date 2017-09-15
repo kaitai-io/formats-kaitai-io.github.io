@@ -31,6 +31,7 @@ namespace Kaitai
             return new Gif(new KaitaiStream(fileName));
         }
 
+
         public enum BlockType
         {
             Extension = 33,
@@ -44,14 +45,14 @@ namespace Kaitai
             Comment = 254,
             Application = 255,
         }
-
-        public Gif(KaitaiStream io, KaitaiStruct parent = null, Gif root = null) : base(io)
+        public Gif(KaitaiStream p__io, KaitaiStruct p__parent = null, Gif p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _hdr = new Header(m_io, this, m_root);
             _logicalScreenDescriptor = new LogicalScreenDescriptorStruct(m_io, this, m_root);
             if (LogicalScreenDescriptor.HasColorTable) {
@@ -60,10 +61,14 @@ namespace Kaitai
                 _globalColorTable = new ColorTable(io___raw_globalColorTable, this, m_root);
             }
             _blocks = new List<Block>();
-            while (!m_io.IsEof) {
-                _blocks.Add(new Block(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _blocks.Add(new Block(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
 
         /// <remarks>
         /// Reference: <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 22</a>
@@ -75,16 +80,17 @@ namespace Kaitai
                 return new ImageData(new KaitaiStream(fileName));
             }
 
-            public ImageData(KaitaiStream io, Gif.LocalImageDescriptor parent = null, Gif root = null) : base(io)
+            public ImageData(KaitaiStream p__io, Gif.LocalImageDescriptor p__parent = null, Gif p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _lzwMinCodeSize = m_io.ReadU1();
                 _subblocks = new Subblocks(m_io, this, m_root);
-                }
+            }
             private byte _lzwMinCodeSize;
             private Subblocks _subblocks;
             private Gif m_root;
@@ -101,17 +107,18 @@ namespace Kaitai
                 return new ColorTableEntry(new KaitaiStream(fileName));
             }
 
-            public ColorTableEntry(KaitaiStream io, Gif.ColorTable parent = null, Gif root = null) : base(io)
+            public ColorTableEntry(KaitaiStream p__io, Gif.ColorTable p__parent = null, Gif p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _red = m_io.ReadU1();
                 _green = m_io.ReadU1();
                 _blue = m_io.ReadU1();
-                }
+            }
             private byte _red;
             private byte _green;
             private byte _blue;
@@ -134,21 +141,22 @@ namespace Kaitai
                 return new LogicalScreenDescriptorStruct(new KaitaiStream(fileName));
             }
 
-            public LogicalScreenDescriptorStruct(KaitaiStream io, Gif parent = null, Gif root = null) : base(io)
+            public LogicalScreenDescriptorStruct(KaitaiStream p__io, Gif p__parent = null, Gif p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_hasColorTable = false;
                 f_colorTableSize = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _screenWidth = m_io.ReadU2le();
                 _screenHeight = m_io.ReadU2le();
                 _flags = m_io.ReadU1();
                 _bgColorIndex = m_io.ReadU1();
                 _pixelAspectRatio = m_io.ReadU1();
-                }
+            }
             private bool f_hasColorTable;
             private bool _hasColorTable;
             public bool HasColorTable
@@ -197,17 +205,18 @@ namespace Kaitai
                 return new LocalImageDescriptor(new KaitaiStream(fileName));
             }
 
-            public LocalImageDescriptor(KaitaiStream io, Gif.Block parent = null, Gif root = null) : base(io)
+            public LocalImageDescriptor(KaitaiStream p__io, Gif.Block p__parent = null, Gif p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_hasColorTable = false;
                 f_hasInterlace = false;
                 f_hasSortedColorTable = false;
                 f_colorTableSize = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _left = m_io.ReadU2le();
                 _top = m_io.ReadU2le();
                 _width = m_io.ReadU2le();
@@ -219,7 +228,7 @@ namespace Kaitai
                     _localColorTable = new ColorTable(io___raw_localColorTable, this, m_root);
                 }
                 _imageData = new ImageData(m_io, this, m_root);
-                }
+            }
             private bool f_hasColorTable;
             private bool _hasColorTable;
             public bool HasColorTable
@@ -300,13 +309,14 @@ namespace Kaitai
                 return new Block(new KaitaiStream(fileName));
             }
 
-            public Block(KaitaiStream io, Gif parent = null, Gif root = null) : base(io)
+            public Block(KaitaiStream p__io, Gif p__parent = null, Gif p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _blockType = ((Gif.BlockType) m_io.ReadU1());
                 switch (BlockType) {
                 case Gif.BlockType.Extension: {
@@ -318,7 +328,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private BlockType _blockType;
             private KaitaiStruct _body;
             private Gif m_root;
@@ -339,18 +349,23 @@ namespace Kaitai
                 return new ColorTable(new KaitaiStream(fileName));
             }
 
-            public ColorTable(KaitaiStream io, KaitaiStruct parent = null, Gif root = null) : base(io)
+            public ColorTable(KaitaiStream p__io, KaitaiStruct p__parent = null, Gif p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List<ColorTableEntry>();
-                while (!m_io.IsEof) {
-                    _entries.Add(new ColorTableEntry(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new ColorTableEntry(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<ColorTableEntry> _entries;
             private Gif m_root;
             private KaitaiStruct m_parent;
@@ -369,16 +384,17 @@ namespace Kaitai
                 return new Header(new KaitaiStream(fileName));
             }
 
-            public Header(KaitaiStream io, Gif parent = null, Gif root = null) : base(io)
+            public Header(KaitaiStream p__io, Gif p__parent = null, Gif p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.EnsureFixedContents(new byte[] { 71, 73, 70 });
                 _version = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(3));
-                }
+            }
             private byte[] _magic;
             private string _version;
             private Gif m_root;
@@ -399,21 +415,22 @@ namespace Kaitai
                 return new ExtGraphicControl(new KaitaiStream(fileName));
             }
 
-            public ExtGraphicControl(KaitaiStream io, Gif.Extension parent = null, Gif root = null) : base(io)
+            public ExtGraphicControl(KaitaiStream p__io, Gif.Extension p__parent = null, Gif p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_transparentColorFlag = false;
                 f_userInputFlag = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _blockSize = m_io.EnsureFixedContents(new byte[] { 4 });
                 _flags = m_io.ReadU1();
                 _delayTime = m_io.ReadU2le();
                 _transparentIdx = m_io.ReadU1();
                 _terminator = m_io.EnsureFixedContents(new byte[] { 0 });
-                }
+            }
             private bool f_transparentColorFlag;
             private bool _transparentColorFlag;
             public bool TransparentColorFlag
@@ -462,16 +479,17 @@ namespace Kaitai
                 return new Subblock(new KaitaiStream(fileName));
             }
 
-            public Subblock(KaitaiStream io, KaitaiStruct parent = null, Gif root = null) : base(io)
+            public Subblock(KaitaiStream p__io, KaitaiStruct p__parent = null, Gif p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _numBytes = m_io.ReadU1();
                 _bytes = m_io.ReadBytes(NumBytes);
-                }
+            }
             private byte _numBytes;
             private byte[] _bytes;
             private Gif m_root;
@@ -488,23 +506,26 @@ namespace Kaitai
                 return new ExtApplication(new KaitaiStream(fileName));
             }
 
-            public ExtApplication(KaitaiStream io, Gif.Extension parent = null, Gif root = null) : base(io)
+            public ExtApplication(KaitaiStream p__io, Gif.Extension p__parent = null, Gif p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _applicationId = new Subblock(m_io, this, m_root);
                 _subblocks = new List<Subblock>();
                 {
+                    var i = 0;
                     Subblock M_;
                     do {
                         M_ = new Subblock(m_io, this, m_root);
                         _subblocks.Add(M_);
+                        i++;
                     } while (!(M_.NumBytes == 0));
                 }
-                }
+            }
             private Subblock _applicationId;
             private List<Subblock> _subblocks;
             private Gif m_root;
@@ -521,22 +542,25 @@ namespace Kaitai
                 return new Subblocks(new KaitaiStream(fileName));
             }
 
-            public Subblocks(KaitaiStream io, KaitaiStruct parent = null, Gif root = null) : base(io)
+            public Subblocks(KaitaiStream p__io, KaitaiStruct p__parent = null, Gif p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List<Subblock>();
                 {
+                    var i = 0;
                     Subblock M_;
                     do {
                         M_ = new Subblock(m_io, this, m_root);
                         _entries.Add(M_);
+                        i++;
                     } while (!(M_.NumBytes == 0));
                 }
-                }
+            }
             private List<Subblock> _entries;
             private Gif m_root;
             private KaitaiStruct m_parent;
@@ -551,13 +575,14 @@ namespace Kaitai
                 return new Extension(new KaitaiStream(fileName));
             }
 
-            public Extension(KaitaiStream io, Gif.Block parent = null, Gif root = null) : base(io)
+            public Extension(KaitaiStream p__io, Gif.Block p__parent = null, Gif p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _label = ((Gif.ExtensionLabel) m_io.ReadU1());
                 switch (Label) {
                 case Gif.ExtensionLabel.Application: {
@@ -577,7 +602,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private ExtensionLabel _label;
             private KaitaiStruct _body;
             private Gif m_root;

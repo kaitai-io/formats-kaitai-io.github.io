@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -16,7 +17,7 @@ import java.util.Arrays;
  */
 public class Ico extends KaitaiStruct {
     public static Ico fromFile(String fileName) throws IOException {
-        return new Ico(new KaitaiStream(fileName));
+        return new Ico(new ByteBufferKaitaiStream(fileName));
     }
 
     public Ico(KaitaiStream _io) {
@@ -43,7 +44,7 @@ public class Ico extends KaitaiStruct {
     }
     public static class IconDirEntry extends KaitaiStruct {
         public static IconDirEntry fromFile(String fileName) throws IOException {
-            return new IconDirEntry(new KaitaiStream(fileName));
+            return new IconDirEntry(new ByteBufferKaitaiStream(fileName));
         }
 
         public IconDirEntry(KaitaiStream _io) {

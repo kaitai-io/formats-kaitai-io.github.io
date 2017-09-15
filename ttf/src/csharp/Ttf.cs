@@ -12,19 +12,21 @@ namespace Kaitai
             return new Ttf(new KaitaiStream(fileName));
         }
 
-        public Ttf(KaitaiStream io, KaitaiStruct parent = null, Ttf root = null) : base(io)
+        public Ttf(KaitaiStream p__io, KaitaiStruct p__parent = null, Ttf p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _offsetTable = new OffsetTable(m_io, this, m_root);
             _directoryTable = new List<DirTableEntry>((int) (OffsetTable.NumTables));
-            for (var i = 0; i < OffsetTable.NumTables; i++) {
+            for (var i = 0; i < OffsetTable.NumTables; i++)
+            {
                 _directoryTable.Add(new DirTableEntry(m_io, this, m_root));
             }
-            }
+        }
         public partial class Post : KaitaiStruct
         {
             public static Post FromFile(string fileName)
@@ -32,13 +34,14 @@ namespace Kaitai
                 return new Post(new KaitaiStream(fileName));
             }
 
-            public Post(KaitaiStream io, Ttf.DirTableEntry parent = null, Ttf root = null) : base(io)
+            public Post(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _format = new Fixed(m_io, this, m_root);
                 _italicAngle = new Fixed(m_io, this, m_root);
                 _underlinePosition = m_io.ReadS2be();
@@ -51,7 +54,7 @@ namespace Kaitai
                 if ( ((Format.Major == 2) && (Format.Minor == 0)) ) {
                     _format20 = new Format20(m_io, this, m_root);
                 }
-                }
+            }
             public partial class Format20 : KaitaiStruct
             {
                 public static Format20 FromFile(string fileName)
@@ -59,27 +62,31 @@ namespace Kaitai
                     return new Format20(new KaitaiStream(fileName));
                 }
 
-                public Format20(KaitaiStream io, Ttf.Post parent = null, Ttf root = null) : base(io)
+                public Format20(KaitaiStream p__io, Ttf.Post p__parent = null, Ttf p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _numberOfGlyphs = m_io.ReadU2be();
                     _glyphNameIndex = new List<ushort>((int) (NumberOfGlyphs));
-                    for (var i = 0; i < NumberOfGlyphs; i++) {
+                    for (var i = 0; i < NumberOfGlyphs; i++)
+                    {
                         _glyphNameIndex.Add(m_io.ReadU2be());
                     }
                     _glyphNames = new List<PascalString>();
                     {
+                        var i = 0;
                         PascalString M_;
                         do {
                             M_ = new PascalString(m_io, this, m_root);
                             _glyphNames.Add(M_);
+                            i++;
                         } while (!(M_.Length == 0));
                     }
-                    }
+                }
                 public partial class PascalString : KaitaiStruct
                 {
                     public static PascalString FromFile(string fileName)
@@ -87,18 +94,19 @@ namespace Kaitai
                         return new PascalString(new KaitaiStream(fileName));
                     }
 
-                    public PascalString(KaitaiStream io, Ttf.Post.Format20 parent = null, Ttf root = null) : base(io)
+                    public PascalString(KaitaiStream p__io, Ttf.Post.Format20 p__parent = null, Ttf p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _length = m_io.ReadU1();
                         if (Length != 0) {
                             _value = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(Length));
                         }
-                        }
+                    }
                     private byte _length;
                     private string _value;
                     private Ttf m_root;
@@ -151,21 +159,23 @@ namespace Kaitai
                 return new Name(new KaitaiStream(fileName));
             }
 
-            public Name(KaitaiStream io, Ttf.DirTableEntry parent = null, Ttf root = null) : base(io)
+            public Name(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _formatSelector = m_io.ReadU2be();
                 _nameRecordCount = m_io.ReadU2be();
                 _stringStorageOffset = m_io.ReadU2be();
                 _nameRecords = new List<NameRecord>((int) (NameRecordCount));
-                for (var i = 0; i < NameRecordCount; i++) {
+                for (var i = 0; i < NameRecordCount; i++)
+                {
                     _nameRecords.Add(new NameRecord(m_io, this, m_root));
                 }
-                }
+            }
             public partial class NameRecord : KaitaiStruct
             {
                 public static NameRecord FromFile(string fileName)
@@ -173,22 +183,23 @@ namespace Kaitai
                     return new NameRecord(new KaitaiStream(fileName));
                 }
 
-                public NameRecord(KaitaiStream io, Ttf.Name parent = null, Ttf root = null) : base(io)
+                public NameRecord(KaitaiStream p__io, Ttf.Name p__parent = null, Ttf p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     f_asciiValue = false;
                     f_unicodeValue = false;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _platformId = m_io.ReadU2be();
                     _encodingId = m_io.ReadU2be();
                     _languageId = m_io.ReadU2be();
                     _nameId = m_io.ReadU2be();
                     _stringLength = m_io.ReadU2be();
                     _stringOffset = m_io.ReadU2be();
-                    }
+                }
                 private bool f_asciiValue;
                 private string _asciiValue;
                 public string AsciiValue
@@ -260,6 +271,7 @@ namespace Kaitai
                 return new Head(new KaitaiStream(fileName));
             }
 
+
             public enum Flags
             {
                 BaselineAtY0 = 1,
@@ -275,14 +287,14 @@ namespace Kaitai
                 OnlyStronglyLeftToRight = 1,
                 StronglyLeftToRightAndNeutrals = 2,
             }
-
-            public Head(KaitaiStream io, Ttf.DirTableEntry parent = null, Ttf root = null) : base(io)
+            public Head(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _version = new Fixed(m_io, this, m_root);
                 _fontRevision = new Fixed(m_io, this, m_root);
                 _checksumAdjustment = m_io.ReadU4be();
@@ -300,7 +312,7 @@ namespace Kaitai
                 _fontDirectionHint = ((FontDirectionHint) m_io.ReadS2be());
                 _indexToLocFormat = m_io.ReadS2be();
                 _glyphDataFormat = m_io.ReadS2be();
-                }
+            }
             private Fixed _version;
             private Fixed _fontRevision;
             private uint _checksumAdjustment;
@@ -347,15 +359,16 @@ namespace Kaitai
                 return new Prep(new KaitaiStream(fileName));
             }
 
-            public Prep(KaitaiStream io, Ttf.DirTableEntry parent = null, Ttf root = null) : base(io)
+            public Prep(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _instructions = m_io.ReadBytesFull();
-                }
+            }
             private byte[] _instructions;
             private Ttf m_root;
             private Ttf.DirTableEntry m_parent;
@@ -370,13 +383,14 @@ namespace Kaitai
                 return new Hhea(new KaitaiStream(fileName));
             }
 
-            public Hhea(KaitaiStream io, Ttf.DirTableEntry parent = null, Ttf root = null) : base(io)
+            public Hhea(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _version = new Fixed(m_io, this, m_root);
                 _ascender = m_io.ReadS2be();
                 _descender = m_io.ReadS2be();
@@ -390,7 +404,7 @@ namespace Kaitai
                 _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
                 _metricDataFormat = m_io.ReadS2be();
                 _numberOfHmetrics = m_io.ReadU2be();
-                }
+            }
             private Fixed _version;
             private short _ascender;
             private short _descender;
@@ -457,15 +471,16 @@ namespace Kaitai
                 return new Fpgm(new KaitaiStream(fileName));
             }
 
-            public Fpgm(KaitaiStream io, Ttf.DirTableEntry parent = null, Ttf root = null) : base(io)
+            public Fpgm(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _instructions = m_io.ReadBytesFull();
-                }
+            }
             private byte[] _instructions;
             private Ttf m_root;
             private Ttf.DirTableEntry m_parent;
@@ -480,20 +495,22 @@ namespace Kaitai
                 return new Kern(new KaitaiStream(fileName));
             }
 
-            public Kern(KaitaiStream io, Ttf.DirTableEntry parent = null, Ttf root = null) : base(io)
+            public Kern(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _version = m_io.ReadU2be();
                 _subtableCount = m_io.ReadU2be();
                 _subtables = new List<Subtable>((int) (SubtableCount));
-                for (var i = 0; i < SubtableCount; i++) {
+                for (var i = 0; i < SubtableCount; i++)
+                {
                     _subtables.Add(new Subtable(m_io, this, m_root));
                 }
-                }
+            }
             public partial class Subtable : KaitaiStruct
             {
                 public static Subtable FromFile(string fileName)
@@ -501,13 +518,14 @@ namespace Kaitai
                     return new Subtable(new KaitaiStream(fileName));
                 }
 
-                public Subtable(KaitaiStream io, Ttf.Kern parent = null, Ttf root = null) : base(io)
+                public Subtable(KaitaiStream p__io, Ttf.Kern p__parent = null, Ttf p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _version = m_io.ReadU2be();
                     _length = m_io.ReadU2be();
                     _format = m_io.ReadU1();
@@ -520,7 +538,7 @@ namespace Kaitai
                     if (Format == 0) {
                         _format0 = new Format0(m_io, this, m_root);
                     }
-                    }
+                }
                 public partial class Format0 : KaitaiStruct
                 {
                     public static Format0 FromFile(string fileName)
@@ -528,22 +546,24 @@ namespace Kaitai
                         return new Format0(new KaitaiStream(fileName));
                     }
 
-                    public Format0(KaitaiStream io, Ttf.Kern.Subtable parent = null, Ttf root = null) : base(io)
+                    public Format0(KaitaiStream p__io, Ttf.Kern.Subtable p__parent = null, Ttf p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _pairCount = m_io.ReadU2be();
                         _searchRange = m_io.ReadU2be();
                         _entrySelector = m_io.ReadU2be();
                         _rangeShift = m_io.ReadU2be();
                         _kerningPairs = new List<KerningPair>((int) (PairCount));
-                        for (var i = 0; i < PairCount; i++) {
+                        for (var i = 0; i < PairCount; i++)
+                        {
                             _kerningPairs.Add(new KerningPair(m_io, this, m_root));
                         }
-                        }
+                    }
                     public partial class KerningPair : KaitaiStruct
                     {
                         public static KerningPair FromFile(string fileName)
@@ -551,17 +571,18 @@ namespace Kaitai
                             return new KerningPair(new KaitaiStream(fileName));
                         }
 
-                        public KerningPair(KaitaiStream io, Ttf.Kern.Subtable.Format0 parent = null, Ttf root = null) : base(io)
+                        public KerningPair(KaitaiStream p__io, Ttf.Kern.Subtable.Format0 p__parent = null, Ttf p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _left = m_io.ReadU2be();
                             _right = m_io.ReadU2be();
                             _value = m_io.ReadS2be();
-                            }
+                        }
                         private ushort _left;
                         private ushort _right;
                         private short _value;
@@ -629,19 +650,20 @@ namespace Kaitai
                 return new DirTableEntry(new KaitaiStream(fileName));
             }
 
-            public DirTableEntry(KaitaiStream io, Ttf parent = null, Ttf root = null) : base(io)
+            public DirTableEntry(KaitaiStream p__io, Ttf p__parent = null, Ttf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_value = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _tag = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(4));
                 _checksum = m_io.ReadU4be();
                 _offset = m_io.ReadU4be();
                 _length = m_io.ReadU4be();
-                }
+            }
             private bool f_value;
             private object _value;
             public object Value
@@ -762,6 +784,7 @@ namespace Kaitai
                 return new Os2(new KaitaiStream(fileName));
             }
 
+
             public enum WeightClass
             {
                 Thin = 100,
@@ -805,14 +828,14 @@ namespace Kaitai
                 Bold = 32,
                 Regular = 64,
             }
-
-            public Os2(KaitaiStream io, Ttf.DirTableEntry parent = null, Ttf root = null) : base(io)
+            public Os2(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _version = m_io.ReadU2be();
                 _xAvgCharWidth = m_io.ReadS2be();
                 _weightClass = ((WeightClass) m_io.ReadU2be());
@@ -841,13 +864,14 @@ namespace Kaitai
                 _winAscent = m_io.ReadU2be();
                 _winDescent = m_io.ReadU2be();
                 _codePageRange = new CodePageRange(m_io, this, m_root);
-                }
+            }
             public partial class Panose : KaitaiStruct
             {
                 public static Panose FromFile(string fileName)
                 {
                     return new Panose(new KaitaiStream(fileName));
                 }
+
 
                 public enum Weight
                 {
@@ -1001,14 +1025,14 @@ namespace Kaitai
                     LowPointed = 12,
                     LowSerifed = 13,
                 }
-
-                public Panose(KaitaiStream io, Ttf.Os2 parent = null, Ttf root = null) : base(io)
+                public Panose(KaitaiStream p__io, Ttf.Os2 p__parent = null, Ttf p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _familyType = ((FamilyKind) m_io.ReadU1());
                     _serifStyle = ((SerifStyle) m_io.ReadU1());
                     _weight = ((Weight) m_io.ReadU1());
@@ -1019,7 +1043,7 @@ namespace Kaitai
                     _letterForm = ((LetterForm) m_io.ReadU1());
                     _midline = ((Midline) m_io.ReadU1());
                     _xHeight = ((XHeight) m_io.ReadU1());
-                    }
+                }
                 private FamilyKind _familyType;
                 private SerifStyle _serifStyle;
                 private Weight _weight;
@@ -1052,13 +1076,14 @@ namespace Kaitai
                     return new UnicodeRange(new KaitaiStream(fileName));
                 }
 
-                public UnicodeRange(KaitaiStream io, Ttf.Os2 parent = null, Ttf root = null) : base(io)
+                public UnicodeRange(KaitaiStream p__io, Ttf.Os2 p__parent = null, Ttf p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _basicLatin = m_io.ReadBitsInt(1) != 0;
                     _latin1Supplement = m_io.ReadBitsInt(1) != 0;
                     _latinExtendedA = m_io.ReadBitsInt(1) != 0;
@@ -1131,7 +1156,7 @@ namespace Kaitai
                     _specials = m_io.ReadBitsInt(1) != 0;
                     m_io.AlignToByte();
                     _reserved = m_io.ReadBytes(7);
-                    }
+                }
                 private bool _basicLatin;
                 private bool _latin1Supplement;
                 private bool _latinExtendedA;
@@ -1286,13 +1311,14 @@ namespace Kaitai
                     return new CodePageRange(new KaitaiStream(fileName));
                 }
 
-                public CodePageRange(KaitaiStream io, Ttf.Os2 parent = null, Ttf root = null) : base(io)
+                public CodePageRange(KaitaiStream p__io, Ttf.Os2 p__parent = null, Ttf p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _symbolCharacterSet = m_io.ReadBitsInt(1) != 0;
                     _oemCharacterSet = m_io.ReadBitsInt(1) != 0;
                     _macintoshCharacterSet = m_io.ReadBitsInt(1) != 0;
@@ -1329,7 +1355,7 @@ namespace Kaitai
                     _cp866MsDosRussian = m_io.ReadBitsInt(1) != 0;
                     _cp869IbmGreek = m_io.ReadBitsInt(1) != 0;
                     _reservedForOem = m_io.ReadBitsInt(16);
-                    }
+                }
                 private bool _symbolCharacterSet;
                 private bool _oemCharacterSet;
                 private bool _macintoshCharacterSet;
@@ -1579,16 +1605,17 @@ namespace Kaitai
                 return new Fixed(new KaitaiStream(fileName));
             }
 
-            public Fixed(KaitaiStream io, KaitaiStruct parent = null, Ttf root = null) : base(io)
+            public Fixed(KaitaiStream p__io, KaitaiStruct p__parent = null, Ttf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _major = m_io.ReadU2be();
                 _minor = m_io.ReadU2be();
-                }
+            }
             private ushort _major;
             private ushort _minor;
             private Ttf m_root;
@@ -1605,13 +1632,14 @@ namespace Kaitai
                 return new Glyf(new KaitaiStream(fileName));
             }
 
-            public Glyf(KaitaiStream io, Ttf.DirTableEntry parent = null, Ttf root = null) : base(io)
+            public Glyf(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _numberOfContours = m_io.ReadS2be();
                 _xMin = m_io.ReadS2be();
                 _yMin = m_io.ReadS2be();
@@ -1620,7 +1648,7 @@ namespace Kaitai
                 if (NumberOfContours > 0) {
                     _value = new SimpleGlyph(m_io, this, m_root);
                 }
-                }
+            }
             public partial class SimpleGlyph : KaitaiStruct
             {
                 public static SimpleGlyph FromFile(string fileName)
@@ -1628,25 +1656,28 @@ namespace Kaitai
                     return new SimpleGlyph(new KaitaiStream(fileName));
                 }
 
-                public SimpleGlyph(KaitaiStream io, Ttf.Glyf parent = null, Ttf root = null) : base(io)
+                public SimpleGlyph(KaitaiStream p__io, Ttf.Glyf p__parent = null, Ttf p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     f_pointCount = false;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _endPtsOfContours = new List<ushort>((int) (M_Parent.NumberOfContours));
-                    for (var i = 0; i < M_Parent.NumberOfContours; i++) {
+                    for (var i = 0; i < M_Parent.NumberOfContours; i++)
+                    {
                         _endPtsOfContours.Add(m_io.ReadU2be());
                     }
                     _instructionLength = m_io.ReadU2be();
                     _instructions = m_io.ReadBytes(InstructionLength);
                     _flags = new List<Flag>((int) (PointCount));
-                    for (var i = 0; i < PointCount; i++) {
+                    for (var i = 0; i < PointCount; i++)
+                    {
                         _flags.Add(new Flag(m_io, this, m_root));
                     }
-                    }
+                }
                 public partial class Flag : KaitaiStruct
                 {
                     public static Flag FromFile(string fileName)
@@ -1654,13 +1685,14 @@ namespace Kaitai
                         return new Flag(new KaitaiStream(fileName));
                     }
 
-                    public Flag(KaitaiStream io, Ttf.Glyf.SimpleGlyph parent = null, Ttf root = null) : base(io)
+                    public Flag(KaitaiStream p__io, Ttf.Glyf.SimpleGlyph p__parent = null, Ttf p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.ReadBitsInt(2);
                         _yIsSame = m_io.ReadBitsInt(1) != 0;
                         _xIsSame = m_io.ReadBitsInt(1) != 0;
@@ -1672,7 +1704,7 @@ namespace Kaitai
                         if (Repeat) {
                             _repeatValue = m_io.ReadU1();
                         }
-                        }
+                    }
                     private ulong _reserved;
                     private bool _yIsSame;
                     private bool _xIsSame;
@@ -1680,7 +1712,7 @@ namespace Kaitai
                     private bool _yShortVector;
                     private bool _xShortVector;
                     private bool _onCurve;
-                    private byte _repeatValue;
+                    private byte? _repeatValue;
                     private Ttf m_root;
                     private Ttf.Glyf.SimpleGlyph m_parent;
                     public ulong Reserved { get { return _reserved; } }
@@ -1690,7 +1722,7 @@ namespace Kaitai
                     public bool YShortVector { get { return _yShortVector; } }
                     public bool XShortVector { get { return _xShortVector; } }
                     public bool OnCurve { get { return _onCurve; } }
-                    public byte RepeatValue { get { return _repeatValue; } }
+                    public byte? RepeatValue { get { return _repeatValue; } }
                     public Ttf M_Root { get { return m_root; } }
                     public Ttf.Glyf.SimpleGlyph M_Parent { get { return m_parent; } }
                 }
@@ -1748,18 +1780,23 @@ namespace Kaitai
                 return new Cvt(new KaitaiStream(fileName));
             }
 
-            public Cvt(KaitaiStream io, Ttf.DirTableEntry parent = null, Ttf root = null) : base(io)
+            public Cvt(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _fwords = new List<short>();
-                while (!m_io.IsEof) {
-                    _fwords.Add(m_io.ReadS2be());
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _fwords.Add(m_io.ReadS2be());
+                        i++;
+                    }
                 }
-                }
+            }
             private List<short> _fwords;
             private Ttf m_root;
             private Ttf.DirTableEntry m_parent;
@@ -1774,13 +1811,14 @@ namespace Kaitai
                 return new Maxp(new KaitaiStream(fileName));
             }
 
-            public Maxp(KaitaiStream io, Ttf.DirTableEntry parent = null, Ttf root = null) : base(io)
+            public Maxp(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _tableVersionNumber = new Fixed(m_io, this, m_root);
                 _numGlyphs = m_io.ReadU2be();
                 _maxPoints = m_io.ReadU2be();
@@ -1796,7 +1834,7 @@ namespace Kaitai
                 _maxSizeOfInstructions = m_io.ReadU2be();
                 _maxComponentElements = m_io.ReadU2be();
                 _maxComponentDepth = m_io.ReadU2be();
-                }
+            }
             private Fixed _tableVersionNumber;
             private ushort _numGlyphs;
             private ushort _maxPoints;
@@ -1899,19 +1937,20 @@ namespace Kaitai
                 return new OffsetTable(new KaitaiStream(fileName));
             }
 
-            public OffsetTable(KaitaiStream io, Ttf parent = null, Ttf root = null) : base(io)
+            public OffsetTable(KaitaiStream p__io, Ttf p__parent = null, Ttf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _sfntVersion = new Fixed(m_io, this, m_root);
                 _numTables = m_io.ReadU2be();
                 _searchRange = m_io.ReadU2be();
                 _entrySelector = m_io.ReadU2be();
                 _rangeShift = m_io.ReadU2be();
-                }
+            }
             private Fixed _sfntVersion;
             private ushort _numTables;
             private ushort _searchRange;
@@ -1938,20 +1977,22 @@ namespace Kaitai
                 return new Cmap(new KaitaiStream(fileName));
             }
 
-            public Cmap(KaitaiStream io, Ttf.DirTableEntry parent = null, Ttf root = null) : base(io)
+            public Cmap(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _versionNumber = m_io.ReadU2be();
                 _numberOfEncodingTables = m_io.ReadU2be();
                 _tables = new List<SubtableHeader>((int) (NumberOfEncodingTables));
-                for (var i = 0; i < NumberOfEncodingTables; i++) {
+                for (var i = 0; i < NumberOfEncodingTables; i++)
+                {
                     _tables.Add(new SubtableHeader(m_io, this, m_root));
                 }
-                }
+            }
             public partial class SubtableHeader : KaitaiStruct
             {
                 public static SubtableHeader FromFile(string fileName)
@@ -1959,18 +2000,19 @@ namespace Kaitai
                     return new SubtableHeader(new KaitaiStream(fileName));
                 }
 
-                public SubtableHeader(KaitaiStream io, Ttf.Cmap parent = null, Ttf root = null) : base(io)
+                public SubtableHeader(KaitaiStream p__io, Ttf.Cmap p__parent = null, Ttf p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     f_table = false;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _platformId = m_io.ReadU2be();
                     _encodingId = m_io.ReadU2be();
                     _subtableOffset = m_io.ReadU4be();
-                    }
+                }
                 private bool f_table;
                 private Subtable _table;
                 public Subtable Table
@@ -2006,6 +2048,7 @@ namespace Kaitai
                     return new Subtable(new KaitaiStream(fileName));
                 }
 
+
                 public enum SubtableFormat
                 {
                     ByteEncodingTable = 0,
@@ -2013,14 +2056,14 @@ namespace Kaitai
                     SegmentMappingToDeltaValues = 4,
                     TrimmedTableMapping = 6,
                 }
-
-                public Subtable(KaitaiStream io, Ttf.Cmap.SubtableHeader parent = null, Ttf root = null) : base(io)
+                public Subtable(KaitaiStream p__io, Ttf.Cmap.SubtableHeader p__parent = null, Ttf p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _format = ((SubtableFormat) m_io.ReadU2be());
                     _length = m_io.ReadU2be();
                     _version = m_io.ReadU2be();
@@ -2054,7 +2097,7 @@ namespace Kaitai
                         break;
                     }
                     }
-                    }
+                }
                 public partial class ByteEncodingTable : KaitaiStruct
                 {
                     public static ByteEncodingTable FromFile(string fileName)
@@ -2062,15 +2105,16 @@ namespace Kaitai
                         return new ByteEncodingTable(new KaitaiStream(fileName));
                     }
 
-                    public ByteEncodingTable(KaitaiStream io, Ttf.Cmap.Subtable parent = null, Ttf root = null) : base(io)
+                    public ByteEncodingTable(KaitaiStream p__io, Ttf.Cmap.Subtable p__parent = null, Ttf p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _glyphIdArray = m_io.ReadBytes(256);
-                        }
+                    }
                     private byte[] _glyphIdArray;
                     private Ttf m_root;
                     private Ttf.Cmap.Subtable m_parent;
@@ -2085,18 +2129,20 @@ namespace Kaitai
                         return new HighByteMappingThroughTable(new KaitaiStream(fileName));
                     }
 
-                    public HighByteMappingThroughTable(KaitaiStream io, Ttf.Cmap.Subtable parent = null, Ttf root = null) : base(io)
+                    public HighByteMappingThroughTable(KaitaiStream p__io, Ttf.Cmap.Subtable p__parent = null, Ttf p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _subHeaderKeys = new List<ushort>((int) (256));
-                        for (var i = 0; i < 256; i++) {
+                        for (var i = 0; i < 256; i++)
+                        {
                             _subHeaderKeys.Add(m_io.ReadU2be());
                         }
-                        }
+                    }
                     private List<ushort> _subHeaderKeys;
                     private Ttf m_root;
                     private Ttf.Cmap.Subtable m_parent;
@@ -2111,40 +2157,49 @@ namespace Kaitai
                         return new SegmentMappingToDeltaValues(new KaitaiStream(fileName));
                     }
 
-                    public SegmentMappingToDeltaValues(KaitaiStream io, Ttf.Cmap.Subtable parent = null, Ttf root = null) : base(io)
+                    public SegmentMappingToDeltaValues(KaitaiStream p__io, Ttf.Cmap.Subtable p__parent = null, Ttf p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         f_segCount = false;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _segCountX2 = m_io.ReadU2be();
                         _searchRange = m_io.ReadU2be();
                         _entrySelector = m_io.ReadU2be();
                         _rangeShift = m_io.ReadU2be();
                         _endCount = new List<ushort>((int) (SegCount));
-                        for (var i = 0; i < SegCount; i++) {
+                        for (var i = 0; i < SegCount; i++)
+                        {
                             _endCount.Add(m_io.ReadU2be());
                         }
                         _reservedPad = m_io.ReadU2be();
                         _startCount = new List<ushort>((int) (SegCount));
-                        for (var i = 0; i < SegCount; i++) {
+                        for (var i = 0; i < SegCount; i++)
+                        {
                             _startCount.Add(m_io.ReadU2be());
                         }
                         _idDelta = new List<ushort>((int) (SegCount));
-                        for (var i = 0; i < SegCount; i++) {
+                        for (var i = 0; i < SegCount; i++)
+                        {
                             _idDelta.Add(m_io.ReadU2be());
                         }
                         _idRangeOffset = new List<ushort>((int) (SegCount));
-                        for (var i = 0; i < SegCount; i++) {
+                        for (var i = 0; i < SegCount; i++)
+                        {
                             _idRangeOffset.Add(m_io.ReadU2be());
                         }
                         _glyphIdArray = new List<ushort>();
-                        while (!m_io.IsEof) {
-                            _glyphIdArray.Add(m_io.ReadU2be());
+                        {
+                            var i = 0;
+                            while (!m_io.IsEof) {
+                                _glyphIdArray.Add(m_io.ReadU2be());
+                                i++;
+                            }
                         }
-                        }
+                    }
                     private bool f_segCount;
                     private int _segCount;
                     public int SegCount
@@ -2190,20 +2245,22 @@ namespace Kaitai
                         return new TrimmedTableMapping(new KaitaiStream(fileName));
                     }
 
-                    public TrimmedTableMapping(KaitaiStream io, Ttf.Cmap.Subtable parent = null, Ttf root = null) : base(io)
+                    public TrimmedTableMapping(KaitaiStream p__io, Ttf.Cmap.Subtable p__parent = null, Ttf p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _firstCode = m_io.ReadU2be();
                         _entryCount = m_io.ReadU2be();
                         _glyphIdArray = new List<ushort>((int) (EntryCount));
-                        for (var i = 0; i < EntryCount; i++) {
+                        for (var i = 0; i < EntryCount; i++)
+                        {
                             _glyphIdArray.Add(m_io.ReadU2be());
                         }
-                        }
+                    }
                     private ushort _firstCode;
                     private ushort _entryCount;
                     private List<ushort> _glyphIdArray;

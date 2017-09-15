@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -19,16 +18,24 @@ public:
     class entry_t;
     class filename_t;
 
-    heroes_of_might_and_magic_agg_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, heroes_of_might_and_magic_agg_t* p_root = 0);
+    heroes_of_might_and_magic_agg_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, heroes_of_might_and_magic_agg_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~heroes_of_might_and_magic_agg_t();
 
     class entry_t : public kaitai::kstruct {
 
     public:
 
-        entry_t(kaitai::kstream* p_io, heroes_of_might_and_magic_agg_t* p_parent = 0, heroes_of_might_and_magic_agg_t* p_root = 0);
+        entry_t(kaitai::kstream* p__io, heroes_of_might_and_magic_agg_t* p__parent = 0, heroes_of_might_and_magic_agg_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~entry_t();
 
     private:
@@ -59,8 +66,12 @@ public:
 
     public:
 
-        filename_t(kaitai::kstream* p_io, heroes_of_might_and_magic_agg_t* p_parent = 0, heroes_of_might_and_magic_agg_t* p_root = 0);
+        filename_t(kaitai::kstream* p__io, heroes_of_might_and_magic_agg_t* p__parent = 0, heroes_of_might_and_magic_agg_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~filename_t();
 
     private:
@@ -87,7 +98,7 @@ private:
     heroes_of_might_and_magic_agg_t* m__root;
     kaitai::kstruct* m__parent;
     std::vector<std::string>* m__raw_filenames;
-    kaitai::kstream* m__io__raw_filenames;
+    std::vector<kaitai::kstream*>* m__io__raw_filenames;
 
 public:
     uint16_t num_files() const { return m_num_files; }
@@ -95,7 +106,7 @@ public:
     heroes_of_might_and_magic_agg_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
     std::vector<std::string>* _raw_filenames() const { return m__raw_filenames; }
-    kaitai::kstream* _io__raw_filenames() const { return m__io__raw_filenames; }
+    std::vector<kaitai::kstream*>* _io__raw_filenames() const { return m__io__raw_filenames; }
 };
 
 #endif  // HEROES_OF_MIGHT_AND_MAGIC_AGG_H_

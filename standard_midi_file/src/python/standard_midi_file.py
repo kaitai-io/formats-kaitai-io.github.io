@@ -33,8 +33,10 @@ class StandardMidiFile(KaitaiStruct):
 
         def _read(self):
             self.event = []
+            i = 0
             while not self._io.is_eof():
                 self.event.append(self._root.TrackEvent(self._io, self, self._root))
+                i += 1
 
 
 

@@ -11,6 +11,7 @@ namespace Kaitai
             return new QuicktimeMov(new KaitaiStream(fileName));
         }
 
+
         public enum AtomType
         {
             Xtra = 1484026465,
@@ -148,16 +149,16 @@ namespace Kaitai
             Ssss = 1936946035,
             Uvvu = 1970697845,
         }
-
-        public QuicktimeMov(KaitaiStream io, KaitaiStruct parent = null, QuicktimeMov root = null) : base(io)
+        public QuicktimeMov(KaitaiStream p__io, KaitaiStruct p__parent = null, QuicktimeMov p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _atoms = new AtomList(m_io, this, m_root);
-            }
+        }
         public partial class MvhdBody : KaitaiStruct
         {
             public static MvhdBody FromFile(string fileName)
@@ -165,13 +166,14 @@ namespace Kaitai
                 return new MvhdBody(new KaitaiStream(fileName));
             }
 
-            public MvhdBody(KaitaiStream io, QuicktimeMov.Atom parent = null, QuicktimeMov root = null) : base(io)
+            public MvhdBody(KaitaiStream p__io, QuicktimeMov.Atom p__parent = null, QuicktimeMov p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _version = m_io.ReadU1();
                 _flags = m_io.ReadBytes(3);
                 _creationTime = m_io.ReadU4be();
@@ -189,7 +191,7 @@ namespace Kaitai
                 _selectionDuration = m_io.ReadU4be();
                 _currentTime = m_io.ReadU4be();
                 _nextTrackId = m_io.ReadU4be();
-                }
+            }
             private byte _version;
             private byte[] _flags;
             private uint _creationTime;
@@ -288,20 +290,25 @@ namespace Kaitai
                 return new FtypBody(new KaitaiStream(fileName));
             }
 
-            public FtypBody(KaitaiStream io, QuicktimeMov.Atom parent = null, QuicktimeMov root = null) : base(io)
+            public FtypBody(KaitaiStream p__io, QuicktimeMov.Atom p__parent = null, QuicktimeMov p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _majorBrand = ((QuicktimeMov.Brand) m_io.ReadU4be());
                 _minorVersion = m_io.ReadBytes(4);
                 _compatibleBrands = new List<Brand>();
-                while (!m_io.IsEof) {
-                    _compatibleBrands.Add(((QuicktimeMov.Brand) m_io.ReadU4be()));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _compatibleBrands.Add(((QuicktimeMov.Brand) m_io.ReadU4be()));
+                        i++;
+                    }
                 }
-                }
+            }
             private Brand _majorBrand;
             private byte[] _minorVersion;
             private List<Brand> _compatibleBrands;
@@ -320,16 +327,17 @@ namespace Kaitai
                 return new Fixed32(new KaitaiStream(fileName));
             }
 
-            public Fixed32(KaitaiStream io, KaitaiStruct parent = null, QuicktimeMov root = null) : base(io)
+            public Fixed32(KaitaiStream p__io, KaitaiStruct p__parent = null, QuicktimeMov p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _intPart = m_io.ReadS2be();
                 _fracPart = m_io.ReadU2be();
-                }
+            }
             private short _intPart;
             private ushort _fracPart;
             private QuicktimeMov m_root;
@@ -346,16 +354,17 @@ namespace Kaitai
                 return new Fixed16(new KaitaiStream(fileName));
             }
 
-            public Fixed16(KaitaiStream io, QuicktimeMov.MvhdBody parent = null, QuicktimeMov root = null) : base(io)
+            public Fixed16(KaitaiStream p__io, QuicktimeMov.MvhdBody p__parent = null, QuicktimeMov p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _intPart = m_io.ReadS1();
                 _fracPart = m_io.ReadU1();
-                }
+            }
             private sbyte _intPart;
             private byte _fracPart;
             private QuicktimeMov m_root;
@@ -372,14 +381,15 @@ namespace Kaitai
                 return new Atom(new KaitaiStream(fileName));
             }
 
-            public Atom(KaitaiStream io, QuicktimeMov.AtomList parent = null, QuicktimeMov root = null) : base(io)
+            public Atom(KaitaiStream p__io, QuicktimeMov.AtomList p__parent = null, QuicktimeMov p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_len = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _len32 = m_io.ReadU4be();
                 _atomType = ((QuicktimeMov.AtomType) m_io.ReadU4be());
                 if (Len32 == 1) {
@@ -457,7 +467,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private bool f_len;
             private int _len;
             public int Len
@@ -473,14 +483,14 @@ namespace Kaitai
             }
             private uint _len32;
             private AtomType _atomType;
-            private ulong _len64;
+            private ulong? _len64;
             private object _body;
             private QuicktimeMov m_root;
             private QuicktimeMov.AtomList m_parent;
             private byte[] __raw_body;
             public uint Len32 { get { return _len32; } }
             public AtomType AtomType { get { return _atomType; } }
-            public ulong Len64 { get { return _len64; } }
+            public ulong? Len64 { get { return _len64; } }
             public object Body { get { return _body; } }
             public QuicktimeMov M_Root { get { return m_root; } }
             public QuicktimeMov.AtomList M_Parent { get { return m_parent; } }
@@ -493,13 +503,14 @@ namespace Kaitai
                 return new TkhdBody(new KaitaiStream(fileName));
             }
 
-            public TkhdBody(KaitaiStream io, QuicktimeMov.Atom parent = null, QuicktimeMov root = null) : base(io)
+            public TkhdBody(KaitaiStream p__io, QuicktimeMov.Atom p__parent = null, QuicktimeMov p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _version = m_io.ReadU1();
                 _flags = m_io.ReadBytes(3);
                 _creationTime = m_io.ReadU4be();
@@ -515,7 +526,7 @@ namespace Kaitai
                 _matrix = m_io.ReadBytes(36);
                 _width = new Fixed32(m_io, this, m_root);
                 _height = new Fixed32(m_io, this, m_root);
-                }
+            }
             private byte _version;
             private byte[] _flags;
             private uint _creationTime;
@@ -562,18 +573,23 @@ namespace Kaitai
                 return new AtomList(new KaitaiStream(fileName));
             }
 
-            public AtomList(KaitaiStream io, KaitaiStruct parent = null, QuicktimeMov root = null) : base(io)
+            public AtomList(KaitaiStream p__io, KaitaiStruct p__parent = null, QuicktimeMov p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _items = new List<Atom>();
-                while (!m_io.IsEof) {
-                    _items.Add(new Atom(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _items.Add(new Atom(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<Atom> _items;
             private QuicktimeMov m_root;
             private KaitaiStruct m_parent;

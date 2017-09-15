@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Stl extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Stl $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Stl $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -27,8 +27,8 @@ class Stl extends \Kaitai\Struct\Struct {
 namespace \Stl;
 
 class Triangle extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Stl $parent = null, \Stl $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Stl $_parent = null, \Stl $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -49,8 +49,8 @@ class Triangle extends \Kaitai\Struct\Struct {
 namespace \Stl;
 
 class Vec3d extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Stl\Triangle $parent = null, \Stl $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Stl\Triangle $_parent = null, \Stl $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

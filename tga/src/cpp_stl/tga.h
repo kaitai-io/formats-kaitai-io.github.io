@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -39,16 +38,24 @@ public:
         IMAGE_TYPE_ENUM_RLE_BW = 11
     };
 
-    tga_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, tga_t* p_root = 0);
+    tga_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, tga_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~tga_t();
 
     class tga_footer_t : public kaitai::kstruct {
 
     public:
 
-        tga_footer_t(kaitai::kstream* p_io, tga_t* p_parent = 0, tga_t* p_root = 0);
+        tga_footer_t(kaitai::kstream* p__io, tga_t* p__parent = 0, tga_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~tga_footer_t();
 
     private:
@@ -98,8 +105,12 @@ public:
 
     public:
 
-        tga_ext_area_t(kaitai::kstream* p_io, tga_t::tga_footer_t* p_parent = 0, tga_t* p_root = 0);
+        tga_ext_area_t(kaitai::kstream* p__io, tga_t::tga_footer_t* p__parent = 0, tga_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~tga_ext_area_t();
 
     private:

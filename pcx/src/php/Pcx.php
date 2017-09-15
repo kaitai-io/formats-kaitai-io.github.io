@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Pcx extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Pcx $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Pcx $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -33,8 +33,8 @@ class Pcx extends \Kaitai\Struct\Struct {
 namespace \Pcx;
 
 class Header extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Pcx $parent = null, \Pcx $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Pcx $_parent = null, \Pcx $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -104,8 +104,8 @@ class Header extends \Kaitai\Struct\Struct {
 namespace \Pcx;
 
 class TPalette256 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Pcx $parent = null, \Pcx $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Pcx $_parent = null, \Pcx $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -126,8 +126,8 @@ class TPalette256 extends \Kaitai\Struct\Struct {
 namespace \Pcx;
 
 class Rgb extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Pcx\TPalette256 $parent = null, \Pcx $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Pcx\TPalette256 $_parent = null, \Pcx $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

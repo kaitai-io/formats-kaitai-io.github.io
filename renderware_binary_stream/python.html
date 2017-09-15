@@ -195,10 +195,10 @@ section#format-index .row {
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = RenderwareBinaryStream(KaitaiStream(raw))</code></pre>
+data = RenderwareBinaryStream(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -740,8 +740,10 @@ class RenderwareBinaryStream(KaitaiStruct):
             else:
                 self.header = self._io.read_bytes(self.header_size)
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(RenderwareBinaryStream(self._io))
+                i += 1
 
 
 

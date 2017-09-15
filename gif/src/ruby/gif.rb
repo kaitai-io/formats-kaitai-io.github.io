@@ -54,8 +54,10 @@ class Gif < Kaitai::Struct::Struct
       @global_color_table = ColorTable.new(io, self, @_root)
     end
     @blocks = []
+    i = 0
     while not @_io.eof?
       @blocks << Block.new(@_io, self, @_root)
+      i += 1
     end
     self
   end
@@ -204,8 +206,10 @@ class Gif < Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries << ColorTableEntry.new(@_io, self, @_root)
+        i += 1
       end
       self
     end
@@ -284,9 +288,11 @@ class Gif < Kaitai::Struct::Struct
     def _read
       @application_id = Subblock.new(@_io, self, @_root)
       @subblocks = []
+      i = 0
       begin
         _ = Subblock.new(@_io, self, @_root)
         @subblocks << _
+        i += 1
       end until _.num_bytes == 0
       self
     end
@@ -301,9 +307,11 @@ class Gif < Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       begin
         _ = Subblock.new(@_io, self, @_root)
         @entries << _
+        i += 1
       end until _.num_bytes == 0
       self
     end

@@ -210,7 +210,7 @@ data = Ttf.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="ruby">data.offsetTable # => get offset table</code></pre>
+<pre><code class="ruby">data.offset_table # => get offset table</code></pre>
 
     </div>
 </section>
@@ -293,9 +293,11 @@ class Ttf &lt; Kaitai::Struct::Struct
           @glyph_name_index[i] = @_io.read_u2be
         }
         @glyph_names = []
+        i = 0
         begin
           _ = PascalString.new(@_io, self, @_root)
           @glyph_names &lt;&lt; _
+          i += 1
         end until _.length == 0
         self
       end
@@ -1416,8 +1418,10 @@ class Ttf &lt; Kaitai::Struct::Struct
 
     def _read
       @fwords = []
+      i = 0
       while not @_io.eof?
         @fwords &lt;&lt; @_io.read_s2be
+        i += 1
       end
       self
     end
@@ -1667,8 +1671,10 @@ class Ttf &lt; Kaitai::Struct::Struct
             @id_range_offset[i] = @_io.read_u2be
           }
           @glyph_id_array = []
+          i = 0
           while not @_io.eof?
             @glyph_id_array &lt;&lt; @_io.read_u2be
+            i += 1
           end
           self
         end

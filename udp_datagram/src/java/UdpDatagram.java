@@ -1,12 +1,13 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 
 public class UdpDatagram extends KaitaiStruct {
     public static UdpDatagram fromFile(String fileName) throws IOException {
-        return new UdpDatagram(new KaitaiStream(fileName));
+        return new UdpDatagram(new ByteBufferKaitaiStream(fileName));
     }
 
     public UdpDatagram(KaitaiStream _io) {

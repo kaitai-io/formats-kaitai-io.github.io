@@ -147,8 +147,10 @@ class Warcraft2Pud(KaitaiStruct):
 
     def _read(self):
         self.sections = []
+        i = 0
         while not self._io.is_eof():
             self.sections.append(self._root.Section(self._io, self, self._root))
+            i += 1
 
 
     class SectionStartingResource(KaitaiStruct):
@@ -160,8 +162,10 @@ class Warcraft2Pud(KaitaiStruct):
 
         def _read(self):
             self.resources_by_player = []
+            i = 0
             while not self._io.is_eof():
                 self.resources_by_player.append(self._io.read_u2le())
+                i += 1
 
 
 
@@ -228,8 +232,10 @@ class Warcraft2Pud(KaitaiStruct):
 
         def _read(self):
             self.units = []
+            i = 0
             while not self._io.is_eof():
                 self.units.append(self._root.Unit(self._io, self, self._root))
+                i += 1
 
 
 
@@ -298,8 +304,10 @@ class Warcraft2Pud(KaitaiStruct):
 
         def _read(self):
             self.controller_by_player = []
+            i = 0
             while not self._io.is_eof():
                 self.controller_by_player.append(self._root.Controller(self._io.read_u1()))
+                i += 1
 
 
 

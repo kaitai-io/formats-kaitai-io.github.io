@@ -125,9 +125,11 @@ var Tsm = (function() {
         var _pos = this._io.pos;
         this._io.seek(this.offset);
         this._m_entries = []
+        var i = 0;
         do {
           var _ = new IndexHeader(this._io, this, this._root);
           this._m_entries.push(_);
+          i++;
         } while (!(this._io.pos == (this._io.size - 8)));
         this._io.seek(_pos);
         return this._m_entries;

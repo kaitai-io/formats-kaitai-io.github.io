@@ -54,9 +54,11 @@ var Ttf = (function() {
           this.glyphNameIndex[i] = this._io.readU2be();
         }
         this.glyphNames = []
+        var i = 0;
         do {
           var _ = new PascalString(this._io, this, this._root);
           this.glyphNames.push(_);
+          i++;
         } while (!(_.length == 0));
       }
 
@@ -1225,8 +1227,10 @@ var Ttf = (function() {
     }
     Cvt.prototype._read = function() {
       this.fwords = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.fwords.push(this._io.readS2be());
+        i++;
       }
     }
 
@@ -1506,8 +1510,10 @@ var Ttf = (function() {
             this.idRangeOffset[i] = this._io.readU2be();
           }
           this.glyphIdArray = [];
+          var i = 0;
           while (!this._io.isEof()) {
             this.glyphIdArray.push(this._io.readU2be());
+            i++;
           }
         }
         Object.defineProperty(SegmentMappingToDeltaValues.prototype, 'segCount', {

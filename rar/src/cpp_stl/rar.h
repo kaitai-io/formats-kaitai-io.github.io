@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -64,16 +63,24 @@ public:
         METHODS_BEST = 53
     };
 
-    rar_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, rar_t* p_root = 0);
+    rar_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, rar_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~rar_t();
 
     class block_v5_t : public kaitai::kstruct {
 
     public:
 
-        block_v5_t(kaitai::kstream* p_io, rar_t* p_parent = 0, rar_t* p_root = 0);
+        block_v5_t(kaitai::kstream* p__io, rar_t* p__parent = 0, rar_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~block_v5_t();
 
     private:
@@ -95,8 +102,12 @@ public:
 
     public:
 
-        block_t(kaitai::kstream* p_io, rar_t* p_parent = 0, rar_t* p_root = 0);
+        block_t(kaitai::kstream* p__io, rar_t* p__parent = 0, rar_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~block_t();
 
     private:
@@ -137,6 +148,12 @@ public:
 
     private:
         block_file_header_t* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
         std::string m_add_body;
         bool n_add_body;
 
@@ -183,8 +200,12 @@ public:
 
     public:
 
-        block_file_header_t(kaitai::kstream* p_io, rar_t::block_t* p_parent = 0, rar_t* p_root = 0);
+        block_file_header_t(kaitai::kstream* p__io, rar_t::block_t* p__parent = 0, rar_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~block_file_header_t();
 
     private:
@@ -276,8 +297,12 @@ public:
 
     public:
 
-        magic_signature_t(kaitai::kstream* p_io, rar_t* p_parent = 0, rar_t* p_root = 0);
+        magic_signature_t(kaitai::kstream* p__io, rar_t* p__parent = 0, rar_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~magic_signature_t();
 
     private:
@@ -318,8 +343,12 @@ public:
 
     public:
 
-        dos_time_t(kaitai::kstream* p_io, rar_t::block_file_header_t* p_parent = 0, rar_t* p_root = 0);
+        dos_time_t(kaitai::kstream* p__io, rar_t::block_file_header_t* p__parent = 0, rar_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~dos_time_t();
 
     private:
@@ -380,6 +409,12 @@ public:
 private:
     magic_signature_t* m_magic;
     std::vector<kaitai::kstruct*>* m_blocks;
+    bool n_blocks;
+
+public:
+    bool _is_null_blocks() { blocks(); return n_blocks; };
+
+private:
     rar_t* m__root;
     kaitai::kstruct* m__parent;
 

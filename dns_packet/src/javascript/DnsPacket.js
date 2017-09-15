@@ -168,9 +168,11 @@ var DnsPacket = (function() {
     }
     DomainName.prototype._read = function() {
       this.name = []
+      var i = 0;
       do {
         var _ = new Label(this._io, this, this._root);
         this.name.push(_);
+        i++;
       } while (!( ((_.length == 0) || (_.length == 192)) ));
     }
 
@@ -247,7 +249,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_qr !== undefined)
           return this._m_qr;
-        this._m_qr = ((this.flag & 32768) >> 15);
+        this._m_qr = ((this.flag & 32768) >>> 15);
         return this._m_qr;
       }
     });
@@ -255,7 +257,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_ra !== undefined)
           return this._m_ra;
-        this._m_ra = ((this.flag & 128) >> 7);
+        this._m_ra = ((this.flag & 128) >>> 7);
         return this._m_ra;
       }
     });
@@ -263,7 +265,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_tc !== undefined)
           return this._m_tc;
-        this._m_tc = ((this.flag & 512) >> 9);
+        this._m_tc = ((this.flag & 512) >>> 9);
         return this._m_tc;
       }
     });
@@ -271,7 +273,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_rcode !== undefined)
           return this._m_rcode;
-        this._m_rcode = ((this.flag & 15) >> 0);
+        this._m_rcode = ((this.flag & 15) >>> 0);
         return this._m_rcode;
       }
     });
@@ -279,7 +281,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_opcode !== undefined)
           return this._m_opcode;
-        this._m_opcode = ((this.flag & 30720) >> 11);
+        this._m_opcode = ((this.flag & 30720) >>> 11);
         return this._m_opcode;
       }
     });
@@ -287,7 +289,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_aa !== undefined)
           return this._m_aa;
-        this._m_aa = ((this.flag & 1024) >> 10);
+        this._m_aa = ((this.flag & 1024) >>> 10);
         return this._m_aa;
       }
     });
@@ -295,7 +297,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_z !== undefined)
           return this._m_z;
-        this._m_z = ((this.flag & 64) >> 6);
+        this._m_z = ((this.flag & 64) >>> 6);
         return this._m_z;
       }
     });
@@ -303,7 +305,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_rd !== undefined)
           return this._m_rd;
-        this._m_rd = ((this.flag & 256) >> 8);
+        this._m_rd = ((this.flag & 256) >>> 8);
         return this._m_rd;
       }
     });
@@ -311,7 +313,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_cd !== undefined)
           return this._m_cd;
-        this._m_cd = ((this.flag & 16) >> 4);
+        this._m_cd = ((this.flag & 16) >>> 4);
         return this._m_cd;
       }
     });
@@ -319,7 +321,7 @@ var DnsPacket = (function() {
       get: function() {
         if (this._m_ad !== undefined)
           return this._m_ad;
-        this._m_ad = ((this.flag & 32) >> 5);
+        this._m_ad = ((this.flag & 32) >>> 5);
         return this._m_ad;
       }
     });

@@ -32,13 +32,14 @@ namespace Kaitai
             return new S3m(new KaitaiStream(fileName));
         }
 
-        public S3m(KaitaiStream io, KaitaiStruct parent = null, S3m root = null) : base(io)
+        public S3m(KaitaiStream p__io, KaitaiStruct p__parent = null, S3m p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _songName = KaitaiStream.BytesTerminate(m_io.ReadBytes(28), 0, false);
             _magic1 = m_io.EnsureFixedContents(new byte[] { 26 });
             _fileType = m_io.ReadU1();
@@ -61,25 +62,29 @@ namespace Kaitai
             _reserved2 = m_io.ReadBytes(8);
             _ofsSpecial = m_io.ReadU2le();
             _channels = new List<Channel>((int) (32));
-            for (var i = 0; i < 32; i++) {
+            for (var i = 0; i < 32; i++)
+            {
                 _channels.Add(new Channel(m_io, this, m_root));
             }
             _orders = m_io.ReadBytes(NumOrders);
             _instruments = new List<InstrumentPtr>((int) (NumInstruments));
-            for (var i = 0; i < NumInstruments; i++) {
+            for (var i = 0; i < NumInstruments; i++)
+            {
                 _instruments.Add(new InstrumentPtr(m_io, this, m_root));
             }
             _patterns = new List<PatternPtr>((int) (NumPatterns));
-            for (var i = 0; i < NumPatterns; i++) {
+            for (var i = 0; i < NumPatterns; i++)
+            {
                 _patterns.Add(new PatternPtr(m_io, this, m_root));
             }
             if (HasCustomPan == 252) {
                 _channelPans = new List<ChannelPan>((int) (32));
-                for (var i = 0; i < 32; i++) {
+                for (var i = 0; i < 32; i++)
+                {
                     _channelPans.Add(new ChannelPan(m_io, this, m_root));
                 }
             }
-            }
+        }
         public partial class ChannelPan : KaitaiStruct
         {
             public static ChannelPan FromFile(string fileName)
@@ -87,18 +92,19 @@ namespace Kaitai
                 return new ChannelPan(new KaitaiStream(fileName));
             }
 
-            public ChannelPan(KaitaiStream io, S3m parent = null, S3m root = null) : base(io)
+            public ChannelPan(KaitaiStream p__io, S3m p__parent = null, S3m p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _reserved1 = m_io.ReadBitsInt(2);
                 _hasCustomPan = m_io.ReadBitsInt(1) != 0;
                 _reserved2 = m_io.ReadBitsInt(1) != 0;
                 _pan = m_io.ReadBitsInt(4);
-                }
+            }
             private ulong _reserved1;
             private bool _hasCustomPan;
             private bool _reserved2;
@@ -125,13 +131,14 @@ namespace Kaitai
                 return new PatternCell(new KaitaiStream(fileName));
             }
 
-            public PatternCell(KaitaiStream io, S3m.PatternCells parent = null, S3m root = null) : base(io)
+            public PatternCell(KaitaiStream p__io, S3m.PatternCells p__parent = null, S3m p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _hasFx = m_io.ReadBitsInt(1) != 0;
                 _hasVolume = m_io.ReadBitsInt(1) != 0;
                 _hasNoteAndInstrument = m_io.ReadBitsInt(1) != 0;
@@ -152,27 +159,27 @@ namespace Kaitai
                 if (HasFx) {
                     _fxValue = m_io.ReadU1();
                 }
-                }
+            }
             private bool _hasFx;
             private bool _hasVolume;
             private bool _hasNoteAndInstrument;
             private ulong _channelNum;
-            private byte _note;
-            private byte _instrument;
-            private byte _volume;
-            private byte _fxType;
-            private byte _fxValue;
+            private byte? _note;
+            private byte? _instrument;
+            private byte? _volume;
+            private byte? _fxType;
+            private byte? _fxValue;
             private S3m m_root;
             private S3m.PatternCells m_parent;
             public bool HasFx { get { return _hasFx; } }
             public bool HasVolume { get { return _hasVolume; } }
             public bool HasNoteAndInstrument { get { return _hasNoteAndInstrument; } }
             public ulong ChannelNum { get { return _channelNum; } }
-            public byte Note { get { return _note; } }
-            public byte Instrument { get { return _instrument; } }
-            public byte Volume { get { return _volume; } }
-            public byte FxType { get { return _fxType; } }
-            public byte FxValue { get { return _fxValue; } }
+            public byte? Note { get { return _note; } }
+            public byte? Instrument { get { return _instrument; } }
+            public byte? Volume { get { return _volume; } }
+            public byte? FxType { get { return _fxType; } }
+            public byte? FxValue { get { return _fxValue; } }
             public S3m M_Root { get { return m_root; } }
             public S3m.PatternCells M_Parent { get { return m_parent; } }
         }
@@ -183,18 +190,23 @@ namespace Kaitai
                 return new PatternCells(new KaitaiStream(fileName));
             }
 
-            public PatternCells(KaitaiStream io, S3m.Pattern parent = null, S3m root = null) : base(io)
+            public PatternCells(KaitaiStream p__io, S3m.Pattern p__parent = null, S3m p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _cells = new List<PatternCell>();
-                while (!m_io.IsEof) {
-                    _cells.Add(new PatternCell(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _cells.Add(new PatternCell(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<PatternCell> _cells;
             private S3m m_root;
             private S3m.Pattern m_parent;
@@ -209,16 +221,17 @@ namespace Kaitai
                 return new Channel(new KaitaiStream(fileName));
             }
 
-            public Channel(KaitaiStream io, S3m parent = null, S3m root = null) : base(io)
+            public Channel(KaitaiStream p__io, S3m p__parent = null, S3m p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _isDisabled = m_io.ReadBitsInt(1) != 0;
                 _chType = m_io.ReadBitsInt(7);
-                }
+            }
             private bool _isDisabled;
             private ulong _chType;
             private S3m m_root;
@@ -243,17 +256,18 @@ namespace Kaitai
                 return new SwappedU3(new KaitaiStream(fileName));
             }
 
-            public SwappedU3(KaitaiStream io, S3m.Instrument.Sampled parent = null, S3m root = null) : base(io)
+            public SwappedU3(KaitaiStream p__io, S3m.Instrument.Sampled p__parent = null, S3m p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_value = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _hi = m_io.ReadU1();
                 _lo = m_io.ReadU2le();
-                }
+            }
             private bool f_value;
             private int _value;
             public int Value
@@ -283,18 +297,19 @@ namespace Kaitai
                 return new Pattern(new KaitaiStream(fileName));
             }
 
-            public Pattern(KaitaiStream io, S3m.PatternPtr parent = null, S3m root = null) : base(io)
+            public Pattern(KaitaiStream p__io, S3m.PatternPtr p__parent = null, S3m p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _size = m_io.ReadU2le();
                 __raw_body = m_io.ReadBytes((Size - 2));
                 var io___raw_body = new KaitaiStream(__raw_body);
                 _body = new PatternCells(io___raw_body, this, m_root);
-                }
+            }
             private ushort _size;
             private PatternCells _body;
             private S3m m_root;
@@ -313,16 +328,17 @@ namespace Kaitai
                 return new PatternPtr(new KaitaiStream(fileName));
             }
 
-            public PatternPtr(KaitaiStream io, S3m parent = null, S3m root = null) : base(io)
+            public PatternPtr(KaitaiStream p__io, S3m p__parent = null, S3m p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_body = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _paraptr = m_io.ReadU2le();
-                }
+            }
             private bool f_body;
             private Pattern _body;
             public Pattern Body
@@ -353,16 +369,17 @@ namespace Kaitai
                 return new InstrumentPtr(new KaitaiStream(fileName));
             }
 
-            public InstrumentPtr(KaitaiStream io, S3m parent = null, S3m root = null) : base(io)
+            public InstrumentPtr(KaitaiStream p__io, S3m p__parent = null, S3m p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_body = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _paraptr = m_io.ReadU2le();
-                }
+            }
             private bool f_body;
             private Instrument _body;
             public Instrument Body
@@ -393,6 +410,7 @@ namespace Kaitai
                 return new Instrument(new KaitaiStream(fileName));
             }
 
+
             public enum InstTypes
             {
                 Sample = 1,
@@ -403,14 +421,14 @@ namespace Kaitai
                 Cymbal = 6,
                 Hihat = 7,
             }
-
-            public Instrument(KaitaiStream io, S3m.InstrumentPtr parent = null, S3m root = null) : base(io)
+            public Instrument(KaitaiStream p__io, S3m.InstrumentPtr p__parent = null, S3m p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _type = ((InstTypes) m_io.ReadU1());
                 _filename = KaitaiStream.BytesTerminate(m_io.ReadBytes(12), 0, false);
                 switch (Type) {
@@ -427,7 +445,7 @@ namespace Kaitai
                 _reserved2 = m_io.ReadBytes(12);
                 _sampleName = KaitaiStream.BytesTerminate(m_io.ReadBytes(28), 0, false);
                 _magic = m_io.EnsureFixedContents(new byte[] { 83, 67, 82, 83 });
-                }
+            }
             public partial class Sampled : KaitaiStruct
             {
                 public static Sampled FromFile(string fileName)
@@ -435,14 +453,15 @@ namespace Kaitai
                     return new Sampled(new KaitaiStream(fileName));
                 }
 
-                public Sampled(KaitaiStream io, S3m.Instrument parent = null, S3m root = null) : base(io)
+                public Sampled(KaitaiStream p__io, S3m.Instrument p__parent = null, S3m p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     f_sample = false;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _paraptrSample = new SwappedU3(m_io, this, m_root);
                     _lenSample = m_io.ReadU4le();
                     _loopBegin = m_io.ReadU4le();
@@ -451,7 +470,7 @@ namespace Kaitai
                     _reserved1 = m_io.ReadU1();
                     _isPacked = m_io.ReadU1();
                     _flags = m_io.ReadU1();
-                    }
+                }
                 private bool f_sample;
                 private byte[] _sample;
                 public byte[] Sample
@@ -504,16 +523,17 @@ namespace Kaitai
                     return new Adlib(new KaitaiStream(fileName));
                 }
 
-                public Adlib(KaitaiStream io, S3m.Instrument parent = null, S3m root = null) : base(io)
+                public Adlib(KaitaiStream p__io, S3m.Instrument p__parent = null, S3m p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _reserved1 = m_io.EnsureFixedContents(new byte[] { 0, 0, 0 });
                     __unnamed1 = m_io.ReadBytes(16);
-                    }
+                }
                 private byte[] _reserved1;
                 private byte[] __unnamed1;
                 private S3m m_root;

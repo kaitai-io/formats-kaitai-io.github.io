@@ -58,11 +58,13 @@ class Ttf(KaitaiStruct):
                     self.glyph_name_index[i] = self._io.read_u2be()
 
                 self.glyph_names = []
+                i = 0
                 while True:
                     _ = self._root.Post.Format20.PascalString(self._io, self, self._root)
                     self.glyph_names.append(_)
                     if _.length == 0:
                         break
+                    i += 1
 
             class PascalString(KaitaiStruct):
                 def __init__(self, _io, _parent=None, _root=None):
@@ -812,8 +814,10 @@ class Ttf(KaitaiStruct):
 
         def _read(self):
             self.fwords = []
+            i = 0
             while not self._io.is_eof():
                 self.fwords.append(self._io.read_s2be())
+                i += 1
 
 
 
@@ -991,8 +995,10 @@ class Ttf(KaitaiStruct):
                         self.id_range_offset[i] = self._io.read_u2be()
 
                     self.glyph_id_array = []
+                    i = 0
                     while not self._io.is_eof():
                         self.glyph_id_array.append(self._io.read_u2be())
+                        i += 1
 
 
                 @property

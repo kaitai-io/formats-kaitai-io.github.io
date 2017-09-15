@@ -106,8 +106,10 @@ class Bson < Kaitai::Struct::Struct
 
     def _read
       @elements = []
+      i = 0
       while not @_io.eof?
         @elements << Element.new(@_io, self, @_root)
+        i += 1
       end
       self
     end

@@ -25,6 +25,7 @@ namespace Kaitai
             return new Warcraft2Pud(new KaitaiStream(fileName));
         }
 
+
         public enum Controller
         {
             Computer = 1,
@@ -147,19 +148,23 @@ namespace Kaitai
             HumanWall = 103,
             OrcWall = 104,
         }
-
-        public Warcraft2Pud(KaitaiStream io, KaitaiStruct parent = null, Warcraft2Pud root = null) : base(io)
+        public Warcraft2Pud(KaitaiStream p__io, KaitaiStruct p__parent = null, Warcraft2Pud p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _sections = new List<Section>();
-            while (!m_io.IsEof) {
-                _sections.Add(new Section(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _sections.Add(new Section(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
         public partial class SectionStartingResource : KaitaiStruct
         {
             public static SectionStartingResource FromFile(string fileName)
@@ -167,18 +172,23 @@ namespace Kaitai
                 return new SectionStartingResource(new KaitaiStream(fileName));
             }
 
-            public SectionStartingResource(KaitaiStream io, Warcraft2Pud.Section parent = null, Warcraft2Pud root = null) : base(io)
+            public SectionStartingResource(KaitaiStream p__io, Warcraft2Pud.Section p__parent = null, Warcraft2Pud p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _resourcesByPlayer = new List<ushort>();
-                while (!m_io.IsEof) {
-                    _resourcesByPlayer.Add(m_io.ReadU2le());
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _resourcesByPlayer.Add(m_io.ReadU2le());
+                        i++;
+                    }
                 }
-                }
+            }
             private List<ushort> _resourcesByPlayer;
             private Warcraft2Pud m_root;
             private Warcraft2Pud.Section m_parent;
@@ -197,15 +207,16 @@ namespace Kaitai
                 return new SectionEra(new KaitaiStream(fileName));
             }
 
-            public SectionEra(KaitaiStream io, Warcraft2Pud.Section parent = null, Warcraft2Pud root = null) : base(io)
+            public SectionEra(KaitaiStream p__io, Warcraft2Pud.Section p__parent = null, Warcraft2Pud p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _terrain = ((Warcraft2Pud.TerrainType) m_io.ReadU2le());
-                }
+            }
             private TerrainType _terrain;
             private Warcraft2Pud m_root;
             private Warcraft2Pud.Section m_parent;
@@ -224,15 +235,16 @@ namespace Kaitai
                 return new SectionVer(new KaitaiStream(fileName));
             }
 
-            public SectionVer(KaitaiStream io, Warcraft2Pud.Section parent = null, Warcraft2Pud root = null) : base(io)
+            public SectionVer(KaitaiStream p__io, Warcraft2Pud.Section p__parent = null, Warcraft2Pud p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _version = m_io.ReadU2le();
-                }
+            }
             private ushort _version;
             private Warcraft2Pud m_root;
             private Warcraft2Pud.Section m_parent;
@@ -247,16 +259,17 @@ namespace Kaitai
                 return new SectionDim(new KaitaiStream(fileName));
             }
 
-            public SectionDim(KaitaiStream io, Warcraft2Pud.Section parent = null, Warcraft2Pud root = null) : base(io)
+            public SectionDim(KaitaiStream p__io, Warcraft2Pud.Section p__parent = null, Warcraft2Pud p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _x = m_io.ReadU2le();
                 _y = m_io.ReadU2le();
-                }
+            }
             private ushort _x;
             private ushort _y;
             private Warcraft2Pud m_root;
@@ -280,17 +293,18 @@ namespace Kaitai
                 return new SectionType(new KaitaiStream(fileName));
             }
 
-            public SectionType(KaitaiStream io, Warcraft2Pud.Section parent = null, Warcraft2Pud root = null) : base(io)
+            public SectionType(KaitaiStream p__io, Warcraft2Pud.Section p__parent = null, Warcraft2Pud p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.EnsureFixedContents(new byte[] { 87, 65, 82, 50, 32, 77, 65, 80, 0, 0 });
                 _unused = m_io.ReadBytes(2);
                 _idTag = m_io.ReadU4le();
-                }
+            }
             private byte[] _magic;
             private byte[] _unused;
             private uint _idTag;
@@ -317,18 +331,23 @@ namespace Kaitai
                 return new SectionUnit(new KaitaiStream(fileName));
             }
 
-            public SectionUnit(KaitaiStream io, Warcraft2Pud.Section parent = null, Warcraft2Pud root = null) : base(io)
+            public SectionUnit(KaitaiStream p__io, Warcraft2Pud.Section p__parent = null, Warcraft2Pud p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _units = new List<Unit>();
-                while (!m_io.IsEof) {
-                    _units.Add(new Unit(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _units.Add(new Unit(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<Unit> _units;
             private Warcraft2Pud m_root;
             private Warcraft2Pud.Section m_parent;
@@ -343,13 +362,14 @@ namespace Kaitai
                 return new Section(new KaitaiStream(fileName));
             }
 
-            public Section(KaitaiStream io, Warcraft2Pud parent = null, Warcraft2Pud root = null) : base(io)
+            public Section(KaitaiStream p__io, Warcraft2Pud p__parent = null, Warcraft2Pud p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _name = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(4));
                 _size = m_io.ReadU4le();
                 switch (Name) {
@@ -418,7 +438,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private string _name;
             private uint _size;
             private object _body;
@@ -443,18 +463,23 @@ namespace Kaitai
                 return new SectionOwnr(new KaitaiStream(fileName));
             }
 
-            public SectionOwnr(KaitaiStream io, Warcraft2Pud.Section parent = null, Warcraft2Pud root = null) : base(io)
+            public SectionOwnr(KaitaiStream p__io, Warcraft2Pud.Section p__parent = null, Warcraft2Pud p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _controllerByPlayer = new List<Controller>();
-                while (!m_io.IsEof) {
-                    _controllerByPlayer.Add(((Warcraft2Pud.Controller) m_io.ReadU1()));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _controllerByPlayer.Add(((Warcraft2Pud.Controller) m_io.ReadU1()));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<Controller> _controllerByPlayer;
             private Warcraft2Pud m_root;
             private Warcraft2Pud.Section m_parent;
@@ -469,23 +494,24 @@ namespace Kaitai
                 return new Unit(new KaitaiStream(fileName));
             }
 
-            public Unit(KaitaiStream io, Warcraft2Pud.SectionUnit parent = null, Warcraft2Pud root = null) : base(io)
+            public Unit(KaitaiStream p__io, Warcraft2Pud.SectionUnit p__parent = null, Warcraft2Pud p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_resource = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _x = m_io.ReadU2le();
                 _y = m_io.ReadU2le();
                 _uType = ((Warcraft2Pud.UnitType) m_io.ReadU1());
                 _owner = m_io.ReadU1();
                 _options = m_io.ReadU2le();
-                }
+            }
             private bool f_resource;
-            private int _resource;
-            public int Resource
+            private int? _resource;
+            public int? Resource
             {
                 get
                 {

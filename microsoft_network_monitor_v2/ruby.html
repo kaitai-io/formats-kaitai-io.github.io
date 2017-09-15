@@ -224,7 +224,7 @@ data = MicrosoftNetworkMonitorV2.new(Kaitai::Struct::Stream.new(bytes))</code></
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="ruby">data.versionMinor # => Format version (minor), BCDdata.frameTable # => Index that is used to access individual captured frames</code></pre>
+<pre><code class="ruby">data.version_minor # => Format version (minor), BCDdata.frame_table # => Index that is used to access individual captured frames</code></pre>
 
     </div>
 </section>
@@ -411,8 +411,10 @@ class MicrosoftNetworkMonitorV2 &lt; Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries &lt;&lt; FrameIndexEntry.new(@_io, self, @_root)
+        i += 1
       end
       self
     end

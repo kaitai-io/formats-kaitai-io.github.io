@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -151,16 +150,24 @@ public:
         LINKTYPE_ISO_14443 = 264
     };
 
-    packet_ppi_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, packet_ppi_t* p_root = 0);
+    packet_ppi_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, packet_ppi_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~packet_ppi_t();
 
     class packet_ppi_fields_t : public kaitai::kstruct {
 
     public:
 
-        packet_ppi_fields_t(kaitai::kstream* p_io, packet_ppi_t* p_parent = 0, packet_ppi_t* p_root = 0);
+        packet_ppi_fields_t(kaitai::kstream* p__io, packet_ppi_t* p__parent = 0, packet_ppi_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~packet_ppi_fields_t();
 
     private:
@@ -182,8 +189,12 @@ public:
 
     public:
 
-        radio_802_11n_mac_ext_body_t(kaitai::kstream* p_io, packet_ppi_t::packet_ppi_field_t* p_parent = 0, packet_ppi_t* p_root = 0);
+        radio_802_11n_mac_ext_body_t(kaitai::kstream* p__io, packet_ppi_t::packet_ppi_field_t* p__parent = 0, packet_ppi_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~radio_802_11n_mac_ext_body_t();
 
     private:
@@ -207,8 +218,12 @@ public:
 
     public:
 
-        mac_flags_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, packet_ppi_t* p_root = 0);
+        mac_flags_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, packet_ppi_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~mac_flags_t();
 
     private:
@@ -274,8 +289,12 @@ public:
 
     public:
 
-        packet_ppi_header_t(kaitai::kstream* p_io, packet_ppi_t* p_parent = 0, packet_ppi_t* p_root = 0);
+        packet_ppi_header_t(kaitai::kstream* p__io, packet_ppi_t* p__parent = 0, packet_ppi_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~packet_ppi_header_t();
 
     private:
@@ -303,8 +322,12 @@ public:
 
     public:
 
-        radio_802_11_common_body_t(kaitai::kstream* p_io, packet_ppi_t::packet_ppi_field_t* p_parent = 0, packet_ppi_t* p_root = 0);
+        radio_802_11_common_body_t(kaitai::kstream* p__io, packet_ppi_t::packet_ppi_field_t* p__parent = 0, packet_ppi_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~radio_802_11_common_body_t();
 
     private:
@@ -342,14 +365,24 @@ public:
 
     public:
 
-        packet_ppi_field_t(kaitai::kstream* p_io, packet_ppi_t::packet_ppi_fields_t* p_parent = 0, packet_ppi_t* p_root = 0);
+        packet_ppi_field_t(kaitai::kstream* p__io, packet_ppi_t::packet_ppi_fields_t* p__parent = 0, packet_ppi_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~packet_ppi_field_t();
 
     private:
         pfh_type_t m_pfh_type;
         uint16_t m_pfh_datalen;
         kaitai::kstruct* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
         packet_ppi_t* m__root;
         packet_ppi_t::packet_ppi_fields_t* m__parent;
         std::string m__raw_body;
@@ -375,16 +408,24 @@ public:
         class channel_flags_t;
         class signal_noise_t;
 
-        radio_802_11n_mac_phy_ext_body_t(kaitai::kstream* p_io, packet_ppi_t::packet_ppi_field_t* p_parent = 0, packet_ppi_t* p_root = 0);
+        radio_802_11n_mac_phy_ext_body_t(kaitai::kstream* p__io, packet_ppi_t::packet_ppi_field_t* p__parent = 0, packet_ppi_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~radio_802_11n_mac_phy_ext_body_t();
 
         class channel_flags_t : public kaitai::kstruct {
 
         public:
 
-            channel_flags_t(kaitai::kstream* p_io, packet_ppi_t::radio_802_11n_mac_phy_ext_body_t* p_parent = 0, packet_ppi_t* p_root = 0);
+            channel_flags_t(kaitai::kstream* p__io, packet_ppi_t::radio_802_11n_mac_phy_ext_body_t* p__parent = 0, packet_ppi_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~channel_flags_t();
 
         private:
@@ -450,8 +491,12 @@ public:
 
         public:
 
-            signal_noise_t(kaitai::kstream* p_io, packet_ppi_t::radio_802_11n_mac_phy_ext_body_t* p_parent = 0, packet_ppi_t* p_root = 0);
+            signal_noise_t(kaitai::kstream* p__io, packet_ppi_t::radio_802_11n_mac_phy_ext_body_t* p__parent = 0, packet_ppi_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~signal_noise_t();
 
         private:
@@ -548,6 +593,12 @@ private:
     packet_ppi_header_t* m_header;
     packet_ppi_fields_t* m_fields;
     kaitai::kstruct* m_body;
+    bool n_body;
+
+public:
+    bool _is_null_body() { body(); return n_body; };
+
+private:
     packet_ppi_t* m__root;
     kaitai::kstruct* m__parent;
     std::string m__raw_fields;

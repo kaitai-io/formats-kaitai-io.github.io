@@ -274,23 +274,26 @@ namespace Kaitai
             return new GenmidiOp2(new KaitaiStream(fileName));
         }
 
-        public GenmidiOp2(KaitaiStream io, KaitaiStruct parent = null, GenmidiOp2 root = null) : base(io)
+        public GenmidiOp2(KaitaiStream p__io, KaitaiStruct p__parent = null, GenmidiOp2 p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _magic = m_io.EnsureFixedContents(new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 });
             _instruments = new List&lt;InstrumentEntry&gt;((int) (175));
-            for (var i = 0; i &lt; 175; i++) {
+            for (var i = 0; i &lt; 175; i++)
+            {
                 _instruments.Add(new InstrumentEntry(m_io, this, m_root));
             }
             _instrumentNames = new List&lt;string&gt;((int) (175));
-            for (var i = 0; i &lt; 175; i++) {
+            for (var i = 0; i &lt; 175; i++)
+            {
                 _instrumentNames.Add(System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(KaitaiStream.BytesTerminate(KaitaiStream.BytesStripRight(m_io.ReadBytes(32), 0), 0, false)));
             }
-            }
+        }
         public partial class InstrumentEntry : KaitaiStruct
         {
             public static InstrumentEntry FromFile(string fileName)
@@ -298,21 +301,23 @@ namespace Kaitai
                 return new InstrumentEntry(new KaitaiStream(fileName));
             }
 
-            public InstrumentEntry(KaitaiStream io, GenmidiOp2 parent = null, GenmidiOp2 root = null) : base(io)
+            public InstrumentEntry(KaitaiStream p__io, GenmidiOp2 p__parent = null, GenmidiOp2 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _flags = m_io.ReadU2le();
                 _finetune = m_io.ReadU1();
                 _note = m_io.ReadU1();
                 _instruments = new List&lt;Instrument&gt;((int) (2));
-                for (var i = 0; i &lt; 2; i++) {
+                for (var i = 0; i &lt; 2; i++)
+                {
                     _instruments.Add(new Instrument(m_io, this, m_root));
                 }
-                }
+            }
             private ushort _flags;
             private byte _finetune;
             private byte _note;
@@ -337,19 +342,20 @@ namespace Kaitai
                 return new Instrument(new KaitaiStream(fileName));
             }
 
-            public Instrument(KaitaiStream io, GenmidiOp2.InstrumentEntry parent = null, GenmidiOp2 root = null) : base(io)
+            public Instrument(KaitaiStream p__io, GenmidiOp2.InstrumentEntry p__parent = null, GenmidiOp2 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _op1 = new OpSettings(m_io, this, m_root);
                 _feedback = m_io.ReadU1();
                 _op2 = new OpSettings(m_io, this, m_root);
                 _unused = m_io.ReadU1();
                 _baseNote = m_io.ReadS2le();
-                }
+            }
             private OpSettings _op1;
             private byte _feedback;
             private OpSettings _op2;
@@ -384,20 +390,21 @@ namespace Kaitai
                 return new OpSettings(new KaitaiStream(fileName));
             }
 
-            public OpSettings(KaitaiStream io, GenmidiOp2.Instrument parent = null, GenmidiOp2 root = null) : base(io)
+            public OpSettings(KaitaiStream p__io, GenmidiOp2.Instrument p__parent = null, GenmidiOp2 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _tremVibr = m_io.ReadU1();
                 _attDec = m_io.ReadU1();
                 _sustRel = m_io.ReadU1();
                 _wave = m_io.ReadU1();
                 _scale = m_io.ReadU1();
                 _level = m_io.ReadU1();
-                }
+            }
             private byte _tremVibr;
             private byte _attDec;
             private byte _sustRel;

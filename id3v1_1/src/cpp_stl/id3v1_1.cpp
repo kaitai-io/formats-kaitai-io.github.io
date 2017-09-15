@@ -4,8 +4,8 @@
 
 
 
-id3v1_1_t::id3v1_1_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, id3v1_1_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+id3v1_1_t::id3v1_1_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, id3v1_1_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_id3v1_tag = false;
     _read();
@@ -20,9 +20,9 @@ id3v1_1_t::~id3v1_1_t() {
     }
 }
 
-id3v1_1_t::id3_v1_1_tag_t::id3_v1_1_tag_t(kaitai::kstream *p_io, id3v1_1_t* p_parent, id3v1_1_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+id3v1_1_t::id3_v1_1_tag_t::id3_v1_1_tag_t(kaitai::kstream* p__io, id3v1_1_t* p__parent, id3v1_1_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

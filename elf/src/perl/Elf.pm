@@ -352,13 +352,13 @@ sub strings {
     my ($self) = @_;
     return $self->{strings} if ($self->{strings});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek($self->section_headers()[$self->section_names_idx()]->offset());
+    $self->{_io}->seek(@{$self->section_headers()}[$self->section_names_idx()]->offset());
     if ($self->{_is_le}) {
-        $self->{_raw_strings} = $self->{_io}->read_bytes($self->section_headers()[$self->section_names_idx()]->size());
+        $self->{_raw_strings} = $self->{_io}->read_bytes(@{$self->section_headers()}[$self->section_names_idx()]->size());
         my $io__raw_strings = IO::KaitaiStruct::Stream->new($self->{_raw_strings});
         $self->{strings} = Elf::EndianElf::StringsStruct->new($io__raw_strings, $self, $self->{_root}, $self->{_is_le});
     } else {
-        $self->{_raw_strings} = $self->{_io}->read_bytes($self->section_headers()[$self->section_names_idx()]->size());
+        $self->{_raw_strings} = $self->{_io}->read_bytes(@{$self->section_headers()}[$self->section_names_idx()]->size());
         my $io__raw_strings = IO::KaitaiStruct::Stream->new($self->{_raw_strings});
         $self->{strings} = Elf::EndianElf::StringsStruct->new($io__raw_strings, $self, $self->{_root}, $self->{_is_le});
     }

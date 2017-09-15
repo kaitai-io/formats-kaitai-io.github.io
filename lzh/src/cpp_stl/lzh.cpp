@@ -4,16 +4,20 @@
 
 
 
-lzh_t::lzh_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, lzh_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+lzh_t::lzh_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, lzh_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
 
 void lzh_t::_read() {
     m_entries = new std::vector<record_t*>();
-    while (!m__io->is_eof()) {
-        m_entries->push_back(new record_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new record_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -24,9 +28,9 @@ lzh_t::~lzh_t() {
     delete m_entries;
 }
 
-lzh_t::record_t::record_t(kaitai::kstream *p_io, lzh_t* p_parent, lzh_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+lzh_t::record_t::record_t(kaitai::kstream* p__io, lzh_t* p__parent, lzh_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -45,9 +49,9 @@ lzh_t::record_t::~record_t() {
     }
 }
 
-lzh_t::file_record_t::file_record_t(kaitai::kstream *p_io, lzh_t::record_t* p_parent, lzh_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+lzh_t::file_record_t::file_record_t(kaitai::kstream* p__io, lzh_t::record_t* p__parent, lzh_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -66,11 +70,13 @@ void lzh_t::file_record_t::_read() {
 lzh_t::file_record_t::~file_record_t() {
     delete m__io__raw_header;
     delete m_header;
+    if (!n_file_uncompr_crc16) {
+    }
 }
 
-lzh_t::header_t::header_t(kaitai::kstream *p_io, lzh_t::file_record_t* p_parent, lzh_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+lzh_t::header_t::header_t(kaitai::kstream* p__io, lzh_t::file_record_t* p__parent, lzh_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -105,11 +111,21 @@ void lzh_t::header_t::_read() {
 
 lzh_t::header_t::~header_t() {
     delete m_header1;
+    if (!n_filename_len) {
+    }
+    if (!n_filename) {
+    }
+    if (!n_file_uncompr_crc16) {
+    }
+    if (!n_os) {
+    }
+    if (!n_ext_header_size) {
+    }
 }
 
-lzh_t::header1_t::header1_t(kaitai::kstream *p_io, lzh_t::header_t* p_parent, lzh_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+lzh_t::header1_t::header1_t(kaitai::kstream* p__io, lzh_t::header_t* p__parent, lzh_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

@@ -15,20 +15,21 @@ namespace Kaitai
             return new MicrosoftPe(new KaitaiStream(fileName));
         }
 
+
         public enum PeFormat
         {
             RomImage = 263,
             Pe32 = 267,
             Pe32Plus = 523,
         }
-
-        public MicrosoftPe(KaitaiStream io, KaitaiStruct parent = null, MicrosoftPe root = null) : base(io)
+        public MicrosoftPe(KaitaiStream p__io, KaitaiStruct p__parent = null, MicrosoftPe p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _mz1 = new MzPlaceholder(m_io, this, m_root);
             _mz2 = m_io.ReadBytes((Mz1.HeaderSize - 64));
             _peSignature = m_io.EnsureFixedContents(new byte[] { 80, 69, 0, 0 });
@@ -37,16 +38,18 @@ namespace Kaitai
             var io___raw_optionalHdr = new KaitaiStream(__raw_optionalHdr);
             _optionalHdr = new OptionalHeader(io___raw_optionalHdr, this, m_root);
             _sections = new List<Section>((int) (CoffHdr.NumberOfSections));
-            for (var i = 0; i < CoffHdr.NumberOfSections; i++) {
+            for (var i = 0; i < CoffHdr.NumberOfSections; i++)
+            {
                 _sections.Add(new Section(m_io, this, m_root));
             }
-            }
+        }
         public partial class OptionalHeaderWindows : KaitaiStruct
         {
             public static OptionalHeaderWindows FromFile(string fileName)
             {
                 return new OptionalHeaderWindows(new KaitaiStream(fileName));
             }
+
 
             public enum SubsystemEnum
             {
@@ -62,14 +65,14 @@ namespace Kaitai
                 EfiRom = 13,
                 Xbox = 14,
             }
-
-            public OptionalHeaderWindows(KaitaiStream io, MicrosoftPe.OptionalHeader parent = null, MicrosoftPe root = null) : base(io)
+            public OptionalHeaderWindows(KaitaiStream p__io, MicrosoftPe.OptionalHeader p__parent = null, MicrosoftPe p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 if (M_Parent.Std.Format == MicrosoftPe.PeFormat.Pe32) {
                     _imageBase32 = m_io.ReadU4le();
                 }
@@ -116,9 +119,9 @@ namespace Kaitai
                 }
                 _loaderFlags = m_io.ReadU4le();
                 _numberOfRvaAndSizes = m_io.ReadU4le();
-                }
-            private uint _imageBase32;
-            private ulong _imageBase64;
+            }
+            private uint? _imageBase32;
+            private ulong? _imageBase64;
             private uint _sectionAlignment;
             private uint _fileAlignment;
             private ushort _majorOperatingSystemVersion;
@@ -133,20 +136,20 @@ namespace Kaitai
             private uint _checkSum;
             private SubsystemEnum _subsystem;
             private ushort _dllCharacteristics;
-            private uint _sizeOfStackReserve32;
-            private ulong _sizeOfStackReserve64;
-            private uint _sizeOfStackCommit32;
-            private ulong _sizeOfStackCommit64;
-            private uint _sizeOfHeapReserve32;
-            private ulong _sizeOfHeapReserve64;
-            private uint _sizeOfHeapCommit32;
-            private ulong _sizeOfHeapCommit64;
+            private uint? _sizeOfStackReserve32;
+            private ulong? _sizeOfStackReserve64;
+            private uint? _sizeOfStackCommit32;
+            private ulong? _sizeOfStackCommit64;
+            private uint? _sizeOfHeapReserve32;
+            private ulong? _sizeOfHeapReserve64;
+            private uint? _sizeOfHeapCommit32;
+            private ulong? _sizeOfHeapCommit64;
             private uint _loaderFlags;
             private uint _numberOfRvaAndSizes;
             private MicrosoftPe m_root;
             private MicrosoftPe.OptionalHeader m_parent;
-            public uint ImageBase32 { get { return _imageBase32; } }
-            public ulong ImageBase64 { get { return _imageBase64; } }
+            public uint? ImageBase32 { get { return _imageBase32; } }
+            public ulong? ImageBase64 { get { return _imageBase64; } }
             public uint SectionAlignment { get { return _sectionAlignment; } }
             public uint FileAlignment { get { return _fileAlignment; } }
             public ushort MajorOperatingSystemVersion { get { return _majorOperatingSystemVersion; } }
@@ -161,14 +164,14 @@ namespace Kaitai
             public uint CheckSum { get { return _checkSum; } }
             public SubsystemEnum Subsystem { get { return _subsystem; } }
             public ushort DllCharacteristics { get { return _dllCharacteristics; } }
-            public uint SizeOfStackReserve32 { get { return _sizeOfStackReserve32; } }
-            public ulong SizeOfStackReserve64 { get { return _sizeOfStackReserve64; } }
-            public uint SizeOfStackCommit32 { get { return _sizeOfStackCommit32; } }
-            public ulong SizeOfStackCommit64 { get { return _sizeOfStackCommit64; } }
-            public uint SizeOfHeapReserve32 { get { return _sizeOfHeapReserve32; } }
-            public ulong SizeOfHeapReserve64 { get { return _sizeOfHeapReserve64; } }
-            public uint SizeOfHeapCommit32 { get { return _sizeOfHeapCommit32; } }
-            public ulong SizeOfHeapCommit64 { get { return _sizeOfHeapCommit64; } }
+            public uint? SizeOfStackReserve32 { get { return _sizeOfStackReserve32; } }
+            public ulong? SizeOfStackReserve64 { get { return _sizeOfStackReserve64; } }
+            public uint? SizeOfStackCommit32 { get { return _sizeOfStackCommit32; } }
+            public ulong? SizeOfStackCommit64 { get { return _sizeOfStackCommit64; } }
+            public uint? SizeOfHeapReserve32 { get { return _sizeOfHeapReserve32; } }
+            public ulong? SizeOfHeapReserve64 { get { return _sizeOfHeapReserve64; } }
+            public uint? SizeOfHeapCommit32 { get { return _sizeOfHeapCommit32; } }
+            public ulong? SizeOfHeapCommit64 { get { return _sizeOfHeapCommit64; } }
             public uint LoaderFlags { get { return _loaderFlags; } }
             public uint NumberOfRvaAndSizes { get { return _numberOfRvaAndSizes; } }
             public MicrosoftPe M_Root { get { return m_root; } }
@@ -181,13 +184,14 @@ namespace Kaitai
                 return new OptionalHeaderDataDirs(new KaitaiStream(fileName));
             }
 
-            public OptionalHeaderDataDirs(KaitaiStream io, MicrosoftPe.OptionalHeader parent = null, MicrosoftPe root = null) : base(io)
+            public OptionalHeaderDataDirs(KaitaiStream p__io, MicrosoftPe.OptionalHeader p__parent = null, MicrosoftPe p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _exportTable = new DataDir(m_io, this, m_root);
                 _importTable = new DataDir(m_io, this, m_root);
                 _resourceTable = new DataDir(m_io, this, m_root);
@@ -203,7 +207,7 @@ namespace Kaitai
                 _iat = new DataDir(m_io, this, m_root);
                 _delayImportDescriptor = new DataDir(m_io, this, m_root);
                 _clrRuntimeHeader = new DataDir(m_io, this, m_root);
-                }
+            }
             private DataDir _exportTable;
             private DataDir _importTable;
             private DataDir _resourceTable;
@@ -246,16 +250,17 @@ namespace Kaitai
                 return new DataDir(new KaitaiStream(fileName));
             }
 
-            public DataDir(KaitaiStream io, MicrosoftPe.OptionalHeaderDataDirs parent = null, MicrosoftPe root = null) : base(io)
+            public DataDir(KaitaiStream p__io, MicrosoftPe.OptionalHeaderDataDirs p__parent = null, MicrosoftPe p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _virtualAddress = m_io.ReadU4le();
                 _size = m_io.ReadU4le();
-                }
+            }
             private uint _virtualAddress;
             private uint _size;
             private MicrosoftPe m_root;
@@ -272,17 +277,18 @@ namespace Kaitai
                 return new OptionalHeader(new KaitaiStream(fileName));
             }
 
-            public OptionalHeader(KaitaiStream io, MicrosoftPe parent = null, MicrosoftPe root = null) : base(io)
+            public OptionalHeader(KaitaiStream p__io, MicrosoftPe p__parent = null, MicrosoftPe p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _std = new OptionalHeaderStd(m_io, this, m_root);
                 _windows = new OptionalHeaderWindows(m_io, this, m_root);
                 _dataDirs = new OptionalHeaderDataDirs(m_io, this, m_root);
-                }
+            }
             private OptionalHeaderStd _std;
             private OptionalHeaderWindows _windows;
             private OptionalHeaderDataDirs _dataDirs;
@@ -301,14 +307,15 @@ namespace Kaitai
                 return new Section(new KaitaiStream(fileName));
             }
 
-            public Section(KaitaiStream io, MicrosoftPe parent = null, MicrosoftPe root = null) : base(io)
+            public Section(KaitaiStream p__io, MicrosoftPe p__parent = null, MicrosoftPe p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_body = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _name = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 0));
                 _virtualSize = m_io.ReadU4le();
                 _virtualAddress = m_io.ReadU4le();
@@ -319,7 +326,7 @@ namespace Kaitai
                 _numberOfRelocations = m_io.ReadU2le();
                 _numberOfLinenumbers = m_io.ReadU2le();
                 _characteristics = m_io.ReadU4le();
-                }
+            }
             private bool f_body;
             private byte[] _body;
             public byte[] Body
@@ -368,17 +375,18 @@ namespace Kaitai
                 return new MzPlaceholder(new KaitaiStream(fileName));
             }
 
-            public MzPlaceholder(KaitaiStream io, MicrosoftPe parent = null, MicrosoftPe root = null) : base(io)
+            public MzPlaceholder(KaitaiStream p__io, MicrosoftPe p__parent = null, MicrosoftPe p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.EnsureFixedContents(new byte[] { 77, 90 });
                 _data1 = m_io.ReadBytes(58);
                 _headerSize = m_io.ReadU4le();
-                }
+            }
             private byte[] _magic;
             private byte[] _data1;
             private uint _headerSize;
@@ -397,13 +405,14 @@ namespace Kaitai
                 return new OptionalHeaderStd(new KaitaiStream(fileName));
             }
 
-            public OptionalHeaderStd(KaitaiStream io, MicrosoftPe.OptionalHeader parent = null, MicrosoftPe root = null) : base(io)
+            public OptionalHeaderStd(KaitaiStream p__io, MicrosoftPe.OptionalHeader p__parent = null, MicrosoftPe p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _format = ((MicrosoftPe.PeFormat) m_io.ReadU2le());
                 _majorLinkerVersion = m_io.ReadU1();
                 _minorLinkerVersion = m_io.ReadU1();
@@ -415,7 +424,7 @@ namespace Kaitai
                 if (Format == MicrosoftPe.PeFormat.Pe32) {
                     _baseOfData = m_io.ReadU4le();
                 }
-                }
+            }
             private PeFormat _format;
             private byte _majorLinkerVersion;
             private byte _minorLinkerVersion;
@@ -424,7 +433,7 @@ namespace Kaitai
             private uint _sizeOfUninitializedData;
             private uint _addressOfEntryPoint;
             private uint _baseOfCode;
-            private uint _baseOfData;
+            private uint? _baseOfData;
             private MicrosoftPe m_root;
             private MicrosoftPe.OptionalHeader m_parent;
             public PeFormat Format { get { return _format; } }
@@ -435,7 +444,7 @@ namespace Kaitai
             public uint SizeOfUninitializedData { get { return _sizeOfUninitializedData; } }
             public uint AddressOfEntryPoint { get { return _addressOfEntryPoint; } }
             public uint BaseOfCode { get { return _baseOfCode; } }
-            public uint BaseOfData { get { return _baseOfData; } }
+            public uint? BaseOfData { get { return _baseOfData; } }
             public MicrosoftPe M_Root { get { return m_root; } }
             public MicrosoftPe.OptionalHeader M_Parent { get { return m_parent; } }
         }
@@ -449,6 +458,7 @@ namespace Kaitai
             {
                 return new CoffHeader(new KaitaiStream(fileName));
             }
+
 
             public enum MachineType
             {
@@ -477,14 +487,14 @@ namespace Kaitai
                 Amd64 = 34404,
                 M32r = 36929,
             }
-
-            public CoffHeader(KaitaiStream io, MicrosoftPe parent = null, MicrosoftPe root = null) : base(io)
+            public CoffHeader(KaitaiStream p__io, MicrosoftPe p__parent = null, MicrosoftPe p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _machine = ((MachineType) m_io.ReadU2le());
                 _numberOfSections = m_io.ReadU2le();
                 _timeDateStamp = m_io.ReadU4le();
@@ -492,7 +502,7 @@ namespace Kaitai
                 _numberOfSymbols = m_io.ReadU4le();
                 _sizeOfOptionalHeader = m_io.ReadU2le();
                 _characteristics = m_io.ReadU2le();
-                }
+            }
             private MachineType _machine;
             private ushort _numberOfSections;
             private uint _timeDateStamp;

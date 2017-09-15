@@ -11,20 +11,22 @@ namespace Kaitai
             return new HeroesOfMightAndMagicAgg(new KaitaiStream(fileName));
         }
 
-        public HeroesOfMightAndMagicAgg(KaitaiStream io, KaitaiStruct parent = null, HeroesOfMightAndMagicAgg root = null) : base(io)
+        public HeroesOfMightAndMagicAgg(KaitaiStream p__io, KaitaiStruct p__parent = null, HeroesOfMightAndMagicAgg p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_filenames = false;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _numFiles = m_io.ReadU2le();
             _entries = new List<Entry>((int) (NumFiles));
-            for (var i = 0; i < NumFiles; i++) {
+            for (var i = 0; i < NumFiles; i++)
+            {
                 _entries.Add(new Entry(m_io, this, m_root));
             }
-            }
+        }
         public partial class Entry : KaitaiStruct
         {
             public static Entry FromFile(string fileName)
@@ -32,19 +34,20 @@ namespace Kaitai
                 return new Entry(new KaitaiStream(fileName));
             }
 
-            public Entry(KaitaiStream io, HeroesOfMightAndMagicAgg parent = null, HeroesOfMightAndMagicAgg root = null) : base(io)
+            public Entry(KaitaiStream p__io, HeroesOfMightAndMagicAgg p__parent = null, HeroesOfMightAndMagicAgg p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_body = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _hash = m_io.ReadU2le();
                 _offset = m_io.ReadU4le();
                 _size = m_io.ReadU4le();
                 _size2 = m_io.ReadU4le();
-                }
+            }
             private bool f_body;
             private byte[] _body;
             public byte[] Body
@@ -81,15 +84,16 @@ namespace Kaitai
                 return new Filename(new KaitaiStream(fileName));
             }
 
-            public Filename(KaitaiStream io, HeroesOfMightAndMagicAgg parent = null, HeroesOfMightAndMagicAgg root = null) : base(io)
+            public Filename(KaitaiStream p__io, HeroesOfMightAndMagicAgg p__parent = null, HeroesOfMightAndMagicAgg p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _str = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true));
-                }
+            }
             private string _str;
             private HeroesOfMightAndMagicAgg m_root;
             private HeroesOfMightAndMagicAgg m_parent;
@@ -109,7 +113,8 @@ namespace Kaitai
                 m_io.Seek((Entries[Entries.Count - 1].Offset + Entries[Entries.Count - 1].Size));
                 __raw_filenames = new List<byte[]>((int) (NumFiles));
                 _filenames = new List<Filename>((int) (NumFiles));
-                for (var i = 0; i < NumFiles; i++) {
+                for (var i = 0; i < NumFiles; i++)
+                {
                     __raw_filenames.Add(m_io.ReadBytes(15));
                     var io___raw_filenames = new KaitaiStream(__raw_filenames[__raw_filenames.Count - 1]);
                     _filenames.Add(new Filename(io___raw_filenames, this, m_root));

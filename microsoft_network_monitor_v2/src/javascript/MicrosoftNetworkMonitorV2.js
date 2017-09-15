@@ -242,7 +242,7 @@ var MicrosoftNetworkMonitorV2 = (function() {
     this.versionMinor = this._io.readU1();
     this.versionMajor = this._io.readU1();
     this.macType = this._io.readU2le();
-    this.timeCaptureStart = new WindowsSystemtime(this._io);
+    this.timeCaptureStart = new WindowsSystemtime(this._io, this, null);
     this.frameTableOfs = this._io.readU4le();
     this.frameTableLen = this._io.readU4le();
     this.userDataOfs = this._io.readU4le();
@@ -267,8 +267,10 @@ var MicrosoftNetworkMonitorV2 = (function() {
     }
     FrameIndex.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.entries.push(new FrameIndexEntry(this._io, this, this._root));
+        i++;
       }
     }
 
@@ -337,7 +339,7 @@ var MicrosoftNetworkMonitorV2 = (function() {
       case MicrosoftNetworkMonitorV2.Linktype.ETHERNET:
         this._raw_body = this._io.readBytes(this.incLen);
         var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new EthernetFrame(_io__raw_body);
+        this.body = new EthernetFrame(_io__raw_body, this, null);
         break;
       default:
         this.body = this._io.readBytes(this.incLen);

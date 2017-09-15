@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.nio.charset.Charset;
 
 public class HeroesOfMightAndMagicAgg extends KaitaiStruct {
     public static HeroesOfMightAndMagicAgg fromFile(String fileName) throws IOException {
-        return new HeroesOfMightAndMagicAgg(new KaitaiStream(fileName));
+        return new HeroesOfMightAndMagicAgg(new ByteBufferKaitaiStream(fileName));
     }
 
     public HeroesOfMightAndMagicAgg(KaitaiStream _io) {
@@ -34,7 +35,7 @@ public class HeroesOfMightAndMagicAgg extends KaitaiStruct {
     }
     public static class Entry extends KaitaiStruct {
         public static Entry fromFile(String fileName) throws IOException {
-            return new Entry(new KaitaiStream(fileName));
+            return new Entry(new ByteBufferKaitaiStream(fileName));
         }
 
         public Entry(KaitaiStream _io) {
@@ -82,7 +83,7 @@ public class HeroesOfMightAndMagicAgg extends KaitaiStruct {
     }
     public static class Filename extends KaitaiStruct {
         public static Filename fromFile(String fileName) throws IOException {
-            return new Filename(new KaitaiStream(fileName));
+            return new Filename(new ByteBufferKaitaiStream(fileName));
         }
 
         public Filename(KaitaiStream _io) {
@@ -119,7 +120,7 @@ public class HeroesOfMightAndMagicAgg extends KaitaiStruct {
         filenames = new ArrayList<Filename>((int) (numFiles()));
         for (int i = 0; i < numFiles(); i++) {
             this._raw_filenames.add(this._io.readBytes(15));
-            KaitaiStream _io__raw_filenames = new KaitaiStream(_raw_filenames.get(_raw_filenames.size() - 1));
+            KaitaiStream _io__raw_filenames = new ByteBufferKaitaiStream(_raw_filenames.get(_raw_filenames.size() - 1));
             this.filenames.add(new Filename(_io__raw_filenames, this, _root));
         }
         this._io.seek(_pos);

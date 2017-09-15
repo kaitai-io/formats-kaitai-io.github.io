@@ -219,10 +219,10 @@ requested time boundary.</p>
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = Tsm(KaitaiStream(raw))</code></pre>
+data = Tsm(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -368,11 +368,13 @@ class Tsm(KaitaiStruct):
             _pos = self._io.pos()
             self._io.seek(self.offset)
             self._m_entries = []
+            i = 0
             while True:
                 _ = self._root.Index.IndexHeader(self._io, self, self._root)
                 self._m_entries.append(_)
                 if self._io.pos() == (self._io.size() - 8):
                     break
+                i += 1
             self._io.seek(_pos)
             return self._m_entries if hasattr(self, &#39;_m_entries&#39;) else None
 

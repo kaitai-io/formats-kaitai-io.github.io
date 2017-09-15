@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
  */
 public class VlqBase128Be extends KaitaiStruct {
     public static VlqBase128Be fromFile(String fileName) throws IOException {
-        return new VlqBase128Be(new KaitaiStream(fileName));
+        return new VlqBase128Be(new ByteBufferKaitaiStream(fileName));
     }
 
     public VlqBase128Be(KaitaiStream _io) {
@@ -44,9 +45,11 @@ public class VlqBase128Be extends KaitaiStruct {
         this.groups = new ArrayList<Group>();
         {
             Group _it;
+            int i = 0;
             do {
                 _it = new Group(this._io, this, _root);
                 this.groups.add(_it);
+                i++;
             } while (!(!(_it.hasNext())));
         }
     }
@@ -57,7 +60,7 @@ public class VlqBase128Be extends KaitaiStruct {
      */
     public static class Group extends KaitaiStruct {
         public static Group fromFile(String fileName) throws IOException {
-            return new Group(new KaitaiStream(fileName));
+            return new Group(new ByteBufferKaitaiStream(fileName));
         }
 
         public Group(KaitaiStream _io) {

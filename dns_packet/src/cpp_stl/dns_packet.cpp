@@ -4,8 +4,8 @@
 
 
 
-dns_packet_t::dns_packet_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, dns_packet_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+dns_packet_t::dns_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -43,9 +43,9 @@ dns_packet_t::~dns_packet_t() {
     delete m_answers;
 }
 
-dns_packet_t::pointer_struct_t::pointer_struct_t(kaitai::kstream *p_io, dns_packet_t::label_t* p_parent, dns_packet_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dns_packet_t::pointer_struct_t::pointer_struct_t(kaitai::kstream* p__io, dns_packet_t::label_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_contents = false;
     _read();
 }
@@ -72,9 +72,9 @@ dns_packet_t::domain_name_t* dns_packet_t::pointer_struct_t::contents() {
     return m_contents;
 }
 
-dns_packet_t::label_t::label_t(kaitai::kstream *p_io, dns_packet_t::domain_name_t* p_parent, dns_packet_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dns_packet_t::label_t::label_t(kaitai::kstream* p__io, dns_packet_t::domain_name_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_is_pointer = false;
     _read();
 }
@@ -97,6 +97,8 @@ dns_packet_t::label_t::~label_t() {
     if (!n_pointer) {
         delete m_pointer;
     }
+    if (!n_name) {
+    }
 }
 
 bool dns_packet_t::label_t::is_pointer() {
@@ -107,9 +109,9 @@ bool dns_packet_t::label_t::is_pointer() {
     return m_is_pointer;
 }
 
-dns_packet_t::query_t::query_t(kaitai::kstream *p_io, dns_packet_t* p_parent, dns_packet_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dns_packet_t::query_t::query_t(kaitai::kstream* p__io, dns_packet_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -123,19 +125,21 @@ dns_packet_t::query_t::~query_t() {
     delete m_name;
 }
 
-dns_packet_t::domain_name_t::domain_name_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, dns_packet_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dns_packet_t::domain_name_t::domain_name_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void dns_packet_t::domain_name_t::_read() {
     m_name = new std::vector<label_t*>();
     {
+        int i = 0;
         label_t* _;
         do {
             _ = new label_t(m__io, this, m__root);
             m_name->push_back(_);
+            i++;
         } while (!( ((_->length() == 0) || (_->length() == 192)) ));
     }
 }
@@ -147,9 +151,9 @@ dns_packet_t::domain_name_t::~domain_name_t() {
     delete m_name;
 }
 
-dns_packet_t::address_t::address_t(kaitai::kstream *p_io, dns_packet_t::answer_t* p_parent, dns_packet_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dns_packet_t::address_t::address_t(kaitai::kstream* p__io, dns_packet_t::answer_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -166,9 +170,9 @@ dns_packet_t::address_t::~address_t() {
     delete m_ip;
 }
 
-dns_packet_t::answer_t::answer_t(kaitai::kstream *p_io, dns_packet_t* p_parent, dns_packet_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dns_packet_t::answer_t::answer_t(kaitai::kstream* p__io, dns_packet_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -200,9 +204,9 @@ dns_packet_t::answer_t::~answer_t() {
     }
 }
 
-dns_packet_t::packet_flags_t::packet_flags_t(kaitai::kstream *p_io, dns_packet_t* p_parent, dns_packet_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dns_packet_t::packet_flags_t::packet_flags_t(kaitai::kstream* p__io, dns_packet_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_qr = false;
     f_ra = false;
     f_tc = false;

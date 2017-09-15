@@ -4,8 +4,8 @@
 
 
 
-heroes_of_might_and_magic_agg_t::heroes_of_might_and_magic_agg_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, heroes_of_might_and_magic_agg_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+heroes_of_might_and_magic_agg_t::heroes_of_might_and_magic_agg_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, heroes_of_might_and_magic_agg_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_filenames = false;
     _read();
@@ -26,16 +26,22 @@ heroes_of_might_and_magic_agg_t::~heroes_of_might_and_magic_agg_t() {
         delete *it;
     }
     delete m_entries;
-    delete m__raw_filenames;
-    for (std::vector<filename_t*>::iterator it = m_filenames->begin(); it != m_filenames->end(); ++it) {
-        delete *it;
+    if (f_filenames) {
+        delete m__raw_filenames;
+        for (std::vector<kaitai::kstream*>::iterator it = m__io__raw_filenames->begin(); it != m__io__raw_filenames->end(); ++it) {
+            delete *it;
+        }
+        delete m__io__raw_filenames;
+        for (std::vector<filename_t*>::iterator it = m_filenames->begin(); it != m_filenames->end(); ++it) {
+            delete *it;
+        }
+        delete m_filenames;
     }
-    delete m_filenames;
 }
 
-heroes_of_might_and_magic_agg_t::entry_t::entry_t(kaitai::kstream *p_io, heroes_of_might_and_magic_agg_t* p_parent, heroes_of_might_and_magic_agg_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+heroes_of_might_and_magic_agg_t::entry_t::entry_t(kaitai::kstream* p__io, heroes_of_might_and_magic_agg_t* p__parent, heroes_of_might_and_magic_agg_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_body = false;
     _read();
 }
@@ -48,6 +54,8 @@ void heroes_of_might_and_magic_agg_t::entry_t::_read() {
 }
 
 heroes_of_might_and_magic_agg_t::entry_t::~entry_t() {
+    if (f_body) {
+    }
 }
 
 std::string heroes_of_might_and_magic_agg_t::entry_t::body() {
@@ -61,9 +69,9 @@ std::string heroes_of_might_and_magic_agg_t::entry_t::body() {
     return m_body;
 }
 
-heroes_of_might_and_magic_agg_t::filename_t::filename_t(kaitai::kstream *p_io, heroes_of_might_and_magic_agg_t* p_parent, heroes_of_might_and_magic_agg_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+heroes_of_might_and_magic_agg_t::filename_t::filename_t(kaitai::kstream* p__io, heroes_of_might_and_magic_agg_t* p__parent, heroes_of_might_and_magic_agg_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -82,12 +90,15 @@ std::vector<heroes_of_might_and_magic_agg_t::filename_t*>* heroes_of_might_and_m
     int l_filenames = num_files();
     m__raw_filenames = new std::vector<std::string>();
     m__raw_filenames->reserve(l_filenames);
+    m__io__raw_filenames = new std::vector<kaitai::kstream*>();
+    m__io__raw_filenames->reserve(l_filenames);
     m_filenames = new std::vector<filename_t*>();
     m_filenames->reserve(l_filenames);
     for (int i = 0; i < l_filenames; i++) {
         m__raw_filenames->push_back(m__io->read_bytes(15));
-        m__io__raw_filenames = new kaitai::kstream(m__raw_filenames->at(m__raw_filenames->size() - 1));
-        m_filenames->push_back(new filename_t(m__io__raw_filenames, this, m__root));
+        kaitai::kstream* io__raw_filenames = new kaitai::kstream(m__raw_filenames->at(m__raw_filenames->size() - 1));
+        m__io__raw_filenames->push_back(io__raw_filenames);
+        m_filenames->push_back(new filename_t(io__raw_filenames, this, m__root));
     }
     m__io->seek(_pos);
     f_filenames = true;

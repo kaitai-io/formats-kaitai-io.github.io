@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -39,8 +38,12 @@ public:
     class integer_cp_info_t;
     class field_ref_cp_info_t;
 
-    java_class_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, java_class_t* p_root = 0);
+    java_class_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, java_class_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~java_class_t();
 
     /**
@@ -51,8 +54,12 @@ public:
 
     public:
 
-        float_cp_info_t(kaitai::kstream* p_io, java_class_t::constant_pool_entry_t* p_parent = 0, java_class_t* p_root = 0);
+        float_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~float_cp_info_t();
 
     private:
@@ -78,8 +85,12 @@ public:
         class attr_body_source_file_t;
         class attr_body_line_number_table_t;
 
-        attribute_info_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, java_class_t* p_root = 0);
+        attribute_info_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~attribute_info_t();
 
         /**
@@ -91,8 +102,12 @@ public:
         public:
             class exception_entry_t;
 
-            attr_body_code_t(kaitai::kstream* p_io, java_class_t::attribute_info_t* p_parent = 0, java_class_t* p_root = 0);
+            attr_body_code_t(kaitai::kstream* p__io, java_class_t::attribute_info_t* p__parent = 0, java_class_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~attr_body_code_t();
 
             /**
@@ -103,8 +118,12 @@ public:
 
             public:
 
-                exception_entry_t(kaitai::kstream* p_io, java_class_t::attribute_info_t::attr_body_code_t* p_parent = 0, java_class_t* p_root = 0);
+                exception_entry_t(kaitai::kstream* p__io, java_class_t::attribute_info_t::attr_body_code_t* p__parent = 0, java_class_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~exception_entry_t();
 
             private:
@@ -191,16 +210,24 @@ public:
         public:
             class exception_table_entry_t;
 
-            attr_body_exceptions_t(kaitai::kstream* p_io, java_class_t::attribute_info_t* p_parent = 0, java_class_t* p_root = 0);
+            attr_body_exceptions_t(kaitai::kstream* p__io, java_class_t::attribute_info_t* p__parent = 0, java_class_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~attr_body_exceptions_t();
 
             class exception_table_entry_t : public kaitai::kstruct {
 
             public:
 
-                exception_table_entry_t(kaitai::kstream* p_io, java_class_t::attribute_info_t::attr_body_exceptions_t* p_parent = 0, java_class_t* p_root = 0);
+                exception_table_entry_t(kaitai::kstream* p__io, java_class_t::attribute_info_t::attr_body_exceptions_t* p__parent = 0, java_class_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~exception_table_entry_t();
 
             private:
@@ -249,8 +276,12 @@ public:
 
         public:
 
-            attr_body_source_file_t(kaitai::kstream* p_io, java_class_t::attribute_info_t* p_parent = 0, java_class_t* p_root = 0);
+            attr_body_source_file_t(kaitai::kstream* p__io, java_class_t::attribute_info_t* p__parent = 0, java_class_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~attr_body_source_file_t();
 
         private:
@@ -280,16 +311,24 @@ public:
         public:
             class line_number_table_entry_t;
 
-            attr_body_line_number_table_t(kaitai::kstream* p_io, java_class_t::attribute_info_t* p_parent = 0, java_class_t* p_root = 0);
+            attr_body_line_number_table_t(kaitai::kstream* p__io, java_class_t::attribute_info_t* p__parent = 0, java_class_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~attr_body_line_number_table_t();
 
             class line_number_table_entry_t : public kaitai::kstruct {
 
             public:
 
-                line_number_table_entry_t(kaitai::kstream* p_io, java_class_t::attribute_info_t::attr_body_line_number_table_t* p_parent = 0, java_class_t* p_root = 0);
+                line_number_table_entry_t(kaitai::kstream* p__io, java_class_t::attribute_info_t::attr_body_line_number_table_t* p__parent = 0, java_class_t* p__root = 0);
+
+            private:
                 void _read();
+
+            public:
                 ~line_number_table_entry_t();
 
             private:
@@ -329,6 +368,12 @@ public:
         uint16_t m_name_index;
         uint32_t m_attribute_length;
         kaitai::kstruct* m_info;
+        bool n_info;
+
+    public:
+        bool _is_null_info() { info(); return n_info; };
+
+    private:
         java_class_t* m__root;
         kaitai::kstruct* m__parent;
         std::string m__raw_info;
@@ -352,8 +397,12 @@ public:
 
     public:
 
-        method_ref_cp_info_t(kaitai::kstream* p_io, java_class_t::constant_pool_entry_t* p_parent = 0, java_class_t* p_root = 0);
+        method_ref_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~method_ref_cp_info_t();
 
     private:
@@ -391,8 +440,12 @@ public:
 
     public:
 
-        field_info_t(kaitai::kstream* p_io, java_class_t* p_parent = 0, java_class_t* p_root = 0);
+        field_info_t(kaitai::kstream* p__io, java_class_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~field_info_t();
 
     private:
@@ -429,8 +482,12 @@ public:
 
     public:
 
-        double_cp_info_t(kaitai::kstream* p_io, java_class_t::constant_pool_entry_t* p_parent = 0, java_class_t* p_root = 0);
+        double_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~double_cp_info_t();
 
     private:
@@ -452,8 +509,12 @@ public:
 
     public:
 
-        long_cp_info_t(kaitai::kstream* p_io, java_class_t::constant_pool_entry_t* p_parent = 0, java_class_t* p_root = 0);
+        long_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~long_cp_info_t();
 
     private:
@@ -475,8 +536,12 @@ public:
 
     public:
 
-        invoke_dynamic_cp_info_t(kaitai::kstream* p_io, java_class_t::constant_pool_entry_t* p_parent = 0, java_class_t* p_root = 0);
+        invoke_dynamic_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~invoke_dynamic_cp_info_t();
 
     private:
@@ -512,8 +577,12 @@ public:
             REFERENCE_KIND_ENUM_INVOKE_INTERFACE = 9
         };
 
-        method_handle_cp_info_t(kaitai::kstream* p_io, java_class_t::constant_pool_entry_t* p_parent = 0, java_class_t* p_root = 0);
+        method_handle_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~method_handle_cp_info_t();
 
     private:
@@ -537,8 +606,12 @@ public:
 
     public:
 
-        name_and_type_cp_info_t(kaitai::kstream* p_io, java_class_t::constant_pool_entry_t* p_parent = 0, java_class_t* p_root = 0);
+        name_and_type_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~name_and_type_cp_info_t();
 
     private:
@@ -590,8 +663,12 @@ public:
 
     public:
 
-        utf8_cp_info_t(kaitai::kstream* p_io, java_class_t::constant_pool_entry_t* p_parent = 0, java_class_t* p_root = 0);
+        utf8_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~utf8_cp_info_t();
 
     private:
@@ -615,8 +692,12 @@ public:
 
     public:
 
-        string_cp_info_t(kaitai::kstream* p_io, java_class_t::constant_pool_entry_t* p_parent = 0, java_class_t* p_root = 0);
+        string_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~string_cp_info_t();
 
     private:
@@ -638,8 +719,12 @@ public:
 
     public:
 
-        method_type_cp_info_t(kaitai::kstream* p_io, java_class_t::constant_pool_entry_t* p_parent = 0, java_class_t* p_root = 0);
+        method_type_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~method_type_cp_info_t();
 
     private:
@@ -661,8 +746,12 @@ public:
 
     public:
 
-        interface_method_ref_cp_info_t(kaitai::kstream* p_io, java_class_t::constant_pool_entry_t* p_parent = 0, java_class_t* p_root = 0);
+        interface_method_ref_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~interface_method_ref_cp_info_t();
 
     private:
@@ -700,8 +789,12 @@ public:
 
     public:
 
-        class_cp_info_t(kaitai::kstream* p_io, java_class_t::constant_pool_entry_t* p_parent = 0, java_class_t* p_root = 0);
+        class_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~class_cp_info_t();
 
     private:
@@ -754,13 +847,23 @@ public:
             TAG_ENUM_INVOKE_DYNAMIC = 18
         };
 
-        constant_pool_entry_t(kaitai::kstream* p_io, java_class_t* p_parent = 0, java_class_t* p_root = 0);
+        constant_pool_entry_t(kaitai::kstream* p__io, java_class_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~constant_pool_entry_t();
 
     private:
         tag_enum_t m_tag;
         kaitai::kstruct* m_cp_info;
+        bool n_cp_info;
+
+    public:
+        bool _is_null_cp_info() { cp_info(); return n_cp_info; };
+
+    private:
         java_class_t* m__root;
         java_class_t* m__parent;
 
@@ -779,8 +882,12 @@ public:
 
     public:
 
-        method_info_t(kaitai::kstream* p_io, java_class_t* p_parent = 0, java_class_t* p_root = 0);
+        method_info_t(kaitai::kstream* p__io, java_class_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~method_info_t();
 
     private:
@@ -817,8 +924,12 @@ public:
 
     public:
 
-        integer_cp_info_t(kaitai::kstream* p_io, java_class_t::constant_pool_entry_t* p_parent = 0, java_class_t* p_root = 0);
+        integer_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~integer_cp_info_t();
 
     private:
@@ -840,8 +951,12 @@ public:
 
     public:
 
-        field_ref_cp_info_t(kaitai::kstream* p_io, java_class_t::constant_pool_entry_t* p_parent = 0, java_class_t* p_root = 0);
+        field_ref_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = 0, java_class_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~field_ref_cp_info_t();
 
     private:

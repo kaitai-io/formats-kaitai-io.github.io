@@ -222,6 +222,7 @@ Ext2 data = new Ext2(new KaitaiStream(someArray));</code></pre>
         <div class="row">
             <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -232,7 +233,7 @@ import java.nio.charset.Charset;
 
 public class Ext2 extends KaitaiStruct {
     public static Ext2 fromFile(String fileName) throws IOException {
-        return new Ext2(new KaitaiStream(fileName));
+        return new Ext2(new ByteBufferKaitaiStream(fileName));
     }
 
     public Ext2(KaitaiStream _io) {
@@ -253,7 +254,7 @@ public class Ext2 extends KaitaiStruct {
     }
     public static class SuperBlockStruct extends KaitaiStruct {
         public static SuperBlockStruct fromFile(String fileName) throws IOException {
-            return new SuperBlockStruct(new KaitaiStream(fileName));
+            return new SuperBlockStruct(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum StateEnum {
@@ -461,7 +462,7 @@ public class Ext2 extends KaitaiStruct {
     }
     public static class DirEntry extends KaitaiStruct {
         public static DirEntry fromFile(String fileName) throws IOException {
-            return new DirEntry(new KaitaiStream(fileName));
+            return new DirEntry(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum FileTypeEnum {
@@ -533,7 +534,7 @@ public class Ext2 extends KaitaiStruct {
     }
     public static class Inode extends KaitaiStruct {
         public static Inode fromFile(String fileName) throws IOException {
-            return new Inode(new KaitaiStream(fileName));
+            return new Inode(new ByteBufferKaitaiStream(fileName));
         }
 
         public Inode(KaitaiStream _io) {
@@ -627,7 +628,7 @@ public class Ext2 extends KaitaiStruct {
     }
     public static class BlockPtr extends KaitaiStruct {
         public static BlockPtr fromFile(String fileName) throws IOException {
-            return new BlockPtr(new KaitaiStream(fileName));
+            return new BlockPtr(new ByteBufferKaitaiStream(fileName));
         }
 
         public BlockPtr(KaitaiStream _io) {
@@ -654,7 +655,7 @@ public class Ext2 extends KaitaiStruct {
             long _pos = this._io.pos();
             this._io.seek((ptr() * _root.bg1().superBlock().blockSize()));
             this._raw_body = this._io.readBytes(_root.bg1().superBlock().blockSize());
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new RawBlock(_io__raw_body, this, _root);
             this._io.seek(_pos);
             return this.body;
@@ -670,7 +671,7 @@ public class Ext2 extends KaitaiStruct {
     }
     public static class Dir extends KaitaiStruct {
         public static Dir fromFile(String fileName) throws IOException {
-            return new Dir(new KaitaiStream(fileName));
+            return new Dir(new ByteBufferKaitaiStream(fileName));
         }
 
         public Dir(KaitaiStream _io) {
@@ -689,8 +690,12 @@ public class Ext2 extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList&lt;DirEntry&gt;();
-            while (!this._io.isEof()) {
-                this.entries.add(new DirEntry(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new DirEntry(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList&lt;DirEntry&gt; entries;
@@ -702,7 +707,7 @@ public class Ext2 extends KaitaiStruct {
     }
     public static class BlockGroup extends KaitaiStruct {
         public static BlockGroup fromFile(String fileName) throws IOException {
-            return new BlockGroup(new KaitaiStream(fileName));
+            return new BlockGroup(new ByteBufferKaitaiStream(fileName));
         }
 
         public BlockGroup(KaitaiStream _io) {
@@ -721,7 +726,7 @@ public class Ext2 extends KaitaiStruct {
         }
         private void _read() {
             this._raw_superBlock = this._io.readBytes(1024);
-            KaitaiStream _io__raw_superBlock = new KaitaiStream(_raw_superBlock);
+            KaitaiStream _io__raw_superBlock = new ByteBufferKaitaiStream(_raw_superBlock);
             this.superBlock = new SuperBlockStruct(_io__raw_superBlock, this, _root);
             blockGroups = new ArrayList&lt;Bgd&gt;((int) (superBlock().blockGroupCount()));
             for (int i = 0; i &lt; superBlock().blockGroupCount(); i++) {
@@ -741,7 +746,7 @@ public class Ext2 extends KaitaiStruct {
     }
     public static class Bgd extends KaitaiStruct {
         public static Bgd fromFile(String fileName) throws IOException {
-            return new Bgd(new KaitaiStream(fileName));
+            return new Bgd(new ByteBufferKaitaiStream(fileName));
         }
 
         public Bgd(KaitaiStream _io) {
@@ -821,7 +826,7 @@ public class Ext2 extends KaitaiStruct {
     }
     public static class RawBlock extends KaitaiStruct {
         public static RawBlock fromFile(String fileName) throws IOException {
-            return new RawBlock(new KaitaiStream(fileName));
+            return new RawBlock(new ByteBufferKaitaiStream(fileName));
         }
 
         public RawBlock(KaitaiStream _io) {

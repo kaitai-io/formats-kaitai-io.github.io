@@ -63,11 +63,13 @@ class Id3v24(KaitaiStruct):
                 self.header_ex = self._root.HeaderEx(self._io, self, self._root)
 
             self.frames = []
+            i = 0
             while True:
                 _ = self._root.Frame(self._io, self, self._root)
                 self.frames.append(_)
                 if  (((self._io.pos() + _.size.value) > self.header.size.value) or (_.is_invalid)) :
                     break
+                i += 1
             if not (self.header.flags.flag_footer):
                 self.padding = self._root.Padding(self._io, self, self._root)
 

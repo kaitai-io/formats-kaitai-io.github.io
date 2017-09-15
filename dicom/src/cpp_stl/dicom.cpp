@@ -4,8 +4,8 @@
 
 
 
-dicom_t::dicom_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, dicom_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+dicom_t::dicom_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dicom_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -13,8 +13,12 @@ dicom_t::dicom_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, dicom_t *p_ro
 void dicom_t::_read() {
     m_file_header = new t_file_header_t(m__io, this, m__root);
     m_elements = new std::vector<t_data_element_implicit_t*>();
-    while (!m__io->is_eof()) {
-        m_elements->push_back(new t_data_element_implicit_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_elements->push_back(new t_data_element_implicit_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -26,9 +30,9 @@ dicom_t::~dicom_t() {
     delete m_elements;
 }
 
-dicom_t::t_file_header_t::t_file_header_t(kaitai::kstream *p_io, dicom_t* p_parent, dicom_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dicom_t::t_file_header_t::t_file_header_t(kaitai::kstream* p__io, dicom_t* p__parent, dicom_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -40,9 +44,9 @@ void dicom_t::t_file_header_t::_read() {
 dicom_t::t_file_header_t::~t_file_header_t() {
 }
 
-dicom_t::t_data_element_explicit_t::t_data_element_explicit_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, dicom_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dicom_t::t_data_element_explicit_t::t_data_element_explicit_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dicom_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_is_forced_implicit = false;
     f_is_long_len = false;
     f_is_transfer_syntax_change_implicit = false;
@@ -63,12 +67,15 @@ void dicom_t::t_data_element_explicit_t::_read() {
         n_reserved = false;
         m_reserved = m__io->read_u2le();
     }
+    n_value_len = true;
     {
         bool on = is_long_len();
         if (on == false) {
+            n_value_len = false;
             m_value_len = m__io->read_u2le();
         }
         else if (on == true) {
+            n_value_len = false;
             m_value_len = m__io->read_u4le();
         }
     }
@@ -82,10 +89,12 @@ void dicom_t::t_data_element_explicit_t::_read() {
         n_items = false;
         m_items = new std::vector<seq_item_t*>();
         {
+            int i = 0;
             seq_item_t* _;
             do {
                 _ = new seq_item_t(m__io, this, m__root);
                 m_items->push_back(_);
+                i++;
             } while (!(_->tag_elem() == 57565));
         }
     }
@@ -93,13 +102,25 @@ void dicom_t::t_data_element_explicit_t::_read() {
     if (is_transfer_syntax_change_implicit()) {
         n_elements_implicit = false;
         m_elements_implicit = new std::vector<t_data_element_implicit_t*>();
-        while (!m__io->is_eof()) {
-            m_elements_implicit->push_back(new t_data_element_implicit_t(m__io, this, m__root));
+        {
+            int i = 0;
+            while (!m__io->is_eof()) {
+                m_elements_implicit->push_back(new t_data_element_implicit_t(m__io, this, m__root));
+                i++;
+            }
         }
     }
 }
 
 dicom_t::t_data_element_explicit_t::~t_data_element_explicit_t() {
+    if (!n_vr) {
+    }
+    if (!n_reserved) {
+    }
+    if (!n_value_len) {
+    }
+    if (!n_value) {
+    }
     if (!n_items) {
         for (std::vector<seq_item_t*>::iterator it = m_items->begin(); it != m_items->end(); ++it) {
             delete *it;
@@ -146,9 +167,9 @@ dicom_t::tags_t dicom_t::t_data_element_explicit_t::tag() {
     return m_tag;
 }
 
-dicom_t::t_data_element_implicit_t::t_data_element_implicit_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, dicom_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dicom_t::t_data_element_implicit_t::t_data_element_implicit_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dicom_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_tag = false;
     f_is_transfer_syntax_change_explicit = false;
     f_is_long_len = false;
@@ -170,12 +191,15 @@ void dicom_t::t_data_element_implicit_t::_read() {
         n_reserved = false;
         m_reserved = m__io->read_u2le();
     }
+    n_value_len = true;
     {
         bool on = ((is_forced_explicit()) ? (is_long_len()) : (true));
         if (on == false) {
+            n_value_len = false;
             m_value_len = m__io->read_u2le();
         }
         else if (on == true) {
+            n_value_len = false;
             m_value_len = m__io->read_u4le();
         }
     }
@@ -189,10 +213,12 @@ void dicom_t::t_data_element_implicit_t::_read() {
         n_items = false;
         m_items = new std::vector<seq_item_t*>();
         {
+            int i = 0;
             seq_item_t* _;
             do {
                 _ = new seq_item_t(m__io, this, m__root);
                 m_items->push_back(_);
+                i++;
             } while (!(_->tag_elem() == 57565));
         }
     }
@@ -200,13 +226,25 @@ void dicom_t::t_data_element_implicit_t::_read() {
     if (is_transfer_syntax_change_explicit()) {
         n_elements = false;
         m_elements = new std::vector<t_data_element_explicit_t*>();
-        while (!m__io->is_eof()) {
-            m_elements->push_back(new t_data_element_explicit_t(m__io, this, m__root));
+        {
+            int i = 0;
+            while (!m__io->is_eof()) {
+                m_elements->push_back(new t_data_element_explicit_t(m__io, this, m__root));
+                i++;
+            }
         }
     }
 }
 
 dicom_t::t_data_element_implicit_t::~t_data_element_implicit_t() {
+    if (!n_vr) {
+    }
+    if (!n_reserved) {
+    }
+    if (!n_value_len) {
+    }
+    if (!n_value) {
+    }
     if (!n_items) {
         for (std::vector<seq_item_t*>::iterator it = m_items->begin(); it != m_items->end(); ++it) {
             delete *it;
@@ -261,9 +299,9 @@ bool dicom_t::t_data_element_implicit_t::is_forced_explicit() {
     return m_is_forced_explicit;
 }
 
-dicom_t::seq_item_t::seq_item_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, dicom_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dicom_t::seq_item_t::seq_item_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dicom_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -281,16 +319,20 @@ void dicom_t::seq_item_t::_read() {
         n_items = false;
         m_items = new std::vector<t_data_element_explicit_t*>();
         {
+            int i = 0;
             t_data_element_explicit_t* _;
             do {
                 _ = new t_data_element_explicit_t(m__io, this, m__root);
                 m_items->push_back(_);
+                i++;
             } while (!( ((_->tag_group() == 65534) && (_->tag_elem() == 57357)) ));
         }
     }
 }
 
 dicom_t::seq_item_t::~seq_item_t() {
+    if (!n_value) {
+    }
     if (!n_items) {
         for (std::vector<t_data_element_explicit_t*>::iterator it = m_items->begin(); it != m_items->end(); ++it) {
             delete *it;

@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -207,8 +206,12 @@ public:
         SECTIONS_UNUSED_16 = 39056127
     };
 
-    renderware_binary_stream_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+    renderware_binary_stream_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~renderware_binary_stream_t();
 
     /**
@@ -219,8 +222,12 @@ public:
 
     public:
 
-        struct_clump_t(kaitai::kstream* p_io, renderware_binary_stream_t::list_with_header_t* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        struct_clump_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~struct_clump_t();
 
     private:
@@ -258,8 +265,12 @@ public:
 
     public:
 
-        struct_geometry_t(kaitai::kstream* p_io, renderware_binary_stream_t::list_with_header_t* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        struct_geometry_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~struct_geometry_t();
 
     private:
@@ -329,8 +340,12 @@ public:
 
     public:
 
-        geometry_non_native_t(kaitai::kstream* p_io, renderware_binary_stream_t::struct_geometry_t* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        geometry_non_native_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_geometry_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~geometry_non_native_t();
 
     private:
@@ -368,8 +383,12 @@ public:
 
     public:
 
-        struct_geometry_list_t(kaitai::kstream* p_io, renderware_binary_stream_t::list_with_header_t* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        struct_geometry_list_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~struct_geometry_list_t();
 
     private:
@@ -387,8 +406,12 @@ public:
 
     public:
 
-        rgba_t(kaitai::kstream* p_io, renderware_binary_stream_t::geometry_non_native_t* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        rgba_t(kaitai::kstream* p__io, renderware_binary_stream_t::geometry_non_native_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~rgba_t();
 
     private:
@@ -412,8 +435,12 @@ public:
 
     public:
 
-        sphere_t(kaitai::kstream* p_io, renderware_binary_stream_t::morph_target_t* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        sphere_t(kaitai::kstream* p__io, renderware_binary_stream_t::morph_target_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~sphere_t();
 
     private:
@@ -437,8 +464,12 @@ public:
 
     public:
 
-        morph_target_t(kaitai::kstream* p_io, renderware_binary_stream_t::struct_geometry_t* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        morph_target_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_geometry_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~morph_target_t();
 
     private:
@@ -480,8 +511,12 @@ public:
 
     public:
 
-        surface_properties_t(kaitai::kstream* p_io, renderware_binary_stream_t::struct_geometry_t* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        surface_properties_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_geometry_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~surface_properties_t();
 
     private:
@@ -507,8 +542,12 @@ public:
 
     public:
 
-        struct_frame_list_t(kaitai::kstream* p_io, renderware_binary_stream_t::list_with_header_t* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        struct_frame_list_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~struct_frame_list_t();
 
     private:
@@ -532,8 +571,12 @@ public:
 
     public:
 
-        matrix_t(kaitai::kstream* p_io, renderware_binary_stream_t::frame_t* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        matrix_t(kaitai::kstream* p__io, renderware_binary_stream_t::frame_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~matrix_t();
 
     private:
@@ -555,8 +598,12 @@ public:
 
     public:
 
-        vector_3d_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        vector_3d_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~vector_3d_t();
 
     private:
@@ -587,8 +634,12 @@ public:
 
     public:
 
-        list_with_header_t(kaitai::kstream* p_io, renderware_binary_stream_t* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        list_with_header_t(kaitai::kstream* p__io, renderware_binary_stream_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~list_with_header_t();
 
     private:
@@ -596,6 +647,12 @@ public:
         uint32_t m_header_size;
         uint32_t m_version;
         kaitai::kstruct* m_header;
+        bool n_header;
+
+    public:
+        bool _is_null_header() { header(); return n_header; };
+
+    private:
         std::vector<renderware_binary_stream_t*>* m_entries;
         renderware_binary_stream_t* m__root;
         renderware_binary_stream_t* m__parent;
@@ -618,8 +675,12 @@ public:
 
     public:
 
-        triangle_t(kaitai::kstream* p_io, renderware_binary_stream_t::geometry_non_native_t* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        triangle_t(kaitai::kstream* p__io, renderware_binary_stream_t::geometry_non_native_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~triangle_t();
 
     private:
@@ -647,8 +708,12 @@ public:
 
     public:
 
-        frame_t(kaitai::kstream* p_io, renderware_binary_stream_t::struct_frame_list_t* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        frame_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_frame_list_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~frame_t();
 
     private:
@@ -672,8 +737,12 @@ public:
 
     public:
 
-        tex_coord_t(kaitai::kstream* p_io, renderware_binary_stream_t::geometry_non_native_t* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        tex_coord_t(kaitai::kstream* p__io, renderware_binary_stream_t::geometry_non_native_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~tex_coord_t();
 
     private:
@@ -693,8 +762,12 @@ public:
 
     public:
 
-        struct_texture_dictionary_t(kaitai::kstream* p_io, renderware_binary_stream_t::list_with_header_t* p_parent = 0, renderware_binary_stream_t* p_root = 0);
+        struct_texture_dictionary_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~struct_texture_dictionary_t();
 
     private:
@@ -713,6 +786,12 @@ private:
     uint32_t m_size;
     uint32_t m_version;
     list_with_header_t* m_body;
+    bool n_body;
+
+public:
+    bool _is_null_body() { body(); return n_body; };
+
+private:
     renderware_binary_stream_t* m__root;
     kaitai::kstruct* m__parent;
     std::string m__raw_body;

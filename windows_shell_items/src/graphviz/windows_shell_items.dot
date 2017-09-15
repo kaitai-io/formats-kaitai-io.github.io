@@ -1,0 +1,96 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__windows_shell_items {
+		label="WindowsShellItems";
+		graph[style=dotted];
+
+		windows_shell_items__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">...</TD><TD>ShellItem</TD><TD PORT="items_type">items</TD></TR>
+			<TR><TD COLSPAN="4" PORT="items__repeat">repeat until _.len_data == 0</TD></TR>
+		</TABLE>>];
+		subgraph cluster__shell_item_data {
+			label="WindowsShellItems::ShellItemData";
+			graph[style=dotted];
+
+			shell_item_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="code_pos">0</TD><TD PORT="code_size">1</TD><TD>u1</TD><TD PORT="code_type">code</TD></TR>
+				<TR><TD PORT="body1_pos">1</TD><TD PORT="body1_size">...</TD><TD>switch (code)</TD><TD PORT="body1_type">body1</TD></TR>
+				<TR><TD PORT="body2_pos">...</TD><TD PORT="body2_size">...</TD><TD>switch ((code &amp; 112))</TD><TD PORT="body2_type">body2</TD></TR>
+			</TABLE>>];
+shell_item_data__seq_body1_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>31</TD><TD PORT="case0">RootFolderBody</TD></TR>
+</TABLE>>];
+shell_item_data__seq_body2_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>32</TD><TD PORT="case0">VolumeBody</TD></TR>
+	<TR><TD>48</TD><TD PORT="case1">FileEntryBody</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__shell_item {
+			label="WindowsShellItems::ShellItem";
+			graph[style=dotted];
+
+			shell_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_data_pos">0</TD><TD PORT="len_data_size">2</TD><TD>u2le</TD><TD PORT="len_data_type">len_data</TD></TR>
+				<TR><TD PORT="data_pos">2</TD><TD PORT="data_size">(len_data - 2)</TD><TD>ShellItemData</TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__root_folder_body {
+			label="WindowsShellItems::RootFolderBody";
+			graph[style=dotted];
+
+			root_folder_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="sort_index_pos">0</TD><TD PORT="sort_index_size">1</TD><TD>u1</TD><TD PORT="sort_index_type">sort_index</TD></TR>
+				<TR><TD PORT="shell_folder_id_pos">1</TD><TD PORT="shell_folder_id_size">16</TD><TD></TD><TD PORT="shell_folder_id_type">shell_folder_id</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__volume_body {
+			label="WindowsShellItems::VolumeBody";
+			graph[style=dotted];
+
+			volume_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="flags_pos">0</TD><TD PORT="flags_size">1</TD><TD>u1</TD><TD PORT="flags_type">flags</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__file_entry_body {
+			label="WindowsShellItems::FileEntryBody";
+			graph[style=dotted];
+
+			file_entry_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="_unnamed0_pos">0</TD><TD PORT="_unnamed0_size">1</TD><TD>u1</TD><TD PORT="_unnamed0_type">_unnamed0</TD></TR>
+				<TR><TD PORT="file_size_pos">1</TD><TD PORT="file_size_size">4</TD><TD>u4le</TD><TD PORT="file_size_type">file_size</TD></TR>
+				<TR><TD PORT="last_mod_time_pos">5</TD><TD PORT="last_mod_time_size">4</TD><TD>u4le</TD><TD PORT="last_mod_time_type">last_mod_time</TD></TR>
+				<TR><TD PORT="file_attrs_pos">9</TD><TD PORT="file_attrs_size">2</TD><TD>u2le</TD><TD PORT="file_attrs_type">file_attrs</TD></TR>
+			</TABLE>>];
+			file_entry_body__inst__is_dir [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_dir</TD><TD>(_parent.code &amp; 1) != 0</TD></TR>
+			</TABLE>>];
+			file_entry_body__inst__is_file [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_file</TD><TD>(_parent.code &amp; 2) != 0</TD></TR>
+			</TABLE>>];
+		}
+	}
+	windows_shell_items__seq:items_type -> shell_item__seq [style=bold];
+	shell_item__seq:len_data_type -> windows_shell_items__seq:items__repeat [color="#404040"];
+	shell_item_data__seq:body1_type -> shell_item_data__seq_body1_switch [style=bold];
+	shell_item_data__seq_body1_switch:case0 -> root_folder_body__seq [style=bold];
+	shell_item_data__seq:code_type -> shell_item_data__seq:body1_type [color="#404040"];
+	shell_item_data__seq:body2_type -> shell_item_data__seq_body2_switch [style=bold];
+	shell_item_data__seq_body2_switch:case0 -> volume_body__seq [style=bold];
+	shell_item_data__seq_body2_switch:case1 -> file_entry_body__seq [style=bold];
+	shell_item_data__seq:code_type -> shell_item_data__seq:body2_type [color="#404040"];
+	shell_item__seq:len_data_type -> shell_item__seq:data_size [color="#404040"];
+	shell_item__seq:data_type -> shell_item_data__seq [style=bold];
+	shell_item_data__seq:code_type -> file_entry_body__inst__is_dir [color="#404040"];
+	shell_item_data__seq:code_type -> file_entry_body__inst__is_file [color="#404040"];
+}

@@ -199,8 +199,10 @@ class Cramfs < Kaitai::Struct::Struct
     def _read
       if _io.size > 0
         @children = []
+        i = 0
         while not @_io.eof?
           @children << Inode.new(@_io, self, @_root)
+          i += 1
         end
       end
       self

@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.nio.charset.Charset;
 
 public class Swf extends KaitaiStruct {
     public static Swf fromFile(String fileName) throws IOException {
-        return new Swf(new KaitaiStream(fileName));
+        return new Swf(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum TagType {
@@ -47,12 +48,12 @@ public class Swf extends KaitaiStruct {
         this.fileSize = this._io.readU4le();
         this._raw__raw_body = this._io.readBytesFull();
         this._raw_body = KaitaiStream.processZlib(this._raw__raw_body);
-        KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
         this.body = new SwfBody(_io__raw_body, this, _root);
     }
     public static class SwfBody extends KaitaiStruct {
         public static SwfBody fromFile(String fileName) throws IOException {
-            return new SwfBody(new KaitaiStream(fileName));
+            return new SwfBody(new ByteBufferKaitaiStream(fileName));
         }
 
         public SwfBody(KaitaiStream _io) {
@@ -74,8 +75,12 @@ public class Swf extends KaitaiStruct {
             this.frameRate = this._io.readU2le();
             this.frameCount = this._io.readU2le();
             this.tags = new ArrayList<Tag>();
-            while (!this._io.isEof()) {
-                this.tags.add(new Tag(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.tags.add(new Tag(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private Rect rect;
@@ -93,7 +98,7 @@ public class Swf extends KaitaiStruct {
     }
     public static class Rect extends KaitaiStruct {
         public static Rect fromFile(String fileName) throws IOException {
-            return new Rect(new KaitaiStream(fileName));
+            return new Rect(new ByteBufferKaitaiStream(fileName));
         }
 
         public Rect(KaitaiStream _io) {
@@ -141,7 +146,7 @@ public class Swf extends KaitaiStruct {
     }
     public static class Tag extends KaitaiStruct {
         public static Tag fromFile(String fileName) throws IOException {
-            return new Tag(new KaitaiStream(fileName));
+            return new Tag(new ByteBufferKaitaiStream(fileName));
         }
 
         public Tag(KaitaiStream _io) {
@@ -163,7 +168,7 @@ public class Swf extends KaitaiStruct {
             switch (recordHeader().tagType()) {
             case ABC_TAG: {
                 this._raw_tagBody = this._io.readBytes(recordHeader().len());
-                KaitaiStream _io__raw_tagBody = new KaitaiStream(_raw_tagBody);
+                KaitaiStream _io__raw_tagBody = new ByteBufferKaitaiStream(_raw_tagBody);
                 this.tagBody = new AbcTagBody(_io__raw_tagBody, this, _root);
                 break;
             }
@@ -186,7 +191,7 @@ public class Swf extends KaitaiStruct {
     }
     public static class AbcTagBody extends KaitaiStruct {
         public static AbcTagBody fromFile(String fileName) throws IOException {
-            return new AbcTagBody(new KaitaiStream(fileName));
+            return new AbcTagBody(new ByteBufferKaitaiStream(fileName));
         }
 
         public AbcTagBody(KaitaiStream _io) {
@@ -221,7 +226,7 @@ public class Swf extends KaitaiStruct {
     }
     public static class RecordHeader extends KaitaiStruct {
         public static RecordHeader fromFile(String fileName) throws IOException {
-            return new RecordHeader(new KaitaiStream(fileName));
+            return new RecordHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public RecordHeader(KaitaiStream _io) {

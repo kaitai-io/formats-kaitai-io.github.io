@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 
@@ -21,16 +20,24 @@ public:
     class no_next_header_t;
     class option_hop_by_hop_t;
 
-    ipv6_packet_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, ipv6_packet_t* p_root = 0);
+    ipv6_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, ipv6_packet_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~ipv6_packet_t();
 
     class no_next_header_t : public kaitai::kstruct {
 
     public:
 
-        no_next_header_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, ipv6_packet_t* p_root = 0);
+        no_next_header_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, ipv6_packet_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~no_next_header_t();
 
     private:
@@ -46,8 +53,12 @@ public:
 
     public:
 
-        option_hop_by_hop_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, ipv6_packet_t* p_root = 0);
+        option_hop_by_hop_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, ipv6_packet_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~option_hop_by_hop_t();
 
     private:
@@ -55,6 +66,12 @@ public:
         uint8_t m_hdr_ext_len;
         std::string m_body;
         kaitai::kstruct* m_next_header;
+        bool n_next_header;
+
+    public:
+        bool _is_null_next_header() { next_header(); return n_next_header; };
+
+    private:
         ipv6_packet_t* m__root;
         kaitai::kstruct* m__parent;
 
@@ -77,6 +94,12 @@ private:
     std::string m_src_ipv6_addr;
     std::string m_dst_ipv6_addr;
     kaitai::kstruct* m_next_header;
+    bool n_next_header;
+
+public:
+    bool _is_null_next_header() { next_header(); return n_next_header; };
+
+private:
     std::string m_rest;
     ipv6_packet_t* m__root;
     kaitai::kstruct* m__parent;

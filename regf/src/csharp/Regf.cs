@@ -32,22 +32,27 @@ namespace Kaitai
             return new Regf(new KaitaiStream(fileName));
         }
 
-        public Regf(KaitaiStream io, KaitaiStruct parent = null, Regf root = null) : base(io)
+        public Regf(KaitaiStream p__io, KaitaiStruct p__parent = null, Regf p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _header = new FileHeader(m_io, this, m_root);
             __raw_hiveBins = new List<byte[]>();
             _hiveBins = new List<HiveBin>();
-            while (!m_io.IsEof) {
-                __raw_hiveBins.Add(m_io.ReadBytes(4096));
-                var io___raw_hiveBins = new KaitaiStream(__raw_hiveBins[__raw_hiveBins.Count - 1]);
-                _hiveBins.Add(new HiveBin(io___raw_hiveBins, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    __raw_hiveBins.Add(m_io.ReadBytes(4096));
+                    var io___raw_hiveBins = new KaitaiStream(__raw_hiveBins[__raw_hiveBins.Count - 1]);
+                    _hiveBins.Add(new HiveBin(io___raw_hiveBins, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
         public partial class Filetime : KaitaiStruct
         {
             public static Filetime FromFile(string fileName)
@@ -55,15 +60,16 @@ namespace Kaitai
                 return new Filetime(new KaitaiStream(fileName));
             }
 
-            public Filetime(KaitaiStream io, KaitaiStruct parent = null, Regf root = null) : base(io)
+            public Filetime(KaitaiStream p__io, KaitaiStruct p__parent = null, Regf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _value = m_io.ReadU8le();
-                }
+            }
             private ulong _value;
             private Regf m_root;
             private KaitaiStruct m_parent;
@@ -78,19 +84,24 @@ namespace Kaitai
                 return new HiveBin(new KaitaiStream(fileName));
             }
 
-            public HiveBin(KaitaiStream io, Regf parent = null, Regf root = null) : base(io)
+            public HiveBin(KaitaiStream p__io, Regf p__parent = null, Regf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _header = new HiveBinHeader(m_io, this, m_root);
                 _cells = new List<HiveBinCell>();
-                while (!m_io.IsEof) {
-                    _cells.Add(new HiveBinCell(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _cells.Add(new HiveBinCell(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private HiveBinHeader _header;
             private List<HiveBinCell> _cells;
             private Regf m_root;
@@ -107,13 +118,14 @@ namespace Kaitai
                 return new HiveBinHeader(new KaitaiStream(fileName));
             }
 
-            public HiveBinHeader(KaitaiStream io, Regf.HiveBin parent = null, Regf root = null) : base(io)
+            public HiveBinHeader(KaitaiStream p__io, Regf.HiveBin p__parent = null, Regf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _signature = m_io.EnsureFixedContents(new byte[] { 104, 98, 105, 110 });
                 _offset = m_io.ReadU4le();
                 _size = m_io.ReadU4le();
@@ -121,7 +133,7 @@ namespace Kaitai
                 _unknown2 = m_io.ReadU4le();
                 _timestamp = new Filetime(m_io, this, m_root);
                 _unknown4 = m_io.ReadU4le();
-                }
+            }
             private byte[] _signature;
             private uint _offset;
             private uint _size;
@@ -173,15 +185,16 @@ namespace Kaitai
                 return new HiveBinCell(new KaitaiStream(fileName));
             }
 
-            public HiveBinCell(KaitaiStream io, Regf.HiveBin parent = null, Regf root = null) : base(io)
+            public HiveBinCell(KaitaiStream p__io, Regf.HiveBin p__parent = null, Regf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_cellSize = false;
                 f_isAllocated = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _cellSizeRaw = m_io.ReadS4le();
                 _identifier = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(2));
                 switch (Identifier) {
@@ -232,13 +245,14 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             public partial class SubKeyListVk : KaitaiStruct
             {
                 public static SubKeyListVk FromFile(string fileName)
                 {
                     return new SubKeyListVk(new KaitaiStream(fileName));
                 }
+
 
                 public enum DataTypeEnum
                 {
@@ -260,14 +274,14 @@ namespace Kaitai
                 {
                     ValueCompName = 1,
                 }
-
-                public SubKeyListVk(KaitaiStream io, Regf.HiveBinCell parent = null, Regf root = null) : base(io)
+                public SubKeyListVk(KaitaiStream p__io, Regf.HiveBinCell p__parent = null, Regf p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _valueNameSize = m_io.ReadU2le();
                     _dataSize = m_io.ReadU4le();
                     _dataOffset = m_io.ReadU4le();
@@ -277,7 +291,7 @@ namespace Kaitai
                     if (Flags == VkFlags.ValueCompName) {
                         _valueName = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(ValueNameSize));
                     }
-                    }
+                }
                 private ushort _valueNameSize;
                 private uint _dataSize;
                 private uint _dataOffset;
@@ -304,19 +318,21 @@ namespace Kaitai
                     return new SubKeyListLhLf(new KaitaiStream(fileName));
                 }
 
-                public SubKeyListLhLf(KaitaiStream io, Regf.HiveBinCell parent = null, Regf root = null) : base(io)
+                public SubKeyListLhLf(KaitaiStream p__io, Regf.HiveBinCell p__parent = null, Regf p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _count = m_io.ReadU2le();
                     _items = new List<Item>((int) (Count));
-                    for (var i = 0; i < Count; i++) {
+                    for (var i = 0; i < Count; i++)
+                    {
                         _items.Add(new Item(m_io, this, m_root));
                     }
-                    }
+                }
                 public partial class Item : KaitaiStruct
                 {
                     public static Item FromFile(string fileName)
@@ -324,16 +340,17 @@ namespace Kaitai
                         return new Item(new KaitaiStream(fileName));
                     }
 
-                    public Item(KaitaiStream io, Regf.HiveBinCell.SubKeyListLhLf parent = null, Regf root = null) : base(io)
+                    public Item(KaitaiStream p__io, Regf.HiveBinCell.SubKeyListLhLf p__parent = null, Regf p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _namedKeyOffset = m_io.ReadU4le();
                         _hashValue = m_io.ReadU4le();
-                        }
+                    }
                     private uint _namedKeyOffset;
                     private uint _hashValue;
                     private Regf m_root;
@@ -359,18 +376,19 @@ namespace Kaitai
                     return new SubKeyListSk(new KaitaiStream(fileName));
                 }
 
-                public SubKeyListSk(KaitaiStream io, Regf.HiveBinCell parent = null, Regf root = null) : base(io)
+                public SubKeyListSk(KaitaiStream p__io, Regf.HiveBinCell p__parent = null, Regf p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _unknown1 = m_io.ReadU2le();
                     _previousSecurityKeyOffset = m_io.ReadU4le();
                     _nextSecurityKeyOffset = m_io.ReadU4le();
                     _referenceCount = m_io.ReadU4le();
-                    }
+                }
                 private ushort _unknown1;
                 private uint _previousSecurityKeyOffset;
                 private uint _nextSecurityKeyOffset;
@@ -391,19 +409,21 @@ namespace Kaitai
                     return new SubKeyListLi(new KaitaiStream(fileName));
                 }
 
-                public SubKeyListLi(KaitaiStream io, Regf.HiveBinCell parent = null, Regf root = null) : base(io)
+                public SubKeyListLi(KaitaiStream p__io, Regf.HiveBinCell p__parent = null, Regf p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _count = m_io.ReadU2le();
                     _items = new List<Item>((int) (Count));
-                    for (var i = 0; i < Count; i++) {
+                    for (var i = 0; i < Count; i++)
+                    {
                         _items.Add(new Item(m_io, this, m_root));
                     }
-                    }
+                }
                 public partial class Item : KaitaiStruct
                 {
                     public static Item FromFile(string fileName)
@@ -411,15 +431,16 @@ namespace Kaitai
                         return new Item(new KaitaiStream(fileName));
                     }
 
-                    public Item(KaitaiStream io, Regf.HiveBinCell.SubKeyListLi parent = null, Regf root = null) : base(io)
+                    public Item(KaitaiStream p__io, Regf.HiveBinCell.SubKeyListLi p__parent = null, Regf p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _namedKeyOffset = m_io.ReadU4le();
-                        }
+                    }
                     private uint _namedKeyOffset;
                     private Regf m_root;
                     private Regf.HiveBinCell.SubKeyListLi m_parent;
@@ -443,6 +464,7 @@ namespace Kaitai
                     return new NamedKey(new KaitaiStream(fileName));
                 }
 
+
                 public enum NkFlags
                 {
                     KeyIsVolatile = 1,
@@ -458,14 +480,14 @@ namespace Kaitai
                     Unknown1 = 4096,
                     Unknown2 = 16384,
                 }
-
-                public NamedKey(KaitaiStream io, Regf.HiveBinCell parent = null, Regf root = null) : base(io)
+                public NamedKey(KaitaiStream p__io, Regf.HiveBinCell p__parent = null, Regf p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _flags = ((NkFlags) m_io.ReadU2le());
                     _lastKeyWrittenDateAndTime = new Filetime(m_io, this, m_root);
                     _unknown1 = m_io.ReadU4le();
@@ -486,7 +508,7 @@ namespace Kaitai
                     _classNameSize = m_io.ReadU2le();
                     _unknownStringSize = m_io.ReadU4le();
                     _unknownString = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(UnknownStringSize));
-                    }
+                }
                 private NkFlags _flags;
                 private Filetime _lastKeyWrittenDateAndTime;
                 private uint _unknown1;
@@ -539,19 +561,21 @@ namespace Kaitai
                     return new SubKeyListRi(new KaitaiStream(fileName));
                 }
 
-                public SubKeyListRi(KaitaiStream io, Regf.HiveBinCell parent = null, Regf root = null) : base(io)
+                public SubKeyListRi(KaitaiStream p__io, Regf.HiveBinCell p__parent = null, Regf p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _count = m_io.ReadU2le();
                     _items = new List<Item>((int) (Count));
-                    for (var i = 0; i < Count; i++) {
+                    for (var i = 0; i < Count; i++)
+                    {
                         _items.Add(new Item(m_io, this, m_root));
                     }
-                    }
+                }
                 public partial class Item : KaitaiStruct
                 {
                     public static Item FromFile(string fileName)
@@ -559,15 +583,16 @@ namespace Kaitai
                         return new Item(new KaitaiStream(fileName));
                     }
 
-                    public Item(KaitaiStream io, Regf.HiveBinCell.SubKeyListRi parent = null, Regf root = null) : base(io)
+                    public Item(KaitaiStream p__io, Regf.HiveBinCell.SubKeyListRi p__parent = null, Regf p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _subKeyListOffset = m_io.ReadU4le();
-                        }
+                    }
                     private uint _subKeyListOffset;
                     private Regf m_root;
                     private Regf.HiveBinCell.SubKeyListRi m_parent;
@@ -630,6 +655,7 @@ namespace Kaitai
                 return new FileHeader(new KaitaiStream(fileName));
             }
 
+
             public enum FileType
             {
                 Normal = 0,
@@ -640,14 +666,14 @@ namespace Kaitai
             {
                 DirectMemoryLoad = 1,
             }
-
-            public FileHeader(KaitaiStream io, Regf parent = null, Regf root = null) : base(io)
+            public FileHeader(KaitaiStream p__io, Regf p__parent = null, Regf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _signature = m_io.EnsureFixedContents(new byte[] { 114, 101, 103, 102 });
                 _primarySequenceNumber = m_io.ReadU4le();
                 _secondarySequenceNumber = m_io.ReadU4le();
@@ -665,7 +691,7 @@ namespace Kaitai
                 _reserved = m_io.ReadBytes(3576);
                 _bootType = m_io.ReadU4le();
                 _bootRecover = m_io.ReadU4le();
-                }
+            }
             private byte[] _signature;
             private uint _primarySequenceNumber;
             private uint _secondarySequenceNumber;

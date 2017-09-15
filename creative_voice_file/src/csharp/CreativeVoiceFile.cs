@@ -27,6 +27,7 @@ namespace Kaitai
             return new CreativeVoiceFile(new KaitaiStream(fileName));
         }
 
+
         public enum BlockTypes
         {
             Terminator = 0,
@@ -52,23 +53,27 @@ namespace Kaitai
             Ulaw = 7,
             Adpcm4To16bit = 512,
         }
-
-        public CreativeVoiceFile(KaitaiStream io, KaitaiStruct parent = null, CreativeVoiceFile root = null) : base(io)
+        public CreativeVoiceFile(KaitaiStream p__io, KaitaiStruct p__parent = null, CreativeVoiceFile p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _magic = m_io.EnsureFixedContents(new byte[] { 67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26 });
             _headerSize = m_io.ReadU2le();
             _version = m_io.ReadU2le();
             _checksum = m_io.ReadU2le();
             _blocks = new List<Block>();
-            while (!m_io.IsEof) {
-                _blocks.Add(new Block(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _blocks.Add(new Block(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
 
         /// <remarks>
         /// Reference: <a href="https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x04:_Marker">Source</a>
@@ -80,15 +85,16 @@ namespace Kaitai
                 return new BlockMarker(new KaitaiStream(fileName));
             }
 
-            public BlockMarker(KaitaiStream io, CreativeVoiceFile.Block parent = null, CreativeVoiceFile root = null) : base(io)
+            public BlockMarker(KaitaiStream p__io, CreativeVoiceFile.Block p__parent = null, CreativeVoiceFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _markerId = m_io.ReadU2le();
-                }
+            }
             private ushort _markerId;
             private CreativeVoiceFile m_root;
             private CreativeVoiceFile.Block m_parent;
@@ -111,18 +117,19 @@ namespace Kaitai
                 return new BlockSilence(new KaitaiStream(fileName));
             }
 
-            public BlockSilence(KaitaiStream io, CreativeVoiceFile.Block parent = null, CreativeVoiceFile root = null) : base(io)
+            public BlockSilence(KaitaiStream p__io, CreativeVoiceFile.Block p__parent = null, CreativeVoiceFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_sampleRate = false;
                 f_durationSec = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _durationSamples = m_io.ReadU2le();
                 _freqDiv = m_io.ReadU1();
-                }
+            }
             private bool f_sampleRate;
             private double _sampleRate;
             public double SampleRate
@@ -181,20 +188,21 @@ namespace Kaitai
                 return new BlockSoundDataNew(new KaitaiStream(fileName));
             }
 
-            public BlockSoundDataNew(KaitaiStream io, CreativeVoiceFile.Block parent = null, CreativeVoiceFile root = null) : base(io)
+            public BlockSoundDataNew(KaitaiStream p__io, CreativeVoiceFile.Block p__parent = null, CreativeVoiceFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _sampleRate = m_io.ReadU4le();
                 _bitsPerSample = m_io.ReadU1();
                 _numChannels = m_io.ReadU1();
                 _codec = ((CreativeVoiceFile.Codecs) m_io.ReadU2le());
                 _reserved = m_io.ReadBytes(4);
                 _wave = m_io.ReadBytesFull();
-                }
+            }
             private uint _sampleRate;
             private byte _bitsPerSample;
             private byte _numChannels;
@@ -219,14 +227,15 @@ namespace Kaitai
                 return new Block(new KaitaiStream(fileName));
             }
 
-            public Block(KaitaiStream io, CreativeVoiceFile parent = null, CreativeVoiceFile root = null) : base(io)
+            public Block(KaitaiStream p__io, CreativeVoiceFile p__parent = null, CreativeVoiceFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_bodySize = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _blockType = ((CreativeVoiceFile.BlockTypes) m_io.ReadU1());
                 if (BlockType != CreativeVoiceFile.BlockTypes.Terminator) {
                     _bodySize1 = m_io.ReadU2le();
@@ -278,16 +287,16 @@ namespace Kaitai
                     }
                     }
                 }
-                }
+            }
             private bool f_bodySize;
-            private int _bodySize;
+            private int? _bodySize;
 
             /// <summary>
             /// body_size is a 24-bit little-endian integer, so we're
             /// emulating that by adding two standard-sized integers
             /// (body_size1 and body_size2).
             /// </summary>
-            public int BodySize
+            public int? BodySize
             {
                 get
                 {
@@ -301,8 +310,8 @@ namespace Kaitai
                 }
             }
             private BlockTypes _blockType;
-            private ushort _bodySize1;
-            private byte _bodySize2;
+            private ushort? _bodySize1;
+            private byte? _bodySize2;
             private object _body;
             private CreativeVoiceFile m_root;
             private CreativeVoiceFile m_parent;
@@ -312,8 +321,8 @@ namespace Kaitai
             /// Byte that determines type of block content
             /// </summary>
             public BlockTypes BlockType { get { return _blockType; } }
-            public ushort BodySize1 { get { return _bodySize1; } }
-            public byte BodySize2 { get { return _bodySize2; } }
+            public ushort? BodySize1 { get { return _bodySize1; } }
+            public byte? BodySize2 { get { return _bodySize2; } }
 
             /// <summary>
             /// Block body, type depends on block type byte
@@ -334,15 +343,16 @@ namespace Kaitai
                 return new BlockRepeatStart(new KaitaiStream(fileName));
             }
 
-            public BlockRepeatStart(KaitaiStream io, CreativeVoiceFile.Block parent = null, CreativeVoiceFile root = null) : base(io)
+            public BlockRepeatStart(KaitaiStream p__io, CreativeVoiceFile.Block p__parent = null, CreativeVoiceFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _repeatCount1 = m_io.ReadU2le();
-                }
+            }
             private ushort _repeatCount1;
             private CreativeVoiceFile m_root;
             private CreativeVoiceFile.Block m_parent;
@@ -365,18 +375,19 @@ namespace Kaitai
                 return new BlockSoundData(new KaitaiStream(fileName));
             }
 
-            public BlockSoundData(KaitaiStream io, CreativeVoiceFile.Block parent = null, CreativeVoiceFile root = null) : base(io)
+            public BlockSoundData(KaitaiStream p__io, CreativeVoiceFile.Block p__parent = null, CreativeVoiceFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_sampleRate = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _freqDiv = m_io.ReadU1();
                 _codec = ((CreativeVoiceFile.Codecs) m_io.ReadU1());
                 _wave = m_io.ReadBytesFull();
-                }
+            }
             private bool f_sampleRate;
             private double _sampleRate;
             public double SampleRate
@@ -416,19 +427,20 @@ namespace Kaitai
                 return new BlockExtraInfo(new KaitaiStream(fileName));
             }
 
-            public BlockExtraInfo(KaitaiStream io, CreativeVoiceFile.Block parent = null, CreativeVoiceFile root = null) : base(io)
+            public BlockExtraInfo(KaitaiStream p__io, CreativeVoiceFile.Block p__parent = null, CreativeVoiceFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_numChannels = false;
                 f_sampleRate = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _freqDiv = m_io.ReadU2le();
                 _codec = ((CreativeVoiceFile.Codecs) m_io.ReadU1());
                 _numChannels1 = m_io.ReadU1();
-                }
+            }
             private bool f_numChannels;
             private int _numChannels;
 

@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 public class QuicktimeMov extends KaitaiStruct {
     public static QuicktimeMov fromFile(String fileName) throws IOException {
-        return new QuicktimeMov(new KaitaiStream(fileName));
+        return new QuicktimeMov(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum AtomType {
@@ -187,7 +188,7 @@ public class QuicktimeMov extends KaitaiStruct {
     }
     public static class MvhdBody extends KaitaiStruct {
         public static MvhdBody fromFile(String fileName) throws IOException {
-            return new MvhdBody(new KaitaiStream(fileName));
+            return new MvhdBody(new ByteBufferKaitaiStream(fileName));
         }
 
         public MvhdBody(KaitaiStream _io) {
@@ -316,7 +317,7 @@ public class QuicktimeMov extends KaitaiStruct {
     }
     public static class FtypBody extends KaitaiStruct {
         public static FtypBody fromFile(String fileName) throws IOException {
-            return new FtypBody(new KaitaiStream(fileName));
+            return new FtypBody(new ByteBufferKaitaiStream(fileName));
         }
 
         public FtypBody(KaitaiStream _io) {
@@ -337,8 +338,12 @@ public class QuicktimeMov extends KaitaiStruct {
             this.majorBrand = QuicktimeMov.Brand.byId(this._io.readU4be());
             this.minorVersion = this._io.readBytes(4);
             this.compatibleBrands = new ArrayList<Brand>();
-            while (!this._io.isEof()) {
-                this.compatibleBrands.add(QuicktimeMov.Brand.byId(this._io.readU4be()));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.compatibleBrands.add(QuicktimeMov.Brand.byId(this._io.readU4be()));
+                    i++;
+                }
             }
         }
         private Brand majorBrand;
@@ -354,7 +359,7 @@ public class QuicktimeMov extends KaitaiStruct {
     }
     public static class Fixed32 extends KaitaiStruct {
         public static Fixed32 fromFile(String fileName) throws IOException {
-            return new Fixed32(new KaitaiStream(fileName));
+            return new Fixed32(new ByteBufferKaitaiStream(fileName));
         }
 
         public Fixed32(KaitaiStream _io) {
@@ -386,7 +391,7 @@ public class QuicktimeMov extends KaitaiStruct {
     }
     public static class Fixed16 extends KaitaiStruct {
         public static Fixed16 fromFile(String fileName) throws IOException {
-            return new Fixed16(new KaitaiStream(fileName));
+            return new Fixed16(new ByteBufferKaitaiStream(fileName));
         }
 
         public Fixed16(KaitaiStream _io) {
@@ -418,7 +423,7 @@ public class QuicktimeMov extends KaitaiStruct {
     }
     public static class Atom extends KaitaiStruct {
         public static Atom fromFile(String fileName) throws IOException {
-            return new Atom(new KaitaiStream(fileName));
+            return new Atom(new ByteBufferKaitaiStream(fileName));
         }
 
         public Atom(KaitaiStream _io) {
@@ -444,67 +449,67 @@ public class QuicktimeMov extends KaitaiStruct {
             switch (atomType()) {
             case STBL: {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new AtomList(_io__raw_body, this, _root);
                 break;
             }
             case MOOF: {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new AtomList(_io__raw_body, this, _root);
                 break;
             }
             case MVHD: {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new MvhdBody(_io__raw_body, this, _root);
                 break;
             }
             case MINF: {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new AtomList(_io__raw_body, this, _root);
                 break;
             }
             case TRAK: {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new AtomList(_io__raw_body, this, _root);
                 break;
             }
             case TRAF: {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new AtomList(_io__raw_body, this, _root);
                 break;
             }
             case MDIA: {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new AtomList(_io__raw_body, this, _root);
                 break;
             }
             case FTYP: {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new FtypBody(_io__raw_body, this, _root);
                 break;
             }
             case MOOV: {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new AtomList(_io__raw_body, this, _root);
                 break;
             }
             case TKHD: {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new TkhdBody(_io__raw_body, this, _root);
                 break;
             }
             case DINF: {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new AtomList(_io__raw_body, this, _root);
                 break;
             }
@@ -539,7 +544,7 @@ public class QuicktimeMov extends KaitaiStruct {
     }
     public static class TkhdBody extends KaitaiStruct {
         public static TkhdBody fromFile(String fileName) throws IOException {
-            return new TkhdBody(new KaitaiStream(fileName));
+            return new TkhdBody(new ByteBufferKaitaiStream(fileName));
         }
 
         public TkhdBody(KaitaiStream _io) {
@@ -614,7 +619,7 @@ public class QuicktimeMov extends KaitaiStruct {
     }
     public static class AtomList extends KaitaiStruct {
         public static AtomList fromFile(String fileName) throws IOException {
-            return new AtomList(new KaitaiStream(fileName));
+            return new AtomList(new ByteBufferKaitaiStream(fileName));
         }
 
         public AtomList(KaitaiStream _io) {
@@ -633,8 +638,12 @@ public class QuicktimeMov extends KaitaiStruct {
         }
         private void _read() {
             this.items = new ArrayList<Atom>();
-            while (!this._io.isEof()) {
-                this.items.add(new Atom(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.items.add(new Atom(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<Atom> items;

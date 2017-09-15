@@ -1,12 +1,13 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 
 public class HeroesOfMightAndMagicBmp extends KaitaiStruct {
     public static HeroesOfMightAndMagicBmp fromFile(String fileName) throws IOException {
-        return new HeroesOfMightAndMagicBmp(new KaitaiStream(fileName));
+        return new HeroesOfMightAndMagicBmp(new ByteBufferKaitaiStream(fileName));
     }
 
     public HeroesOfMightAndMagicBmp(KaitaiStream _io) {

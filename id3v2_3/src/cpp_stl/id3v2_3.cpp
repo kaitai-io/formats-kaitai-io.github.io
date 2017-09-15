@@ -4,8 +4,8 @@
 
 
 
-id3v2_3_t::id3v2_3_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, id3v2_3_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+id3v2_3_t::id3v2_3_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, id3v2_3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -18,9 +18,9 @@ id3v2_3_t::~id3v2_3_t() {
     delete m_tag;
 }
 
-id3v2_3_t::u1be_synchsafe_t::u1be_synchsafe_t(kaitai::kstream *p_io, id3v2_3_t::u2be_synchsafe_t* p_parent, id3v2_3_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+id3v2_3_t::u1be_synchsafe_t::u1be_synchsafe_t(kaitai::kstream* p__io, id3v2_3_t::u2be_synchsafe_t* p__parent, id3v2_3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -32,9 +32,9 @@ void id3v2_3_t::u1be_synchsafe_t::_read() {
 id3v2_3_t::u1be_synchsafe_t::~u1be_synchsafe_t() {
 }
 
-id3v2_3_t::u2be_synchsafe_t::u2be_synchsafe_t(kaitai::kstream *p_io, id3v2_3_t::u4be_synchsafe_t* p_parent, id3v2_3_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+id3v2_3_t::u2be_synchsafe_t::u2be_synchsafe_t(kaitai::kstream* p__io, id3v2_3_t::u4be_synchsafe_t* p__parent, id3v2_3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_value = false;
     _read();
 }
@@ -57,9 +57,9 @@ int32_t id3v2_3_t::u2be_synchsafe_t::value() {
     return m_value;
 }
 
-id3v2_3_t::tag_t::tag_t(kaitai::kstream *p_io, id3v2_3_t* p_parent, id3v2_3_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+id3v2_3_t::tag_t::tag_t(kaitai::kstream* p__io, id3v2_3_t* p__parent, id3v2_3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -72,10 +72,12 @@ void id3v2_3_t::tag_t::_read() {
     }
     m_frames = new std::vector<frame_t*>();
     {
+        int i = 0;
         frame_t* _;
         do {
             _ = new frame_t(m__io, this, m__root);
             m_frames->push_back(_);
+            i++;
         } while (!( (((_io()->pos() + _->size()) > header()->size()->value()) || (_->is_invalid())) ));
     }
     n_padding = true;
@@ -94,11 +96,13 @@ id3v2_3_t::tag_t::~tag_t() {
         delete *it;
     }
     delete m_frames;
+    if (!n_padding) {
+    }
 }
 
-id3v2_3_t::u4be_synchsafe_t::u4be_synchsafe_t(kaitai::kstream *p_io, id3v2_3_t::header_t* p_parent, id3v2_3_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+id3v2_3_t::u4be_synchsafe_t::u4be_synchsafe_t(kaitai::kstream* p__io, id3v2_3_t::header_t* p__parent, id3v2_3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_value = false;
     _read();
 }
@@ -121,9 +125,9 @@ int32_t id3v2_3_t::u4be_synchsafe_t::value() {
     return m_value;
 }
 
-id3v2_3_t::frame_t::frame_t(kaitai::kstream *p_io, id3v2_3_t::tag_t* p_parent, id3v2_3_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+id3v2_3_t::frame_t::frame_t(kaitai::kstream* p__io, id3v2_3_t::tag_t* p__parent, id3v2_3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_is_invalid = false;
     _read();
 }
@@ -139,9 +143,9 @@ id3v2_3_t::frame_t::~frame_t() {
     delete m_flags;
 }
 
-id3v2_3_t::frame_t::flags_t::flags_t(kaitai::kstream *p_io, id3v2_3_t::frame_t* p_parent, id3v2_3_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+id3v2_3_t::frame_t::flags_t::flags_t(kaitai::kstream* p__io, id3v2_3_t::frame_t* p__parent, id3v2_3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -167,9 +171,9 @@ bool id3v2_3_t::frame_t::is_invalid() {
     return m_is_invalid;
 }
 
-id3v2_3_t::header_ex_t::header_ex_t(kaitai::kstream *p_io, id3v2_3_t::tag_t* p_parent, id3v2_3_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+id3v2_3_t::header_ex_t::header_ex_t(kaitai::kstream* p__io, id3v2_3_t::tag_t* p__parent, id3v2_3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -186,11 +190,13 @@ void id3v2_3_t::header_ex_t::_read() {
 
 id3v2_3_t::header_ex_t::~header_ex_t() {
     delete m_flags_ex;
+    if (!n_crc) {
+    }
 }
 
-id3v2_3_t::header_ex_t::flags_ex_t::flags_ex_t(kaitai::kstream *p_io, id3v2_3_t::header_ex_t* p_parent, id3v2_3_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+id3v2_3_t::header_ex_t::flags_ex_t::flags_ex_t(kaitai::kstream* p__io, id3v2_3_t::header_ex_t* p__parent, id3v2_3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -202,9 +208,9 @@ void id3v2_3_t::header_ex_t::flags_ex_t::_read() {
 id3v2_3_t::header_ex_t::flags_ex_t::~flags_ex_t() {
 }
 
-id3v2_3_t::header_t::header_t(kaitai::kstream *p_io, id3v2_3_t::tag_t* p_parent, id3v2_3_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+id3v2_3_t::header_t::header_t(kaitai::kstream* p__io, id3v2_3_t::tag_t* p__parent, id3v2_3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -221,9 +227,9 @@ id3v2_3_t::header_t::~header_t() {
     delete m_size;
 }
 
-id3v2_3_t::header_t::flags_t::flags_t(kaitai::kstream *p_io, id3v2_3_t::header_t* p_parent, id3v2_3_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+id3v2_3_t::header_t::flags_t::flags_t(kaitai::kstream* p__io, id3v2_3_t::header_t* p__parent, id3v2_3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

@@ -23,6 +23,7 @@ namespace Kaitai
             return new Xwd(new KaitaiStream(fileName));
         }
 
+
         public enum PixmapFormat
         {
             XYBitmap = 0,
@@ -45,26 +46,27 @@ namespace Kaitai
             TrueColor = 4,
             DirectColor = 5,
         }
-
-        public Xwd(KaitaiStream io, KaitaiStruct parent = null, Xwd root = null) : base(io)
+        public Xwd(KaitaiStream p__io, KaitaiStruct p__parent = null, Xwd p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _headerSize = m_io.ReadU4be();
             __raw_hdr = m_io.ReadBytes((HeaderSize - 4));
             var io___raw_hdr = new KaitaiStream(__raw_hdr);
             _hdr = new Header(io___raw_hdr, this, m_root);
             __raw_colorMap = new List<byte[]>((int) (Hdr.ColorMapEntries));
             _colorMap = new List<ColorMapEntry>((int) (Hdr.ColorMapEntries));
-            for (var i = 0; i < Hdr.ColorMapEntries; i++) {
+            for (var i = 0; i < Hdr.ColorMapEntries; i++)
+            {
                 __raw_colorMap.Add(m_io.ReadBytes(12));
                 var io___raw_colorMap = new KaitaiStream(__raw_colorMap[__raw_colorMap.Count - 1]);
                 _colorMap.Add(new ColorMapEntry(io___raw_colorMap, this, m_root));
             }
-            }
+        }
         public partial class Header : KaitaiStruct
         {
             public static Header FromFile(string fileName)
@@ -72,13 +74,14 @@ namespace Kaitai
                 return new Header(new KaitaiStream(fileName));
             }
 
-            public Header(KaitaiStream io, Xwd parent = null, Xwd root = null) : base(io)
+            public Header(KaitaiStream p__io, Xwd p__parent = null, Xwd p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _fileVersion = m_io.ReadU4be();
                 _pixmapFormat = ((Xwd.PixmapFormat) m_io.ReadU4be());
                 _pixmapDepth = m_io.ReadU4be();
@@ -104,7 +107,7 @@ namespace Kaitai
                 _windowY = m_io.ReadS4be();
                 _windowBorderWidth = m_io.ReadU4be();
                 _creator = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
-                }
+            }
             private uint _fileVersion;
             private PixmapFormat _pixmapFormat;
             private uint _pixmapDepth;
@@ -267,20 +270,21 @@ namespace Kaitai
                 return new ColorMapEntry(new KaitaiStream(fileName));
             }
 
-            public ColorMapEntry(KaitaiStream io, Xwd parent = null, Xwd root = null) : base(io)
+            public ColorMapEntry(KaitaiStream p__io, Xwd p__parent = null, Xwd p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entryNumber = m_io.ReadU4be();
                 _red = m_io.ReadU2be();
                 _green = m_io.ReadU2be();
                 _blue = m_io.ReadU2be();
                 _flags = m_io.ReadU1();
                 _padding = m_io.ReadU1();
-                }
+            }
             private uint _entryNumber;
             private ushort _red;
             private ushort _green;

@@ -255,19 +255,20 @@ namespace Kaitai
             return new AndesFirmware(new KaitaiStream(fileName));
         }
 
-        public AndesFirmware(KaitaiStream io, KaitaiStruct parent = null, AndesFirmware root = null) : base(io)
+        public AndesFirmware(KaitaiStream p__io, KaitaiStruct p__parent = null, AndesFirmware p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             __raw_imageHeader = m_io.ReadBytes(32);
             var io___raw_imageHeader = new KaitaiStream(__raw_imageHeader);
             _imageHeader = new ImageHeader(io___raw_imageHeader, this, m_root);
             _ilm = m_io.ReadBytes(ImageHeader.IlmLen);
             _dlm = m_io.ReadBytes(ImageHeader.DlmLen);
-            }
+        }
         public partial class ImageHeader : KaitaiStruct
         {
             public static ImageHeader FromFile(string fileName)
@@ -275,20 +276,21 @@ namespace Kaitai
                 return new ImageHeader(new KaitaiStream(fileName));
             }
 
-            public ImageHeader(KaitaiStream io, AndesFirmware parent = null, AndesFirmware root = null) : base(io)
+            public ImageHeader(KaitaiStream p__io, AndesFirmware p__parent = null, AndesFirmware p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _ilmLen = m_io.ReadU4le();
                 _dlmLen = m_io.ReadU4le();
                 _fwVer = m_io.ReadU2le();
                 _buildVer = m_io.ReadU2le();
                 _extra = m_io.ReadU4le();
                 _buildTime = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(16));
-                }
+            }
             private uint _ilmLen;
             private uint _dlmLen;
             private ushort _fwVer;

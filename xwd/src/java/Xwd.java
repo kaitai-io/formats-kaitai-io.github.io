@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -22,7 +23,7 @@ import java.nio.charset.Charset;
  */
 public class Xwd extends KaitaiStruct {
     public static Xwd fromFile(String fileName) throws IOException {
-        return new Xwd(new KaitaiStream(fileName));
+        return new Xwd(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum PixmapFormat {
@@ -92,19 +93,19 @@ public class Xwd extends KaitaiStruct {
     private void _read() {
         this.headerSize = this._io.readU4be();
         this._raw_hdr = this._io.readBytes((headerSize() - 4));
-        KaitaiStream _io__raw_hdr = new KaitaiStream(_raw_hdr);
+        KaitaiStream _io__raw_hdr = new ByteBufferKaitaiStream(_raw_hdr);
         this.hdr = new Header(_io__raw_hdr, this, _root);
         this._raw_colorMap = new ArrayList<byte[]>((int) (hdr().colorMapEntries()));
         colorMap = new ArrayList<ColorMapEntry>((int) (hdr().colorMapEntries()));
         for (int i = 0; i < hdr().colorMapEntries(); i++) {
             this._raw_colorMap.add(this._io.readBytes(12));
-            KaitaiStream _io__raw_colorMap = new KaitaiStream(_raw_colorMap.get(_raw_colorMap.size() - 1));
+            KaitaiStream _io__raw_colorMap = new ByteBufferKaitaiStream(_raw_colorMap.get(_raw_colorMap.size() - 1));
             this.colorMap.add(new ColorMapEntry(_io__raw_colorMap, this, _root));
         }
     }
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
-            return new Header(new KaitaiStream(fileName));
+            return new Header(new ByteBufferKaitaiStream(fileName));
         }
 
         public Header(KaitaiStream _io) {
@@ -305,7 +306,7 @@ public class Xwd extends KaitaiStruct {
     }
     public static class ColorMapEntry extends KaitaiStruct {
         public static ColorMapEntry fromFile(String fileName) throws IOException {
-            return new ColorMapEntry(new KaitaiStream(fileName));
+            return new ColorMapEntry(new ByteBufferKaitaiStream(fileName));
         }
 
         public ColorMapEntry(KaitaiStream _io) {

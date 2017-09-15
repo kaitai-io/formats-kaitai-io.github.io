@@ -217,7 +217,7 @@ data = DoomWad.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="ruby">data.numIndexEntries # => Number of entries in the lump index</code></pre>
+<pre><code class="ruby">data.num_index_entries # => Number of entries in the lump index</code></pre>
 
     </div>
 </section>
@@ -272,8 +272,10 @@ class DoomWad &lt; Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries &lt;&lt; Sector.new(@_io, self, @_root)
+        i += 1
       end
       self
     end
@@ -542,8 +544,10 @@ class DoomWad &lt; Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries &lt;&lt; Vertex.new(@_io, self, @_root)
+        i += 1
       end
       self
     end
@@ -579,8 +583,10 @@ class DoomWad &lt; Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries &lt;&lt; Thing.new(@_io, self, @_root)
+        i += 1
       end
       self
     end
@@ -594,8 +600,10 @@ class DoomWad &lt; Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries &lt;&lt; Linedef.new(@_io, self, @_root)
+        i += 1
       end
       self
     end
@@ -674,8 +682,10 @@ class DoomWad &lt; Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries &lt;&lt; Sidedef.new(@_io, self, @_root)
+        i += 1
       end
       self
     end
@@ -716,9 +726,11 @@ class DoomWad &lt; Kaitai::Struct::Struct
         _pos = @_io.pos
         @_io.seek((offset * 2))
         @linedefs = []
+        i = 0
         begin
           _ = @_io.read_s2le
           @linedefs &lt;&lt; _
+          i += 1
         end until _ == -1
         @_io.seek(_pos)
         @linedefs

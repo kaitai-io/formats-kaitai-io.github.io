@@ -37,8 +37,10 @@ var WindowsResourceFile = (function() {
   }
   WindowsResourceFile.prototype._read = function() {
     this.resources = [];
+    var i = 0;
     while (!this._io.isEof()) {
       this.resources.push(new Resource(this._io, this, this._root));
+      i++;
     }
   }
 
@@ -180,9 +182,11 @@ var WindowsResourceFile = (function() {
       }
       if (this.isString) {
         this.rest = []
+        var i = 0;
         do {
           var _ = this._io.readU2le();
           this.rest.push(_);
+          i++;
         } while (!(_ == 0));
       }
       if ( ((this.isString) && (this.savePos2 >= 0)) ) {

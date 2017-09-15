@@ -27,8 +27,10 @@ class BlenderBlend(KaitaiStruct):
     def _read(self):
         self.hdr = self._root.Header(self._io, self, self._root)
         self.blocks = []
+        i = 0
         while not self._io.is_eof():
             self.blocks.append(self._root.FileBlock(self._io, self, self._root))
+            i += 1
 
 
     class Header(KaitaiStruct):

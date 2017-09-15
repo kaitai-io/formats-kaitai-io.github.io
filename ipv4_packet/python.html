@@ -198,10 +198,10 @@ section#format-index .row {
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = Ipv4Packet(KaitaiStream(raw))</code></pre>
+data = Ipv4Packet(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -243,9 +243,9 @@ if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
     raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
 
 from tcp_segment import TcpSegment
+from ipv6_packet import Ipv6Packet
 from udp_datagram import UdpDatagram
 from icmp_packet import IcmpPacket
-from ipv6_packet import Ipv6Packet
 class Ipv4Packet(KaitaiStruct):
 
     class ProtocolEnum(Enum):
@@ -442,8 +442,10 @@ class Ipv4Packet(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.Ipv4Option(self._io, self, self._root))
+                i += 1
 
 
 

@@ -11,18 +11,19 @@ namespace Kaitai
             return new HeroesOfMightAndMagicBmp(new KaitaiStream(fileName));
         }
 
-        public HeroesOfMightAndMagicBmp(KaitaiStream io, KaitaiStruct parent = null, HeroesOfMightAndMagicBmp root = null) : base(io)
+        public HeroesOfMightAndMagicBmp(KaitaiStream p__io, KaitaiStruct p__parent = null, HeroesOfMightAndMagicBmp p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _magic = m_io.ReadU2le();
             _width = m_io.ReadU2le();
             _height = m_io.ReadU2le();
             _data = m_io.ReadBytes((Width * Height));
-            }
+        }
         private ushort _magic;
         private ushort _width;
         private ushort _height;

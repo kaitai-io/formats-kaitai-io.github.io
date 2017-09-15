@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -22,16 +21,24 @@ public:
     class header_dbase_3_t;
     class header_dbase_7_t;
 
-    dbf_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, dbf_t* p_root = 0);
+    dbf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, dbf_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~dbf_t();
 
     class header2_t : public kaitai::kstruct {
 
     public:
 
-        header2_t(kaitai::kstream* p_io, dbf_t* p_parent = 0, dbf_t* p_root = 0);
+        header2_t(kaitai::kstream* p__io, dbf_t* p__parent = 0, dbf_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header2_t();
 
     private:
@@ -65,8 +72,12 @@ public:
 
     public:
 
-        field_t(kaitai::kstream* p_io, dbf_t::header2_t* p_parent = 0, dbf_t* p_root = 0);
+        field_t(kaitai::kstream* p__io, dbf_t::header2_t* p__parent = 0, dbf_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~field_t();
 
     private:
@@ -102,8 +113,12 @@ public:
 
     public:
 
-        header1_t(kaitai::kstream* p_io, dbf_t* p_parent = 0, dbf_t* p_root = 0);
+        header1_t(kaitai::kstream* p__io, dbf_t* p__parent = 0, dbf_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header1_t();
 
     private:
@@ -140,8 +155,12 @@ public:
 
     public:
 
-        header_dbase_3_t(kaitai::kstream* p_io, dbf_t::header2_t* p_parent = 0, dbf_t* p_root = 0);
+        header_dbase_3_t(kaitai::kstream* p__io, dbf_t::header2_t* p__parent = 0, dbf_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header_dbase_3_t();
 
     private:
@@ -163,8 +182,12 @@ public:
 
     public:
 
-        header_dbase_7_t(kaitai::kstream* p_io, dbf_t::header2_t* p_parent = 0, dbf_t* p_root = 0);
+        header_dbase_7_t(kaitai::kstream* p__io, dbf_t::header2_t* p__parent = 0, dbf_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header_dbase_7_t();
 
     private:

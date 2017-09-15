@@ -136,9 +136,11 @@ class DnsPacket < Kaitai::Struct::Struct
 
     def _read
       @name = []
+      i = 0
       begin
         _ = Label.new(@_io, self, @_root)
         @name << _
+        i += 1
       end until  ((_.length == 0) || (_.length == 192)) 
       self
     end

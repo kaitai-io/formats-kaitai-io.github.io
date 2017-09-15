@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -33,16 +32,24 @@ public:
     class instrument_t;
     class op_settings_t;
 
-    genmidi_op2_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, genmidi_op2_t* p_root = 0);
+    genmidi_op2_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, genmidi_op2_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~genmidi_op2_t();
 
     class instrument_entry_t : public kaitai::kstruct {
 
     public:
 
-        instrument_entry_t(kaitai::kstream* p_io, genmidi_op2_t* p_parent = 0, genmidi_op2_t* p_root = 0);
+        instrument_entry_t(kaitai::kstream* p__io, genmidi_op2_t* p__parent = 0, genmidi_op2_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~instrument_entry_t();
 
     private:
@@ -70,8 +77,12 @@ public:
 
     public:
 
-        instrument_t(kaitai::kstream* p_io, genmidi_op2_t::instrument_entry_t* p_parent = 0, genmidi_op2_t* p_root = 0);
+        instrument_t(kaitai::kstream* p__io, genmidi_op2_t::instrument_entry_t* p__parent = 0, genmidi_op2_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~instrument_t();
 
     private:
@@ -109,8 +120,12 @@ public:
 
     public:
 
-        op_settings_t(kaitai::kstream* p_io, genmidi_op2_t::instrument_t* p_parent = 0, genmidi_op2_t* p_root = 0);
+        op_settings_t(kaitai::kstream* p__io, genmidi_op2_t::instrument_t* p__parent = 0, genmidi_op2_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~op_settings_t();
 
     private:

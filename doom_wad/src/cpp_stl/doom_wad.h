@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -31,16 +30,24 @@ public:
     class sidedefs_t;
     class blockmap_t;
 
-    doom_wad_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, doom_wad_t* p_root = 0);
+    doom_wad_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, doom_wad_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~doom_wad_t();
 
     class sectors_t : public kaitai::kstruct {
 
     public:
 
-        sectors_t(kaitai::kstream* p_io, doom_wad_t::index_entry_t* p_parent = 0, doom_wad_t* p_root = 0);
+        sectors_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~sectors_t();
 
     private:
@@ -58,8 +65,12 @@ public:
 
     public:
 
-        vertex_t(kaitai::kstream* p_io, doom_wad_t::vertexes_t* p_parent = 0, doom_wad_t* p_root = 0);
+        vertex_t(kaitai::kstream* p__io, doom_wad_t::vertexes_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~vertex_t();
 
     private:
@@ -91,16 +102,24 @@ public:
         class texture_body_t;
         class patch_t;
 
-        texture12_t(kaitai::kstream* p_io, doom_wad_t::index_entry_t* p_parent = 0, doom_wad_t* p_root = 0);
+        texture12_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~texture12_t();
 
         class texture_index_t : public kaitai::kstruct {
 
         public:
 
-            texture_index_t(kaitai::kstream* p_io, doom_wad_t::texture12_t* p_parent = 0, doom_wad_t* p_root = 0);
+            texture_index_t(kaitai::kstream* p__io, doom_wad_t::texture12_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~texture_index_t();
 
         private:
@@ -125,8 +144,12 @@ public:
 
         public:
 
-            texture_body_t(kaitai::kstream* p_io, doom_wad_t::texture12_t::texture_index_t* p_parent = 0, doom_wad_t* p_root = 0);
+            texture_body_t(kaitai::kstream* p__io, doom_wad_t::texture12_t::texture_index_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~texture_body_t();
 
         private:
@@ -168,8 +191,12 @@ public:
 
         public:
 
-            patch_t(kaitai::kstream* p_io, doom_wad_t::texture12_t::texture_body_t* p_parent = 0, doom_wad_t* p_root = 0);
+            patch_t(kaitai::kstream* p__io, doom_wad_t::texture12_t::texture_body_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~patch_t();
 
         private:
@@ -224,8 +251,12 @@ public:
 
     public:
 
-        linedef_t(kaitai::kstream* p_io, doom_wad_t::linedefs_t* p_parent = 0, doom_wad_t* p_root = 0);
+        linedef_t(kaitai::kstream* p__io, doom_wad_t::linedefs_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~linedef_t();
 
     private:
@@ -259,8 +290,12 @@ public:
 
     public:
 
-        pnames_t(kaitai::kstream* p_io, doom_wad_t::index_entry_t* p_parent = 0, doom_wad_t* p_root = 0);
+        pnames_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~pnames_t();
 
     private:
@@ -284,8 +319,12 @@ public:
 
     public:
 
-        thing_t(kaitai::kstream* p_io, doom_wad_t::things_t* p_parent = 0, doom_wad_t* p_root = 0);
+        thing_t(kaitai::kstream* p__io, doom_wad_t::things_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~thing_t();
 
     private:
@@ -338,8 +377,12 @@ public:
             SPECIAL_SECTOR_LIGHT_SEQUENCE_SPECIAL2 = 24
         };
 
-        sector_t(kaitai::kstream* p_io, doom_wad_t::sectors_t* p_parent = 0, doom_wad_t* p_root = 0);
+        sector_t(kaitai::kstream* p__io, doom_wad_t::sectors_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~sector_t();
 
     private:
@@ -380,8 +423,12 @@ public:
 
     public:
 
-        vertexes_t(kaitai::kstream* p_io, doom_wad_t::index_entry_t* p_parent = 0, doom_wad_t* p_root = 0);
+        vertexes_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~vertexes_t();
 
     private:
@@ -399,8 +446,12 @@ public:
 
     public:
 
-        sidedef_t(kaitai::kstream* p_io, doom_wad_t::sidedefs_t* p_parent = 0, doom_wad_t* p_root = 0);
+        sidedef_t(kaitai::kstream* p__io, doom_wad_t::sidedefs_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~sidedef_t();
 
     private:
@@ -428,8 +479,12 @@ public:
 
     public:
 
-        things_t(kaitai::kstream* p_io, doom_wad_t::index_entry_t* p_parent = 0, doom_wad_t* p_root = 0);
+        things_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~things_t();
 
     private:
@@ -447,8 +502,12 @@ public:
 
     public:
 
-        linedefs_t(kaitai::kstream* p_io, doom_wad_t::index_entry_t* p_parent = 0, doom_wad_t* p_root = 0);
+        linedefs_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~linedefs_t();
 
     private:
@@ -466,8 +525,12 @@ public:
 
     public:
 
-        index_entry_t(kaitai::kstream* p_io, doom_wad_t* p_parent = 0, doom_wad_t* p_root = 0);
+        index_entry_t(kaitai::kstream* p__io, doom_wad_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~index_entry_t();
 
     private:
@@ -500,8 +563,12 @@ public:
 
     public:
 
-        sidedefs_t(kaitai::kstream* p_io, doom_wad_t::index_entry_t* p_parent = 0, doom_wad_t* p_root = 0);
+        sidedefs_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~sidedefs_t();
 
     private:
@@ -520,16 +587,24 @@ public:
     public:
         class blocklist_t;
 
-        blockmap_t(kaitai::kstream* p_io, doom_wad_t::index_entry_t* p_parent = 0, doom_wad_t* p_root = 0);
+        blockmap_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~blockmap_t();
 
         class blocklist_t : public kaitai::kstruct {
 
         public:
 
-            blocklist_t(kaitai::kstream* p_io, doom_wad_t::blockmap_t* p_parent = 0, doom_wad_t* p_root = 0);
+            blocklist_t(kaitai::kstream* p__io, doom_wad_t::blockmap_t* p__parent = 0, doom_wad_t* p__root = 0);
+
+        private:
             void _read();
+
+        public:
             ~blocklist_t();
 
         private:

@@ -4,8 +4,8 @@
 
 
 
-regf_t::regf_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, regf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+regf_t::regf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, regf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -13,26 +13,36 @@ regf_t::regf_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, regf_t *p_root)
 void regf_t::_read() {
     m_header = new file_header_t(m__io, this, m__root);
     m__raw_hive_bins = new std::vector<std::string>();
+    m__io__raw_hive_bins = new std::vector<kaitai::kstream*>();
     m_hive_bins = new std::vector<hive_bin_t*>();
-    while (!m__io->is_eof()) {
-        m__raw_hive_bins->push_back(m__io->read_bytes(4096));
-        m__io__raw_hive_bins = new kaitai::kstream(m__raw_hive_bins->at(m__raw_hive_bins->size() - 1));
-        m_hive_bins->push_back(new hive_bin_t(m__io__raw_hive_bins, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m__raw_hive_bins->push_back(m__io->read_bytes(4096));
+            kaitai::kstream* io__raw_hive_bins = new kaitai::kstream(m__raw_hive_bins->at(m__raw_hive_bins->size() - 1));
+            m__io__raw_hive_bins->push_back(io__raw_hive_bins);
+            m_hive_bins->push_back(new hive_bin_t(io__raw_hive_bins, this, m__root));
+            i++;
+        }
     }
 }
 
 regf_t::~regf_t() {
     delete m_header;
     delete m__raw_hive_bins;
+    for (std::vector<kaitai::kstream*>::iterator it = m__io__raw_hive_bins->begin(); it != m__io__raw_hive_bins->end(); ++it) {
+        delete *it;
+    }
+    delete m__io__raw_hive_bins;
     for (std::vector<hive_bin_t*>::iterator it = m_hive_bins->begin(); it != m_hive_bins->end(); ++it) {
         delete *it;
     }
     delete m_hive_bins;
 }
 
-regf_t::filetime_t::filetime_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, regf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+regf_t::filetime_t::filetime_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, regf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -43,17 +53,21 @@ void regf_t::filetime_t::_read() {
 regf_t::filetime_t::~filetime_t() {
 }
 
-regf_t::hive_bin_t::hive_bin_t(kaitai::kstream *p_io, regf_t* p_parent, regf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+regf_t::hive_bin_t::hive_bin_t(kaitai::kstream* p__io, regf_t* p__parent, regf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void regf_t::hive_bin_t::_read() {
     m_header = new hive_bin_header_t(m__io, this, m__root);
     m_cells = new std::vector<hive_bin_cell_t*>();
-    while (!m__io->is_eof()) {
-        m_cells->push_back(new hive_bin_cell_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_cells->push_back(new hive_bin_cell_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -65,9 +79,9 @@ regf_t::hive_bin_t::~hive_bin_t() {
     delete m_cells;
 }
 
-regf_t::hive_bin_header_t::hive_bin_header_t(kaitai::kstream *p_io, regf_t::hive_bin_t* p_parent, regf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+regf_t::hive_bin_header_t::hive_bin_header_t(kaitai::kstream* p__io, regf_t::hive_bin_t* p__parent, regf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -85,9 +99,9 @@ regf_t::hive_bin_header_t::~hive_bin_header_t() {
     delete m_timestamp;
 }
 
-regf_t::hive_bin_cell_t::hive_bin_cell_t(kaitai::kstream *p_io, regf_t::hive_bin_t* p_parent, regf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+regf_t::hive_bin_cell_t::hive_bin_cell_t(kaitai::kstream* p__io, regf_t::hive_bin_t* p__parent, regf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_cell_size = false;
     f_is_allocated = false;
     _read();
@@ -96,39 +110,47 @@ regf_t::hive_bin_cell_t::hive_bin_cell_t(kaitai::kstream *p_io, regf_t::hive_bin
 void regf_t::hive_bin_cell_t::_read() {
     m_cell_size_raw = m__io->read_s4le();
     m_identifier = kaitai::kstream::bytes_to_str(m__io->read_bytes(2), std::string("ascii"));
+    n_data = true;
     {
         std::string on = identifier();
         if (on == std::string("li")) {
+            n_data = false;
             m__raw_data = m__io->read_bytes(((cell_size() - 2) - 4));
             m__io__raw_data = new kaitai::kstream(m__raw_data);
             m_data = new sub_key_list_li_t(m__io__raw_data, this, m__root);
         }
         else if (on == std::string("vk")) {
+            n_data = false;
             m__raw_data = m__io->read_bytes(((cell_size() - 2) - 4));
             m__io__raw_data = new kaitai::kstream(m__raw_data);
             m_data = new sub_key_list_vk_t(m__io__raw_data, this, m__root);
         }
         else if (on == std::string("lf")) {
+            n_data = false;
             m__raw_data = m__io->read_bytes(((cell_size() - 2) - 4));
             m__io__raw_data = new kaitai::kstream(m__raw_data);
             m_data = new sub_key_list_lh_lf_t(m__io__raw_data, this, m__root);
         }
         else if (on == std::string("ri")) {
+            n_data = false;
             m__raw_data = m__io->read_bytes(((cell_size() - 2) - 4));
             m__io__raw_data = new kaitai::kstream(m__raw_data);
             m_data = new sub_key_list_ri_t(m__io__raw_data, this, m__root);
         }
         else if (on == std::string("lh")) {
+            n_data = false;
             m__raw_data = m__io->read_bytes(((cell_size() - 2) - 4));
             m__io__raw_data = new kaitai::kstream(m__raw_data);
             m_data = new sub_key_list_lh_lf_t(m__io__raw_data, this, m__root);
         }
         else if (on == std::string("nk")) {
+            n_data = false;
             m__raw_data = m__io->read_bytes(((cell_size() - 2) - 4));
             m__io__raw_data = new kaitai::kstream(m__raw_data);
             m_data = new named_key_t(m__io__raw_data, this, m__root);
         }
         else if (on == std::string("sk")) {
+            n_data = false;
             m__raw_data = m__io->read_bytes(((cell_size() - 2) - 4));
             m__io__raw_data = new kaitai::kstream(m__raw_data);
             m_data = new sub_key_list_sk_t(m__io__raw_data, this, m__root);
@@ -140,11 +162,15 @@ void regf_t::hive_bin_cell_t::_read() {
 }
 
 regf_t::hive_bin_cell_t::~hive_bin_cell_t() {
+    if (!n_data) {
+        delete m__io__raw_data;
+        delete m_data;
+    }
 }
 
-regf_t::hive_bin_cell_t::sub_key_list_vk_t::sub_key_list_vk_t(kaitai::kstream *p_io, regf_t::hive_bin_cell_t* p_parent, regf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+regf_t::hive_bin_cell_t::sub_key_list_vk_t::sub_key_list_vk_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t* p__parent, regf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -163,11 +189,13 @@ void regf_t::hive_bin_cell_t::sub_key_list_vk_t::_read() {
 }
 
 regf_t::hive_bin_cell_t::sub_key_list_vk_t::~sub_key_list_vk_t() {
+    if (!n_value_name) {
+    }
 }
 
-regf_t::hive_bin_cell_t::sub_key_list_lh_lf_t::sub_key_list_lh_lf_t(kaitai::kstream *p_io, regf_t::hive_bin_cell_t* p_parent, regf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+regf_t::hive_bin_cell_t::sub_key_list_lh_lf_t::sub_key_list_lh_lf_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t* p__parent, regf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -188,9 +216,9 @@ regf_t::hive_bin_cell_t::sub_key_list_lh_lf_t::~sub_key_list_lh_lf_t() {
     delete m_items;
 }
 
-regf_t::hive_bin_cell_t::sub_key_list_lh_lf_t::item_t::item_t(kaitai::kstream *p_io, regf_t::hive_bin_cell_t::sub_key_list_lh_lf_t* p_parent, regf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+regf_t::hive_bin_cell_t::sub_key_list_lh_lf_t::item_t::item_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t::sub_key_list_lh_lf_t* p__parent, regf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -202,9 +230,9 @@ void regf_t::hive_bin_cell_t::sub_key_list_lh_lf_t::item_t::_read() {
 regf_t::hive_bin_cell_t::sub_key_list_lh_lf_t::item_t::~item_t() {
 }
 
-regf_t::hive_bin_cell_t::sub_key_list_sk_t::sub_key_list_sk_t(kaitai::kstream *p_io, regf_t::hive_bin_cell_t* p_parent, regf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+regf_t::hive_bin_cell_t::sub_key_list_sk_t::sub_key_list_sk_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t* p__parent, regf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -218,9 +246,9 @@ void regf_t::hive_bin_cell_t::sub_key_list_sk_t::_read() {
 regf_t::hive_bin_cell_t::sub_key_list_sk_t::~sub_key_list_sk_t() {
 }
 
-regf_t::hive_bin_cell_t::sub_key_list_li_t::sub_key_list_li_t(kaitai::kstream *p_io, regf_t::hive_bin_cell_t* p_parent, regf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+regf_t::hive_bin_cell_t::sub_key_list_li_t::sub_key_list_li_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t* p__parent, regf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -241,9 +269,9 @@ regf_t::hive_bin_cell_t::sub_key_list_li_t::~sub_key_list_li_t() {
     delete m_items;
 }
 
-regf_t::hive_bin_cell_t::sub_key_list_li_t::item_t::item_t(kaitai::kstream *p_io, regf_t::hive_bin_cell_t::sub_key_list_li_t* p_parent, regf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+regf_t::hive_bin_cell_t::sub_key_list_li_t::item_t::item_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t::sub_key_list_li_t* p__parent, regf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -254,9 +282,9 @@ void regf_t::hive_bin_cell_t::sub_key_list_li_t::item_t::_read() {
 regf_t::hive_bin_cell_t::sub_key_list_li_t::item_t::~item_t() {
 }
 
-regf_t::hive_bin_cell_t::named_key_t::named_key_t(kaitai::kstream *p_io, regf_t::hive_bin_cell_t* p_parent, regf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+regf_t::hive_bin_cell_t::named_key_t::named_key_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t* p__parent, regf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -287,9 +315,9 @@ regf_t::hive_bin_cell_t::named_key_t::~named_key_t() {
     delete m_last_key_written_date_and_time;
 }
 
-regf_t::hive_bin_cell_t::sub_key_list_ri_t::sub_key_list_ri_t(kaitai::kstream *p_io, regf_t::hive_bin_cell_t* p_parent, regf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+regf_t::hive_bin_cell_t::sub_key_list_ri_t::sub_key_list_ri_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t* p__parent, regf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -310,9 +338,9 @@ regf_t::hive_bin_cell_t::sub_key_list_ri_t::~sub_key_list_ri_t() {
     delete m_items;
 }
 
-regf_t::hive_bin_cell_t::sub_key_list_ri_t::item_t::item_t(kaitai::kstream *p_io, regf_t::hive_bin_cell_t::sub_key_list_ri_t* p_parent, regf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+regf_t::hive_bin_cell_t::sub_key_list_ri_t::item_t::item_t(kaitai::kstream* p__io, regf_t::hive_bin_cell_t::sub_key_list_ri_t* p__parent, regf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -339,9 +367,9 @@ bool regf_t::hive_bin_cell_t::is_allocated() {
     return m_is_allocated;
 }
 
-regf_t::file_header_t::file_header_t(kaitai::kstream *p_io, regf_t* p_parent, regf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+regf_t::file_header_t::file_header_t(kaitai::kstream* p__io, regf_t* p__parent, regf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

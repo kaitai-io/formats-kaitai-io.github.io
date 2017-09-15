@@ -598,8 +598,10 @@ var PythonPyc27 = (function() {
     }
     OpArgs.prototype._read = function() {
       this.items = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.items.push(new OpArg(this._io, this, this._root));
+        i++;
       }
     }
 

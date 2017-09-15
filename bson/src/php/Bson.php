@@ -9,8 +9,8 @@
  */
 
 class Bson extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Bson $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Bson $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -42,8 +42,8 @@ class Bson extends \Kaitai\Struct\Struct {
 namespace \Bson;
 
 class Timestamp extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Bson\Element $parent = null, \Bson $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Bson\Element $_parent = null, \Bson $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -64,8 +64,8 @@ class Timestamp extends \Kaitai\Struct\Struct {
 namespace \Bson;
 
 class BinData extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Bson\Element $parent = null, \Bson $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Bson\Element $_parent = null, \Bson $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -100,8 +100,8 @@ class BinData extends \Kaitai\Struct\Struct {
 namespace \Bson\BinData;
 
 class ByteArrayDeprecated extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Bson\BinData $parent = null, \Bson $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Bson\BinData $_parent = null, \Bson $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -130,15 +130,17 @@ class Subtype {
 namespace \Bson;
 
 class ElementsList extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Bson $parent = null, \Bson $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Bson $_parent = null, \Bson $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_elements = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_elements[] = new \Bson\Element($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_elements;
@@ -148,8 +150,8 @@ class ElementsList extends \Kaitai\Struct\Struct {
 namespace \Bson;
 
 class Cstring extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Bson $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Bson $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -167,8 +169,8 @@ class Cstring extends \Kaitai\Struct\Struct {
 namespace \Bson;
 
 class String extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Bson $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Bson $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -188,8 +190,8 @@ class String extends \Kaitai\Struct\Struct {
 namespace \Bson;
 
 class Element extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Bson\ElementsList $parent = null, \Bson $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Bson\ElementsList $_parent = null, \Bson $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -288,8 +290,8 @@ class BsonType {
 namespace \Bson;
 
 class DbPointer extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Bson\Element $parent = null, \Bson $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Bson\Element $_parent = null, \Bson $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -310,8 +312,8 @@ class DbPointer extends \Kaitai\Struct\Struct {
 namespace \Bson;
 
 class U3 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Bson\ObjectId $parent = null, \Bson $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Bson\ObjectId $_parent = null, \Bson $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -338,8 +340,8 @@ class U3 extends \Kaitai\Struct\Struct {
 namespace \Bson;
 
 class CodeWithScope extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Bson\Element $parent = null, \Bson $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Bson\Element $_parent = null, \Bson $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -367,8 +369,8 @@ class CodeWithScope extends \Kaitai\Struct\Struct {
 namespace \Bson;
 
 class F16 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Bson\Element $parent = null, \Bson $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Bson\Element $_parent = null, \Bson $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -396,8 +398,8 @@ class F16 extends \Kaitai\Struct\Struct {
 namespace \Bson;
 
 class ObjectId extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Bson $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Bson $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -428,8 +430,8 @@ class ObjectId extends \Kaitai\Struct\Struct {
 namespace \Bson;
 
 class RegEx extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Bson\Element $parent = null, \Bson $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Bson\Element $_parent = null, \Bson $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

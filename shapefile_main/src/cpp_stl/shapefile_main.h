@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -63,16 +62,24 @@ public:
         PART_TYPE_RING = 5
     };
 
-    shapefile_main_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, shapefile_main_t* p_root = 0);
+    shapefile_main_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, shapefile_main_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~shapefile_main_t();
 
     class multi_point_m_t : public kaitai::kstruct {
 
     public:
 
-        multi_point_m_t(kaitai::kstream* p_io, shapefile_main_t::record_contents_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        multi_point_m_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~multi_point_m_t();
 
     private:
@@ -98,8 +105,12 @@ public:
 
     public:
 
-        bounding_box_x_y_z_m_t(kaitai::kstream* p_io, shapefile_main_t::file_header_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        bounding_box_x_y_z_m_t(kaitai::kstream* p__io, shapefile_main_t::file_header_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~bounding_box_x_y_z_m_t();
 
     private:
@@ -123,8 +134,12 @@ public:
 
     public:
 
-        point_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, shapefile_main_t* p_root = 0);
+        point_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~point_t();
 
     private:
@@ -144,8 +159,12 @@ public:
 
     public:
 
-        polygon_t(kaitai::kstream* p_io, shapefile_main_t::record_contents_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        polygon_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~polygon_t();
 
     private:
@@ -171,8 +190,12 @@ public:
 
     public:
 
-        bounds_min_max_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, shapefile_main_t* p_root = 0);
+        bounds_min_max_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~bounds_min_max_t();
 
     private:
@@ -192,8 +215,12 @@ public:
 
     public:
 
-        poly_line_t(kaitai::kstream* p_io, shapefile_main_t::record_contents_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        poly_line_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~poly_line_t();
 
     private:
@@ -219,8 +246,12 @@ public:
 
     public:
 
-        multi_point_z_t(kaitai::kstream* p_io, shapefile_main_t::record_contents_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        multi_point_z_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~multi_point_z_t();
 
     private:
@@ -250,8 +281,12 @@ public:
 
     public:
 
-        poly_line_z_t(kaitai::kstream* p_io, shapefile_main_t::record_contents_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        poly_line_z_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~poly_line_z_t();
 
     private:
@@ -285,8 +320,12 @@ public:
 
     public:
 
-        polygon_z_t(kaitai::kstream* p_io, shapefile_main_t::record_contents_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        polygon_z_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~polygon_z_t();
 
     private:
@@ -320,8 +359,12 @@ public:
 
     public:
 
-        bounding_box_x_y_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, shapefile_main_t* p_root = 0);
+        bounding_box_x_y_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~bounding_box_x_y_t();
 
     private:
@@ -341,8 +384,12 @@ public:
 
     public:
 
-        point_m_t(kaitai::kstream* p_io, shapefile_main_t::record_contents_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        point_m_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~point_m_t();
 
     private:
@@ -364,8 +411,12 @@ public:
 
     public:
 
-        polygon_m_t(kaitai::kstream* p_io, shapefile_main_t::record_contents_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        polygon_m_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~polygon_m_t();
 
     private:
@@ -395,8 +446,12 @@ public:
 
     public:
 
-        record_header_t(kaitai::kstream* p_io, shapefile_main_t::record_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        record_header_t(kaitai::kstream* p__io, shapefile_main_t::record_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~record_header_t();
 
     private:
@@ -416,8 +471,12 @@ public:
 
     public:
 
-        multi_point_t(kaitai::kstream* p_io, shapefile_main_t::record_contents_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        multi_point_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~multi_point_t();
 
     private:
@@ -439,8 +498,12 @@ public:
 
     public:
 
-        file_header_t(kaitai::kstream* p_io, shapefile_main_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        file_header_t(kaitai::kstream* p__io, shapefile_main_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~file_header_t();
 
     private:
@@ -484,8 +547,12 @@ public:
 
     public:
 
-        point_z_t(kaitai::kstream* p_io, shapefile_main_t::record_contents_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        point_z_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~point_z_t();
 
     private:
@@ -509,8 +576,12 @@ public:
 
     public:
 
-        record_t(kaitai::kstream* p_io, shapefile_main_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        record_t(kaitai::kstream* p__io, shapefile_main_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~record_t();
 
     private:
@@ -534,8 +605,12 @@ public:
 
     public:
 
-        record_contents_t(kaitai::kstream* p_io, shapefile_main_t::record_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        record_contents_t(kaitai::kstream* p__io, shapefile_main_t::record_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~record_contents_t();
 
     private:
@@ -561,8 +636,12 @@ public:
 
     public:
 
-        multi_patch_t(kaitai::kstream* p_io, shapefile_main_t::record_contents_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        multi_patch_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~multi_patch_t();
 
     private:
@@ -598,8 +677,12 @@ public:
 
     public:
 
-        poly_line_m_t(kaitai::kstream* p_io, shapefile_main_t::record_contents_t* p_parent = 0, shapefile_main_t* p_root = 0);
+        poly_line_m_t(kaitai::kstream* p__io, shapefile_main_t::record_contents_t* p__parent = 0, shapefile_main_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~poly_line_m_t();
 
     private:

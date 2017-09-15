@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -19,16 +18,24 @@ public:
     class triangle_t;
     class vec3d_t;
 
-    stl_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, stl_t* p_root = 0);
+    stl_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, stl_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~stl_t();
 
     class triangle_t : public kaitai::kstruct {
 
     public:
 
-        triangle_t(kaitai::kstream* p_io, stl_t* p_parent = 0, stl_t* p_root = 0);
+        triangle_t(kaitai::kstream* p__io, stl_t* p__parent = 0, stl_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~triangle_t();
 
     private:
@@ -48,8 +55,12 @@ public:
 
     public:
 
-        vec3d_t(kaitai::kstream* p_io, stl_t::triangle_t* p_parent = 0, stl_t* p_root = 0);
+        vec3d_t(kaitai::kstream* p__io, stl_t::triangle_t* p__parent = 0, stl_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~vec3d_t();
 
     private:

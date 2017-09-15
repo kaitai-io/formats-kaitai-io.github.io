@@ -4,8 +4,8 @@
 
 
 
-genmidi_op2_t::genmidi_op2_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, genmidi_op2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+genmidi_op2_t::genmidi_op2_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, genmidi_op2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -34,9 +34,9 @@ genmidi_op2_t::~genmidi_op2_t() {
     delete m_instrument_names;
 }
 
-genmidi_op2_t::instrument_entry_t::instrument_entry_t(kaitai::kstream *p_io, genmidi_op2_t* p_parent, genmidi_op2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+genmidi_op2_t::instrument_entry_t::instrument_entry_t(kaitai::kstream* p__io, genmidi_op2_t* p__parent, genmidi_op2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -59,9 +59,9 @@ genmidi_op2_t::instrument_entry_t::~instrument_entry_t() {
     delete m_instruments;
 }
 
-genmidi_op2_t::instrument_t::instrument_t(kaitai::kstream *p_io, genmidi_op2_t::instrument_entry_t* p_parent, genmidi_op2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+genmidi_op2_t::instrument_t::instrument_t(kaitai::kstream* p__io, genmidi_op2_t::instrument_entry_t* p__parent, genmidi_op2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -78,9 +78,9 @@ genmidi_op2_t::instrument_t::~instrument_t() {
     delete m_op2;
 }
 
-genmidi_op2_t::op_settings_t::op_settings_t(kaitai::kstream *p_io, genmidi_op2_t::instrument_t* p_parent, genmidi_op2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+genmidi_op2_t::op_settings_t::op_settings_t(kaitai::kstream* p__io, genmidi_op2_t::instrument_t* p__parent, genmidi_op2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

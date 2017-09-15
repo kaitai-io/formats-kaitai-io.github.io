@@ -4,8 +4,8 @@
 
 
 
-tls_client_hello_t::tls_client_hello_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, tls_client_hello_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+tls_client_hello_t::tls_client_hello_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, tls_client_hello_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -34,9 +34,9 @@ tls_client_hello_t::~tls_client_hello_t() {
     }
 }
 
-tls_client_hello_t::server_name_t::server_name_t(kaitai::kstream *p_io, tls_client_hello_t::sni_t* p_parent, tls_client_hello_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tls_client_hello_t::server_name_t::server_name_t(kaitai::kstream* p__io, tls_client_hello_t::sni_t* p__parent, tls_client_hello_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -49,9 +49,9 @@ void tls_client_hello_t::server_name_t::_read() {
 tls_client_hello_t::server_name_t::~server_name_t() {
 }
 
-tls_client_hello_t::random_t::random_t(kaitai::kstream *p_io, tls_client_hello_t* p_parent, tls_client_hello_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tls_client_hello_t::random_t::random_t(kaitai::kstream* p__io, tls_client_hello_t* p__parent, tls_client_hello_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -63,9 +63,9 @@ void tls_client_hello_t::random_t::_read() {
 tls_client_hello_t::random_t::~random_t() {
 }
 
-tls_client_hello_t::session_id_t::session_id_t(kaitai::kstream *p_io, tls_client_hello_t* p_parent, tls_client_hello_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tls_client_hello_t::session_id_t::session_id_t(kaitai::kstream* p__io, tls_client_hello_t* p__parent, tls_client_hello_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -77,17 +77,21 @@ void tls_client_hello_t::session_id_t::_read() {
 tls_client_hello_t::session_id_t::~session_id_t() {
 }
 
-tls_client_hello_t::sni_t::sni_t(kaitai::kstream *p_io, tls_client_hello_t::extension_t* p_parent, tls_client_hello_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tls_client_hello_t::sni_t::sni_t(kaitai::kstream* p__io, tls_client_hello_t::extension_t* p__parent, tls_client_hello_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void tls_client_hello_t::sni_t::_read() {
     m_list_length = m__io->read_u2be();
     m_server_names = new std::vector<server_name_t*>();
-    while (!m__io->is_eof()) {
-        m_server_names->push_back(new server_name_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_server_names->push_back(new server_name_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -98,9 +102,9 @@ tls_client_hello_t::sni_t::~sni_t() {
     delete m_server_names;
 }
 
-tls_client_hello_t::cipher_suites_t::cipher_suites_t(kaitai::kstream *p_io, tls_client_hello_t* p_parent, tls_client_hello_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tls_client_hello_t::cipher_suites_t::cipher_suites_t(kaitai::kstream* p__io, tls_client_hello_t* p__parent, tls_client_hello_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -118,9 +122,9 @@ tls_client_hello_t::cipher_suites_t::~cipher_suites_t() {
     delete m_cipher_suites;
 }
 
-tls_client_hello_t::compression_methods_t::compression_methods_t(kaitai::kstream *p_io, tls_client_hello_t* p_parent, tls_client_hello_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tls_client_hello_t::compression_methods_t::compression_methods_t(kaitai::kstream* p__io, tls_client_hello_t* p__parent, tls_client_hello_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -132,17 +136,21 @@ void tls_client_hello_t::compression_methods_t::_read() {
 tls_client_hello_t::compression_methods_t::~compression_methods_t() {
 }
 
-tls_client_hello_t::alpn_t::alpn_t(kaitai::kstream *p_io, tls_client_hello_t::extension_t* p_parent, tls_client_hello_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tls_client_hello_t::alpn_t::alpn_t(kaitai::kstream* p__io, tls_client_hello_t::extension_t* p__parent, tls_client_hello_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void tls_client_hello_t::alpn_t::_read() {
     m_ext_len = m__io->read_u2be();
     m_alpn_protocols = new std::vector<protocol_t*>();
-    while (!m__io->is_eof()) {
-        m_alpn_protocols->push_back(new protocol_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_alpn_protocols->push_back(new protocol_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -153,17 +161,21 @@ tls_client_hello_t::alpn_t::~alpn_t() {
     delete m_alpn_protocols;
 }
 
-tls_client_hello_t::extensions_t::extensions_t(kaitai::kstream *p_io, tls_client_hello_t* p_parent, tls_client_hello_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tls_client_hello_t::extensions_t::extensions_t(kaitai::kstream* p__io, tls_client_hello_t* p__parent, tls_client_hello_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void tls_client_hello_t::extensions_t::_read() {
     m_len = m__io->read_u2be();
     m_extensions = new std::vector<extension_t*>();
-    while (!m__io->is_eof()) {
-        m_extensions->push_back(new extension_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_extensions->push_back(new extension_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -174,9 +186,9 @@ tls_client_hello_t::extensions_t::~extensions_t() {
     delete m_extensions;
 }
 
-tls_client_hello_t::version_t::version_t(kaitai::kstream *p_io, tls_client_hello_t* p_parent, tls_client_hello_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tls_client_hello_t::version_t::version_t(kaitai::kstream* p__io, tls_client_hello_t* p__parent, tls_client_hello_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -188,9 +200,9 @@ void tls_client_hello_t::version_t::_read() {
 tls_client_hello_t::version_t::~version_t() {
 }
 
-tls_client_hello_t::protocol_t::protocol_t(kaitai::kstream *p_io, tls_client_hello_t::alpn_t* p_parent, tls_client_hello_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tls_client_hello_t::protocol_t::protocol_t(kaitai::kstream* p__io, tls_client_hello_t::alpn_t* p__parent, tls_client_hello_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -202,31 +214,41 @@ void tls_client_hello_t::protocol_t::_read() {
 tls_client_hello_t::protocol_t::~protocol_t() {
 }
 
-tls_client_hello_t::extension_t::extension_t(kaitai::kstream *p_io, tls_client_hello_t::extensions_t* p_parent, tls_client_hello_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+tls_client_hello_t::extension_t::extension_t(kaitai::kstream* p__io, tls_client_hello_t::extensions_t* p__parent, tls_client_hello_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void tls_client_hello_t::extension_t::_read() {
     m_type = m__io->read_u2be();
     m_len = m__io->read_u2be();
+    n_body = true;
     switch (type()) {
-    case 0:
+    case 0: {
+        n_body = false;
         m__raw_body = m__io->read_bytes(len());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new sni_t(m__io__raw_body, this, m__root);
         break;
-    case 16:
+    }
+    case 16: {
+        n_body = false;
         m__raw_body = m__io->read_bytes(len());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new alpn_t(m__io__raw_body, this, m__root);
         break;
-    default:
+    }
+    default: {
         m__raw_body = m__io->read_bytes(len());
         break;
+    }
     }
 }
 
 tls_client_hello_t::extension_t::~extension_t() {
+    if (!n_body) {
+        delete m__io__raw_body;
+        delete m_body;
+    }
 }

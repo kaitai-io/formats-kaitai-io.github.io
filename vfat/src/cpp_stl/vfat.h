@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -23,8 +22,12 @@ public:
     class root_directory_t;
     class ext_bios_param_block_fat16_t;
 
-    vfat_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, vfat_t* p_root = 0);
+    vfat_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, vfat_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~vfat_t();
 
     /**
@@ -35,8 +38,12 @@ public:
 
     public:
 
-        ext_bios_param_block_fat32_t(kaitai::kstream* p_io, vfat_t::boot_sector_t* p_parent = 0, vfat_t* p_root = 0);
+        ext_bios_param_block_fat32_t(kaitai::kstream* p__io, vfat_t::boot_sector_t* p__parent = 0, vfat_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~ext_bios_param_block_fat32_t();
 
     private:
@@ -143,8 +150,12 @@ public:
 
     public:
 
-        boot_sector_t(kaitai::kstream* p_io, vfat_t* p_parent = 0, vfat_t* p_root = 0);
+        boot_sector_t(kaitai::kstream* p__io, vfat_t* p__parent = 0, vfat_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~boot_sector_t();
 
     private:
@@ -271,8 +282,12 @@ public:
 
     public:
 
-        bios_param_block_t(kaitai::kstream* p_io, vfat_t::boot_sector_t* p_parent = 0, vfat_t* p_root = 0);
+        bios_param_block_t(kaitai::kstream* p__io, vfat_t::boot_sector_t* p__parent = 0, vfat_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~bios_param_block_t();
 
     private:
@@ -376,8 +391,12 @@ public:
 
     public:
 
-        root_directory_rec_t(kaitai::kstream* p_io, vfat_t::root_directory_t* p_parent = 0, vfat_t* p_root = 0);
+        root_directory_rec_t(kaitai::kstream* p__io, vfat_t::root_directory_t* p__parent = 0, vfat_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~root_directory_rec_t();
 
     private:
@@ -407,8 +426,12 @@ public:
 
     public:
 
-        root_directory_t(kaitai::kstream* p_io, vfat_t* p_parent = 0, vfat_t* p_root = 0);
+        root_directory_t(kaitai::kstream* p__io, vfat_t* p__parent = 0, vfat_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~root_directory_t();
 
     private:
@@ -431,8 +454,12 @@ public:
 
     public:
 
-        ext_bios_param_block_fat16_t(kaitai::kstream* p_io, vfat_t::boot_sector_t* p_parent = 0, vfat_t* p_root = 0);
+        ext_bios_param_block_fat16_t(kaitai::kstream* p__io, vfat_t::boot_sector_t* p__parent = 0, vfat_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~ext_bios_param_block_fat16_t();
 
     private:

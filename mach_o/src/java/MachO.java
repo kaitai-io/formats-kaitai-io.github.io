@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.nio.charset.Charset;
 
 public class MachO extends KaitaiStruct {
     public static MachO fromFile(String fileName) throws IOException {
-        return new MachO(new KaitaiStream(fileName));
+        return new MachO(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum LoadCommandType {
@@ -45,12 +46,10 @@ public class MachO extends KaitaiStruct {
         LAZY_LOAD_DYLIB(32),
         ENCRYPTION_INFO(33),
         DYLD_INFO(34),
-        LOAD_UPWARD_DYLIB(35),
         VERSION_MIN_MACOSX(36),
         VERSION_MIN_IPHONEOS(37),
         FUNCTION_STARTS(38),
         DYLD_ENVIRONMENT(39),
-        MAIN(40),
         DATA_IN_CODE(41),
         SOURCE_VERSION(42),
         DYLIB_CODE_SIGN_DRS(43),
@@ -64,12 +63,13 @@ public class MachO extends KaitaiStruct {
         RPATH(2147483676),
         REEXPORT_DYLIB(2147483679),
         DYLD_INFO_ONLY(2147483682),
-        MAIN2(2147483688);
+        LOAD_UPWARD_DYLIB(2147483683),
+        MAIN(2147483688);
 
         private final long id;
         LoadCommandType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, LoadCommandType> byId = new HashMap<Long, LoadCommandType>(51);
+        private static final Map<Long, LoadCommandType> byId = new HashMap<Long, LoadCommandType>(50);
         static {
             for (LoadCommandType e : LoadCommandType.values())
                 byId.put(e.id(), e);
@@ -114,25 +114,6 @@ public class MachO extends KaitaiStruct {
                 byId.put(e.id(), e);
         }
         public static MachoFlags byId(long id) { return byId.get(id); }
-    }
-
-    public enum VmProt {
-        NONE(0),
-        READ(1),
-        WRITE(2),
-        EXECUTE(4),
-        NO_CHANGE(8),
-        COPY(16);
-
-        private final long id;
-        VmProt(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, VmProt> byId = new HashMap<Long, VmProt>(6);
-        static {
-            for (VmProt e : VmProt.values())
-                byId.put(e.id(), e);
-        }
-        public static VmProt byId(long id) { return byId.get(id); }
     }
 
     public enum MagicType {
@@ -196,13 +177,14 @@ public class MachO extends KaitaiStruct {
         POWERPC(18),
         ABI64(16777216),
         X86_64(16777223),
+        ARM64(16777228),
         POWERPC64(16777234),
         ANY(4294967295);
 
         private final long id;
         CpuType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, CpuType> byId = new HashMap<Long, CpuType>(19);
+        private static final Map<Long, CpuType> byId = new HashMap<Long, CpuType>(20);
         static {
             for (CpuType e : CpuType.values())
                 byId.put(e.id(), e);
@@ -234,7 +216,7 @@ public class MachO extends KaitaiStruct {
     }
     public static class RpathCommand extends KaitaiStruct {
         public static RpathCommand fromFile(String fileName) throws IOException {
-            return new RpathCommand(new KaitaiStream(fileName));
+            return new RpathCommand(new ByteBufferKaitaiStream(fileName));
         }
 
         public RpathCommand(KaitaiStream _io) {
@@ -266,7 +248,7 @@ public class MachO extends KaitaiStruct {
     }
     public static class Uleb128 extends KaitaiStruct {
         public static Uleb128 fromFile(String fileName) throws IOException {
-            return new Uleb128(new KaitaiStream(fileName));
+            return new Uleb128(new ByteBufferKaitaiStream(fileName));
         }
 
         public Uleb128(KaitaiStream _io) {
@@ -348,7 +330,7 @@ public class MachO extends KaitaiStruct {
     }
     public static class SourceVersionCommand extends KaitaiStruct {
         public static SourceVersionCommand fromFile(String fileName) throws IOException {
-            return new SourceVersionCommand(new KaitaiStream(fileName));
+            return new SourceVersionCommand(new ByteBufferKaitaiStream(fileName));
         }
 
         public SourceVersionCommand(KaitaiStream _io) {
@@ -377,7 +359,7 @@ public class MachO extends KaitaiStruct {
     }
     public static class CsBlob extends KaitaiStruct {
         public static CsBlob fromFile(String fileName) throws IOException {
-            return new CsBlob(new KaitaiStream(fileName));
+            return new CsBlob(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum CsMagic {
@@ -420,43 +402,43 @@ public class MachO extends KaitaiStruct {
             switch (magic()) {
             case DETACHED_SIGNATURE: {
                 this._raw_body = this._io.readBytes((length() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SuperBlob(_io__raw_body, this, _root);
                 break;
             }
             case EMBEDDED_SIGNATURE: {
                 this._raw_body = this._io.readBytes((length() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SuperBlob(_io__raw_body, this, _root);
                 break;
             }
             case ENTITLEMENT: {
                 this._raw_body = this._io.readBytes((length() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new Entitlement(_io__raw_body, this, _root);
                 break;
             }
             case BLOB_WRAPPER: {
                 this._raw_body = this._io.readBytes((length() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new BlobWrapper(_io__raw_body, this, _root);
                 break;
             }
             case REQUIREMENT: {
                 this._raw_body = this._io.readBytes((length() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new Requirement(_io__raw_body, this, _root);
                 break;
             }
             case CODE_DIRECTORY: {
                 this._raw_body = this._io.readBytes((length() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new CodeDirectory(_io__raw_body, this, _root);
                 break;
             }
             case REQUIREMENTS: {
                 this._raw_body = this._io.readBytes((length() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new Entitlements(_io__raw_body, this, _root);
                 break;
             }
@@ -468,7 +450,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class Entitlement extends KaitaiStruct {
             public static Entitlement fromFile(String fileName) throws IOException {
-                return new Entitlement(new KaitaiStream(fileName));
+                return new Entitlement(new ByteBufferKaitaiStream(fileName));
             }
 
             public Entitlement(KaitaiStream _io) {
@@ -497,7 +479,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class CodeDirectory extends KaitaiStruct {
             public static CodeDirectory fromFile(String fileName) throws IOException {
-                return new CodeDirectory(new KaitaiStream(fileName));
+                return new CodeDirectory(new ByteBufferKaitaiStream(fileName));
             }
 
             public CodeDirectory(KaitaiStream _io) {
@@ -602,7 +584,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class EntitlementsBlobIndex extends KaitaiStruct {
             public static EntitlementsBlobIndex fromFile(String fileName) throws IOException {
-                return new EntitlementsBlobIndex(new KaitaiStream(fileName));
+                return new EntitlementsBlobIndex(new ByteBufferKaitaiStream(fileName));
             }
 
             public enum RequirementType {
@@ -661,7 +643,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class Data extends KaitaiStruct {
             public static Data fromFile(String fileName) throws IOException {
-                return new Data(new KaitaiStream(fileName));
+                return new Data(new ByteBufferKaitaiStream(fileName));
             }
 
             public Data(KaitaiStream _io) {
@@ -696,7 +678,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class SuperBlob extends KaitaiStruct {
             public static SuperBlob fromFile(String fileName) throws IOException {
-                return new SuperBlob(new KaitaiStream(fileName));
+                return new SuperBlob(new ByteBufferKaitaiStream(fileName));
             }
 
             public SuperBlob(KaitaiStream _io) {
@@ -731,7 +713,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class Expr extends KaitaiStruct {
             public static Expr fromFile(String fileName) throws IOException {
-                return new Expr(new KaitaiStream(fileName));
+                return new Expr(new ByteBufferKaitaiStream(fileName));
             }
 
             public enum OpEnum {
@@ -852,7 +834,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class InfoKeyFieldExpr extends KaitaiStruct {
                 public static InfoKeyFieldExpr fromFile(String fileName) throws IOException {
-                    return new InfoKeyFieldExpr(new KaitaiStream(fileName));
+                    return new InfoKeyFieldExpr(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public InfoKeyFieldExpr(KaitaiStream _io) {
@@ -884,7 +866,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class CertSlotExpr extends KaitaiStruct {
                 public static CertSlotExpr fromFile(String fileName) throws IOException {
-                    return new CertSlotExpr(new KaitaiStream(fileName));
+                    return new CertSlotExpr(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public CertSlotExpr(KaitaiStream _io) {
@@ -913,7 +895,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class CertGenericExpr extends KaitaiStruct {
                 public static CertGenericExpr fromFile(String fileName) throws IOException {
-                    return new CertGenericExpr(new KaitaiStream(fileName));
+                    return new CertGenericExpr(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public CertGenericExpr(KaitaiStream _io) {
@@ -948,7 +930,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class IdentExpr extends KaitaiStruct {
                 public static IdentExpr fromFile(String fileName) throws IOException {
-                    return new IdentExpr(new KaitaiStream(fileName));
+                    return new IdentExpr(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public IdentExpr(KaitaiStream _io) {
@@ -977,7 +959,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class CertFieldExpr extends KaitaiStruct {
                 public static CertFieldExpr fromFile(String fileName) throws IOException {
-                    return new CertFieldExpr(new KaitaiStream(fileName));
+                    return new CertFieldExpr(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public CertFieldExpr(KaitaiStream _io) {
@@ -1012,7 +994,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class AnchorHashExpr extends KaitaiStruct {
                 public static AnchorHashExpr fromFile(String fileName) throws IOException {
-                    return new AnchorHashExpr(new KaitaiStream(fileName));
+                    return new AnchorHashExpr(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public AnchorHashExpr(KaitaiStream _io) {
@@ -1044,7 +1026,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class AppleGenericAnchorExpr extends KaitaiStruct {
                 public static AppleGenericAnchorExpr fromFile(String fileName) throws IOException {
-                    return new AppleGenericAnchorExpr(new KaitaiStream(fileName));
+                    return new AppleGenericAnchorExpr(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public AppleGenericAnchorExpr(KaitaiStream _io) {
@@ -1077,7 +1059,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class EntitlementFieldExpr extends KaitaiStruct {
                 public static EntitlementFieldExpr fromFile(String fileName) throws IOException {
-                    return new EntitlementFieldExpr(new KaitaiStream(fileName));
+                    return new EntitlementFieldExpr(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public EntitlementFieldExpr(KaitaiStream _io) {
@@ -1109,7 +1091,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class AndExpr extends KaitaiStruct {
                 public static AndExpr fromFile(String fileName) throws IOException {
-                    return new AndExpr(new KaitaiStream(fileName));
+                    return new AndExpr(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public AndExpr(KaitaiStream _io) {
@@ -1141,7 +1123,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class OrExpr extends KaitaiStruct {
                 public static OrExpr fromFile(String fileName) throws IOException {
-                    return new OrExpr(new KaitaiStream(fileName));
+                    return new OrExpr(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public OrExpr(KaitaiStream _io) {
@@ -1182,7 +1164,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class BlobIndex extends KaitaiStruct {
             public static BlobIndex fromFile(String fileName) throws IOException {
-                return new BlobIndex(new KaitaiStream(fileName));
+                return new BlobIndex(new ByteBufferKaitaiStream(fileName));
             }
 
             public enum CsslotType {
@@ -1232,7 +1214,7 @@ public class MachO extends KaitaiStruct {
                 long _pos = io.pos();
                 io.seek((offset() - 8));
                 this._raw_blob = io.readBytesFull();
-                KaitaiStream _io__raw_blob = new KaitaiStream(_raw_blob);
+                KaitaiStream _io__raw_blob = new ByteBufferKaitaiStream(_raw_blob);
                 this.blob = new CsBlob(_io__raw_blob, this, _root);
                 io.seek(_pos);
                 return this.blob;
@@ -1250,7 +1232,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class Match extends KaitaiStruct {
             public static Match fromFile(String fileName) throws IOException {
-                return new Match(new KaitaiStream(fileName));
+                return new Match(new ByteBufferKaitaiStream(fileName));
             }
 
             public enum Op {
@@ -1306,7 +1288,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class Requirement extends KaitaiStruct {
             public static Requirement fromFile(String fileName) throws IOException {
-                return new Requirement(new KaitaiStream(fileName));
+                return new Requirement(new ByteBufferKaitaiStream(fileName));
             }
 
             public Requirement(KaitaiStream _io) {
@@ -1338,7 +1320,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class BlobWrapper extends KaitaiStruct {
             public static BlobWrapper fromFile(String fileName) throws IOException {
-                return new BlobWrapper(new KaitaiStream(fileName));
+                return new BlobWrapper(new ByteBufferKaitaiStream(fileName));
             }
 
             public BlobWrapper(KaitaiStream _io) {
@@ -1367,7 +1349,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class Entitlements extends KaitaiStruct {
             public static Entitlements fromFile(String fileName) throws IOException {
-                return new Entitlements(new KaitaiStream(fileName));
+                return new Entitlements(new ByteBufferKaitaiStream(fileName));
             }
 
             public Entitlements(KaitaiStream _io) {
@@ -1413,9 +1395,114 @@ public class MachO extends KaitaiStruct {
         public KaitaiStruct _parent() { return _parent; }
         public byte[] _raw_body() { return _raw_body; }
     }
+    public static class RoutinesCommand extends KaitaiStruct {
+        public static RoutinesCommand fromFile(String fileName) throws IOException {
+            return new RoutinesCommand(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public RoutinesCommand(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public RoutinesCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
+            this(_io, _parent, null);
+        }
+
+        public RoutinesCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.initAddress = this._io.readU4le();
+            this.initModule = this._io.readU4le();
+            this.reserved = this._io.readBytes(24);
+        }
+        private long initAddress;
+        private long initModule;
+        private byte[] reserved;
+        private MachO _root;
+        private MachO.LoadCommand _parent;
+        public long initAddress() { return initAddress; }
+        public long initModule() { return initModule; }
+        public byte[] reserved() { return reserved; }
+        public MachO _root() { return _root; }
+        public MachO.LoadCommand _parent() { return _parent; }
+    }
+    public static class RoutinesCommand64 extends KaitaiStruct {
+        public static RoutinesCommand64 fromFile(String fileName) throws IOException {
+            return new RoutinesCommand64(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public RoutinesCommand64(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public RoutinesCommand64(KaitaiStream _io, MachO.LoadCommand _parent) {
+            this(_io, _parent, null);
+        }
+
+        public RoutinesCommand64(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.initAddress = this._io.readU8le();
+            this.initModule = this._io.readU8le();
+            this.reserved = this._io.readBytes(48);
+        }
+        private long initAddress;
+        private long initModule;
+        private byte[] reserved;
+        private MachO _root;
+        private MachO.LoadCommand _parent;
+        public long initAddress() { return initAddress; }
+        public long initModule() { return initModule; }
+        public byte[] reserved() { return reserved; }
+        public MachO _root() { return _root; }
+        public MachO.LoadCommand _parent() { return _parent; }
+    }
+    public static class LinkerOptionCommand extends KaitaiStruct {
+        public static LinkerOptionCommand fromFile(String fileName) throws IOException {
+            return new LinkerOptionCommand(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public LinkerOptionCommand(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public LinkerOptionCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
+            this(_io, _parent, null);
+        }
+
+        public LinkerOptionCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.numStrings = this._io.readU4le();
+            strings = new ArrayList<String>((int) (numStrings()));
+            for (int i = 0; i < numStrings(); i++) {
+                this.strings.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("utf-8")));
+            }
+        }
+        private long numStrings;
+        private ArrayList<String> strings;
+        private MachO _root;
+        private MachO.LoadCommand _parent;
+        public long numStrings() { return numStrings; }
+        public ArrayList<String> strings() { return strings; }
+        public MachO _root() { return _root; }
+        public MachO.LoadCommand _parent() { return _parent; }
+    }
     public static class SegmentCommand64 extends KaitaiStruct {
         public static SegmentCommand64 fromFile(String fileName) throws IOException {
-            return new SegmentCommand64(new KaitaiStream(fileName));
+            return new SegmentCommand64(new ByteBufferKaitaiStream(fileName));
         }
 
         public SegmentCommand64(KaitaiStream _io) {
@@ -1438,8 +1525,8 @@ public class MachO extends KaitaiStruct {
             this.vmsize = this._io.readU8le();
             this.fileoff = this._io.readU8le();
             this.filesize = this._io.readU8le();
-            this.maxprot = MachO.VmProt.byId(this._io.readU4le());
-            this.initprot = MachO.VmProt.byId(this._io.readU4le());
+            this.maxprot = new VmProt(this._io, this, _root);
+            this.initprot = new VmProt(this._io, this, _root);
             this.nsects = this._io.readU4le();
             this.flags = this._io.readU4le();
             sections = new ArrayList<Section64>((int) (nsects()));
@@ -1449,7 +1536,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class Section64 extends KaitaiStruct {
             public static Section64 fromFile(String fileName) throws IOException {
-                return new Section64(new KaitaiStream(fileName));
+                return new Section64(new ByteBufferKaitaiStream(fileName));
             }
 
             public Section64(KaitaiStream _io) {
@@ -1482,7 +1569,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class CfStringList extends KaitaiStruct {
                 public static CfStringList fromFile(String fileName) throws IOException {
-                    return new CfStringList(new KaitaiStream(fileName));
+                    return new CfStringList(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public CfStringList(KaitaiStream _io) {
@@ -1501,8 +1588,12 @@ public class MachO extends KaitaiStruct {
                 }
                 private void _read() {
                     this.items = new ArrayList<CfString>();
-                    while (!this._io.isEof()) {
-                        this.items.add(new CfString(this._io, this, _root));
+                    {
+                        int i = 0;
+                        while (!this._io.isEof()) {
+                            this.items.add(new CfString(this._io, this, _root));
+                            i++;
+                        }
                     }
                 }
                 private ArrayList<CfString> items;
@@ -1514,7 +1605,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class CfString extends KaitaiStruct {
                 public static CfString fromFile(String fileName) throws IOException {
-                    return new CfString(new KaitaiStream(fileName));
+                    return new CfString(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public CfString(KaitaiStream _io) {
@@ -1552,7 +1643,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class EhFrameItem extends KaitaiStruct {
                 public static EhFrameItem fromFile(String fileName) throws IOException {
-                    return new EhFrameItem(new KaitaiStream(fileName));
+                    return new EhFrameItem(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public EhFrameItem(KaitaiStream _io) {
@@ -1579,7 +1670,7 @@ public class MachO extends KaitaiStruct {
                         switch (id()) {
                         case 0: {
                             this._raw_body = this._io.readBytes((length() - 4));
-                            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                             this.body = new Cie(_io__raw_body, this, _root);
                             break;
                         }
@@ -1592,7 +1683,7 @@ public class MachO extends KaitaiStruct {
                 }
                 public static class CharChain extends KaitaiStruct {
                     public static CharChain fromFile(String fileName) throws IOException {
-                        return new CharChain(new KaitaiStream(fileName));
+                        return new CharChain(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public CharChain(KaitaiStream _io) {
@@ -1626,7 +1717,7 @@ public class MachO extends KaitaiStruct {
                 }
                 public static class Cie extends KaitaiStruct {
                     public static Cie fromFile(String fileName) throws IOException {
-                        return new Cie(new KaitaiStream(fileName));
+                        return new Cie(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public Cie(KaitaiStream _io) {
@@ -1672,7 +1763,7 @@ public class MachO extends KaitaiStruct {
                 }
                 public static class AugmentationEntry extends KaitaiStruct {
                     public static AugmentationEntry fromFile(String fileName) throws IOException {
-                        return new AugmentationEntry(new KaitaiStream(fileName));
+                        return new AugmentationEntry(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public AugmentationEntry(KaitaiStream _io) {
@@ -1721,7 +1812,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class EhFrame extends KaitaiStruct {
                 public static EhFrame fromFile(String fileName) throws IOException {
-                    return new EhFrame(new KaitaiStream(fileName));
+                    return new EhFrame(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public EhFrame(KaitaiStream _io) {
@@ -1740,8 +1831,12 @@ public class MachO extends KaitaiStruct {
                 }
                 private void _read() {
                     this.items = new ArrayList<EhFrameItem>();
-                    while (!this._io.isEof()) {
-                        this.items.add(new EhFrameItem(this._io, this, _root));
+                    {
+                        int i = 0;
+                        while (!this._io.isEof()) {
+                            this.items.add(new EhFrameItem(this._io, this, _root));
+                            i++;
+                        }
                     }
                 }
                 private ArrayList<EhFrameItem> items;
@@ -1753,7 +1848,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class PointerList extends KaitaiStruct {
                 public static PointerList fromFile(String fileName) throws IOException {
-                    return new PointerList(new KaitaiStream(fileName));
+                    return new PointerList(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public PointerList(KaitaiStream _io) {
@@ -1772,8 +1867,12 @@ public class MachO extends KaitaiStruct {
                 }
                 private void _read() {
                     this.items = new ArrayList<Long>();
-                    while (!this._io.isEof()) {
-                        this.items.add(this._io.readU8le());
+                    {
+                        int i = 0;
+                        while (!this._io.isEof()) {
+                            this.items.add(this._io.readU8le());
+                            i++;
+                        }
                     }
                 }
                 private ArrayList<Long> items;
@@ -1785,7 +1884,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class StringList extends KaitaiStruct {
                 public static StringList fromFile(String fileName) throws IOException {
-                    return new StringList(new KaitaiStream(fileName));
+                    return new StringList(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public StringList(KaitaiStream _io) {
@@ -1804,8 +1903,12 @@ public class MachO extends KaitaiStruct {
                 }
                 private void _read() {
                     this.strings = new ArrayList<String>();
-                    while (!this._io.isEof()) {
-                        this.strings.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ascii")));
+                    {
+                        int i = 0;
+                        while (!this._io.isEof()) {
+                            this.strings.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ascii")));
+                            i++;
+                        }
                     }
                 }
                 private ArrayList<String> strings;
@@ -1825,103 +1928,103 @@ public class MachO extends KaitaiStruct {
                 switch (sectName()) {
                 case "__objc_nlclslist": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new PointerList(_io__raw_data, this, _root);
                     break;
                 }
                 case "__objc_methname": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new StringList(_io__raw_data, this, _root);
                     break;
                 }
                 case "__nl_symbol_ptr": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new PointerList(_io__raw_data, this, _root);
                     break;
                 }
                 case "__la_symbol_ptr": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new PointerList(_io__raw_data, this, _root);
                     break;
                 }
                 case "__objc_selrefs": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new PointerList(_io__raw_data, this, _root);
                     break;
                 }
                 case "__cstring": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new StringList(_io__raw_data, this, _root);
                     break;
                 }
                 case "__objc_classlist": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new PointerList(_io__raw_data, this, _root);
                     break;
                 }
                 case "__objc_protolist": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new PointerList(_io__raw_data, this, _root);
                     break;
                 }
                 case "__objc_imageinfo": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new PointerList(_io__raw_data, this, _root);
                     break;
                 }
                 case "__objc_methtype": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new StringList(_io__raw_data, this, _root);
                     break;
                 }
                 case "__cfstring": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new CfStringList(_io__raw_data, this, _root);
                     break;
                 }
                 case "__objc_classrefs": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new PointerList(_io__raw_data, this, _root);
                     break;
                 }
                 case "__objc_protorefs": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new PointerList(_io__raw_data, this, _root);
                     break;
                 }
                 case "__objc_classname": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new StringList(_io__raw_data, this, _root);
                     break;
                 }
                 case "__got": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new PointerList(_io__raw_data, this, _root);
                     break;
                 }
                 case "__eh_frame": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new EhFrame(_io__raw_data, this, _root);
                     break;
                 }
                 case "__objc_superrefs": {
                     this._raw_data = io.readBytes(size());
-                    KaitaiStream _io__raw_data = new KaitaiStream(_raw_data);
+                    KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
                     this.data = new PointerList(_io__raw_data, this, _root);
                     break;
                 }
@@ -1989,9 +2092,98 @@ public class MachO extends KaitaiStruct {
         public MachO _root() { return _root; }
         public MachO.LoadCommand _parent() { return _parent; }
     }
+    public static class VmProt extends KaitaiStruct {
+        public static VmProt fromFile(String fileName) throws IOException {
+            return new VmProt(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public VmProt(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public VmProt(KaitaiStream _io, MachO.SegmentCommand64 _parent) {
+            this(_io, _parent, null);
+        }
+
+        public VmProt(KaitaiStream _io, MachO.SegmentCommand64 _parent, MachO _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.stripRead = this._io.readBitsInt(1) != 0;
+            this.isMask = this._io.readBitsInt(1) != 0;
+            this.reserved0 = this._io.readBitsInt(1) != 0;
+            this.copy = this._io.readBitsInt(1) != 0;
+            this.noChange = this._io.readBitsInt(1) != 0;
+            this.execute = this._io.readBitsInt(1) != 0;
+            this.write = this._io.readBitsInt(1) != 0;
+            this.read = this._io.readBitsInt(1) != 0;
+            this.reserved1 = this._io.readBitsInt(24);
+        }
+        private boolean stripRead;
+        private boolean isMask;
+        private boolean reserved0;
+        private boolean copy;
+        private boolean noChange;
+        private boolean execute;
+        private boolean write;
+        private boolean read;
+        private long reserved1;
+        private MachO _root;
+        private MachO.SegmentCommand64 _parent;
+
+        /**
+         * Special marker to support execute-only protection.
+         */
+        public boolean stripRead() { return stripRead; }
+
+        /**
+         * Indicates to use value as a mask against the actual protection bits.
+         */
+        public boolean isMask() { return isMask; }
+
+        /**
+         * Reserved (unused) bit.
+         */
+        public boolean reserved0() { return reserved0; }
+
+        /**
+         * Used when write permission can not be obtained, to mark the entry as COW.
+         */
+        public boolean copy() { return copy; }
+
+        /**
+         * Used only by memory_object_lock_request to indicate no change to page locks.
+         */
+        public boolean noChange() { return noChange; }
+
+        /**
+         * Execute permission.
+         */
+        public boolean execute() { return execute; }
+
+        /**
+         * Write permission.
+         */
+        public boolean write() { return write; }
+
+        /**
+         * Read permission.
+         */
+        public boolean read() { return read; }
+
+        /**
+         * Reserved (unused) bits.
+         */
+        public long reserved1() { return reserved1; }
+        public MachO _root() { return _root; }
+        public MachO.SegmentCommand64 _parent() { return _parent; }
+    }
     public static class DysymtabCommand extends KaitaiStruct {
         public static DysymtabCommand fromFile(String fileName) throws IOException {
-            return new DysymtabCommand(new KaitaiStream(fileName));
+            return new DysymtabCommand(new ByteBufferKaitaiStream(fileName));
         }
 
         public DysymtabCommand(KaitaiStream _io) {
@@ -2085,7 +2277,7 @@ public class MachO extends KaitaiStruct {
     }
     public static class MachHeader extends KaitaiStruct {
         public static MachHeader fromFile(String fileName) throws IOException {
-            return new MachHeader(new KaitaiStream(fileName));
+            return new MachHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public MachHeader(KaitaiStream _io) {
@@ -2134,7 +2326,7 @@ public class MachO extends KaitaiStruct {
     }
     public static class LinkeditDataCommand extends KaitaiStruct {
         public static LinkeditDataCommand fromFile(String fileName) throws IOException {
-            return new LinkeditDataCommand(new KaitaiStream(fileName));
+            return new LinkeditDataCommand(new ByteBufferKaitaiStream(fileName));
         }
 
         public LinkeditDataCommand(KaitaiStream _io) {
@@ -2164,9 +2356,70 @@ public class MachO extends KaitaiStruct {
         public MachO _root() { return _root; }
         public MachO.LoadCommand _parent() { return _parent; }
     }
+    public static class SubCommand extends KaitaiStruct {
+        public static SubCommand fromFile(String fileName) throws IOException {
+            return new SubCommand(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public SubCommand(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public SubCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
+            this(_io, _parent, null);
+        }
+
+        public SubCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.name = new LcStr(this._io, this, _root);
+        }
+        private LcStr name;
+        private MachO _root;
+        private MachO.LoadCommand _parent;
+        public LcStr name() { return name; }
+        public MachO _root() { return _root; }
+        public MachO.LoadCommand _parent() { return _parent; }
+    }
+    public static class TwolevelHintsCommand extends KaitaiStruct {
+        public static TwolevelHintsCommand fromFile(String fileName) throws IOException {
+            return new TwolevelHintsCommand(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public TwolevelHintsCommand(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TwolevelHintsCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TwolevelHintsCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.offset = this._io.readU4le();
+            this.numHints = this._io.readU4le();
+        }
+        private long offset;
+        private long numHints;
+        private MachO _root;
+        private MachO.LoadCommand _parent;
+        public long offset() { return offset; }
+        public long numHints() { return numHints; }
+        public MachO _root() { return _root; }
+        public MachO.LoadCommand _parent() { return _parent; }
+    }
     public static class Version extends KaitaiStruct {
         public static Version fromFile(String fileName) throws IOException {
-            return new Version(new KaitaiStream(fileName));
+            return new Version(new ByteBufferKaitaiStream(fileName));
         }
 
         public Version(KaitaiStream _io) {
@@ -2202,9 +2455,49 @@ public class MachO extends KaitaiStruct {
         public MachO _root() { return _root; }
         public MachO.VersionMinCommand _parent() { return _parent; }
     }
+    public static class EncryptionInfoCommand extends KaitaiStruct {
+        public static EncryptionInfoCommand fromFile(String fileName) throws IOException {
+            return new EncryptionInfoCommand(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public EncryptionInfoCommand(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public EncryptionInfoCommand(KaitaiStream _io, MachO.LoadCommand _parent) {
+            this(_io, _parent, null);
+        }
+
+        public EncryptionInfoCommand(KaitaiStream _io, MachO.LoadCommand _parent, MachO _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.cryptoff = this._io.readU4le();
+            this.cryptsize = this._io.readU4le();
+            this.cryptid = this._io.readU4le();
+            if ( ((_root.magic() == MachO.MagicType.MACHO_BE_X64) || (_root.magic() == MachO.MagicType.MACHO_LE_X64)) ) {
+                this.pad = this._io.readU4le();
+            }
+        }
+        private long cryptoff;
+        private long cryptsize;
+        private long cryptid;
+        private Long pad;
+        private MachO _root;
+        private MachO.LoadCommand _parent;
+        public long cryptoff() { return cryptoff; }
+        public long cryptsize() { return cryptsize; }
+        public long cryptid() { return cryptid; }
+        public Long pad() { return pad; }
+        public MachO _root() { return _root; }
+        public MachO.LoadCommand _parent() { return _parent; }
+    }
     public static class CodeSignatureCommand extends KaitaiStruct {
         public static CodeSignatureCommand fromFile(String fileName) throws IOException {
-            return new CodeSignatureCommand(new KaitaiStream(fileName));
+            return new CodeSignatureCommand(new ByteBufferKaitaiStream(fileName));
         }
 
         public CodeSignatureCommand(KaitaiStream _io) {
@@ -2233,7 +2526,7 @@ public class MachO extends KaitaiStruct {
             long _pos = io.pos();
             io.seek(dataOff());
             this._raw_codeSignature = io.readBytes(dataSize());
-            KaitaiStream _io__raw_codeSignature = new KaitaiStream(_raw_codeSignature);
+            KaitaiStream _io__raw_codeSignature = new ByteBufferKaitaiStream(_raw_codeSignature);
             this.codeSignature = new CsBlob(_io__raw_codeSignature, this, _root);
             io.seek(_pos);
             return this.codeSignature;
@@ -2251,7 +2544,7 @@ public class MachO extends KaitaiStruct {
     }
     public static class DyldInfoCommand extends KaitaiStruct {
         public static DyldInfoCommand fromFile(String fileName) throws IOException {
-            return new DyldInfoCommand(new KaitaiStream(fileName));
+            return new DyldInfoCommand(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum BindOpcode {
@@ -2308,7 +2601,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class BindItem extends KaitaiStruct {
             public static BindItem fromFile(String fileName) throws IOException {
-                return new BindItem(new KaitaiStream(fileName));
+                return new BindItem(new ByteBufferKaitaiStream(fileName));
             }
 
             public BindItem(KaitaiStream _io) {
@@ -2367,7 +2660,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class RebaseData extends KaitaiStruct {
             public static RebaseData fromFile(String fileName) throws IOException {
-                return new RebaseData(new KaitaiStream(fileName));
+                return new RebaseData(new ByteBufferKaitaiStream(fileName));
             }
 
             public enum Opcode {
@@ -2410,15 +2703,17 @@ public class MachO extends KaitaiStruct {
                 this.items = new ArrayList<RebaseItem>();
                 {
                     RebaseItem _it;
+                    int i = 0;
                     do {
                         _it = new RebaseItem(this._io, this, _root);
                         this.items.add(_it);
+                        i++;
                     } while (!(_it.opcode() == Opcode.DONE));
                 }
             }
             public static class RebaseItem extends KaitaiStruct {
                 public static RebaseItem fromFile(String fileName) throws IOException {
-                    return new RebaseItem(new KaitaiStream(fileName));
+                    return new RebaseItem(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public RebaseItem(KaitaiStream _io) {
@@ -2479,7 +2774,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class ExportNode extends KaitaiStruct {
             public static ExportNode fromFile(String fileName) throws IOException {
-                return new ExportNode(new KaitaiStream(fileName));
+                return new ExportNode(new ByteBufferKaitaiStream(fileName));
             }
 
             public ExportNode(KaitaiStream _io) {
@@ -2507,7 +2802,7 @@ public class MachO extends KaitaiStruct {
             }
             public static class Child extends KaitaiStruct {
                 public static Child fromFile(String fileName) throws IOException {
-                    return new Child(new KaitaiStream(fileName));
+                    return new Child(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public Child(KaitaiStream _io) {
@@ -2562,7 +2857,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class BindData extends KaitaiStruct {
             public static BindData fromFile(String fileName) throws IOException {
-                return new BindData(new KaitaiStream(fileName));
+                return new BindData(new ByteBufferKaitaiStream(fileName));
             }
 
             public BindData(KaitaiStream _io) {
@@ -2583,9 +2878,11 @@ public class MachO extends KaitaiStruct {
                 this.items = new ArrayList<BindItem>();
                 {
                     BindItem _it;
+                    int i = 0;
                     do {
                         _it = new BindItem(this._io, this, _root);
                         this.items.add(_it);
+                        i++;
                     } while (!(_it.opcode() == MachO.DyldInfoCommand.BindOpcode.DONE));
                 }
             }
@@ -2598,7 +2895,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class LazyBindData extends KaitaiStruct {
             public static LazyBindData fromFile(String fileName) throws IOException {
-                return new LazyBindData(new KaitaiStream(fileName));
+                return new LazyBindData(new ByteBufferKaitaiStream(fileName));
             }
 
             public LazyBindData(KaitaiStream _io) {
@@ -2617,8 +2914,12 @@ public class MachO extends KaitaiStruct {
             }
             private void _read() {
                 this.items = new ArrayList<BindItem>();
-                while (!this._io.isEof()) {
-                    this.items.add(new BindItem(this._io, this, _root));
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.items.add(new BindItem(this._io, this, _root));
+                        i++;
+                    }
                 }
             }
             private ArrayList<BindItem> items;
@@ -2636,7 +2937,7 @@ public class MachO extends KaitaiStruct {
             long _pos = io.pos();
             io.seek(rebaseOff());
             this._raw_rebase = io.readBytes(rebaseSize());
-            KaitaiStream _io__raw_rebase = new KaitaiStream(_raw_rebase);
+            KaitaiStream _io__raw_rebase = new ByteBufferKaitaiStream(_raw_rebase);
             this.rebase = new RebaseData(_io__raw_rebase, this, _root);
             io.seek(_pos);
             return this.rebase;
@@ -2649,7 +2950,7 @@ public class MachO extends KaitaiStruct {
             long _pos = io.pos();
             io.seek(bindOff());
             this._raw_bind = io.readBytes(bindSize());
-            KaitaiStream _io__raw_bind = new KaitaiStream(_raw_bind);
+            KaitaiStream _io__raw_bind = new ByteBufferKaitaiStream(_raw_bind);
             this.bind = new BindData(_io__raw_bind, this, _root);
             io.seek(_pos);
             return this.bind;
@@ -2662,7 +2963,7 @@ public class MachO extends KaitaiStruct {
             long _pos = io.pos();
             io.seek(lazyBindOff());
             this._raw_lazyBind = io.readBytes(lazyBindSize());
-            KaitaiStream _io__raw_lazyBind = new KaitaiStream(_raw_lazyBind);
+            KaitaiStream _io__raw_lazyBind = new ByteBufferKaitaiStream(_raw_lazyBind);
             this.lazyBind = new LazyBindData(_io__raw_lazyBind, this, _root);
             io.seek(_pos);
             return this.lazyBind;
@@ -2675,7 +2976,7 @@ public class MachO extends KaitaiStruct {
             long _pos = io.pos();
             io.seek(exportOff());
             this._raw_exports = io.readBytes(exportSize());
-            KaitaiStream _io__raw_exports = new KaitaiStream(_raw_exports);
+            KaitaiStream _io__raw_exports = new ByteBufferKaitaiStream(_raw_exports);
             this.exports = new ExportNode(_io__raw_exports, this, _root);
             io.seek(_pos);
             return this.exports;
@@ -2715,7 +3016,7 @@ public class MachO extends KaitaiStruct {
     }
     public static class DylinkerCommand extends KaitaiStruct {
         public static DylinkerCommand fromFile(String fileName) throws IOException {
-            return new DylinkerCommand(new KaitaiStream(fileName));
+            return new DylinkerCommand(new ByteBufferKaitaiStream(fileName));
         }
 
         public DylinkerCommand(KaitaiStream _io) {
@@ -2744,7 +3045,7 @@ public class MachO extends KaitaiStruct {
     }
     public static class DylibCommand extends KaitaiStruct {
         public static DylibCommand fromFile(String fileName) throws IOException {
-            return new DylibCommand(new KaitaiStream(fileName));
+            return new DylibCommand(new ByteBufferKaitaiStream(fileName));
         }
 
         public DylibCommand(KaitaiStream _io) {
@@ -2785,18 +3086,18 @@ public class MachO extends KaitaiStruct {
     }
     public static class LcStr extends KaitaiStruct {
         public static LcStr fromFile(String fileName) throws IOException {
-            return new LcStr(new KaitaiStream(fileName));
+            return new LcStr(new ByteBufferKaitaiStream(fileName));
         }
 
         public LcStr(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public LcStr(KaitaiStream _io, MachO.DylinkerCommand _parent) {
+        public LcStr(KaitaiStream _io, KaitaiStruct _parent) {
             this(_io, _parent, null);
         }
 
-        public LcStr(KaitaiStream _io, MachO.DylinkerCommand _parent, MachO _root) {
+        public LcStr(KaitaiStream _io, KaitaiStruct _parent, MachO _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -2809,15 +3110,15 @@ public class MachO extends KaitaiStruct {
         private long length;
         private String value;
         private MachO _root;
-        private MachO.DylinkerCommand _parent;
+        private KaitaiStruct _parent;
         public long length() { return length; }
         public String value() { return value; }
         public MachO _root() { return _root; }
-        public MachO.DylinkerCommand _parent() { return _parent; }
+        public KaitaiStruct _parent() { return _parent; }
     }
     public static class LoadCommand extends KaitaiStruct {
         public static LoadCommand fromFile(String fileName) throws IOException {
-            return new LoadCommand(new KaitaiStream(fileName));
+            return new LoadCommand(new ByteBufferKaitaiStream(fileName));
         }
 
         public LoadCommand(KaitaiStream _io) {
@@ -2838,88 +3139,232 @@ public class MachO extends KaitaiStruct {
             this.type = MachO.LoadCommandType.byId(this._io.readU4le());
             this.size = this._io.readU4le();
             switch (type()) {
+            case SUB_LIBRARY: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new SubCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case SEGMENT_SPLIT_INFO: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new LinkeditDataCommand(_io__raw_body, this, _root);
+                break;
+            }
             case RPATH: {
                 this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new RpathCommand(_io__raw_body, this, _root);
                 break;
             }
             case SOURCE_VERSION: {
                 this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SourceVersionCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case ENCRYPTION_INFO_64: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new EncryptionInfoCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case VERSION_MIN_TVOS: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new VersionMinCommand(_io__raw_body, this, _root);
                 break;
             }
             case LOAD_DYLINKER: {
                 this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new DylinkerCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case SUB_FRAMEWORK: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new SubCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case LOAD_WEAK_DYLIB: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new DylibCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case VERSION_MIN_IPHONEOS: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new VersionMinCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case LINKER_OPTIMIZATION_HINT: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new LinkeditDataCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case DYLD_ENVIRONMENT: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new DylinkerCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case LOAD_UPWARD_DYLIB: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new DylibCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case DYLIB_CODE_SIGN_DRS: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new LinkeditDataCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case DYLD_INFO: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new DyldInfoCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case REEXPORT_DYLIB: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new DylibCommand(_io__raw_body, this, _root);
                 break;
             }
             case SYMTAB: {
                 this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SymtabCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case ROUTINES_64: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new RoutinesCommand64(_io__raw_body, this, _root);
+                break;
+            }
+            case ID_DYLINKER: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new DylinkerCommand(_io__raw_body, this, _root);
                 break;
             }
             case MAIN: {
                 this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new EntryPointCommand(_io__raw_body, this, _root);
                 break;
             }
             case FUNCTION_STARTS: {
                 this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new LinkeditDataCommand(_io__raw_body, this, _root);
                 break;
             }
             case VERSION_MIN_MACOSX: {
                 this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new VersionMinCommand(_io__raw_body, this, _root);
                 break;
             }
             case DATA_IN_CODE: {
                 this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new LinkeditDataCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case VERSION_MIN_WATCHOS: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new VersionMinCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case ENCRYPTION_INFO: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new EncryptionInfoCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case SUB_UMBRELLA: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new SubCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case LINKER_OPTION: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new LinkerOptionCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case TWOLEVEL_HINTS: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new TwolevelHintsCommand(_io__raw_body, this, _root);
                 break;
             }
             case UUID: {
                 this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new UuidCommand(_io__raw_body, this, _root);
                 break;
             }
             case DYLD_INFO_ONLY: {
                 this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new DyldInfoCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case LAZY_LOAD_DYLIB: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new DylibCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case SUB_CLIENT: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new SubCommand(_io__raw_body, this, _root);
+                break;
+            }
+            case ROUTINES: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new RoutinesCommand(_io__raw_body, this, _root);
                 break;
             }
             case CODE_SIGNATURE: {
                 this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new CodeSignatureCommand(_io__raw_body, this, _root);
                 break;
             }
             case DYSYMTAB: {
                 this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new DysymtabCommand(_io__raw_body, this, _root);
                 break;
             }
             case LOAD_DYLIB: {
                 this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new DylibCommand(_io__raw_body, this, _root);
                 break;
             }
             case SEGMENT_64: {
                 this._raw_body = this._io.readBytes((size() - 8));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SegmentCommand64(_io__raw_body, this, _root);
+                break;
+            }
+            case ID_DYLIB: {
+                this._raw_body = this._io.readBytes((size() - 8));
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new DylibCommand(_io__raw_body, this, _root);
                 break;
             }
             default: {
@@ -2943,7 +3388,7 @@ public class MachO extends KaitaiStruct {
     }
     public static class UuidCommand extends KaitaiStruct {
         public static UuidCommand fromFile(String fileName) throws IOException {
-            return new UuidCommand(new KaitaiStream(fileName));
+            return new UuidCommand(new ByteBufferKaitaiStream(fileName));
         }
 
         public UuidCommand(KaitaiStream _io) {
@@ -2972,7 +3417,7 @@ public class MachO extends KaitaiStruct {
     }
     public static class SymtabCommand extends KaitaiStruct {
         public static SymtabCommand fromFile(String fileName) throws IOException {
-            return new SymtabCommand(new KaitaiStream(fileName));
+            return new SymtabCommand(new ByteBufferKaitaiStream(fileName));
         }
 
         public SymtabCommand(KaitaiStream _io) {
@@ -2997,7 +3442,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class StrTable extends KaitaiStruct {
             public static StrTable fromFile(String fileName) throws IOException {
-                return new StrTable(new KaitaiStream(fileName));
+                return new StrTable(new ByteBufferKaitaiStream(fileName));
             }
 
             public StrTable(KaitaiStream _io) {
@@ -3019,9 +3464,11 @@ public class MachO extends KaitaiStruct {
                 this.items = new ArrayList<String>();
                 {
                     String _it;
+                    int i = 0;
                     do {
                         _it = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ascii"));
                         this.items.add(_it);
+                        i++;
                     } while (!(_it.equals("")));
                 }
             }
@@ -3036,7 +3483,7 @@ public class MachO extends KaitaiStruct {
         }
         public static class Nlist64 extends KaitaiStruct {
             public static Nlist64 fromFile(String fileName) throws IOException {
-                return new Nlist64(new KaitaiStream(fileName));
+                return new Nlist64(new ByteBufferKaitaiStream(fileName));
             }
 
             public Nlist64(KaitaiStream _io) {
@@ -3097,7 +3544,7 @@ public class MachO extends KaitaiStruct {
             long _pos = io.pos();
             io.seek(strOff());
             this._raw_strs = io.readBytes(strSize());
-            KaitaiStream _io__raw_strs = new KaitaiStream(_raw_strs);
+            KaitaiStream _io__raw_strs = new ByteBufferKaitaiStream(_raw_strs);
             this.strs = new StrTable(_io__raw_strs, this, _root);
             io.seek(_pos);
             return this.strs;
@@ -3119,7 +3566,7 @@ public class MachO extends KaitaiStruct {
     }
     public static class VersionMinCommand extends KaitaiStruct {
         public static VersionMinCommand fromFile(String fileName) throws IOException {
-            return new VersionMinCommand(new KaitaiStream(fileName));
+            return new VersionMinCommand(new ByteBufferKaitaiStream(fileName));
         }
 
         public VersionMinCommand(KaitaiStream _io) {
@@ -3138,20 +3585,20 @@ public class MachO extends KaitaiStruct {
         }
         private void _read() {
             this.version = new Version(this._io, this, _root);
-            this.reserved = new Version(this._io, this, _root);
+            this.sdk = new Version(this._io, this, _root);
         }
         private Version version;
-        private Version reserved;
+        private Version sdk;
         private MachO _root;
         private MachO.LoadCommand _parent;
         public Version version() { return version; }
-        public Version reserved() { return reserved; }
+        public Version sdk() { return sdk; }
         public MachO _root() { return _root; }
         public MachO.LoadCommand _parent() { return _parent; }
     }
     public static class EntryPointCommand extends KaitaiStruct {
         public static EntryPointCommand fromFile(String fileName) throws IOException {
-            return new EntryPointCommand(new KaitaiStream(fileName));
+            return new EntryPointCommand(new ByteBufferKaitaiStream(fileName));
         }
 
         public EntryPointCommand(KaitaiStream _io) {

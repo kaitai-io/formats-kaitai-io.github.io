@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 public class Ipv4Packet extends KaitaiStruct {
     public static Ipv4Packet fromFile(String fileName) throws IOException {
-        return new Ipv4Packet(new KaitaiStream(fileName));
+        return new Ipv4Packet(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum ProtocolEnum {
@@ -195,30 +196,30 @@ public class Ipv4Packet extends KaitaiStruct {
         this.srcIpAddr = this._io.readBytes(4);
         this.dstIpAddr = this._io.readBytes(4);
         this._raw_options = this._io.readBytes((ihlBytes() - 20));
-        KaitaiStream _io__raw_options = new KaitaiStream(_raw_options);
+        KaitaiStream _io__raw_options = new ByteBufferKaitaiStream(_raw_options);
         this.options = new Ipv4Options(_io__raw_options, this, _root);
         switch (protocol()) {
         case TCP: {
             this._raw_body = this._io.readBytes((totalLength() - ihlBytes()));
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new TcpSegment(_io__raw_body);
             break;
         }
         case ICMP: {
             this._raw_body = this._io.readBytes((totalLength() - ihlBytes()));
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new IcmpPacket(_io__raw_body);
             break;
         }
         case UDP: {
             this._raw_body = this._io.readBytes((totalLength() - ihlBytes()));
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new UdpDatagram(_io__raw_body);
             break;
         }
         case IPV6: {
             this._raw_body = this._io.readBytes((totalLength() - ihlBytes()));
-            KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new Ipv6Packet(_io__raw_body);
             break;
         }
@@ -230,7 +231,7 @@ public class Ipv4Packet extends KaitaiStruct {
     }
     public static class Ipv4Options extends KaitaiStruct {
         public static Ipv4Options fromFile(String fileName) throws IOException {
-            return new Ipv4Options(new KaitaiStream(fileName));
+            return new Ipv4Options(new ByteBufferKaitaiStream(fileName));
         }
 
         public Ipv4Options(KaitaiStream _io) {
@@ -249,8 +250,12 @@ public class Ipv4Packet extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<Ipv4Option>();
-            while (!this._io.isEof()) {
-                this.entries.add(new Ipv4Option(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Ipv4Option(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<Ipv4Option> entries;
@@ -262,7 +267,7 @@ public class Ipv4Packet extends KaitaiStruct {
     }
     public static class Ipv4Option extends KaitaiStruct {
         public static Ipv4Option fromFile(String fileName) throws IOException {
-            return new Ipv4Option(new KaitaiStream(fileName));
+            return new Ipv4Option(new ByteBufferKaitaiStream(fileName));
         }
 
         public Ipv4Option(KaitaiStream _io) {

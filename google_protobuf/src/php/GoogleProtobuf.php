@@ -32,15 +32,17 @@
  */
 
 class GoogleProtobuf extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \GoogleProtobuf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \GoogleProtobuf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_pairs = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_pairs[] = new \GoogleProtobuf\Pair($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_pairs;
@@ -58,8 +60,8 @@ class GoogleProtobuf extends \Kaitai\Struct\Struct {
 namespace \GoogleProtobuf;
 
 class Pair extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \GoogleProtobuf $parent = null, \GoogleProtobuf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \GoogleProtobuf $_parent = null, \GoogleProtobuf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -143,8 +145,8 @@ class WireTypes {
 namespace \GoogleProtobuf;
 
 class DelimitedBytes extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \GoogleProtobuf\Pair $parent = null, \GoogleProtobuf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \GoogleProtobuf\Pair $_parent = null, \GoogleProtobuf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

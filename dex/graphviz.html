@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.dex file format: GraphViz block diagram (.dot) source: Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Executables and Byte-code</li>
+        <li class="active">.dex file format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.dex file format:
+            
+            GraphViz block diagram (.dot) source
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        dex
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC-BY-SA-3.0.html">CC-BY-SA-3.0</a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .dex file format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".dex file format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".dex file format parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="graphviz.html" title=".dex file format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".dex file format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title=".dex file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".dex file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".dex file format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".dex file format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".dex file format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            GraphViz block diagram source
+            
+        </h2>
+
+        
+
+        <h3>dex.dot</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/graphviz/dex.dot" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="graphviz">digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__dex {
+		label=&quot;Dex&quot;;
+		graph[style=dotted];
+
+		dex__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;header_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;header_size&quot;&gt;112&lt;/TD&gt;&lt;TD&gt;HeaderItem&lt;/TD&gt;&lt;TD PORT=&quot;header_type&quot;&gt;header&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		dex__inst__string_ids [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;string_ids_pos&quot;&gt;header.string_ids_off&lt;/TD&gt;&lt;TD PORT=&quot;string_ids_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;StringIdItem&lt;/TD&gt;&lt;TD PORT=&quot;string_ids_type&quot;&gt;string_ids&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;string_ids__repeat&quot;&gt;repeat header.string_ids_size times&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		dex__inst__method_ids [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;method_ids_pos&quot;&gt;header.method_ids_off&lt;/TD&gt;&lt;TD PORT=&quot;method_ids_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;MethodIdItem&lt;/TD&gt;&lt;TD PORT=&quot;method_ids_type&quot;&gt;method_ids&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;method_ids__repeat&quot;&gt;repeat header.method_ids_size times&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		dex__inst__link_data [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;link_data_pos&quot;&gt;header.link_off&lt;/TD&gt;&lt;TD PORT=&quot;link_data_size&quot;&gt;header.link_size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;link_data_type&quot;&gt;link_data&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		dex__inst__map [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;map_pos&quot;&gt;header.map_off&lt;/TD&gt;&lt;TD PORT=&quot;map_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;MapList&lt;/TD&gt;&lt;TD PORT=&quot;map_type&quot;&gt;map&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		dex__inst__class_defs [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;class_defs_pos&quot;&gt;header.class_defs_off&lt;/TD&gt;&lt;TD PORT=&quot;class_defs_size&quot;&gt;32&lt;/TD&gt;&lt;TD&gt;ClassDefItem&lt;/TD&gt;&lt;TD PORT=&quot;class_defs_type&quot;&gt;class_defs&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;class_defs__repeat&quot;&gt;repeat header.class_defs_size times&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		dex__inst__data [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;data_pos&quot;&gt;header.data_off&lt;/TD&gt;&lt;TD PORT=&quot;data_size&quot;&gt;header.data_size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;data_type&quot;&gt;data&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		dex__inst__type_ids [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;type_ids_pos&quot;&gt;header.type_ids_off&lt;/TD&gt;&lt;TD PORT=&quot;type_ids_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;TypeIdItem&lt;/TD&gt;&lt;TD PORT=&quot;type_ids_type&quot;&gt;type_ids&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;type_ids__repeat&quot;&gt;repeat header.type_ids_size times&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		dex__inst__proto_ids [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;proto_ids_pos&quot;&gt;header.proto_ids_off&lt;/TD&gt;&lt;TD PORT=&quot;proto_ids_size&quot;&gt;12&lt;/TD&gt;&lt;TD&gt;ProtoIdItem&lt;/TD&gt;&lt;TD PORT=&quot;proto_ids_type&quot;&gt;proto_ids&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;proto_ids__repeat&quot;&gt;repeat header.proto_ids_size times&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		dex__inst__field_ids [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;field_ids_pos&quot;&gt;header.field_ids_off&lt;/TD&gt;&lt;TD PORT=&quot;field_ids_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;FieldIdItem&lt;/TD&gt;&lt;TD PORT=&quot;field_ids_type&quot;&gt;field_ids&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;field_ids__repeat&quot;&gt;repeat header.field_ids_size times&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		subgraph cluster__header_item {
+			label=&quot;Dex::HeaderItem&quot;;
+			graph[style=dotted];
+
+			header_item__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;magic_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;magic_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;64 65 78 0A&lt;/TD&gt;&lt;TD PORT=&quot;magic_type&quot;&gt;magic&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;version_str_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;version_str_size&quot;&gt;3&lt;/TD&gt;&lt;TD&gt;str(ascii)&lt;/TD&gt;&lt;TD PORT=&quot;version_str_type&quot;&gt;version_str&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;magic2_pos&quot;&gt;7&lt;/TD&gt;&lt;TD PORT=&quot;magic2_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;00&lt;/TD&gt;&lt;TD PORT=&quot;magic2_type&quot;&gt;magic2&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;checksum_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;checksum_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;checksum_type&quot;&gt;checksum&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;signature_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;signature_size&quot;&gt;20&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;signature_type&quot;&gt;signature&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;file_size_pos&quot;&gt;32&lt;/TD&gt;&lt;TD PORT=&quot;file_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;file_size_type&quot;&gt;file_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;header_size_pos&quot;&gt;36&lt;/TD&gt;&lt;TD PORT=&quot;header_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;header_size_type&quot;&gt;header_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;endian_tag_pos&quot;&gt;40&lt;/TD&gt;&lt;TD PORT=&quot;endian_tag_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le→EndianConstant&lt;/TD&gt;&lt;TD PORT=&quot;endian_tag_type&quot;&gt;endian_tag&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;link_size_pos&quot;&gt;44&lt;/TD&gt;&lt;TD PORT=&quot;link_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;link_size_type&quot;&gt;link_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;link_off_pos&quot;&gt;48&lt;/TD&gt;&lt;TD PORT=&quot;link_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;link_off_type&quot;&gt;link_off&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;map_off_pos&quot;&gt;52&lt;/TD&gt;&lt;TD PORT=&quot;map_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;map_off_type&quot;&gt;map_off&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;string_ids_size_pos&quot;&gt;56&lt;/TD&gt;&lt;TD PORT=&quot;string_ids_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;string_ids_size_type&quot;&gt;string_ids_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;string_ids_off_pos&quot;&gt;60&lt;/TD&gt;&lt;TD PORT=&quot;string_ids_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;string_ids_off_type&quot;&gt;string_ids_off&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;type_ids_size_pos&quot;&gt;64&lt;/TD&gt;&lt;TD PORT=&quot;type_ids_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;type_ids_size_type&quot;&gt;type_ids_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;type_ids_off_pos&quot;&gt;68&lt;/TD&gt;&lt;TD PORT=&quot;type_ids_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;type_ids_off_type&quot;&gt;type_ids_off&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;proto_ids_size_pos&quot;&gt;72&lt;/TD&gt;&lt;TD PORT=&quot;proto_ids_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;proto_ids_size_type&quot;&gt;proto_ids_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;proto_ids_off_pos&quot;&gt;76&lt;/TD&gt;&lt;TD PORT=&quot;proto_ids_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;proto_ids_off_type&quot;&gt;proto_ids_off&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;field_ids_size_pos&quot;&gt;80&lt;/TD&gt;&lt;TD PORT=&quot;field_ids_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;field_ids_size_type&quot;&gt;field_ids_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;field_ids_off_pos&quot;&gt;84&lt;/TD&gt;&lt;TD PORT=&quot;field_ids_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;field_ids_off_type&quot;&gt;field_ids_off&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;method_ids_size_pos&quot;&gt;88&lt;/TD&gt;&lt;TD PORT=&quot;method_ids_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;method_ids_size_type&quot;&gt;method_ids_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;method_ids_off_pos&quot;&gt;92&lt;/TD&gt;&lt;TD PORT=&quot;method_ids_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;method_ids_off_type&quot;&gt;method_ids_off&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;class_defs_size_pos&quot;&gt;96&lt;/TD&gt;&lt;TD PORT=&quot;class_defs_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;class_defs_size_type&quot;&gt;class_defs_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;class_defs_off_pos&quot;&gt;100&lt;/TD&gt;&lt;TD PORT=&quot;class_defs_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;class_defs_off_type&quot;&gt;class_defs_off&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;data_size_pos&quot;&gt;104&lt;/TD&gt;&lt;TD PORT=&quot;data_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;data_size_type&quot;&gt;data_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;data_off_pos&quot;&gt;108&lt;/TD&gt;&lt;TD PORT=&quot;data_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;data_off_type&quot;&gt;data_off&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__map_list {
+			label=&quot;Dex::MapList&quot;;
+			graph[style=dotted];
+
+			map_list__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;size_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;size_type&quot;&gt;size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;list_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;list_size&quot;&gt;12&lt;/TD&gt;&lt;TD&gt;MapItem&lt;/TD&gt;&lt;TD PORT=&quot;list_type&quot;&gt;list&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;list__repeat&quot;&gt;repeat size times&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__encoded_value {
+			label=&quot;Dex::EncodedValue&quot;;
+			graph[style=dotted];
+
+			encoded_value__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;value_arg_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;value_arg_size&quot;&gt;3b&lt;/TD&gt;&lt;TD&gt;b3&lt;/TD&gt;&lt;TD PORT=&quot;value_arg_type&quot;&gt;value_arg&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;value_type_pos&quot;&gt;0:3&lt;/TD&gt;&lt;TD PORT=&quot;value_type_size&quot;&gt;5b&lt;/TD&gt;&lt;TD&gt;b5→ValueTypeEnum&lt;/TD&gt;&lt;TD PORT=&quot;value_type_type&quot;&gt;value_type&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;value_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;value_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (value_type)&lt;/TD&gt;&lt;TD PORT=&quot;value_type&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+encoded_value__seq_value_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:value_type_enum_annotation&lt;/TD&gt;&lt;TD PORT=&quot;case0&quot;&gt;EncodedAnnotation&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:value_type_enum_array&lt;/TD&gt;&lt;TD PORT=&quot;case1&quot;&gt;EncodedArray&lt;/TD&gt;&lt;/TR&gt;
+&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__call_site_id_item {
+			label=&quot;Dex::CallSiteIdItem&quot;;
+			graph[style=dotted];
+
+			call_site_id_item__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;call_site_off_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;call_site_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;call_site_off_type&quot;&gt;call_site_off&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__method_id_item {
+			label=&quot;Dex::MethodIdItem&quot;;
+			graph[style=dotted];
+
+			method_id_item__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;class_idx_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;class_idx_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;class_idx_type&quot;&gt;class_idx&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;proto_idx_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;proto_idx_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;proto_idx_type&quot;&gt;proto_idx&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;name_idx_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;name_idx_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;name_idx_type&quot;&gt;name_idx&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__uleb128 {
+			label=&quot;Dex::Uleb128&quot;;
+			graph[style=dotted];
+
+			uleb128__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;b1_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;b1_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;b1_type&quot;&gt;b1&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;b2_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;b2_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;b2_type&quot;&gt;b2&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;b3_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;b3_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;b3_type&quot;&gt;b3&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;b4_pos&quot;&gt;3&lt;/TD&gt;&lt;TD PORT=&quot;b4_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;b4_type&quot;&gt;b4&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;b5_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;b5_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;b5_type&quot;&gt;b5&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;b6_pos&quot;&gt;5&lt;/TD&gt;&lt;TD PORT=&quot;b6_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;b6_type&quot;&gt;b6&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;b7_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;b7_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;b7_type&quot;&gt;b7&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;b8_pos&quot;&gt;7&lt;/TD&gt;&lt;TD PORT=&quot;b8_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;b8_type&quot;&gt;b8&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;b9_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;b9_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;b9_type&quot;&gt;b9&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;b10_pos&quot;&gt;9&lt;/TD&gt;&lt;TD PORT=&quot;b10_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;b10_type&quot;&gt;b10&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			uleb128__inst__value [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD&gt;value&lt;/TD&gt;&lt;TD&gt;(((b1 % 128) &amp;lt;&amp;lt; 0) + ((b1 &amp;amp; 128) == 0 ? 0 : (((b2 % 128) &amp;lt;&amp;lt; 7) + ((b2 &amp;amp; 128) == 0 ? 0 : (((b3 % 128) &amp;lt;&amp;lt; 14) + ((b3 &amp;amp; 128) == 0 ? 0 : (((b4 % 128) &amp;lt;&amp;lt; 21) + ((b4 &amp;amp; 128) == 0 ? 0 : (((b5 % 128) &amp;lt;&amp;lt; 28) + ((b5 &amp;amp; 128) == 0 ? 0 : (((b6 % 128) &amp;lt;&amp;lt; 35) + ((b6 &amp;amp; 128) == 0 ? 0 : (((b7 % 128) &amp;lt;&amp;lt; 42) + ((b7 &amp;amp; 128) == 0 ? 0 : (((b8 % 128) &amp;lt;&amp;lt; 49) + ((b8 &amp;amp; 128) == 0 ? 0 : (((b9 % 128) &amp;lt;&amp;lt; 56) + ((b8 &amp;amp; 128) == 0 ? 0 : ((b10 % 128) &amp;lt;&amp;lt; 63)))))))))))))))))))&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__type_id_item {
+			label=&quot;Dex::TypeIdItem&quot;;
+			graph[style=dotted];
+
+			type_id_item__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;descriptor_idx_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;descriptor_idx_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;descriptor_idx_type&quot;&gt;descriptor_idx&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			type_id_item__inst__type_name [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD&gt;type_name&lt;/TD&gt;&lt;TD&gt;_root.string_ids[descriptor_idx].value.data&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__annotation_element {
+			label=&quot;Dex::AnnotationElement&quot;;
+			graph[style=dotted];
+
+			annotation_element__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;name_idx_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;name_idx_size&quot;&gt;10&lt;/TD&gt;&lt;TD&gt;Uleb128&lt;/TD&gt;&lt;TD PORT=&quot;name_idx_type&quot;&gt;name_idx&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;value_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;value_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;EncodedValue&lt;/TD&gt;&lt;TD PORT=&quot;value_type&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__encoded_field {
+			label=&quot;Dex::EncodedField&quot;;
+			graph[style=dotted];
+
+			encoded_field__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;field_idx_diff_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;field_idx_diff_size&quot;&gt;10&lt;/TD&gt;&lt;TD&gt;Uleb128&lt;/TD&gt;&lt;TD PORT=&quot;field_idx_diff_type&quot;&gt;field_idx_diff&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;access_flags_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;access_flags_size&quot;&gt;10&lt;/TD&gt;&lt;TD&gt;Uleb128&lt;/TD&gt;&lt;TD PORT=&quot;access_flags_type&quot;&gt;access_flags&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__encoded_array_item {
+			label=&quot;Dex::EncodedArrayItem&quot;;
+			graph[style=dotted];
+
+			encoded_array_item__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;value_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;value_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;EncodedArray&lt;/TD&gt;&lt;TD PORT=&quot;value_type&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__class_data_item {
+			label=&quot;Dex::ClassDataItem&quot;;
+			graph[style=dotted];
+
+			class_data_item__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;static_fields_size_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;static_fields_size_size&quot;&gt;10&lt;/TD&gt;&lt;TD&gt;Uleb128&lt;/TD&gt;&lt;TD PORT=&quot;static_fields_size_type&quot;&gt;static_fields_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;instance_fields_size_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;instance_fields_size_size&quot;&gt;10&lt;/TD&gt;&lt;TD&gt;Uleb128&lt;/TD&gt;&lt;TD PORT=&quot;instance_fields_size_type&quot;&gt;instance_fields_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;direct_methods_size_pos&quot;&gt;20&lt;/TD&gt;&lt;TD PORT=&quot;direct_methods_size_size&quot;&gt;10&lt;/TD&gt;&lt;TD&gt;Uleb128&lt;/TD&gt;&lt;TD PORT=&quot;direct_methods_size_type&quot;&gt;direct_methods_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;virtual_methods_size_pos&quot;&gt;30&lt;/TD&gt;&lt;TD PORT=&quot;virtual_methods_size_size&quot;&gt;10&lt;/TD&gt;&lt;TD&gt;Uleb128&lt;/TD&gt;&lt;TD PORT=&quot;virtual_methods_size_type&quot;&gt;virtual_methods_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;static_fields_pos&quot;&gt;40&lt;/TD&gt;&lt;TD PORT=&quot;static_fields_size&quot;&gt;20&lt;/TD&gt;&lt;TD&gt;EncodedField&lt;/TD&gt;&lt;TD PORT=&quot;static_fields_type&quot;&gt;static_fields&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;static_fields__repeat&quot;&gt;repeat static_fields_size.value times&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;instance_fields_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;instance_fields_size&quot;&gt;20&lt;/TD&gt;&lt;TD&gt;EncodedField&lt;/TD&gt;&lt;TD PORT=&quot;instance_fields_type&quot;&gt;instance_fields&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;instance_fields__repeat&quot;&gt;repeat instance_fields_size.value times&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;direct_methods_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;direct_methods_size&quot;&gt;30&lt;/TD&gt;&lt;TD&gt;EncodedMethod&lt;/TD&gt;&lt;TD PORT=&quot;direct_methods_type&quot;&gt;direct_methods&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;direct_methods__repeat&quot;&gt;repeat direct_methods_size.value times&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;virtual_methods_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;virtual_methods_size&quot;&gt;30&lt;/TD&gt;&lt;TD&gt;EncodedMethod&lt;/TD&gt;&lt;TD PORT=&quot;virtual_methods_type&quot;&gt;virtual_methods&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;virtual_methods__repeat&quot;&gt;repeat virtual_methods_size.value times&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__field_id_item {
+			label=&quot;Dex::FieldIdItem&quot;;
+			graph[style=dotted];
+
+			field_id_item__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;class_idx_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;class_idx_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;class_idx_type&quot;&gt;class_idx&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;type_idx_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;type_idx_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;type_idx_type&quot;&gt;type_idx&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;name_idx_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;name_idx_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;name_idx_type&quot;&gt;name_idx&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__encoded_annotation {
+			label=&quot;Dex::EncodedAnnotation&quot;;
+			graph[style=dotted];
+
+			encoded_annotation__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;type_idx_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;type_idx_size&quot;&gt;10&lt;/TD&gt;&lt;TD&gt;Uleb128&lt;/TD&gt;&lt;TD PORT=&quot;type_idx_type&quot;&gt;type_idx&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;size_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;size_size&quot;&gt;10&lt;/TD&gt;&lt;TD&gt;Uleb128&lt;/TD&gt;&lt;TD PORT=&quot;size_type&quot;&gt;size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;elements_pos&quot;&gt;20&lt;/TD&gt;&lt;TD PORT=&quot;elements_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;AnnotationElement&lt;/TD&gt;&lt;TD PORT=&quot;elements_type&quot;&gt;elements&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;elements__repeat&quot;&gt;repeat size.value times&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__class_def_item {
+			label=&quot;Dex::ClassDefItem&quot;;
+			graph[style=dotted];
+
+			class_def_item__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;class_idx_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;class_idx_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;class_idx_type&quot;&gt;class_idx&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;access_flags_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;access_flags_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le→ClassAccessFlags&lt;/TD&gt;&lt;TD PORT=&quot;access_flags_type&quot;&gt;access_flags&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;superclass_idx_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;superclass_idx_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;superclass_idx_type&quot;&gt;superclass_idx&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;interfaces_off_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;interfaces_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;interfaces_off_type&quot;&gt;interfaces_off&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;source_file_idx_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;source_file_idx_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;source_file_idx_type&quot;&gt;source_file_idx&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;annotations_off_pos&quot;&gt;20&lt;/TD&gt;&lt;TD PORT=&quot;annotations_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;annotations_off_type&quot;&gt;annotations_off&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;class_data_off_pos&quot;&gt;24&lt;/TD&gt;&lt;TD PORT=&quot;class_data_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;class_data_off_type&quot;&gt;class_data_off&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;static_values_off_pos&quot;&gt;28&lt;/TD&gt;&lt;TD PORT=&quot;static_values_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;static_values_off_type&quot;&gt;static_values_off&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			class_def_item__inst__type_name [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD&gt;type_name&lt;/TD&gt;&lt;TD&gt;_root.type_ids[class_idx].type_name&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			class_def_item__inst__class_data [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;class_data_pos&quot;&gt;class_data_off&lt;/TD&gt;&lt;TD PORT=&quot;class_data_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;ClassDataItem&lt;/TD&gt;&lt;TD PORT=&quot;class_data_type&quot;&gt;class_data&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			class_def_item__inst__static_values [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;static_values_pos&quot;&gt;static_values_off&lt;/TD&gt;&lt;TD PORT=&quot;static_values_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;EncodedArrayItem&lt;/TD&gt;&lt;TD PORT=&quot;static_values_type&quot;&gt;static_values&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__string_id_item {
+			label=&quot;Dex::StringIdItem&quot;;
+			graph[style=dotted];
+
+			string_id_item__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;string_data_off_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;string_data_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;string_data_off_type&quot;&gt;string_data_off&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			string_id_item__inst__value [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;value_pos&quot;&gt;string_data_off&lt;/TD&gt;&lt;TD PORT=&quot;value_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;StringDataItem&lt;/TD&gt;&lt;TD PORT=&quot;value_type&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			subgraph cluster__string_data_item {
+				label=&quot;Dex::StringIdItem::StringDataItem&quot;;
+				graph[style=dotted];
+
+				string_data_item__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;utf16_size_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;utf16_size_size&quot;&gt;10&lt;/TD&gt;&lt;TD&gt;Uleb128&lt;/TD&gt;&lt;TD PORT=&quot;utf16_size_type&quot;&gt;utf16_size&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;data_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;data_size&quot;&gt;utf16_size.value&lt;/TD&gt;&lt;TD&gt;str(ascii)&lt;/TD&gt;&lt;TD PORT=&quot;data_type&quot;&gt;data&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+			}
+		}
+		subgraph cluster__proto_id_item {
+			label=&quot;Dex::ProtoIdItem&quot;;
+			graph[style=dotted];
+
+			proto_id_item__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;shorty_idx_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;shorty_idx_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;shorty_idx_type&quot;&gt;shorty_idx&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;return_type_idx_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;return_type_idx_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;return_type_idx_type&quot;&gt;return_type_idx&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;parameters_off_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;parameters_off_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;parameters_off_type&quot;&gt;parameters_off&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__encoded_method {
+			label=&quot;Dex::EncodedMethod&quot;;
+			graph[style=dotted];
+
+			encoded_method__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;method_idx_diff_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;method_idx_diff_size&quot;&gt;10&lt;/TD&gt;&lt;TD&gt;Uleb128&lt;/TD&gt;&lt;TD PORT=&quot;method_idx_diff_type&quot;&gt;method_idx_diff&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;access_flags_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;access_flags_size&quot;&gt;10&lt;/TD&gt;&lt;TD&gt;Uleb128&lt;/TD&gt;&lt;TD PORT=&quot;access_flags_type&quot;&gt;access_flags&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;code_off_pos&quot;&gt;20&lt;/TD&gt;&lt;TD PORT=&quot;code_off_size&quot;&gt;10&lt;/TD&gt;&lt;TD&gt;Uleb128&lt;/TD&gt;&lt;TD PORT=&quot;code_off_type&quot;&gt;code_off&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__map_item {
+			label=&quot;Dex::MapItem&quot;;
+			graph[style=dotted];
+
+			map_item__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;type_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;type_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le→MapItemType&lt;/TD&gt;&lt;TD PORT=&quot;type_type&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;unused_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;unused_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;unused_type&quot;&gt;unused&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;size_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;size_type&quot;&gt;size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;offset_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;offset_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;offset_type&quot;&gt;offset&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__encoded_array {
+			label=&quot;Dex::EncodedArray&quot;;
+			graph[style=dotted];
+
+			encoded_array__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;size_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;size_size&quot;&gt;10&lt;/TD&gt;&lt;TD&gt;Uleb128&lt;/TD&gt;&lt;TD PORT=&quot;size_type&quot;&gt;size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;values_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;values_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;EncodedValue&lt;/TD&gt;&lt;TD PORT=&quot;values_type&quot;&gt;values&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;values__repeat&quot;&gt;repeat size.value times&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+	}
+	dex__seq:header_type -&gt; header_item__seq [style=bold];
+	header_item__seq:string_ids_off_type -&gt; dex__inst__string_ids:string_ids_pos [color=&quot;#404040&quot;];
+	dex__inst__string_ids:string_ids_type -&gt; string_id_item__seq [style=bold];
+	header_item__seq:string_ids_size_type -&gt; dex__inst__string_ids:string_ids__repeat [color=&quot;#404040&quot;];
+	header_item__seq:method_ids_off_type -&gt; dex__inst__method_ids:method_ids_pos [color=&quot;#404040&quot;];
+	dex__inst__method_ids:method_ids_type -&gt; method_id_item__seq [style=bold];
+	header_item__seq:method_ids_size_type -&gt; dex__inst__method_ids:method_ids__repeat [color=&quot;#404040&quot;];
+	header_item__seq:link_off_type -&gt; dex__inst__link_data:link_data_pos [color=&quot;#404040&quot;];
+	header_item__seq:link_size_type -&gt; dex__inst__link_data:link_data_size [color=&quot;#404040&quot;];
+	header_item__seq:map_off_type -&gt; dex__inst__map:map_pos [color=&quot;#404040&quot;];
+	dex__inst__map:map_type -&gt; map_list__seq [style=bold];
+	header_item__seq:class_defs_off_type -&gt; dex__inst__class_defs:class_defs_pos [color=&quot;#404040&quot;];
+	dex__inst__class_defs:class_defs_type -&gt; class_def_item__seq [style=bold];
+	header_item__seq:class_defs_size_type -&gt; dex__inst__class_defs:class_defs__repeat [color=&quot;#404040&quot;];
+	header_item__seq:data_off_type -&gt; dex__inst__data:data_pos [color=&quot;#404040&quot;];
+	header_item__seq:data_size_type -&gt; dex__inst__data:data_size [color=&quot;#404040&quot;];
+	header_item__seq:type_ids_off_type -&gt; dex__inst__type_ids:type_ids_pos [color=&quot;#404040&quot;];
+	dex__inst__type_ids:type_ids_type -&gt; type_id_item__seq [style=bold];
+	header_item__seq:type_ids_size_type -&gt; dex__inst__type_ids:type_ids__repeat [color=&quot;#404040&quot;];
+	header_item__seq:proto_ids_off_type -&gt; dex__inst__proto_ids:proto_ids_pos [color=&quot;#404040&quot;];
+	dex__inst__proto_ids:proto_ids_type -&gt; proto_id_item__seq [style=bold];
+	header_item__seq:proto_ids_size_type -&gt; dex__inst__proto_ids:proto_ids__repeat [color=&quot;#404040&quot;];
+	header_item__seq:field_ids_off_type -&gt; dex__inst__field_ids:field_ids_pos [color=&quot;#404040&quot;];
+	dex__inst__field_ids:field_ids_type -&gt; field_id_item__seq [style=bold];
+	header_item__seq:field_ids_size_type -&gt; dex__inst__field_ids:field_ids__repeat [color=&quot;#404040&quot;];
+	map_list__seq:list_type -&gt; map_item__seq [style=bold];
+	map_list__seq:size_type -&gt; map_list__seq:list__repeat [color=&quot;#404040&quot;];
+	encoded_value__seq:value_type -&gt; encoded_value__seq_value_switch [style=bold];
+	encoded_value__seq_value_switch:case0 -&gt; encoded_annotation__seq [style=bold];
+	encoded_value__seq_value_switch:case1 -&gt; encoded_array__seq [style=bold];
+	encoded_value__seq:value_type_type -&gt; encoded_value__seq:value_type [color=&quot;#404040&quot;];
+	uleb128__seq:b1_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b1_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b2_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b2_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b3_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b3_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b4_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b4_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b5_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b5_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b6_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b6_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b7_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b7_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b8_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b8_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b9_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b8_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	uleb128__seq:b10_type -&gt; uleb128__inst__value [color=&quot;#404040&quot;];
+	string_data_item__seq:data_type -&gt; type_id_item__inst__type_name [color=&quot;#404040&quot;];
+	annotation_element__seq:name_idx_type -&gt; uleb128__seq [style=bold];
+	annotation_element__seq:value_type -&gt; encoded_value__seq [style=bold];
+	encoded_field__seq:field_idx_diff_type -&gt; uleb128__seq [style=bold];
+	encoded_field__seq:access_flags_type -&gt; uleb128__seq [style=bold];
+	encoded_array_item__seq:value_type -&gt; encoded_array__seq [style=bold];
+	class_data_item__seq:static_fields_size_type -&gt; uleb128__seq [style=bold];
+	class_data_item__seq:instance_fields_size_type -&gt; uleb128__seq [style=bold];
+	class_data_item__seq:direct_methods_size_type -&gt; uleb128__seq [style=bold];
+	class_data_item__seq:virtual_methods_size_type -&gt; uleb128__seq [style=bold];
+	class_data_item__seq:static_fields_type -&gt; encoded_field__seq [style=bold];
+	uleb128__inst__value:value_type -&gt; class_data_item__seq:static_fields__repeat [color=&quot;#404040&quot;];
+	class_data_item__seq:instance_fields_type -&gt; encoded_field__seq [style=bold];
+	uleb128__inst__value:value_type -&gt; class_data_item__seq:instance_fields__repeat [color=&quot;#404040&quot;];
+	class_data_item__seq:direct_methods_type -&gt; encoded_method__seq [style=bold];
+	uleb128__inst__value:value_type -&gt; class_data_item__seq:direct_methods__repeat [color=&quot;#404040&quot;];
+	class_data_item__seq:virtual_methods_type -&gt; encoded_method__seq [style=bold];
+	uleb128__inst__value:value_type -&gt; class_data_item__seq:virtual_methods__repeat [color=&quot;#404040&quot;];
+	encoded_annotation__seq:type_idx_type -&gt; uleb128__seq [style=bold];
+	encoded_annotation__seq:size_type -&gt; uleb128__seq [style=bold];
+	encoded_annotation__seq:elements_type -&gt; annotation_element__seq [style=bold];
+	uleb128__inst__value:value_type -&gt; encoded_annotation__seq:elements__repeat [color=&quot;#404040&quot;];
+	type_id_item__inst__type_name:type_name_type -&gt; class_def_item__inst__type_name [color=&quot;#404040&quot;];
+	class_def_item__seq:class_data_off_type -&gt; class_def_item__inst__class_data:class_data_pos [color=&quot;#404040&quot;];
+	class_def_item__inst__class_data:class_data_type -&gt; class_data_item__seq [style=bold];
+	class_def_item__seq:static_values_off_type -&gt; class_def_item__inst__static_values:static_values_pos [color=&quot;#404040&quot;];
+	class_def_item__inst__static_values:static_values_type -&gt; encoded_array_item__seq [style=bold];
+	string_id_item__seq:string_data_off_type -&gt; string_id_item__inst__value:value_pos [color=&quot;#404040&quot;];
+	string_id_item__inst__value:value_type -&gt; string_data_item__seq [style=bold];
+	string_data_item__seq:utf16_size_type -&gt; uleb128__seq [style=bold];
+	uleb128__inst__value:value_type -&gt; string_data_item__seq:data_size [color=&quot;#404040&quot;];
+	encoded_method__seq:method_idx_diff_type -&gt; uleb128__seq [style=bold];
+	encoded_method__seq:access_flags_type -&gt; uleb128__seq [style=bold];
+	encoded_method__seq:code_off_type -&gt; uleb128__seq [style=bold];
+	encoded_array__seq:size_type -&gt; uleb128__seq [style=bold];
+	encoded_array__seq:values_type -&gt; encoded_value__seq [style=bold];
+	uleb128__inst__value:value_type -&gt; encoded_array__seq:values__repeat [color=&quot;#404040&quot;];
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

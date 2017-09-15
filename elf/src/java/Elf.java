@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 
 public class Elf extends KaitaiStruct {
     public static Elf fromFile(String fileName) throws IOException {
-        return new Elf(new KaitaiStream(fileName));
+        return new Elf(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum Endian {
@@ -212,7 +213,7 @@ public class Elf extends KaitaiStruct {
     }
     public static class EndianElf extends KaitaiStruct {
         public static EndianElf fromFile(String fileName) throws IOException {
-            return new EndianElf(new KaitaiStream(fileName));
+            return new EndianElf(new ByteBufferKaitaiStream(fileName));
         }
         private Boolean _is_le;
 
@@ -258,7 +259,7 @@ public class Elf extends KaitaiStruct {
             this.eVersion = this._io.readU4le();
             switch (_root.bits()) {
             case B32: {
-                this.entryPoint = this._io.readU4le();
+                this.entryPoint = (long) (this._io.readU4le());
                 break;
             }
             case B64: {
@@ -268,7 +269,7 @@ public class Elf extends KaitaiStruct {
             }
             switch (_root.bits()) {
             case B32: {
-                this.programHeaderOffset = this._io.readU4le();
+                this.programHeaderOffset = (long) (this._io.readU4le());
                 break;
             }
             case B64: {
@@ -278,7 +279,7 @@ public class Elf extends KaitaiStruct {
             }
             switch (_root.bits()) {
             case B32: {
-                this.sectionHeaderOffset = this._io.readU4le();
+                this.sectionHeaderOffset = (long) (this._io.readU4le());
                 break;
             }
             case B64: {
@@ -300,7 +301,7 @@ public class Elf extends KaitaiStruct {
             this.eVersion = this._io.readU4be();
             switch (_root.bits()) {
             case B32: {
-                this.entryPoint = this._io.readU4be();
+                this.entryPoint = (long) (this._io.readU4be());
                 break;
             }
             case B64: {
@@ -310,7 +311,7 @@ public class Elf extends KaitaiStruct {
             }
             switch (_root.bits()) {
             case B32: {
-                this.programHeaderOffset = this._io.readU4be();
+                this.programHeaderOffset = (long) (this._io.readU4be());
                 break;
             }
             case B64: {
@@ -320,7 +321,7 @@ public class Elf extends KaitaiStruct {
             }
             switch (_root.bits()) {
             case B32: {
-                this.sectionHeaderOffset = this._io.readU4be();
+                this.sectionHeaderOffset = (long) (this._io.readU4be());
                 break;
             }
             case B64: {
@@ -363,7 +364,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.offset = this._io.readU4le();
+                    this.offset = (long) (this._io.readU4le());
                     break;
                 }
                 case B64: {
@@ -373,7 +374,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.vaddr = this._io.readU4le();
+                    this.vaddr = (long) (this._io.readU4le());
                     break;
                 }
                 case B64: {
@@ -383,7 +384,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.paddr = this._io.readU4le();
+                    this.paddr = (long) (this._io.readU4le());
                     break;
                 }
                 case B64: {
@@ -393,7 +394,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.filesz = this._io.readU4le();
+                    this.filesz = (long) (this._io.readU4le());
                     break;
                 }
                 case B64: {
@@ -403,7 +404,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.memsz = this._io.readU4le();
+                    this.memsz = (long) (this._io.readU4le());
                     break;
                 }
                 case B64: {
@@ -416,7 +417,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.align = this._io.readU4le();
+                    this.align = (long) (this._io.readU4le());
                     break;
                 }
                 case B64: {
@@ -432,7 +433,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.offset = this._io.readU4be();
+                    this.offset = (long) (this._io.readU4be());
                     break;
                 }
                 case B64: {
@@ -442,7 +443,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.vaddr = this._io.readU4be();
+                    this.vaddr = (long) (this._io.readU4be());
                     break;
                 }
                 case B64: {
@@ -452,7 +453,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.paddr = this._io.readU4be();
+                    this.paddr = (long) (this._io.readU4be());
                     break;
                 }
                 case B64: {
@@ -462,7 +463,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.filesz = this._io.readU4be();
+                    this.filesz = (long) (this._io.readU4be());
                     break;
                 }
                 case B64: {
@@ -472,7 +473,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.memsz = this._io.readU4be();
+                    this.memsz = (long) (this._io.readU4be());
                     break;
                 }
                 case B64: {
@@ -485,7 +486,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.align = this._io.readU4be();
+                    this.align = (long) (this._io.readU4be());
                     break;
                 }
                 case B64: {
@@ -496,24 +497,24 @@ public class Elf extends KaitaiStruct {
             }
             private PhType type;
             private Long flags64;
-            private long offset;
-            private long vaddr;
-            private long paddr;
-            private long filesz;
-            private long memsz;
+            private Long offset;
+            private Long vaddr;
+            private Long paddr;
+            private Long filesz;
+            private Long memsz;
             private Long flags32;
-            private long align;
+            private Long align;
             private Elf _root;
             private Elf.EndianElf _parent;
             public PhType type() { return type; }
             public Long flags64() { return flags64; }
-            public long offset() { return offset; }
-            public long vaddr() { return vaddr; }
-            public long paddr() { return paddr; }
-            public long filesz() { return filesz; }
-            public long memsz() { return memsz; }
+            public Long offset() { return offset; }
+            public Long vaddr() { return vaddr; }
+            public Long paddr() { return paddr; }
+            public Long filesz() { return filesz; }
+            public Long memsz() { return memsz; }
             public Long flags32() { return flags32; }
-            public long align() { return align; }
+            public Long align() { return align; }
             public Elf _root() { return _root; }
             public Elf.EndianElf _parent() { return _parent; }
         }
@@ -542,7 +543,7 @@ public class Elf extends KaitaiStruct {
                 this.type = Elf.ShType.byId(this._io.readU4le());
                 switch (_root.bits()) {
                 case B32: {
-                    this.flags = this._io.readU4le();
+                    this.flags = (long) (this._io.readU4le());
                     break;
                 }
                 case B64: {
@@ -552,7 +553,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.addr = this._io.readU4le();
+                    this.addr = (long) (this._io.readU4le());
                     break;
                 }
                 case B64: {
@@ -562,7 +563,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.offset = this._io.readU4le();
+                    this.offset = (long) (this._io.readU4le());
                     break;
                 }
                 case B64: {
@@ -572,7 +573,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.size = this._io.readU4le();
+                    this.size = (long) (this._io.readU4le());
                     break;
                 }
                 case B64: {
@@ -584,7 +585,7 @@ public class Elf extends KaitaiStruct {
                 this.info = this._io.readBytes(4);
                 switch (_root.bits()) {
                 case B32: {
-                    this.align = this._io.readU4le();
+                    this.align = (long) (this._io.readU4le());
                     break;
                 }
                 case B64: {
@@ -594,7 +595,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.entrySize = this._io.readU4le();
+                    this.entrySize = (long) (this._io.readU4le());
                     break;
                 }
                 case B64: {
@@ -608,7 +609,7 @@ public class Elf extends KaitaiStruct {
                 this.type = Elf.ShType.byId(this._io.readU4be());
                 switch (_root.bits()) {
                 case B32: {
-                    this.flags = this._io.readU4be();
+                    this.flags = (long) (this._io.readU4be());
                     break;
                 }
                 case B64: {
@@ -618,7 +619,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.addr = this._io.readU4be();
+                    this.addr = (long) (this._io.readU4be());
                     break;
                 }
                 case B64: {
@@ -628,7 +629,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.offset = this._io.readU4be();
+                    this.offset = (long) (this._io.readU4be());
                     break;
                 }
                 case B64: {
@@ -638,7 +639,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.size = this._io.readU4be();
+                    this.size = (long) (this._io.readU4be());
                     break;
                 }
                 case B64: {
@@ -650,7 +651,7 @@ public class Elf extends KaitaiStruct {
                 this.info = this._io.readBytes(4);
                 switch (_root.bits()) {
                 case B32: {
-                    this.align = this._io.readU4be();
+                    this.align = (long) (this._io.readU4be());
                     break;
                 }
                 case B64: {
@@ -660,7 +661,7 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.entrySize = this._io.readU4be();
+                    this.entrySize = (long) (this._io.readU4be());
                     break;
                 }
                 case B64: {
@@ -701,26 +702,26 @@ public class Elf extends KaitaiStruct {
             }
             private long nameOffset;
             private ShType type;
-            private long flags;
-            private long addr;
-            private long offset;
-            private long size;
+            private Long flags;
+            private Long addr;
+            private Long offset;
+            private Long size;
             private long linkedSectionIdx;
             private byte[] info;
-            private long align;
-            private long entrySize;
+            private Long align;
+            private Long entrySize;
             private Elf _root;
             private Elf.EndianElf _parent;
             public long nameOffset() { return nameOffset; }
             public ShType type() { return type; }
-            public long flags() { return flags; }
-            public long addr() { return addr; }
-            public long offset() { return offset; }
-            public long size() { return size; }
+            public Long flags() { return flags; }
+            public Long addr() { return addr; }
+            public Long offset() { return offset; }
+            public Long size() { return size; }
             public long linkedSectionIdx() { return linkedSectionIdx; }
             public byte[] info() { return info; }
-            public long align() { return align; }
-            public long entrySize() { return entrySize; }
+            public Long align() { return align; }
+            public Long entrySize() { return entrySize; }
             public Elf _root() { return _root; }
             public Elf.EndianElf _parent() { return _parent; }
         }
@@ -746,14 +747,22 @@ public class Elf extends KaitaiStruct {
             }
             private void _readLE() {
                 this.entries = new ArrayList<String>();
-                while (!this._io.isEof()) {
-                    this.entries.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII")));
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.entries.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII")));
+                        i++;
+                    }
                 }
             }
             private void _readBE() {
                 this.entries = new ArrayList<String>();
-                while (!this._io.isEof()) {
-                    this.entries.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII")));
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.entries.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII")));
+                        i++;
+                    }
                 }
             }
             private ArrayList<String> entries;
@@ -774,7 +783,7 @@ public class Elf extends KaitaiStruct {
                 programHeaders = new ArrayList<ProgramHeader>((int) (qtyProgramHeader()));
                 for (int i = 0; i < qtyProgramHeader(); i++) {
                     this._raw_programHeaders.add(this._io.readBytes(programHeaderEntrySize()));
-                    KaitaiStream _io__raw_programHeaders = new KaitaiStream(_raw_programHeaders.get(_raw_programHeaders.size() - 1));
+                    KaitaiStream _io__raw_programHeaders = new ByteBufferKaitaiStream(_raw_programHeaders.get(_raw_programHeaders.size() - 1));
                     this.programHeaders.add(new ProgramHeader(_io__raw_programHeaders, this, _root, _is_le));
                 }
             } else {
@@ -782,7 +791,7 @@ public class Elf extends KaitaiStruct {
                 programHeaders = new ArrayList<ProgramHeader>((int) (qtyProgramHeader()));
                 for (int i = 0; i < qtyProgramHeader(); i++) {
                     this._raw_programHeaders.add(this._io.readBytes(programHeaderEntrySize()));
-                    KaitaiStream _io__raw_programHeaders = new KaitaiStream(_raw_programHeaders.get(_raw_programHeaders.size() - 1));
+                    KaitaiStream _io__raw_programHeaders = new ByteBufferKaitaiStream(_raw_programHeaders.get(_raw_programHeaders.size() - 1));
                     this.programHeaders.add(new ProgramHeader(_io__raw_programHeaders, this, _root, _is_le));
                 }
             }
@@ -800,7 +809,7 @@ public class Elf extends KaitaiStruct {
                 sectionHeaders = new ArrayList<SectionHeader>((int) (qtySectionHeader()));
                 for (int i = 0; i < qtySectionHeader(); i++) {
                     this._raw_sectionHeaders.add(this._io.readBytes(sectionHeaderEntrySize()));
-                    KaitaiStream _io__raw_sectionHeaders = new KaitaiStream(_raw_sectionHeaders.get(_raw_sectionHeaders.size() - 1));
+                    KaitaiStream _io__raw_sectionHeaders = new ByteBufferKaitaiStream(_raw_sectionHeaders.get(_raw_sectionHeaders.size() - 1));
                     this.sectionHeaders.add(new SectionHeader(_io__raw_sectionHeaders, this, _root, _is_le));
                 }
             } else {
@@ -808,7 +817,7 @@ public class Elf extends KaitaiStruct {
                 sectionHeaders = new ArrayList<SectionHeader>((int) (qtySectionHeader()));
                 for (int i = 0; i < qtySectionHeader(); i++) {
                     this._raw_sectionHeaders.add(this._io.readBytes(sectionHeaderEntrySize()));
-                    KaitaiStream _io__raw_sectionHeaders = new KaitaiStream(_raw_sectionHeaders.get(_raw_sectionHeaders.size() - 1));
+                    KaitaiStream _io__raw_sectionHeaders = new ByteBufferKaitaiStream(_raw_sectionHeaders.get(_raw_sectionHeaders.size() - 1));
                     this.sectionHeaders.add(new SectionHeader(_io__raw_sectionHeaders, this, _root, _is_le));
                 }
             }
@@ -823,11 +832,11 @@ public class Elf extends KaitaiStruct {
             this._io.seek(sectionHeaders().get((int) sectionNamesIdx()).offset());
             if (_is_le) {
                 this._raw_strings = this._io.readBytes(sectionHeaders().get((int) sectionNamesIdx()).size());
-                KaitaiStream _io__raw_strings = new KaitaiStream(_raw_strings);
+                KaitaiStream _io__raw_strings = new ByteBufferKaitaiStream(_raw_strings);
                 this.strings = new StringsStruct(_io__raw_strings, this, _root, _is_le);
             } else {
                 this._raw_strings = this._io.readBytes(sectionHeaders().get((int) sectionNamesIdx()).size());
-                KaitaiStream _io__raw_strings = new KaitaiStream(_raw_strings);
+                KaitaiStream _io__raw_strings = new ByteBufferKaitaiStream(_raw_strings);
                 this.strings = new StringsStruct(_io__raw_strings, this, _root, _is_le);
             }
             this._io.seek(_pos);
@@ -836,9 +845,9 @@ public class Elf extends KaitaiStruct {
         private ObjType eType;
         private Machine machine;
         private long eVersion;
-        private long entryPoint;
-        private long programHeaderOffset;
-        private long sectionHeaderOffset;
+        private Long entryPoint;
+        private Long programHeaderOffset;
+        private Long sectionHeaderOffset;
         private byte[] flags;
         private int eEhsize;
         private int programHeaderEntrySize;
@@ -854,9 +863,9 @@ public class Elf extends KaitaiStruct {
         public ObjType eType() { return eType; }
         public Machine machine() { return machine; }
         public long eVersion() { return eVersion; }
-        public long entryPoint() { return entryPoint; }
-        public long programHeaderOffset() { return programHeaderOffset; }
-        public long sectionHeaderOffset() { return sectionHeaderOffset; }
+        public Long entryPoint() { return entryPoint; }
+        public Long programHeaderOffset() { return programHeaderOffset; }
+        public Long sectionHeaderOffset() { return sectionHeaderOffset; }
         public byte[] flags() { return flags; }
         public int eEhsize() { return eEhsize; }
         public int programHeaderEntrySize() { return programHeaderEntrySize; }

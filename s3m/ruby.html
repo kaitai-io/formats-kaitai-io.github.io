@@ -225,7 +225,7 @@ data = S3m.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="ruby">data.numOrders # => Number of orders in a song</code></pre>
+<pre><code class="ruby">data.num_orders # => Number of orders in a song</code></pre>
 
     </div>
 </section>
@@ -397,8 +397,10 @@ class S3m &lt; Kaitai::Struct::Struct
 
     def _read
       @cells = []
+      i = 0
       while not @_io.eof?
         @cells &lt;&lt; PatternCell.new(@_io, self, @_root)
+        i += 1
       end
       self
     end

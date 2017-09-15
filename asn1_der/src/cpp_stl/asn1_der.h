@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -43,16 +42,24 @@ public:
         TYPE_TAG_SET = 49
     };
 
-    asn1_der_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, asn1_der_t* p_root = 0);
+    asn1_der_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, asn1_der_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~asn1_der_t();
 
     class len_encoded_t : public kaitai::kstruct {
 
     public:
 
-        len_encoded_t(kaitai::kstream* p_io, asn1_der_t* p_parent = 0, asn1_der_t* p_root = 0);
+        len_encoded_t(kaitai::kstream* p__io, asn1_der_t* p__parent = 0, asn1_der_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~len_encoded_t();
 
     private:
@@ -85,8 +92,12 @@ public:
 
     public:
 
-        body_sequence_t(kaitai::kstream* p_io, asn1_der_t* p_parent = 0, asn1_der_t* p_root = 0);
+        body_sequence_t(kaitai::kstream* p__io, asn1_der_t* p__parent = 0, asn1_der_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~body_sequence_t();
 
     private:
@@ -104,8 +115,12 @@ public:
 
     public:
 
-        body_utf8string_t(kaitai::kstream* p_io, asn1_der_t* p_parent = 0, asn1_der_t* p_root = 0);
+        body_utf8string_t(kaitai::kstream* p__io, asn1_der_t* p__parent = 0, asn1_der_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~body_utf8string_t();
 
     private:
@@ -123,8 +138,12 @@ public:
 
     public:
 
-        body_printable_string_t(kaitai::kstream* p_io, asn1_der_t* p_parent = 0, asn1_der_t* p_root = 0);
+        body_printable_string_t(kaitai::kstream* p__io, asn1_der_t* p__parent = 0, asn1_der_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~body_printable_string_t();
 
     private:
@@ -142,6 +161,12 @@ private:
     type_tag_t m_type_tag;
     len_encoded_t* m_len;
     kaitai::kstruct* m_body;
+    bool n_body;
+
+public:
+    bool _is_null_body() { body(); return n_body; };
+
+private:
     asn1_der_t* m__root;
     kaitai::kstruct* m__parent;
     std::string m__raw_body;

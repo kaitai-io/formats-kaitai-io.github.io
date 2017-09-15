@@ -175,8 +175,10 @@ class Code6502 < Kaitai::Struct::Struct
 
   def _read
     @operations = []
+    i = 0
     while not @_io.eof?
       @operations << Operation.new(@_io, self, @_root)
+      i += 1
     end
     self
   end

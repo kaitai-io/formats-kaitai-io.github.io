@@ -62,9 +62,7 @@ sub dir {
     return $self->{dir} if ($self->{dir});
     my $_pos = $self->{_io}->pos();
     $self->{_io}->seek((($self->header()->ofs_dir() + 1) * $self->sector_size()));
-    $self->{_raw_dir} = $self->{_io}->read_bytes(128);
-    my $io__raw_dir = IO::KaitaiStruct::Stream->new($self->{_raw_dir});
-    $self->{dir} = MicrosoftCfb::DirEntry->new($io__raw_dir, $self, $self->{_root});
+    $self->{dir} = MicrosoftCfb::DirEntry->new($self->{_io}, $self, $self->{_root});
     $self->{_io}->seek($_pos);
     return $self->{dir};
 }
@@ -77,11 +75,6 @@ sub header {
 sub _raw_fat {
     my ($self) = @_;
     return $self->{_raw_fat};
-}
-
-sub _raw_dir {
-    my ($self) = @_;
-    return $self->{_raw_dir};
 }
 
 ########################################################################
@@ -333,6 +326,45 @@ sub mini_stream {
         $io->seek($_pos);
     }
     return $self->{mini_stream};
+}
+
+sub child {
+    my ($self) = @_;
+    return $self->{child} if ($self->{child});
+    if ($self->child_id() != -1) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek(((($self->_root()->header()->ofs_dir() + 1) * $self->_root()->sector_size()) + ($self->child_id() * 128)));
+        $self->{child} = MicrosoftCfb::DirEntry->new($io, $self, $self->{_root});
+        $io->seek($_pos);
+    }
+    return $self->{child};
+}
+
+sub left_sibling {
+    my ($self) = @_;
+    return $self->{left_sibling} if ($self->{left_sibling});
+    if ($self->left_sibling_id() != -1) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek(((($self->_root()->header()->ofs_dir() + 1) * $self->_root()->sector_size()) + ($self->left_sibling_id() * 128)));
+        $self->{left_sibling} = MicrosoftCfb::DirEntry->new($io, $self, $self->{_root});
+        $io->seek($_pos);
+    }
+    return $self->{left_sibling};
+}
+
+sub right_sibling {
+    my ($self) = @_;
+    return $self->{right_sibling} if ($self->{right_sibling});
+    if ($self->right_sibling_id() != -1) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek(((($self->_root()->header()->ofs_dir() + 1) * $self->_root()->sector_size()) + ($self->right_sibling_id() * 128)));
+        $self->{right_sibling} = MicrosoftCfb::DirEntry->new($io, $self, $self->{_root});
+        $io->seek($_pos);
+    }
+    return $self->{right_sibling};
 }
 
 sub name {

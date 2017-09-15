@@ -533,8 +533,10 @@ class Icc4(KaitaiStruct):
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
                     self.values = []
+                    i = 0
                     while not self._io.is_eof():
                         self.values.append(self._root.XyzNumber(self._io, self, self._root))
+                        i += 1
 
 
 
@@ -680,8 +682,10 @@ class Icc4(KaitaiStruct):
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
                     self.values = []
+                    i = 0
                     while not self._io.is_eof():
                         self.values.append(self._root.U16Fixed16Number(self._io, self, self._root))
+                        i += 1
 
 
 
@@ -1263,8 +1267,10 @@ class Icc4(KaitaiStruct):
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
                     self.values = []
+                    i = 0
                     while not self._io.is_eof():
                         self.values.append(self._io.read_u2be())
+                        i += 1
 
 
 
@@ -1357,8 +1363,10 @@ class Icc4(KaitaiStruct):
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
                     self.values = []
+                    i = 0
                     while not self._io.is_eof():
                         self.values.append(self._root.S15Fixed16Number(self._io, self, self._root))
+                        i += 1
 
 
 
@@ -1704,8 +1712,10 @@ class Icc4(KaitaiStruct):
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
                     self.values = []
+                    i = 0
                     while not self._io.is_eof():
                         self.values.append(self._io.read_u4be())
+                        i += 1
 
 
 
@@ -1737,8 +1747,10 @@ class Icc4(KaitaiStruct):
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
                     self.values = []
+                    i = 0
                     while not self._io.is_eof():
                         self.values.append(self._io.read_u1())
+                        i += 1
 
 
 
@@ -1766,8 +1778,10 @@ class Icc4(KaitaiStruct):
                 def _read(self):
                     self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
                     self.values = []
+                    i = 0
                     while not self._io.is_eof():
                         self.values.append(self._io.read_u8be())
+                        i += 1
 
 
 

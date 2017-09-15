@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>edid: Ruby parsing library</title>
+  <title>EDID (VESA Enhanced Extended Display Identification Data): Ruby parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Hardware Protocols</li>
-        <li class="active">edid</li>
+        <li class="active">EDID (VESA Enhanced Extended Display Identification Data)</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>edid:
+        <h1>EDID (VESA Enhanced Extended Display Identification Data):
             
             Ruby parsing library
             
@@ -105,6 +105,16 @@ section#format-index .row {
                     
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
                 </div>
             </div>
         </div>
@@ -112,7 +122,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of edid
+            This page hosts a formal specification of EDID (VESA Enhanced Extended Display Identification Data)
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -123,52 +133,52 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="index.html" title="edid parsing Overview library">Overview</a></li>
+                <a href="index.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="edid parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="edid parsing C# library">C#</a></li>
+                <a href="csharp.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="edid parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="edid parsing Java library">Java</a></li>
+                <a href="java.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title="edid parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title="edid parsing Perl library">Perl</a></li>
+                <a href="perl.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="edid parsing PHP library">PHP</a></li>
+                <a href="php.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing PHP library">PHP</a></li>
                 
                 
                 <li>
                 
-                <a href="python.html" title="edid parsing Python library">Python</a></li>
+                <a href="python.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Python library">Python</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="ruby.html" title="edid parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -184,7 +194,7 @@ section#format-index .row {
 
 
 
-<pre><code class="ruby">data = Edid.from_file("path/to/local/file.edid")</code></pre>
+<pre><code class="ruby">data = Edid.from_file("path/to/local/file.EDID (VESA Enhanced Extended Display Identification Data)")</code></pre>
 
 <p>Or parse structure from a string of bytes:</p>
 
@@ -193,7 +203,7 @@ data = Edid.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="ruby">data.productCode # => Manufacturer product code</code></pre>
+<pre><code class="ruby">data.product_code # => Manufacturer product code</code></pre>
 
     </div>
 </section>
@@ -203,7 +213,7 @@ data = Edid.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
     <div class="container">
         <h2>
             
-            Ruby source code to parse edid
+            Ruby source code to parse EDID (VESA Enhanced Extended Display Identification Data)
             
         </h2>
 
@@ -248,8 +258,363 @@ class Edid &lt; Kaitai::Struct::Struct
     @screen_size_v = @_io.read_u1
     @gamma_mod = @_io.read_u1
     @features_flags = @_io.read_u1
-    @chromacity = @_io.read_bytes(10)
+    @chromacity = ChromacityInfo.new(@_io, self, @_root)
+    @est_timings = EstTimingsInfo.new(@_io, self, @_root)
+    @std_timings = Array.new(8)
+    (8).times { |i|
+      @std_timings[i] = StdTiming.new(@_io, self, @_root)
+    }
     self
+  end
+
+  ##
+  # Chromaticity information: colorimetry and white point
+  # coordinates. All coordinates are stored as fixed precision
+  # 10-bit numbers, bits are shuffled for compactness.
+  class ChromacityInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @red_x_1_0 = @_io.read_bits_int(2)
+      @red_y_1_0 = @_io.read_bits_int(2)
+      @green_x_1_0 = @_io.read_bits_int(2)
+      @green_y_1_0 = @_io.read_bits_int(2)
+      @blue_x_1_0 = @_io.read_bits_int(2)
+      @blue_y_1_0 = @_io.read_bits_int(2)
+      @white_x_1_0 = @_io.read_bits_int(2)
+      @white_y_1_0 = @_io.read_bits_int(2)
+      @_io.align_to_byte
+      @red_x_9_2 = @_io.read_u1
+      @red_y_9_2 = @_io.read_u1
+      @green_x_9_2 = @_io.read_u1
+      @green_y_9_2 = @_io.read_u1
+      @blue_x_9_2 = @_io.read_u1
+      @blue_y_9_2 = @_io.read_u1
+      @white_x_9_2 = @_io.read_u1
+      @white_y_9_2 = @_io.read_u1
+      self
+    end
+    def green_x_int
+      return @green_x_int unless @green_x_int.nil?
+      @green_x_int = ((green_x_9_2 &lt;&lt; 2) | green_x_1_0)
+      @green_x_int
+    end
+
+    ##
+    # Red Y coordinate
+    def red_y
+      return @red_y unless @red_y.nil?
+      @red_y = (red_y_int / 1024.0)
+      @red_y
+    end
+    def green_y_int
+      return @green_y_int unless @green_y_int.nil?
+      @green_y_int = ((green_y_9_2 &lt;&lt; 2) | green_y_1_0)
+      @green_y_int
+    end
+
+    ##
+    # White Y coordinate
+    def white_y
+      return @white_y unless @white_y.nil?
+      @white_y = (white_y_int / 1024.0)
+      @white_y
+    end
+
+    ##
+    # Red X coordinate
+    def red_x
+      return @red_x unless @red_x.nil?
+      @red_x = (red_x_int / 1024.0)
+      @red_x
+    end
+
+    ##
+    # White X coordinate
+    def white_x
+      return @white_x unless @white_x.nil?
+      @white_x = (white_x_int / 1024.0)
+      @white_x
+    end
+
+    ##
+    # Blue X coordinate
+    def blue_x
+      return @blue_x unless @blue_x.nil?
+      @blue_x = (blue_x_int / 1024.0)
+      @blue_x
+    end
+    def white_x_int
+      return @white_x_int unless @white_x_int.nil?
+      @white_x_int = ((white_x_9_2 &lt;&lt; 2) | white_x_1_0)
+      @white_x_int
+    end
+    def white_y_int
+      return @white_y_int unless @white_y_int.nil?
+      @white_y_int = ((white_y_9_2 &lt;&lt; 2) | white_y_1_0)
+      @white_y_int
+    end
+
+    ##
+    # Green X coordinate
+    def green_x
+      return @green_x unless @green_x.nil?
+      @green_x = (green_x_int / 1024.0)
+      @green_x
+    end
+    def red_x_int
+      return @red_x_int unless @red_x_int.nil?
+      @red_x_int = ((red_x_9_2 &lt;&lt; 2) | red_x_1_0)
+      @red_x_int
+    end
+    def red_y_int
+      return @red_y_int unless @red_y_int.nil?
+      @red_y_int = ((red_y_9_2 &lt;&lt; 2) | red_y_1_0)
+      @red_y_int
+    end
+    def blue_x_int
+      return @blue_x_int unless @blue_x_int.nil?
+      @blue_x_int = ((blue_x_9_2 &lt;&lt; 2) | blue_x_1_0)
+      @blue_x_int
+    end
+
+    ##
+    # Blue Y coordinate
+    def blue_y
+      return @blue_y unless @blue_y.nil?
+      @blue_y = (blue_y_int / 1024.0)
+      @blue_y
+    end
+
+    ##
+    # Green Y coordinate
+    def green_y
+      return @green_y unless @green_y.nil?
+      @green_y = (green_y_int / 1024.0)
+      @green_y
+    end
+    def blue_y_int
+      return @blue_y_int unless @blue_y_int.nil?
+      @blue_y_int = ((blue_y_9_2 &lt;&lt; 2) | blue_y_1_0)
+      @blue_y_int
+    end
+
+    ##
+    # Red X, bits 1..0
+    attr_reader :red_x_1_0
+
+    ##
+    # Red Y, bits 1..0
+    attr_reader :red_y_1_0
+
+    ##
+    # Green X, bits 1..0
+    attr_reader :green_x_1_0
+
+    ##
+    # Green Y, bits 1..0
+    attr_reader :green_y_1_0
+
+    ##
+    # Blue X, bits 1..0
+    attr_reader :blue_x_1_0
+
+    ##
+    # Blue Y, bits 1..0
+    attr_reader :blue_y_1_0
+
+    ##
+    # White X, bits 1..0
+    attr_reader :white_x_1_0
+
+    ##
+    # White Y, bits 1..0
+    attr_reader :white_y_1_0
+
+    ##
+    # Red X, bits 9..2
+    attr_reader :red_x_9_2
+
+    ##
+    # Red Y, bits 9..2
+    attr_reader :red_y_9_2
+
+    ##
+    # Green X, bits 9..2
+    attr_reader :green_x_9_2
+
+    ##
+    # Green Y, bits 9..2
+    attr_reader :green_y_9_2
+
+    ##
+    # Blue X, bits 9..2
+    attr_reader :blue_x_9_2
+
+    ##
+    # Blue Y, bits 9..2
+    attr_reader :blue_y_9_2
+
+    ##
+    # White X, bits 9..2
+    attr_reader :white_x_9_2
+
+    ##
+    # White Y, bits 9..2
+    attr_reader :white_y_9_2
+  end
+  class EstTimingsInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @can_720_400_70 = @_io.read_bits_int(1) != 0
+      @can_720_400_88 = @_io.read_bits_int(1) != 0
+      @can_640_480_60 = @_io.read_bits_int(1) != 0
+      @can_640_480_67 = @_io.read_bits_int(1) != 0
+      @can_640_480_72 = @_io.read_bits_int(1) != 0
+      @can_640_480_75 = @_io.read_bits_int(1) != 0
+      @can_800_600_56 = @_io.read_bits_int(1) != 0
+      @can_800_600_60 = @_io.read_bits_int(1) != 0
+      @can_800_600_72 = @_io.read_bits_int(1) != 0
+      @can_800_600_75 = @_io.read_bits_int(1) != 0
+      @can_832_624_75 = @_io.read_bits_int(1) != 0
+      @can_1024_768_87_i = @_io.read_bits_int(1) != 0
+      @can_1024_768_60 = @_io.read_bits_int(1) != 0
+      @can_1024_768_70 = @_io.read_bits_int(1) != 0
+      @can_1024_768_75 = @_io.read_bits_int(1) != 0
+      @can_1280_1024_75 = @_io.read_bits_int(1) != 0
+      @can_1152_870_75 = @_io.read_bits_int(1) != 0
+      @reserved = @_io.read_bits_int(7)
+      self
+    end
+
+    ##
+    # Supports 720 x 400 @ 70Hz
+    attr_reader :can_720_400_70
+
+    ##
+    # Supports 720 x 400 @ 88Hz
+    attr_reader :can_720_400_88
+
+    ##
+    # Supports 640 x 480 @ 60Hz
+    attr_reader :can_640_480_60
+
+    ##
+    # Supports 640 x 480 @ 67Hz
+    attr_reader :can_640_480_67
+
+    ##
+    # Supports 640 x 480 @ 72Hz
+    attr_reader :can_640_480_72
+
+    ##
+    # Supports 640 x 480 @ 75Hz
+    attr_reader :can_640_480_75
+
+    ##
+    # Supports 800 x 600 @ 56Hz
+    attr_reader :can_800_600_56
+
+    ##
+    # Supports 800 x 600 @ 60Hz
+    attr_reader :can_800_600_60
+
+    ##
+    # Supports 800 x 600 @ 72Hz
+    attr_reader :can_800_600_72
+
+    ##
+    # Supports 800 x 600 @ 75Hz
+    attr_reader :can_800_600_75
+
+    ##
+    # Supports 832 x 624 @ 75Hz
+    attr_reader :can_832_624_75
+
+    ##
+    # Supports 1024 x 768 @ 87Hz(I)
+    attr_reader :can_1024_768_87_i
+
+    ##
+    # Supports 1024 x 768 @ 60Hz
+    attr_reader :can_1024_768_60
+
+    ##
+    # Supports 1024 x 768 @ 70Hz
+    attr_reader :can_1024_768_70
+
+    ##
+    # Supports 1024 x 768 @ 75Hz
+    attr_reader :can_1024_768_75
+
+    ##
+    # Supports 1280 x 1024 @ 75Hz
+    attr_reader :can_1280_1024_75
+
+    ##
+    # Supports 1152 x 870 @ 75Hz
+    attr_reader :can_1152_870_75
+    attr_reader :reserved
+  end
+  class StdTiming &lt; Kaitai::Struct::Struct
+
+    ASPECT_RATIOS = {
+      0 =&gt; :aspect_ratios_ratio_16_10,
+      1 =&gt; :aspect_ratios_ratio_4_3,
+      2 =&gt; :aspect_ratios_ratio_5_4,
+      3 =&gt; :aspect_ratios_ratio_16_9,
+    }
+    I__ASPECT_RATIOS = ASPECT_RATIOS.invert
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @horiz_active_pixels_mod = @_io.read_u1
+      @aspect_ratio = Kaitai::Struct::Stream::resolve_enum(ASPECT_RATIOS, @_io.read_bits_int(2))
+      @refresh_rate_mod = @_io.read_bits_int(5)
+      self
+    end
+
+    ##
+    # Range of horizontal active pixels.
+    def horiz_active_pixels
+      return @horiz_active_pixels unless @horiz_active_pixels.nil?
+      @horiz_active_pixels = ((horiz_active_pixels_mod + 31) * 8)
+      @horiz_active_pixels
+    end
+
+    ##
+    # Vertical refresh rate, Hz.
+    def refresh_rate
+      return @refresh_rate unless @refresh_rate.nil?
+      @refresh_rate = (refresh_rate_mod + 60)
+      @refresh_rate
+    end
+
+    ##
+    # Range of horizontal active pixels, written in modified form:
+    # `(horiz_active_pixels / 8) - 31`. This yields an effective
+    # range of 256..2288, with steps of 8 pixels.
+    attr_reader :horiz_active_pixels_mod
+
+    ##
+    # Aspect ratio of the image. Can be used to calculate number
+    # of vertical pixels.
+    attr_reader :aspect_ratio
+
+    ##
+    # Refresh rate in Hz, written in modified form: `refresh_rate
+    # - 60`. This yields an effective range of 60..123 Hz.
+    attr_reader :refresh_rate_mod
   end
   def mfg_year
     return @mfg_year unless @mfg_year.nil?
@@ -318,7 +683,24 @@ class Edid &lt; Kaitai::Struct::Struct
   # Display gamma, datavalue = (gamma*100)-100 (range 1.00–3.54)
   attr_reader :gamma_mod
   attr_reader :features_flags
+
+  ##
+  # Phosphor or filter chromaticity structure, which provides info on colorimetry and white point
+  # @see &#39;&#39; Standard, section 3.7
   attr_reader :chromacity
+
+  ##
+  # Block of bit flags that indicates support of so called
+  # &quot;established timings&quot;, which is a commonly used subset of VESA
+  # DMT (Discrete Monitor Timings) modes.
+  # @see &#39;&#39; Standard, section 3.8
+  attr_reader :est_timings
+
+  ##
+  # Array of descriptions of so called &quot;standard timings&quot;, which are
+  # used to specify up to 8 additional timings not included in
+  # &quot;established timings&quot;.
+  attr_reader :std_timings
 end
 </code></pre>
             

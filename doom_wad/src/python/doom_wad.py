@@ -29,8 +29,10 @@ class DoomWad(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.Sector(self._io, self, self._root))
+                i += 1
 
 
 
@@ -230,8 +232,10 @@ class DoomWad(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.Vertex(self._io, self, self._root))
+                i += 1
 
 
 
@@ -260,8 +264,10 @@ class DoomWad(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.Thing(self._io, self, self._root))
+                i += 1
 
 
 
@@ -274,8 +280,10 @@ class DoomWad(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.Linedef(self._io, self, self._root))
+                i += 1
 
 
 
@@ -351,8 +359,10 @@ class DoomWad(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.Sidedef(self._io, self, self._root))
+                i += 1
 
 
 
@@ -392,11 +402,13 @@ class DoomWad(KaitaiStruct):
                 _pos = self._io.pos()
                 self._io.seek((self.offset * 2))
                 self._m_linedefs = []
+                i = 0
                 while True:
                     _ = self._io.read_s2le()
                     self._m_linedefs.append(_)
                     if _ == -1:
                         break
+                    i += 1
                 self._io.seek(_pos)
                 return self._m_linedefs if hasattr(self, '_m_linedefs') else None
 

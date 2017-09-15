@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
  */
 public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
     public static MicrosoftNetworkMonitorV2 fromFile(String fileName) throws IOException {
-        return new MicrosoftNetworkMonitorV2(new KaitaiStream(fileName));
+        return new MicrosoftNetworkMonitorV2(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum Linktype {
@@ -175,7 +176,7 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
     }
     public static class FrameIndex extends KaitaiStruct {
         public static FrameIndex fromFile(String fileName) throws IOException {
-            return new FrameIndex(new KaitaiStream(fileName));
+            return new FrameIndex(new ByteBufferKaitaiStream(fileName));
         }
 
         public FrameIndex(KaitaiStream _io) {
@@ -194,8 +195,12 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<FrameIndexEntry>();
-            while (!this._io.isEof()) {
-                this.entries.add(new FrameIndexEntry(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new FrameIndexEntry(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<FrameIndexEntry> entries;
@@ -212,7 +217,7 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
      */
     public static class FrameIndexEntry extends KaitaiStruct {
         public static FrameIndexEntry fromFile(String fileName) throws IOException {
-            return new FrameIndexEntry(new KaitaiStream(fileName));
+            return new FrameIndexEntry(new ByteBufferKaitaiStream(fileName));
         }
 
         public FrameIndexEntry(KaitaiStream _io) {
@@ -266,7 +271,7 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
      */
     public static class Frame extends KaitaiStruct {
         public static Frame fromFile(String fileName) throws IOException {
-            return new Frame(new KaitaiStream(fileName));
+            return new Frame(new ByteBufferKaitaiStream(fileName));
         }
 
         public Frame(KaitaiStream _io) {
@@ -290,7 +295,7 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
             switch (_root.macType()) {
             case ETHERNET: {
                 this._raw_body = this._io.readBytes(incLen());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new EthernetFrame(_io__raw_body);
                 break;
             }
@@ -342,7 +347,7 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
         long _pos = this._io.pos();
         this._io.seek(frameTableOfs());
         this._raw_frameTable = this._io.readBytes(frameTableLen());
-        KaitaiStream _io__raw_frameTable = new KaitaiStream(_raw_frameTable);
+        KaitaiStream _io__raw_frameTable = new ByteBufferKaitaiStream(_raw_frameTable);
         this.frameTable = new FrameIndex(_io__raw_frameTable, this, _root);
         this._io.seek(_pos);
         return this.frameTable;

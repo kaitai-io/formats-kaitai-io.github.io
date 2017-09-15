@@ -50,7 +50,7 @@ sub bg1 {
 sub root_dir {
     my ($self) = @_;
     return $self->{root_dir} if ($self->{root_dir});
-    $self->{root_dir} = $self->bg1()->block_groups()[0]->inodes()[1]->as_dir();
+    $self->{root_dir} = @{@{$self->bg1()->block_groups()}[0]->inodes()}[1]->as_dir();
     return $self->{root_dir};
 }
 
@@ -425,7 +425,7 @@ sub _read {
 sub inode {
     my ($self) = @_;
     return $self->{inode} if ($self->{inode});
-    $self->{inode} = $self->_root()->bg1()->block_groups()[int(($self->inode_ptr() - 1) / $self->_root()->bg1()->super_block()->inodes_per_group())]->inodes()[(($self->inode_ptr() - 1) % $self->_root()->bg1()->super_block()->inodes_per_group())];
+    $self->{inode} = @{@{$self->_root()->bg1()->block_groups()}[int(($self->inode_ptr() - 1) / $self->_root()->bg1()->super_block()->inodes_per_group())]->inodes()}[(($self->inode_ptr() - 1) % $self->_root()->bg1()->super_block()->inodes_per_group())];
     return $self->{inode};
 }
 
@@ -516,7 +516,7 @@ sub _read {
 sub as_dir {
     my ($self) = @_;
     return $self->{as_dir} if ($self->{as_dir});
-    my $io = $self->block()[0]->body()->_io();
+    my $io = @{$self->block()}[0]->body()->_io();
     my $_pos = $io->pos();
     $io->seek(0);
     $self->{as_dir} = Ext2::Dir->new($io, $self, $self->{_root});

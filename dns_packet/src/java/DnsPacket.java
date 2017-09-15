@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.nio.charset.Charset;
 
 public class DnsPacket extends KaitaiStruct {
     public static DnsPacket fromFile(String fileName) throws IOException {
-        return new DnsPacket(new KaitaiStream(fileName));
+        return new DnsPacket(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum ClassType {
@@ -91,7 +92,7 @@ public class DnsPacket extends KaitaiStruct {
     }
     public static class PointerStruct extends KaitaiStruct {
         public static PointerStruct fromFile(String fileName) throws IOException {
-            return new PointerStruct(new KaitaiStream(fileName));
+            return new PointerStruct(new ByteBufferKaitaiStream(fileName));
         }
 
         public PointerStruct(KaitaiStream _io) {
@@ -135,7 +136,7 @@ public class DnsPacket extends KaitaiStruct {
     }
     public static class Label extends KaitaiStruct {
         public static Label fromFile(String fileName) throws IOException {
-            return new Label(new KaitaiStream(fileName));
+            return new Label(new ByteBufferKaitaiStream(fileName));
         }
 
         public Label(KaitaiStream _io) {
@@ -190,7 +191,7 @@ public class DnsPacket extends KaitaiStruct {
     }
     public static class Query extends KaitaiStruct {
         public static Query fromFile(String fileName) throws IOException {
-            return new Query(new KaitaiStream(fileName));
+            return new Query(new ByteBufferKaitaiStream(fileName));
         }
 
         public Query(KaitaiStream _io) {
@@ -225,7 +226,7 @@ public class DnsPacket extends KaitaiStruct {
     }
     public static class DomainName extends KaitaiStruct {
         public static DomainName fromFile(String fileName) throws IOException {
-            return new DomainName(new KaitaiStream(fileName));
+            return new DomainName(new ByteBufferKaitaiStream(fileName));
         }
 
         public DomainName(KaitaiStream _io) {
@@ -246,9 +247,11 @@ public class DnsPacket extends KaitaiStruct {
             this.name = new ArrayList<Label>();
             {
                 Label _it;
+                int i = 0;
                 do {
                     _it = new Label(this._io, this, _root);
                     this.name.add(_it);
+                    i++;
                 } while (!( ((_it.length() == 0) || (_it.length() == 192)) ));
             }
         }
@@ -265,7 +268,7 @@ public class DnsPacket extends KaitaiStruct {
     }
     public static class Address extends KaitaiStruct {
         public static Address fromFile(String fileName) throws IOException {
-            return new Address(new KaitaiStream(fileName));
+            return new Address(new ByteBufferKaitaiStream(fileName));
         }
 
         public Address(KaitaiStream _io) {
@@ -297,7 +300,7 @@ public class DnsPacket extends KaitaiStruct {
     }
     public static class Answer extends KaitaiStruct {
         public static Answer fromFile(String fileName) throws IOException {
-            return new Answer(new KaitaiStream(fileName));
+            return new Answer(new ByteBufferKaitaiStream(fileName));
         }
 
         public Answer(KaitaiStream _io) {
@@ -356,7 +359,7 @@ public class DnsPacket extends KaitaiStruct {
     }
     public static class PacketFlags extends KaitaiStruct {
         public static PacketFlags fromFile(String fileName) throws IOException {
-            return new PacketFlags(new KaitaiStream(fileName));
+            return new PacketFlags(new ByteBufferKaitaiStream(fileName));
         }
 
         public PacketFlags(KaitaiStream _io) {

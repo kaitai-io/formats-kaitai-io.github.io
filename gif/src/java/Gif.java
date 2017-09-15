@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -30,7 +31,7 @@ import java.nio.charset.Charset;
  */
 public class Gif extends KaitaiStruct {
     public static Gif fromFile(String fileName) throws IOException {
-        return new Gif(new KaitaiStream(fileName));
+        return new Gif(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum BlockType {
@@ -84,12 +85,16 @@ public class Gif extends KaitaiStruct {
         this.logicalScreenDescriptor = new LogicalScreenDescriptorStruct(this._io, this, _root);
         if (logicalScreenDescriptor().hasColorTable()) {
             this._raw_globalColorTable = this._io.readBytes((logicalScreenDescriptor().colorTableSize() * 3));
-            KaitaiStream _io__raw_globalColorTable = new KaitaiStream(_raw_globalColorTable);
+            KaitaiStream _io__raw_globalColorTable = new ByteBufferKaitaiStream(_raw_globalColorTable);
             this.globalColorTable = new ColorTable(_io__raw_globalColorTable, this, _root);
         }
         this.blocks = new ArrayList<Block>();
-        while (!this._io.isEof()) {
-            this.blocks.add(new Block(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.blocks.add(new Block(this._io, this, _root));
+                i++;
+            }
         }
     }
 
@@ -98,7 +103,7 @@ public class Gif extends KaitaiStruct {
      */
     public static class ImageData extends KaitaiStruct {
         public static ImageData fromFile(String fileName) throws IOException {
-            return new ImageData(new KaitaiStream(fileName));
+            return new ImageData(new ByteBufferKaitaiStream(fileName));
         }
 
         public ImageData(KaitaiStream _io) {
@@ -130,7 +135,7 @@ public class Gif extends KaitaiStruct {
     }
     public static class ColorTableEntry extends KaitaiStruct {
         public static ColorTableEntry fromFile(String fileName) throws IOException {
-            return new ColorTableEntry(new KaitaiStream(fileName));
+            return new ColorTableEntry(new ByteBufferKaitaiStream(fileName));
         }
 
         public ColorTableEntry(KaitaiStream _io) {
@@ -169,7 +174,7 @@ public class Gif extends KaitaiStruct {
      */
     public static class LogicalScreenDescriptorStruct extends KaitaiStruct {
         public static LogicalScreenDescriptorStruct fromFile(String fileName) throws IOException {
-            return new LogicalScreenDescriptorStruct(new KaitaiStream(fileName));
+            return new LogicalScreenDescriptorStruct(new ByteBufferKaitaiStream(fileName));
         }
 
         public LogicalScreenDescriptorStruct(KaitaiStream _io) {
@@ -226,7 +231,7 @@ public class Gif extends KaitaiStruct {
     }
     public static class LocalImageDescriptor extends KaitaiStruct {
         public static LocalImageDescriptor fromFile(String fileName) throws IOException {
-            return new LocalImageDescriptor(new KaitaiStream(fileName));
+            return new LocalImageDescriptor(new ByteBufferKaitaiStream(fileName));
         }
 
         public LocalImageDescriptor(KaitaiStream _io) {
@@ -251,7 +256,7 @@ public class Gif extends KaitaiStruct {
             this.flags = this._io.readU1();
             if (hasColorTable()) {
                 this._raw_localColorTable = this._io.readBytes((colorTableSize() * 3));
-                KaitaiStream _io__raw_localColorTable = new KaitaiStream(_raw_localColorTable);
+                KaitaiStream _io__raw_localColorTable = new ByteBufferKaitaiStream(_raw_localColorTable);
                 this.localColorTable = new ColorTable(_io__raw_localColorTable, this, _root);
             }
             this.imageData = new ImageData(this._io, this, _root);
@@ -311,7 +316,7 @@ public class Gif extends KaitaiStruct {
     }
     public static class Block extends KaitaiStruct {
         public static Block fromFile(String fileName) throws IOException {
-            return new Block(new KaitaiStream(fileName));
+            return new Block(new ByteBufferKaitaiStream(fileName));
         }
 
         public Block(KaitaiStream _io) {
@@ -356,7 +361,7 @@ public class Gif extends KaitaiStruct {
      */
     public static class ColorTable extends KaitaiStruct {
         public static ColorTable fromFile(String fileName) throws IOException {
-            return new ColorTable(new KaitaiStream(fileName));
+            return new ColorTable(new ByteBufferKaitaiStream(fileName));
         }
 
         public ColorTable(KaitaiStream _io) {
@@ -375,8 +380,12 @@ public class Gif extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<ColorTableEntry>();
-            while (!this._io.isEof()) {
-                this.entries.add(new ColorTableEntry(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new ColorTableEntry(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<ColorTableEntry> entries;
@@ -392,7 +401,7 @@ public class Gif extends KaitaiStruct {
      */
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
-            return new Header(new KaitaiStream(fileName));
+            return new Header(new ByteBufferKaitaiStream(fileName));
         }
 
         public Header(KaitaiStream _io) {
@@ -428,7 +437,7 @@ public class Gif extends KaitaiStruct {
      */
     public static class ExtGraphicControl extends KaitaiStruct {
         public static ExtGraphicControl fromFile(String fileName) throws IOException {
-            return new ExtGraphicControl(new KaitaiStream(fileName));
+            return new ExtGraphicControl(new ByteBufferKaitaiStream(fileName));
         }
 
         public ExtGraphicControl(KaitaiStream _io) {
@@ -485,7 +494,7 @@ public class Gif extends KaitaiStruct {
     }
     public static class Subblock extends KaitaiStruct {
         public static Subblock fromFile(String fileName) throws IOException {
-            return new Subblock(new KaitaiStream(fileName));
+            return new Subblock(new ByteBufferKaitaiStream(fileName));
         }
 
         public Subblock(KaitaiStream _io) {
@@ -517,7 +526,7 @@ public class Gif extends KaitaiStruct {
     }
     public static class ExtApplication extends KaitaiStruct {
         public static ExtApplication fromFile(String fileName) throws IOException {
-            return new ExtApplication(new KaitaiStream(fileName));
+            return new ExtApplication(new ByteBufferKaitaiStream(fileName));
         }
 
         public ExtApplication(KaitaiStream _io) {
@@ -539,9 +548,11 @@ public class Gif extends KaitaiStruct {
             this.subblocks = new ArrayList<Subblock>();
             {
                 Subblock _it;
+                int i = 0;
                 do {
                     _it = new Subblock(this._io, this, _root);
                     this.subblocks.add(_it);
+                    i++;
                 } while (!(_it.numBytes() == 0));
             }
         }
@@ -556,7 +567,7 @@ public class Gif extends KaitaiStruct {
     }
     public static class Subblocks extends KaitaiStruct {
         public static Subblocks fromFile(String fileName) throws IOException {
-            return new Subblocks(new KaitaiStream(fileName));
+            return new Subblocks(new ByteBufferKaitaiStream(fileName));
         }
 
         public Subblocks(KaitaiStream _io) {
@@ -577,9 +588,11 @@ public class Gif extends KaitaiStruct {
             this.entries = new ArrayList<Subblock>();
             {
                 Subblock _it;
+                int i = 0;
                 do {
                     _it = new Subblock(this._io, this, _root);
                     this.entries.add(_it);
+                    i++;
                 } while (!(_it.numBytes() == 0));
             }
         }
@@ -592,7 +605,7 @@ public class Gif extends KaitaiStruct {
     }
     public static class Extension extends KaitaiStruct {
         public static Extension fromFile(String fileName) throws IOException {
-            return new Extension(new KaitaiStream(fileName));
+            return new Extension(new ByteBufferKaitaiStream(fileName));
         }
 
         public Extension(KaitaiStream _io) {

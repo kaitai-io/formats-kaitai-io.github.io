@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -29,16 +28,24 @@ public:
     class dec_datetime_t;
     class dir_entry_body_t;
 
-    iso9660_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, iso9660_t* p_root = 0);
+    iso9660_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, iso9660_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~iso9660_t();
 
     class vol_desc_primary_t : public kaitai::kstruct {
 
     public:
 
-        vol_desc_primary_t(kaitai::kstream* p_io, iso9660_t::vol_desc_t* p_parent = 0, iso9660_t* p_root = 0);
+        vol_desc_primary_t(kaitai::kstream* p__io, iso9660_t::vol_desc_t* p__parent = 0, iso9660_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~vol_desc_primary_t();
 
     private:
@@ -127,8 +134,12 @@ public:
 
     public:
 
-        vol_desc_boot_record_t(kaitai::kstream* p_io, iso9660_t::vol_desc_t* p_parent = 0, iso9660_t* p_root = 0);
+        vol_desc_boot_record_t(kaitai::kstream* p__io, iso9660_t::vol_desc_t* p__parent = 0, iso9660_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~vol_desc_boot_record_t();
 
     private:
@@ -148,8 +159,12 @@ public:
 
     public:
 
-        datetime_t(kaitai::kstream* p_io, iso9660_t::dir_entry_body_t* p_parent = 0, iso9660_t* p_root = 0);
+        datetime_t(kaitai::kstream* p__io, iso9660_t::dir_entry_body_t* p__parent = 0, iso9660_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~datetime_t();
 
     private:
@@ -179,8 +194,12 @@ public:
 
     public:
 
-        dir_entry_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, iso9660_t* p_root = 0);
+        dir_entry_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, iso9660_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~dir_entry_t();
 
     private:
@@ -210,8 +229,12 @@ public:
 
     public:
 
-        vol_desc_t(kaitai::kstream* p_io, iso9660_t* p_parent = 0, iso9660_t* p_root = 0);
+        vol_desc_t(kaitai::kstream* p__io, iso9660_t* p__parent = 0, iso9660_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~vol_desc_t();
 
     private:
@@ -249,8 +272,12 @@ public:
 
     public:
 
-        path_table_entry_le_t(kaitai::kstream* p_io, iso9660_t::path_table_le_t* p_parent = 0, iso9660_t* p_root = 0);
+        path_table_entry_le_t(kaitai::kstream* p__io, iso9660_t::path_table_le_t* p__parent = 0, iso9660_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~path_table_entry_le_t();
 
     private:
@@ -284,8 +311,12 @@ public:
 
     public:
 
-        dir_entries_t(kaitai::kstream* p_io, iso9660_t::dir_entry_body_t* p_parent = 0, iso9660_t* p_root = 0);
+        dir_entries_t(kaitai::kstream* p__io, iso9660_t::dir_entry_body_t* p__parent = 0, iso9660_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~dir_entries_t();
 
     private:
@@ -303,8 +334,12 @@ public:
 
     public:
 
-        u4bi_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, iso9660_t* p_root = 0);
+        u4bi_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, iso9660_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~u4bi_t();
 
     private:
@@ -324,8 +359,12 @@ public:
 
     public:
 
-        u2bi_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, iso9660_t* p_root = 0);
+        u2bi_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, iso9660_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~u2bi_t();
 
     private:
@@ -345,8 +384,12 @@ public:
 
     public:
 
-        path_table_le_t(kaitai::kstream* p_io, iso9660_t::vol_desc_primary_t* p_parent = 0, iso9660_t* p_root = 0);
+        path_table_le_t(kaitai::kstream* p__io, iso9660_t::vol_desc_primary_t* p__parent = 0, iso9660_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~path_table_le_t();
 
     private:
@@ -364,8 +407,12 @@ public:
 
     public:
 
-        dec_datetime_t(kaitai::kstream* p_io, iso9660_t::vol_desc_primary_t* p_parent = 0, iso9660_t* p_root = 0);
+        dec_datetime_t(kaitai::kstream* p__io, iso9660_t::vol_desc_primary_t* p__parent = 0, iso9660_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~dec_datetime_t();
 
     private:
@@ -397,8 +444,12 @@ public:
 
     public:
 
-        dir_entry_body_t(kaitai::kstream* p_io, iso9660_t::dir_entry_t* p_parent = 0, iso9660_t* p_root = 0);
+        dir_entry_body_t(kaitai::kstream* p__io, iso9660_t::dir_entry_t* p__parent = 0, iso9660_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~dir_entry_body_t();
 
     private:

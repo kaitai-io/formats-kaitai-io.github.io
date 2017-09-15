@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Vfat extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Vfat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Vfat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -49,8 +49,8 @@ class Vfat extends \Kaitai\Struct\Struct {
 namespace \Vfat;
 
 class ExtBiosParamBlockFat32 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Vfat\BootSector $parent = null, \Vfat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Vfat\BootSector $_parent = null, \Vfat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -169,8 +169,8 @@ class ExtBiosParamBlockFat32 extends \Kaitai\Struct\Struct {
 namespace \Vfat;
 
 class BootSector extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Vfat $parent = null, \Vfat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Vfat $_parent = null, \Vfat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -288,8 +288,8 @@ class BootSector extends \Kaitai\Struct\Struct {
 namespace \Vfat;
 
 class BiosParamBlock extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Vfat\BootSector $parent = null, \Vfat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Vfat\BootSector $_parent = null, \Vfat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -400,8 +400,8 @@ class BiosParamBlock extends \Kaitai\Struct\Struct {
 namespace \Vfat;
 
 class RootDirectoryRec extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Vfat\RootDirectory $parent = null, \Vfat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Vfat\RootDirectory $_parent = null, \Vfat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -433,8 +433,8 @@ class RootDirectoryRec extends \Kaitai\Struct\Struct {
 namespace \Vfat;
 
 class RootDirectory extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Vfat $parent = null, \Vfat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Vfat $_parent = null, \Vfat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -457,8 +457,8 @@ class RootDirectory extends \Kaitai\Struct\Struct {
 namespace \Vfat;
 
 class ExtBiosParamBlockFat16 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Vfat\BootSector $parent = null, \Vfat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Vfat\BootSector $_parent = null, \Vfat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

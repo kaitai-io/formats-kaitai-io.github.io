@@ -126,8 +126,10 @@ class Pcap < Kaitai::Struct::Struct
   def _read
     @hdr = Header.new(@_io, self, @_root)
     @packets = []
+    i = 0
     while not @_io.eof?
       @packets << Packet.new(@_io, self, @_root)
+      i += 1
     end
     self
   end

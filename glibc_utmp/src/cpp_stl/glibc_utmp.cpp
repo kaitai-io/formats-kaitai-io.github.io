@@ -4,33 +4,43 @@
 
 
 
-glibc_utmp_t::glibc_utmp_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, glibc_utmp_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+glibc_utmp_t::glibc_utmp_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, glibc_utmp_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
 
 void glibc_utmp_t::_read() {
     m__raw_records = new std::vector<std::string>();
+    m__io__raw_records = new std::vector<kaitai::kstream*>();
     m_records = new std::vector<record_t*>();
-    while (!m__io->is_eof()) {
-        m__raw_records->push_back(m__io->read_bytes(384));
-        m__io__raw_records = new kaitai::kstream(m__raw_records->at(m__raw_records->size() - 1));
-        m_records->push_back(new record_t(m__io__raw_records, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m__raw_records->push_back(m__io->read_bytes(384));
+            kaitai::kstream* io__raw_records = new kaitai::kstream(m__raw_records->at(m__raw_records->size() - 1));
+            m__io__raw_records->push_back(io__raw_records);
+            m_records->push_back(new record_t(io__raw_records, this, m__root));
+            i++;
+        }
     }
 }
 
 glibc_utmp_t::~glibc_utmp_t() {
     delete m__raw_records;
+    for (std::vector<kaitai::kstream*>::iterator it = m__io__raw_records->begin(); it != m__io__raw_records->end(); ++it) {
+        delete *it;
+    }
+    delete m__io__raw_records;
     for (std::vector<record_t*>::iterator it = m_records->begin(); it != m_records->end(); ++it) {
         delete *it;
     }
     delete m_records;
 }
 
-glibc_utmp_t::record_t::record_t(kaitai::kstream *p_io, glibc_utmp_t* p_parent, glibc_utmp_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+glibc_utmp_t::record_t::record_t(kaitai::kstream* p__io, glibc_utmp_t* p__parent, glibc_utmp_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -52,9 +62,9 @@ glibc_utmp_t::record_t::~record_t() {
     delete m_tv;
 }
 
-glibc_utmp_t::timeval_t::timeval_t(kaitai::kstream *p_io, glibc_utmp_t::record_t* p_parent, glibc_utmp_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+glibc_utmp_t::timeval_t::timeval_t(kaitai::kstream* p__io, glibc_utmp_t::record_t* p__parent, glibc_utmp_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

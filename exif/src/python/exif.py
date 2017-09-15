@@ -7,8 +7,8 @@ from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, 
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-from exif_le import ExifLe
 from exif_be import ExifBe
+from exif_le import ExifLe
 class Exif(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

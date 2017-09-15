@@ -210,9 +210,11 @@ class Iso9660 < Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       begin
         _ = DirEntry.new(@_io, self, @_root)
         @entries << _
+        i += 1
       end until _.len == 0
       self
     end
@@ -254,8 +256,10 @@ class Iso9660 < Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries << PathTableEntryLe.new(@_io, self, @_root)
+        i += 1
       end
       self
     end

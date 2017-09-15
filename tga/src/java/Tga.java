@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -16,7 +17,7 @@ import java.nio.charset.Charset;
  */
 public class Tga extends KaitaiStruct {
     public static Tga fromFile(String fileName) throws IOException {
-        return new Tga(new KaitaiStream(fileName));
+        return new Tga(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum ColorMapEnum {
@@ -91,7 +92,7 @@ public class Tga extends KaitaiStruct {
     }
     public static class TgaFooter extends KaitaiStruct {
         public static TgaFooter fromFile(String fileName) throws IOException {
-            return new TgaFooter(new KaitaiStream(fileName));
+            return new TgaFooter(new ByteBufferKaitaiStream(fileName));
         }
 
         public TgaFooter(KaitaiStream _io) {
@@ -154,7 +155,7 @@ public class Tga extends KaitaiStruct {
     }
     public static class TgaExtArea extends KaitaiStruct {
         public static TgaExtArea fromFile(String fileName) throws IOException {
-            return new TgaExtArea(new KaitaiStream(fileName));
+            return new TgaExtArea(new ByteBufferKaitaiStream(fileName));
         }
 
         public TgaExtArea(KaitaiStream _io) {

@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.nio.charset.Charset;
 
 public class Png extends KaitaiStruct {
     public static Png fromFile(String fileName) throws IOException {
-        return new Png(new KaitaiStream(fileName));
+        return new Png(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum ColorType {
@@ -69,15 +70,17 @@ public class Png extends KaitaiStruct {
         this.chunks = new ArrayList<Chunk>();
         {
             Chunk _it;
+            int i = 0;
             do {
                 _it = new Chunk(this._io, this, _root);
                 this.chunks.add(_it);
+                i++;
             } while (!( ((_it.type().equals("IEND")) || (_io().isEof())) ));
         }
     }
     public static class Rgb extends KaitaiStruct {
         public static Rgb fromFile(String fileName) throws IOException {
-            return new Rgb(new KaitaiStream(fileName));
+            return new Rgb(new ByteBufferKaitaiStream(fileName));
         }
 
         public Rgb(KaitaiStream _io) {
@@ -112,7 +115,7 @@ public class Png extends KaitaiStruct {
     }
     public static class Chunk extends KaitaiStruct {
         public static Chunk fromFile(String fileName) throws IOException {
-            return new Chunk(new KaitaiStream(fileName));
+            return new Chunk(new ByteBufferKaitaiStream(fileName));
         }
 
         public Chunk(KaitaiStream _io) {
@@ -135,61 +138,61 @@ public class Png extends KaitaiStruct {
             switch (type()) {
             case "iTXt": {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new InternationalTextChunk(_io__raw_body, this, _root);
                 break;
             }
             case "gAMA": {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new GamaChunk(_io__raw_body, this, _root);
                 break;
             }
             case "tIME": {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new TimeChunk(_io__raw_body, this, _root);
                 break;
             }
             case "PLTE": {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new PlteChunk(_io__raw_body, this, _root);
                 break;
             }
             case "bKGD": {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new BkgdChunk(_io__raw_body, this, _root);
                 break;
             }
             case "pHYs": {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new PhysChunk(_io__raw_body, this, _root);
                 break;
             }
             case "tEXt": {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new TextChunk(_io__raw_body, this, _root);
                 break;
             }
             case "cHRM": {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new ChrmChunk(_io__raw_body, this, _root);
                 break;
             }
             case "sRGB": {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new SrgbChunk(_io__raw_body, this, _root);
                 break;
             }
             case "zTXt": {
                 this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new CompressedTextChunk(_io__raw_body, this, _root);
                 break;
             }
@@ -217,7 +220,7 @@ public class Png extends KaitaiStruct {
     }
     public static class BkgdIndexed extends KaitaiStruct {
         public static BkgdIndexed fromFile(String fileName) throws IOException {
-            return new BkgdIndexed(new KaitaiStream(fileName));
+            return new BkgdIndexed(new ByteBufferKaitaiStream(fileName));
         }
 
         public BkgdIndexed(KaitaiStream _io) {
@@ -246,7 +249,7 @@ public class Png extends KaitaiStruct {
     }
     public static class Point extends KaitaiStruct {
         public static Point fromFile(String fileName) throws IOException {
-            return new Point(new KaitaiStream(fileName));
+            return new Point(new ByteBufferKaitaiStream(fileName));
         }
 
         public Point(KaitaiStream _io) {
@@ -294,7 +297,7 @@ public class Png extends KaitaiStruct {
     }
     public static class BkgdGreyscale extends KaitaiStruct {
         public static BkgdGreyscale fromFile(String fileName) throws IOException {
-            return new BkgdGreyscale(new KaitaiStream(fileName));
+            return new BkgdGreyscale(new ByteBufferKaitaiStream(fileName));
         }
 
         public BkgdGreyscale(KaitaiStream _io) {
@@ -323,7 +326,7 @@ public class Png extends KaitaiStruct {
     }
     public static class ChrmChunk extends KaitaiStruct {
         public static ChrmChunk fromFile(String fileName) throws IOException {
-            return new ChrmChunk(new KaitaiStream(fileName));
+            return new ChrmChunk(new ByteBufferKaitaiStream(fileName));
         }
 
         public ChrmChunk(KaitaiStream _io) {
@@ -361,7 +364,7 @@ public class Png extends KaitaiStruct {
     }
     public static class IhdrChunk extends KaitaiStruct {
         public static IhdrChunk fromFile(String fileName) throws IOException {
-            return new IhdrChunk(new KaitaiStream(fileName));
+            return new IhdrChunk(new ByteBufferKaitaiStream(fileName));
         }
 
         public IhdrChunk(KaitaiStream _io) {
@@ -408,7 +411,7 @@ public class Png extends KaitaiStruct {
     }
     public static class PlteChunk extends KaitaiStruct {
         public static PlteChunk fromFile(String fileName) throws IOException {
-            return new PlteChunk(new KaitaiStream(fileName));
+            return new PlteChunk(new ByteBufferKaitaiStream(fileName));
         }
 
         public PlteChunk(KaitaiStream _io) {
@@ -427,8 +430,12 @@ public class Png extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<Rgb>();
-            while (!this._io.isEof()) {
-                this.entries.add(new Rgb(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Rgb(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<Rgb> entries;
@@ -440,7 +447,7 @@ public class Png extends KaitaiStruct {
     }
     public static class SrgbChunk extends KaitaiStruct {
         public static SrgbChunk fromFile(String fileName) throws IOException {
-            return new SrgbChunk(new KaitaiStream(fileName));
+            return new SrgbChunk(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum Intent {
@@ -486,7 +493,7 @@ public class Png extends KaitaiStruct {
     }
     public static class CompressedTextChunk extends KaitaiStruct {
         public static CompressedTextChunk fromFile(String fileName) throws IOException {
-            return new CompressedTextChunk(new KaitaiStream(fileName));
+            return new CompressedTextChunk(new ByteBufferKaitaiStream(fileName));
         }
 
         public CompressedTextChunk(KaitaiStream _io) {
@@ -524,7 +531,7 @@ public class Png extends KaitaiStruct {
     }
     public static class BkgdTruecolor extends KaitaiStruct {
         public static BkgdTruecolor fromFile(String fileName) throws IOException {
-            return new BkgdTruecolor(new KaitaiStream(fileName));
+            return new BkgdTruecolor(new ByteBufferKaitaiStream(fileName));
         }
 
         public BkgdTruecolor(KaitaiStream _io) {
@@ -559,7 +566,7 @@ public class Png extends KaitaiStruct {
     }
     public static class GamaChunk extends KaitaiStruct {
         public static GamaChunk fromFile(String fileName) throws IOException {
-            return new GamaChunk(new KaitaiStream(fileName));
+            return new GamaChunk(new ByteBufferKaitaiStream(fileName));
         }
 
         public GamaChunk(KaitaiStream _io) {
@@ -596,7 +603,7 @@ public class Png extends KaitaiStruct {
     }
     public static class BkgdChunk extends KaitaiStruct {
         public static BkgdChunk fromFile(String fileName) throws IOException {
-            return new BkgdChunk(new KaitaiStream(fileName));
+            return new BkgdChunk(new ByteBufferKaitaiStream(fileName));
         }
 
         public BkgdChunk(KaitaiStream _io) {
@@ -646,7 +653,7 @@ public class Png extends KaitaiStruct {
     }
     public static class PhysChunk extends KaitaiStruct {
         public static PhysChunk fromFile(String fileName) throws IOException {
-            return new PhysChunk(new KaitaiStream(fileName));
+            return new PhysChunk(new ByteBufferKaitaiStream(fileName));
         }
 
         public PhysChunk(KaitaiStream _io) {
@@ -681,7 +688,7 @@ public class Png extends KaitaiStruct {
     }
     public static class InternationalTextChunk extends KaitaiStruct {
         public static InternationalTextChunk fromFile(String fileName) throws IOException {
-            return new InternationalTextChunk(new KaitaiStream(fileName));
+            return new InternationalTextChunk(new ByteBufferKaitaiStream(fileName));
         }
 
         public InternationalTextChunk(KaitaiStream _io) {
@@ -725,7 +732,7 @@ public class Png extends KaitaiStruct {
     }
     public static class TextChunk extends KaitaiStruct {
         public static TextChunk fromFile(String fileName) throws IOException {
-            return new TextChunk(new KaitaiStream(fileName));
+            return new TextChunk(new ByteBufferKaitaiStream(fileName));
         }
 
         public TextChunk(KaitaiStream _io) {
@@ -757,7 +764,7 @@ public class Png extends KaitaiStruct {
     }
     public static class TimeChunk extends KaitaiStruct {
         public static TimeChunk fromFile(String fileName) throws IOException {
-            return new TimeChunk(new KaitaiStream(fileName));
+            return new TimeChunk(new ByteBufferKaitaiStream(fileName));
         }
 
         public TimeChunk(KaitaiStream _io) {

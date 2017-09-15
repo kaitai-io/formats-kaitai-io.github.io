@@ -432,14 +432,18 @@ class Elf(KaitaiStruct):
 
             def _read_le(self):
                 self.entries = []
+                i = 0
                 while not self._io.is_eof():
                     self.entries.append((self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII"))
+                    i += 1
 
 
             def _read_be(self):
                 self.entries = []
+                i = 0
                 while not self._io.is_eof():
                     self.entries.append((self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII"))
+                    i += 1
 
 
 

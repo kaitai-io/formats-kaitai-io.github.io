@@ -44,8 +44,10 @@ class GoogleProtobuf < Kaitai::Struct::Struct
 
   def _read
     @pairs = []
+    i = 0
     while not @_io.eof?
       @pairs << Pair.new(@_io, self, @_root)
+      i += 1
     end
     self
   end

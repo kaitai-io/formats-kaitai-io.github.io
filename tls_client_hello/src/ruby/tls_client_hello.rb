@@ -76,8 +76,10 @@ class TlsClientHello < Kaitai::Struct::Struct
     def _read
       @list_length = @_io.read_u2be
       @server_names = []
+      i = 0
       while not @_io.eof?
         @server_names << ServerName.new(@_io, self, @_root)
+        i += 1
       end
       self
     end
@@ -124,8 +126,10 @@ class TlsClientHello < Kaitai::Struct::Struct
     def _read
       @ext_len = @_io.read_u2be
       @alpn_protocols = []
+      i = 0
       while not @_io.eof?
         @alpn_protocols << Protocol.new(@_io, self, @_root)
+        i += 1
       end
       self
     end
@@ -141,8 +145,10 @@ class TlsClientHello < Kaitai::Struct::Struct
     def _read
       @len = @_io.read_u2be
       @extensions = []
+      i = 0
       while not @_io.eof?
         @extensions << Extension.new(@_io, self, @_root)
+        i += 1
       end
       self
     end

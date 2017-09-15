@@ -4,8 +4,8 @@
 
 #include <algorithm>
 
-ttf_t::ttf_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+ttf_t::ttf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -28,9 +28,9 @@ ttf_t::~ttf_t() {
     delete m_directory_table;
 }
 
-ttf_t::post_t::post_t(kaitai::kstream *p_io, ttf_t::dir_table_entry_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::post_t::post_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -59,9 +59,9 @@ ttf_t::post_t::~post_t() {
     }
 }
 
-ttf_t::post_t::format20_t::format20_t(kaitai::kstream *p_io, ttf_t::post_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::post_t::format20_t::format20_t(kaitai::kstream* p__io, ttf_t::post_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -75,10 +75,12 @@ void ttf_t::post_t::format20_t::_read() {
     }
     m_glyph_names = new std::vector<pascal_string_t*>();
     {
+        int i = 0;
         pascal_string_t* _;
         do {
             _ = new pascal_string_t(m__io, this, m__root);
             m_glyph_names->push_back(_);
+            i++;
         } while (!(_->length() == 0));
     }
 }
@@ -91,9 +93,9 @@ ttf_t::post_t::format20_t::~format20_t() {
     delete m_glyph_names;
 }
 
-ttf_t::post_t::format20_t::pascal_string_t::pascal_string_t(kaitai::kstream *p_io, ttf_t::post_t::format20_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::post_t::format20_t::pascal_string_t::pascal_string_t(kaitai::kstream* p__io, ttf_t::post_t::format20_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -107,11 +109,13 @@ void ttf_t::post_t::format20_t::pascal_string_t::_read() {
 }
 
 ttf_t::post_t::format20_t::pascal_string_t::~pascal_string_t() {
+    if (!n_value) {
+    }
 }
 
-ttf_t::name_t::name_t(kaitai::kstream *p_io, ttf_t::dir_table_entry_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::name_t::name_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -134,9 +138,9 @@ ttf_t::name_t::~name_t() {
     delete m_name_records;
 }
 
-ttf_t::name_t::name_record_t::name_record_t(kaitai::kstream *p_io, ttf_t::name_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::name_t::name_record_t::name_record_t(kaitai::kstream* p__io, ttf_t::name_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_ascii_value = false;
     f_unicode_value = false;
     _read();
@@ -152,6 +156,10 @@ void ttf_t::name_t::name_record_t::_read() {
 }
 
 ttf_t::name_t::name_record_t::~name_record_t() {
+    if (f_ascii_value) {
+    }
+    if (f_unicode_value) {
+    }
 }
 
 std::string ttf_t::name_t::name_record_t::ascii_value() {
@@ -178,9 +186,9 @@ std::string ttf_t::name_t::name_record_t::unicode_value() {
     return m_unicode_value;
 }
 
-ttf_t::head_t::head_t(kaitai::kstream *p_io, ttf_t::dir_table_entry_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::head_t::head_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -209,9 +217,9 @@ ttf_t::head_t::~head_t() {
     delete m_font_revision;
 }
 
-ttf_t::prep_t::prep_t(kaitai::kstream *p_io, ttf_t::dir_table_entry_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::prep_t::prep_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -222,9 +230,9 @@ void ttf_t::prep_t::_read() {
 ttf_t::prep_t::~prep_t() {
 }
 
-ttf_t::hhea_t::hhea_t(kaitai::kstream *p_io, ttf_t::dir_table_entry_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::hhea_t::hhea_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -248,9 +256,9 @@ ttf_t::hhea_t::~hhea_t() {
     delete m_version;
 }
 
-ttf_t::fpgm_t::fpgm_t(kaitai::kstream *p_io, ttf_t::dir_table_entry_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::fpgm_t::fpgm_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -261,9 +269,9 @@ void ttf_t::fpgm_t::_read() {
 ttf_t::fpgm_t::~fpgm_t() {
 }
 
-ttf_t::kern_t::kern_t(kaitai::kstream *p_io, ttf_t::dir_table_entry_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::kern_t::kern_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -285,9 +293,9 @@ ttf_t::kern_t::~kern_t() {
     delete m_subtables;
 }
 
-ttf_t::kern_t::subtable_t::subtable_t(kaitai::kstream *p_io, ttf_t::kern_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::kern_t::subtable_t::subtable_t(kaitai::kstream* p__io, ttf_t::kern_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -314,9 +322,9 @@ ttf_t::kern_t::subtable_t::~subtable_t() {
     }
 }
 
-ttf_t::kern_t::subtable_t::format0_t::format0_t(kaitai::kstream *p_io, ttf_t::kern_t::subtable_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::kern_t::subtable_t::format0_t::format0_t(kaitai::kstream* p__io, ttf_t::kern_t::subtable_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -340,9 +348,9 @@ ttf_t::kern_t::subtable_t::format0_t::~format0_t() {
     delete m_kerning_pairs;
 }
 
-ttf_t::kern_t::subtable_t::format0_t::kerning_pair_t::kerning_pair_t(kaitai::kstream *p_io, ttf_t::kern_t::subtable_t::format0_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::kern_t::subtable_t::format0_t::kerning_pair_t::kerning_pair_t(kaitai::kstream* p__io, ttf_t::kern_t::subtable_t::format0_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -355,9 +363,9 @@ void ttf_t::kern_t::subtable_t::format0_t::kerning_pair_t::_read() {
 ttf_t::kern_t::subtable_t::format0_t::kerning_pair_t::~kerning_pair_t() {
 }
 
-ttf_t::dir_table_entry_t::dir_table_entry_t(kaitai::kstream *p_io, ttf_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::dir_table_entry_t::dir_table_entry_t(kaitai::kstream* p__io, ttf_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_value = false;
     _read();
 }
@@ -370,6 +378,10 @@ void ttf_t::dir_table_entry_t::_read() {
 }
 
 ttf_t::dir_table_entry_t::~dir_table_entry_t() {
+    if (f_value && !n_value) {
+        delete m__io__raw_value;
+        delete m_value;
+    }
 }
 
 kaitai::kstruct* ttf_t::dir_table_entry_t::value() {
@@ -378,64 +390,77 @@ kaitai::kstruct* ttf_t::dir_table_entry_t::value() {
     kaitai::kstream *io = _root()->_io();
     std::streampos _pos = io->pos();
     io->seek(offset());
+    n_value = true;
     {
         std::string on = tag();
         if (on == std::string("head")) {
+            n_value = false;
             m__raw_value = io->read_bytes(length());
             m__io__raw_value = new kaitai::kstream(m__raw_value);
             m_value = new head_t(m__io__raw_value, this, m__root);
         }
         else if (on == std::string("cvt ")) {
+            n_value = false;
             m__raw_value = io->read_bytes(length());
             m__io__raw_value = new kaitai::kstream(m__raw_value);
             m_value = new cvt_t(m__io__raw_value, this, m__root);
         }
         else if (on == std::string("prep")) {
+            n_value = false;
             m__raw_value = io->read_bytes(length());
             m__io__raw_value = new kaitai::kstream(m__raw_value);
             m_value = new prep_t(m__io__raw_value, this, m__root);
         }
         else if (on == std::string("kern")) {
+            n_value = false;
             m__raw_value = io->read_bytes(length());
             m__io__raw_value = new kaitai::kstream(m__raw_value);
             m_value = new kern_t(m__io__raw_value, this, m__root);
         }
         else if (on == std::string("hhea")) {
+            n_value = false;
             m__raw_value = io->read_bytes(length());
             m__io__raw_value = new kaitai::kstream(m__raw_value);
             m_value = new hhea_t(m__io__raw_value, this, m__root);
         }
         else if (on == std::string("post")) {
+            n_value = false;
             m__raw_value = io->read_bytes(length());
             m__io__raw_value = new kaitai::kstream(m__raw_value);
             m_value = new post_t(m__io__raw_value, this, m__root);
         }
         else if (on == std::string("OS/2")) {
+            n_value = false;
             m__raw_value = io->read_bytes(length());
             m__io__raw_value = new kaitai::kstream(m__raw_value);
             m_value = new os2_t(m__io__raw_value, this, m__root);
         }
         else if (on == std::string("name")) {
+            n_value = false;
             m__raw_value = io->read_bytes(length());
             m__io__raw_value = new kaitai::kstream(m__raw_value);
             m_value = new name_t(m__io__raw_value, this, m__root);
         }
         else if (on == std::string("maxp")) {
+            n_value = false;
             m__raw_value = io->read_bytes(length());
             m__io__raw_value = new kaitai::kstream(m__raw_value);
             m_value = new maxp_t(m__io__raw_value, this, m__root);
         }
         else if (on == std::string("glyf")) {
+            n_value = false;
             m__raw_value = io->read_bytes(length());
             m__io__raw_value = new kaitai::kstream(m__raw_value);
             m_value = new glyf_t(m__io__raw_value, this, m__root);
         }
         else if (on == std::string("fpgm")) {
+            n_value = false;
             m__raw_value = io->read_bytes(length());
             m__io__raw_value = new kaitai::kstream(m__raw_value);
             m_value = new fpgm_t(m__io__raw_value, this, m__root);
         }
         else if (on == std::string("cmap")) {
+            n_value = false;
             m__raw_value = io->read_bytes(length());
             m__io__raw_value = new kaitai::kstream(m__raw_value);
             m_value = new cmap_t(m__io__raw_value, this, m__root);
@@ -449,9 +474,9 @@ kaitai::kstruct* ttf_t::dir_table_entry_t::value() {
     return m_value;
 }
 
-ttf_t::os2_t::os2_t(kaitai::kstream *p_io, ttf_t::dir_table_entry_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::os2_t::os2_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -492,9 +517,9 @@ ttf_t::os2_t::~os2_t() {
     delete m_code_page_range;
 }
 
-ttf_t::os2_t::panose_t::panose_t(kaitai::kstream *p_io, ttf_t::os2_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::os2_t::panose_t::panose_t(kaitai::kstream* p__io, ttf_t::os2_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -514,9 +539,9 @@ void ttf_t::os2_t::panose_t::_read() {
 ttf_t::os2_t::panose_t::~panose_t() {
 }
 
-ttf_t::os2_t::unicode_range_t::unicode_range_t(kaitai::kstream *p_io, ttf_t::os2_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::os2_t::unicode_range_t::unicode_range_t(kaitai::kstream* p__io, ttf_t::os2_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -598,9 +623,9 @@ void ttf_t::os2_t::unicode_range_t::_read() {
 ttf_t::os2_t::unicode_range_t::~unicode_range_t() {
 }
 
-ttf_t::os2_t::code_page_range_t::code_page_range_t(kaitai::kstream *p_io, ttf_t::os2_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::os2_t::code_page_range_t::code_page_range_t(kaitai::kstream* p__io, ttf_t::os2_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -646,9 +671,9 @@ void ttf_t::os2_t::code_page_range_t::_read() {
 ttf_t::os2_t::code_page_range_t::~code_page_range_t() {
 }
 
-ttf_t::fixed_t::fixed_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::fixed_t::fixed_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -660,9 +685,9 @@ void ttf_t::fixed_t::_read() {
 ttf_t::fixed_t::~fixed_t() {
 }
 
-ttf_t::glyf_t::glyf_t(kaitai::kstream *p_io, ttf_t::dir_table_entry_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::glyf_t::glyf_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -685,9 +710,9 @@ ttf_t::glyf_t::~glyf_t() {
     }
 }
 
-ttf_t::glyf_t::simple_glyph_t::simple_glyph_t(kaitai::kstream *p_io, ttf_t::glyf_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::glyf_t::simple_glyph_t::simple_glyph_t(kaitai::kstream* p__io, ttf_t::glyf_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_point_count = false;
     _read();
 }
@@ -717,9 +742,9 @@ ttf_t::glyf_t::simple_glyph_t::~simple_glyph_t() {
     delete m_flags;
 }
 
-ttf_t::glyf_t::simple_glyph_t::flag_t::flag_t(kaitai::kstream *p_io, ttf_t::glyf_t::simple_glyph_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::glyf_t::simple_glyph_t::flag_t::flag_t(kaitai::kstream* p__io, ttf_t::glyf_t::simple_glyph_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -740,6 +765,8 @@ void ttf_t::glyf_t::simple_glyph_t::flag_t::_read() {
 }
 
 ttf_t::glyf_t::simple_glyph_t::flag_t::~flag_t() {
+    if (!n_repeat_value) {
+    }
 }
 
 int32_t ttf_t::glyf_t::simple_glyph_t::point_count() {
@@ -750,16 +777,20 @@ int32_t ttf_t::glyf_t::simple_glyph_t::point_count() {
     return m_point_count;
 }
 
-ttf_t::cvt_t::cvt_t(kaitai::kstream *p_io, ttf_t::dir_table_entry_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::cvt_t::cvt_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void ttf_t::cvt_t::_read() {
     m_fwords = new std::vector<int16_t>();
-    while (!m__io->is_eof()) {
-        m_fwords->push_back(m__io->read_s2be());
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_fwords->push_back(m__io->read_s2be());
+            i++;
+        }
     }
 }
 
@@ -767,9 +798,9 @@ ttf_t::cvt_t::~cvt_t() {
     delete m_fwords;
 }
 
-ttf_t::maxp_t::maxp_t(kaitai::kstream *p_io, ttf_t::dir_table_entry_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::maxp_t::maxp_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -795,9 +826,9 @@ ttf_t::maxp_t::~maxp_t() {
     delete m_table_version_number;
 }
 
-ttf_t::offset_table_t::offset_table_t(kaitai::kstream *p_io, ttf_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::offset_table_t::offset_table_t(kaitai::kstream* p__io, ttf_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -813,9 +844,9 @@ ttf_t::offset_table_t::~offset_table_t() {
     delete m_sfnt_version;
 }
 
-ttf_t::cmap_t::cmap_t(kaitai::kstream *p_io, ttf_t::dir_table_entry_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::cmap_t::cmap_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -837,9 +868,9 @@ ttf_t::cmap_t::~cmap_t() {
     delete m_tables;
 }
 
-ttf_t::cmap_t::subtable_header_t::subtable_header_t(kaitai::kstream *p_io, ttf_t::cmap_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::cmap_t::subtable_header_t::subtable_header_t(kaitai::kstream* p__io, ttf_t::cmap_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_table = false;
     _read();
 }
@@ -868,9 +899,9 @@ ttf_t::cmap_t::subtable_t* ttf_t::cmap_t::subtable_header_t::table() {
     return m_table;
 }
 
-ttf_t::cmap_t::subtable_t::subtable_t(kaitai::kstream *p_io, ttf_t::cmap_t::subtable_header_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::cmap_t::subtable_t::subtable_t(kaitai::kstream* p__io, ttf_t::cmap_t::subtable_header_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -878,39 +909,53 @@ void ttf_t::cmap_t::subtable_t::_read() {
     m_format = static_cast<ttf_t::cmap_t::subtable_t::subtable_format_t>(m__io->read_u2be());
     m_length = m__io->read_u2be();
     m_version = m__io->read_u2be();
+    n_value = true;
     switch (format()) {
-    case SUBTABLE_FORMAT_BYTE_ENCODING_TABLE:
+    case SUBTABLE_FORMAT_BYTE_ENCODING_TABLE: {
+        n_value = false;
         m__raw_value = m__io->read_bytes((length() - 6));
         m__io__raw_value = new kaitai::kstream(m__raw_value);
         m_value = new byte_encoding_table_t(m__io__raw_value, this, m__root);
         break;
-    case SUBTABLE_FORMAT_HIGH_BYTE_MAPPING_THROUGH_TABLE:
+    }
+    case SUBTABLE_FORMAT_HIGH_BYTE_MAPPING_THROUGH_TABLE: {
+        n_value = false;
         m__raw_value = m__io->read_bytes((length() - 6));
         m__io__raw_value = new kaitai::kstream(m__raw_value);
         m_value = new high_byte_mapping_through_table_t(m__io__raw_value, this, m__root);
         break;
-    case SUBTABLE_FORMAT_TRIMMED_TABLE_MAPPING:
+    }
+    case SUBTABLE_FORMAT_TRIMMED_TABLE_MAPPING: {
+        n_value = false;
         m__raw_value = m__io->read_bytes((length() - 6));
         m__io__raw_value = new kaitai::kstream(m__raw_value);
         m_value = new trimmed_table_mapping_t(m__io__raw_value, this, m__root);
         break;
-    case SUBTABLE_FORMAT_SEGMENT_MAPPING_TO_DELTA_VALUES:
+    }
+    case SUBTABLE_FORMAT_SEGMENT_MAPPING_TO_DELTA_VALUES: {
+        n_value = false;
         m__raw_value = m__io->read_bytes((length() - 6));
         m__io__raw_value = new kaitai::kstream(m__raw_value);
         m_value = new segment_mapping_to_delta_values_t(m__io__raw_value, this, m__root);
         break;
-    default:
+    }
+    default: {
         m__raw_value = m__io->read_bytes((length() - 6));
         break;
+    }
     }
 }
 
 ttf_t::cmap_t::subtable_t::~subtable_t() {
+    if (!n_value) {
+        delete m__io__raw_value;
+        delete m_value;
+    }
 }
 
-ttf_t::cmap_t::subtable_t::byte_encoding_table_t::byte_encoding_table_t(kaitai::kstream *p_io, ttf_t::cmap_t::subtable_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::cmap_t::subtable_t::byte_encoding_table_t::byte_encoding_table_t(kaitai::kstream* p__io, ttf_t::cmap_t::subtable_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -921,9 +966,9 @@ void ttf_t::cmap_t::subtable_t::byte_encoding_table_t::_read() {
 ttf_t::cmap_t::subtable_t::byte_encoding_table_t::~byte_encoding_table_t() {
 }
 
-ttf_t::cmap_t::subtable_t::high_byte_mapping_through_table_t::high_byte_mapping_through_table_t(kaitai::kstream *p_io, ttf_t::cmap_t::subtable_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::cmap_t::subtable_t::high_byte_mapping_through_table_t::high_byte_mapping_through_table_t(kaitai::kstream* p__io, ttf_t::cmap_t::subtable_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -940,9 +985,9 @@ ttf_t::cmap_t::subtable_t::high_byte_mapping_through_table_t::~high_byte_mapping
     delete m_sub_header_keys;
 }
 
-ttf_t::cmap_t::subtable_t::segment_mapping_to_delta_values_t::segment_mapping_to_delta_values_t(kaitai::kstream *p_io, ttf_t::cmap_t::subtable_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::cmap_t::subtable_t::segment_mapping_to_delta_values_t::segment_mapping_to_delta_values_t(kaitai::kstream* p__io, ttf_t::cmap_t::subtable_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_seg_count = false;
     _read();
 }
@@ -978,8 +1023,12 @@ void ttf_t::cmap_t::subtable_t::segment_mapping_to_delta_values_t::_read() {
         m_id_range_offset->push_back(m__io->read_u2be());
     }
     m_glyph_id_array = new std::vector<uint16_t>();
-    while (!m__io->is_eof()) {
-        m_glyph_id_array->push_back(m__io->read_u2be());
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_glyph_id_array->push_back(m__io->read_u2be());
+            i++;
+        }
     }
 }
 
@@ -999,9 +1048,9 @@ int32_t ttf_t::cmap_t::subtable_t::segment_mapping_to_delta_values_t::seg_count(
     return m_seg_count;
 }
 
-ttf_t::cmap_t::subtable_t::trimmed_table_mapping_t::trimmed_table_mapping_t(kaitai::kstream *p_io, ttf_t::cmap_t::subtable_t* p_parent, ttf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ttf_t::cmap_t::subtable_t::trimmed_table_mapping_t::trimmed_table_mapping_t(kaitai::kstream* p__io, ttf_t::cmap_t::subtable_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

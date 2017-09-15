@@ -11,6 +11,7 @@ namespace Kaitai
             return new IcmpPacket(new KaitaiStream(fileName));
         }
 
+
         public enum IcmpTypeEnum
         {
             EchoReply = 0,
@@ -20,14 +21,14 @@ namespace Kaitai
             Echo = 8,
             TimeExceeded = 11,
         }
-
-        public IcmpPacket(KaitaiStream io, KaitaiStruct parent = null, IcmpPacket root = null) : base(io)
+        public IcmpPacket(KaitaiStream p__io, KaitaiStruct p__parent = null, IcmpPacket p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _icmpType = ((IcmpTypeEnum) m_io.ReadU1());
             if (IcmpType == IcmpTypeEnum.DestinationUnreachable) {
                 _destinationUnreachable = new DestinationUnreachableMsg(m_io, this, m_root);
@@ -38,13 +39,14 @@ namespace Kaitai
             if ( ((IcmpType == IcmpTypeEnum.Echo) || (IcmpType == IcmpTypeEnum.EchoReply)) ) {
                 _echo = new EchoMsg(m_io, this, m_root);
             }
-            }
+        }
         public partial class DestinationUnreachableMsg : KaitaiStruct
         {
             public static DestinationUnreachableMsg FromFile(string fileName)
             {
                 return new DestinationUnreachableMsg(new KaitaiStream(fileName));
             }
+
 
             public enum DestinationUnreachableCode
             {
@@ -55,17 +57,17 @@ namespace Kaitai
                 FragmentationNeededAndDfSet = 4,
                 SourceRouteFailed = 5,
             }
-
-            public DestinationUnreachableMsg(KaitaiStream io, IcmpPacket parent = null, IcmpPacket root = null) : base(io)
+            public DestinationUnreachableMsg(KaitaiStream p__io, IcmpPacket p__parent = null, IcmpPacket p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _code = ((DestinationUnreachableCode) m_io.ReadU1());
                 _checksum = m_io.ReadU2be();
-                }
+            }
             private DestinationUnreachableCode _code;
             private ushort _checksum;
             private IcmpPacket m_root;
@@ -82,22 +84,23 @@ namespace Kaitai
                 return new TimeExceededMsg(new KaitaiStream(fileName));
             }
 
+
             public enum TimeExceededCode
             {
                 TimeToLiveExceededInTransit = 0,
                 FragmentReassemblyTimeExceeded = 1,
             }
-
-            public TimeExceededMsg(KaitaiStream io, IcmpPacket parent = null, IcmpPacket root = null) : base(io)
+            public TimeExceededMsg(KaitaiStream p__io, IcmpPacket p__parent = null, IcmpPacket p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _code = ((TimeExceededCode) m_io.ReadU1());
                 _checksum = m_io.ReadU2be();
-                }
+            }
             private TimeExceededCode _code;
             private ushort _checksum;
             private IcmpPacket m_root;
@@ -114,18 +117,19 @@ namespace Kaitai
                 return new EchoMsg(new KaitaiStream(fileName));
             }
 
-            public EchoMsg(KaitaiStream io, IcmpPacket parent = null, IcmpPacket root = null) : base(io)
+            public EchoMsg(KaitaiStream p__io, IcmpPacket p__parent = null, IcmpPacket p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _code = m_io.EnsureFixedContents(new byte[] { 0 });
                 _checksum = m_io.ReadU2be();
                 _identifier = m_io.ReadU2be();
                 _seqNum = m_io.ReadU2be();
-                }
+            }
             private byte[] _code;
             private ushort _checksum;
             private ushort _identifier;

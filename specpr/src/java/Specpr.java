@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -22,7 +23,7 @@ import java.nio.charset.Charset;
  */
 public class Specpr extends KaitaiStruct {
     public static Specpr fromFile(String fileName) throws IOException {
-        return new Specpr(new KaitaiStream(fileName));
+        return new Specpr(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum RecordType {
@@ -58,13 +59,17 @@ public class Specpr extends KaitaiStruct {
     }
     private void _read() {
         this.records = new ArrayList<Record>();
-        while (!this._io.isEof()) {
-            this.records.add(new Record(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.records.add(new Record(this._io, this, _root));
+                i++;
+            }
         }
     }
     public static class DataInitial extends KaitaiStruct {
         public static DataInitial fromFile(String fileName) throws IOException {
-            return new DataInitial(new KaitaiStream(fileName));
+            return new DataInitial(new ByteBufferKaitaiStream(fileName));
         }
 
         public DataInitial(KaitaiStream _io) {
@@ -315,7 +320,7 @@ public class Specpr extends KaitaiStruct {
     }
     public static class CoarseTimestamp extends KaitaiStruct {
         public static CoarseTimestamp fromFile(String fileName) throws IOException {
-            return new CoarseTimestamp(new KaitaiStream(fileName));
+            return new CoarseTimestamp(new ByteBufferKaitaiStream(fileName));
         }
 
         public CoarseTimestamp(KaitaiStream _io) {
@@ -356,7 +361,7 @@ public class Specpr extends KaitaiStruct {
      */
     public static class Icflag extends KaitaiStruct {
         public static Icflag fromFile(String fileName) throws IOException {
-            return new Icflag(new KaitaiStream(fileName));
+            return new Icflag(new ByteBufferKaitaiStream(fileName));
         }
 
         public Icflag(KaitaiStream _io) {
@@ -447,7 +452,7 @@ public class Specpr extends KaitaiStruct {
     }
     public static class DataContinuation extends KaitaiStruct {
         public static DataContinuation fromFile(String fileName) throws IOException {
-            return new DataContinuation(new KaitaiStream(fileName));
+            return new DataContinuation(new ByteBufferKaitaiStream(fileName));
         }
 
         public DataContinuation(KaitaiStream _io) {
@@ -483,7 +488,7 @@ public class Specpr extends KaitaiStruct {
     }
     public static class Identifiers extends KaitaiStruct {
         public static Identifiers fromFile(String fileName) throws IOException {
-            return new Identifiers(new KaitaiStream(fileName));
+            return new Identifiers(new ByteBufferKaitaiStream(fileName));
         }
 
         public Identifiers(KaitaiStream _io) {
@@ -523,7 +528,7 @@ public class Specpr extends KaitaiStruct {
     }
     public static class IllumAngle extends KaitaiStruct {
         public static IllumAngle fromFile(String fileName) throws IOException {
-            return new IllumAngle(new KaitaiStream(fileName));
+            return new IllumAngle(new ByteBufferKaitaiStream(fileName));
         }
 
         public IllumAngle(KaitaiStream _io) {
@@ -580,7 +585,7 @@ public class Specpr extends KaitaiStruct {
     }
     public static class TextInitial extends KaitaiStruct {
         public static TextInitial fromFile(String fileName) throws IOException {
-            return new TextInitial(new KaitaiStream(fileName));
+            return new TextInitial(new ByteBufferKaitaiStream(fileName));
         }
 
         public TextInitial(KaitaiStream _io) {
@@ -630,7 +635,7 @@ public class Specpr extends KaitaiStruct {
     }
     public static class Record extends KaitaiStruct {
         public static Record fromFile(String fileName) throws IOException {
-            return new Record(new KaitaiStream(fileName));
+            return new Record(new ByteBufferKaitaiStream(fileName));
         }
 
         public Record(KaitaiStream _io) {
@@ -652,25 +657,25 @@ public class Specpr extends KaitaiStruct {
             switch (icflag().type()) {
             case DATA_INITIAL: {
                 this._raw_content = this._io.readBytes((1536 - 4));
-                KaitaiStream _io__raw_content = new KaitaiStream(_raw_content);
+                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
                 this.content = new DataInitial(_io__raw_content, this, _root);
                 break;
             }
             case DATA_CONTINUATION: {
                 this._raw_content = this._io.readBytes((1536 - 4));
-                KaitaiStream _io__raw_content = new KaitaiStream(_raw_content);
+                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
                 this.content = new DataContinuation(_io__raw_content, this, _root);
                 break;
             }
             case TEXT_CONTINUATION: {
                 this._raw_content = this._io.readBytes((1536 - 4));
-                KaitaiStream _io__raw_content = new KaitaiStream(_raw_content);
+                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
                 this.content = new TextContinuation(_io__raw_content, this, _root);
                 break;
             }
             case TEXT_INITIAL: {
                 this._raw_content = this._io.readBytes((1536 - 4));
-                KaitaiStream _io__raw_content = new KaitaiStream(_raw_content);
+                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
                 this.content = new TextInitial(_io__raw_content, this, _root);
                 break;
             }
@@ -697,7 +702,7 @@ public class Specpr extends KaitaiStruct {
     }
     public static class TextContinuation extends KaitaiStruct {
         public static TextContinuation fromFile(String fileName) throws IOException {
-            return new TextContinuation(new KaitaiStream(fileName));
+            return new TextContinuation(new ByteBufferKaitaiStream(fileName));
         }
 
         public TextContinuation(KaitaiStream _io) {

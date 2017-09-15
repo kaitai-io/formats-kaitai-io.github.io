@@ -113,11 +113,13 @@ class Tsm(KaitaiStruct):
             _pos = self._io.pos()
             self._io.seek(self.offset)
             self._m_entries = []
+            i = 0
             while True:
                 _ = self._root.Index.IndexHeader(self._io, self, self._root)
                 self._m_entries.append(_)
                 if self._io.pos() == (self._io.size() - 8):
                     break
+                i += 1
             self._io.seek(_pos)
             return self._m_entries if hasattr(self, '_m_entries') else None
 

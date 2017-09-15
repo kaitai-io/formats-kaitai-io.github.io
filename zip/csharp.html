@@ -254,6 +254,7 @@ namespace Kaitai
             return new Zip(new KaitaiStream(fileName));
         }
 
+
         public enum Compression
         {
             None = 0,
@@ -296,19 +297,23 @@ namespace Kaitai
             InfozipUnix = 30805,
             InfozipUnixVarSize = 30837,
         }
-
-        public Zip(KaitaiStream io, KaitaiStruct parent = null, Zip root = null) : base(io)
+        public Zip(KaitaiStream p__io, KaitaiStruct p__parent = null, Zip p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _sections = new List&lt;PkSection&gt;();
-            while (!m_io.IsEof) {
-                _sections.Add(new PkSection(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _sections.Add(new PkSection(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
         public partial class LocalFile : KaitaiStruct
         {
             public static LocalFile FromFile(string fileName)
@@ -316,16 +321,17 @@ namespace Kaitai
                 return new LocalFile(new KaitaiStream(fileName));
             }
 
-            public LocalFile(KaitaiStream io, Zip.PkSection parent = null, Zip root = null) : base(io)
+            public LocalFile(KaitaiStream p__io, Zip.PkSection p__parent = null, Zip p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _header = new LocalFileHeader(m_io, this, m_root);
                 _body = m_io.ReadBytes(Header.CompressedSize);
-                }
+            }
             private LocalFileHeader _header;
             private byte[] _body;
             private Zip m_root;
@@ -342,13 +348,14 @@ namespace Kaitai
                 return new ExtraField(new KaitaiStream(fileName));
             }
 
-            public ExtraField(KaitaiStream io, Zip.Extras parent = null, Zip root = null) : base(io)
+            public ExtraField(KaitaiStream p__io, Zip.Extras p__parent = null, Zip p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _code = ((Zip.ExtraCodes) m_io.ReadU2le());
                 _size = m_io.ReadU2le();
                 switch (Code) {
@@ -375,7 +382,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
 
             /// &lt;remarks&gt;
             /// Reference: &lt;a href=&quot;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191&quot;&gt;Source&lt;/a&gt;
@@ -387,19 +394,24 @@ namespace Kaitai
                     return new Ntfs(new KaitaiStream(fileName));
                 }
 
-                public Ntfs(KaitaiStream io, Zip.ExtraField parent = null, Zip root = null) : base(io)
+                public Ntfs(KaitaiStream p__io, Zip.ExtraField p__parent = null, Zip p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _reserved = m_io.ReadU4le();
                     _attributes = new List&lt;Attribute&gt;();
-                    while (!m_io.IsEof) {
-                        _attributes.Add(new Attribute(m_io, this, m_root));
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _attributes.Add(new Attribute(m_io, this, m_root));
+                            i++;
+                        }
                     }
-                    }
+                }
                 public partial class Attribute : KaitaiStruct
                 {
                     public static Attribute FromFile(string fileName)
@@ -407,13 +419,14 @@ namespace Kaitai
                         return new Attribute(new KaitaiStream(fileName));
                     }
 
-                    public Attribute(KaitaiStream io, Zip.ExtraField.Ntfs parent = null, Zip root = null) : base(io)
+                    public Attribute(KaitaiStream p__io, Zip.ExtraField.Ntfs p__parent = null, Zip p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tag = m_io.ReadU2le();
                         _size = m_io.ReadU2le();
                         switch (Tag) {
@@ -428,7 +441,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private ushort _tag;
                     private ushort _size;
                     private object _body;
@@ -449,17 +462,18 @@ namespace Kaitai
                         return new Attribute1(new KaitaiStream(fileName));
                     }
 
-                    public Attribute1(KaitaiStream io, Zip.ExtraField.Ntfs.Attribute parent = null, Zip root = null) : base(io)
+                    public Attribute1(KaitaiStream p__io, Zip.ExtraField.Ntfs.Attribute p__parent = null, Zip p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _lastModTime = m_io.ReadU8le();
                         _lastAccessTime = m_io.ReadU8le();
                         _creationTime = m_io.ReadU8le();
-                        }
+                    }
                     private ulong _lastModTime;
                     private ulong _lastAccessTime;
                     private ulong _creationTime;
@@ -491,13 +505,14 @@ namespace Kaitai
                     return new ExtendedTimestamp(new KaitaiStream(fileName));
                 }
 
-                public ExtendedTimestamp(KaitaiStream io, Zip.ExtraField parent = null, Zip root = null) : base(io)
+                public ExtendedTimestamp(KaitaiStream p__io, Zip.ExtraField p__parent = null, Zip p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _flags = m_io.ReadU1();
                     _modTime = m_io.ReadU4le();
                     if (!(M_Io.IsEof)) {
@@ -506,17 +521,17 @@ namespace Kaitai
                     if (!(M_Io.IsEof)) {
                         _createTime = m_io.ReadU4le();
                     }
-                    }
+                }
                 private byte _flags;
                 private uint _modTime;
-                private uint _accessTime;
-                private uint _createTime;
+                private uint? _accessTime;
+                private uint? _createTime;
                 private Zip m_root;
                 private Zip.ExtraField m_parent;
                 public byte Flags { get { return _flags; } }
                 public uint ModTime { get { return _modTime; } }
-                public uint AccessTime { get { return _accessTime; } }
-                public uint CreateTime { get { return _createTime; } }
+                public uint? AccessTime { get { return _accessTime; } }
+                public uint? CreateTime { get { return _createTime; } }
                 public Zip M_Root { get { return m_root; } }
                 public Zip.ExtraField M_Parent { get { return m_parent; } }
             }
@@ -531,19 +546,20 @@ namespace Kaitai
                     return new InfozipUnixVarSize(new KaitaiStream(fileName));
                 }
 
-                public InfozipUnixVarSize(KaitaiStream io, Zip.ExtraField parent = null, Zip root = null) : base(io)
+                public InfozipUnixVarSize(KaitaiStream p__io, Zip.ExtraField p__parent = null, Zip p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _version = m_io.ReadU1();
                     _uidSize = m_io.ReadU1();
                     _uid = m_io.ReadBytes(UidSize);
                     _gidSize = m_io.ReadU1();
                     _gid = m_io.ReadBytes(GidSize);
-                    }
+                }
                 private byte _version;
                 private byte _uidSize;
                 private byte[] _uid;
@@ -603,14 +619,15 @@ namespace Kaitai
                 return new CentralDirEntry(new KaitaiStream(fileName));
             }
 
-            public CentralDirEntry(KaitaiStream io, Zip.PkSection parent = null, Zip root = null) : base(io)
+            public CentralDirEntry(KaitaiStream p__io, Zip.PkSection p__parent = null, Zip p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_localHeader = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _versionMadeBy = m_io.ReadU2le();
                 _versionNeededToExtract = m_io.ReadU2le();
                 _flags = m_io.ReadU2le();
@@ -632,7 +649,7 @@ namespace Kaitai
                 var io___raw_extra = new KaitaiStream(__raw_extra);
                 _extra = new Extras(io___raw_extra, this, m_root);
                 _comment = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(CommentLen));
-                }
+            }
             private bool f_localHeader;
             private PkSection _localHeader;
             public PkSection LocalHeader
@@ -701,13 +718,14 @@ namespace Kaitai
                 return new PkSection(new KaitaiStream(fileName));
             }
 
-            public PkSection(KaitaiStream io, KaitaiStruct parent = null, Zip root = null) : base(io)
+            public PkSection(KaitaiStream p__io, KaitaiStruct p__parent = null, Zip p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.EnsureFixedContents(new byte[] { 80, 75 });
                 _sectionType = m_io.ReadU2le();
                 switch (SectionType) {
@@ -724,7 +742,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private byte[] _magic;
             private ushort _sectionType;
             private KaitaiStruct _body;
@@ -743,18 +761,23 @@ namespace Kaitai
                 return new Extras(new KaitaiStream(fileName));
             }
 
-            public Extras(KaitaiStream io, KaitaiStruct parent = null, Zip root = null) : base(io)
+            public Extras(KaitaiStream p__io, KaitaiStruct p__parent = null, Zip p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List&lt;ExtraField&gt;();
-                while (!m_io.IsEof) {
-                    _entries.Add(new ExtraField(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new ExtraField(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List&lt;ExtraField&gt; _entries;
             private Zip m_root;
             private KaitaiStruct m_parent;
@@ -769,13 +792,14 @@ namespace Kaitai
                 return new LocalFileHeader(new KaitaiStream(fileName));
             }
 
-            public LocalFileHeader(KaitaiStream io, Zip.LocalFile parent = null, Zip root = null) : base(io)
+            public LocalFileHeader(KaitaiStream p__io, Zip.LocalFile p__parent = null, Zip p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _version = m_io.ReadU2le();
                 _flags = m_io.ReadU2le();
                 _compressionMethod = ((Zip.Compression) m_io.ReadU2le());
@@ -790,7 +814,7 @@ namespace Kaitai
                 __raw_extra = m_io.ReadBytes(ExtraLen);
                 var io___raw_extra = new KaitaiStream(__raw_extra);
                 _extra = new Extras(io___raw_extra, this, m_root);
-                }
+            }
             private ushort _version;
             private ushort _flags;
             private Compression _compressionMethod;
@@ -829,13 +853,14 @@ namespace Kaitai
                 return new EndOfCentralDir(new KaitaiStream(fileName));
             }
 
-            public EndOfCentralDir(KaitaiStream io, Zip.PkSection parent = null, Zip root = null) : base(io)
+            public EndOfCentralDir(KaitaiStream p__io, Zip.PkSection p__parent = null, Zip p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _diskOfEndOfCentralDir = m_io.ReadU2le();
                 _diskOfCentralDir = m_io.ReadU2le();
                 _qtyCentralDirEntriesOnDisk = m_io.ReadU2le();
@@ -844,7 +869,7 @@ namespace Kaitai
                 _centralDirOffset = m_io.ReadU4le();
                 _commentLen = m_io.ReadU2le();
                 _comment = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(CommentLen));
-                }
+            }
             private ushort _diskOfEndOfCentralDir;
             private ushort _diskOfCentralDir;
             private ushort _qtyCentralDirEntriesOnDisk;

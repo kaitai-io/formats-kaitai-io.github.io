@@ -175,8 +175,10 @@ class Code6502(KaitaiStruct):
 
     def _read(self):
         self.operations = []
+        i = 0
         while not self._io.is_eof():
             self.operations.append(self._root.Operation(self._io, self, self._root))
+            i += 1
 
 
     class Operation(KaitaiStruct):

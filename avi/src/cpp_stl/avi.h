@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -57,16 +56,24 @@ public:
         HANDLER_TYPE_XVID = 1684633208
     };
 
-    avi_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, avi_t* p_root = 0);
+    avi_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, avi_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~avi_t();
 
     class list_body_t : public kaitai::kstruct {
 
     public:
 
-        list_body_t(kaitai::kstream* p_io, avi_t::block_t* p_parent = 0, avi_t* p_root = 0);
+        list_body_t(kaitai::kstream* p__io, avi_t::block_t* p__parent = 0, avi_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~list_body_t();
 
     private:
@@ -86,8 +93,12 @@ public:
 
     public:
 
-        rect_t(kaitai::kstream* p_io, avi_t::strh_body_t* p_parent = 0, avi_t* p_root = 0);
+        rect_t(kaitai::kstream* p__io, avi_t::strh_body_t* p__parent = 0, avi_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~rect_t();
 
     private:
@@ -111,8 +122,12 @@ public:
 
     public:
 
-        blocks_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, avi_t* p_root = 0);
+        blocks_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, avi_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~blocks_t();
 
     private:
@@ -135,8 +150,12 @@ public:
 
     public:
 
-        avih_body_t(kaitai::kstream* p_io, avi_t::block_t* p_parent = 0, avi_t* p_root = 0);
+        avih_body_t(kaitai::kstream* p__io, avi_t::block_t* p__parent = 0, avi_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~avih_body_t();
 
     private:
@@ -174,14 +193,24 @@ public:
 
     public:
 
-        block_t(kaitai::kstream* p_io, avi_t::blocks_t* p_parent = 0, avi_t* p_root = 0);
+        block_t(kaitai::kstream* p__io, avi_t::blocks_t* p__parent = 0, avi_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~block_t();
 
     private:
         chunk_type_t m_four_cc;
         uint32_t m_block_size;
         kaitai::kstruct* m_data;
+        bool n_data;
+
+    public:
+        bool _is_null_data() { data(); return n_data; };
+
+    private:
         avi_t* m__root;
         avi_t::blocks_t* m__parent;
         std::string m__raw_data;
@@ -206,8 +235,12 @@ public:
 
     public:
 
-        strh_body_t(kaitai::kstream* p_io, avi_t::block_t* p_parent = 0, avi_t* p_root = 0);
+        strh_body_t(kaitai::kstream* p__io, avi_t::block_t* p__parent = 0, avi_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~strh_body_t();
 
     private:
@@ -263,8 +296,12 @@ public:
 
     public:
 
-        strf_body_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, avi_t* p_root = 0);
+        strf_body_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, avi_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~strf_body_t();
 
     private:

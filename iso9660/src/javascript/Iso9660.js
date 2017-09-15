@@ -181,9 +181,11 @@ var Iso9660 = (function() {
     }
     DirEntries.prototype._read = function() {
       this.entries = []
+      var i = 0;
       do {
         var _ = new DirEntry(this._io, this, this._root);
         this.entries.push(_);
+        i++;
       } while (!(_.len == 0));
     }
 
@@ -232,8 +234,10 @@ var Iso9660 = (function() {
     }
     PathTableLe.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.entries.push(new PathTableEntryLe(this._io, this, this._root));
+        i++;
       }
     }
 

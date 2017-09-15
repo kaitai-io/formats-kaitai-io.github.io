@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 
@@ -28,8 +27,12 @@ public:
         ICMP_TYPE_ENUM_TIME_EXCEEDED = 11
     };
 
-    icmp_packet_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, icmp_packet_t* p_root = 0);
+    icmp_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, icmp_packet_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~icmp_packet_t();
 
     class destination_unreachable_msg_t : public kaitai::kstruct {
@@ -45,8 +48,12 @@ public:
             DESTINATION_UNREACHABLE_CODE_SOURCE_ROUTE_FAILED = 5
         };
 
-        destination_unreachable_msg_t(kaitai::kstream* p_io, icmp_packet_t* p_parent = 0, icmp_packet_t* p_root = 0);
+        destination_unreachable_msg_t(kaitai::kstream* p__io, icmp_packet_t* p__parent = 0, icmp_packet_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~destination_unreachable_msg_t();
 
     private:
@@ -71,8 +78,12 @@ public:
             TIME_EXCEEDED_CODE_FRAGMENT_REASSEMBLY_TIME_EXCEEDED = 1
         };
 
-        time_exceeded_msg_t(kaitai::kstream* p_io, icmp_packet_t* p_parent = 0, icmp_packet_t* p_root = 0);
+        time_exceeded_msg_t(kaitai::kstream* p__io, icmp_packet_t* p__parent = 0, icmp_packet_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~time_exceeded_msg_t();
 
     private:
@@ -92,8 +103,12 @@ public:
 
     public:
 
-        echo_msg_t(kaitai::kstream* p_io, icmp_packet_t* p_parent = 0, icmp_packet_t* p_root = 0);
+        echo_msg_t(kaitai::kstream* p__io, icmp_packet_t* p__parent = 0, icmp_packet_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~echo_msg_t();
 
     private:

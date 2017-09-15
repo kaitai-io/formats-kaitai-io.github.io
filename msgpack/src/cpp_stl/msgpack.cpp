@@ -4,8 +4,8 @@
 
 
 
-msgpack_t::msgpack_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, msgpack_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+msgpack_t::msgpack_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, msgpack_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_is_array_32 = false;
     f_int_value = false;
@@ -41,31 +41,48 @@ msgpack_t::msgpack_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, msgpack_t
 
 void msgpack_t::_read() {
     m_b1 = m__io->read_u1();
+    n_int_extra = true;
     switch (b1()) {
-    case 211:
+    case 211: {
+        n_int_extra = false;
         m_int_extra = m__io->read_s8be();
         break;
-    case 209:
+    }
+    case 209: {
+        n_int_extra = false;
         m_int_extra = m__io->read_s2be();
         break;
-    case 210:
+    }
+    case 210: {
+        n_int_extra = false;
         m_int_extra = m__io->read_s4be();
         break;
-    case 208:
+    }
+    case 208: {
+        n_int_extra = false;
         m_int_extra = m__io->read_s1();
         break;
-    case 205:
+    }
+    case 205: {
+        n_int_extra = false;
         m_int_extra = m__io->read_u2be();
         break;
-    case 207:
+    }
+    case 207: {
+        n_int_extra = false;
         m_int_extra = m__io->read_u8be();
         break;
-    case 204:
+    }
+    case 204: {
+        n_int_extra = false;
         m_int_extra = m__io->read_u1();
         break;
-    case 206:
+    }
+    case 206: {
+        n_int_extra = false;
         m_int_extra = m__io->read_u4be();
         break;
+    }
     }
     n_float_32_value = true;
     if (is_float_32()) {
@@ -140,11 +157,33 @@ void msgpack_t::_read() {
 }
 
 msgpack_t::~msgpack_t() {
+    if (!n_int_extra) {
+    }
+    if (!n_float_32_value) {
+    }
+    if (!n_float_64_value) {
+    }
+    if (!n_str_len_8) {
+    }
+    if (!n_str_len_16) {
+    }
+    if (!n_str_len_32) {
+    }
+    if (!n_str_value) {
+    }
+    if (!n_num_array_elements_16) {
+    }
+    if (!n_num_array_elements_32) {
+    }
     if (!n_array_elements) {
         for (std::vector<msgpack_t*>::iterator it = m_array_elements->begin(); it != m_array_elements->end(); ++it) {
             delete *it;
         }
         delete m_array_elements;
+    }
+    if (!n_num_map_elements_16) {
+    }
+    if (!n_num_map_elements_32) {
     }
     if (!n_map_elements) {
         for (std::vector<map_tuple_t*>::iterator it = m_map_elements->begin(); it != m_map_elements->end(); ++it) {
@@ -154,9 +193,9 @@ msgpack_t::~msgpack_t() {
     }
 }
 
-msgpack_t::map_tuple_t::map_tuple_t(kaitai::kstream *p_io, msgpack_t* p_parent, msgpack_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+msgpack_t::map_tuple_t::map_tuple_t(kaitai::kstream* p__io, msgpack_t* p__parent, msgpack_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

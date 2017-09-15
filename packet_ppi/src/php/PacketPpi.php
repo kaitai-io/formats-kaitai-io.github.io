@@ -11,8 +11,8 @@
  */
 
 class PacketPpi extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \PacketPpi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PacketPpi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -52,15 +52,17 @@ class PacketPpi extends \Kaitai\Struct\Struct {
 namespace \PacketPpi;
 
 class PacketPpiFields extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi $parent = null, \PacketPpi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi $_parent = null, \PacketPpi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \PacketPpi\PacketPpiField($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -70,8 +72,8 @@ class PacketPpiFields extends \Kaitai\Struct\Struct {
 namespace \PacketPpi;
 
 class Radio80211nMacExtBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi\PacketPpiField $parent = null, \PacketPpi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi\PacketPpiField $_parent = null, \PacketPpi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -94,8 +96,8 @@ class Radio80211nMacExtBody extends \Kaitai\Struct\Struct {
 namespace \PacketPpi;
 
 class MacFlags extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \PacketPpi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PacketPpi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -162,8 +164,8 @@ class MacFlags extends \Kaitai\Struct\Struct {
 namespace \PacketPpi;
 
 class PacketPpiHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi $parent = null, \PacketPpi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi $_parent = null, \PacketPpi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -186,8 +188,8 @@ class PacketPpiHeader extends \Kaitai\Struct\Struct {
 namespace \PacketPpi;
 
 class Radio80211CommonBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi\PacketPpiField $parent = null, \PacketPpi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi\PacketPpiField $_parent = null, \PacketPpi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -225,8 +227,8 @@ class Radio80211CommonBody extends \Kaitai\Struct\Struct {
 namespace \PacketPpi;
 
 class PacketPpiField extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi\PacketPpiFields $parent = null, \PacketPpi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi\PacketPpiFields $_parent = null, \PacketPpi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -267,8 +269,8 @@ class PacketPpiField extends \Kaitai\Struct\Struct {
 namespace \PacketPpi;
 
 class Radio80211nMacPhyExtBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi\PacketPpiField $parent = null, \PacketPpi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi\PacketPpiField $_parent = null, \PacketPpi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -367,8 +369,8 @@ class Radio80211nMacPhyExtBody extends \Kaitai\Struct\Struct {
 namespace \PacketPpi\Radio80211nMacPhyExtBody;
 
 class ChannelFlags extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi\Radio80211nMacPhyExtBody $parent = null, \PacketPpi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi\Radio80211nMacPhyExtBody $_parent = null, \PacketPpi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -438,8 +440,8 @@ class ChannelFlags extends \Kaitai\Struct\Struct {
 namespace \PacketPpi\Radio80211nMacPhyExtBody;
 
 class SignalNoise extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PacketPpi\Radio80211nMacPhyExtBody $parent = null, \PacketPpi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi\Radio80211nMacPhyExtBody $_parent = null, \PacketPpi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

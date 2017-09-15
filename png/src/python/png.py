@@ -35,11 +35,13 @@ class Png(KaitaiStruct):
         self.ihdr = self._root.IhdrChunk(self._io, self, self._root)
         self.ihdr_crc = self._io.read_bytes(4)
         self.chunks = []
+        i = 0
         while True:
             _ = self._root.Chunk(self._io, self, self._root)
             self.chunks.append(_)
             if  ((_.type == u"IEND") or (self._io.is_eof())) :
                 break
+            i += 1
 
     class Rgb(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -200,8 +202,10 @@ class Png(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.Rgb(self._io, self, self._root))
+                i += 1
 
 
 

@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -35,7 +36,7 @@ import java.util.ArrayList;
  */
 public class AvantesRoh60 extends KaitaiStruct {
     public static AvantesRoh60 fromFile(String fileName) throws IOException {
-        return new AvantesRoh60(new KaitaiStream(fileName));
+        return new AvantesRoh60(new ByteBufferKaitaiStream(fileName));
     }
 
     public AvantesRoh60(KaitaiStream _io) {

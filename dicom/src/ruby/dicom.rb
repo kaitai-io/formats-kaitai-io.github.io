@@ -4055,8 +4055,10 @@ class Dicom < Kaitai::Struct::Struct
   def _read
     @file_header = TFileHeader.new(@_io, self, @_root)
     @elements = []
+    i = 0
     while not @_io.eof?
       @elements << TDataElementImplicit.new(@_io, self, @_root)
+      i += 1
     end
     self
   end
@@ -4103,15 +4105,19 @@ class Dicom < Kaitai::Struct::Struct
       end
       if  ((vr == "SQ") && (value_len == 4294967295)) 
         @items = []
+        i = 0
         begin
           _ = SeqItem.new(@_io, self, @_root)
           @items << _
+          i += 1
         end until _.tag_elem == 57565
       end
       if is_transfer_syntax_change_implicit
         @elements_implicit = []
+        i = 0
         while not @_io.eof?
           @elements_implicit << TDataElementImplicit.new(@_io, self, @_root)
+          i += 1
         end
       end
       self
@@ -4174,15 +4180,19 @@ class Dicom < Kaitai::Struct::Struct
       end
       if  ((vr == "SQ") && (value_len == 4294967295)) 
         @items = []
+        i = 0
         begin
           _ = SeqItem.new(@_io, self, @_root)
           @items << _
+          i += 1
         end until _.tag_elem == 57565
       end
       if is_transfer_syntax_change_explicit
         @elements = []
+        i = 0
         while not @_io.eof?
           @elements << TDataElementExplicit.new(@_io, self, @_root)
+          i += 1
         end
       end
       self
@@ -4236,9 +4246,11 @@ class Dicom < Kaitai::Struct::Struct
       end
       if value_len == 4294967295
         @items = []
+        i = 0
         begin
           _ = TDataElementExplicit.new(@_io, self, @_root)
           @items << _
+          i += 1
         end until  ((_.tag_group == 65534) && (_.tag_elem == 57357)) 
       end
       self

@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.nio.charset.Charset;
  */
 public class JavaClass extends KaitaiStruct {
     public static JavaClass fromFile(String fileName) throws IOException {
-        return new JavaClass(new KaitaiStream(fileName));
+        return new JavaClass(new ByteBufferKaitaiStream(fileName));
     }
 
     public JavaClass(KaitaiStream _io) {
@@ -70,7 +71,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class FloatCpInfo extends KaitaiStruct {
         public static FloatCpInfo fromFile(String fileName) throws IOException {
-            return new FloatCpInfo(new KaitaiStream(fileName));
+            return new FloatCpInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public FloatCpInfo(KaitaiStream _io) {
@@ -103,7 +104,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class AttributeInfo extends KaitaiStruct {
         public static AttributeInfo fromFile(String fileName) throws IOException {
-            return new AttributeInfo(new KaitaiStream(fileName));
+            return new AttributeInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public AttributeInfo(KaitaiStream _io) {
@@ -126,25 +127,25 @@ public class JavaClass extends KaitaiStruct {
             switch (nameAsStr()) {
             case "SourceFile": {
                 this._raw_info = this._io.readBytes(attributeLength());
-                KaitaiStream _io__raw_info = new KaitaiStream(_raw_info);
+                KaitaiStream _io__raw_info = new ByteBufferKaitaiStream(_raw_info);
                 this.info = new AttrBodySourceFile(_io__raw_info, this, _root);
                 break;
             }
             case "LineNumberTable": {
                 this._raw_info = this._io.readBytes(attributeLength());
-                KaitaiStream _io__raw_info = new KaitaiStream(_raw_info);
+                KaitaiStream _io__raw_info = new ByteBufferKaitaiStream(_raw_info);
                 this.info = new AttrBodyLineNumberTable(_io__raw_info, this, _root);
                 break;
             }
             case "Exceptions": {
                 this._raw_info = this._io.readBytes(attributeLength());
-                KaitaiStream _io__raw_info = new KaitaiStream(_raw_info);
+                KaitaiStream _io__raw_info = new ByteBufferKaitaiStream(_raw_info);
                 this.info = new AttrBodyExceptions(_io__raw_info, this, _root);
                 break;
             }
             case "Code": {
                 this._raw_info = this._io.readBytes(attributeLength());
-                KaitaiStream _io__raw_info = new KaitaiStream(_raw_info);
+                KaitaiStream _io__raw_info = new ByteBufferKaitaiStream(_raw_info);
                 this.info = new AttrBodyCode(_io__raw_info, this, _root);
                 break;
             }
@@ -160,7 +161,7 @@ public class JavaClass extends KaitaiStruct {
          */
         public static class AttrBodyCode extends KaitaiStruct {
             public static AttrBodyCode fromFile(String fileName) throws IOException {
-                return new AttrBodyCode(new KaitaiStream(fileName));
+                return new AttrBodyCode(new ByteBufferKaitaiStream(fileName));
             }
 
             public AttrBodyCode(KaitaiStream _io) {
@@ -199,7 +200,7 @@ public class JavaClass extends KaitaiStruct {
              */
             public static class ExceptionEntry extends KaitaiStruct {
                 public static ExceptionEntry fromFile(String fileName) throws IOException {
-                    return new ExceptionEntry(new KaitaiStream(fileName));
+                    return new ExceptionEntry(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ExceptionEntry(KaitaiStream _io) {
@@ -291,7 +292,7 @@ public class JavaClass extends KaitaiStruct {
          */
         public static class AttrBodyExceptions extends KaitaiStruct {
             public static AttrBodyExceptions fromFile(String fileName) throws IOException {
-                return new AttrBodyExceptions(new KaitaiStream(fileName));
+                return new AttrBodyExceptions(new ByteBufferKaitaiStream(fileName));
             }
 
             public AttrBodyExceptions(KaitaiStream _io) {
@@ -317,7 +318,7 @@ public class JavaClass extends KaitaiStruct {
             }
             public static class ExceptionTableEntry extends KaitaiStruct {
                 public static ExceptionTableEntry fromFile(String fileName) throws IOException {
-                    return new ExceptionTableEntry(new KaitaiStream(fileName));
+                    return new ExceptionTableEntry(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ExceptionTableEntry(KaitaiStream _io) {
@@ -374,7 +375,7 @@ public class JavaClass extends KaitaiStruct {
          */
         public static class AttrBodySourceFile extends KaitaiStruct {
             public static AttrBodySourceFile fromFile(String fileName) throws IOException {
-                return new AttrBodySourceFile(new KaitaiStream(fileName));
+                return new AttrBodySourceFile(new ByteBufferKaitaiStream(fileName));
             }
 
             public AttrBodySourceFile(KaitaiStream _io) {
@@ -414,7 +415,7 @@ public class JavaClass extends KaitaiStruct {
          */
         public static class AttrBodyLineNumberTable extends KaitaiStruct {
             public static AttrBodyLineNumberTable fromFile(String fileName) throws IOException {
-                return new AttrBodyLineNumberTable(new KaitaiStream(fileName));
+                return new AttrBodyLineNumberTable(new ByteBufferKaitaiStream(fileName));
             }
 
             public AttrBodyLineNumberTable(KaitaiStream _io) {
@@ -440,7 +441,7 @@ public class JavaClass extends KaitaiStruct {
             }
             public static class LineNumberTableEntry extends KaitaiStruct {
                 public static LineNumberTableEntry fromFile(String fileName) throws IOException {
-                    return new LineNumberTableEntry(new KaitaiStream(fileName));
+                    return new LineNumberTableEntry(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public LineNumberTableEntry(KaitaiStream _io) {
@@ -505,7 +506,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class MethodRefCpInfo extends KaitaiStruct {
         public static MethodRefCpInfo fromFile(String fileName) throws IOException {
-            return new MethodRefCpInfo(new KaitaiStream(fileName));
+            return new MethodRefCpInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public MethodRefCpInfo(KaitaiStream _io) {
@@ -557,7 +558,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class FieldInfo extends KaitaiStruct {
         public static FieldInfo fromFile(String fileName) throws IOException {
-            return new FieldInfo(new KaitaiStream(fileName));
+            return new FieldInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public FieldInfo(KaitaiStream _io) {
@@ -612,7 +613,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class DoubleCpInfo extends KaitaiStruct {
         public static DoubleCpInfo fromFile(String fileName) throws IOException {
-            return new DoubleCpInfo(new KaitaiStream(fileName));
+            return new DoubleCpInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public DoubleCpInfo(KaitaiStream _io) {
@@ -645,7 +646,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class LongCpInfo extends KaitaiStruct {
         public static LongCpInfo fromFile(String fileName) throws IOException {
-            return new LongCpInfo(new KaitaiStream(fileName));
+            return new LongCpInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public LongCpInfo(KaitaiStream _io) {
@@ -678,7 +679,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class InvokeDynamicCpInfo extends KaitaiStruct {
         public static InvokeDynamicCpInfo fromFile(String fileName) throws IOException {
-            return new InvokeDynamicCpInfo(new KaitaiStream(fileName));
+            return new InvokeDynamicCpInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public InvokeDynamicCpInfo(KaitaiStream _io) {
@@ -714,7 +715,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class MethodHandleCpInfo extends KaitaiStruct {
         public static MethodHandleCpInfo fromFile(String fileName) throws IOException {
-            return new MethodHandleCpInfo(new KaitaiStream(fileName));
+            return new MethodHandleCpInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum ReferenceKindEnum {
@@ -772,7 +773,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class NameAndTypeCpInfo extends KaitaiStruct {
         public static NameAndTypeCpInfo fromFile(String fileName) throws IOException {
-            return new NameAndTypeCpInfo(new KaitaiStream(fileName));
+            return new NameAndTypeCpInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public NameAndTypeCpInfo(KaitaiStream _io) {
@@ -838,7 +839,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class Utf8CpInfo extends KaitaiStruct {
         public static Utf8CpInfo fromFile(String fileName) throws IOException {
-            return new Utf8CpInfo(new KaitaiStream(fileName));
+            return new Utf8CpInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public Utf8CpInfo(KaitaiStream _io) {
@@ -874,7 +875,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class StringCpInfo extends KaitaiStruct {
         public static StringCpInfo fromFile(String fileName) throws IOException {
-            return new StringCpInfo(new KaitaiStream(fileName));
+            return new StringCpInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public StringCpInfo(KaitaiStream _io) {
@@ -907,7 +908,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class MethodTypeCpInfo extends KaitaiStruct {
         public static MethodTypeCpInfo fromFile(String fileName) throws IOException {
-            return new MethodTypeCpInfo(new KaitaiStream(fileName));
+            return new MethodTypeCpInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public MethodTypeCpInfo(KaitaiStream _io) {
@@ -940,7 +941,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class InterfaceMethodRefCpInfo extends KaitaiStruct {
         public static InterfaceMethodRefCpInfo fromFile(String fileName) throws IOException {
-            return new InterfaceMethodRefCpInfo(new KaitaiStream(fileName));
+            return new InterfaceMethodRefCpInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public InterfaceMethodRefCpInfo(KaitaiStream _io) {
@@ -992,7 +993,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class ClassCpInfo extends KaitaiStruct {
         public static ClassCpInfo fromFile(String fileName) throws IOException {
-            return new ClassCpInfo(new KaitaiStream(fileName));
+            return new ClassCpInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public ClassCpInfo(KaitaiStream _io) {
@@ -1040,7 +1041,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class ConstantPoolEntry extends KaitaiStruct {
         public static ConstantPoolEntry fromFile(String fileName) throws IOException {
-            return new ConstantPoolEntry(new KaitaiStream(fileName));
+            return new ConstantPoolEntry(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum TagEnum {
@@ -1160,7 +1161,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class MethodInfo extends KaitaiStruct {
         public static MethodInfo fromFile(String fileName) throws IOException {
-            return new MethodInfo(new KaitaiStream(fileName));
+            return new MethodInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public MethodInfo(KaitaiStream _io) {
@@ -1215,7 +1216,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class IntegerCpInfo extends KaitaiStruct {
         public static IntegerCpInfo fromFile(String fileName) throws IOException {
-            return new IntegerCpInfo(new KaitaiStream(fileName));
+            return new IntegerCpInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public IntegerCpInfo(KaitaiStream _io) {
@@ -1248,7 +1249,7 @@ public class JavaClass extends KaitaiStruct {
      */
     public static class FieldRefCpInfo extends KaitaiStruct {
         public static FieldRefCpInfo fromFile(String fileName) throws IOException {
-            return new FieldRefCpInfo(new KaitaiStream(fileName));
+            return new FieldRefCpInfo(new ByteBufferKaitaiStream(fileName));
         }
 
         public FieldRefCpInfo(KaitaiStream _io) {

@@ -4,8 +4,8 @@
 
 
 
-gran_turismo_vol_t::gran_turismo_vol_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, gran_turismo_vol_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+gran_turismo_vol_t::gran_turismo_vol_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, gran_turismo_vol_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_ofs_dir = false;
     f_files = false;
@@ -27,15 +27,17 @@ void gran_turismo_vol_t::_read() {
 
 gran_turismo_vol_t::~gran_turismo_vol_t() {
     delete m_offsets;
-    for (std::vector<file_info_t*>::iterator it = m_files->begin(); it != m_files->end(); ++it) {
-        delete *it;
+    if (f_files) {
+        for (std::vector<file_info_t*>::iterator it = m_files->begin(); it != m_files->end(); ++it) {
+            delete *it;
+        }
+        delete m_files;
     }
-    delete m_files;
 }
 
-gran_turismo_vol_t::file_info_t::file_info_t(kaitai::kstream *p_io, gran_turismo_vol_t* p_parent, gran_turismo_vol_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+gran_turismo_vol_t::file_info_t::file_info_t(kaitai::kstream* p__io, gran_turismo_vol_t* p__parent, gran_turismo_vol_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_size = false;
     f_body = false;
     f_is_dir = false;
@@ -51,6 +53,8 @@ void gran_turismo_vol_t::file_info_t::_read() {
 }
 
 gran_turismo_vol_t::file_info_t::~file_info_t() {
+    if (f_body && !n_body) {
+    }
 }
 
 int32_t gran_turismo_vol_t::file_info_t::size() {

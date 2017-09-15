@@ -11,6 +11,7 @@ namespace Kaitai
             return new Png(new KaitaiStream(fileName));
         }
 
+
         public enum ColorType
         {
             Greyscale = 0,
@@ -25,14 +26,14 @@ namespace Kaitai
             Unknown = 0,
             Meter = 1,
         }
-
-        public Png(KaitaiStream io, KaitaiStruct parent = null, Png root = null) : base(io)
+        public Png(KaitaiStream p__io, KaitaiStruct p__parent = null, Png p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _magic = m_io.EnsureFixedContents(new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 });
             _ihdrLen = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 13 });
             _ihdrType = m_io.EnsureFixedContents(new byte[] { 73, 72, 68, 82 });
@@ -40,13 +41,15 @@ namespace Kaitai
             _ihdrCrc = m_io.ReadBytes(4);
             _chunks = new List<Chunk>();
             {
+                var i = 0;
                 Chunk M_;
                 do {
                     M_ = new Chunk(m_io, this, m_root);
                     _chunks.Add(M_);
+                    i++;
                 } while (!( ((M_.Type == "IEND") || (M_Io.IsEof)) ));
             }
-            }
+        }
         public partial class Rgb : KaitaiStruct
         {
             public static Rgb FromFile(string fileName)
@@ -54,17 +57,18 @@ namespace Kaitai
                 return new Rgb(new KaitaiStream(fileName));
             }
 
-            public Rgb(KaitaiStream io, Png.PlteChunk parent = null, Png root = null) : base(io)
+            public Rgb(KaitaiStream p__io, Png.PlteChunk p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _r = m_io.ReadU1();
                 _g = m_io.ReadU1();
                 _b = m_io.ReadU1();
-                }
+            }
             private byte _r;
             private byte _g;
             private byte _b;
@@ -83,13 +87,14 @@ namespace Kaitai
                 return new Chunk(new KaitaiStream(fileName));
             }
 
-            public Chunk(KaitaiStream io, Png parent = null, Png root = null) : base(io)
+            public Chunk(KaitaiStream p__io, Png p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _len = m_io.ReadU4be();
                 _type = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
                 switch (Type) {
@@ -159,7 +164,7 @@ namespace Kaitai
                 }
                 }
                 _crc = m_io.ReadBytes(4);
-                }
+            }
             private uint _len;
             private string _type;
             private object _body;
@@ -182,15 +187,16 @@ namespace Kaitai
                 return new BkgdIndexed(new KaitaiStream(fileName));
             }
 
-            public BkgdIndexed(KaitaiStream io, Png.BkgdChunk parent = null, Png root = null) : base(io)
+            public BkgdIndexed(KaitaiStream p__io, Png.BkgdChunk p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _paletteIndex = m_io.ReadU1();
-                }
+            }
             private byte _paletteIndex;
             private Png m_root;
             private Png.BkgdChunk m_parent;
@@ -205,18 +211,19 @@ namespace Kaitai
                 return new Point(new KaitaiStream(fileName));
             }
 
-            public Point(KaitaiStream io, Png.ChrmChunk parent = null, Png root = null) : base(io)
+            public Point(KaitaiStream p__io, Png.ChrmChunk p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_x = false;
                 f_y = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _xInt = m_io.ReadU4be();
                 _yInt = m_io.ReadU4be();
-                }
+            }
             private bool f_x;
             private double _x;
             public double X
@@ -259,15 +266,16 @@ namespace Kaitai
                 return new BkgdGreyscale(new KaitaiStream(fileName));
             }
 
-            public BkgdGreyscale(KaitaiStream io, Png.BkgdChunk parent = null, Png root = null) : base(io)
+            public BkgdGreyscale(KaitaiStream p__io, Png.BkgdChunk p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _value = m_io.ReadU2be();
-                }
+            }
             private ushort _value;
             private Png m_root;
             private Png.BkgdChunk m_parent;
@@ -282,18 +290,19 @@ namespace Kaitai
                 return new ChrmChunk(new KaitaiStream(fileName));
             }
 
-            public ChrmChunk(KaitaiStream io, Png.Chunk parent = null, Png root = null) : base(io)
+            public ChrmChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _whitePoint = new Point(m_io, this, m_root);
                 _red = new Point(m_io, this, m_root);
                 _green = new Point(m_io, this, m_root);
                 _blue = new Point(m_io, this, m_root);
-                }
+            }
             private Point _whitePoint;
             private Point _red;
             private Point _green;
@@ -314,13 +323,14 @@ namespace Kaitai
                 return new IhdrChunk(new KaitaiStream(fileName));
             }
 
-            public IhdrChunk(KaitaiStream io, Png parent = null, Png root = null) : base(io)
+            public IhdrChunk(KaitaiStream p__io, Png p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _width = m_io.ReadU4be();
                 _height = m_io.ReadU4be();
                 _bitDepth = m_io.ReadU1();
@@ -328,7 +338,7 @@ namespace Kaitai
                 _compressionMethod = m_io.ReadU1();
                 _filterMethod = m_io.ReadU1();
                 _interlaceMethod = m_io.ReadU1();
-                }
+            }
             private uint _width;
             private uint _height;
             private byte _bitDepth;
@@ -355,18 +365,23 @@ namespace Kaitai
                 return new PlteChunk(new KaitaiStream(fileName));
             }
 
-            public PlteChunk(KaitaiStream io, Png.Chunk parent = null, Png root = null) : base(io)
+            public PlteChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List<Rgb>();
-                while (!m_io.IsEof) {
-                    _entries.Add(new Rgb(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new Rgb(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<Rgb> _entries;
             private Png m_root;
             private Png.Chunk m_parent;
@@ -381,6 +396,7 @@ namespace Kaitai
                 return new SrgbChunk(new KaitaiStream(fileName));
             }
 
+
             public enum Intent
             {
                 Perceptual = 0,
@@ -388,16 +404,16 @@ namespace Kaitai
                 Saturation = 2,
                 AbsoluteColorimetric = 3,
             }
-
-            public SrgbChunk(KaitaiStream io, Png.Chunk parent = null, Png root = null) : base(io)
+            public SrgbChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _renderIntent = ((Intent) m_io.ReadU1());
-                }
+            }
             private Intent _renderIntent;
             private Png m_root;
             private Png.Chunk m_parent;
@@ -412,18 +428,19 @@ namespace Kaitai
                 return new CompressedTextChunk(new KaitaiStream(fileName));
             }
 
-            public CompressedTextChunk(KaitaiStream io, Png.Chunk parent = null, Png root = null) : base(io)
+            public CompressedTextChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _keyword = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
                 _compressionMethod = m_io.ReadU1();
                 __raw_textDatastream = m_io.ReadBytesFull();
                 _textDatastream = m_io.ProcessZlib(__raw_textDatastream);
-                }
+            }
             private string _keyword;
             private byte _compressionMethod;
             private byte[] _textDatastream;
@@ -444,17 +461,18 @@ namespace Kaitai
                 return new BkgdTruecolor(new KaitaiStream(fileName));
             }
 
-            public BkgdTruecolor(KaitaiStream io, Png.BkgdChunk parent = null, Png root = null) : base(io)
+            public BkgdTruecolor(KaitaiStream p__io, Png.BkgdChunk p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _red = m_io.ReadU2be();
                 _green = m_io.ReadU2be();
                 _blue = m_io.ReadU2be();
-                }
+            }
             private ushort _red;
             private ushort _green;
             private ushort _blue;
@@ -473,16 +491,17 @@ namespace Kaitai
                 return new GamaChunk(new KaitaiStream(fileName));
             }
 
-            public GamaChunk(KaitaiStream io, Png.Chunk parent = null, Png root = null) : base(io)
+            public GamaChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_gammaRatio = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _gammaInt = m_io.ReadU4be();
-                }
+            }
             private bool f_gammaRatio;
             private double _gammaRatio;
             public double GammaRatio
@@ -510,13 +529,14 @@ namespace Kaitai
                 return new BkgdChunk(new KaitaiStream(fileName));
             }
 
-            public BkgdChunk(KaitaiStream io, Png.Chunk parent = null, Png root = null) : base(io)
+            public BkgdChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 switch (M_Root.Ihdr.ColorType) {
                 case Png.ColorType.GreyscaleAlpha: {
                     _bkgd = new BkgdGreyscale(m_io, this, m_root);
@@ -539,7 +559,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private KaitaiStruct _bkgd;
             private Png m_root;
             private Png.Chunk m_parent;
@@ -554,17 +574,18 @@ namespace Kaitai
                 return new PhysChunk(new KaitaiStream(fileName));
             }
 
-            public PhysChunk(KaitaiStream io, Png.Chunk parent = null, Png root = null) : base(io)
+            public PhysChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _pixelsPerUnitX = m_io.ReadU4be();
                 _pixelsPerUnitY = m_io.ReadU4be();
                 _unit = ((Png.PhysUnit) m_io.ReadU1());
-                }
+            }
             private uint _pixelsPerUnitX;
             private uint _pixelsPerUnitY;
             private PhysUnit _unit;
@@ -583,20 +604,21 @@ namespace Kaitai
                 return new InternationalTextChunk(new KaitaiStream(fileName));
             }
 
-            public InternationalTextChunk(KaitaiStream io, Png.Chunk parent = null, Png root = null) : base(io)
+            public InternationalTextChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _keyword = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
                 _compressionFlag = m_io.ReadU1();
                 _compressionMethod = m_io.ReadU1();
                 _languageTag = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true));
                 _translatedKeyword = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
                 _text = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesFull());
-                }
+            }
             private string _keyword;
             private byte _compressionFlag;
             private byte _compressionMethod;
@@ -621,16 +643,17 @@ namespace Kaitai
                 return new TextChunk(new KaitaiStream(fileName));
             }
 
-            public TextChunk(KaitaiStream io, Png.Chunk parent = null, Png root = null) : base(io)
+            public TextChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _keyword = System.Text.Encoding.GetEncoding("iso8859-1").GetString(m_io.ReadBytesTerm(0, false, true, true));
                 _text = System.Text.Encoding.GetEncoding("iso8859-1").GetString(m_io.ReadBytesFull());
-                }
+            }
             private string _keyword;
             private string _text;
             private Png m_root;
@@ -647,20 +670,21 @@ namespace Kaitai
                 return new TimeChunk(new KaitaiStream(fileName));
             }
 
-            public TimeChunk(KaitaiStream io, Png.Chunk parent = null, Png root = null) : base(io)
+            public TimeChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _year = m_io.ReadU2be();
                 _month = m_io.ReadU1();
                 _day = m_io.ReadU1();
                 _hour = m_io.ReadU1();
                 _minute = m_io.ReadU1();
                 _second = m_io.ReadU1();
-                }
+            }
             private ushort _year;
             private byte _month;
             private byte _day;

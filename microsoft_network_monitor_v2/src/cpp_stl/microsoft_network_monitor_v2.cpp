@@ -6,8 +6,8 @@
 #include "windows_systemtime.h"
 #include "ethernet_frame.h"
 
-microsoft_network_monitor_v2_t::microsoft_network_monitor_v2_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, microsoft_network_monitor_v2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+microsoft_network_monitor_v2_t::microsoft_network_monitor_v2_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, microsoft_network_monitor_v2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_frame_table = false;
     _read();
@@ -41,16 +41,20 @@ microsoft_network_monitor_v2_t::~microsoft_network_monitor_v2_t() {
     }
 }
 
-microsoft_network_monitor_v2_t::frame_index_t::frame_index_t(kaitai::kstream *p_io, microsoft_network_monitor_v2_t* p_parent, microsoft_network_monitor_v2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+microsoft_network_monitor_v2_t::frame_index_t::frame_index_t(kaitai::kstream* p__io, microsoft_network_monitor_v2_t* p__parent, microsoft_network_monitor_v2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void microsoft_network_monitor_v2_t::frame_index_t::_read() {
     m_entries = new std::vector<frame_index_entry_t*>();
-    while (!m__io->is_eof()) {
-        m_entries->push_back(new frame_index_entry_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new frame_index_entry_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -61,9 +65,9 @@ microsoft_network_monitor_v2_t::frame_index_t::~frame_index_t() {
     delete m_entries;
 }
 
-microsoft_network_monitor_v2_t::frame_index_entry_t::frame_index_entry_t(kaitai::kstream *p_io, microsoft_network_monitor_v2_t::frame_index_t* p_parent, microsoft_network_monitor_v2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+microsoft_network_monitor_v2_t::frame_index_entry_t::frame_index_entry_t(kaitai::kstream* p__io, microsoft_network_monitor_v2_t::frame_index_t* p__parent, microsoft_network_monitor_v2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_body = false;
     _read();
 }
@@ -90,9 +94,9 @@ microsoft_network_monitor_v2_t::frame_t* microsoft_network_monitor_v2_t::frame_i
     return m_body;
 }
 
-microsoft_network_monitor_v2_t::frame_t::frame_t(kaitai::kstream *p_io, microsoft_network_monitor_v2_t::frame_index_entry_t* p_parent, microsoft_network_monitor_v2_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+microsoft_network_monitor_v2_t::frame_t::frame_t(kaitai::kstream* p__io, microsoft_network_monitor_v2_t::frame_index_entry_t* p__parent, microsoft_network_monitor_v2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -100,19 +104,27 @@ void microsoft_network_monitor_v2_t::frame_t::_read() {
     m_ts_delta = m__io->read_u8le();
     m_orig_len = m__io->read_u4le();
     m_inc_len = m__io->read_u4le();
+    n_body = true;
     switch (_root()->mac_type()) {
-    case LINKTYPE_ETHERNET:
+    case LINKTYPE_ETHERNET: {
+        n_body = false;
         m__raw_body = m__io->read_bytes(inc_len());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new ethernet_frame_t(m__io__raw_body);
         break;
-    default:
+    }
+    default: {
         m__raw_body = m__io->read_bytes(inc_len());
         break;
+    }
     }
 }
 
 microsoft_network_monitor_v2_t::frame_t::~frame_t() {
+    if (!n_body) {
+        delete m__io__raw_body;
+        delete m_body;
+    }
 }
 
 microsoft_network_monitor_v2_t::frame_index_t* microsoft_network_monitor_v2_t::frame_table() {

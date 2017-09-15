@@ -40,12 +40,10 @@ class MachO < Kaitai::Struct::Struct
     32 => :load_command_type_lazy_load_dylib,
     33 => :load_command_type_encryption_info,
     34 => :load_command_type_dyld_info,
-    35 => :load_command_type_load_upward_dylib,
     36 => :load_command_type_version_min_macosx,
     37 => :load_command_type_version_min_iphoneos,
     38 => :load_command_type_function_starts,
     39 => :load_command_type_dyld_environment,
-    40 => :load_command_type_main,
     41 => :load_command_type_data_in_code,
     42 => :load_command_type_source_version,
     43 => :load_command_type_dylib_code_sign_drs,
@@ -59,7 +57,8 @@ class MachO < Kaitai::Struct::Struct
     2147483676 => :load_command_type_rpath,
     2147483679 => :load_command_type_reexport_dylib,
     2147483682 => :load_command_type_dyld_info_only,
-    2147483688 => :load_command_type_main2,
+    2147483683 => :load_command_type_load_upward_dylib,
+    2147483688 => :load_command_type_main,
   }
   I__LOAD_COMMAND_TYPE = LOAD_COMMAND_TYPE.invert
 
@@ -92,16 +91,6 @@ class MachO < Kaitai::Struct::Struct
     33554432 => :macho_flags_app_extension_safe,
   }
   I__MACHO_FLAGS = MACHO_FLAGS.invert
-
-  VM_PROT = {
-    0 => :vm_prot_none,
-    1 => :vm_prot_read,
-    2 => :vm_prot_write,
-    4 => :vm_prot_execute,
-    8 => :vm_prot_no_change,
-    16 => :vm_prot_copy,
-  }
-  I__VM_PROT = VM_PROT.invert
 
   MAGIC_TYPE = {
     3199925962 => :magic_type_fat_le,
@@ -146,6 +135,7 @@ class MachO < Kaitai::Struct::Struct
     18 => :cpu_type_powerpc,
     16777216 => :cpu_type_abi64,
     16777223 => :cpu_type_x86_64,
+    16777228 => :cpu_type_arm64,
     16777234 => :cpu_type_powerpc64,
     4294967295 => :cpu_type_any,
   }
@@ -765,6 +755,55 @@ class MachO < Kaitai::Struct::Struct
     attr_reader :body
     attr_reader :_raw_body
   end
+  class RoutinesCommand < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @init_address = @_io.read_u4le
+      @init_module = @_io.read_u4le
+      @reserved = @_io.read_bytes(24)
+      self
+    end
+    attr_reader :init_address
+    attr_reader :init_module
+    attr_reader :reserved
+  end
+  class RoutinesCommand64 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @init_address = @_io.read_u8le
+      @init_module = @_io.read_u8le
+      @reserved = @_io.read_bytes(48)
+      self
+    end
+    attr_reader :init_address
+    attr_reader :init_module
+    attr_reader :reserved
+  end
+  class LinkerOptionCommand < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @num_strings = @_io.read_u4le
+      @strings = Array.new(num_strings)
+      (num_strings).times { |i|
+        @strings[i] = (@_io.read_bytes_term(0, false, true, true)).force_encoding("utf-8")
+      }
+      self
+    end
+    attr_reader :num_strings
+    attr_reader :strings
+  end
   class SegmentCommand64 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -777,8 +816,8 @@ class MachO < Kaitai::Struct::Struct
       @vmsize = @_io.read_u8le
       @fileoff = @_io.read_u8le
       @filesize = @_io.read_u8le
-      @maxprot = Kaitai::Struct::Stream::resolve_enum(VM_PROT, @_io.read_u4le)
-      @initprot = Kaitai::Struct::Stream::resolve_enum(VM_PROT, @_io.read_u4le)
+      @maxprot = VmProt.new(@_io, self, @_root)
+      @initprot = VmProt.new(@_io, self, @_root)
       @nsects = @_io.read_u4le
       @flags = @_io.read_u4le
       @sections = Array.new(nsects)
@@ -816,8 +855,10 @@ class MachO < Kaitai::Struct::Struct
 
         def _read
           @items = []
+          i = 0
           while not @_io.eof?
             @items << CfString.new(@_io, self, @_root)
+            i += 1
           end
           self
         end
@@ -935,8 +976,10 @@ class MachO < Kaitai::Struct::Struct
 
         def _read
           @items = []
+          i = 0
           while not @_io.eof?
             @items << EhFrameItem.new(@_io, self, @_root)
+            i += 1
           end
           self
         end
@@ -950,8 +993,10 @@ class MachO < Kaitai::Struct::Struct
 
         def _read
           @items = []
+          i = 0
           while not @_io.eof?
             @items << @_io.read_u8le
+            i += 1
           end
           self
         end
@@ -965,8 +1010,10 @@ class MachO < Kaitai::Struct::Struct
 
         def _read
           @strings = []
+          i = 0
           while not @_io.eof?
             @strings << (@_io.read_bytes_term(0, false, true, true)).force_encoding("ascii")
+            i += 1
           end
           self
         end
@@ -1077,6 +1124,61 @@ class MachO < Kaitai::Struct::Struct
     attr_reader :flags
     attr_reader :sections
   end
+  class VmProt < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @strip_read = @_io.read_bits_int(1) != 0
+      @is_mask = @_io.read_bits_int(1) != 0
+      @reserved0 = @_io.read_bits_int(1) != 0
+      @copy = @_io.read_bits_int(1) != 0
+      @no_change = @_io.read_bits_int(1) != 0
+      @execute = @_io.read_bits_int(1) != 0
+      @write = @_io.read_bits_int(1) != 0
+      @read = @_io.read_bits_int(1) != 0
+      @reserved1 = @_io.read_bits_int(24)
+      self
+    end
+
+    ##
+    # Special marker to support execute-only protection.
+    attr_reader :strip_read
+
+    ##
+    # Indicates to use value as a mask against the actual protection bits.
+    attr_reader :is_mask
+
+    ##
+    # Reserved (unused) bit.
+    attr_reader :reserved0
+
+    ##
+    # Used when write permission can not be obtained, to mark the entry as COW.
+    attr_reader :copy
+
+    ##
+    # Used only by memory_object_lock_request to indicate no change to page locks.
+    attr_reader :no_change
+
+    ##
+    # Execute permission.
+    attr_reader :execute
+
+    ##
+    # Write permission.
+    attr_reader :write
+
+    ##
+    # Read permission.
+    attr_reader :read
+
+    ##
+    # Reserved (unused) bits.
+    attr_reader :reserved1
+  end
   class DysymtabCommand < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -1175,6 +1277,32 @@ class MachO < Kaitai::Struct::Struct
     attr_reader :data_off
     attr_reader :data_size
   end
+  class SubCommand < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @name = LcStr.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :name
+  end
+  class TwolevelHintsCommand < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @offset = @_io.read_u4le
+      @num_hints = @_io.read_u4le
+      self
+    end
+    attr_reader :offset
+    attr_reader :num_hints
+  end
   class Version < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -1192,6 +1320,26 @@ class MachO < Kaitai::Struct::Struct
     attr_reader :minor
     attr_reader :major
     attr_reader :release
+  end
+  class EncryptionInfoCommand < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @cryptoff = @_io.read_u4le
+      @cryptsize = @_io.read_u4le
+      @cryptid = @_io.read_u4le
+      if  ((_root.magic == :magic_type_macho_be_x64) || (_root.magic == :magic_type_macho_le_x64)) 
+        @pad = @_io.read_u4le
+      end
+      self
+    end
+    attr_reader :cryptoff
+    attr_reader :cryptsize
+    attr_reader :cryptid
+    attr_reader :pad
   end
   class CodeSignatureCommand < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -1310,9 +1458,11 @@ class MachO < Kaitai::Struct::Struct
 
       def _read
         @items = []
+        i = 0
         begin
           _ = RebaseItem.new(@_io, self, @_root)
           @items << _
+          i += 1
         end until _.opcode == :opcode_done
         self
       end
@@ -1399,9 +1549,11 @@ class MachO < Kaitai::Struct::Struct
 
       def _read
         @items = []
+        i = 0
         begin
           _ = BindItem.new(@_io, self, @_root)
           @items << _
+          i += 1
         end until _.opcode == :bind_opcode_done
         self
       end
@@ -1415,8 +1567,10 @@ class MachO < Kaitai::Struct::Struct
 
       def _read
         @items = []
+        i = 0
         while not @_io.eof?
           @items << BindItem.new(@_io, self, @_root)
+          i += 1
         end
         self
       end
@@ -1537,6 +1691,14 @@ class MachO < Kaitai::Struct::Struct
       @type = Kaitai::Struct::Stream::resolve_enum(LOAD_COMMAND_TYPE, @_io.read_u4le)
       @size = @_io.read_u4le
       case type
+      when :load_command_type_sub_library
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SubCommand.new(io, self, @_root)
+      when :load_command_type_segment_split_info
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = LinkeditDataCommand.new(io, self, @_root)
       when :load_command_type_rpath
         @_raw_body = @_io.read_bytes((size - 8))
         io = Kaitai::Struct::Stream.new(@_raw_body)
@@ -1545,14 +1707,66 @@ class MachO < Kaitai::Struct::Struct
         @_raw_body = @_io.read_bytes((size - 8))
         io = Kaitai::Struct::Stream.new(@_raw_body)
         @body = SourceVersionCommand.new(io, self, @_root)
+      when :load_command_type_encryption_info_64
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = EncryptionInfoCommand.new(io, self, @_root)
+      when :load_command_type_version_min_tvos
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = VersionMinCommand.new(io, self, @_root)
       when :load_command_type_load_dylinker
         @_raw_body = @_io.read_bytes((size - 8))
         io = Kaitai::Struct::Stream.new(@_raw_body)
         @body = DylinkerCommand.new(io, self, @_root)
+      when :load_command_type_sub_framework
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SubCommand.new(io, self, @_root)
+      when :load_command_type_load_weak_dylib
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylibCommand.new(io, self, @_root)
+      when :load_command_type_version_min_iphoneos
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = VersionMinCommand.new(io, self, @_root)
+      when :load_command_type_linker_optimization_hint
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = LinkeditDataCommand.new(io, self, @_root)
+      when :load_command_type_dyld_environment
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylinkerCommand.new(io, self, @_root)
+      when :load_command_type_load_upward_dylib
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylibCommand.new(io, self, @_root)
+      when :load_command_type_dylib_code_sign_drs
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = LinkeditDataCommand.new(io, self, @_root)
+      when :load_command_type_dyld_info
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DyldInfoCommand.new(io, self, @_root)
+      when :load_command_type_reexport_dylib
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylibCommand.new(io, self, @_root)
       when :load_command_type_symtab
         @_raw_body = @_io.read_bytes((size - 8))
         io = Kaitai::Struct::Stream.new(@_raw_body)
         @body = SymtabCommand.new(io, self, @_root)
+      when :load_command_type_routines_64
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = RoutinesCommand64.new(io, self, @_root)
+      when :load_command_type_id_dylinker
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylinkerCommand.new(io, self, @_root)
       when :load_command_type_main
         @_raw_body = @_io.read_bytes((size - 8))
         io = Kaitai::Struct::Stream.new(@_raw_body)
@@ -1569,6 +1783,26 @@ class MachO < Kaitai::Struct::Struct
         @_raw_body = @_io.read_bytes((size - 8))
         io = Kaitai::Struct::Stream.new(@_raw_body)
         @body = LinkeditDataCommand.new(io, self, @_root)
+      when :load_command_type_version_min_watchos
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = VersionMinCommand.new(io, self, @_root)
+      when :load_command_type_encryption_info
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = EncryptionInfoCommand.new(io, self, @_root)
+      when :load_command_type_sub_umbrella
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SubCommand.new(io, self, @_root)
+      when :load_command_type_linker_option
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = LinkerOptionCommand.new(io, self, @_root)
+      when :load_command_type_twolevel_hints
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = TwolevelHintsCommand.new(io, self, @_root)
       when :load_command_type_uuid
         @_raw_body = @_io.read_bytes((size - 8))
         io = Kaitai::Struct::Stream.new(@_raw_body)
@@ -1577,6 +1811,18 @@ class MachO < Kaitai::Struct::Struct
         @_raw_body = @_io.read_bytes((size - 8))
         io = Kaitai::Struct::Stream.new(@_raw_body)
         @body = DyldInfoCommand.new(io, self, @_root)
+      when :load_command_type_lazy_load_dylib
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylibCommand.new(io, self, @_root)
+      when :load_command_type_sub_client
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = SubCommand.new(io, self, @_root)
+      when :load_command_type_routines
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = RoutinesCommand.new(io, self, @_root)
       when :load_command_type_code_signature
         @_raw_body = @_io.read_bytes((size - 8))
         io = Kaitai::Struct::Stream.new(@_raw_body)
@@ -1593,6 +1839,10 @@ class MachO < Kaitai::Struct::Struct
         @_raw_body = @_io.read_bytes((size - 8))
         io = Kaitai::Struct::Stream.new(@_raw_body)
         @body = SegmentCommand64.new(io, self, @_root)
+      when :load_command_type_id_dylib
+        @_raw_body = @_io.read_bytes((size - 8))
+        io = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = DylibCommand.new(io, self, @_root)
       else
         @body = @_io.read_bytes((size - 8))
       end
@@ -1637,9 +1887,11 @@ class MachO < Kaitai::Struct::Struct
       def _read
         @unknown = @_io.read_u4le
         @items = []
+        i = 0
         begin
           _ = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ascii")
           @items << _
+          i += 1
         end until _ == ""
         self
       end
@@ -1703,11 +1955,11 @@ class MachO < Kaitai::Struct::Struct
 
     def _read
       @version = Version.new(@_io, self, @_root)
-      @reserved = Version.new(@_io, self, @_root)
+      @sdk = Version.new(@_io, self, @_root)
       self
     end
     attr_reader :version
-    attr_reader :reserved
+    attr_reader :sdk
   end
   class EntryPointCommand < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)

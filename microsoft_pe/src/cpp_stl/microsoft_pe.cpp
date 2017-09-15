@@ -4,8 +4,8 @@
 
 
 
-microsoft_pe_t::microsoft_pe_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, microsoft_pe_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+microsoft_pe_t::microsoft_pe_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -37,9 +37,9 @@ microsoft_pe_t::~microsoft_pe_t() {
     delete m_sections;
 }
 
-microsoft_pe_t::optional_header_windows_t::optional_header_windows_t(kaitai::kstream *p_io, microsoft_pe_t::optional_header_t* p_parent, microsoft_pe_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+microsoft_pe_t::optional_header_windows_t::optional_header_windows_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -113,11 +113,31 @@ void microsoft_pe_t::optional_header_windows_t::_read() {
 }
 
 microsoft_pe_t::optional_header_windows_t::~optional_header_windows_t() {
+    if (!n_image_base_32) {
+    }
+    if (!n_image_base_64) {
+    }
+    if (!n_size_of_stack_reserve_32) {
+    }
+    if (!n_size_of_stack_reserve_64) {
+    }
+    if (!n_size_of_stack_commit_32) {
+    }
+    if (!n_size_of_stack_commit_64) {
+    }
+    if (!n_size_of_heap_reserve_32) {
+    }
+    if (!n_size_of_heap_reserve_64) {
+    }
+    if (!n_size_of_heap_commit_32) {
+    }
+    if (!n_size_of_heap_commit_64) {
+    }
 }
 
-microsoft_pe_t::optional_header_data_dirs_t::optional_header_data_dirs_t(kaitai::kstream *p_io, microsoft_pe_t::optional_header_t* p_parent, microsoft_pe_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+microsoft_pe_t::optional_header_data_dirs_t::optional_header_data_dirs_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -157,9 +177,9 @@ microsoft_pe_t::optional_header_data_dirs_t::~optional_header_data_dirs_t() {
     delete m_clr_runtime_header;
 }
 
-microsoft_pe_t::data_dir_t::data_dir_t(kaitai::kstream *p_io, microsoft_pe_t::optional_header_data_dirs_t* p_parent, microsoft_pe_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+microsoft_pe_t::data_dir_t::data_dir_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_data_dirs_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -171,9 +191,9 @@ void microsoft_pe_t::data_dir_t::_read() {
 microsoft_pe_t::data_dir_t::~data_dir_t() {
 }
 
-microsoft_pe_t::optional_header_t::optional_header_t(kaitai::kstream *p_io, microsoft_pe_t* p_parent, microsoft_pe_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+microsoft_pe_t::optional_header_t::optional_header_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -189,9 +209,9 @@ microsoft_pe_t::optional_header_t::~optional_header_t() {
     delete m_data_dirs;
 }
 
-microsoft_pe_t::section_t::section_t(kaitai::kstream *p_io, microsoft_pe_t* p_parent, microsoft_pe_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+microsoft_pe_t::section_t::section_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_body = false;
     _read();
 }
@@ -210,6 +230,8 @@ void microsoft_pe_t::section_t::_read() {
 }
 
 microsoft_pe_t::section_t::~section_t() {
+    if (f_body) {
+    }
 }
 
 std::string microsoft_pe_t::section_t::body() {
@@ -223,9 +245,9 @@ std::string microsoft_pe_t::section_t::body() {
     return m_body;
 }
 
-microsoft_pe_t::mz_placeholder_t::mz_placeholder_t(kaitai::kstream *p_io, microsoft_pe_t* p_parent, microsoft_pe_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+microsoft_pe_t::mz_placeholder_t::mz_placeholder_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -238,9 +260,9 @@ void microsoft_pe_t::mz_placeholder_t::_read() {
 microsoft_pe_t::mz_placeholder_t::~mz_placeholder_t() {
 }
 
-microsoft_pe_t::optional_header_std_t::optional_header_std_t(kaitai::kstream *p_io, microsoft_pe_t::optional_header_t* p_parent, microsoft_pe_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+microsoft_pe_t::optional_header_std_t::optional_header_std_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -261,11 +283,13 @@ void microsoft_pe_t::optional_header_std_t::_read() {
 }
 
 microsoft_pe_t::optional_header_std_t::~optional_header_std_t() {
+    if (!n_base_of_data) {
+    }
 }
 
-microsoft_pe_t::coff_header_t::coff_header_t(kaitai::kstream *p_io, microsoft_pe_t* p_parent, microsoft_pe_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+microsoft_pe_t::coff_header_t::coff_header_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

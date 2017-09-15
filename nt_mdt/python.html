@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>NT-MDT data: Python parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Scientific Applications</li>
+        <li class="active">NT-MDT data</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>NT-MDT data:
+            
+            Python parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A native file format of NT-MDT scientific software. Usually contains
+any of:</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Scanning_probe_microscopy">Scanning probe</a> microscopy scans and spectra</li>
+<li><a href="https://en.wikipedia.org/wiki/Raman_spectroscopy">Raman spectra</a></li>
+<li>results of their analysis</li>
+</ul>
+<p>Some examples of mdt files can be downloaded at:</p>
+<ul>
+<li>http://www.ntmdt-si.ru/scan-gallery</li>
+<li>http://callistosoft.narod.ru/Resources/Mdt.zip</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["Nova", "Image Analysis", "NanoEducator", "Gwyddion", "Callisto"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        mdt
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/GPL-3.0+.html">GPL-3.0+</a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of NT-MDT data
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="NT-MDT data parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="NT-MDT data parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="NT-MDT data parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="NT-MDT data parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="NT-MDT data parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="NT-MDT data parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="NT-MDT data parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="NT-MDT data parsing PHP library">PHP</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="python.html" title="NT-MDT data parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="NT-MDT data parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="python">data = NtMdt.from_file("path/to/local/file.mdt")</code></pre>
+
+<p>Or parse structure from a bytes:</p>
+
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
+
+raw = b"\x00\x01\x02..."
+data = NtMdt(KaitaiStream(BytesIO(raw)))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="python">data.size # => File size (w/o header)</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Python source code to parse NT-MDT data
+            
+        </h2>
+
+        
+
+        <h3>nt_mdt.py</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/python/nt_mdt.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+from pkg_resources import parse_version
+from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+from enum import Enum
+import struct
+
+
+if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
+    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
+
+class NtMdt(KaitaiStruct):
+    &quot;&quot;&quot;A native file format of NT-MDT scientific software. Usually contains
+    any of:
+    
+    * [Scanning probe](https://en.wikipedia.org/wiki/Scanning_probe_microscopy) microscopy scans and spectra
+    * [Raman spectra](https://en.wikipedia.org/wiki/Raman_spectroscopy)
+    * results of their analysis
+    
+    Some examples of mdt files can be downloaded at:
+    
+    * http://www.ntmdt-si.ru/scan-gallery
+    * http://callistosoft.narod.ru/Resources/Mdt.zip
+    
+    .. seealso::
+       Source - https://svn.code.sf.net/p/gwyddion/code/trunk/gwyddion/modules/file/nt-mdt.c
+    &quot;&quot;&quot;
+
+    class AdcMode(Enum):
+        height = 0
+        dfl = 1
+        lateral_f = 2
+        bias_v = 3
+        current = 4
+        fb_out = 5
+        mag = 6
+        mag_sin = 7
+        mag_cos = 8
+        rms = 9
+        calc_mag = 10
+        phase1 = 11
+        phase2 = 12
+        calc_phase = 13
+        ex1 = 14
+        ex2 = 15
+        hv_x = 16
+        hv_y = 17
+        snap_back = 18
+        false = 255
+
+    class XmlScanLocation(Enum):
+        hlt = 0
+        hlb = 1
+        hrt = 2
+        hrb = 3
+        vlt = 4
+        vlb = 5
+        vrt = 6
+        vrb = 7
+
+    class XmlParamType(Enum):
+        none = 0
+        laser_wavelength = 1
+        units = 2
+        data_array = 255
+
+    class SpmMode(Enum):
+        constant_force = 0
+        contact_constant_height = 1
+        contact_error = 2
+        lateral_force = 3
+        force_modulation = 4
+        spreading_resistance_imaging = 5
+        semicontact_topography = 6
+        semicontact_error = 7
+        phase_contrast = 8
+        ac_magnetic_force = 9
+        dc_magnetic_force = 10
+        electrostatic_force = 11
+        capacitance_contrast = 12
+        kelvin_probe = 13
+        constant_current = 14
+        barrier_height = 15
+        constant_height = 16
+        afam = 17
+        contact_efm = 18
+        shear_force_topography = 19
+        sfom = 20
+        contact_capacitance = 21
+        snom_transmission = 22
+        snom_reflection = 23
+        snom_all = 24
+        snom = 25
+
+    class Unit(Enum):
+        raman_shift = -10
+        reserved0 = -9
+        reserved1 = -8
+        reserved2 = -7
+        reserved3 = -6
+        meter = -5
+        centi_meter = -4
+        milli_meter = -3
+        micro_meter = -2
+        nano_meter = -1
+        angstrom = 0
+        nano_ampere = 1
+        volt = 2
+        none = 3
+        kilo_hertz = 4
+        degrees = 5
+        percent = 6
+        celsium_degree = 7
+        volt_high = 8
+        second = 9
+        milli_second = 10
+        micro_second = 11
+        nano_second = 12
+        counts = 13
+        pixels = 14
+        reserved_sfom0 = 15
+        reserved_sfom1 = 16
+        reserved_sfom2 = 17
+        reserved_sfom3 = 18
+        reserved_sfom4 = 19
+        ampere2 = 20
+        milli_ampere = 21
+        micro_ampere = 22
+        nano_ampere2 = 23
+        pico_ampere = 24
+        volt2 = 25
+        milli_volt = 26
+        micro_volt = 27
+        nano_volt = 28
+        pico_volt = 29
+        newton = 30
+        milli_newton = 31
+        micro_newton = 32
+        nano_newton = 33
+        pico_newton = 34
+        reserved_dos0 = 35
+        reserved_dos1 = 36
+        reserved_dos2 = 37
+        reserved_dos3 = 38
+        reserved_dos4 = 39
+
+    class SpmTechnique(Enum):
+        contact_mode = 0
+        semicontact_mode = 1
+        tunnel_current = 2
+        snom = 3
+
+    class Consts(Enum):
+        frame_mode_size = 8
+        frame_header_size = 22
+        axis_scales_size = 30
+        file_header_size = 32
+        spectro_vars_min_size = 38
+        scan_vars_min_size = 77
+    def __init__(self, _io, _parent=None, _root=None):
+        self._io = _io
+        self._parent = _parent
+        self._root = _root if _root else self
+        self._read()
+
+    def _read(self):
+        self.signature = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 1, -80, -109, -1))
+        self.size = self._io.read_u4le()
+        self.reserved0 = self._io.read_bytes(4)
+        self.last_frame = self._io.read_u2le()
+        self.reserved1 = self._io.read_bytes(18)
+        self.wrond_doc = self._io.read_bytes(1)
+        self._raw_frames = self._io.read_bytes(self.size)
+        io = KaitaiStream(BytesIO(self._raw_frames))
+        self.frames = self._root.Framez(io, self, self._root)
+
+    class Uuid(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.data = [None] * (16)
+            for i in range(16):
+                self.data[i] = self._io.read_u1()
+
+
+
+    class Framez(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.frames = [None] * ((self._root.last_frame + 1))
+            for i in range((self._root.last_frame + 1)):
+                self.frames[i] = self._root.Frame(self._io, self, self._root)
+
+
+
+    class Frame(KaitaiStruct):
+
+        class FrameType(Enum):
+            scanned = 0
+            spectroscopy = 1
+            text = 3
+            old_mda = 105
+            mda = 106
+            palette = 107
+            curves_new = 190
+            curves = 201
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.size = self._io.read_u4le()
+            self._raw_main = self._io.read_bytes((self.size - 4))
+            io = KaitaiStream(BytesIO(self._raw_main))
+            self.main = self._root.Frame.FrameMain(io, self, self._root)
+
+        class Dots(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.fm_ndots = self._io.read_u2le()
+                if self.fm_ndots &gt; 0:
+                    self.coord_header = self._root.Frame.Dots.DotsHeader(self._io, self, self._root)
+
+                self.coordinates = [None] * (self.fm_ndots)
+                for i in range(self.fm_ndots):
+                    self.coordinates[i] = self._root.Frame.Dots.DotsData(self._io, self, self._root)
+
+                self.data = [None] * (self.fm_ndots)
+                for i in range(self.fm_ndots):
+                    self.data[i] = self._root.Frame.Dots.DataLinez(i, self._io, self, self._root)
+
+
+            class DotsHeader(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    self._io = _io
+                    self._parent = _parent
+                    self._root = _root if _root else self
+                    self._read()
+
+                def _read(self):
+                    self.header_size = self._io.read_s4le()
+                    self._raw_header = self._io.read_bytes(self.header_size)
+                    io = KaitaiStream(BytesIO(self._raw_header))
+                    self.header = self._root.Frame.Dots.DotsHeader.Header(io, self, self._root)
+
+                class Header(KaitaiStruct):
+                    def __init__(self, _io, _parent=None, _root=None):
+                        self._io = _io
+                        self._parent = _parent
+                        self._root = _root if _root else self
+                        self._read()
+
+                    def _read(self):
+                        self.coord_size = self._io.read_s4le()
+                        self.version = self._io.read_s4le()
+                        self.xyunits = self._root.Unit(self._io.read_s2le())
+
+
+
+            class DotsData(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    self._io = _io
+                    self._parent = _parent
+                    self._root = _root if _root else self
+                    self._read()
+
+                def _read(self):
+                    self.coord_x = self._io.read_f4le()
+                    self.coord_y = self._io.read_f4le()
+                    self.forward_size = self._io.read_s4le()
+                    self.backward_size = self._io.read_s4le()
+
+
+            class DataLinez(KaitaiStruct):
+                def __init__(self, index, _io, _parent=None, _root=None):
+                    self._io = _io
+                    self._parent = _parent
+                    self._root = _root if _root else self
+                    self.index = index
+                    self._read()
+
+                def _read(self):
+                    self.forward = [None] * (self._parent.coordinates[self.index].forward_size)
+                    for i in range(self._parent.coordinates[self.index].forward_size):
+                        self.forward[i] = self._io.read_s2le()
+
+                    self.backward = [None] * (self._parent.coordinates[self.index].backward_size)
+                    for i in range(self._parent.coordinates[self.index].backward_size):
+                        self.backward[i] = self._io.read_s2le()
+
+
+
+
+        class FrameMain(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.type = self._root.Frame.FrameType(self._io.read_u2le())
+                self.version = self._root.Version(self._io, self, self._root)
+                self.date_time = self._root.Frame.DateTime(self._io, self, self._root)
+                self.var_size = self._io.read_u2le()
+                _on = self.type
+                if _on == self._root.Frame.FrameType.scanned:
+                    self._raw_frame_data = self._io.read_bytes_full()
+                    io = KaitaiStream(BytesIO(self._raw_frame_data))
+                    self.frame_data = self._root.Frame.FdScanned(io, self, self._root)
+                elif _on == self._root.Frame.FrameType.curves_new:
+                    self._raw_frame_data = self._io.read_bytes_full()
+                    io = KaitaiStream(BytesIO(self._raw_frame_data))
+                    self.frame_data = self._root.Frame.FdCurvesNew(io, self, self._root)
+                elif _on == self._root.Frame.FrameType.mda:
+                    self._raw_frame_data = self._io.read_bytes_full()
+                    io = KaitaiStream(BytesIO(self._raw_frame_data))
+                    self.frame_data = self._root.Frame.FdMetaData(io, self, self._root)
+                elif _on == self._root.Frame.FrameType.spectroscopy:
+                    self._raw_frame_data = self._io.read_bytes_full()
+                    io = KaitaiStream(BytesIO(self._raw_frame_data))
+                    self.frame_data = self._root.Frame.FdSpectroscopy(io, self, self._root)
+                elif _on == self._root.Frame.FrameType.curves:
+                    self._raw_frame_data = self._io.read_bytes_full()
+                    io = KaitaiStream(BytesIO(self._raw_frame_data))
+                    self.frame_data = self._root.Frame.FdSpectroscopy(io, self, self._root)
+                else:
+                    self.frame_data = self._io.read_bytes_full()
+
+
+        class FdCurvesNew(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.block_count = self._io.read_u4le()
+                self.blocks_headers = [None] * (self.block_count)
+                for i in range(self.block_count):
+                    self.blocks_headers[i] = self._root.Frame.FdCurvesNew.BlockDescr(self._io, self, self._root)
+
+                self.blocks_names = [None] * (self.block_count)
+                for i in range(self.block_count):
+                    self.blocks_names[i] = (self._io.read_bytes(self.blocks_headers[i].name_len)).decode(u&quot;UTF-8&quot;)
+
+                self.blocks_data = [None] * (self.block_count)
+                for i in range(self.block_count):
+                    self.blocks_data[i] = self._io.read_bytes(self.blocks_headers[i].len)
+
+
+            class BlockDescr(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    self._io = _io
+                    self._parent = _parent
+                    self._root = _root if _root else self
+                    self._read()
+
+                def _read(self):
+                    self.name_len = self._io.read_u4le()
+                    self.len = self._io.read_u4le()
+
+
+
+        class FdMetaData(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.head_size = self._io.read_u4le()
+                self.tot_len = self._io.read_u4le()
+                self.guids = [None] * (2)
+                for i in range(2):
+                    self.guids[i] = self._root.Uuid(self._io, self, self._root)
+
+                self.frame_status = self._io.read_bytes(4)
+                self.name_size = self._io.read_u4le()
+                self.comm_size = self._io.read_u4le()
+                self.view_info_size = self._io.read_u4le()
+                self.spec_size = self._io.read_u4le()
+                self.source_info_size = self._io.read_u4le()
+                self.var_size = self._io.read_u4le()
+                self.data_offset = self._io.read_u4le()
+                self.data_size = self._io.read_u4le()
+                self.title = (self._io.read_bytes(self.name_size)).decode(u&quot;UTF-8&quot;)
+                self.xml = (self._io.read_bytes(self.comm_size)).decode(u&quot;UTF-8&quot;)
+                self.struct_len = self._io.read_u4le()
+                self.array_size = self._io.read_u8le()
+                self.cell_size = self._io.read_u4le()
+                self.n_dimensions = self._io.read_u4le()
+                self.n_mesurands = self._io.read_u4le()
+                self.dimensions = [None] * (self.n_dimensions)
+                for i in range(self.n_dimensions):
+                    self.dimensions[i] = self._root.Frame.FdMetaData.Calibration(self._io, self, self._root)
+
+                self.mesurands = [None] * (self.n_mesurands)
+                for i in range(self.n_mesurands):
+                    self.mesurands[i] = self._root.Frame.FdMetaData.Calibration(self._io, self, self._root)
+
+                self.image = self._io.read_bytes_full()
+
+            class Calibration(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    self._io = _io
+                    self._parent = _parent
+                    self._root = _root if _root else self
+                    self._read()
+
+                def _read(self):
+                    self.len_tot = self._io.read_u4le()
+                    self.len_struct = self._io.read_u4le()
+                    self.len_name = self._io.read_u4le()
+                    self.len_comment = self._io.read_u4le()
+                    self.len_unit = self._io.read_u4le()
+                    self.si_unit = self._io.read_u8le()
+                    self.accuracy = self._io.read_f8le()
+                    self.function_id_and_dimensions = self._io.read_u8le()
+                    self.bias = self._io.read_f8le()
+                    self.scale = self._io.read_f8le()
+                    self.min_index = self._io.read_u8le()
+                    self.max_index = self._io.read_u8le()
+                    self.data_type = self._io.read_s4le()
+                    self.len_author = self._io.read_u4le()
+                    self.name = (self._io.read_bytes(self.len_name)).decode(u&quot;utf-8&quot;)
+                    self.comment = (self._io.read_bytes(self.len_comment)).decode(u&quot;utf-8&quot;)
+                    self.unit = (self._io.read_bytes(self.len_unit)).decode(u&quot;utf-8&quot;)
+                    self.author = (self._io.read_bytes(self.len_author)).decode(u&quot;utf-8&quot;)
+
+
+
+        class FdSpectroscopy(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self._raw_vars = self._io.read_bytes(self._parent.var_size)
+                io = KaitaiStream(BytesIO(self._raw_vars))
+                self.vars = self._root.Frame.FdSpectroscopy.Vars(io, self, self._root)
+                self.fm_mode = self._io.read_u2le()
+                self.fm_xres = self._io.read_u2le()
+                self.fm_yres = self._io.read_u2le()
+                self.dots = self._root.Frame.Dots(self._io, self, self._root)
+                self.data = [None] * ((self.fm_xres * self.fm_yres))
+                for i in range((self.fm_xres * self.fm_yres)):
+                    self.data[i] = self._io.read_s2le()
+
+                self.title = self._root.Title(self._io, self, self._root)
+                self.xml = self._root.Xml(self._io, self, self._root)
+
+            class Vars(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    self._io = _io
+                    self._parent = _parent
+                    self._root = _root if _root else self
+                    self._read()
+
+                def _read(self):
+                    self.x_scale = self._root.Frame.AxisScale(self._io, self, self._root)
+                    self.y_scale = self._root.Frame.AxisScale(self._io, self, self._root)
+                    self.z_scale = self._root.Frame.AxisScale(self._io, self, self._root)
+                    self.sp_mode = self._io.read_u2le()
+                    self.sp_filter = self._io.read_u2le()
+                    self.u_begin = self._io.read_f4le()
+                    self.u_end = self._io.read_f4le()
+                    self.z_up = self._io.read_s2le()
+                    self.z_down = self._io.read_s2le()
+                    self.sp_averaging = self._io.read_u2le()
+                    self.sp_repeat = self._io.read_u1()
+                    self.sp_back = self._io.read_u1()
+                    self.sp_4nx = self._io.read_s2le()
+                    self.sp_osc = self._io.read_u1()
+                    self.sp_n4 = self._io.read_u1()
+                    self.sp_4x0 = self._io.read_f4le()
+                    self.sp_4xr = self._io.read_f4le()
+                    self.sp_4u = self._io.read_s2le()
+                    self.sp_4i = self._io.read_s2le()
+                    self.sp_nx = self._io.read_s2le()
+
+
+
+        class DateTime(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.date = self._root.Frame.DateTime.Date(self._io, self, self._root)
+                self.time = self._root.Frame.DateTime.Time(self._io, self, self._root)
+
+            class Date(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    self._io = _io
+                    self._parent = _parent
+                    self._root = _root if _root else self
+                    self._read()
+
+                def _read(self):
+                    self.year = self._io.read_u2le()
+                    self.month = self._io.read_u2le()
+                    self.day = self._io.read_u2le()
+
+
+            class Time(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    self._io = _io
+                    self._parent = _parent
+                    self._root = _root if _root else self
+                    self._read()
+
+                def _read(self):
+                    self.hour = self._io.read_u2le()
+                    self.min = self._io.read_u2le()
+                    self.sec = self._io.read_u2le()
+
+
+
+        class AxisScale(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.offset = self._io.read_f4le()
+                self.step = self._io.read_f4le()
+                self.unit = self._root.Unit(self._io.read_s2le())
+
+
+        class FdScanned(KaitaiStruct):
+
+            class Mode(Enum):
+                stm = 0
+                afm = 1
+                unknown2 = 2
+                unknown3 = 3
+                unknown4 = 4
+
+            class InputSignal(Enum):
+                extension_slot = 0
+                bias_v = 1
+                ground = 2
+
+            class LiftMode(Enum):
+                step = 0
+                fine = 1
+                slope = 2
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self._raw_vars = self._io.read_bytes(self._parent.var_size)
+                io = KaitaiStream(BytesIO(self._raw_vars))
+                self.vars = self._root.Frame.FdScanned.Vars(io, self, self._root)
+                if False:
+                    self.orig_format = self._io.read_u4le()
+
+                if False:
+                    self.tune = self._root.Frame.FdScanned.LiftMode(self._io.read_u4le())
+
+                if False:
+                    self.feedback_gain = self._io.read_f8le()
+
+                if False:
+                    self.dac_scale = self._io.read_s4le()
+
+                if False:
+                    self.overscan = self._io.read_s4le()
+
+                self.fm_mode = self._io.read_u2le()
+                self.fm_xres = self._io.read_u2le()
+                self.fm_yres = self._io.read_u2le()
+                self.dots = self._root.Frame.Dots(self._io, self, self._root)
+                self.image = [None] * ((self.fm_xres * self.fm_yres))
+                for i in range((self.fm_xres * self.fm_yres)):
+                    self.image[i] = self._io.read_s2le()
+
+                self.title = self._root.Title(self._io, self, self._root)
+                self.xml = self._root.Xml(self._io, self, self._root)
+
+            class Vars(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    self._io = _io
+                    self._parent = _parent
+                    self._root = _root if _root else self
+                    self._read()
+
+                def _read(self):
+                    self.x_scale = self._root.Frame.AxisScale(self._io, self, self._root)
+                    self.y_scale = self._root.Frame.AxisScale(self._io, self, self._root)
+                    self.z_scale = self._root.Frame.AxisScale(self._io, self, self._root)
+                    self.channel_index = self._root.AdcMode(self._io.read_u1())
+                    self.mode = self._root.Frame.FdScanned.Mode(self._io.read_u1())
+                    self.xres = self._io.read_u2le()
+                    self.yres = self._io.read_u2le()
+                    self.ndacq = self._io.read_u2le()
+                    self.step_length = self._io.read_f4le()
+                    self.adt = self._io.read_u2le()
+                    self.adc_gain_amp_log10 = self._io.read_u1()
+                    self.adc_index = self._io.read_u1()
+                    self.input_signal_or_version = self._io.read_u1()
+                    self.substr_plane_order_or_pass_num = self._io.read_u1()
+                    self.scan_dir = self._root.Frame.FdScanned.ScanDir(self._io, self, self._root)
+                    self.power_of_2 = self._io.read_u1()
+                    self.velocity = self._io.read_f4le()
+                    self.setpoint = self._io.read_f4le()
+                    self.bias_voltage = self._io.read_f4le()
+                    self.draw = self._io.read_u1()
+                    self.reserved = self._io.read_u1()
+                    self.xoff = self._io.read_s4le()
+                    self.yoff = self._io.read_s4le()
+                    self.nl_corr = self._io.read_u1()
+
+
+            class Dot(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    self._io = _io
+                    self._parent = _parent
+                    self._root = _root if _root else self
+                    self._read()
+
+                def _read(self):
+                    self.x = self._io.read_s2le()
+                    self.y = self._io.read_s2le()
+
+
+            class ScanDir(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    self._io = _io
+                    self._parent = _parent
+                    self._root = _root if _root else self
+                    self._read()
+
+                def _read(self):
+                    self.unkn = self._io.read_bits_int(4)
+                    self.double_pass = self._io.read_bits_int(1) != 0
+                    self.bottom = self._io.read_bits_int(1) != 0
+                    self.left = self._io.read_bits_int(1) != 0
+                    self.horizontal = self._io.read_bits_int(1) != 0
+
+
+
+
+    class Version(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.minor = self._io.read_u1()
+            self.major = self._io.read_u1()
+
+
+    class Xml(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.xml_len = self._io.read_u4le()
+            self.xml = (self._io.read_bytes(self.xml_len)).decode(u&quot;UTF-16LE&quot;)
+
+
+    class Title(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.title_len = self._io.read_u4le()
+            self.title = (self._io.read_bytes(self.title_len)).decode(u&quot;cp1251&quot;)
+
+
+
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

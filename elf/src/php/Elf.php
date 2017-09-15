@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Elf extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Elf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Elf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -68,8 +68,8 @@ namespace \Elf;
 class EndianElf extends \Kaitai\Struct\Struct {
     protected $_m__is_le;
 
-    public function __construct(\Kaitai\Struct\Stream $io, \Elf $parent = null, \Elf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Elf $_parent = null, \Elf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -278,8 +278,8 @@ namespace \Elf\EndianElf;
 class ProgramHeader extends \Kaitai\Struct\Struct {
     protected $_m__is_le;
 
-    public function __construct(\Kaitai\Struct\Stream $io, \Elf\EndianElf $parent = null, \Elf $root = null, $is_le = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Elf\EndianElf $_parent = null, \Elf $_root = null, $is_le = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_m__is_le = $is_le;
         $this->_read();
     }
@@ -435,8 +435,8 @@ namespace \Elf\EndianElf;
 class SectionHeader extends \Kaitai\Struct\Struct {
     protected $_m__is_le;
 
-    public function __construct(\Kaitai\Struct\Stream $io, \Elf\EndianElf $parent = null, \Elf $root = null, $is_le = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Elf\EndianElf $_parent = null, \Elf $_root = null, $is_le = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_m__is_le = $is_le;
         $this->_read();
     }
@@ -618,8 +618,8 @@ namespace \Elf\EndianElf;
 class StringsStruct extends \Kaitai\Struct\Struct {
     protected $_m__is_le;
 
-    public function __construct(\Kaitai\Struct\Stream $io, \Elf\EndianElf $parent = null, \Elf $root = null, $is_le = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Elf\EndianElf $_parent = null, \Elf $_root = null, $is_le = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_m__is_le = $is_le;
         $this->_read();
     }
@@ -637,15 +637,19 @@ class StringsStruct extends \Kaitai\Struct\Struct {
 
     private function _readLE() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
+            $i++;
         }
     }
 
     private function _readBE() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
+            $i++;
         }
     }
     protected $_m_entries;

@@ -26,8 +26,10 @@ class DoomWad < Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries << Sector.new(@_io, self, @_root)
+        i += 1
       end
       self
     end
@@ -296,8 +298,10 @@ class DoomWad < Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries << Vertex.new(@_io, self, @_root)
+        i += 1
       end
       self
     end
@@ -333,8 +337,10 @@ class DoomWad < Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries << Thing.new(@_io, self, @_root)
+        i += 1
       end
       self
     end
@@ -348,8 +354,10 @@ class DoomWad < Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries << Linedef.new(@_io, self, @_root)
+        i += 1
       end
       self
     end
@@ -428,8 +436,10 @@ class DoomWad < Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries << Sidedef.new(@_io, self, @_root)
+        i += 1
       end
       self
     end
@@ -470,9 +480,11 @@ class DoomWad < Kaitai::Struct::Struct
         _pos = @_io.pos
         @_io.seek((offset * 2))
         @linedefs = []
+        i = 0
         begin
           _ = @_io.read_s2le
           @linedefs << _
+          i += 1
         end until _ == -1
         @_io.seek(_pos)
         @linedefs

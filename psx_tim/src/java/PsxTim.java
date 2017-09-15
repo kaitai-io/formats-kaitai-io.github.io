@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.util.HashMap;
 
 public class PsxTim extends KaitaiStruct {
     public static PsxTim fromFile(String fileName) throws IOException {
-        return new PsxTim(new KaitaiStream(fileName));
+        return new PsxTim(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum BppType {
@@ -52,7 +53,7 @@ public class PsxTim extends KaitaiStruct {
     }
     public static class Bitmap extends KaitaiStruct {
         public static Bitmap fromFile(String fileName) throws IOException {
-            return new Bitmap(new KaitaiStream(fileName));
+            return new Bitmap(new ByteBufferKaitaiStream(fileName));
         }
 
         public Bitmap(KaitaiStream _io) {

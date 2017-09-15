@@ -24,8 +24,10 @@ var DoomWad = (function() {
     }
     Sectors.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.entries.push(new Sector(this._io, this, this._root));
+        i++;
       }
     }
 
@@ -334,8 +336,10 @@ var DoomWad = (function() {
     }
     Vertexes.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.entries.push(new Vertex(this._io, this, this._root));
+        i++;
       }
     }
 
@@ -372,8 +376,10 @@ var DoomWad = (function() {
     }
     Things.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.entries.push(new Thing(this._io, this, this._root));
+        i++;
       }
     }
 
@@ -390,8 +396,10 @@ var DoomWad = (function() {
     }
     Linedefs.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.entries.push(new Linedef(this._io, this, this._root));
+        i++;
       }
     }
 
@@ -486,8 +494,10 @@ var DoomWad = (function() {
     }
     Sidedefs.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.entries.push(new Sidedef(this._io, this, this._root));
+        i++;
       }
     }
 
@@ -535,9 +545,11 @@ var DoomWad = (function() {
           var _pos = this._io.pos;
           this._io.seek((this.offset * 2));
           this._m_linedefs = []
+          var i = 0;
           do {
             var _ = this._io.readS2le();
             this._m_linedefs.push(_);
+            i++;
           } while (!(_ == -1));
           this._io.seek(_pos);
           return this._m_linedefs;

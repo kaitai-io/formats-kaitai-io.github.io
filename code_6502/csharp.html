@@ -254,6 +254,7 @@ namespace Kaitai
             return new Code6502(new KaitaiStream(fileName));
         }
 
+
         public enum Opcode
         {
             BrkImpl = 0,
@@ -408,19 +409,23 @@ namespace Kaitai
             SbcAbsX = 253,
             IncAbsX = 254,
         }
-
-        public Code6502(KaitaiStream io, KaitaiStruct parent = null, Code6502 root = null) : base(io)
+        public Code6502(KaitaiStream p__io, KaitaiStruct p__parent = null, Code6502 p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _operations = new List&lt;Operation&gt;();
-            while (!m_io.IsEof) {
-                _operations.Add(new Operation(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _operations.Add(new Operation(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
         public partial class Operation : KaitaiStruct
         {
             public static Operation FromFile(string fileName)
@@ -428,13 +433,14 @@ namespace Kaitai
                 return new Operation(new KaitaiStream(fileName));
             }
 
-            public Operation(KaitaiStream io, Code6502 parent = null, Code6502 root = null) : base(io)
+            public Operation(KaitaiStream p__io, Code6502 p__parent = null, Code6502 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _code = ((Code6502.Opcode) m_io.ReadU1());
                 switch (Code) {
                 case Code6502.Opcode.LsrAbsX: {
@@ -926,7 +932,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private Opcode _code;
             private ushort _args;
             private Code6502 m_root;

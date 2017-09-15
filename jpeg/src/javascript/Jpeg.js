@@ -27,8 +27,10 @@ var Jpeg = (function() {
   }
   Jpeg.prototype._read = function() {
     this.segments = [];
+    var i = 0;
     while (!this._io.isEof()) {
       this.segments.push(new Segment(this._io, this, this._root));
+      i++;
     }
   }
 
@@ -269,7 +271,7 @@ var Jpeg = (function() {
         get: function() {
           if (this._m_samplingX !== undefined)
             return this._m_samplingX;
-          this._m_samplingX = ((this.samplingFactors & 240) >> 4);
+          this._m_samplingX = ((this.samplingFactors & 240) >>> 4);
           return this._m_samplingX;
         }
       });
@@ -304,7 +306,7 @@ var Jpeg = (function() {
       this.extraZero = this._io.ensureFixedContents([0]);
       this._raw_data = this._io.readBytesFull();
       var _io__raw_data = new KaitaiStream(this._raw_data);
-      this.data = new Exif(_io__raw_data);
+      this.data = new Exif(_io__raw_data, this, null);
     }
 
     return ExifInJpeg;

@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 
@@ -15,14 +14,19 @@
 /**
  * Microsoft Windows SYSTEMTIME structure, stores individual components
  * of date and time as individual fields, up to millisecond precision.
+ * \sa Source
  */
 
 class windows_systemtime_t : public kaitai::kstruct {
 
 public:
 
-    windows_systemtime_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, windows_systemtime_t* p_root = 0);
+    windows_systemtime_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, windows_systemtime_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~windows_systemtime_t();
 
 private:

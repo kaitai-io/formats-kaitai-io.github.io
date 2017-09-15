@@ -11,6 +11,7 @@ namespace Kaitai
             return new Jpeg(new KaitaiStream(fileName));
         }
 
+
         public enum ComponentId
         {
             Y = 1,
@@ -19,25 +20,30 @@ namespace Kaitai
             I = 4,
             Q = 5,
         }
-
-        public Jpeg(KaitaiStream io, KaitaiStruct parent = null, Jpeg root = null) : base(io)
+        public Jpeg(KaitaiStream p__io, KaitaiStruct p__parent = null, Jpeg p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _segments = new List<Segment>();
-            while (!m_io.IsEof) {
-                _segments.Add(new Segment(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _segments.Add(new Segment(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
         public partial class Segment : KaitaiStruct
         {
             public static Segment FromFile(string fileName)
             {
                 return new Segment(new KaitaiStream(fileName));
             }
+
 
             public enum MarkerEnum
             {
@@ -75,14 +81,14 @@ namespace Kaitai
                 App15 = 239,
                 Com = 254,
             }
-
-            public Segment(KaitaiStream io, Jpeg parent = null, Jpeg root = null) : base(io)
+            public Segment(KaitaiStream p__io, Jpeg p__parent = null, Jpeg p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.EnsureFixedContents(new byte[] { 255 });
                 _marker = ((MarkerEnum) m_io.ReadU1());
                 if ( ((Marker != MarkerEnum.Soi) && (Marker != MarkerEnum.Eoi)) ) {
@@ -123,10 +129,10 @@ namespace Kaitai
                 if (Marker == MarkerEnum.Sos) {
                     _imageData = m_io.ReadBytesFull();
                 }
-                }
+            }
             private byte[] _magic;
             private MarkerEnum _marker;
-            private ushort _length;
+            private ushort? _length;
             private object _data;
             private byte[] _imageData;
             private Jpeg m_root;
@@ -134,7 +140,7 @@ namespace Kaitai
             private byte[] __raw_data;
             public byte[] Magic { get { return _magic; } }
             public MarkerEnum Marker { get { return _marker; } }
-            public ushort Length { get { return _length; } }
+            public ushort? Length { get { return _length; } }
             public object Data { get { return _data; } }
             public byte[] ImageData { get { return _imageData; } }
             public Jpeg M_Root { get { return m_root; } }
@@ -148,22 +154,24 @@ namespace Kaitai
                 return new SegmentSos(new KaitaiStream(fileName));
             }
 
-            public SegmentSos(KaitaiStream io, Jpeg.Segment parent = null, Jpeg root = null) : base(io)
+            public SegmentSos(KaitaiStream p__io, Jpeg.Segment p__parent = null, Jpeg p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _numComponents = m_io.ReadU1();
                 _components = new List<Component>((int) (NumComponents));
-                for (var i = 0; i < NumComponents; i++) {
+                for (var i = 0; i < NumComponents; i++)
+                {
                     _components.Add(new Component(m_io, this, m_root));
                 }
                 _startSpectralSelection = m_io.ReadU1();
                 _endSpectral = m_io.ReadU1();
                 _apprBitPos = m_io.ReadU1();
-                }
+            }
             public partial class Component : KaitaiStruct
             {
                 public static Component FromFile(string fileName)
@@ -171,16 +179,17 @@ namespace Kaitai
                     return new Component(new KaitaiStream(fileName));
                 }
 
-                public Component(KaitaiStream io, Jpeg.SegmentSos parent = null, Jpeg root = null) : base(io)
+                public Component(KaitaiStream p__io, Jpeg.SegmentSos p__parent = null, Jpeg p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _id = ((Jpeg.ComponentId) m_io.ReadU1());
                     _huffmanTable = m_io.ReadU1();
-                    }
+                }
                 private ComponentId _id;
                 private byte _huffmanTable;
                 private Jpeg m_root;
@@ -236,13 +245,14 @@ namespace Kaitai
                 return new SegmentApp1(new KaitaiStream(fileName));
             }
 
-            public SegmentApp1(KaitaiStream io, Jpeg.Segment parent = null, Jpeg root = null) : base(io)
+            public SegmentApp1(KaitaiStream p__io, Jpeg.Segment p__parent = null, Jpeg p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true));
                 switch (Magic) {
                 case "Exif": {
@@ -250,7 +260,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private string _magic;
             private ExifInJpeg _body;
             private Jpeg m_root;
@@ -267,22 +277,24 @@ namespace Kaitai
                 return new SegmentSof0(new KaitaiStream(fileName));
             }
 
-            public SegmentSof0(KaitaiStream io, Jpeg.Segment parent = null, Jpeg root = null) : base(io)
+            public SegmentSof0(KaitaiStream p__io, Jpeg.Segment p__parent = null, Jpeg p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _bitsPerSample = m_io.ReadU1();
                 _imageHeight = m_io.ReadU2be();
                 _imageWidth = m_io.ReadU2be();
                 _numComponents = m_io.ReadU1();
                 _components = new List<Component>((int) (NumComponents));
-                for (var i = 0; i < NumComponents; i++) {
+                for (var i = 0; i < NumComponents; i++)
+                {
                     _components.Add(new Component(m_io, this, m_root));
                 }
-                }
+            }
             public partial class Component : KaitaiStruct
             {
                 public static Component FromFile(string fileName)
@@ -290,19 +302,20 @@ namespace Kaitai
                     return new Component(new KaitaiStream(fileName));
                 }
 
-                public Component(KaitaiStream io, Jpeg.SegmentSof0 parent = null, Jpeg root = null) : base(io)
+                public Component(KaitaiStream p__io, Jpeg.SegmentSof0 p__parent = null, Jpeg p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     f_samplingX = false;
                     f_samplingY = false;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _id = ((Jpeg.ComponentId) m_io.ReadU1());
                     _samplingFactors = m_io.ReadU1();
                     _quantizationTableId = m_io.ReadU1();
-                    }
+                }
                 private bool f_samplingX;
                 private int _samplingX;
                 public int SamplingX
@@ -366,18 +379,19 @@ namespace Kaitai
                 return new ExifInJpeg(new KaitaiStream(fileName));
             }
 
-            public ExifInJpeg(KaitaiStream io, Jpeg.SegmentApp1 parent = null, Jpeg root = null) : base(io)
+            public ExifInJpeg(KaitaiStream p__io, Jpeg.SegmentApp1 p__parent = null, Jpeg p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _extraZero = m_io.EnsureFixedContents(new byte[] { 0 });
                 __raw_data = m_io.ReadBytesFull();
                 var io___raw_data = new KaitaiStream(__raw_data);
                 _data = new Exif(io___raw_data);
-                }
+            }
             private byte[] _extraZero;
             private Exif _data;
             private Jpeg m_root;
@@ -396,20 +410,21 @@ namespace Kaitai
                 return new SegmentApp0(new KaitaiStream(fileName));
             }
 
+
             public enum DensityUnit
             {
                 NoUnits = 0,
                 PixelsPerInch = 1,
                 PixelsPerCm = 2,
             }
-
-            public SegmentApp0(KaitaiStream io, Jpeg.Segment parent = null, Jpeg root = null) : base(io)
+            public SegmentApp0(KaitaiStream p__io, Jpeg.Segment p__parent = null, Jpeg p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(5));
                 _versionMajor = m_io.ReadU1();
                 _versionMinor = m_io.ReadU1();
@@ -419,7 +434,7 @@ namespace Kaitai
                 _thumbnailX = m_io.ReadU1();
                 _thumbnailY = m_io.ReadU1();
                 _thumbnail = m_io.ReadBytes(((ThumbnailX * ThumbnailY) * 3));
-                }
+            }
             private string _magic;
             private byte _versionMajor;
             private byte _versionMinor;

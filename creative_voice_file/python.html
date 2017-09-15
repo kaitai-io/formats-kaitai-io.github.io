@@ -204,10 +204,10 @@ software due to simplicity and availability of Creative's recording
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = CreativeVoiceFile(KaitaiStream(raw))</code></pre>
+data = CreativeVoiceFile(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -298,8 +298,10 @@ class CreativeVoiceFile(KaitaiStruct):
         self.version = self._io.read_u2le()
         self.checksum = self._io.read_u2le()
         self.blocks = []
+        i = 0
         while not self._io.is_eof():
             self.blocks.append(self._root.Block(self._io, self, self._root))
+            i += 1
 
 
     class BlockMarker(KaitaiStruct):

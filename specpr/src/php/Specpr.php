@@ -14,15 +14,17 @@
  */
 
 class Specpr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Specpr $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Specpr $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_records = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_records[] = new \Specpr\Record($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_records;
@@ -32,8 +34,8 @@ class Specpr extends \Kaitai\Struct\Struct {
 namespace \Specpr;
 
 class DataInitial extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Specpr\Record $parent = null, \Specpr $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Specpr\Record $_parent = null, \Specpr $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -271,8 +273,8 @@ class DataInitial extends \Kaitai\Struct\Struct {
 namespace \Specpr;
 
 class CoarseTimestamp extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Specpr\DataInitial $parent = null, \Specpr $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Specpr\DataInitial $_parent = null, \Specpr $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -297,8 +299,8 @@ class CoarseTimestamp extends \Kaitai\Struct\Struct {
 namespace \Specpr;
 
 class Icflag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Specpr\Record $parent = null, \Specpr $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Specpr\Record $_parent = null, \Specpr $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -374,8 +376,8 @@ class Icflag extends \Kaitai\Struct\Struct {
 namespace \Specpr;
 
 class DataContinuation extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Specpr\Record $parent = null, \Specpr $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Specpr\Record $_parent = null, \Specpr $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -397,8 +399,8 @@ class DataContinuation extends \Kaitai\Struct\Struct {
 namespace \Specpr;
 
 class Identifiers extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Specpr $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Specpr $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -423,8 +425,8 @@ class Identifiers extends \Kaitai\Struct\Struct {
 namespace \Specpr;
 
 class IllumAngle extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Specpr\DataInitial $parent = null, \Specpr $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Specpr\DataInitial $_parent = null, \Specpr $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -463,8 +465,8 @@ class IllumAngle extends \Kaitai\Struct\Struct {
 namespace \Specpr;
 
 class TextInitial extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Specpr\Record $parent = null, \Specpr $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Specpr\Record $_parent = null, \Specpr $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -499,8 +501,8 @@ class TextInitial extends \Kaitai\Struct\Struct {
 namespace \Specpr;
 
 class Record extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Specpr $parent = null, \Specpr $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Specpr $_parent = null, \Specpr $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -547,8 +549,8 @@ class Record extends \Kaitai\Struct\Struct {
 namespace \Specpr;
 
 class TextContinuation extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Specpr\Record $parent = null, \Specpr $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Specpr\Record $_parent = null, \Specpr $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

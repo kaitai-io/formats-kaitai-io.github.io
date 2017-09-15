@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class QuicktimeMov extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \QuicktimeMov $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \QuicktimeMov $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -17,8 +17,8 @@ class QuicktimeMov extends \Kaitai\Struct\Struct {
 namespace \QuicktimeMov;
 
 class MvhdBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \QuicktimeMov\Atom $parent = null, \QuicktimeMov $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \QuicktimeMov\Atom $_parent = null, \QuicktimeMov $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -132,8 +132,8 @@ class MvhdBody extends \Kaitai\Struct\Struct {
 namespace \QuicktimeMov;
 
 class FtypBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \QuicktimeMov\Atom $parent = null, \QuicktimeMov $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \QuicktimeMov\Atom $_parent = null, \QuicktimeMov $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -141,8 +141,10 @@ class FtypBody extends \Kaitai\Struct\Struct {
         $this->_m_majorBrand = $this->_io->readU4be();
         $this->_m_minorVersion = $this->_io->readBytes(4);
         $this->_m_compatibleBrands = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_compatibleBrands[] = $this->_io->readU4be();
+            $i++;
         }
     }
     protected $_m_majorBrand;
@@ -156,8 +158,8 @@ class FtypBody extends \Kaitai\Struct\Struct {
 namespace \QuicktimeMov;
 
 class Fixed32 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \QuicktimeMov $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \QuicktimeMov $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -174,8 +176,8 @@ class Fixed32 extends \Kaitai\Struct\Struct {
 namespace \QuicktimeMov;
 
 class Fixed16 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \QuicktimeMov\MvhdBody $parent = null, \QuicktimeMov $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \QuicktimeMov\MvhdBody $_parent = null, \QuicktimeMov $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -192,8 +194,8 @@ class Fixed16 extends \Kaitai\Struct\Struct {
 namespace \QuicktimeMov;
 
 class Atom extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \QuicktimeMov\AtomList $parent = null, \QuicktimeMov $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \QuicktimeMov\AtomList $_parent = null, \QuicktimeMov $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -286,8 +288,8 @@ class Atom extends \Kaitai\Struct\Struct {
 namespace \QuicktimeMov;
 
 class TkhdBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \QuicktimeMov\Atom $parent = null, \QuicktimeMov $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \QuicktimeMov\Atom $_parent = null, \QuicktimeMov $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -347,15 +349,17 @@ class TkhdBody extends \Kaitai\Struct\Struct {
 namespace \QuicktimeMov;
 
 class AtomList extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \QuicktimeMov $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \QuicktimeMov $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_items = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_items[] = new \QuicktimeMov\Atom($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_items;

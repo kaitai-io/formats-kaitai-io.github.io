@@ -42,8 +42,10 @@ class WindowsResourceFile(KaitaiStruct):
 
     def _read(self):
         self.resources = []
+        i = 0
         while not self._io.is_eof():
             self.resources.append(self._root.Resource(self._io, self, self._root))
+            i += 1
 
 
     class Resource(KaitaiStruct):
@@ -135,11 +137,13 @@ class WindowsResourceFile(KaitaiStruct):
 
             if self.is_string:
                 self.rest = []
+                i = 0
                 while True:
                     _ = self._io.read_u2le()
                     self.rest.append(_)
                     if _ == 0:
                         break
+                    i += 1
 
             if  ((self.is_string) and (self.save_pos2 >= 0)) :
                 self.noop = self._io.read_bytes(0)

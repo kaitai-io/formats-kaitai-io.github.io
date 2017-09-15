@@ -241,16 +241,18 @@ subtypes to force parsing in particular transfer syntax.</p>
  */
 
 class Dicom extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Dicom $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Dicom $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
 
     private function _read() {
         $this-&gt;_m_fileHeader = new \Dicom\TFileHeader($this-&gt;_io, $this, $this-&gt;_root);
         $this-&gt;_m_elements = [];
+        $i = 0;
         while (!$this-&gt;_io-&gt;isEof()) {
             $this-&gt;_m_elements[] = new \Dicom\TDataElementImplicit($this-&gt;_io, $this, $this-&gt;_root);
+            $i++;
         }
     }
     protected $_m_fileHeader;
@@ -262,8 +264,8 @@ class Dicom extends \Kaitai\Struct\Struct {
 namespace \Dicom;
 
 class TFileHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Dicom $parent = null, \Dicom $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Dicom $_parent = null, \Dicom $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
 
@@ -280,8 +282,8 @@ class TFileHeader extends \Kaitai\Struct\Struct {
 namespace \Dicom;
 
 class TDataElementExplicit extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Dicom $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Dicom $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
 
@@ -307,15 +309,19 @@ class TDataElementExplicit extends \Kaitai\Struct\Struct {
         }
         if ( (($this-&gt;vr() == &quot;SQ&quot;) &amp;&amp; ($this-&gt;valueLen() == 4294967295)) ) {
             $this-&gt;_m_items = [];
+            $i = 0;
             do {
                 $_ = new \Dicom\SeqItem($this-&gt;_io, $this, $this-&gt;_root);
                 $this-&gt;_m_items[] = $_;
+                $i++;
             } while (!($_-&gt;tagElem() == 57565));
         }
         if ($this-&gt;isTransferSyntaxChangeImplicit()) {
             $this-&gt;_m_elementsImplicit = [];
+            $i = 0;
             while (!$this-&gt;_io-&gt;isEof()) {
                 $this-&gt;_m_elementsImplicit[] = new \Dicom\TDataElementImplicit($this-&gt;_io, $this, $this-&gt;_root);
+                $i++;
             }
         }
     }
@@ -368,8 +374,8 @@ class TDataElementExplicit extends \Kaitai\Struct\Struct {
 namespace \Dicom;
 
 class TDataElementImplicit extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Dicom $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Dicom $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
 
@@ -395,15 +401,19 @@ class TDataElementImplicit extends \Kaitai\Struct\Struct {
         }
         if ( (($this-&gt;vr() == &quot;SQ&quot;) &amp;&amp; ($this-&gt;valueLen() == 4294967295)) ) {
             $this-&gt;_m_items = [];
+            $i = 0;
             do {
                 $_ = new \Dicom\SeqItem($this-&gt;_io, $this, $this-&gt;_root);
                 $this-&gt;_m_items[] = $_;
+                $i++;
             } while (!($_-&gt;tagElem() == 57565));
         }
         if ($this-&gt;isTransferSyntaxChangeExplicit()) {
             $this-&gt;_m_elements = [];
+            $i = 0;
             while (!$this-&gt;_io-&gt;isEof()) {
                 $this-&gt;_m_elements[] = new \Dicom\TDataElementExplicit($this-&gt;_io, $this, $this-&gt;_root);
+                $i++;
             }
         }
     }
@@ -463,8 +473,8 @@ class TDataElementImplicit extends \Kaitai\Struct\Struct {
 namespace \Dicom;
 
 class SeqItem extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Dicom $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Dicom $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
 
@@ -477,9 +487,11 @@ class SeqItem extends \Kaitai\Struct\Struct {
         }
         if ($this-&gt;valueLen() == 4294967295) {
             $this-&gt;_m_items = [];
+            $i = 0;
             do {
                 $_ = new \Dicom\TDataElementExplicit($this-&gt;_io, $this, $this-&gt;_root);
                 $this-&gt;_m_items[] = $_;
+                $i++;
             } while (!( (($_-&gt;tagGroup() == 65534) &amp;&amp; ($_-&gt;tagElem() == 57357)) ));
         }
     }

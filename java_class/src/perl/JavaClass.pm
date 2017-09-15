@@ -252,7 +252,7 @@ sub _read {
 sub name_as_str {
     my ($self) = @_;
     return $self->{name_as_str} if ($self->{name_as_str});
-    $self->{name_as_str} = $self->_root()->constant_pool()[($self->name_index() - 1)]->cp_info()->value();
+    $self->{name_as_str} = @{$self->_root()->constant_pool()}[($self->name_index() - 1)]->cp_info()->value();
     return $self->{name_as_str};
 }
 
@@ -404,7 +404,7 @@ sub catch_exception {
     my ($self) = @_;
     return $self->{catch_exception} if ($self->{catch_exception});
     if ($self->catch_type() != 0) {
-        $self->{catch_exception} = $self->_root()->constant_pool()[($self->catch_type() - 1)];
+        $self->{catch_exception} = @{$self->_root()->constant_pool()}[($self->catch_type() - 1)];
     }
     return $self->{catch_exception};
 }
@@ -513,7 +513,7 @@ sub _read {
 sub as_info {
     my ($self) = @_;
     return $self->{as_info} if ($self->{as_info});
-    $self->{as_info} = $self->_root()->constant_pool()[($self->index() - 1)]->cp_info();
+    $self->{as_info} = @{$self->_root()->constant_pool()}[($self->index() - 1)]->cp_info();
     return $self->{as_info};
 }
 
@@ -565,7 +565,7 @@ sub _read {
 sub sourcefile_as_str {
     my ($self) = @_;
     return $self->{sourcefile_as_str} if ($self->{sourcefile_as_str});
-    $self->{sourcefile_as_str} = $self->_root()->constant_pool()[($self->sourcefile_index() - 1)]->cp_info()->value();
+    $self->{sourcefile_as_str} = @{$self->_root()->constant_pool()}[($self->sourcefile_index() - 1)]->cp_info()->value();
     return $self->{sourcefile_as_str};
 }
 
@@ -703,14 +703,14 @@ sub _read {
 sub class_as_info {
     my ($self) = @_;
     return $self->{class_as_info} if ($self->{class_as_info});
-    $self->{class_as_info} = $self->_root()->constant_pool()[($self->class_index() - 1)]->cp_info();
+    $self->{class_as_info} = @{$self->_root()->constant_pool()}[($self->class_index() - 1)]->cp_info();
     return $self->{class_as_info};
 }
 
 sub name_and_type_as_info {
     my ($self) = @_;
     return $self->{name_and_type_as_info} if ($self->{name_and_type_as_info});
-    $self->{name_and_type_as_info} = $self->_root()->constant_pool()[($self->name_and_type_index() - 1)]->cp_info();
+    $self->{name_and_type_as_info} = @{$self->_root()->constant_pool()}[($self->name_and_type_index() - 1)]->cp_info();
     return $self->{name_and_type_as_info};
 }
 
@@ -768,7 +768,7 @@ sub _read {
 sub name_as_str {
     my ($self) = @_;
     return $self->{name_as_str} if ($self->{name_as_str});
-    $self->{name_as_str} = $self->_root()->constant_pool()[($self->name_index() - 1)]->cp_info()->value();
+    $self->{name_as_str} = @{$self->_root()->constant_pool()}[($self->name_index() - 1)]->cp_info()->value();
     return $self->{name_as_str};
 }
 
@@ -1008,7 +1008,7 @@ sub _read {
 sub name_as_info {
     my ($self) = @_;
     return $self->{name_as_info} if ($self->{name_as_info});
-    $self->{name_as_info} = $self->_root()->constant_pool()[($self->name_index() - 1)]->cp_info();
+    $self->{name_as_info} = @{$self->_root()->constant_pool()}[($self->name_index() - 1)]->cp_info();
     return $self->{name_as_info};
 }
 
@@ -1022,7 +1022,7 @@ sub name_as_str {
 sub descriptor_as_info {
     my ($self) = @_;
     return $self->{descriptor_as_info} if ($self->{descriptor_as_info});
-    $self->{descriptor_as_info} = $self->_root()->constant_pool()[($self->descriptor_index() - 1)]->cp_info();
+    $self->{descriptor_as_info} = @{$self->_root()->constant_pool()}[($self->descriptor_index() - 1)]->cp_info();
     return $self->{descriptor_as_info};
 }
 
@@ -1200,14 +1200,14 @@ sub _read {
 sub class_as_info {
     my ($self) = @_;
     return $self->{class_as_info} if ($self->{class_as_info});
-    $self->{class_as_info} = $self->_root()->constant_pool()[($self->class_index() - 1)]->cp_info();
+    $self->{class_as_info} = @{$self->_root()->constant_pool()}[($self->class_index() - 1)]->cp_info();
     return $self->{class_as_info};
 }
 
 sub name_and_type_as_info {
     my ($self) = @_;
     return $self->{name_and_type_as_info} if ($self->{name_and_type_as_info});
-    $self->{name_and_type_as_info} = $self->_root()->constant_pool()[($self->name_and_type_index() - 1)]->cp_info();
+    $self->{name_and_type_as_info} = @{$self->_root()->constant_pool()}[($self->name_and_type_index() - 1)]->cp_info();
     return $self->{name_and_type_as_info};
 }
 
@@ -1257,7 +1257,7 @@ sub _read {
 sub name_as_info {
     my ($self) = @_;
     return $self->{name_as_info} if ($self->{name_as_info});
-    $self->{name_as_info} = $self->_root()->constant_pool()[($self->name_index() - 1)]->cp_info();
+    $self->{name_as_info} = @{$self->_root()->constant_pool()}[($self->name_index() - 1)]->cp_info();
     return $self->{name_as_info};
 }
 
@@ -1418,7 +1418,7 @@ sub _read {
 sub name_as_str {
     my ($self) = @_;
     return $self->{name_as_str} if ($self->{name_as_str});
-    $self->{name_as_str} = $self->_root()->constant_pool()[($self->name_index() - 1)]->cp_info()->value();
+    $self->{name_as_str} = @{$self->_root()->constant_pool()}[($self->name_index() - 1)]->cp_info()->value();
     return $self->{name_as_str};
 }
 
@@ -1522,14 +1522,14 @@ sub _read {
 sub class_as_info {
     my ($self) = @_;
     return $self->{class_as_info} if ($self->{class_as_info});
-    $self->{class_as_info} = $self->_root()->constant_pool()[($self->class_index() - 1)]->cp_info();
+    $self->{class_as_info} = @{$self->_root()->constant_pool()}[($self->class_index() - 1)]->cp_info();
     return $self->{class_as_info};
 }
 
 sub name_and_type_as_info {
     my ($self) = @_;
     return $self->{name_and_type_as_info} if ($self->{name_and_type_as_info});
-    $self->{name_and_type_as_info} = $self->_root()->constant_pool()[($self->name_and_type_index() - 1)]->cp_info();
+    $self->{name_and_type_as_info} = @{$self->_root()->constant_pool()}[($self->name_and_type_index() - 1)]->cp_info();
     return $self->{name_and_type_as_info};
 }
 

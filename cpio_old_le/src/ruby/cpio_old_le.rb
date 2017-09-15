@@ -14,8 +14,10 @@ class CpioOldLe < Kaitai::Struct::Struct
 
   def _read
     @files = []
+    i = 0
     while not @_io.eof?
       @files << File.new(@_io, self, @_root)
+      i += 1
     end
     self
   end

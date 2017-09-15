@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 
 public class Iso9660 extends KaitaiStruct {
     public static Iso9660 fromFile(String fileName) throws IOException {
-        return new Iso9660(new KaitaiStream(fileName));
+        return new Iso9660(new ByteBufferKaitaiStream(fileName));
     }
 
     public Iso9660(KaitaiStream _io) {
@@ -29,7 +30,7 @@ public class Iso9660 extends KaitaiStruct {
     }
     public static class VolDescPrimary extends KaitaiStruct {
         public static VolDescPrimary fromFile(String fileName) throws IOException {
-            return new VolDescPrimary(new KaitaiStream(fileName));
+            return new VolDescPrimary(new ByteBufferKaitaiStream(fileName));
         }
 
         public VolDescPrimary(KaitaiStream _io) {
@@ -62,7 +63,7 @@ public class Iso9660 extends KaitaiStruct {
             this.lbaPathTableBe = this._io.readU4be();
             this.lbaOptPathTableBe = this._io.readU4be();
             this._raw_rootDir = this._io.readBytes(34);
-            KaitaiStream _io__raw_rootDir = new KaitaiStream(_raw_rootDir);
+            KaitaiStream _io__raw_rootDir = new ByteBufferKaitaiStream(_raw_rootDir);
             this.rootDir = new DirEntry(_io__raw_rootDir, this, _root);
             this.volSetId = new String(this._io.readBytes(128), Charset.forName("UTF-8"));
             this.publisherId = new String(this._io.readBytes(128), Charset.forName("UTF-8"));
@@ -86,7 +87,7 @@ public class Iso9660 extends KaitaiStruct {
             long _pos = this._io.pos();
             this._io.seek((lbaPathTableLe() * _root.sectorSize()));
             this._raw_pathTable = this._io.readBytes(pathTableSize().le());
-            KaitaiStream _io__raw_pathTable = new KaitaiStream(_raw_pathTable);
+            KaitaiStream _io__raw_pathTable = new ByteBufferKaitaiStream(_raw_pathTable);
             this.pathTable = new PathTableLe(_io__raw_pathTable, this, _root);
             this._io.seek(_pos);
             return this.pathTable;
@@ -160,7 +161,7 @@ public class Iso9660 extends KaitaiStruct {
     }
     public static class VolDescBootRecord extends KaitaiStruct {
         public static VolDescBootRecord fromFile(String fileName) throws IOException {
-            return new VolDescBootRecord(new KaitaiStream(fileName));
+            return new VolDescBootRecord(new ByteBufferKaitaiStream(fileName));
         }
 
         public VolDescBootRecord(KaitaiStream _io) {
@@ -192,7 +193,7 @@ public class Iso9660 extends KaitaiStruct {
     }
     public static class Datetime extends KaitaiStruct {
         public static Datetime fromFile(String fileName) throws IOException {
-            return new Datetime(new KaitaiStream(fileName));
+            return new Datetime(new ByteBufferKaitaiStream(fileName));
         }
 
         public Datetime(KaitaiStream _io) {
@@ -239,7 +240,7 @@ public class Iso9660 extends KaitaiStruct {
     }
     public static class DirEntry extends KaitaiStruct {
         public static DirEntry fromFile(String fileName) throws IOException {
-            return new DirEntry(new KaitaiStream(fileName));
+            return new DirEntry(new ByteBufferKaitaiStream(fileName));
         }
 
         public DirEntry(KaitaiStream _io) {
@@ -260,7 +261,7 @@ public class Iso9660 extends KaitaiStruct {
             this.len = this._io.readU1();
             if (len() > 0) {
                 this._raw_body = this._io.readBytes((len() - 1));
-                KaitaiStream _io__raw_body = new KaitaiStream(_raw_body);
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new DirEntryBody(_io__raw_body, this, _root);
             }
         }
@@ -277,7 +278,7 @@ public class Iso9660 extends KaitaiStruct {
     }
     public static class VolDesc extends KaitaiStruct {
         public static VolDesc fromFile(String fileName) throws IOException {
-            return new VolDesc(new KaitaiStream(fileName));
+            return new VolDesc(new ByteBufferKaitaiStream(fileName));
         }
 
         public VolDesc(KaitaiStream _io) {
@@ -322,7 +323,7 @@ public class Iso9660 extends KaitaiStruct {
     }
     public static class PathTableEntryLe extends KaitaiStruct {
         public static PathTableEntryLe fromFile(String fileName) throws IOException {
-            return new PathTableEntryLe(new KaitaiStream(fileName));
+            return new PathTableEntryLe(new ByteBufferKaitaiStream(fileName));
         }
 
         public PathTableEntryLe(KaitaiStream _io) {
@@ -368,7 +369,7 @@ public class Iso9660 extends KaitaiStruct {
     }
     public static class DirEntries extends KaitaiStruct {
         public static DirEntries fromFile(String fileName) throws IOException {
-            return new DirEntries(new KaitaiStream(fileName));
+            return new DirEntries(new ByteBufferKaitaiStream(fileName));
         }
 
         public DirEntries(KaitaiStream _io) {
@@ -389,9 +390,11 @@ public class Iso9660 extends KaitaiStruct {
             this.entries = new ArrayList<DirEntry>();
             {
                 DirEntry _it;
+                int i = 0;
                 do {
                     _it = new DirEntry(this._io, this, _root);
                     this.entries.add(_it);
+                    i++;
                 } while (!(_it.len() == 0));
             }
         }
@@ -404,7 +407,7 @@ public class Iso9660 extends KaitaiStruct {
     }
     public static class U4bi extends KaitaiStruct {
         public static U4bi fromFile(String fileName) throws IOException {
-            return new U4bi(new KaitaiStream(fileName));
+            return new U4bi(new ByteBufferKaitaiStream(fileName));
         }
 
         public U4bi(KaitaiStream _io) {
@@ -436,7 +439,7 @@ public class Iso9660 extends KaitaiStruct {
     }
     public static class U2bi extends KaitaiStruct {
         public static U2bi fromFile(String fileName) throws IOException {
-            return new U2bi(new KaitaiStream(fileName));
+            return new U2bi(new ByteBufferKaitaiStream(fileName));
         }
 
         public U2bi(KaitaiStream _io) {
@@ -468,7 +471,7 @@ public class Iso9660 extends KaitaiStruct {
     }
     public static class PathTableLe extends KaitaiStruct {
         public static PathTableLe fromFile(String fileName) throws IOException {
-            return new PathTableLe(new KaitaiStream(fileName));
+            return new PathTableLe(new ByteBufferKaitaiStream(fileName));
         }
 
         public PathTableLe(KaitaiStream _io) {
@@ -487,8 +490,12 @@ public class Iso9660 extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<PathTableEntryLe>();
-            while (!this._io.isEof()) {
-                this.entries.add(new PathTableEntryLe(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new PathTableEntryLe(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<PathTableEntryLe> entries;
@@ -500,7 +507,7 @@ public class Iso9660 extends KaitaiStruct {
     }
     public static class DecDatetime extends KaitaiStruct {
         public static DecDatetime fromFile(String fileName) throws IOException {
-            return new DecDatetime(new KaitaiStream(fileName));
+            return new DecDatetime(new ByteBufferKaitaiStream(fileName));
         }
 
         public DecDatetime(KaitaiStream _io) {
@@ -550,7 +557,7 @@ public class Iso9660 extends KaitaiStruct {
     }
     public static class DirEntryBody extends KaitaiStruct {
         public static DirEntryBody fromFile(String fileName) throws IOException {
-            return new DirEntryBody(new KaitaiStream(fileName));
+            return new DirEntryBody(new ByteBufferKaitaiStream(fileName));
         }
 
         public DirEntryBody(KaitaiStream _io) {
@@ -592,7 +599,7 @@ public class Iso9660 extends KaitaiStruct {
                 long _pos = io.pos();
                 io.seek((lbaExtent().le() * _root.sectorSize()));
                 this._raw_extentAsDir = io.readBytes(sizeExtent().le());
-                KaitaiStream _io__raw_extentAsDir = new KaitaiStream(_raw_extentAsDir);
+                KaitaiStream _io__raw_extentAsDir = new ByteBufferKaitaiStream(_raw_extentAsDir);
                 this.extentAsDir = new DirEntries(_io__raw_extentAsDir, this, _root);
                 io.seek(_pos);
             }

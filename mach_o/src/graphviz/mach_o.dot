@@ -8,8 +8,8 @@ digraph {
 		mach_o__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>u4be→MagicType</TD><TD PORT="magic_type">magic</TD></TR>
-			<TR><TD PORT="header_pos">4</TD><TD PORT="header_size">...</TD><TD>MachHeader</TD><TD PORT="header_type">header</TD></TR>
-			<TR><TD PORT="load_commands_pos">...</TD><TD PORT="load_commands_size">...</TD><TD>LoadCommand</TD><TD PORT="load_commands_type">load_commands</TD></TR>
+			<TR><TD PORT="header_pos">4</TD><TD PORT="header_size">28</TD><TD>MachHeader</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="load_commands_pos">32</TD><TD PORT="load_commands_size">...</TD><TD>LoadCommand</TD><TD PORT="load_commands_type">load_commands</TD></TR>
 			<TR><TD COLSPAN="4" PORT="load_commands__repeat">repeat header.ncmds times</TD></TR>
 		</TABLE>>];
 		subgraph cluster__rpath_command {
@@ -149,7 +149,7 @@ cs_blob__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0
 				super_blob__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="count_pos">0</TD><TD PORT="count_size">4</TD><TD>u4be</TD><TD PORT="count_type">count</TD></TR>
-					<TR><TD PORT="blobs_pos">4</TD><TD PORT="blobs_size">...</TD><TD>BlobIndex</TD><TD PORT="blobs_type">blobs</TD></TR>
+					<TR><TD PORT="blobs_pos">4</TD><TD PORT="blobs_size">8</TD><TD>BlobIndex</TD><TD PORT="blobs_type">blobs</TD></TR>
 					<TR><TD COLSPAN="4" PORT="blobs__repeat">repeat count times</TD></TR>
 				</TABLE>>];
 			}
@@ -331,10 +331,43 @@ expr__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				entitlements__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="count_pos">0</TD><TD PORT="count_size">4</TD><TD>u4be</TD><TD PORT="count_type">count</TD></TR>
-					<TR><TD PORT="items_pos">4</TD><TD PORT="items_size">...</TD><TD>EntitlementsBlobIndex</TD><TD PORT="items_type">items</TD></TR>
+					<TR><TD PORT="items_pos">4</TD><TD PORT="items_size">8</TD><TD>EntitlementsBlobIndex</TD><TD PORT="items_type">items</TD></TR>
 					<TR><TD COLSPAN="4" PORT="items__repeat">repeat count times</TD></TR>
 				</TABLE>>];
 			}
+		}
+		subgraph cluster__routines_command {
+			label="MachO::RoutinesCommand";
+			graph[style=dotted];
+
+			routines_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="init_address_pos">0</TD><TD PORT="init_address_size">4</TD><TD>u4le</TD><TD PORT="init_address_type">init_address</TD></TR>
+				<TR><TD PORT="init_module_pos">4</TD><TD PORT="init_module_size">4</TD><TD>u4le</TD><TD PORT="init_module_type">init_module</TD></TR>
+				<TR><TD PORT="reserved_pos">8</TD><TD PORT="reserved_size">24</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__routines_command_64 {
+			label="MachO::RoutinesCommand64";
+			graph[style=dotted];
+
+			routines_command_64__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="init_address_pos">0</TD><TD PORT="init_address_size">8</TD><TD>u8le</TD><TD PORT="init_address_type">init_address</TD></TR>
+				<TR><TD PORT="init_module_pos">8</TD><TD PORT="init_module_size">8</TD><TD>u8le</TD><TD PORT="init_module_type">init_module</TD></TR>
+				<TR><TD PORT="reserved_pos">16</TD><TD PORT="reserved_size">48</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__linker_option_command {
+			label="MachO::LinkerOptionCommand";
+			graph[style=dotted];
+
+			linker_option_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_strings_pos">0</TD><TD PORT="num_strings_size">4</TD><TD>u4le</TD><TD PORT="num_strings_type">num_strings</TD></TR>
+				<TR><TD PORT="strings_pos">4</TD><TD PORT="strings_size">...</TD><TD>str(utf-8)</TD><TD PORT="strings_type">strings</TD></TR>
+				<TR><TD COLSPAN="4" PORT="strings__repeat">repeat num_strings times</TD></TR>
+			</TABLE>>];
 		}
 		subgraph cluster__segment_command_64 {
 			label="MachO::SegmentCommand64";
@@ -347,11 +380,11 @@ expr__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD PORT="vmsize_pos">24</TD><TD PORT="vmsize_size">8</TD><TD>u8le</TD><TD PORT="vmsize_type">vmsize</TD></TR>
 				<TR><TD PORT="fileoff_pos">32</TD><TD PORT="fileoff_size">8</TD><TD>u8le</TD><TD PORT="fileoff_type">fileoff</TD></TR>
 				<TR><TD PORT="filesize_pos">40</TD><TD PORT="filesize_size">8</TD><TD>u8le</TD><TD PORT="filesize_type">filesize</TD></TR>
-				<TR><TD PORT="maxprot_pos">48</TD><TD PORT="maxprot_size">4</TD><TD>u4le→VmProt</TD><TD PORT="maxprot_type">maxprot</TD></TR>
-				<TR><TD PORT="initprot_pos">52</TD><TD PORT="initprot_size">4</TD><TD>u4le→VmProt</TD><TD PORT="initprot_type">initprot</TD></TR>
+				<TR><TD PORT="maxprot_pos">48</TD><TD PORT="maxprot_size">4</TD><TD>VmProt</TD><TD PORT="maxprot_type">maxprot</TD></TR>
+				<TR><TD PORT="initprot_pos">52</TD><TD PORT="initprot_size">4</TD><TD>VmProt</TD><TD PORT="initprot_type">initprot</TD></TR>
 				<TR><TD PORT="nsects_pos">56</TD><TD PORT="nsects_size">4</TD><TD>u4le</TD><TD PORT="nsects_type">nsects</TD></TR>
 				<TR><TD PORT="flags_pos">60</TD><TD PORT="flags_size">4</TD><TD>u4le</TD><TD PORT="flags_type">flags</TD></TR>
-				<TR><TD PORT="sections_pos">64</TD><TD PORT="sections_size">...</TD><TD>Section64</TD><TD PORT="sections_type">sections</TD></TR>
+				<TR><TD PORT="sections_pos">64</TD><TD PORT="sections_size">80</TD><TD>Section64</TD><TD PORT="sections_type">sections</TD></TR>
 				<TR><TD COLSPAN="4" PORT="sections__repeat">repeat nsects times</TD></TR>
 			</TABLE>>];
 			subgraph cluster__section_64 {
@@ -403,7 +436,7 @@ section_64__inst__data_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELL
 
 					cf_string_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-						<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">...</TD><TD>CfString</TD><TD PORT="items_type">items</TD></TR>
+						<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">32</TD><TD>CfString</TD><TD PORT="items_type">items</TD></TR>
 						<TR><TD COLSPAN="4" PORT="items__repeat">repeat to end of stream</TD></TR>
 					</TABLE>>];
 				}
@@ -452,10 +485,10 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 							<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">1</TD><TD>u1</TD><TD PORT="version_type">version</TD></TR>
 							<TR><TD PORT="aug_str_pos">1</TD><TD PORT="aug_str_size">...</TD><TD>CharChain</TD><TD PORT="aug_str_type">aug_str</TD></TR>
-							<TR><TD PORT="code_alignment_factor_pos">...</TD><TD PORT="code_alignment_factor_size">...</TD><TD>Uleb128</TD><TD PORT="code_alignment_factor_type">code_alignment_factor</TD></TR>
-							<TR><TD PORT="data_alignment_factor_pos">...</TD><TD PORT="data_alignment_factor_size">...</TD><TD>Uleb128</TD><TD PORT="data_alignment_factor_type">data_alignment_factor</TD></TR>
+							<TR><TD PORT="code_alignment_factor_pos">...</TD><TD PORT="code_alignment_factor_size">10</TD><TD>Uleb128</TD><TD PORT="code_alignment_factor_type">code_alignment_factor</TD></TR>
+							<TR><TD PORT="data_alignment_factor_pos">...</TD><TD PORT="data_alignment_factor_size">10</TD><TD>Uleb128</TD><TD PORT="data_alignment_factor_type">data_alignment_factor</TD></TR>
 							<TR><TD PORT="return_address_register_pos">...</TD><TD PORT="return_address_register_size">1</TD><TD>u1</TD><TD PORT="return_address_register_type">return_address_register</TD></TR>
-							<TR><TD PORT="augmentation_pos">...</TD><TD PORT="augmentation_size">...</TD><TD>AugmentationEntry</TD><TD PORT="augmentation_type">augmentation</TD></TR>
+							<TR><TD PORT="augmentation_pos">...</TD><TD PORT="augmentation_size">11</TD><TD>AugmentationEntry</TD><TD PORT="augmentation_type">augmentation</TD></TR>
 						</TABLE>>];
 					}
 					subgraph cluster__augmentation_entry {
@@ -464,8 +497,8 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 
 						augmentation_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-							<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">...</TD><TD>Uleb128</TD><TD PORT="length_type">length</TD></TR>
-							<TR><TD PORT="fde_pointer_encoding_pos">...</TD><TD PORT="fde_pointer_encoding_size">1</TD><TD>u1</TD><TD PORT="fde_pointer_encoding_type">fde_pointer_encoding</TD></TR>
+							<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">10</TD><TD>Uleb128</TD><TD PORT="length_type">length</TD></TR>
+							<TR><TD PORT="fde_pointer_encoding_pos">10</TD><TD PORT="fde_pointer_encoding_size">1</TD><TD>u1</TD><TD PORT="fde_pointer_encoding_type">fde_pointer_encoding</TD></TR>
 						</TABLE>>];
 					}
 				}
@@ -500,6 +533,23 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 					</TABLE>>];
 				}
 			}
+		}
+		subgraph cluster__vm_prot {
+			label="MachO::VmProt";
+			graph[style=dotted];
+
+			vm_prot__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="strip_read_pos">0</TD><TD PORT="strip_read_size">1b</TD><TD>BitsType1</TD><TD PORT="strip_read_type">strip_read</TD></TR>
+				<TR><TD PORT="is_mask_pos">0:1</TD><TD PORT="is_mask_size">1b</TD><TD>BitsType1</TD><TD PORT="is_mask_type">is_mask</TD></TR>
+				<TR><TD PORT="reserved0_pos">0:2</TD><TD PORT="reserved0_size">1b</TD><TD>BitsType1</TD><TD PORT="reserved0_type">reserved0</TD></TR>
+				<TR><TD PORT="copy_pos">0:3</TD><TD PORT="copy_size">1b</TD><TD>BitsType1</TD><TD PORT="copy_type">copy</TD></TR>
+				<TR><TD PORT="no_change_pos">0:4</TD><TD PORT="no_change_size">1b</TD><TD>BitsType1</TD><TD PORT="no_change_type">no_change</TD></TR>
+				<TR><TD PORT="execute_pos">0:5</TD><TD PORT="execute_size">1b</TD><TD>BitsType1</TD><TD PORT="execute_type">execute</TD></TR>
+				<TR><TD PORT="write_pos">0:6</TD><TD PORT="write_size">1b</TD><TD>BitsType1</TD><TD PORT="write_type">write</TD></TR>
+				<TR><TD PORT="read_pos">0:7</TD><TD PORT="read_size">1b</TD><TD>BitsType1</TD><TD PORT="read_type">read</TD></TR>
+				<TR><TD PORT="reserved1_pos">1</TD><TD PORT="reserved1_size">3</TD><TD>b24</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+			</TABLE>>];
 		}
 		subgraph cluster__dysymtab_command {
 			label="MachO::DysymtabCommand";
@@ -557,6 +607,25 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 				<TR><TD PORT="data_size_pos">4</TD><TD PORT="data_size_size">4</TD><TD>u4le</TD><TD PORT="data_size_type">data_size</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__sub_command {
+			label="MachO::SubCommand";
+			graph[style=dotted];
+
+			sub_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">...</TD><TD>LcStr</TD><TD PORT="name_type">name</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__twolevel_hints_command {
+			label="MachO::TwolevelHintsCommand";
+			graph[style=dotted];
+
+			twolevel_hints_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="offset_pos">0</TD><TD PORT="offset_size">4</TD><TD>u4le</TD><TD PORT="offset_type">offset</TD></TR>
+				<TR><TD PORT="num_hints_pos">4</TD><TD PORT="num_hints_size">4</TD><TD>u4le</TD><TD PORT="num_hints_type">num_hints</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__version {
 			label="MachO::Version";
 			graph[style=dotted];
@@ -567,6 +636,18 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 				<TR><TD PORT="minor_pos">1</TD><TD PORT="minor_size">1</TD><TD>u1</TD><TD PORT="minor_type">minor</TD></TR>
 				<TR><TD PORT="major_pos">2</TD><TD PORT="major_size">1</TD><TD>u1</TD><TD PORT="major_type">major</TD></TR>
 				<TR><TD PORT="release_pos">3</TD><TD PORT="release_size">1</TD><TD>u1</TD><TD PORT="release_type">release</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__encryption_info_command {
+			label="MachO::EncryptionInfoCommand";
+			graph[style=dotted];
+
+			encryption_info_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="cryptoff_pos">0</TD><TD PORT="cryptoff_size">4</TD><TD>u4le</TD><TD PORT="cryptoff_type">cryptoff</TD></TR>
+				<TR><TD PORT="cryptsize_pos">4</TD><TD PORT="cryptsize_size">4</TD><TD>u4le</TD><TD PORT="cryptsize_type">cryptsize</TD></TR>
+				<TR><TD PORT="cryptid_pos">8</TD><TD PORT="cryptid_size">4</TD><TD>u4le</TD><TD PORT="cryptid_type">cryptid</TD></TR>
+				<TR><TD PORT="pad_pos">12</TD><TD PORT="pad_size">4</TD><TD>u4le</TD><TD PORT="pad_type">pad</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__code_signature_command {
@@ -623,9 +704,9 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 				bind_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="opcode_and_immediate_pos">0</TD><TD PORT="opcode_and_immediate_size">1</TD><TD>u1</TD><TD PORT="opcode_and_immediate_type">opcode_and_immediate</TD></TR>
-					<TR><TD PORT="uleb_pos">1</TD><TD PORT="uleb_size">...</TD><TD>Uleb128</TD><TD PORT="uleb_type">uleb</TD></TR>
-					<TR><TD PORT="skip_pos">...</TD><TD PORT="skip_size">...</TD><TD>Uleb128</TD><TD PORT="skip_type">skip</TD></TR>
-					<TR><TD PORT="symbol_pos">...</TD><TD PORT="symbol_size">...</TD><TD>str(ascii)</TD><TD PORT="symbol_type">symbol</TD></TR>
+					<TR><TD PORT="uleb_pos">1</TD><TD PORT="uleb_size">10</TD><TD>Uleb128</TD><TD PORT="uleb_type">uleb</TD></TR>
+					<TR><TD PORT="skip_pos">11</TD><TD PORT="skip_size">10</TD><TD>Uleb128</TD><TD PORT="skip_type">skip</TD></TR>
+					<TR><TD PORT="symbol_pos">21</TD><TD PORT="symbol_size">...</TD><TD>str(ascii)</TD><TD PORT="symbol_type">symbol</TD></TR>
 				</TABLE>>];
 				bind_item__inst__opcode [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
@@ -642,7 +723,7 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 
 				rebase_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">...</TD><TD>RebaseItem</TD><TD PORT="items_type">items</TD></TR>
+					<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">21</TD><TD>RebaseItem</TD><TD PORT="items_type">items</TD></TR>
 					<TR><TD COLSPAN="4" PORT="items__repeat">repeat until _.opcode == :opcode_done</TD></TR>
 				</TABLE>>];
 				subgraph cluster__rebase_item {
@@ -652,8 +733,8 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 					rebase_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 						<TR><TD PORT="opcode_and_immediate_pos">0</TD><TD PORT="opcode_and_immediate_size">1</TD><TD>u1</TD><TD PORT="opcode_and_immediate_type">opcode_and_immediate</TD></TR>
-						<TR><TD PORT="uleb_pos">1</TD><TD PORT="uleb_size">...</TD><TD>Uleb128</TD><TD PORT="uleb_type">uleb</TD></TR>
-						<TR><TD PORT="skip_pos">...</TD><TD PORT="skip_size">...</TD><TD>Uleb128</TD><TD PORT="skip_type">skip</TD></TR>
+						<TR><TD PORT="uleb_pos">1</TD><TD PORT="uleb_size">10</TD><TD>Uleb128</TD><TD PORT="uleb_type">uleb</TD></TR>
+						<TR><TD PORT="skip_pos">11</TD><TD PORT="skip_size">10</TD><TD>Uleb128</TD><TD PORT="skip_type">skip</TD></TR>
 					</TABLE>>];
 					rebase_item__inst__opcode [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
@@ -671,9 +752,9 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 
 				export_node__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="terminal_size_pos">0</TD><TD PORT="terminal_size_size">...</TD><TD>Uleb128</TD><TD PORT="terminal_size_type">terminal_size</TD></TR>
-					<TR><TD PORT="children_count_pos">...</TD><TD PORT="children_count_size">1</TD><TD>u1</TD><TD PORT="children_count_type">children_count</TD></TR>
-					<TR><TD PORT="children_pos">...</TD><TD PORT="children_size">...</TD><TD>Child</TD><TD PORT="children_type">children</TD></TR>
+					<TR><TD PORT="terminal_size_pos">0</TD><TD PORT="terminal_size_size">10</TD><TD>Uleb128</TD><TD PORT="terminal_size_type">terminal_size</TD></TR>
+					<TR><TD PORT="children_count_pos">10</TD><TD PORT="children_count_size">1</TD><TD>u1</TD><TD PORT="children_count_type">children_count</TD></TR>
+					<TR><TD PORT="children_pos">11</TD><TD PORT="children_size">...</TD><TD>Child</TD><TD PORT="children_type">children</TD></TR>
 					<TR><TD COLSPAN="4" PORT="children__repeat">repeat children_count times</TD></TR>
 					<TR><TD PORT="terminal_pos">...</TD><TD PORT="terminal_size">terminal_size.value</TD><TD></TD><TD PORT="terminal_type">terminal</TD></TR>
 				</TABLE>>];
@@ -684,7 +765,7 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 					child__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 						<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">...</TD><TD>str(ascii)</TD><TD PORT="name_type">name</TD></TR>
-						<TR><TD PORT="node_offset_pos">...</TD><TD PORT="node_offset_size">...</TD><TD>Uleb128</TD><TD PORT="node_offset_type">node_offset</TD></TR>
+						<TR><TD PORT="node_offset_pos">...</TD><TD PORT="node_offset_size">10</TD><TD>Uleb128</TD><TD PORT="node_offset_type">node_offset</TD></TR>
 					</TABLE>>];
 					child__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
@@ -757,20 +838,44 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 			</TABLE>>];
 load_command__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:load_command_type_rpath</TD><TD PORT="case0">RpathCommand</TD></TR>
-	<TR><TD>:load_command_type_source_version</TD><TD PORT="case1">SourceVersionCommand</TD></TR>
-	<TR><TD>:load_command_type_load_dylinker</TD><TD PORT="case2">DylinkerCommand</TD></TR>
-	<TR><TD>:load_command_type_symtab</TD><TD PORT="case3">SymtabCommand</TD></TR>
-	<TR><TD>:load_command_type_main</TD><TD PORT="case4">EntryPointCommand</TD></TR>
-	<TR><TD>:load_command_type_function_starts</TD><TD PORT="case5">LinkeditDataCommand</TD></TR>
-	<TR><TD>:load_command_type_version_min_macosx</TD><TD PORT="case6">VersionMinCommand</TD></TR>
-	<TR><TD>:load_command_type_data_in_code</TD><TD PORT="case7">LinkeditDataCommand</TD></TR>
-	<TR><TD>:load_command_type_uuid</TD><TD PORT="case8">UuidCommand</TD></TR>
-	<TR><TD>:load_command_type_dyld_info_only</TD><TD PORT="case9">DyldInfoCommand</TD></TR>
-	<TR><TD>:load_command_type_code_signature</TD><TD PORT="case10">CodeSignatureCommand</TD></TR>
-	<TR><TD>:load_command_type_dysymtab</TD><TD PORT="case11">DysymtabCommand</TD></TR>
-	<TR><TD>:load_command_type_load_dylib</TD><TD PORT="case12">DylibCommand</TD></TR>
-	<TR><TD>:load_command_type_segment_64</TD><TD PORT="case13">SegmentCommand64</TD></TR>
+	<TR><TD>:load_command_type_sub_library</TD><TD PORT="case0">SubCommand</TD></TR>
+	<TR><TD>:load_command_type_segment_split_info</TD><TD PORT="case1">LinkeditDataCommand</TD></TR>
+	<TR><TD>:load_command_type_rpath</TD><TD PORT="case2">RpathCommand</TD></TR>
+	<TR><TD>:load_command_type_source_version</TD><TD PORT="case3">SourceVersionCommand</TD></TR>
+	<TR><TD>:load_command_type_encryption_info_64</TD><TD PORT="case4">EncryptionInfoCommand</TD></TR>
+	<TR><TD>:load_command_type_version_min_tvos</TD><TD PORT="case5">VersionMinCommand</TD></TR>
+	<TR><TD>:load_command_type_load_dylinker</TD><TD PORT="case6">DylinkerCommand</TD></TR>
+	<TR><TD>:load_command_type_sub_framework</TD><TD PORT="case7">SubCommand</TD></TR>
+	<TR><TD>:load_command_type_load_weak_dylib</TD><TD PORT="case8">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_version_min_iphoneos</TD><TD PORT="case9">VersionMinCommand</TD></TR>
+	<TR><TD>:load_command_type_linker_optimization_hint</TD><TD PORT="case10">LinkeditDataCommand</TD></TR>
+	<TR><TD>:load_command_type_dyld_environment</TD><TD PORT="case11">DylinkerCommand</TD></TR>
+	<TR><TD>:load_command_type_load_upward_dylib</TD><TD PORT="case12">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_dylib_code_sign_drs</TD><TD PORT="case13">LinkeditDataCommand</TD></TR>
+	<TR><TD>:load_command_type_dyld_info</TD><TD PORT="case14">DyldInfoCommand</TD></TR>
+	<TR><TD>:load_command_type_reexport_dylib</TD><TD PORT="case15">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_symtab</TD><TD PORT="case16">SymtabCommand</TD></TR>
+	<TR><TD>:load_command_type_routines_64</TD><TD PORT="case17">RoutinesCommand64</TD></TR>
+	<TR><TD>:load_command_type_id_dylinker</TD><TD PORT="case18">DylinkerCommand</TD></TR>
+	<TR><TD>:load_command_type_main</TD><TD PORT="case19">EntryPointCommand</TD></TR>
+	<TR><TD>:load_command_type_function_starts</TD><TD PORT="case20">LinkeditDataCommand</TD></TR>
+	<TR><TD>:load_command_type_version_min_macosx</TD><TD PORT="case21">VersionMinCommand</TD></TR>
+	<TR><TD>:load_command_type_data_in_code</TD><TD PORT="case22">LinkeditDataCommand</TD></TR>
+	<TR><TD>:load_command_type_version_min_watchos</TD><TD PORT="case23">VersionMinCommand</TD></TR>
+	<TR><TD>:load_command_type_encryption_info</TD><TD PORT="case24">EncryptionInfoCommand</TD></TR>
+	<TR><TD>:load_command_type_sub_umbrella</TD><TD PORT="case25">SubCommand</TD></TR>
+	<TR><TD>:load_command_type_linker_option</TD><TD PORT="case26">LinkerOptionCommand</TD></TR>
+	<TR><TD>:load_command_type_twolevel_hints</TD><TD PORT="case27">TwolevelHintsCommand</TD></TR>
+	<TR><TD>:load_command_type_uuid</TD><TD PORT="case28">UuidCommand</TD></TR>
+	<TR><TD>:load_command_type_dyld_info_only</TD><TD PORT="case29">DyldInfoCommand</TD></TR>
+	<TR><TD>:load_command_type_lazy_load_dylib</TD><TD PORT="case30">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_sub_client</TD><TD PORT="case31">SubCommand</TD></TR>
+	<TR><TD>:load_command_type_routines</TD><TD PORT="case32">RoutinesCommand</TD></TR>
+	<TR><TD>:load_command_type_code_signature</TD><TD PORT="case33">CodeSignatureCommand</TD></TR>
+	<TR><TD>:load_command_type_dysymtab</TD><TD PORT="case34">DysymtabCommand</TD></TR>
+	<TR><TD>:load_command_type_load_dylib</TD><TD PORT="case35">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_segment_64</TD><TD PORT="case36">SegmentCommand64</TD></TR>
+	<TR><TD>:load_command_type_id_dylib</TD><TD PORT="case37">DylibCommand</TD></TR>
 </TABLE>>];
 		}
 		subgraph cluster__uuid_command {
@@ -795,7 +900,7 @@ load_command__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 			</TABLE>>];
 			symtab_command__inst__symbols [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="symbols_pos">sym_off</TD><TD PORT="symbols_size">...</TD><TD>Nlist64</TD><TD PORT="symbols_type">symbols</TD></TR>
+				<TR><TD PORT="symbols_pos">sym_off</TD><TD PORT="symbols_size">16</TD><TD>Nlist64</TD><TD PORT="symbols_type">symbols</TD></TR>
 				<TR><TD COLSPAN="4" PORT="symbols__repeat">repeat n_syms times</TD></TR>
 			</TABLE>>];
 			symtab_command__inst__strs [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
@@ -833,8 +938,8 @@ load_command__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 
 			version_min_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">...</TD><TD>Version</TD><TD PORT="version_type">version</TD></TR>
-				<TR><TD PORT="reserved_pos">...</TD><TD PORT="reserved_size">...</TD><TD>Version</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">4</TD><TD>Version</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="sdk_pos">4</TD><TD PORT="sdk_size">4</TD><TD>Version</TD><TD PORT="sdk_type">sdk</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__entry_point_command {
@@ -928,6 +1033,9 @@ load_command__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 	requirement__seq:expr_type -> expr__seq [style=bold];
 	entitlements__seq:items_type -> entitlements_blob_index__seq [style=bold];
 	entitlements__seq:count_type -> entitlements__seq:items__repeat [color="#404040"];
+	linker_option_command__seq:num_strings_type -> linker_option_command__seq:strings__repeat [color="#404040"];
+	segment_command_64__seq:maxprot_type -> vm_prot__seq [style=bold];
+	segment_command_64__seq:initprot_type -> vm_prot__seq [style=bold];
 	segment_command_64__seq:sections_type -> section_64__seq [style=bold];
 	segment_command_64__seq:nsects_type -> segment_command_64__seq:sections__repeat [color="#404040"];
 	section_64__seq:offset_type -> section_64__inst__data:data_pos [color="#404040"];
@@ -963,6 +1071,7 @@ load_command__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 	eh_frame__seq:items_type -> eh_frame_item__seq [style=bold];
 	dysymtab_command__seq:indirect_sym_off_type -> dysymtab_command__inst__indirect_symbols:indirect_symbols_pos [color="#404040"];
 	dysymtab_command__seq:n_indirect_syms_type -> dysymtab_command__inst__indirect_symbols:indirect_symbols__repeat [color="#404040"];
+	sub_command__seq:name_type -> lc_str__seq [style=bold];
 	code_signature_command__seq:data_off_type -> code_signature_command__inst__code_signature:code_signature_pos [color="#404040"];
 	code_signature_command__seq:data_size_type -> code_signature_command__inst__code_signature:code_signature_size [color="#404040"];
 	code_signature_command__inst__code_signature:code_signature_type -> cs_blob__seq [style=bold];
@@ -1000,20 +1109,44 @@ load_command__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 	lazy_bind_data__seq:items_type -> bind_item__seq [style=bold];
 	dylinker_command__seq:name_type -> lc_str__seq [style=bold];
 	load_command__seq:body_type -> load_command__seq_body_switch [style=bold];
-	load_command__seq_body_switch:case0 -> rpath_command__seq [style=bold];
-	load_command__seq_body_switch:case1 -> source_version_command__seq [style=bold];
-	load_command__seq_body_switch:case2 -> dylinker_command__seq [style=bold];
-	load_command__seq_body_switch:case3 -> symtab_command__seq [style=bold];
-	load_command__seq_body_switch:case4 -> entry_point_command__seq [style=bold];
-	load_command__seq_body_switch:case5 -> linkedit_data_command__seq [style=bold];
-	load_command__seq_body_switch:case6 -> version_min_command__seq [style=bold];
-	load_command__seq_body_switch:case7 -> linkedit_data_command__seq [style=bold];
-	load_command__seq_body_switch:case8 -> uuid_command__seq [style=bold];
-	load_command__seq_body_switch:case9 -> dyld_info_command__seq [style=bold];
-	load_command__seq_body_switch:case10 -> code_signature_command__seq [style=bold];
-	load_command__seq_body_switch:case11 -> dysymtab_command__seq [style=bold];
+	load_command__seq_body_switch:case0 -> sub_command__seq [style=bold];
+	load_command__seq_body_switch:case1 -> linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case2 -> rpath_command__seq [style=bold];
+	load_command__seq_body_switch:case3 -> source_version_command__seq [style=bold];
+	load_command__seq_body_switch:case4 -> encryption_info_command__seq [style=bold];
+	load_command__seq_body_switch:case5 -> version_min_command__seq [style=bold];
+	load_command__seq_body_switch:case6 -> dylinker_command__seq [style=bold];
+	load_command__seq_body_switch:case7 -> sub_command__seq [style=bold];
+	load_command__seq_body_switch:case8 -> dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case9 -> version_min_command__seq [style=bold];
+	load_command__seq_body_switch:case10 -> linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case11 -> dylinker_command__seq [style=bold];
 	load_command__seq_body_switch:case12 -> dylib_command__seq [style=bold];
-	load_command__seq_body_switch:case13 -> segment_command_64__seq [style=bold];
+	load_command__seq_body_switch:case13 -> linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case14 -> dyld_info_command__seq [style=bold];
+	load_command__seq_body_switch:case15 -> dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case16 -> symtab_command__seq [style=bold];
+	load_command__seq_body_switch:case17 -> routines_command_64__seq [style=bold];
+	load_command__seq_body_switch:case18 -> dylinker_command__seq [style=bold];
+	load_command__seq_body_switch:case19 -> entry_point_command__seq [style=bold];
+	load_command__seq_body_switch:case20 -> linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case21 -> version_min_command__seq [style=bold];
+	load_command__seq_body_switch:case22 -> linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case23 -> version_min_command__seq [style=bold];
+	load_command__seq_body_switch:case24 -> encryption_info_command__seq [style=bold];
+	load_command__seq_body_switch:case25 -> sub_command__seq [style=bold];
+	load_command__seq_body_switch:case26 -> linker_option_command__seq [style=bold];
+	load_command__seq_body_switch:case27 -> twolevel_hints_command__seq [style=bold];
+	load_command__seq_body_switch:case28 -> uuid_command__seq [style=bold];
+	load_command__seq_body_switch:case29 -> dyld_info_command__seq [style=bold];
+	load_command__seq_body_switch:case30 -> dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case31 -> sub_command__seq [style=bold];
+	load_command__seq_body_switch:case32 -> routines_command__seq [style=bold];
+	load_command__seq_body_switch:case33 -> code_signature_command__seq [style=bold];
+	load_command__seq_body_switch:case34 -> dysymtab_command__seq [style=bold];
+	load_command__seq_body_switch:case35 -> dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case36 -> segment_command_64__seq [style=bold];
+	load_command__seq_body_switch:case37 -> dylib_command__seq [style=bold];
 	load_command__seq:type_type -> load_command__seq:body_type [color="#404040"];
 	symtab_command__seq:sym_off_type -> symtab_command__inst__symbols:symbols_pos [color="#404040"];
 	symtab_command__inst__symbols:symbols_type -> nlist_64__seq [style=bold];
@@ -1022,5 +1155,5 @@ load_command__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 	symtab_command__seq:str_size_type -> symtab_command__inst__strs:strs_size [color="#404040"];
 	symtab_command__inst__strs:strs_type -> str_table__seq [style=bold];
 	version_min_command__seq:version_type -> version__seq [style=bold];
-	version_min_command__seq:reserved_type -> version__seq [style=bold];
+	version_min_command__seq:sdk_type -> version__seq [style=bold];
 }

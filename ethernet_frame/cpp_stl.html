@@ -264,16 +264,15 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include &lt;kaitai/kaitaistruct.h&gt;
-#include &lt;kaitai/kaitaistream.h&gt;
+#include &quot;kaitai/kaitaistruct.h&quot;
 
 #include &lt;stdint.h&gt;
 
 #if KAITAI_STRUCT_VERSION &lt; 7000L
 #error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
 #endif
-class ipv4_packet_t;
 class ipv6_packet_t;
+class ipv4_packet_t;
 
 class ethernet_frame_t : public kaitai::kstruct {
 
@@ -290,8 +289,12 @@ public:
         ETHER_TYPE_ENUM_IPV6 = 34525
     };
 
-    ethernet_frame_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, ethernet_frame_t* p_root = 0);
+    ethernet_frame_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, ethernet_frame_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~ethernet_frame_t();
 
 private:
@@ -299,6 +302,12 @@ private:
     std::string m_src_mac;
     ether_type_enum_t m_ether_type;
     kaitai::kstruct* m_body;
+    bool n_body;
+
+public:
+    bool _is_null_body() { body(); return n_body; };
+
+private:
     ethernet_frame_t* m__root;
     kaitai::kstruct* m__parent;
     std::string m__raw_body;
@@ -337,11 +346,11 @@ public:
 #include &quot;ethernet_frame.h&quot;
 
 
-#include &quot;ipv4_packet.h&quot;
 #include &quot;ipv6_packet.h&quot;
+#include &quot;ipv4_packet.h&quot;
 
-ethernet_frame_t::ethernet_frame_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, ethernet_frame_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+ethernet_frame_t::ethernet_frame_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ethernet_frame_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -350,24 +359,34 @@ void ethernet_frame_t::_read() {
     m_dst_mac = m__io-&gt;read_bytes(6);
     m_src_mac = m__io-&gt;read_bytes(6);
     m_ether_type = static_cast&lt;ethernet_frame_t::ether_type_enum_t&gt;(m__io-&gt;read_u2be());
+    n_body = true;
     switch (ether_type()) {
-    case ETHER_TYPE_ENUM_IPV4:
+    case ETHER_TYPE_ENUM_IPV4: {
+        n_body = false;
         m__raw_body = m__io-&gt;read_bytes_full();
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new ipv4_packet_t(m__io__raw_body);
         break;
-    case ETHER_TYPE_ENUM_IPV6:
+    }
+    case ETHER_TYPE_ENUM_IPV6: {
+        n_body = false;
         m__raw_body = m__io-&gt;read_bytes_full();
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new ipv6_packet_t(m__io__raw_body);
         break;
-    default:
+    }
+    default: {
         m__raw_body = m__io-&gt;read_bytes_full();
         break;
+    }
     }
 }
 
 ethernet_frame_t::~ethernet_frame_t() {
+    if (!n_body) {
+        delete m__io__raw_body;
+        delete m_body;
+    }
 }
 </code></pre>
             

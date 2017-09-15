@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -121,8 +120,12 @@ public:
         OBJ_TYPE_CORE = 4
     };
 
-    elf_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, elf_t* p_root = 0);
+    elf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, elf_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~elf_t();
 
     class endian_elf_t : public kaitai::kstruct {
@@ -132,30 +135,54 @@ public:
         class section_header_t;
         class strings_struct_t;
 
-        endian_elf_t(kaitai::kstream* p_io, elf_t* p_parent = 0, elf_t* p_root = 0);
+        endian_elf_t(kaitai::kstream* p__io, elf_t* p__parent = 0, elf_t* p__root = 0);
 
     private:
         int m__is_le;
 
     public:
+
+    private:
         void _read();
+
+    public:
+
+    private:
         void _read_le();
+
+    public:
+
+    private:
         void _read_be();
+
+    public:
         ~endian_elf_t();
 
         class program_header_t : public kaitai::kstruct {
 
         public:
 
-            program_header_t(kaitai::kstream* p_io, elf_t::endian_elf_t* p_parent = 0, elf_t* p_root = 0, int p_is_le = -1);
+            program_header_t(kaitai::kstream* p__io, elf_t::endian_elf_t* p__parent = 0, elf_t* p__root = 0, int p_is_le = -1);
 
         private:
             int m__is_le;
 
         public:
+
+        private:
             void _read();
+
+        public:
+
+        private:
             void _read_le();
+
+        public:
+
+        private:
             void _read_be();
+
+        public:
             ~program_header_t();
 
         private:
@@ -168,10 +195,40 @@ public:
 
         private:
             uint64_t m_offset;
+            bool n_offset;
+
+        public:
+            bool _is_null_offset() { offset(); return n_offset; };
+
+        private:
             uint64_t m_vaddr;
+            bool n_vaddr;
+
+        public:
+            bool _is_null_vaddr() { vaddr(); return n_vaddr; };
+
+        private:
             uint64_t m_paddr;
+            bool n_paddr;
+
+        public:
+            bool _is_null_paddr() { paddr(); return n_paddr; };
+
+        private:
             uint64_t m_filesz;
+            bool n_filesz;
+
+        public:
+            bool _is_null_filesz() { filesz(); return n_filesz; };
+
+        private:
             uint64_t m_memsz;
+            bool n_memsz;
+
+        public:
+            bool _is_null_memsz() { memsz(); return n_memsz; };
+
+        private:
             uint32_t m_flags32;
             bool n_flags32;
 
@@ -180,6 +237,12 @@ public:
 
         private:
             uint64_t m_align;
+            bool n_align;
+
+        public:
+            bool _is_null_align() { align(); return n_align; };
+
+        private:
             elf_t* m__root;
             elf_t::endian_elf_t* m__parent;
 
@@ -201,15 +264,27 @@ public:
 
         public:
 
-            section_header_t(kaitai::kstream* p_io, elf_t::endian_elf_t* p_parent = 0, elf_t* p_root = 0, int p_is_le = -1);
+            section_header_t(kaitai::kstream* p__io, elf_t::endian_elf_t* p__parent = 0, elf_t* p__root = 0, int p_is_le = -1);
 
         private:
             int m__is_le;
 
         public:
+
+        private:
             void _read();
+
+        public:
+
+        private:
             void _read_le();
+
+        public:
+
+        private:
             void _read_be();
+
+        public:
             ~section_header_t();
 
         private:
@@ -230,13 +305,49 @@ public:
             uint32_t m_name_offset;
             sh_type_t m_type;
             uint64_t m_flags;
+            bool n_flags;
+
+        public:
+            bool _is_null_flags() { flags(); return n_flags; };
+
+        private:
             uint64_t m_addr;
+            bool n_addr;
+
+        public:
+            bool _is_null_addr() { addr(); return n_addr; };
+
+        private:
             uint64_t m_offset;
+            bool n_offset;
+
+        public:
+            bool _is_null_offset() { offset(); return n_offset; };
+
+        private:
             uint64_t m_size;
+            bool n_size;
+
+        public:
+            bool _is_null_size() { size(); return n_size; };
+
+        private:
             uint32_t m_linked_section_idx;
             std::string m_info;
             uint64_t m_align;
+            bool n_align;
+
+        public:
+            bool _is_null_align() { align(); return n_align; };
+
+        private:
             uint64_t m_entry_size;
+            bool n_entry_size;
+
+        public:
+            bool _is_null_entry_size() { entry_size(); return n_entry_size; };
+
+        private:
             elf_t* m__root;
             elf_t::endian_elf_t* m__parent;
 
@@ -259,15 +370,27 @@ public:
 
         public:
 
-            strings_struct_t(kaitai::kstream* p_io, elf_t::endian_elf_t* p_parent = 0, elf_t* p_root = 0, int p_is_le = -1);
+            strings_struct_t(kaitai::kstream* p__io, elf_t::endian_elf_t* p__parent = 0, elf_t* p__root = 0, int p_is_le = -1);
 
         private:
             int m__is_le;
 
         public:
+
+        private:
             void _read();
+
+        public:
+
+        private:
             void _read_le();
+
+        public:
+
+        private:
             void _read_be();
+
+        public:
             ~strings_struct_t();
 
         private:
@@ -307,8 +430,26 @@ public:
         machine_t m_machine;
         uint32_t m_e_version;
         uint64_t m_entry_point;
+        bool n_entry_point;
+
+    public:
+        bool _is_null_entry_point() { entry_point(); return n_entry_point; };
+
+    private:
         uint64_t m_program_header_offset;
+        bool n_program_header_offset;
+
+    public:
+        bool _is_null_program_header_offset() { program_header_offset(); return n_program_header_offset; };
+
+    private:
         uint64_t m_section_header_offset;
+        bool n_section_header_offset;
+
+    public:
+        bool _is_null_section_header_offset() { section_header_offset(); return n_section_header_offset; };
+
+    private:
         std::string m_flags;
         uint16_t m_e_ehsize;
         uint16_t m_program_header_entry_size;
@@ -319,9 +460,9 @@ public:
         elf_t* m__root;
         elf_t* m__parent;
         std::vector<std::string>* m__raw_program_headers;
-        kaitai::kstream* m__io__raw_program_headers;
+        std::vector<kaitai::kstream*>* m__io__raw_program_headers;
         std::vector<std::string>* m__raw_section_headers;
-        kaitai::kstream* m__io__raw_section_headers;
+        std::vector<kaitai::kstream*>* m__io__raw_section_headers;
         std::string m__raw_strings;
         kaitai::kstream* m__io__raw_strings;
 
@@ -342,9 +483,9 @@ public:
         elf_t* _root() const { return m__root; }
         elf_t* _parent() const { return m__parent; }
         std::vector<std::string>* _raw_program_headers() const { return m__raw_program_headers; }
-        kaitai::kstream* _io__raw_program_headers() const { return m__io__raw_program_headers; }
+        std::vector<kaitai::kstream*>* _io__raw_program_headers() const { return m__io__raw_program_headers; }
         std::vector<std::string>* _raw_section_headers() const { return m__raw_section_headers; }
-        kaitai::kstream* _io__raw_section_headers() const { return m__io__raw_section_headers; }
+        std::vector<kaitai::kstream*>* _io__raw_section_headers() const { return m__io__raw_section_headers; }
         std::string _raw_strings() const { return m__raw_strings; }
         kaitai::kstream* _io__raw_strings() const { return m__io__raw_strings; }
     };

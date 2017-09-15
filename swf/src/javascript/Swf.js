@@ -38,8 +38,10 @@ var Swf = (function() {
       this.frameRate = this._io.readU2le();
       this.frameCount = this._io.readU2le();
       this.tags = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.tags.push(new Tag(this._io, this, this._root));
+        i++;
       }
     }
 
@@ -62,7 +64,7 @@ var Swf = (function() {
       get: function() {
         if (this._m_numBits !== undefined)
           return this._m_numBits;
-        this._m_numBits = (this.b1 >> 3);
+        this._m_numBits = (this.b1 >>> 3);
         return this._m_numBits;
       }
     });
@@ -138,7 +140,7 @@ var Swf = (function() {
       get: function() {
         if (this._m_tagType !== undefined)
           return this._m_tagType;
-        this._m_tagType = (this.tagCodeAndLength >> 6);
+        this._m_tagType = (this.tagCodeAndLength >>> 6);
         return this._m_tagType;
       }
     });

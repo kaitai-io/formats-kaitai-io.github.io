@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -47,16 +46,24 @@ public:
         PHYS_UNIT_METER = 1
     };
 
-    png_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, png_t* p_root = 0);
+    png_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, png_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~png_t();
 
     class rgb_t : public kaitai::kstruct {
 
     public:
 
-        rgb_t(kaitai::kstream* p_io, png_t::plte_chunk_t* p_parent = 0, png_t* p_root = 0);
+        rgb_t(kaitai::kstream* p__io, png_t::plte_chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~rgb_t();
 
     private:
@@ -78,14 +85,24 @@ public:
 
     public:
 
-        chunk_t(kaitai::kstream* p_io, png_t* p_parent = 0, png_t* p_root = 0);
+        chunk_t(kaitai::kstream* p__io, png_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~chunk_t();
 
     private:
         uint32_t m_len;
         std::string m_type;
         kaitai::kstruct* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
         std::string m_crc;
         png_t* m__root;
         png_t* m__parent;
@@ -107,8 +124,12 @@ public:
 
     public:
 
-        bkgd_indexed_t(kaitai::kstream* p_io, png_t::bkgd_chunk_t* p_parent = 0, png_t* p_root = 0);
+        bkgd_indexed_t(kaitai::kstream* p__io, png_t::bkgd_chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~bkgd_indexed_t();
 
     private:
@@ -126,8 +147,12 @@ public:
 
     public:
 
-        point_t(kaitai::kstream* p_io, png_t::chrm_chunk_t* p_parent = 0, png_t* p_root = 0);
+        point_t(kaitai::kstream* p__io, png_t::chrm_chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~point_t();
 
     private:
@@ -161,8 +186,12 @@ public:
 
     public:
 
-        bkgd_greyscale_t(kaitai::kstream* p_io, png_t::bkgd_chunk_t* p_parent = 0, png_t* p_root = 0);
+        bkgd_greyscale_t(kaitai::kstream* p__io, png_t::bkgd_chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~bkgd_greyscale_t();
 
     private:
@@ -180,8 +209,12 @@ public:
 
     public:
 
-        chrm_chunk_t(kaitai::kstream* p_io, png_t::chunk_t* p_parent = 0, png_t* p_root = 0);
+        chrm_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~chrm_chunk_t();
 
     private:
@@ -205,8 +238,12 @@ public:
 
     public:
 
-        ihdr_chunk_t(kaitai::kstream* p_io, png_t* p_parent = 0, png_t* p_root = 0);
+        ihdr_chunk_t(kaitai::kstream* p__io, png_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~ihdr_chunk_t();
 
     private:
@@ -236,8 +273,12 @@ public:
 
     public:
 
-        plte_chunk_t(kaitai::kstream* p_io, png_t::chunk_t* p_parent = 0, png_t* p_root = 0);
+        plte_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~plte_chunk_t();
 
     private:
@@ -262,8 +303,12 @@ public:
             INTENT_ABSOLUTE_COLORIMETRIC = 3
         };
 
-        srgb_chunk_t(kaitai::kstream* p_io, png_t::chunk_t* p_parent = 0, png_t* p_root = 0);
+        srgb_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~srgb_chunk_t();
 
     private:
@@ -281,8 +326,12 @@ public:
 
     public:
 
-        compressed_text_chunk_t(kaitai::kstream* p_io, png_t::chunk_t* p_parent = 0, png_t* p_root = 0);
+        compressed_text_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~compressed_text_chunk_t();
 
     private:
@@ -306,8 +355,12 @@ public:
 
     public:
 
-        bkgd_truecolor_t(kaitai::kstream* p_io, png_t::bkgd_chunk_t* p_parent = 0, png_t* p_root = 0);
+        bkgd_truecolor_t(kaitai::kstream* p__io, png_t::bkgd_chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~bkgd_truecolor_t();
 
     private:
@@ -329,8 +382,12 @@ public:
 
     public:
 
-        gama_chunk_t(kaitai::kstream* p_io, png_t::chunk_t* p_parent = 0, png_t* p_root = 0);
+        gama_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~gama_chunk_t();
 
     private:
@@ -355,12 +412,22 @@ public:
 
     public:
 
-        bkgd_chunk_t(kaitai::kstream* p_io, png_t::chunk_t* p_parent = 0, png_t* p_root = 0);
+        bkgd_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~bkgd_chunk_t();
 
     private:
         kaitai::kstruct* m_bkgd;
+        bool n_bkgd;
+
+    public:
+        bool _is_null_bkgd() { bkgd(); return n_bkgd; };
+
+    private:
         png_t* m__root;
         png_t::chunk_t* m__parent;
 
@@ -374,8 +441,12 @@ public:
 
     public:
 
-        phys_chunk_t(kaitai::kstream* p_io, png_t::chunk_t* p_parent = 0, png_t* p_root = 0);
+        phys_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~phys_chunk_t();
 
     private:
@@ -397,8 +468,12 @@ public:
 
     public:
 
-        international_text_chunk_t(kaitai::kstream* p_io, png_t::chunk_t* p_parent = 0, png_t* p_root = 0);
+        international_text_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~international_text_chunk_t();
 
     private:
@@ -426,8 +501,12 @@ public:
 
     public:
 
-        text_chunk_t(kaitai::kstream* p_io, png_t::chunk_t* p_parent = 0, png_t* p_root = 0);
+        text_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~text_chunk_t();
 
     private:
@@ -447,8 +526,12 @@ public:
 
     public:
 
-        time_chunk_t(kaitai::kstream* p_io, png_t::chunk_t* p_parent = 0, png_t* p_root = 0);
+        time_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~time_chunk_t();
 
     private:

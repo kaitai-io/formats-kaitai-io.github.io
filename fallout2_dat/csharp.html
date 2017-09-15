@@ -250,22 +250,23 @@ namespace Kaitai
             return new Fallout2Dat(new KaitaiStream(fileName));
         }
 
+
         public enum Compression
         {
             None = 0,
             Zlib = 1,
         }
-
-        public Fallout2Dat(KaitaiStream io, KaitaiStruct parent = null, Fallout2Dat root = null) : base(io)
+        public Fallout2Dat(KaitaiStream p__io, KaitaiStruct p__parent = null, Fallout2Dat p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_footer = false;
             f_index = false;
             _read();
         }
-        private void _read() {
-            }
+        private void _read()
+        {
+        }
         public partial class Pstr : KaitaiStruct
         {
             public static Pstr FromFile(string fileName)
@@ -273,16 +274,17 @@ namespace Kaitai
                 return new Pstr(new KaitaiStream(fileName));
             }
 
-            public Pstr(KaitaiStream io, Fallout2Dat.File parent = null, Fallout2Dat root = null) : base(io)
+            public Pstr(KaitaiStream p__io, Fallout2Dat.File p__parent = null, Fallout2Dat p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _size = m_io.ReadU4le();
                 _str = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytes(Size));
-                }
+            }
             private uint _size;
             private string _str;
             private Fallout2Dat m_root;
@@ -299,16 +301,17 @@ namespace Kaitai
                 return new Footer(new KaitaiStream(fileName));
             }
 
-            public Footer(KaitaiStream io, Fallout2Dat parent = null, Fallout2Dat root = null) : base(io)
+            public Footer(KaitaiStream p__io, Fallout2Dat p__parent = null, Fallout2Dat p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _indexSize = m_io.ReadU4le();
                 _fileSize = m_io.ReadU4le();
-                }
+            }
             private uint _indexSize;
             private uint _fileSize;
             private Fallout2Dat m_root;
@@ -325,19 +328,21 @@ namespace Kaitai
                 return new Index(new KaitaiStream(fileName));
             }
 
-            public Index(KaitaiStream io, Fallout2Dat parent = null, Fallout2Dat root = null) : base(io)
+            public Index(KaitaiStream p__io, Fallout2Dat p__parent = null, Fallout2Dat p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _fileCount = m_io.ReadU4le();
                 _files = new List&lt;File&gt;((int) (FileCount));
-                for (var i = 0; i &lt; FileCount; i++) {
+                for (var i = 0; i &lt; FileCount; i++)
+                {
                     _files.Add(new File(m_io, this, m_root));
                 }
-                }
+            }
             private uint _fileCount;
             private List&lt;File&gt; _files;
             private Fallout2Dat m_root;
@@ -354,20 +359,21 @@ namespace Kaitai
                 return new File(new KaitaiStream(fileName));
             }
 
-            public File(KaitaiStream io, Fallout2Dat.Index parent = null, Fallout2Dat root = null) : base(io)
+            public File(KaitaiStream p__io, Fallout2Dat.Index p__parent = null, Fallout2Dat p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_contents = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _name = new Pstr(m_io, this, m_root);
                 _flags = ((Fallout2Dat.Compression) m_io.ReadU1());
                 _sizeUnpacked = m_io.ReadU4le();
                 _sizePacked = m_io.ReadU4le();
                 _offset = m_io.ReadU4le();
-                }
+            }
             private bool f_contents;
             private byte[] _contents;
             public byte[] Contents

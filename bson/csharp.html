@@ -258,19 +258,20 @@ namespace Kaitai
             return new Bson(new KaitaiStream(fileName));
         }
 
-        public Bson(KaitaiStream io, KaitaiStruct parent = null, Bson root = null) : base(io)
+        public Bson(KaitaiStream p__io, KaitaiStruct p__parent = null, Bson p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _len = m_io.ReadS4le();
             __raw_fields = m_io.ReadBytes((Len - 5));
             var io___raw_fields = new KaitaiStream(__raw_fields);
             _fields = new ElementsList(io___raw_fields, this, m_root);
             _terminator = m_io.EnsureFixedContents(new byte[] { 0 });
-            }
+        }
 
         /// &lt;summary&gt;
         /// Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.
@@ -282,16 +283,17 @@ namespace Kaitai
                 return new Timestamp(new KaitaiStream(fileName));
             }
 
-            public Timestamp(KaitaiStream io, Bson.Element parent = null, Bson root = null) : base(io)
+            public Timestamp(KaitaiStream p__io, Bson.Element p__parent = null, Bson p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _increment = m_io.ReadU4le();
                 _timestamp = m_io.ReadU4le();
-                }
+            }
             private uint _increment;
             private uint _timestamp;
             private Bson m_root;
@@ -312,6 +314,7 @@ namespace Kaitai
                 return new BinData(new KaitaiStream(fileName));
             }
 
+
             public enum Subtype
             {
                 Generic = 0,
@@ -322,14 +325,14 @@ namespace Kaitai
                 Md5 = 5,
                 Custom = 128,
             }
-
-            public BinData(KaitaiStream io, Bson.Element parent = null, Bson root = null) : base(io)
+            public BinData(KaitaiStream p__io, Bson.Element p__parent = null, Bson p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _len = m_io.ReadS4le();
                 _subtype = ((Subtype) m_io.ReadU1());
                 switch (Subtype) {
@@ -344,7 +347,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
 
             /// &lt;summary&gt;
             /// The BSON &amp;quot;binary&amp;quot; or &amp;quot;BinData&amp;quot; datatype is used to represent arrays of bytes. It is somewhat analogous to the Java notion of a ByteArray. BSON binary values have a subtype. This is used to indicate what kind of data is in the byte array. Subtypes from zero to 127 are predefined or reserved. Subtypes from 128-255 are user-defined.
@@ -356,16 +359,17 @@ namespace Kaitai
                     return new ByteArrayDeprecated(new KaitaiStream(fileName));
                 }
 
-                public ByteArrayDeprecated(KaitaiStream io, Bson.BinData parent = null, Bson root = null) : base(io)
+                public ByteArrayDeprecated(KaitaiStream p__io, Bson.BinData p__parent = null, Bson p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _len = m_io.ReadS4le();
                     _content = m_io.ReadBytes(Len);
-                    }
+                }
                 private int _len;
                 private byte[] _content;
                 private Bson m_root;
@@ -395,18 +399,23 @@ namespace Kaitai
                 return new ElementsList(new KaitaiStream(fileName));
             }
 
-            public ElementsList(KaitaiStream io, Bson parent = null, Bson root = null) : base(io)
+            public ElementsList(KaitaiStream p__io, Bson p__parent = null, Bson p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _elements = new List&lt;Element&gt;();
-                while (!m_io.IsEof) {
-                    _elements.Add(new Element(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _elements.Add(new Element(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List&lt;Element&gt; _elements;
             private Bson m_root;
             private Bson m_parent;
@@ -421,15 +430,16 @@ namespace Kaitai
                 return new Cstring(new KaitaiStream(fileName));
             }
 
-            public Cstring(KaitaiStream io, KaitaiStruct parent = null, Bson root = null) : base(io)
+            public Cstring(KaitaiStream p__io, KaitaiStruct p__parent = null, Bson p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _str = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true));
-                }
+            }
             private string _str;
             private Bson m_root;
             private KaitaiStruct m_parent;
@@ -448,17 +458,18 @@ namespace Kaitai
                 return new String(new KaitaiStream(fileName));
             }
 
-            public String(KaitaiStream io, KaitaiStruct parent = null, Bson root = null) : base(io)
+            public String(KaitaiStream p__io, KaitaiStruct p__parent = null, Bson p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _len = m_io.ReadS4le();
                 _str = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes((Len - 1)));
                 _terminator = m_io.EnsureFixedContents(new byte[] { 0 });
-                }
+            }
             private int _len;
             private string _str;
             private byte[] _terminator;
@@ -476,6 +487,7 @@ namespace Kaitai
             {
                 return new Element(new KaitaiStream(fileName));
             }
+
 
             public enum BsonType
             {
@@ -502,14 +514,14 @@ namespace Kaitai
                 NumberDecimal = 19,
                 MaxKey = 127,
             }
-
-            public Element(KaitaiStream io, Bson.ElementsList parent = null, Bson root = null) : base(io)
+            public Element(KaitaiStream p__io, Bson.ElementsList p__parent = null, Bson p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _typeByte = ((BsonType) m_io.ReadU1());
                 _name = new Cstring(m_io, this, m_root);
                 switch (TypeByte) {
@@ -582,7 +594,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private BsonType _typeByte;
             private Cstring _name;
             private object _content;
@@ -601,16 +613,17 @@ namespace Kaitai
                 return new DbPointer(new KaitaiStream(fileName));
             }
 
-            public DbPointer(KaitaiStream io, Bson.Element parent = null, Bson root = null) : base(io)
+            public DbPointer(KaitaiStream p__io, Bson.Element p__parent = null, Bson p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _namespace = new String(m_io, this, m_root);
                 _id = new ObjectId(m_io, this, m_root);
-                }
+            }
             private String _namespace;
             private ObjectId _id;
             private Bson m_root;
@@ -631,18 +644,19 @@ namespace Kaitai
                 return new U3(new KaitaiStream(fileName));
             }
 
-            public U3(KaitaiStream io, Bson.ObjectId parent = null, Bson root = null) : base(io)
+            public U3(KaitaiStream p__io, Bson.ObjectId p__parent = null, Bson p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_value = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _b1 = m_io.ReadU1();
                 _b2 = m_io.ReadU1();
                 _b3 = m_io.ReadU1();
-                }
+            }
             private bool f_value;
             private int _value;
             public int Value
@@ -674,17 +688,18 @@ namespace Kaitai
                 return new CodeWithScope(new KaitaiStream(fileName));
             }
 
-            public CodeWithScope(KaitaiStream io, Bson.Element parent = null, Bson root = null) : base(io)
+            public CodeWithScope(KaitaiStream p__io, Bson.Element p__parent = null, Bson p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _id = m_io.ReadS4le();
                 _source = new String(m_io, this, m_root);
                 _scope = new Bson(m_io);
-                }
+            }
             private int _id;
             private String _source;
             private Bson _scope;
@@ -711,19 +726,20 @@ namespace Kaitai
                 return new F16(new KaitaiStream(fileName));
             }
 
-            public F16(KaitaiStream io, Bson.Element parent = null, Bson root = null) : base(io)
+            public F16(KaitaiStream p__io, Bson.Element p__parent = null, Bson p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _str = m_io.ReadBitsInt(1) != 0;
                 _exponent = m_io.ReadBitsInt(15);
                 _significandHi = m_io.ReadBitsInt(49);
                 m_io.AlignToByte();
                 _significandLo = m_io.ReadU8le();
-                }
+            }
             private bool _str;
             private ulong _exponent;
             private ulong _significandHi;
@@ -748,18 +764,19 @@ namespace Kaitai
                 return new ObjectId(new KaitaiStream(fileName));
             }
 
-            public ObjectId(KaitaiStream io, KaitaiStruct parent = null, Bson root = null) : base(io)
+            public ObjectId(KaitaiStream p__io, KaitaiStruct p__parent = null, Bson p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _epochTime = m_io.ReadU4le();
                 _machineId = new U3(m_io, this, m_root);
                 _processId = m_io.ReadU2le();
                 _counter = new U3(m_io, this, m_root);
-                }
+            }
             private uint _epochTime;
             private U3 _machineId;
             private ushort _processId;
@@ -788,16 +805,17 @@ namespace Kaitai
                 return new RegEx(new KaitaiStream(fileName));
             }
 
-            public RegEx(KaitaiStream io, Bson.Element parent = null, Bson root = null) : base(io)
+            public RegEx(KaitaiStream p__io, Bson.Element p__parent = null, Bson p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _pattern = new Cstring(m_io, this, m_root);
                 _options = new Cstring(m_io, this, m_root);
-                }
+            }
             private Cstring _pattern;
             private Cstring _options;
             private Bson m_root;

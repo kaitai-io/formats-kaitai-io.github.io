@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -25,16 +24,24 @@ public:
     class mdl_triangle_t;
     class vec3_t;
 
-    quake_mdl_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, quake_mdl_t* p_root = 0);
+    quake_mdl_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, quake_mdl_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~quake_mdl_t();
 
     class mdl_vertex_t : public kaitai::kstruct {
 
     public:
 
-        mdl_vertex_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, quake_mdl_t* p_root = 0);
+        mdl_vertex_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, quake_mdl_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~mdl_vertex_t();
 
     private:
@@ -54,8 +61,12 @@ public:
 
     public:
 
-        mdl_texcoord_t(kaitai::kstream* p_io, quake_mdl_t* p_parent = 0, quake_mdl_t* p_root = 0);
+        mdl_texcoord_t(kaitai::kstream* p__io, quake_mdl_t* p__parent = 0, quake_mdl_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~mdl_texcoord_t();
 
     private:
@@ -77,8 +88,12 @@ public:
 
     public:
 
-        mdl_header_t(kaitai::kstream* p_io, quake_mdl_t* p_parent = 0, quake_mdl_t* p_root = 0);
+        mdl_header_t(kaitai::kstream* p__io, quake_mdl_t* p__parent = 0, quake_mdl_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~mdl_header_t();
 
     private:
@@ -138,8 +153,12 @@ public:
 
     public:
 
-        mdl_skin_t(kaitai::kstream* p_io, quake_mdl_t* p_parent = 0, quake_mdl_t* p_root = 0);
+        mdl_skin_t(kaitai::kstream* p__io, quake_mdl_t* p__parent = 0, quake_mdl_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~mdl_skin_t();
 
     private:
@@ -189,8 +208,12 @@ public:
 
     public:
 
-        mdl_frame_t(kaitai::kstream* p_io, quake_mdl_t* p_parent = 0, quake_mdl_t* p_root = 0);
+        mdl_frame_t(kaitai::kstream* p__io, quake_mdl_t* p__parent = 0, quake_mdl_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~mdl_frame_t();
 
     private:
@@ -241,8 +264,12 @@ public:
 
     public:
 
-        mdl_simple_frame_t(kaitai::kstream* p_io, quake_mdl_t::mdl_frame_t* p_parent = 0, quake_mdl_t* p_root = 0);
+        mdl_simple_frame_t(kaitai::kstream* p__io, quake_mdl_t::mdl_frame_t* p__parent = 0, quake_mdl_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~mdl_simple_frame_t();
 
     private:
@@ -266,8 +293,12 @@ public:
 
     public:
 
-        mdl_triangle_t(kaitai::kstream* p_io, quake_mdl_t* p_parent = 0, quake_mdl_t* p_root = 0);
+        mdl_triangle_t(kaitai::kstream* p__io, quake_mdl_t* p__parent = 0, quake_mdl_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~mdl_triangle_t();
 
     private:
@@ -287,8 +318,12 @@ public:
 
     public:
 
-        vec3_t(kaitai::kstream* p_io, quake_mdl_t::mdl_header_t* p_parent = 0, quake_mdl_t* p_root = 0);
+        vec3_t(kaitai::kstream* p__io, quake_mdl_t::mdl_header_t* p__parent = 0, quake_mdl_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~vec3_t();
 
     private:

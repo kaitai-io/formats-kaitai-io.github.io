@@ -203,10 +203,10 @@ a simple header prepended.</p>
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = PythonPyc27(KaitaiStream(raw))</code></pre>
+data = PythonPyc27(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -621,8 +621,10 @@ class PythonPyc27(KaitaiStruct):
 
         def _read(self):
             self.items = []
+            i = 0
             while not self._io.is_eof():
                 self.items.append(self._root.OpArg(self._io, self, self._root))
+                i += 1
 
 
 

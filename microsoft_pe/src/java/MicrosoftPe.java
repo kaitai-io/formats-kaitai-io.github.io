@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.nio.charset.Charset;
  */
 public class MicrosoftPe extends KaitaiStruct {
     public static MicrosoftPe fromFile(String fileName) throws IOException {
-        return new MicrosoftPe(new KaitaiStream(fileName));
+        return new MicrosoftPe(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum PeFormat {
@@ -53,7 +54,7 @@ public class MicrosoftPe extends KaitaiStruct {
         this.peSignature = this._io.ensureFixedContents(new byte[] { 80, 69, 0, 0 });
         this.coffHdr = new CoffHeader(this._io, this, _root);
         this._raw_optionalHdr = this._io.readBytes(coffHdr().sizeOfOptionalHeader());
-        KaitaiStream _io__raw_optionalHdr = new KaitaiStream(_raw_optionalHdr);
+        KaitaiStream _io__raw_optionalHdr = new ByteBufferKaitaiStream(_raw_optionalHdr);
         this.optionalHdr = new OptionalHeader(_io__raw_optionalHdr, this, _root);
         sections = new ArrayList<Section>((int) (coffHdr().numberOfSections()));
         for (int i = 0; i < coffHdr().numberOfSections(); i++) {
@@ -62,7 +63,7 @@ public class MicrosoftPe extends KaitaiStruct {
     }
     public static class OptionalHeaderWindows extends KaitaiStruct {
         public static OptionalHeaderWindows fromFile(String fileName) throws IOException {
-            return new OptionalHeaderWindows(new KaitaiStream(fileName));
+            return new OptionalHeaderWindows(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum SubsystemEnum {
@@ -210,7 +211,7 @@ public class MicrosoftPe extends KaitaiStruct {
     }
     public static class OptionalHeaderDataDirs extends KaitaiStruct {
         public static OptionalHeaderDataDirs fromFile(String fileName) throws IOException {
-            return new OptionalHeaderDataDirs(new KaitaiStream(fileName));
+            return new OptionalHeaderDataDirs(new ByteBufferKaitaiStream(fileName));
         }
 
         public OptionalHeaderDataDirs(KaitaiStream _io) {
@@ -281,7 +282,7 @@ public class MicrosoftPe extends KaitaiStruct {
     }
     public static class DataDir extends KaitaiStruct {
         public static DataDir fromFile(String fileName) throws IOException {
-            return new DataDir(new KaitaiStream(fileName));
+            return new DataDir(new ByteBufferKaitaiStream(fileName));
         }
 
         public DataDir(KaitaiStream _io) {
@@ -313,7 +314,7 @@ public class MicrosoftPe extends KaitaiStruct {
     }
     public static class OptionalHeader extends KaitaiStruct {
         public static OptionalHeader fromFile(String fileName) throws IOException {
-            return new OptionalHeader(new KaitaiStream(fileName));
+            return new OptionalHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public OptionalHeader(KaitaiStream _io) {
@@ -348,7 +349,7 @@ public class MicrosoftPe extends KaitaiStruct {
     }
     public static class Section extends KaitaiStruct {
         public static Section fromFile(String fileName) throws IOException {
-            return new Section(new KaitaiStream(fileName));
+            return new Section(new ByteBufferKaitaiStream(fileName));
         }
 
         public Section(KaitaiStream _io) {
@@ -414,7 +415,7 @@ public class MicrosoftPe extends KaitaiStruct {
     }
     public static class MzPlaceholder extends KaitaiStruct {
         public static MzPlaceholder fromFile(String fileName) throws IOException {
-            return new MzPlaceholder(new KaitaiStream(fileName));
+            return new MzPlaceholder(new ByteBufferKaitaiStream(fileName));
         }
 
         public MzPlaceholder(KaitaiStream _io) {
@@ -449,7 +450,7 @@ public class MicrosoftPe extends KaitaiStruct {
     }
     public static class OptionalHeaderStd extends KaitaiStruct {
         public static OptionalHeaderStd fromFile(String fileName) throws IOException {
-            return new OptionalHeaderStd(new KaitaiStream(fileName));
+            return new OptionalHeaderStd(new ByteBufferKaitaiStream(fileName));
         }
 
         public OptionalHeaderStd(KaitaiStream _io) {
@@ -508,7 +509,7 @@ public class MicrosoftPe extends KaitaiStruct {
      */
     public static class CoffHeader extends KaitaiStruct {
         public static CoffHeader fromFile(String fileName) throws IOException {
-            return new CoffHeader(new KaitaiStream(fileName));
+            return new CoffHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum MachineType {

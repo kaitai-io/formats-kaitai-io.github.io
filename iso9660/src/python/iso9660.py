@@ -163,11 +163,13 @@ class Iso9660(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while True:
                 _ = self._root.DirEntry(self._io, self, self._root)
                 self.entries.append(_)
                 if _.len == 0:
                     break
+                i += 1
 
 
     class U4bi(KaitaiStruct):
@@ -203,8 +205,10 @@ class Iso9660(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.PathTableEntryLe(self._io, self, self._root))
+                i += 1
 
 
 

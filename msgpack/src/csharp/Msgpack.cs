@@ -19,10 +19,10 @@ namespace Kaitai
             return new Msgpack(new KaitaiStream(fileName));
         }
 
-        public Msgpack(KaitaiStream io, KaitaiStruct parent = null, Msgpack root = null) : base(io)
+        public Msgpack(KaitaiStream p__io, KaitaiStruct p__parent = null, Msgpack p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_isArray32 = false;
             f_intValue = false;
             f_strLen = false;
@@ -54,7 +54,8 @@ namespace Kaitai
             f_isMap32 = false;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _b1 = m_io.ReadU1();
             switch (B1) {
             case 211: {
@@ -116,7 +117,8 @@ namespace Kaitai
             }
             if (IsArray) {
                 _arrayElements = new List<Msgpack>((int) (NumArrayElements));
-                for (var i = 0; i < NumArrayElements; i++) {
+                for (var i = 0; i < NumArrayElements; i++)
+                {
                     _arrayElements.Add(new Msgpack(m_io));
                 }
             }
@@ -128,11 +130,12 @@ namespace Kaitai
             }
             if (IsMap) {
                 _mapElements = new List<MapTuple>((int) (NumMapElements));
-                for (var i = 0; i < NumMapElements; i++) {
+                for (var i = 0; i < NumMapElements; i++)
+                {
                     _mapElements.Add(new MapTuple(m_io, this, m_root));
                 }
             }
-            }
+        }
         public partial class MapTuple : KaitaiStruct
         {
             public static MapTuple FromFile(string fileName)
@@ -140,16 +143,17 @@ namespace Kaitai
                 return new MapTuple(new KaitaiStream(fileName));
             }
 
-            public MapTuple(KaitaiStream io, Msgpack parent = null, Msgpack root = null) : base(io)
+            public MapTuple(KaitaiStream p__io, Msgpack p__parent = null, Msgpack p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _key = new Msgpack(m_io);
                 _value = new Msgpack(m_io);
-                }
+            }
             private Msgpack _key;
             private Msgpack _value;
             private Msgpack m_root;
@@ -177,8 +181,8 @@ namespace Kaitai
             }
         }
         private bool f_intValue;
-        private int _intValue;
-        public int IntValue
+        private int? _intValue;
+        public int? IntValue
         {
             get
             {
@@ -192,8 +196,8 @@ namespace Kaitai
             }
         }
         private bool f_strLen;
-        private int _strLen;
-        public int StrLen
+        private int? _strLen;
+        public int? StrLen
         {
             get
             {
@@ -395,8 +399,8 @@ namespace Kaitai
             }
         }
         private bool f_posInt7Value;
-        private byte _posInt7Value;
-        public byte PosInt7Value
+        private byte? _posInt7Value;
+        public byte? PosInt7Value
         {
             get
             {
@@ -427,8 +431,8 @@ namespace Kaitai
             }
         }
         private bool f_floatValue;
-        private double _floatValue;
-        public double FloatValue
+        private double? _floatValue;
+        public double? FloatValue
         {
             get
             {
@@ -442,12 +446,12 @@ namespace Kaitai
             }
         }
         private bool f_numArrayElements;
-        private int _numArrayElements;
+        private int? _numArrayElements;
 
         /// <remarks>
         /// Reference: <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array">Source</a>
         /// </remarks>
-        public int NumArrayElements
+        public int? NumArrayElements
         {
             get
             {
@@ -461,8 +465,8 @@ namespace Kaitai
             }
         }
         private bool f_negInt5Value;
-        private int _negInt5Value;
-        public int NegInt5Value
+        private int? _negInt5Value;
+        public int? NegInt5Value
         {
             get
             {
@@ -476,12 +480,12 @@ namespace Kaitai
             }
         }
         private bool f_boolValue;
-        private bool _boolValue;
+        private bool? _boolValue;
 
         /// <remarks>
         /// Reference: <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-bool">Source</a>
         /// </remarks>
-        public bool BoolValue
+        public bool? BoolValue
         {
             get
             {
@@ -572,12 +576,12 @@ namespace Kaitai
             }
         }
         private bool f_numMapElements;
-        private int _numMapElements;
+        private int? _numMapElements;
 
         /// <remarks>
         /// Reference: <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map">Source</a>
         /// </remarks>
-        public int NumMapElements
+        public int? NumMapElements
         {
             get
             {
@@ -626,17 +630,17 @@ namespace Kaitai
         }
         private byte _b1;
         private int _intExtra;
-        private float _float32Value;
-        private double _float64Value;
-        private byte _strLen8;
-        private ushort _strLen16;
-        private uint _strLen32;
+        private float? _float32Value;
+        private double? _float64Value;
+        private byte? _strLen8;
+        private ushort? _strLen16;
+        private uint? _strLen32;
         private string _strValue;
-        private ushort _numArrayElements16;
-        private uint _numArrayElements32;
+        private ushort? _numArrayElements16;
+        private uint? _numArrayElements32;
         private List<Msgpack> _arrayElements;
-        private ushort _numMapElements16;
-        private uint _numMapElements32;
+        private ushort? _numMapElements16;
+        private uint? _numMapElements32;
         private List<MapTuple> _mapElements;
         private Msgpack m_root;
         private KaitaiStruct m_parent;
@@ -648,17 +652,17 @@ namespace Kaitai
         /// </summary>
         public byte B1 { get { return _b1; } }
         public int IntExtra { get { return _intExtra; } }
-        public float Float32Value { get { return _float32Value; } }
-        public double Float64Value { get { return _float64Value; } }
-        public byte StrLen8 { get { return _strLen8; } }
-        public ushort StrLen16 { get { return _strLen16; } }
-        public uint StrLen32 { get { return _strLen32; } }
+        public float? Float32Value { get { return _float32Value; } }
+        public double? Float64Value { get { return _float64Value; } }
+        public byte? StrLen8 { get { return _strLen8; } }
+        public ushort? StrLen16 { get { return _strLen16; } }
+        public uint? StrLen32 { get { return _strLen32; } }
         public string StrValue { get { return _strValue; } }
-        public ushort NumArrayElements16 { get { return _numArrayElements16; } }
-        public uint NumArrayElements32 { get { return _numArrayElements32; } }
+        public ushort? NumArrayElements16 { get { return _numArrayElements16; } }
+        public uint? NumArrayElements32 { get { return _numArrayElements32; } }
         public List<Msgpack> ArrayElements { get { return _arrayElements; } }
-        public ushort NumMapElements16 { get { return _numMapElements16; } }
-        public uint NumMapElements32 { get { return _numMapElements32; } }
+        public ushort? NumMapElements16 { get { return _numMapElements16; } }
+        public uint? NumMapElements32 { get { return _numMapElements32; } }
         public List<MapTuple> MapElements { get { return _mapElements; } }
         public Msgpack M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }

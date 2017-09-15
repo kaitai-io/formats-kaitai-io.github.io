@@ -93,8 +93,10 @@ class Asn1Der < Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries << Asn1Der.new(@_io)
+        i += 1
       end
       self
     end

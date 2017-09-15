@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 
@@ -24,16 +23,24 @@ public:
         BPP_TYPE_BPP_24 = 3
     };
 
-    psx_tim_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, psx_tim_t* p_root = 0);
+    psx_tim_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, psx_tim_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~psx_tim_t();
 
     class bitmap_t : public kaitai::kstruct {
 
     public:
 
-        bitmap_t(kaitai::kstream* p_io, psx_tim_t* p_parent = 0, psx_tim_t* p_root = 0);
+        bitmap_t(kaitai::kstream* p__io, psx_tim_t* p__parent = 0, psx_tim_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~bitmap_t();
 
     private:

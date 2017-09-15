@@ -4,13 +4,13 @@ if (typeof require === 'function')
   var TcpSegment = require('./TcpSegment.js');
 
 if (typeof require === 'function')
+  var Ipv6Packet = require('./Ipv6Packet.js');
+
+if (typeof require === 'function')
   var UdpDatagram = require('./UdpDatagram.js');
 
 if (typeof require === 'function')
   var IcmpPacket = require('./IcmpPacket.js');
-
-if (typeof require === 'function')
-  var Ipv6Packet = require('./Ipv6Packet.js');
 
 var Ipv4Packet = (function() {
   Ipv4Packet.ProtocolEnum = Object.freeze({
@@ -330,22 +330,22 @@ var Ipv4Packet = (function() {
     case Ipv4Packet.ProtocolEnum.TCP:
       this._raw_body = this._io.readBytes((this.totalLength - this.ihlBytes));
       var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new TcpSegment(_io__raw_body);
+      this.body = new TcpSegment(_io__raw_body, this, null);
       break;
     case Ipv4Packet.ProtocolEnum.ICMP:
       this._raw_body = this._io.readBytes((this.totalLength - this.ihlBytes));
       var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new IcmpPacket(_io__raw_body);
+      this.body = new IcmpPacket(_io__raw_body, this, null);
       break;
     case Ipv4Packet.ProtocolEnum.UDP:
       this._raw_body = this._io.readBytes((this.totalLength - this.ihlBytes));
       var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new UdpDatagram(_io__raw_body);
+      this.body = new UdpDatagram(_io__raw_body, this, null);
       break;
     case Ipv4Packet.ProtocolEnum.IPV6:
       this._raw_body = this._io.readBytes((this.totalLength - this.ihlBytes));
       var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new Ipv6Packet(_io__raw_body);
+      this.body = new Ipv6Packet(_io__raw_body, this, null);
       break;
     default:
       this.body = this._io.readBytes((this.totalLength - this.ihlBytes));
@@ -363,8 +363,10 @@ var Ipv4Packet = (function() {
     }
     Ipv4Options.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.entries.push(new Ipv4Option(this._io, this, this._root));
+        i++;
       }
     }
 
@@ -388,7 +390,7 @@ var Ipv4Packet = (function() {
       get: function() {
         if (this._m_copy !== undefined)
           return this._m_copy;
-        this._m_copy = ((this.b1 & 128) >> 7);
+        this._m_copy = ((this.b1 & 128) >>> 7);
         return this._m_copy;
       }
     });
@@ -396,7 +398,7 @@ var Ipv4Packet = (function() {
       get: function() {
         if (this._m_optClass !== undefined)
           return this._m_optClass;
-        this._m_optClass = ((this.b1 & 96) >> 5);
+        this._m_optClass = ((this.b1 & 96) >>> 5);
         return this._m_optClass;
       }
     });
@@ -415,7 +417,7 @@ var Ipv4Packet = (function() {
     get: function() {
       if (this._m_version !== undefined)
         return this._m_version;
-      this._m_version = ((this.b1 & 240) >> 4);
+      this._m_version = ((this.b1 & 240) >>> 4);
       return this._m_version;
     }
   });

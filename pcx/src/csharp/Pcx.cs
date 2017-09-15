@@ -11,6 +11,7 @@ namespace Kaitai
             return new Pcx(new KaitaiStream(fileName));
         }
 
+
         public enum Versions
         {
             V25 = 0,
@@ -24,19 +25,19 @@ namespace Kaitai
         {
             Rle = 1,
         }
-
-        public Pcx(KaitaiStream io, KaitaiStruct parent = null, Pcx root = null) : base(io)
+        public Pcx(KaitaiStream p__io, KaitaiStruct p__parent = null, Pcx p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_palette256 = false;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             __raw_hdr = m_io.ReadBytes(128);
             var io___raw_hdr = new KaitaiStream(__raw_hdr);
             _hdr = new Header(io___raw_hdr, this, m_root);
-            }
+        }
 
         /// <remarks>
         /// Reference: <a href="http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "ZSoft .PCX FILE HEADER FORMAT"</a>
@@ -48,13 +49,14 @@ namespace Kaitai
                 return new Header(new KaitaiStream(fileName));
             }
 
-            public Header(KaitaiStream io, Pcx parent = null, Pcx root = null) : base(io)
+            public Header(KaitaiStream p__io, Pcx p__parent = null, Pcx p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.EnsureFixedContents(new byte[] { 10 });
                 _version = ((Pcx.Versions) m_io.ReadU1());
                 _encoding = ((Pcx.Encodings) m_io.ReadU1());
@@ -72,7 +74,7 @@ namespace Kaitai
                 _paletteInfo = m_io.ReadU2le();
                 _hScreenSize = m_io.ReadU2le();
                 _vScreenSize = m_io.ReadU2le();
-                }
+            }
             private byte[] _magic;
             private Versions _version;
             private Encodings _encoding;
@@ -127,19 +129,21 @@ namespace Kaitai
                 return new TPalette256(new KaitaiStream(fileName));
             }
 
-            public TPalette256(KaitaiStream io, Pcx parent = null, Pcx root = null) : base(io)
+            public TPalette256(KaitaiStream p__io, Pcx p__parent = null, Pcx p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.EnsureFixedContents(new byte[] { 12 });
                 _colors = new List<Rgb>((int) (256));
-                for (var i = 0; i < 256; i++) {
+                for (var i = 0; i < 256; i++)
+                {
                     _colors.Add(new Rgb(m_io, this, m_root));
                 }
-                }
+            }
             private byte[] _magic;
             private List<Rgb> _colors;
             private Pcx m_root;
@@ -156,17 +160,18 @@ namespace Kaitai
                 return new Rgb(new KaitaiStream(fileName));
             }
 
-            public Rgb(KaitaiStream io, Pcx.TPalette256 parent = null, Pcx root = null) : base(io)
+            public Rgb(KaitaiStream p__io, Pcx.TPalette256 p__parent = null, Pcx p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _r = m_io.ReadU1();
                 _g = m_io.ReadU1();
                 _b = m_io.ReadU1();
-                }
+            }
             private byte _r;
             private byte _g;
             private byte _b;

@@ -202,8 +202,8 @@ section#format-index .row {
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class MicrosoftCfb extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \MicrosoftCfb $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MicrosoftCfb $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
 
@@ -235,25 +235,21 @@ class MicrosoftCfb extends \Kaitai\Struct\Struct {
             return $this-&gt;_m_dir;
         $_pos = $this-&gt;_io-&gt;pos();
         $this-&gt;_io-&gt;seek((($this-&gt;header()-&gt;ofsDir() + 1) * $this-&gt;sectorSize()));
-        $this-&gt;_m__raw_dir = $this-&gt;_io-&gt;readBytes(128);
-        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_dir);
-        $this-&gt;_m_dir = new \MicrosoftCfb\DirEntry($io, $this, $this-&gt;_root);
+        $this-&gt;_m_dir = new \MicrosoftCfb\DirEntry($this-&gt;_io, $this, $this-&gt;_root);
         $this-&gt;_io-&gt;seek($_pos);
         return $this-&gt;_m_dir;
     }
     protected $_m_header;
     protected $_m__raw_fat;
-    protected $_m__raw_dir;
     public function header() { return $this-&gt;_m_header; }
     public function _raw_fat() { return $this-&gt;_m__raw_fat; }
-    public function _raw_dir() { return $this-&gt;_m__raw_dir; }
 }
 
 namespace \MicrosoftCfb;
 
 class CfbHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftCfb $parent = null, \MicrosoftCfb $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftCfb $_parent = null, \MicrosoftCfb $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
 
@@ -370,15 +366,17 @@ class CfbHeader extends \Kaitai\Struct\Struct {
 namespace \MicrosoftCfb;
 
 class FatEntries extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftCfb $parent = null, \MicrosoftCfb $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftCfb $_parent = null, \MicrosoftCfb $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
 
     private function _read() {
         $this-&gt;_m_entries = [];
+        $i = 0;
         while (!$this-&gt;_io-&gt;isEof()) {
             $this-&gt;_m_entries[] = $this-&gt;_io-&gt;readS4le();
+            $i++;
         }
     }
     protected $_m_entries;
@@ -388,8 +386,8 @@ class FatEntries extends \Kaitai\Struct\Struct {
 namespace \MicrosoftCfb;
 
 class DirEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftCfb $parent = null, \MicrosoftCfb $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MicrosoftCfb $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
 
@@ -420,6 +418,45 @@ class DirEntry extends \Kaitai\Struct\Struct {
             $io-&gt;seek($_pos);
         }
         return $this-&gt;_m_miniStream;
+    }
+    protected $_m_child;
+    public function child() {
+        if ($this-&gt;_m_child !== null)
+            return $this-&gt;_m_child;
+        if ($this-&gt;childId() != -1) {
+            $io = $this-&gt;_root()-&gt;_io();
+            $_pos = $io-&gt;pos();
+            $io-&gt;seek(((($this-&gt;_root()-&gt;header()-&gt;ofsDir() + 1) * $this-&gt;_root()-&gt;sectorSize()) + ($this-&gt;childId() * 128)));
+            $this-&gt;_m_child = new \MicrosoftCfb\DirEntry($io, $this, $this-&gt;_root);
+            $io-&gt;seek($_pos);
+        }
+        return $this-&gt;_m_child;
+    }
+    protected $_m_leftSibling;
+    public function leftSibling() {
+        if ($this-&gt;_m_leftSibling !== null)
+            return $this-&gt;_m_leftSibling;
+        if ($this-&gt;leftSiblingId() != -1) {
+            $io = $this-&gt;_root()-&gt;_io();
+            $_pos = $io-&gt;pos();
+            $io-&gt;seek(((($this-&gt;_root()-&gt;header()-&gt;ofsDir() + 1) * $this-&gt;_root()-&gt;sectorSize()) + ($this-&gt;leftSiblingId() * 128)));
+            $this-&gt;_m_leftSibling = new \MicrosoftCfb\DirEntry($io, $this, $this-&gt;_root);
+            $io-&gt;seek($_pos);
+        }
+        return $this-&gt;_m_leftSibling;
+    }
+    protected $_m_rightSibling;
+    public function rightSibling() {
+        if ($this-&gt;_m_rightSibling !== null)
+            return $this-&gt;_m_rightSibling;
+        if ($this-&gt;rightSiblingId() != -1) {
+            $io = $this-&gt;_root()-&gt;_io();
+            $_pos = $io-&gt;pos();
+            $io-&gt;seek(((($this-&gt;_root()-&gt;header()-&gt;ofsDir() + 1) * $this-&gt;_root()-&gt;sectorSize()) + ($this-&gt;rightSiblingId() * 128)));
+            $this-&gt;_m_rightSibling = new \MicrosoftCfb\DirEntry($io, $this, $this-&gt;_root);
+            $io-&gt;seek($_pos);
+        }
+        return $this-&gt;_m_rightSibling;
     }
     protected $_m_name;
     protected $_m_nameLen;

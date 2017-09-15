@@ -247,8 +247,10 @@ class QuicktimeMov < Kaitai::Struct::Struct
       @major_brand = Kaitai::Struct::Stream::resolve_enum(BRAND, @_io.read_u4be)
       @minor_version = @_io.read_bytes(4)
       @compatible_brands = []
+      i = 0
       while not @_io.eof?
         @compatible_brands << Kaitai::Struct::Stream::resolve_enum(BRAND, @_io.read_u4be)
+        i += 1
       end
       self
     end
@@ -408,8 +410,10 @@ class QuicktimeMov < Kaitai::Struct::Struct
 
     def _read
       @items = []
+      i = 0
       while not @_io.eof?
         @items << Atom.new(@_io, self, @_root)
+        i += 1
       end
       self
     end

@@ -1,12 +1,16 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Edid extends KaitaiStruct {
     public static Edid fromFile(String fileName) throws IOException {
-        return new Edid(new KaitaiStream(fileName));
+        return new Edid(new ByteBufferKaitaiStream(fileName));
     }
 
     public Edid(KaitaiStream _io) {
@@ -37,7 +41,557 @@ public class Edid extends KaitaiStruct {
         this.screenSizeV = this._io.readU1();
         this.gammaMod = this._io.readU1();
         this.featuresFlags = this._io.readU1();
-        this.chromacity = this._io.readBytes(10);
+        this.chromacity = new ChromacityInfo(this._io, this, _root);
+        this.estTimings = new EstTimingsInfo(this._io, this, _root);
+        stdTimings = new ArrayList<StdTiming>((int) (8));
+        for (int i = 0; i < 8; i++) {
+            this.stdTimings.add(new StdTiming(this._io, this, _root));
+        }
+    }
+
+    /**
+     * Chromaticity information: colorimetry and white point
+     * coordinates. All coordinates are stored as fixed precision
+     * 10-bit numbers, bits are shuffled for compactness.
+     */
+    public static class ChromacityInfo extends KaitaiStruct {
+        public static ChromacityInfo fromFile(String fileName) throws IOException {
+            return new ChromacityInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ChromacityInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ChromacityInfo(KaitaiStream _io, Edid _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ChromacityInfo(KaitaiStream _io, Edid _parent, Edid _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.redX10 = this._io.readBitsInt(2);
+            this.redY10 = this._io.readBitsInt(2);
+            this.greenX10 = this._io.readBitsInt(2);
+            this.greenY10 = this._io.readBitsInt(2);
+            this.blueX10 = this._io.readBitsInt(2);
+            this.blueY10 = this._io.readBitsInt(2);
+            this.whiteX10 = this._io.readBitsInt(2);
+            this.whiteY10 = this._io.readBitsInt(2);
+            this._io.alignToByte();
+            this.redX92 = this._io.readU1();
+            this.redY92 = this._io.readU1();
+            this.greenX92 = this._io.readU1();
+            this.greenY92 = this._io.readU1();
+            this.blueX92 = this._io.readU1();
+            this.blueY92 = this._io.readU1();
+            this.whiteX92 = this._io.readU1();
+            this.whiteY92 = this._io.readU1();
+        }
+        private Integer greenXInt;
+        public Integer greenXInt() {
+            if (this.greenXInt != null)
+                return this.greenXInt;
+            int _tmp = (int) (((greenX92() << 2) | greenX10()));
+            this.greenXInt = _tmp;
+            return this.greenXInt;
+        }
+        private Double redY;
+
+        /**
+         * Red Y coordinate
+         */
+        public Double redY() {
+            if (this.redY != null)
+                return this.redY;
+            double _tmp = (double) ((redYInt() / 1024.0));
+            this.redY = _tmp;
+            return this.redY;
+        }
+        private Integer greenYInt;
+        public Integer greenYInt() {
+            if (this.greenYInt != null)
+                return this.greenYInt;
+            int _tmp = (int) (((greenY92() << 2) | greenY10()));
+            this.greenYInt = _tmp;
+            return this.greenYInt;
+        }
+        private Double whiteY;
+
+        /**
+         * White Y coordinate
+         */
+        public Double whiteY() {
+            if (this.whiteY != null)
+                return this.whiteY;
+            double _tmp = (double) ((whiteYInt() / 1024.0));
+            this.whiteY = _tmp;
+            return this.whiteY;
+        }
+        private Double redX;
+
+        /**
+         * Red X coordinate
+         */
+        public Double redX() {
+            if (this.redX != null)
+                return this.redX;
+            double _tmp = (double) ((redXInt() / 1024.0));
+            this.redX = _tmp;
+            return this.redX;
+        }
+        private Double whiteX;
+
+        /**
+         * White X coordinate
+         */
+        public Double whiteX() {
+            if (this.whiteX != null)
+                return this.whiteX;
+            double _tmp = (double) ((whiteXInt() / 1024.0));
+            this.whiteX = _tmp;
+            return this.whiteX;
+        }
+        private Double blueX;
+
+        /**
+         * Blue X coordinate
+         */
+        public Double blueX() {
+            if (this.blueX != null)
+                return this.blueX;
+            double _tmp = (double) ((blueXInt() / 1024.0));
+            this.blueX = _tmp;
+            return this.blueX;
+        }
+        private Integer whiteXInt;
+        public Integer whiteXInt() {
+            if (this.whiteXInt != null)
+                return this.whiteXInt;
+            int _tmp = (int) (((whiteX92() << 2) | whiteX10()));
+            this.whiteXInt = _tmp;
+            return this.whiteXInt;
+        }
+        private Integer whiteYInt;
+        public Integer whiteYInt() {
+            if (this.whiteYInt != null)
+                return this.whiteYInt;
+            int _tmp = (int) (((whiteY92() << 2) | whiteY10()));
+            this.whiteYInt = _tmp;
+            return this.whiteYInt;
+        }
+        private Double greenX;
+
+        /**
+         * Green X coordinate
+         */
+        public Double greenX() {
+            if (this.greenX != null)
+                return this.greenX;
+            double _tmp = (double) ((greenXInt() / 1024.0));
+            this.greenX = _tmp;
+            return this.greenX;
+        }
+        private Integer redXInt;
+        public Integer redXInt() {
+            if (this.redXInt != null)
+                return this.redXInt;
+            int _tmp = (int) (((redX92() << 2) | redX10()));
+            this.redXInt = _tmp;
+            return this.redXInt;
+        }
+        private Integer redYInt;
+        public Integer redYInt() {
+            if (this.redYInt != null)
+                return this.redYInt;
+            int _tmp = (int) (((redY92() << 2) | redY10()));
+            this.redYInt = _tmp;
+            return this.redYInt;
+        }
+        private Integer blueXInt;
+        public Integer blueXInt() {
+            if (this.blueXInt != null)
+                return this.blueXInt;
+            int _tmp = (int) (((blueX92() << 2) | blueX10()));
+            this.blueXInt = _tmp;
+            return this.blueXInt;
+        }
+        private Double blueY;
+
+        /**
+         * Blue Y coordinate
+         */
+        public Double blueY() {
+            if (this.blueY != null)
+                return this.blueY;
+            double _tmp = (double) ((blueYInt() / 1024.0));
+            this.blueY = _tmp;
+            return this.blueY;
+        }
+        private Double greenY;
+
+        /**
+         * Green Y coordinate
+         */
+        public Double greenY() {
+            if (this.greenY != null)
+                return this.greenY;
+            double _tmp = (double) ((greenYInt() / 1024.0));
+            this.greenY = _tmp;
+            return this.greenY;
+        }
+        private Integer blueYInt;
+        public Integer blueYInt() {
+            if (this.blueYInt != null)
+                return this.blueYInt;
+            int _tmp = (int) (((blueY92() << 2) | blueY10()));
+            this.blueYInt = _tmp;
+            return this.blueYInt;
+        }
+        private long redX10;
+        private long redY10;
+        private long greenX10;
+        private long greenY10;
+        private long blueX10;
+        private long blueY10;
+        private long whiteX10;
+        private long whiteY10;
+        private int redX92;
+        private int redY92;
+        private int greenX92;
+        private int greenY92;
+        private int blueX92;
+        private int blueY92;
+        private int whiteX92;
+        private int whiteY92;
+        private Edid _root;
+        private Edid _parent;
+
+        /**
+         * Red X, bits 1..0
+         */
+        public long redX10() { return redX10; }
+
+        /**
+         * Red Y, bits 1..0
+         */
+        public long redY10() { return redY10; }
+
+        /**
+         * Green X, bits 1..0
+         */
+        public long greenX10() { return greenX10; }
+
+        /**
+         * Green Y, bits 1..0
+         */
+        public long greenY10() { return greenY10; }
+
+        /**
+         * Blue X, bits 1..0
+         */
+        public long blueX10() { return blueX10; }
+
+        /**
+         * Blue Y, bits 1..0
+         */
+        public long blueY10() { return blueY10; }
+
+        /**
+         * White X, bits 1..0
+         */
+        public long whiteX10() { return whiteX10; }
+
+        /**
+         * White Y, bits 1..0
+         */
+        public long whiteY10() { return whiteY10; }
+
+        /**
+         * Red X, bits 9..2
+         */
+        public int redX92() { return redX92; }
+
+        /**
+         * Red Y, bits 9..2
+         */
+        public int redY92() { return redY92; }
+
+        /**
+         * Green X, bits 9..2
+         */
+        public int greenX92() { return greenX92; }
+
+        /**
+         * Green Y, bits 9..2
+         */
+        public int greenY92() { return greenY92; }
+
+        /**
+         * Blue X, bits 9..2
+         */
+        public int blueX92() { return blueX92; }
+
+        /**
+         * Blue Y, bits 9..2
+         */
+        public int blueY92() { return blueY92; }
+
+        /**
+         * White X, bits 9..2
+         */
+        public int whiteX92() { return whiteX92; }
+
+        /**
+         * White Y, bits 9..2
+         */
+        public int whiteY92() { return whiteY92; }
+        public Edid _root() { return _root; }
+        public Edid _parent() { return _parent; }
+    }
+    public static class EstTimingsInfo extends KaitaiStruct {
+        public static EstTimingsInfo fromFile(String fileName) throws IOException {
+            return new EstTimingsInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public EstTimingsInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public EstTimingsInfo(KaitaiStream _io, Edid _parent) {
+            this(_io, _parent, null);
+        }
+
+        public EstTimingsInfo(KaitaiStream _io, Edid _parent, Edid _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.can72040070 = this._io.readBitsInt(1) != 0;
+            this.can72040088 = this._io.readBitsInt(1) != 0;
+            this.can64048060 = this._io.readBitsInt(1) != 0;
+            this.can64048067 = this._io.readBitsInt(1) != 0;
+            this.can64048072 = this._io.readBitsInt(1) != 0;
+            this.can64048075 = this._io.readBitsInt(1) != 0;
+            this.can80060056 = this._io.readBitsInt(1) != 0;
+            this.can80060060 = this._io.readBitsInt(1) != 0;
+            this.can80060072 = this._io.readBitsInt(1) != 0;
+            this.can80060075 = this._io.readBitsInt(1) != 0;
+            this.can83262475 = this._io.readBitsInt(1) != 0;
+            this.can102476887I = this._io.readBitsInt(1) != 0;
+            this.can102476860 = this._io.readBitsInt(1) != 0;
+            this.can102476870 = this._io.readBitsInt(1) != 0;
+            this.can102476875 = this._io.readBitsInt(1) != 0;
+            this.can1280102475 = this._io.readBitsInt(1) != 0;
+            this.can115287075 = this._io.readBitsInt(1) != 0;
+            this.reserved = this._io.readBitsInt(7);
+        }
+        private boolean can72040070;
+        private boolean can72040088;
+        private boolean can64048060;
+        private boolean can64048067;
+        private boolean can64048072;
+        private boolean can64048075;
+        private boolean can80060056;
+        private boolean can80060060;
+        private boolean can80060072;
+        private boolean can80060075;
+        private boolean can83262475;
+        private boolean can102476887I;
+        private boolean can102476860;
+        private boolean can102476870;
+        private boolean can102476875;
+        private boolean can1280102475;
+        private boolean can115287075;
+        private long reserved;
+        private Edid _root;
+        private Edid _parent;
+
+        /**
+         * Supports 720 x 400 @ 70Hz
+         */
+        public boolean can72040070() { return can72040070; }
+
+        /**
+         * Supports 720 x 400 @ 88Hz
+         */
+        public boolean can72040088() { return can72040088; }
+
+        /**
+         * Supports 640 x 480 @ 60Hz
+         */
+        public boolean can64048060() { return can64048060; }
+
+        /**
+         * Supports 640 x 480 @ 67Hz
+         */
+        public boolean can64048067() { return can64048067; }
+
+        /**
+         * Supports 640 x 480 @ 72Hz
+         */
+        public boolean can64048072() { return can64048072; }
+
+        /**
+         * Supports 640 x 480 @ 75Hz
+         */
+        public boolean can64048075() { return can64048075; }
+
+        /**
+         * Supports 800 x 600 @ 56Hz
+         */
+        public boolean can80060056() { return can80060056; }
+
+        /**
+         * Supports 800 x 600 @ 60Hz
+         */
+        public boolean can80060060() { return can80060060; }
+
+        /**
+         * Supports 800 x 600 @ 72Hz
+         */
+        public boolean can80060072() { return can80060072; }
+
+        /**
+         * Supports 800 x 600 @ 75Hz
+         */
+        public boolean can80060075() { return can80060075; }
+
+        /**
+         * Supports 832 x 624 @ 75Hz
+         */
+        public boolean can83262475() { return can83262475; }
+
+        /**
+         * Supports 1024 x 768 @ 87Hz(I)
+         */
+        public boolean can102476887I() { return can102476887I; }
+
+        /**
+         * Supports 1024 x 768 @ 60Hz
+         */
+        public boolean can102476860() { return can102476860; }
+
+        /**
+         * Supports 1024 x 768 @ 70Hz
+         */
+        public boolean can102476870() { return can102476870; }
+
+        /**
+         * Supports 1024 x 768 @ 75Hz
+         */
+        public boolean can102476875() { return can102476875; }
+
+        /**
+         * Supports 1280 x 1024 @ 75Hz
+         */
+        public boolean can1280102475() { return can1280102475; }
+
+        /**
+         * Supports 1152 x 870 @ 75Hz
+         */
+        public boolean can115287075() { return can115287075; }
+        public long reserved() { return reserved; }
+        public Edid _root() { return _root; }
+        public Edid _parent() { return _parent; }
+    }
+    public static class StdTiming extends KaitaiStruct {
+        public static StdTiming fromFile(String fileName) throws IOException {
+            return new StdTiming(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public enum AspectRatios {
+            RATIO_16_10(0),
+            RATIO_4_3(1),
+            RATIO_5_4(2),
+            RATIO_16_9(3);
+
+            private final long id;
+            AspectRatios(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, AspectRatios> byId = new HashMap<Long, AspectRatios>(4);
+            static {
+                for (AspectRatios e : AspectRatios.values())
+                    byId.put(e.id(), e);
+            }
+            public static AspectRatios byId(long id) { return byId.get(id); }
+        }
+
+        public StdTiming(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public StdTiming(KaitaiStream _io, Edid _parent) {
+            this(_io, _parent, null);
+        }
+
+        public StdTiming(KaitaiStream _io, Edid _parent, Edid _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.horizActivePixelsMod = this._io.readU1();
+            this.aspectRatio = AspectRatios.byId(this._io.readBitsInt(2));
+            this.refreshRateMod = this._io.readBitsInt(5);
+        }
+        private Integer horizActivePixels;
+
+        /**
+         * Range of horizontal active pixels.
+         */
+        public Integer horizActivePixels() {
+            if (this.horizActivePixels != null)
+                return this.horizActivePixels;
+            int _tmp = (int) (((horizActivePixelsMod() + 31) * 8));
+            this.horizActivePixels = _tmp;
+            return this.horizActivePixels;
+        }
+        private Integer refreshRate;
+
+        /**
+         * Vertical refresh rate, Hz.
+         */
+        public Integer refreshRate() {
+            if (this.refreshRate != null)
+                return this.refreshRate;
+            int _tmp = (int) ((refreshRateMod() + 60));
+            this.refreshRate = _tmp;
+            return this.refreshRate;
+        }
+        private int horizActivePixelsMod;
+        private AspectRatios aspectRatio;
+        private long refreshRateMod;
+        private Edid _root;
+        private Edid _parent;
+
+        /**
+         * Range of horizontal active pixels, written in modified form:
+         * `(horiz_active_pixels / 8) - 31`. This yields an effective
+         * range of 256..2288, with steps of 8 pixels.
+         */
+        public int horizActivePixelsMod() { return horizActivePixelsMod; }
+
+        /**
+         * Aspect ratio of the image. Can be used to calculate number
+         * of vertical pixels.
+         */
+        public AspectRatios aspectRatio() { return aspectRatio; }
+
+        /**
+         * Refresh rate in Hz, written in modified form: `refresh_rate
+         * - 60`. This yields an effective range of 60..123 Hz.
+         */
+        public long refreshRateMod() { return refreshRateMod; }
+        public Edid _root() { return _root; }
+        public Edid _parent() { return _parent; }
     }
     private Integer mfgYear;
     public Integer mfgYear() {
@@ -94,7 +648,9 @@ public class Edid extends KaitaiStruct {
     private int screenSizeV;
     private int gammaMod;
     private int featuresFlags;
-    private byte[] chromacity;
+    private ChromacityInfo chromacity;
+    private EstTimingsInfo estTimings;
+    private ArrayList<StdTiming> stdTimings;
     private Edid _root;
     private KaitaiStruct _parent;
     public byte[] magic() { return magic; }
@@ -146,7 +702,27 @@ public class Edid extends KaitaiStruct {
      */
     public int gammaMod() { return gammaMod; }
     public int featuresFlags() { return featuresFlags; }
-    public byte[] chromacity() { return chromacity; }
+
+    /**
+     * Phosphor or filter chromaticity structure, which provides info on colorimetry and white point
+     * @see "Standard, section 3.7"
+     */
+    public ChromacityInfo chromacity() { return chromacity; }
+
+    /**
+     * Block of bit flags that indicates support of so called
+     * "established timings", which is a commonly used subset of VESA
+     * DMT (Discrete Monitor Timings) modes.
+     * @see "Standard, section 3.8"
+     */
+    public EstTimingsInfo estTimings() { return estTimings; }
+
+    /**
+     * Array of descriptions of so called "standard timings", which are
+     * used to specify up to 8 additional timings not included in
+     * "established timings".
+     */
+    public ArrayList<StdTiming> stdTimings() { return stdTimings; }
     public Edid _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

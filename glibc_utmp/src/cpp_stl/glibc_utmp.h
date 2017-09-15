@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -32,16 +31,24 @@ public:
         ENTRY_TYPE_ACCOUNTING = 9
     };
 
-    glibc_utmp_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, glibc_utmp_t* p_root = 0);
+    glibc_utmp_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, glibc_utmp_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~glibc_utmp_t();
 
     class record_t : public kaitai::kstruct {
 
     public:
 
-        record_t(kaitai::kstream* p_io, glibc_utmp_t* p_parent = 0, glibc_utmp_t* p_root = 0);
+        record_t(kaitai::kstream* p__io, glibc_utmp_t* p__parent = 0, glibc_utmp_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~record_t();
 
     private:
@@ -119,8 +126,12 @@ public:
 
     public:
 
-        timeval_t(kaitai::kstream* p_io, glibc_utmp_t::record_t* p_parent = 0, glibc_utmp_t* p_root = 0);
+        timeval_t(kaitai::kstream* p__io, glibc_utmp_t::record_t* p__parent = 0, glibc_utmp_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~timeval_t();
 
     private:
@@ -149,14 +160,14 @@ private:
     glibc_utmp_t* m__root;
     kaitai::kstruct* m__parent;
     std::vector<std::string>* m__raw_records;
-    kaitai::kstream* m__io__raw_records;
+    std::vector<kaitai::kstream*>* m__io__raw_records;
 
 public:
     std::vector<record_t*>* records() const { return m_records; }
     glibc_utmp_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
     std::vector<std::string>* _raw_records() const { return m__raw_records; }
-    kaitai::kstream* _io__raw_records() const { return m__io__raw_records; }
+    std::vector<kaitai::kstream*>* _io__raw_records() const { return m__io__raw_records; }
 };
 
 #endif  // GLIBC_UTMP_H_

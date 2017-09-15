@@ -71,8 +71,10 @@ class TlsClientHello(KaitaiStruct):
         def _read(self):
             self.list_length = self._io.read_u2be()
             self.server_names = []
+            i = 0
             while not self._io.is_eof():
                 self.server_names.append(self._root.ServerName(self._io, self, self._root))
+                i += 1
 
 
 
@@ -113,8 +115,10 @@ class TlsClientHello(KaitaiStruct):
         def _read(self):
             self.ext_len = self._io.read_u2be()
             self.alpn_protocols = []
+            i = 0
             while not self._io.is_eof():
                 self.alpn_protocols.append(self._root.Protocol(self._io, self, self._root))
+                i += 1
 
 
 
@@ -128,8 +132,10 @@ class TlsClientHello(KaitaiStruct):
         def _read(self):
             self.len = self._io.read_u2be()
             self.extensions = []
+            i = 0
             while not self._io.is_eof():
                 self.extensions.append(self._root.Extension(self._io, self, self._root))
+                i += 1
 
 
 

@@ -22,6 +22,7 @@ namespace Kaitai
             return new Rar(new KaitaiStream(fileName));
         }
 
+
         public enum BlockTypes
         {
             Marker = 114,
@@ -55,29 +56,33 @@ namespace Kaitai
             Good = 52,
             Best = 53,
         }
-
-        public Rar(KaitaiStream io, KaitaiStruct parent = null, Rar root = null) : base(io)
+        public Rar(KaitaiStream p__io, KaitaiStruct p__parent = null, Rar p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _magic = new MagicSignature(m_io, this, m_root);
             _blocks = new List<KaitaiStruct>();
-            while (!m_io.IsEof) {
-                switch (Magic.Version) {
-                case 0: {
-                    _blocks.Add(new Block(m_io, this, m_root));
-                    break;
-                }
-                case 1: {
-                    _blocks.Add(new BlockV5(m_io, this, m_root));
-                    break;
-                }
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    switch (Magic.Version) {
+                    case 0: {
+                        _blocks.Add(new Block(m_io, this, m_root));
+                        break;
+                    }
+                    case 1: {
+                        _blocks.Add(new BlockV5(m_io, this, m_root));
+                        break;
+                    }
+                    }
+                    i++;
                 }
             }
-            }
+        }
         public partial class BlockV5 : KaitaiStruct
         {
             public static BlockV5 FromFile(string fileName)
@@ -85,14 +90,15 @@ namespace Kaitai
                 return new BlockV5(new KaitaiStream(fileName));
             }
 
-            public BlockV5(KaitaiStream io, Rar parent = null, Rar root = null) : base(io)
+            public BlockV5(KaitaiStream p__io, Rar p__parent = null, Rar p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
-                }
+            private void _read()
+            {
+            }
             private Rar m_root;
             private Rar m_parent;
             public Rar M_Root { get { return m_root; } }
@@ -111,16 +117,17 @@ namespace Kaitai
                 return new Block(new KaitaiStream(fileName));
             }
 
-            public Block(KaitaiStream io, Rar parent = null, Rar root = null) : base(io)
+            public Block(KaitaiStream p__io, Rar p__parent = null, Rar p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_hasAdd = false;
                 f_headerSize = false;
                 f_bodySize = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _crc16 = m_io.ReadU2le();
                 _blockType = ((Rar.BlockTypes) m_io.ReadU1());
                 _flags = m_io.ReadU2le();
@@ -143,7 +150,7 @@ namespace Kaitai
                 if (HasAdd) {
                     _addBody = m_io.ReadBytes(AddSize);
                 }
-                }
+            }
             private bool f_hasAdd;
             private bool _hasAdd;
 
@@ -191,7 +198,7 @@ namespace Kaitai
             private BlockTypes _blockType;
             private ushort _flags;
             private ushort _blockSize;
-            private uint _addSize;
+            private uint? _addSize;
             private object _body;
             private byte[] _addBody;
             private Rar m_root;
@@ -213,7 +220,7 @@ namespace Kaitai
             /// <summary>
             /// Size of additional content in this block
             /// </summary>
-            public uint AddSize { get { return _addSize; } }
+            public uint? AddSize { get { return _addSize; } }
             public object Body { get { return _body; } }
 
             /// <summary>
@@ -231,13 +238,14 @@ namespace Kaitai
                 return new BlockFileHeader(new KaitaiStream(fileName));
             }
 
-            public BlockFileHeader(KaitaiStream io, Rar.Block parent = null, Rar root = null) : base(io)
+            public BlockFileHeader(KaitaiStream p__io, Rar.Block p__parent = null, Rar p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _lowUnpSize = m_io.ReadU4le();
                 _hostOs = ((Rar.Oses) m_io.ReadU1());
                 _fileCrc32 = m_io.ReadU4le();
@@ -253,7 +261,7 @@ namespace Kaitai
                 if ((M_Parent.Flags & 1024) != 0) {
                     _salt = m_io.ReadU8le();
                 }
-                }
+            }
             private uint _lowUnpSize;
             private Oses _hostOs;
             private uint _fileCrc32;
@@ -262,9 +270,9 @@ namespace Kaitai
             private Methods _method;
             private ushort _nameSize;
             private uint _attr;
-            private uint _highPackSize;
+            private uint? _highPackSize;
             private byte[] _fileName;
-            private ulong _salt;
+            private ulong? _salt;
             private Rar m_root;
             private Rar.Block m_parent;
 
@@ -307,9 +315,9 @@ namespace Kaitai
             /// <summary>
             /// Compressed file size, high 32 bits, only if 64-bit header flag is present
             /// </summary>
-            public uint HighPackSize { get { return _highPackSize; } }
+            public uint? HighPackSize { get { return _highPackSize; } }
             public byte[] FileName { get { return _fileName; } }
-            public ulong Salt { get { return _salt; } }
+            public ulong? Salt { get { return _salt; } }
             public Rar M_Root { get { return m_root; } }
             public Rar.Block M_Parent { get { return m_parent; } }
         }
@@ -330,19 +338,20 @@ namespace Kaitai
                 return new MagicSignature(new KaitaiStream(fileName));
             }
 
-            public MagicSignature(KaitaiStream io, Rar parent = null, Rar root = null) : base(io)
+            public MagicSignature(KaitaiStream p__io, Rar p__parent = null, Rar p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic1 = m_io.EnsureFixedContents(new byte[] { 82, 97, 114, 33, 26, 7 });
                 _version = m_io.ReadU1();
                 if (Version == 1) {
                     _magic3 = m_io.EnsureFixedContents(new byte[] { 0 });
                 }
-                }
+            }
             private byte[] _magic1;
             private byte _version;
             private byte[] _magic3;
@@ -374,10 +383,10 @@ namespace Kaitai
                 return new DosTime(new KaitaiStream(fileName));
             }
 
-            public DosTime(KaitaiStream io, Rar.BlockFileHeader parent = null, Rar root = null) : base(io)
+            public DosTime(KaitaiStream p__io, Rar.BlockFileHeader p__parent = null, Rar p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_month = false;
                 f_seconds = false;
                 f_year = false;
@@ -386,10 +395,11 @@ namespace Kaitai
                 f_hours = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _time = m_io.ReadU2le();
                 _date = m_io.ReadU2le();
-                }
+            }
             private bool f_month;
             private int _month;
             public int Month

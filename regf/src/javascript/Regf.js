@@ -31,10 +31,12 @@ var Regf = (function() {
     this.header = new FileHeader(this._io, this, this._root);
     this._raw_hiveBins = [];
     this.hiveBins = [];
+    var i = 0;
     while (!this._io.isEof()) {
       this._raw_hiveBins.push(this._io.readBytes(4096));
       var _io__raw_hiveBins = new KaitaiStream(this._raw_hiveBins[this._raw_hiveBins.length - 1]);
       this.hiveBins.push(new HiveBin(_io__raw_hiveBins, this, this._root));
+      i++;
     }
   }
 
@@ -64,8 +66,10 @@ var Regf = (function() {
     HiveBin.prototype._read = function() {
       this.header = new HiveBinHeader(this._io, this, this._root);
       this.cells = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.cells.push(new HiveBinCell(this._io, this, this._root));
+        i++;
       }
     }
 

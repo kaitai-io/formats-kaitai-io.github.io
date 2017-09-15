@@ -4,8 +4,8 @@
 
 
 
-dbf_t::dbf_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, dbf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+dbf_t::dbf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dbf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -30,9 +30,9 @@ dbf_t::~dbf_t() {
     delete m_records;
 }
 
-dbf_t::header2_t::header2_t(kaitai::kstream *p_io, dbf_t* p_parent, dbf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dbf_t::header2_t::header2_t(kaitai::kstream* p__io, dbf_t* p__parent, dbf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -68,9 +68,9 @@ dbf_t::header2_t::~header2_t() {
     delete m_fields;
 }
 
-dbf_t::field_t::field_t(kaitai::kstream *p_io, dbf_t::header2_t* p_parent, dbf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dbf_t::field_t::field_t(kaitai::kstream* p__io, dbf_t::header2_t* p__parent, dbf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -90,9 +90,9 @@ void dbf_t::field_t::_read() {
 dbf_t::field_t::~field_t() {
 }
 
-dbf_t::header1_t::header1_t(kaitai::kstream *p_io, dbf_t* p_parent, dbf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dbf_t::header1_t::header1_t(kaitai::kstream* p__io, dbf_t* p__parent, dbf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_dbase_level = false;
     _read();
 }
@@ -118,9 +118,9 @@ int32_t dbf_t::header1_t::dbase_level() {
     return m_dbase_level;
 }
 
-dbf_t::header_dbase_3_t::header_dbase_3_t(kaitai::kstream *p_io, dbf_t::header2_t* p_parent, dbf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dbf_t::header_dbase_3_t::header_dbase_3_t(kaitai::kstream* p__io, dbf_t::header2_t* p__parent, dbf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -133,9 +133,9 @@ void dbf_t::header_dbase_3_t::_read() {
 dbf_t::header_dbase_3_t::~header_dbase_3_t() {
 }
 
-dbf_t::header_dbase_7_t::header_dbase_7_t(kaitai::kstream *p_io, dbf_t::header2_t* p_parent, dbf_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+dbf_t::header_dbase_7_t::header_dbase_7_t(kaitai::kstream* p__io, dbf_t::header2_t* p__parent, dbf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

@@ -13,8 +13,8 @@
  */
 
 class MicrosoftNetworkMonitorV2 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \MicrosoftNetworkMonitorV2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MicrosoftNetworkMonitorV2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -110,15 +110,17 @@ class MicrosoftNetworkMonitorV2 extends \Kaitai\Struct\Struct {
 namespace \MicrosoftNetworkMonitorV2;
 
 class FrameIndex extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftNetworkMonitorV2 $parent = null, \MicrosoftNetworkMonitorV2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftNetworkMonitorV2 $_parent = null, \MicrosoftNetworkMonitorV2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \MicrosoftNetworkMonitorV2\FrameIndexEntry($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -133,8 +135,8 @@ class FrameIndex extends \Kaitai\Struct\Struct {
 namespace \MicrosoftNetworkMonitorV2;
 
 class FrameIndexEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftNetworkMonitorV2\FrameIndex $parent = null, \MicrosoftNetworkMonitorV2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftNetworkMonitorV2\FrameIndex $_parent = null, \MicrosoftNetworkMonitorV2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -173,8 +175,8 @@ class FrameIndexEntry extends \Kaitai\Struct\Struct {
 namespace \MicrosoftNetworkMonitorV2;
 
 class Frame extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftNetworkMonitorV2\FrameIndexEntry $parent = null, \MicrosoftNetworkMonitorV2 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftNetworkMonitorV2\FrameIndexEntry $_parent = null, \MicrosoftNetworkMonitorV2 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

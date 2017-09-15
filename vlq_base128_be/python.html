@@ -213,10 +213,10 @@ https://en.wikipedia.org/wiki/Variable-length_quantity</p>
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = VlqBase128Be(KaitaiStream(raw))</code></pre>
+data = VlqBase128Be(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -279,11 +279,13 @@ class VlqBase128Be(KaitaiStruct):
 
     def _read(self):
         self.groups = []
+        i = 0
         while True:
             _ = self._root.Group(self._io, self, self._root)
             self.groups.append(_)
             if not (_.has_next):
                 break
+            i += 1
 
     class Group(KaitaiStruct):
         &quot;&quot;&quot;One byte group, clearly divided into 7-bit &quot;value&quot; and 1-bit &quot;has continuation

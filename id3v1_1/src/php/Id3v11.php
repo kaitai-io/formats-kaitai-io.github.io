@@ -11,8 +11,8 @@
  */
 
 class Id3v11 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Id3v11 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Id3v11 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -45,8 +45,8 @@ class Id3v11 extends \Kaitai\Struct\Struct {
 namespace \Id3v11;
 
 class Id3V11Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Id3v11 $parent = null, \Id3v11 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Id3v11 $_parent = null, \Id3v11 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

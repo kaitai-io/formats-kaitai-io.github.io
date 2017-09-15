@@ -1,0 +1,118 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__windows_evt_log {
+		label="WindowsEvtLog";
+		graph[style=dotted];
+
+		windows_evt_log__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">48</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="records_pos">48</TD><TD PORT="records_size">...</TD><TD>Record</TD><TD PORT="records_type">records</TD></TR>
+			<TR><TD COLSPAN="4" PORT="records__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__header {
+			label="WindowsEvtLog::Header";
+			graph[style=dotted];
+
+			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_header_pos">0</TD><TD PORT="len_header_size">4</TD><TD>u4le</TD><TD PORT="len_header_type">len_header</TD></TR>
+				<TR><TD PORT="magic_pos">4</TD><TD PORT="magic_size">4</TD><TD>4C 66 4C 65</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="version_major_pos">8</TD><TD PORT="version_major_size">4</TD><TD>u4le</TD><TD PORT="version_major_type">version_major</TD></TR>
+				<TR><TD PORT="version_minor_pos">12</TD><TD PORT="version_minor_size">4</TD><TD>u4le</TD><TD PORT="version_minor_type">version_minor</TD></TR>
+				<TR><TD PORT="ofs_start_pos">16</TD><TD PORT="ofs_start_size">4</TD><TD>u4le</TD><TD PORT="ofs_start_type">ofs_start</TD></TR>
+				<TR><TD PORT="ofs_end_pos">20</TD><TD PORT="ofs_end_size">4</TD><TD>u4le</TD><TD PORT="ofs_end_type">ofs_end</TD></TR>
+				<TR><TD PORT="cur_rec_idx_pos">24</TD><TD PORT="cur_rec_idx_size">4</TD><TD>u4le</TD><TD PORT="cur_rec_idx_type">cur_rec_idx</TD></TR>
+				<TR><TD PORT="oldest_rec_idx_pos">28</TD><TD PORT="oldest_rec_idx_size">4</TD><TD>u4le</TD><TD PORT="oldest_rec_idx_type">oldest_rec_idx</TD></TR>
+				<TR><TD PORT="len_file_max_pos">32</TD><TD PORT="len_file_max_size">4</TD><TD>u4le</TD><TD PORT="len_file_max_type">len_file_max</TD></TR>
+				<TR><TD PORT="flags_pos">36</TD><TD PORT="flags_size">4</TD><TD>Flags</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="retention_pos">40</TD><TD PORT="retention_size">4</TD><TD>u4le</TD><TD PORT="retention_type">retention</TD></TR>
+				<TR><TD PORT="len_header_2_pos">44</TD><TD PORT="len_header_2_size">4</TD><TD>u4le</TD><TD PORT="len_header_2_type">len_header_2</TD></TR>
+			</TABLE>>];
+			subgraph cluster__flags {
+				label="WindowsEvtLog::Header::Flags";
+				graph[style=dotted];
+
+				flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">28b</TD><TD>b28</TD><TD PORT="reserved_type">reserved</TD></TR>
+					<TR><TD PORT="archive_pos">3:4</TD><TD PORT="archive_size">1b</TD><TD>BitsType1</TD><TD PORT="archive_type">archive</TD></TR>
+					<TR><TD PORT="log_full_pos">3:5</TD><TD PORT="log_full_size">1b</TD><TD>BitsType1</TD><TD PORT="log_full_type">log_full</TD></TR>
+					<TR><TD PORT="wrap_pos">3:6</TD><TD PORT="wrap_size">1b</TD><TD>BitsType1</TD><TD PORT="wrap_type">wrap</TD></TR>
+					<TR><TD PORT="dirty_pos">3:7</TD><TD PORT="dirty_size">1b</TD><TD>BitsType1</TD><TD PORT="dirty_type">dirty</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__record {
+			label="WindowsEvtLog::Record";
+			graph[style=dotted];
+
+			record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_record_pos">0</TD><TD PORT="len_record_size">4</TD><TD>u4le</TD><TD PORT="len_record_type">len_record</TD></TR>
+				<TR><TD PORT="type_pos">4</TD><TD PORT="type_size">4</TD><TD>u4le</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="body_pos">8</TD><TD PORT="body_size">...</TD><TD>switch (type)</TD><TD PORT="body_type">body</TD></TR>
+				<TR><TD PORT="len_record2_pos">...</TD><TD PORT="len_record2_size">4</TD><TD>u4le</TD><TD PORT="len_record2_type">len_record2</TD></TR>
+			</TABLE>>];
+record__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>1699505740</TD><TD PORT="case0">RecordBody</TD></TR>
+	<TR><TD>286331153</TD><TD PORT="case1">CursorRecordBody</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__record_body {
+			label="WindowsEvtLog::RecordBody";
+			graph[style=dotted];
+
+			record_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="idx_pos">0</TD><TD PORT="idx_size">4</TD><TD>u4le</TD><TD PORT="idx_type">idx</TD></TR>
+				<TR><TD PORT="time_generated_pos">4</TD><TD PORT="time_generated_size">4</TD><TD>u4le</TD><TD PORT="time_generated_type">time_generated</TD></TR>
+				<TR><TD PORT="time_written_pos">8</TD><TD PORT="time_written_size">4</TD><TD>u4le</TD><TD PORT="time_written_type">time_written</TD></TR>
+				<TR><TD PORT="event_id_pos">12</TD><TD PORT="event_id_size">4</TD><TD>u4le</TD><TD PORT="event_id_type">event_id</TD></TR>
+				<TR><TD PORT="event_type_pos">16</TD><TD PORT="event_type_size">2</TD><TD>u2le→EventTypes</TD><TD PORT="event_type_type">event_type</TD></TR>
+				<TR><TD PORT="num_strings_pos">18</TD><TD PORT="num_strings_size">2</TD><TD>u2le</TD><TD PORT="num_strings_type">num_strings</TD></TR>
+				<TR><TD PORT="event_category_pos">20</TD><TD PORT="event_category_size">2</TD><TD>u2le</TD><TD PORT="event_category_type">event_category</TD></TR>
+				<TR><TD PORT="reserved_pos">22</TD><TD PORT="reserved_size">6</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="ofs_strings_pos">28</TD><TD PORT="ofs_strings_size">4</TD><TD>u4le</TD><TD PORT="ofs_strings_type">ofs_strings</TD></TR>
+				<TR><TD PORT="len_user_sid_pos">32</TD><TD PORT="len_user_sid_size">4</TD><TD>u4le</TD><TD PORT="len_user_sid_type">len_user_sid</TD></TR>
+				<TR><TD PORT="ofs_user_sid_pos">36</TD><TD PORT="ofs_user_sid_size">4</TD><TD>u4le</TD><TD PORT="ofs_user_sid_type">ofs_user_sid</TD></TR>
+				<TR><TD PORT="len_data_pos">40</TD><TD PORT="len_data_size">4</TD><TD>u4le</TD><TD PORT="len_data_type">len_data</TD></TR>
+				<TR><TD PORT="ofs_data_pos">44</TD><TD PORT="ofs_data_size">4</TD><TD>u4le</TD><TD PORT="ofs_data_type">ofs_data</TD></TR>
+			</TABLE>>];
+			record_body__inst__user_sid [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="user_sid_pos">(ofs_user_sid - 8)</TD><TD PORT="user_sid_size">len_user_sid</TD><TD></TD><TD PORT="user_sid_type">user_sid</TD></TR>
+			</TABLE>>];
+			record_body__inst__data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="data_pos">(ofs_data - 8)</TD><TD PORT="data_size">len_data</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__cursor_record_body {
+			label="WindowsEvtLog::CursorRecordBody";
+			graph[style=dotted];
+
+			cursor_record_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">12</TD><TD>22 22 22 22 33 33 33 33 44 44 44 44</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="ofs_first_record_pos">12</TD><TD PORT="ofs_first_record_size">4</TD><TD>u4le</TD><TD PORT="ofs_first_record_type">ofs_first_record</TD></TR>
+				<TR><TD PORT="ofs_next_record_pos">16</TD><TD PORT="ofs_next_record_size">4</TD><TD>u4le</TD><TD PORT="ofs_next_record_type">ofs_next_record</TD></TR>
+				<TR><TD PORT="idx_next_record_pos">20</TD><TD PORT="idx_next_record_size">4</TD><TD>u4le</TD><TD PORT="idx_next_record_type">idx_next_record</TD></TR>
+				<TR><TD PORT="idx_first_record_pos">24</TD><TD PORT="idx_first_record_size">4</TD><TD>u4le</TD><TD PORT="idx_first_record_type">idx_first_record</TD></TR>
+			</TABLE>>];
+		}
+	}
+	windows_evt_log__seq:header_type -> header__seq [style=bold];
+	windows_evt_log__seq:records_type -> record__seq [style=bold];
+	header__seq:flags_type -> flags__seq [style=bold];
+	record__seq:body_type -> record__seq_body_switch [style=bold];
+	record__seq_body_switch:case0 -> record_body__seq [style=bold];
+	record__seq_body_switch:case1 -> cursor_record_body__seq [style=bold];
+	record__seq:type_type -> record__seq:body_type [color="#404040"];
+	record_body__seq:ofs_user_sid_type -> record_body__inst__user_sid:user_sid_pos [color="#404040"];
+	record_body__seq:len_user_sid_type -> record_body__inst__user_sid:user_sid_size [color="#404040"];
+	record_body__seq:ofs_data_type -> record_body__inst__data:data_pos [color="#404040"];
+	record_body__seq:len_data_type -> record_body__inst__data:data_size [color="#404040"];
+}

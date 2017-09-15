@@ -193,7 +193,7 @@ data = Asn1Der.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="ruby">data.typeTag # => get type tag</code></pre>
+<pre><code class="ruby">data.type_tag # => get type tag</code></pre>
 
     </div>
 </section>
@@ -315,8 +315,10 @@ class Asn1Der &lt; Kaitai::Struct::Struct
 
     def _read
       @entries = []
+      i = 0
       while not @_io.eof?
         @entries &lt;&lt; Asn1Der.new(@_io)
+        i += 1
       end
       self
     end

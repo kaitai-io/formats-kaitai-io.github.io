@@ -121,8 +121,10 @@ var Bson = (function() {
     }
     ElementsList.prototype._read = function() {
       this.elements = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.elements.push(new Element(this._io, this, this._root));
+        i++;
       }
     }
 
@@ -256,7 +258,7 @@ var Bson = (function() {
         this.content = new DbPointer(this._io, this, this._root);
         break;
       case Bson.Element.BsonType.ARRAY:
-        this.content = new Bson(this._io);
+        this.content = new Bson(this._io, this, null);
         break;
       case Bson.Element.BsonType.JAVASCRIPT:
         this.content = new String(this._io, this, this._root);
@@ -265,7 +267,7 @@ var Bson = (function() {
         this.content = this._io.readU1();
         break;
       case Bson.Element.BsonType.DOCUMENT:
-        this.content = new Bson(this._io);
+        this.content = new Bson(this._io, this, null);
         break;
       case Bson.Element.BsonType.SYMBOL:
         this.content = new String(this._io, this, this._root);
@@ -338,7 +340,7 @@ var Bson = (function() {
     CodeWithScope.prototype._read = function() {
       this.id = this._io.readS4le();
       this.source = new String(this._io, this, this._root);
-      this.scope = new Bson(this._io);
+      this.scope = new Bson(this._io, this, null);
     }
 
     /**

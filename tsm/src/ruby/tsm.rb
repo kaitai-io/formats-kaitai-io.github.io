@@ -119,9 +119,11 @@ class Tsm < Kaitai::Struct::Struct
       _pos = @_io.pos
       @_io.seek(offset)
       @entries = []
+      i = 0
       begin
         _ = IndexHeader.new(@_io, self, @_root)
         @entries << _
+        i += 1
       end until _io.pos == (_io.size - 8)
       @_io.seek(_pos)
       @entries

@@ -203,7 +203,7 @@ data = Cramfs.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="ruby">data.superBlock # => get super block</code></pre>
+<pre><code class="ruby">data.super_block # => get super block</code></pre>
 
     </div>
 </section>
@@ -431,8 +431,10 @@ class Cramfs &lt; Kaitai::Struct::Struct
     def _read
       if _io.size &gt; 0
         @children = []
+        i = 0
         while not @_io.eof?
           @children &lt;&lt; Inode.new(@_io, self, @_root)
+          i += 1
         end
       end
       self

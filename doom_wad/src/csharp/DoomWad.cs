@@ -11,18 +11,19 @@ namespace Kaitai
             return new DoomWad(new KaitaiStream(fileName));
         }
 
-        public DoomWad(KaitaiStream io, KaitaiStruct parent = null, DoomWad root = null) : base(io)
+        public DoomWad(KaitaiStream p__io, KaitaiStruct p__parent = null, DoomWad p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_index = false;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _magic = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(4));
             _numIndexEntries = m_io.ReadS4le();
             _indexOffset = m_io.ReadS4le();
-            }
+        }
         public partial class Sectors : KaitaiStruct
         {
             public static Sectors FromFile(string fileName)
@@ -30,18 +31,23 @@ namespace Kaitai
                 return new Sectors(new KaitaiStream(fileName));
             }
 
-            public Sectors(KaitaiStream io, DoomWad.IndexEntry parent = null, DoomWad root = null) : base(io)
+            public Sectors(KaitaiStream p__io, DoomWad.IndexEntry p__parent = null, DoomWad p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List<Sector>();
-                while (!m_io.IsEof) {
-                    _entries.Add(new Sector(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new Sector(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<Sector> _entries;
             private DoomWad m_root;
             private DoomWad.IndexEntry m_parent;
@@ -56,16 +62,17 @@ namespace Kaitai
                 return new Vertex(new KaitaiStream(fileName));
             }
 
-            public Vertex(KaitaiStream io, DoomWad.Vertexes parent = null, DoomWad root = null) : base(io)
+            public Vertex(KaitaiStream p__io, DoomWad.Vertexes p__parent = null, DoomWad p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _x = m_io.ReadS2le();
                 _y = m_io.ReadS2le();
-                }
+            }
             private short _x;
             private short _y;
             private DoomWad m_root;
@@ -93,19 +100,21 @@ namespace Kaitai
                 return new Texture12(new KaitaiStream(fileName));
             }
 
-            public Texture12(KaitaiStream io, DoomWad.IndexEntry parent = null, DoomWad root = null) : base(io)
+            public Texture12(KaitaiStream p__io, DoomWad.IndexEntry p__parent = null, DoomWad p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _numTextures = m_io.ReadS4le();
                 _textures = new List<TextureIndex>((int) (NumTextures));
-                for (var i = 0; i < NumTextures; i++) {
+                for (var i = 0; i < NumTextures; i++)
+                {
                     _textures.Add(new TextureIndex(m_io, this, m_root));
                 }
-                }
+            }
             public partial class TextureIndex : KaitaiStruct
             {
                 public static TextureIndex FromFile(string fileName)
@@ -113,16 +122,17 @@ namespace Kaitai
                     return new TextureIndex(new KaitaiStream(fileName));
                 }
 
-                public TextureIndex(KaitaiStream io, DoomWad.Texture12 parent = null, DoomWad root = null) : base(io)
+                public TextureIndex(KaitaiStream p__io, DoomWad.Texture12 p__parent = null, DoomWad p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     f_body = false;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _offset = m_io.ReadS4le();
-                    }
+                }
                 private bool f_body;
                 private TextureBody _body;
                 public TextureBody Body
@@ -153,13 +163,14 @@ namespace Kaitai
                     return new TextureBody(new KaitaiStream(fileName));
                 }
 
-                public TextureBody(KaitaiStream io, DoomWad.Texture12.TextureIndex parent = null, DoomWad root = null) : base(io)
+                public TextureBody(KaitaiStream p__io, DoomWad.Texture12.TextureIndex p__parent = null, DoomWad p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _name = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 0));
                     _masked = m_io.ReadU4le();
                     _width = m_io.ReadU2le();
@@ -167,10 +178,11 @@ namespace Kaitai
                     _columnDirectory = m_io.ReadU4le();
                     _numPatches = m_io.ReadU2le();
                     _patches = new List<Patch>((int) (NumPatches));
-                    for (var i = 0; i < NumPatches; i++) {
+                    for (var i = 0; i < NumPatches; i++)
+                    {
                         _patches.Add(new Patch(m_io, this, m_root));
                     }
-                    }
+                }
                 private string _name;
                 private uint _masked;
                 private ushort _width;
@@ -209,19 +221,20 @@ namespace Kaitai
                     return new Patch(new KaitaiStream(fileName));
                 }
 
-                public Patch(KaitaiStream io, DoomWad.Texture12.TextureBody parent = null, DoomWad root = null) : base(io)
+                public Patch(KaitaiStream p__io, DoomWad.Texture12.TextureBody p__parent = null, DoomWad p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _originX = m_io.ReadS2le();
                     _originY = m_io.ReadS2le();
                     _patchId = m_io.ReadU2le();
                     _stepDir = m_io.ReadU2le();
                     _colormap = m_io.ReadU2le();
-                    }
+                }
                 private short _originX;
                 private short _originY;
                 private ushort _patchId;
@@ -269,13 +282,14 @@ namespace Kaitai
                 return new Linedef(new KaitaiStream(fileName));
             }
 
-            public Linedef(KaitaiStream io, DoomWad.Linedefs parent = null, DoomWad root = null) : base(io)
+            public Linedef(KaitaiStream p__io, DoomWad.Linedefs p__parent = null, DoomWad p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _vertexStartIdx = m_io.ReadU2le();
                 _vertexEndIdx = m_io.ReadU2le();
                 _flags = m_io.ReadU2le();
@@ -283,7 +297,7 @@ namespace Kaitai
                 _sectorTag = m_io.ReadU2le();
                 _sidedefRightIdx = m_io.ReadU2le();
                 _sidedefLeftIdx = m_io.ReadU2le();
-                }
+            }
             private ushort _vertexStartIdx;
             private ushort _vertexEndIdx;
             private ushort _flags;
@@ -314,19 +328,21 @@ namespace Kaitai
                 return new Pnames(new KaitaiStream(fileName));
             }
 
-            public Pnames(KaitaiStream io, DoomWad.IndexEntry parent = null, DoomWad root = null) : base(io)
+            public Pnames(KaitaiStream p__io, DoomWad.IndexEntry p__parent = null, DoomWad p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _numPatches = m_io.ReadU4le();
                 _names = new List<string>((int) (NumPatches));
-                for (var i = 0; i < NumPatches; i++) {
+                for (var i = 0; i < NumPatches; i++)
+                {
                     _names.Add(System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 0)));
                 }
-                }
+            }
             private uint _numPatches;
             private List<string> _names;
             private DoomWad m_root;
@@ -347,19 +363,20 @@ namespace Kaitai
                 return new Thing(new KaitaiStream(fileName));
             }
 
-            public Thing(KaitaiStream io, DoomWad.Things parent = null, DoomWad root = null) : base(io)
+            public Thing(KaitaiStream p__io, DoomWad.Things p__parent = null, DoomWad p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _x = m_io.ReadS2le();
                 _y = m_io.ReadS2le();
                 _angle = m_io.ReadU2le();
                 _type = m_io.ReadU2le();
                 _flags = m_io.ReadU2le();
-                }
+            }
             private short _x;
             private short _y;
             private ushort _angle;
@@ -381,6 +398,7 @@ namespace Kaitai
             {
                 return new Sector(new KaitaiStream(fileName));
             }
+
 
             public enum SpecialSector
             {
@@ -409,14 +427,14 @@ namespace Kaitai
                 LightSequenceSpecial1 = 23,
                 LightSequenceSpecial2 = 24,
             }
-
-            public Sector(KaitaiStream io, DoomWad.Sectors parent = null, DoomWad root = null) : base(io)
+            public Sector(KaitaiStream p__io, DoomWad.Sectors p__parent = null, DoomWad p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _floorZ = m_io.ReadS2le();
                 _ceilZ = m_io.ReadS2le();
                 _floorFlat = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(8));
@@ -424,7 +442,7 @@ namespace Kaitai
                 _light = m_io.ReadS2le();
                 _specialType = ((SpecialSector) m_io.ReadU2le());
                 _tag = m_io.ReadU2le();
-                }
+            }
             private short _floorZ;
             private short _ceilZ;
             private string _floorFlat;
@@ -462,18 +480,23 @@ namespace Kaitai
                 return new Vertexes(new KaitaiStream(fileName));
             }
 
-            public Vertexes(KaitaiStream io, DoomWad.IndexEntry parent = null, DoomWad root = null) : base(io)
+            public Vertexes(KaitaiStream p__io, DoomWad.IndexEntry p__parent = null, DoomWad p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List<Vertex>();
-                while (!m_io.IsEof) {
-                    _entries.Add(new Vertex(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new Vertex(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<Vertex> _entries;
             private DoomWad m_root;
             private DoomWad.IndexEntry m_parent;
@@ -488,20 +511,21 @@ namespace Kaitai
                 return new Sidedef(new KaitaiStream(fileName));
             }
 
-            public Sidedef(KaitaiStream io, DoomWad.Sidedefs parent = null, DoomWad root = null) : base(io)
+            public Sidedef(KaitaiStream p__io, DoomWad.Sidedefs p__parent = null, DoomWad p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _offsetX = m_io.ReadS2le();
                 _offsetY = m_io.ReadS2le();
                 _upperTextureName = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(8));
                 _lowerTextureName = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(8));
                 _normalTextureName = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(8));
                 _sectorId = m_io.ReadS2le();
-                }
+            }
             private short _offsetX;
             private short _offsetY;
             private string _upperTextureName;
@@ -526,18 +550,23 @@ namespace Kaitai
                 return new Things(new KaitaiStream(fileName));
             }
 
-            public Things(KaitaiStream io, DoomWad.IndexEntry parent = null, DoomWad root = null) : base(io)
+            public Things(KaitaiStream p__io, DoomWad.IndexEntry p__parent = null, DoomWad p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List<Thing>();
-                while (!m_io.IsEof) {
-                    _entries.Add(new Thing(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new Thing(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<Thing> _entries;
             private DoomWad m_root;
             private DoomWad.IndexEntry m_parent;
@@ -552,18 +581,23 @@ namespace Kaitai
                 return new Linedefs(new KaitaiStream(fileName));
             }
 
-            public Linedefs(KaitaiStream io, DoomWad.IndexEntry parent = null, DoomWad root = null) : base(io)
+            public Linedefs(KaitaiStream p__io, DoomWad.IndexEntry p__parent = null, DoomWad p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List<Linedef>();
-                while (!m_io.IsEof) {
-                    _entries.Add(new Linedef(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new Linedef(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<Linedef> _entries;
             private DoomWad m_root;
             private DoomWad.IndexEntry m_parent;
@@ -578,18 +612,19 @@ namespace Kaitai
                 return new IndexEntry(new KaitaiStream(fileName));
             }
 
-            public IndexEntry(KaitaiStream io, DoomWad parent = null, DoomWad root = null) : base(io)
+            public IndexEntry(KaitaiStream p__io, DoomWad p__parent = null, DoomWad p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_contents = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _offset = m_io.ReadS4le();
                 _size = m_io.ReadS4le();
                 _name = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 0));
-                }
+            }
             private bool f_contents;
             private object _contents;
             public object Contents
@@ -686,18 +721,23 @@ namespace Kaitai
                 return new Sidedefs(new KaitaiStream(fileName));
             }
 
-            public Sidedefs(KaitaiStream io, DoomWad.IndexEntry parent = null, DoomWad root = null) : base(io)
+            public Sidedefs(KaitaiStream p__io, DoomWad.IndexEntry p__parent = null, DoomWad p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List<Sidedef>();
-                while (!m_io.IsEof) {
-                    _entries.Add(new Sidedef(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new Sidedef(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<Sidedef> _entries;
             private DoomWad m_root;
             private DoomWad.IndexEntry m_parent;
@@ -712,22 +752,24 @@ namespace Kaitai
                 return new Blockmap(new KaitaiStream(fileName));
             }
 
-            public Blockmap(KaitaiStream io, DoomWad.IndexEntry parent = null, DoomWad root = null) : base(io)
+            public Blockmap(KaitaiStream p__io, DoomWad.IndexEntry p__parent = null, DoomWad p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _originX = m_io.ReadS2le();
                 _originY = m_io.ReadS2le();
                 _numCols = m_io.ReadS2le();
                 _numRows = m_io.ReadS2le();
                 _linedefsInBlock = new List<Blocklist>((int) ((NumCols * NumRows)));
-                for (var i = 0; i < (NumCols * NumRows); i++) {
+                for (var i = 0; i < (NumCols * NumRows); i++)
+                {
                     _linedefsInBlock.Add(new Blocklist(m_io, this, m_root));
                 }
-                }
+            }
             public partial class Blocklist : KaitaiStruct
             {
                 public static Blocklist FromFile(string fileName)
@@ -735,16 +777,17 @@ namespace Kaitai
                     return new Blocklist(new KaitaiStream(fileName));
                 }
 
-                public Blocklist(KaitaiStream io, DoomWad.Blockmap parent = null, DoomWad root = null) : base(io)
+                public Blocklist(KaitaiStream p__io, DoomWad.Blockmap p__parent = null, DoomWad p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     f_linedefs = false;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _offset = m_io.ReadU2le();
-                    }
+                }
                 private bool f_linedefs;
                 private List<short> _linedefs;
 
@@ -761,10 +804,12 @@ namespace Kaitai
                         m_io.Seek((Offset * 2));
                         _linedefs = new List<short>();
                         {
+                            var i = 0;
                             short M_;
                             do {
                                 M_ = m_io.ReadS2le();
                                 _linedefs.Add(M_);
+                                i++;
                             } while (!(M_ == -1));
                         }
                         m_io.Seek(_pos);
@@ -829,7 +874,8 @@ namespace Kaitai
                 long _pos = m_io.Pos;
                 m_io.Seek(IndexOffset);
                 _index = new List<IndexEntry>((int) (NumIndexEntries));
-                for (var i = 0; i < NumIndexEntries; i++) {
+                for (var i = 0; i < NumIndexEntries; i++)
+                {
                     _index.Add(new IndexEntry(m_io, this, m_root));
                 }
                 m_io.Seek(_pos);

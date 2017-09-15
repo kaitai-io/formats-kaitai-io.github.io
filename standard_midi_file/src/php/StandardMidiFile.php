@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class StandardMidiFile extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \StandardMidiFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \StandardMidiFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -24,15 +24,17 @@ class StandardMidiFile extends \Kaitai\Struct\Struct {
 namespace \StandardMidiFile;
 
 class TrackEvents extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \StandardMidiFile\Track $parent = null, \StandardMidiFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\Track $_parent = null, \StandardMidiFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_event = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_event[] = new \StandardMidiFile\TrackEvent($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_event;
@@ -42,8 +44,8 @@ class TrackEvents extends \Kaitai\Struct\Struct {
 namespace \StandardMidiFile;
 
 class TrackEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \StandardMidiFile\TrackEvents $parent = null, \StandardMidiFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvents $_parent = null, \StandardMidiFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -111,8 +113,8 @@ class TrackEvent extends \Kaitai\Struct\Struct {
 namespace \StandardMidiFile;
 
 class PitchBendEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \StandardMidiFile\TrackEvent $parent = null, \StandardMidiFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -143,8 +145,8 @@ class PitchBendEvent extends \Kaitai\Struct\Struct {
 namespace \StandardMidiFile;
 
 class ProgramChangeEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \StandardMidiFile\TrackEvent $parent = null, \StandardMidiFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -158,8 +160,8 @@ class ProgramChangeEvent extends \Kaitai\Struct\Struct {
 namespace \StandardMidiFile;
 
 class NoteOnEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \StandardMidiFile\TrackEvent $parent = null, \StandardMidiFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -176,8 +178,8 @@ class NoteOnEvent extends \Kaitai\Struct\Struct {
 namespace \StandardMidiFile;
 
 class PolyphonicPressureEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \StandardMidiFile\TrackEvent $parent = null, \StandardMidiFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -194,8 +196,8 @@ class PolyphonicPressureEvent extends \Kaitai\Struct\Struct {
 namespace \StandardMidiFile;
 
 class Track extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \StandardMidiFile $parent = null, \StandardMidiFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile $_parent = null, \StandardMidiFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -219,8 +221,8 @@ class Track extends \Kaitai\Struct\Struct {
 namespace \StandardMidiFile;
 
 class MetaEventBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \StandardMidiFile\TrackEvent $parent = null, \StandardMidiFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -260,8 +262,8 @@ class MetaTypeEnum {
 namespace \StandardMidiFile;
 
 class ControllerEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \StandardMidiFile\TrackEvent $parent = null, \StandardMidiFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -278,8 +280,8 @@ class ControllerEvent extends \Kaitai\Struct\Struct {
 namespace \StandardMidiFile;
 
 class Header extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \StandardMidiFile $parent = null, \StandardMidiFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile $_parent = null, \StandardMidiFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -305,8 +307,8 @@ class Header extends \Kaitai\Struct\Struct {
 namespace \StandardMidiFile;
 
 class SysexEventBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \StandardMidiFile\TrackEvent $parent = null, \StandardMidiFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -323,8 +325,8 @@ class SysexEventBody extends \Kaitai\Struct\Struct {
 namespace \StandardMidiFile;
 
 class NoteOffEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \StandardMidiFile\TrackEvent $parent = null, \StandardMidiFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -341,8 +343,8 @@ class NoteOffEvent extends \Kaitai\Struct\Struct {
 namespace \StandardMidiFile;
 
 class ChannelPressureEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \StandardMidiFile\TrackEvent $parent = null, \StandardMidiFile $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

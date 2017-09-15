@@ -94,8 +94,10 @@ class Asn1Der(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(Asn1Der(self._io))
+                i += 1
 
 
 

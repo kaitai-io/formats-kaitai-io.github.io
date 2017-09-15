@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -179,21 +178,35 @@ public:
         OPCODE_INC_ABS_X = 254
     };
 
-    code_6502_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, code_6502_t* p_root = 0);
+    code_6502_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, code_6502_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~code_6502_t();
 
     class operation_t : public kaitai::kstruct {
 
     public:
 
-        operation_t(kaitai::kstream* p_io, code_6502_t* p_parent = 0, code_6502_t* p_root = 0);
+        operation_t(kaitai::kstream* p__io, code_6502_t* p__parent = 0, code_6502_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~operation_t();
 
     private:
         opcode_t m_code;
         uint16_t m_args;
+        bool n_args;
+
+    public:
+        bool _is_null_args() { args(); return n_args; };
+
+    private:
         code_6502_t* m__root;
         code_6502_t* m__parent;
 

@@ -29,16 +29,16 @@ var Ipv6Packet = (function() {
     this.dstIpv6Addr = this._io.readBytes(16);
     switch (this.nextHeaderType) {
     case 17:
-      this.nextHeader = new UdpDatagram(this._io);
+      this.nextHeader = new UdpDatagram(this._io, this, null);
       break;
     case 0:
       this.nextHeader = new OptionHopByHop(this._io, this, this._root);
       break;
     case 4:
-      this.nextHeader = new Ipv4Packet(this._io);
+      this.nextHeader = new Ipv4Packet(this._io, this, null);
       break;
     case 6:
-      this.nextHeader = new TcpSegment(this._io);
+      this.nextHeader = new TcpSegment(this._io, this, null);
       break;
     case 59:
       this.nextHeader = new NoNextHeader(this._io, this, this._root);
@@ -78,7 +78,7 @@ var Ipv6Packet = (function() {
         this.nextHeader = new OptionHopByHop(this._io, this, this._root);
         break;
       case 6:
-        this.nextHeader = new TcpSegment(this._io);
+        this.nextHeader = new TcpSegment(this._io, this, null);
         break;
       case 59:
         this.nextHeader = new NoNextHeader(this._io, this, this._root);

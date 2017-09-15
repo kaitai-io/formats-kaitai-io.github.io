@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -45,16 +44,24 @@ public:
         RECORD_TYPE_TEXT_CONTINUATION = 3
     };
 
-    specpr_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, specpr_t* p_root = 0);
+    specpr_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, specpr_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~specpr_t();
 
     class data_initial_t : public kaitai::kstruct {
 
     public:
 
-        data_initial_t(kaitai::kstream* p_io, specpr_t::record_t* p_parent = 0, specpr_t* p_root = 0);
+        data_initial_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent = 0, specpr_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~data_initial_t();
 
     private:
@@ -256,8 +263,12 @@ public:
 
     public:
 
-        coarse_timestamp_t(kaitai::kstream* p_io, specpr_t::data_initial_t* p_parent = 0, specpr_t* p_root = 0);
+        coarse_timestamp_t(kaitai::kstream* p__io, specpr_t::data_initial_t* p__parent = 0, specpr_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~coarse_timestamp_t();
 
     private:
@@ -286,8 +297,12 @@ public:
 
     public:
 
-        icflag_t(kaitai::kstream* p_io, specpr_t::record_t* p_parent = 0, specpr_t* p_root = 0);
+        icflag_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent = 0, specpr_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~icflag_t();
 
     private:
@@ -361,8 +376,12 @@ public:
 
     public:
 
-        data_continuation_t(kaitai::kstream* p_io, specpr_t::record_t* p_parent = 0, specpr_t* p_root = 0);
+        data_continuation_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent = 0, specpr_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~data_continuation_t();
 
     private:
@@ -384,8 +403,12 @@ public:
 
     public:
 
-        identifiers_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, specpr_t* p_root = 0);
+        identifiers_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, specpr_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~identifiers_t();
 
     private:
@@ -413,8 +436,12 @@ public:
 
     public:
 
-        illum_angle_t(kaitai::kstream* p_io, specpr_t::data_initial_t* p_parent = 0, specpr_t* p_root = 0);
+        illum_angle_t(kaitai::kstream* p__io, specpr_t::data_initial_t* p__parent = 0, specpr_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~illum_angle_t();
 
     private:
@@ -457,8 +484,12 @@ public:
 
     public:
 
-        text_initial_t(kaitai::kstream* p_io, specpr_t::record_t* p_parent = 0, specpr_t* p_root = 0);
+        text_initial_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent = 0, specpr_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~text_initial_t();
 
     private:
@@ -494,13 +525,23 @@ public:
 
     public:
 
-        record_t(kaitai::kstream* p_io, specpr_t* p_parent = 0, specpr_t* p_root = 0);
+        record_t(kaitai::kstream* p__io, specpr_t* p__parent = 0, specpr_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~record_t();
 
     private:
         icflag_t* m_icflag;
         kaitai::kstruct* m_content;
+        bool n_content;
+
+    public:
+        bool _is_null_content() { content(); return n_content; };
+
+    private:
         specpr_t* m__root;
         specpr_t* m__parent;
         std::string m__raw_content;
@@ -523,8 +564,12 @@ public:
 
     public:
 
-        text_continuation_t(kaitai::kstream* p_io, specpr_t::record_t* p_parent = 0, specpr_t* p_root = 0);
+        text_continuation_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent = 0, specpr_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~text_continuation_t();
 
     private:

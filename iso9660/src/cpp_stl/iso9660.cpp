@@ -4,8 +4,8 @@
 
 
 
-iso9660_t::iso9660_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, iso9660_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+iso9660_t::iso9660_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_sector_size = false;
     f_primary_vol_desc = false;
@@ -21,9 +21,9 @@ iso9660_t::~iso9660_t() {
     }
 }
 
-iso9660_t::vol_desc_primary_t::vol_desc_primary_t(kaitai::kstream *p_io, iso9660_t::vol_desc_t* p_parent, iso9660_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+iso9660_t::vol_desc_primary_t::vol_desc_primary_t(kaitai::kstream* p__io, iso9660_t::vol_desc_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_path_table = false;
     _read();
 }
@@ -93,9 +93,9 @@ iso9660_t::path_table_le_t* iso9660_t::vol_desc_primary_t::path_table() {
     return m_path_table;
 }
 
-iso9660_t::vol_desc_boot_record_t::vol_desc_boot_record_t(kaitai::kstream *p_io, iso9660_t::vol_desc_t* p_parent, iso9660_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+iso9660_t::vol_desc_boot_record_t::vol_desc_boot_record_t(kaitai::kstream* p__io, iso9660_t::vol_desc_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -107,9 +107,9 @@ void iso9660_t::vol_desc_boot_record_t::_read() {
 iso9660_t::vol_desc_boot_record_t::~vol_desc_boot_record_t() {
 }
 
-iso9660_t::datetime_t::datetime_t(kaitai::kstream *p_io, iso9660_t::dir_entry_body_t* p_parent, iso9660_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+iso9660_t::datetime_t::datetime_t(kaitai::kstream* p__io, iso9660_t::dir_entry_body_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -126,9 +126,9 @@ void iso9660_t::datetime_t::_read() {
 iso9660_t::datetime_t::~datetime_t() {
 }
 
-iso9660_t::dir_entry_t::dir_entry_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, iso9660_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+iso9660_t::dir_entry_t::dir_entry_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -150,9 +150,9 @@ iso9660_t::dir_entry_t::~dir_entry_t() {
     }
 }
 
-iso9660_t::vol_desc_t::vol_desc_t(kaitai::kstream *p_io, iso9660_t* p_parent, iso9660_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+iso9660_t::vol_desc_t::vol_desc_t(kaitai::kstream* p__io, iso9660_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -181,9 +181,9 @@ iso9660_t::vol_desc_t::~vol_desc_t() {
     }
 }
 
-iso9660_t::path_table_entry_le_t::path_table_entry_le_t(kaitai::kstream *p_io, iso9660_t::path_table_le_t* p_parent, iso9660_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+iso9660_t::path_table_entry_le_t::path_table_entry_le_t(kaitai::kstream* p__io, iso9660_t::path_table_le_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -201,21 +201,25 @@ void iso9660_t::path_table_entry_le_t::_read() {
 }
 
 iso9660_t::path_table_entry_le_t::~path_table_entry_le_t() {
+    if (!n_padding) {
+    }
 }
 
-iso9660_t::dir_entries_t::dir_entries_t(kaitai::kstream *p_io, iso9660_t::dir_entry_body_t* p_parent, iso9660_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+iso9660_t::dir_entries_t::dir_entries_t(kaitai::kstream* p__io, iso9660_t::dir_entry_body_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void iso9660_t::dir_entries_t::_read() {
     m_entries = new std::vector<dir_entry_t*>();
     {
+        int i = 0;
         dir_entry_t* _;
         do {
             _ = new dir_entry_t(m__io, this, m__root);
             m_entries->push_back(_);
+            i++;
         } while (!(_->len() == 0));
     }
 }
@@ -227,9 +231,9 @@ iso9660_t::dir_entries_t::~dir_entries_t() {
     delete m_entries;
 }
 
-iso9660_t::u4bi_t::u4bi_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, iso9660_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+iso9660_t::u4bi_t::u4bi_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -241,9 +245,9 @@ void iso9660_t::u4bi_t::_read() {
 iso9660_t::u4bi_t::~u4bi_t() {
 }
 
-iso9660_t::u2bi_t::u2bi_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, iso9660_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+iso9660_t::u2bi_t::u2bi_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -255,16 +259,20 @@ void iso9660_t::u2bi_t::_read() {
 iso9660_t::u2bi_t::~u2bi_t() {
 }
 
-iso9660_t::path_table_le_t::path_table_le_t(kaitai::kstream *p_io, iso9660_t::vol_desc_primary_t* p_parent, iso9660_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+iso9660_t::path_table_le_t::path_table_le_t(kaitai::kstream* p__io, iso9660_t::vol_desc_primary_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void iso9660_t::path_table_le_t::_read() {
     m_entries = new std::vector<path_table_entry_le_t*>();
-    while (!m__io->is_eof()) {
-        m_entries->push_back(new path_table_entry_le_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new path_table_entry_le_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -275,9 +283,9 @@ iso9660_t::path_table_le_t::~path_table_le_t() {
     delete m_entries;
 }
 
-iso9660_t::dec_datetime_t::dec_datetime_t(kaitai::kstream *p_io, iso9660_t::vol_desc_primary_t* p_parent, iso9660_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+iso9660_t::dec_datetime_t::dec_datetime_t(kaitai::kstream* p__io, iso9660_t::vol_desc_primary_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -295,9 +303,9 @@ void iso9660_t::dec_datetime_t::_read() {
 iso9660_t::dec_datetime_t::~dec_datetime_t() {
 }
 
-iso9660_t::dir_entry_body_t::dir_entry_body_t(kaitai::kstream *p_io, iso9660_t::dir_entry_t* p_parent, iso9660_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+iso9660_t::dir_entry_body_t::dir_entry_body_t(kaitai::kstream* p__io, iso9660_t::dir_entry_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_extent_as_dir = false;
     f_extent_as_file = false;
     _read();
@@ -327,9 +335,13 @@ iso9660_t::dir_entry_body_t::~dir_entry_body_t() {
     delete m_size_extent;
     delete m_datetime;
     delete m_vol_seq_num;
+    if (!n_padding) {
+    }
     if (f_extent_as_dir && !n_extent_as_dir) {
         delete m__io__raw_extent_as_dir;
         delete m_extent_as_dir;
+    }
+    if (f_extent_as_file && !n_extent_as_file) {
     }
 }
 

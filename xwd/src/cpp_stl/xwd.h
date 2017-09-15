@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -51,16 +50,24 @@ public:
         VISUAL_CLASS_DIRECT_COLOR = 5
     };
 
-    xwd_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, xwd_t* p_root = 0);
+    xwd_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, xwd_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~xwd_t();
 
     class header_t : public kaitai::kstruct {
 
     public:
 
-        header_t(kaitai::kstream* p_io, xwd_t* p_parent = 0, xwd_t* p_root = 0);
+        header_t(kaitai::kstream* p__io, xwd_t* p__parent = 0, xwd_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header_t();
 
     private:
@@ -226,8 +233,12 @@ public:
 
     public:
 
-        color_map_entry_t(kaitai::kstream* p_io, xwd_t* p_parent = 0, xwd_t* p_root = 0);
+        color_map_entry_t(kaitai::kstream* p__io, xwd_t* p__parent = 0, xwd_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~color_map_entry_t();
 
     private:
@@ -264,7 +275,7 @@ private:
     std::string m__raw_hdr;
     kaitai::kstream* m__io__raw_hdr;
     std::vector<std::string>* m__raw_color_map;
-    kaitai::kstream* m__io__raw_color_map;
+    std::vector<kaitai::kstream*>* m__io__raw_color_map;
 
 public:
 
@@ -279,7 +290,7 @@ public:
     std::string _raw_hdr() const { return m__raw_hdr; }
     kaitai::kstream* _io__raw_hdr() const { return m__io__raw_hdr; }
     std::vector<std::string>* _raw_color_map() const { return m__raw_color_map; }
-    kaitai::kstream* _io__raw_color_map() const { return m__io__raw_color_map; }
+    std::vector<kaitai::kstream*>* _io__raw_color_map() const { return m__io__raw_color_map; }
 };
 
 #endif  // XWD_H_

@@ -22,8 +22,8 @@
  */
 
 class Gif extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Gif $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Gif $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -36,8 +36,10 @@ class Gif extends \Kaitai\Struct\Struct {
             $this->_m_globalColorTable = new \Gif\ColorTable($io, $this, $this->_root);
         }
         $this->_m_blocks = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_blocks[] = new \Gif\Block($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_hdr;
@@ -55,8 +57,8 @@ class Gif extends \Kaitai\Struct\Struct {
 namespace \Gif;
 
 class ImageData extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Gif\LocalImageDescriptor $parent = null, \Gif $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Gif\LocalImageDescriptor $_parent = null, \Gif $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -73,8 +75,8 @@ class ImageData extends \Kaitai\Struct\Struct {
 namespace \Gif;
 
 class ColorTableEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Gif\ColorTable $parent = null, \Gif $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Gif\ColorTable $_parent = null, \Gif $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -94,8 +96,8 @@ class ColorTableEntry extends \Kaitai\Struct\Struct {
 namespace \Gif;
 
 class LogicalScreenDescriptorStruct extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Gif $parent = null, \Gif $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Gif $_parent = null, \Gif $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -135,8 +137,8 @@ class LogicalScreenDescriptorStruct extends \Kaitai\Struct\Struct {
 namespace \Gif;
 
 class LocalImageDescriptor extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Gif\Block $parent = null, \Gif $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Gif\Block $_parent = null, \Gif $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -202,8 +204,8 @@ class LocalImageDescriptor extends \Kaitai\Struct\Struct {
 namespace \Gif;
 
 class Block extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Gif $parent = null, \Gif $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Gif $_parent = null, \Gif $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -227,15 +229,17 @@ class Block extends \Kaitai\Struct\Struct {
 namespace \Gif;
 
 class ColorTable extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Gif $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Gif $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \Gif\ColorTableEntry($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -245,8 +249,8 @@ class ColorTable extends \Kaitai\Struct\Struct {
 namespace \Gif;
 
 class Header extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Gif $parent = null, \Gif $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Gif $_parent = null, \Gif $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -263,8 +267,8 @@ class Header extends \Kaitai\Struct\Struct {
 namespace \Gif;
 
 class ExtGraphicControl extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Gif\Extension $parent = null, \Gif $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Gif\Extension $_parent = null, \Gif $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -304,8 +308,8 @@ class ExtGraphicControl extends \Kaitai\Struct\Struct {
 namespace \Gif;
 
 class Subblock extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Gif $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Gif $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -322,17 +326,19 @@ class Subblock extends \Kaitai\Struct\Struct {
 namespace \Gif;
 
 class ExtApplication extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Gif\Extension $parent = null, \Gif $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Gif\Extension $_parent = null, \Gif $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_applicationId = new \Gif\Subblock($this->_io, $this, $this->_root);
         $this->_m_subblocks = [];
+        $i = 0;
         do {
             $_ = new \Gif\Subblock($this->_io, $this, $this->_root);
             $this->_m_subblocks[] = $_;
+            $i++;
         } while (!($_->numBytes() == 0));
     }
     protected $_m_applicationId;
@@ -344,16 +350,18 @@ class ExtApplication extends \Kaitai\Struct\Struct {
 namespace \Gif;
 
 class Subblocks extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Gif $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Gif $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         do {
             $_ = new \Gif\Subblock($this->_io, $this, $this->_root);
             $this->_m_entries[] = $_;
+            $i++;
         } while (!($_->numBytes() == 0));
     }
     protected $_m_entries;
@@ -363,8 +371,8 @@ class Subblocks extends \Kaitai\Struct\Struct {
 namespace \Gif;
 
 class Extension extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Gif\Block $parent = null, \Gif $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Gif\Block $_parent = null, \Gif $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

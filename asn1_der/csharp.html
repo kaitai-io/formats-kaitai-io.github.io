@@ -233,6 +233,7 @@ namespace Kaitai
             return new Asn1Der(new KaitaiStream(fileName));
         }
 
+
         public enum TypeTag
         {
             EndOfContent = 0,
@@ -255,14 +256,14 @@ namespace Kaitai
             Sequence30 = 48,
             Set = 49,
         }
-
-        public Asn1Der(KaitaiStream io, KaitaiStruct parent = null, Asn1Der root = null) : base(io)
+        public Asn1Der(KaitaiStream p__io, KaitaiStruct p__parent = null, Asn1Der p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _typeTag = ((TypeTag) m_io.ReadU1());
             _len = new LenEncoded(m_io, this, m_root);
             switch (TypeTag) {
@@ -301,7 +302,7 @@ namespace Kaitai
                 break;
             }
             }
-            }
+        }
         public partial class LenEncoded : KaitaiStruct
         {
             public static LenEncoded FromFile(string fileName)
@@ -309,19 +310,20 @@ namespace Kaitai
                 return new LenEncoded(new KaitaiStream(fileName));
             }
 
-            public LenEncoded(KaitaiStream io, Asn1Der parent = null, Asn1Der root = null) : base(io)
+            public LenEncoded(KaitaiStream p__io, Asn1Der p__parent = null, Asn1Der p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_result = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _b1 = m_io.ReadU1();
                 if (B1 == 130) {
                     _int2 = m_io.ReadU2be();
                 }
-                }
+            }
             private bool f_result;
             private ushort _result;
             public ushort Result
@@ -336,11 +338,11 @@ namespace Kaitai
                 }
             }
             private byte _b1;
-            private ushort _int2;
+            private ushort? _int2;
             private Asn1Der m_root;
             private Asn1Der m_parent;
             public byte B1 { get { return _b1; } }
-            public ushort Int2 { get { return _int2; } }
+            public ushort? Int2 { get { return _int2; } }
             public Asn1Der M_Root { get { return m_root; } }
             public Asn1Der M_Parent { get { return m_parent; } }
         }
@@ -351,18 +353,23 @@ namespace Kaitai
                 return new BodySequence(new KaitaiStream(fileName));
             }
 
-            public BodySequence(KaitaiStream io, Asn1Der parent = null, Asn1Der root = null) : base(io)
+            public BodySequence(KaitaiStream p__io, Asn1Der p__parent = null, Asn1Der p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List&lt;Asn1Der&gt;();
-                while (!m_io.IsEof) {
-                    _entries.Add(new Asn1Der(m_io));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new Asn1Der(m_io));
+                        i++;
+                    }
                 }
-                }
+            }
             private List&lt;Asn1Der&gt; _entries;
             private Asn1Der m_root;
             private Asn1Der m_parent;
@@ -377,15 +384,16 @@ namespace Kaitai
                 return new BodyUtf8string(new KaitaiStream(fileName));
             }
 
-            public BodyUtf8string(KaitaiStream io, Asn1Der parent = null, Asn1Der root = null) : base(io)
+            public BodyUtf8string(KaitaiStream p__io, Asn1Der p__parent = null, Asn1Der p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _str = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytesFull());
-                }
+            }
             private string _str;
             private Asn1Der m_root;
             private Asn1Der m_parent;
@@ -400,15 +408,16 @@ namespace Kaitai
                 return new BodyPrintableString(new KaitaiStream(fileName));
             }
 
-            public BodyPrintableString(KaitaiStream io, Asn1Der parent = null, Asn1Der root = null) : base(io)
+            public BodyPrintableString(KaitaiStream p__io, Asn1Der p__parent = null, Asn1Der p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _str = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytesFull());
-                }
+            }
             private string _str;
             private Asn1Der m_root;
             private Asn1Der m_parent;

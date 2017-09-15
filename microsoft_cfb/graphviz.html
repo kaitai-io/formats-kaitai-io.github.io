@@ -207,7 +207,7 @@ section#format-index .row {
 
 		microsoft_cfb__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;header_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;header_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;CfbHeader&lt;/TD&gt;&lt;TD PORT=&quot;header_type&quot;&gt;header&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;header_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;header_size&quot;&gt;512&lt;/TD&gt;&lt;TD&gt;CfbHeader&lt;/TD&gt;&lt;TD PORT=&quot;header_type&quot;&gt;header&lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
 		microsoft_cfb__inst__sector_size [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
@@ -282,6 +282,18 @@ section#format-index .row {
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;mini_stream_pos&quot;&gt;((ofs + 1) * _root.sector_size)&lt;/TD&gt;&lt;TD PORT=&quot;mini_stream_size&quot;&gt;size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;mini_stream_type&quot;&gt;mini_stream&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
+			dir_entry__inst__child [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;child_pos&quot;&gt;(((_root.header.ofs_dir + 1) * _root.sector_size) + (child_id * 128))&lt;/TD&gt;&lt;TD PORT=&quot;child_size&quot;&gt;128&lt;/TD&gt;&lt;TD&gt;DirEntry&lt;/TD&gt;&lt;TD PORT=&quot;child_type&quot;&gt;child&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			dir_entry__inst__left_sibling [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;left_sibling_pos&quot;&gt;(((_root.header.ofs_dir + 1) * _root.sector_size) + (left_sibling_id * 128))&lt;/TD&gt;&lt;TD PORT=&quot;left_sibling_size&quot;&gt;128&lt;/TD&gt;&lt;TD&gt;DirEntry&lt;/TD&gt;&lt;TD PORT=&quot;left_sibling_type&quot;&gt;left_sibling&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			dir_entry__inst__right_sibling [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;right_sibling_pos&quot;&gt;(((_root.header.ofs_dir + 1) * _root.sector_size) + (right_sibling_id * 128))&lt;/TD&gt;&lt;TD PORT=&quot;right_sibling_size&quot;&gt;128&lt;/TD&gt;&lt;TD&gt;DirEntry&lt;/TD&gt;&lt;TD PORT=&quot;right_sibling_type&quot;&gt;right_sibling&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
 		}
 	}
 	microsoft_cfb__seq:header_type -&gt; cfb_header__seq [style=bold];
@@ -296,6 +308,18 @@ section#format-index .row {
 	dir_entry__seq:ofs_type -&gt; dir_entry__inst__mini_stream:mini_stream_pos [color=&quot;#404040&quot;];
 	microsoft_cfb__inst__sector_size:sector_size_type -&gt; dir_entry__inst__mini_stream:mini_stream_pos [color=&quot;#404040&quot;];
 	dir_entry__seq:size_type -&gt; dir_entry__inst__mini_stream:mini_stream_size [color=&quot;#404040&quot;];
+	cfb_header__seq:ofs_dir_type -&gt; dir_entry__inst__child:child_pos [color=&quot;#404040&quot;];
+	microsoft_cfb__inst__sector_size:sector_size_type -&gt; dir_entry__inst__child:child_pos [color=&quot;#404040&quot;];
+	dir_entry__seq:child_id_type -&gt; dir_entry__inst__child:child_pos [color=&quot;#404040&quot;];
+	dir_entry__inst__child:child_type -&gt; dir_entry__seq [style=bold];
+	cfb_header__seq:ofs_dir_type -&gt; dir_entry__inst__left_sibling:left_sibling_pos [color=&quot;#404040&quot;];
+	microsoft_cfb__inst__sector_size:sector_size_type -&gt; dir_entry__inst__left_sibling:left_sibling_pos [color=&quot;#404040&quot;];
+	dir_entry__seq:left_sibling_id_type -&gt; dir_entry__inst__left_sibling:left_sibling_pos [color=&quot;#404040&quot;];
+	dir_entry__inst__left_sibling:left_sibling_type -&gt; dir_entry__seq [style=bold];
+	cfb_header__seq:ofs_dir_type -&gt; dir_entry__inst__right_sibling:right_sibling_pos [color=&quot;#404040&quot;];
+	microsoft_cfb__inst__sector_size:sector_size_type -&gt; dir_entry__inst__right_sibling:right_sibling_pos [color=&quot;#404040&quot;];
+	dir_entry__seq:right_sibling_id_type -&gt; dir_entry__inst__right_sibling:right_sibling_pos [color=&quot;#404040&quot;];
+	dir_entry__inst__right_sibling:right_sibling_type -&gt; dir_entry__seq [style=bold];
 }
 </code></pre>
             

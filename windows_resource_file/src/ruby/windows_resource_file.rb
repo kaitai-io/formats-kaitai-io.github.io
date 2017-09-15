@@ -40,8 +40,10 @@ class WindowsResourceFile < Kaitai::Struct::Struct
 
   def _read
     @resources = []
+    i = 0
     while not @_io.eof?
       @resources << Resource.new(@_io, self, @_root)
+      i += 1
     end
     self
   end
@@ -158,9 +160,11 @@ class WindowsResourceFile < Kaitai::Struct::Struct
       end
       if is_string
         @rest = []
+        i = 0
         begin
           _ = @_io.read_u2le
           @rest << _
+          i += 1
         end until _ == 0
       end
       if  ((is_string) && (save_pos2 >= 0)) 

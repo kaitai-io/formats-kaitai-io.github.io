@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -37,7 +38,7 @@ import java.nio.charset.Charset;
  */
 public class WindowsResourceFile extends KaitaiStruct {
     public static WindowsResourceFile fromFile(String fileName) throws IOException {
-        return new WindowsResourceFile(new KaitaiStream(fileName));
+        return new WindowsResourceFile(new ByteBufferKaitaiStream(fileName));
     }
 
     public WindowsResourceFile(KaitaiStream _io) {
@@ -56,8 +57,12 @@ public class WindowsResourceFile extends KaitaiStruct {
     }
     private void _read() {
         this.resources = new ArrayList<Resource>();
-        while (!this._io.isEof()) {
-            this.resources.add(new Resource(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.resources.add(new Resource(this._io, this, _root));
+                i++;
+            }
         }
     }
 
@@ -69,7 +74,7 @@ public class WindowsResourceFile extends KaitaiStruct {
      */
     public static class Resource extends KaitaiStruct {
         public static Resource fromFile(String fileName) throws IOException {
-            return new Resource(new KaitaiStream(fileName));
+            return new Resource(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum PredefTypes {
@@ -206,7 +211,7 @@ public class WindowsResourceFile extends KaitaiStruct {
      */
     public static class UnicodeOrId extends KaitaiStruct {
         public static UnicodeOrId fromFile(String fileName) throws IOException {
-            return new UnicodeOrId(new KaitaiStream(fileName));
+            return new UnicodeOrId(new ByteBufferKaitaiStream(fileName));
         }
 
         public UnicodeOrId(KaitaiStream _io) {
@@ -234,9 +239,11 @@ public class WindowsResourceFile extends KaitaiStruct {
                 this.rest = new ArrayList<Integer>();
                 {
                     int _it;
+                    int i = 0;
                     do {
                         _it = this._io.readU2le();
                         this.rest.add(_it);
+                        i++;
                     } while (!(_it == 0));
                 }
             }

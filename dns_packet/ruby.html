@@ -193,7 +193,7 @@ data = DnsPacket.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="ruby">data.transactionId # => ID to keep track of request/responces</code></pre>
+<pre><code class="ruby">data.transaction_id # => ID to keep track of request/responces</code></pre>
 
     </div>
 </section>
@@ -358,9 +358,11 @@ class DnsPacket &lt; Kaitai::Struct::Struct
 
     def _read
       @name = []
+      i = 0
       begin
         _ = Label.new(@_io, self, @_root)
         @name &lt;&lt; _
+        i += 1
       end until  ((_.length == 0) || (_.length == 192)) 
       self
     end

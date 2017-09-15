@@ -4,16 +4,20 @@
 
 
 
-cpio_old_le_t::cpio_old_le_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, cpio_old_le_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+cpio_old_le_t::cpio_old_le_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, cpio_old_le_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
 
 void cpio_old_le_t::_read() {
     m_files = new std::vector<file_t*>();
-    while (!m__io->is_eof()) {
-        m_files->push_back(new file_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_files->push_back(new file_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -24,9 +28,9 @@ cpio_old_le_t::~cpio_old_le_t() {
     delete m_files;
 }
 
-cpio_old_le_t::file_t::file_t(kaitai::kstream *p_io, cpio_old_le_t* p_parent, cpio_old_le_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+cpio_old_le_t::file_t::file_t(kaitai::kstream* p__io, cpio_old_le_t* p__parent, cpio_old_le_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -54,11 +58,17 @@ void cpio_old_le_t::file_t::_read() {
 
 cpio_old_le_t::file_t::~file_t() {
     delete m_header;
+    if (!n_path_name_padding) {
+    }
+    if (!n_file_data_padding) {
+    }
+    if (!n_end_of_file_padding) {
+    }
 }
 
-cpio_old_le_t::file_header_t::file_header_t(kaitai::kstream *p_io, cpio_old_le_t::file_t* p_parent, cpio_old_le_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+cpio_old_le_t::file_header_t::file_header_t(kaitai::kstream* p__io, cpio_old_le_t::file_t* p__parent, cpio_old_le_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -81,9 +91,9 @@ cpio_old_le_t::file_header_t::~file_header_t() {
     delete m_file_size;
 }
 
-cpio_old_le_t::four_byte_unsigned_integer_t::four_byte_unsigned_integer_t(kaitai::kstream *p_io, cpio_old_le_t::file_header_t* p_parent, cpio_old_le_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+cpio_old_le_t::four_byte_unsigned_integer_t::four_byte_unsigned_integer_t(kaitai::kstream* p__io, cpio_old_le_t::file_header_t* p__parent, cpio_old_le_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_value = false;
     _read();
 }

@@ -7,7 +7,7 @@ digraph {
 
 		microsoft_cfb__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">...</TD><TD>CfbHeader</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">512</TD><TD>CfbHeader</TD><TD PORT="header_type">header</TD></TR>
 		</TABLE>>];
 		microsoft_cfb__inst__sector_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
@@ -82,6 +82,18 @@ digraph {
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="mini_stream_pos">((ofs + 1) * _root.sector_size)</TD><TD PORT="mini_stream_size">size</TD><TD></TD><TD PORT="mini_stream_type">mini_stream</TD></TR>
 			</TABLE>>];
+			dir_entry__inst__child [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="child_pos">(((_root.header.ofs_dir + 1) * _root.sector_size) + (child_id * 128))</TD><TD PORT="child_size">128</TD><TD>DirEntry</TD><TD PORT="child_type">child</TD></TR>
+			</TABLE>>];
+			dir_entry__inst__left_sibling [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="left_sibling_pos">(((_root.header.ofs_dir + 1) * _root.sector_size) + (left_sibling_id * 128))</TD><TD PORT="left_sibling_size">128</TD><TD>DirEntry</TD><TD PORT="left_sibling_type">left_sibling</TD></TR>
+			</TABLE>>];
+			dir_entry__inst__right_sibling [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="right_sibling_pos">(((_root.header.ofs_dir + 1) * _root.sector_size) + (right_sibling_id * 128))</TD><TD PORT="right_sibling_size">128</TD><TD>DirEntry</TD><TD PORT="right_sibling_type">right_sibling</TD></TR>
+			</TABLE>>];
 		}
 	}
 	microsoft_cfb__seq:header_type -> cfb_header__seq [style=bold];
@@ -96,4 +108,16 @@ digraph {
 	dir_entry__seq:ofs_type -> dir_entry__inst__mini_stream:mini_stream_pos [color="#404040"];
 	microsoft_cfb__inst__sector_size:sector_size_type -> dir_entry__inst__mini_stream:mini_stream_pos [color="#404040"];
 	dir_entry__seq:size_type -> dir_entry__inst__mini_stream:mini_stream_size [color="#404040"];
+	cfb_header__seq:ofs_dir_type -> dir_entry__inst__child:child_pos [color="#404040"];
+	microsoft_cfb__inst__sector_size:sector_size_type -> dir_entry__inst__child:child_pos [color="#404040"];
+	dir_entry__seq:child_id_type -> dir_entry__inst__child:child_pos [color="#404040"];
+	dir_entry__inst__child:child_type -> dir_entry__seq [style=bold];
+	cfb_header__seq:ofs_dir_type -> dir_entry__inst__left_sibling:left_sibling_pos [color="#404040"];
+	microsoft_cfb__inst__sector_size:sector_size_type -> dir_entry__inst__left_sibling:left_sibling_pos [color="#404040"];
+	dir_entry__seq:left_sibling_id_type -> dir_entry__inst__left_sibling:left_sibling_pos [color="#404040"];
+	dir_entry__inst__left_sibling:left_sibling_type -> dir_entry__seq [style=bold];
+	cfb_header__seq:ofs_dir_type -> dir_entry__inst__right_sibling:right_sibling_pos [color="#404040"];
+	microsoft_cfb__inst__sector_size:sector_size_type -> dir_entry__inst__right_sibling:right_sibling_pos [color="#404040"];
+	dir_entry__seq:right_sibling_id_type -> dir_entry__inst__right_sibling:right_sibling_pos [color="#404040"];
+	dir_entry__inst__right_sibling:right_sibling_type -> dir_entry__seq [style=bold];
 }

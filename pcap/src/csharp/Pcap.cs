@@ -15,6 +15,7 @@ namespace Kaitai
             return new Pcap(new KaitaiStream(fileName));
         }
 
+
         public enum Linktype
         {
             NullLinktype = 0,
@@ -122,20 +123,24 @@ namespace Kaitai
             WattstopperDlm = 263,
             Iso14443 = 264,
         }
-
-        public Pcap(KaitaiStream io, KaitaiStruct parent = null, Pcap root = null) : base(io)
+        public Pcap(KaitaiStream p__io, KaitaiStruct p__parent = null, Pcap p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _hdr = new Header(m_io, this, m_root);
             _packets = new List<Packet>();
-            while (!m_io.IsEof) {
-                _packets.Add(new Packet(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _packets.Add(new Packet(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
 
         /// <remarks>
         /// Reference: <a href="https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header">Source</a>
@@ -147,13 +152,14 @@ namespace Kaitai
                 return new Header(new KaitaiStream(fileName));
             }
 
-            public Header(KaitaiStream io, Pcap parent = null, Pcap root = null) : base(io)
+            public Header(KaitaiStream p__io, Pcap p__parent = null, Pcap p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magicNumber = m_io.EnsureFixedContents(new byte[] { 212, 195, 178, 161 });
                 _versionMajor = m_io.ReadU2le();
                 _versionMinor = m_io.ReadU2le();
@@ -161,7 +167,7 @@ namespace Kaitai
                 _sigfigs = m_io.ReadU4le();
                 _snaplen = m_io.ReadU4le();
                 _network = ((Pcap.Linktype) m_io.ReadU4le());
-                }
+            }
             private byte[] _magicNumber;
             private ushort _versionMajor;
             private ushort _versionMinor;
@@ -213,13 +219,14 @@ namespace Kaitai
                 return new Packet(new KaitaiStream(fileName));
             }
 
-            public Packet(KaitaiStream io, Pcap parent = null, Pcap root = null) : base(io)
+            public Packet(KaitaiStream p__io, Pcap p__parent = null, Pcap p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _tsSec = m_io.ReadU4le();
                 _tsUsec = m_io.ReadU4le();
                 _inclLen = m_io.ReadU4le();
@@ -242,7 +249,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private uint _tsSec;
             private uint _tsUsec;
             private uint _inclLen;

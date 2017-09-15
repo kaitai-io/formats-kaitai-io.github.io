@@ -57,8 +57,10 @@ var Gif = (function() {
       this.globalColorTable = new ColorTable(_io__raw_globalColorTable, this, this._root);
     }
     this.blocks = [];
+    var i = 0;
     while (!this._io.isEof()) {
       this.blocks.push(new Block(this._io, this, this._root));
+      i++;
     }
   }
 
@@ -232,8 +234,10 @@ var Gif = (function() {
     }
     ColorTable.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.entries.push(new ColorTableEntry(this._io, this, this._root));
+        i++;
       }
     }
 
@@ -326,9 +330,11 @@ var Gif = (function() {
     ExtApplication.prototype._read = function() {
       this.applicationId = new Subblock(this._io, this, this._root);
       this.subblocks = []
+      var i = 0;
       do {
         var _ = new Subblock(this._io, this, this._root);
         this.subblocks.push(_);
+        i++;
       } while (!(_.numBytes == 0));
     }
 
@@ -345,9 +351,11 @@ var Gif = (function() {
     }
     Subblocks.prototype._read = function() {
       this.entries = []
+      var i = 0;
       do {
         var _ = new Subblock(this._io, this, this._root);
         this.entries.push(_);
+        i++;
       } while (!(_.numBytes == 0));
     }
 

@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -46,8 +45,12 @@ public:
     class resource_t;
     class unicode_or_id_t;
 
-    windows_resource_file_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, windows_resource_file_t* p_root = 0);
+    windows_resource_file_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, windows_resource_file_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~windows_resource_file_t();
 
     /**
@@ -85,8 +88,12 @@ public:
             PREDEF_TYPES_MANIFEST = 24
         };
 
-        resource_t(kaitai::kstream* p_io, windows_resource_file_t* p_parent = 0, windows_resource_file_t* p_root = 0);
+        resource_t(kaitai::kstream* p__io, windows_resource_file_t* p__parent = 0, windows_resource_file_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~resource_t();
 
     private:
@@ -171,8 +178,12 @@ public:
 
     public:
 
-        unicode_or_id_t(kaitai::kstream* p_io, windows_resource_file_t::resource_t* p_parent = 0, windows_resource_file_t* p_root = 0);
+        unicode_or_id_t(kaitai::kstream* p__io, windows_resource_file_t::resource_t* p__parent = 0, windows_resource_file_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~unicode_or_id_t();
 
     private:

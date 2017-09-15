@@ -12,8 +12,8 @@
  */
 
 class PythonPyc27 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \PythonPyc27 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PythonPyc27 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -36,8 +36,8 @@ class PythonPyc27 extends \Kaitai\Struct\Struct {
 namespace \PythonPyc27;
 
 class CodeObject extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PythonPyc27\PyObject $parent = null, \PythonPyc27 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -98,8 +98,8 @@ class FlagsEnum {
 namespace \PythonPyc27;
 
 class Assembly extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PythonPyc27\CodeObject $parent = null, \PythonPyc27 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\CodeObject $_parent = null, \PythonPyc27 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -123,8 +123,8 @@ class Assembly extends \Kaitai\Struct\Struct {
 namespace \PythonPyc27;
 
 class OpArg extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PythonPyc27\OpArgs $parent = null, \PythonPyc27 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\OpArgs $_parent = null, \PythonPyc27 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -267,8 +267,8 @@ class OpCodeEnum {
 namespace \PythonPyc27;
 
 class PyObject extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \PythonPyc27 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PythonPyc27 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -313,8 +313,8 @@ class PyObject extends \Kaitai\Struct\Struct {
 namespace \PythonPyc27\PyObject;
 
 class PyNone extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PythonPyc27\PyObject $parent = null, \PythonPyc27 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -325,8 +325,8 @@ class PyNone extends \Kaitai\Struct\Struct {
 namespace \PythonPyc27\PyObject;
 
 class PyFalse extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PythonPyc27\PyObject $parent = null, \PythonPyc27 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -337,8 +337,8 @@ class PyFalse extends \Kaitai\Struct\Struct {
 namespace \PythonPyc27\PyObject;
 
 class StringRef extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PythonPyc27\PyObject $parent = null, \PythonPyc27 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -352,8 +352,8 @@ class StringRef extends \Kaitai\Struct\Struct {
 namespace \PythonPyc27\PyObject;
 
 class PyTrue extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PythonPyc27\PyObject $parent = null, \PythonPyc27 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -364,8 +364,8 @@ class PyTrue extends \Kaitai\Struct\Struct {
 namespace \PythonPyc27\PyObject;
 
 class Tuple extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PythonPyc27\PyObject $parent = null, \PythonPyc27 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -386,8 +386,8 @@ class Tuple extends \Kaitai\Struct\Struct {
 namespace \PythonPyc27\PyObject;
 
 class UnicodeString extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \PythonPyc27 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PythonPyc27 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -404,8 +404,8 @@ class UnicodeString extends \Kaitai\Struct\Struct {
 namespace \PythonPyc27\PyObject;
 
 class InternedString extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PythonPyc27\PyObject $parent = null, \PythonPyc27 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -422,8 +422,8 @@ class InternedString extends \Kaitai\Struct\Struct {
 namespace \PythonPyc27\PyObject;
 
 class PyString extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PythonPyc27\PyObject $parent = null, \PythonPyc27 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -455,15 +455,17 @@ class ObjectType {
 namespace \PythonPyc27;
 
 class OpArgs extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \PythonPyc27\Assembly $parent = null, \PythonPyc27 $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\Assembly $_parent = null, \PythonPyc27 $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_items = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_items[] = new \PythonPyc27\OpArg($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_items;

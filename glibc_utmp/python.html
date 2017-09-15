@@ -188,10 +188,10 @@ section#format-index .row {
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = GlibcUtmp(KaitaiStream(raw))</code></pre>
+data = GlibcUtmp(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -254,10 +254,12 @@ class GlibcUtmp(KaitaiStruct):
     def _read(self):
         self._raw_records = []
         self.records = []
+        i = 0
         while not self._io.is_eof():
             self._raw_records.append(self._io.read_bytes(384))
             io = KaitaiStream(BytesIO(self._raw_records[-1]))
             self.records.append(self._root.Record(io, self, self._root))
+            i += 1
 
 
     class Record(KaitaiStruct):

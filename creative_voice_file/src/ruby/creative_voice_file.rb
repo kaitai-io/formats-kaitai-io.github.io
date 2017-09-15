@@ -57,8 +57,10 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
     @version = @_io.read_u2le
     @checksum = @_io.read_u2le
     @blocks = []
+    i = 0
     while not @_io.eof?
       @blocks << Block.new(@_io, self, @_root)
+      i += 1
     end
     self
   end

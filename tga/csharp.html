@@ -258,6 +258,7 @@ namespace Kaitai
             return new Tga(new KaitaiStream(fileName));
         }
 
+
         public enum ColorMapEnum
         {
             NoColorMap = 0,
@@ -274,15 +275,15 @@ namespace Kaitai
             RleTrueColor = 10,
             RleBw = 11,
         }
-
-        public Tga(KaitaiStream io, KaitaiStruct parent = null, Tga root = null) : base(io)
+        public Tga(KaitaiStream p__io, KaitaiStruct p__parent = null, Tga p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_footer = false;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _imageIdLen = m_io.ReadU1();
             _colorMapType = ((ColorMapEnum) m_io.ReadU1());
             _imageType = ((ImageTypeEnum) m_io.ReadU1());
@@ -298,11 +299,12 @@ namespace Kaitai
             _imageId = m_io.ReadBytes(ImageIdLen);
             if (ColorMapType == ColorMapEnum.HasColorMap) {
                 _colorMap = new List&lt;byte[]&gt;((int) (NumColorMap));
-                for (var i = 0; i &lt; NumColorMap; i++) {
+                for (var i = 0; i &lt; NumColorMap; i++)
+                {
                     _colorMap.Add(m_io.ReadBytes(((ColorMapDepth + 7) / 8)));
                 }
             }
-            }
+        }
         public partial class TgaFooter : KaitaiStruct
         {
             public static TgaFooter FromFile(string fileName)
@@ -310,19 +312,20 @@ namespace Kaitai
                 return new TgaFooter(new KaitaiStream(fileName));
             }
 
-            public TgaFooter(KaitaiStream io, Tga parent = null, Tga root = null) : base(io)
+            public TgaFooter(KaitaiStream p__io, Tga p__parent = null, Tga p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_isValid = false;
                 f_extArea = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _extAreaOfs = m_io.ReadU4le();
                 _devDirOfs = m_io.ReadU4le();
                 _versionMagic = m_io.ReadBytes(18);
-                }
+            }
             private bool f_isValid;
             private bool _isValid;
             public bool IsValid
@@ -380,17 +383,19 @@ namespace Kaitai
                 return new TgaExtArea(new KaitaiStream(fileName));
             }
 
-            public TgaExtArea(KaitaiStream io, Tga.TgaFooter parent = null, Tga root = null) : base(io)
+            public TgaExtArea(KaitaiStream p__io, Tga.TgaFooter p__parent = null, Tga p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _extAreaSize = m_io.ReadU2le();
                 _authorName = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytes(41));
                 _comments = new List&lt;string&gt;((int) (4));
-                for (var i = 0; i &lt; 4; i++) {
+                for (var i = 0; i &lt; 4; i++)
+                {
                     _comments.Add(System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytes(81)));
                 }
                 _timestamp = m_io.ReadBytes(12);
@@ -405,7 +410,7 @@ namespace Kaitai
                 _postageStampOfs = m_io.ReadU4le();
                 _scanLineOfs = m_io.ReadU4le();
                 _attributes = m_io.ReadU1();
-                }
+            }
             private ushort _extAreaSize;
             private string _authorName;
             private List&lt;string&gt; _comments;

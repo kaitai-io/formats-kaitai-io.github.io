@@ -44,8 +44,10 @@ var GoogleProtobuf = (function() {
   }
   GoogleProtobuf.prototype._read = function() {
     this.pairs = [];
+    var i = 0;
     while (!this._io.isEof()) {
       this.pairs.push(new Pair(this._io, this, this._root));
+      i++;
     }
   }
 
@@ -78,10 +80,10 @@ var GoogleProtobuf = (function() {
       this._read();
     }
     Pair.prototype._read = function() {
-      this.key = new VlqBase128Le(this._io);
+      this.key = new VlqBase128Le(this._io, this, null);
       switch (this.wireType) {
       case GoogleProtobuf.Pair.WireTypes.VARINT:
-        this.value = new VlqBase128Le(this._io);
+        this.value = new VlqBase128Le(this._io, this, null);
         break;
       case GoogleProtobuf.Pair.WireTypes.LEN_DELIMITED:
         this.value = new DelimitedBytes(this._io, this, this._root);
@@ -121,7 +123,7 @@ var GoogleProtobuf = (function() {
       get: function() {
         if (this._m_fieldTag !== undefined)
           return this._m_fieldTag;
-        this._m_fieldTag = (this.key.value >> 3);
+        this._m_fieldTag = (this.key.value >>> 3);
         return this._m_fieldTag;
       }
     });
@@ -152,7 +154,7 @@ var GoogleProtobuf = (function() {
       this._read();
     }
     DelimitedBytes.prototype._read = function() {
-      this.len = new VlqBase128Le(this._io);
+      this.len = new VlqBase128Le(this._io, this, null);
       this.body = this._io.readBytes(this.len.value);
     }
 

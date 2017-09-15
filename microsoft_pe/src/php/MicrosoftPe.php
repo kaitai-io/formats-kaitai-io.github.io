@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class MicrosoftPe extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \MicrosoftPe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MicrosoftPe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -40,8 +40,8 @@ class MicrosoftPe extends \Kaitai\Struct\Struct {
 namespace \MicrosoftPe;
 
 class OptionalHeaderWindows extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftPe\OptionalHeader $parent = null, \MicrosoftPe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe\OptionalHeader $_parent = null, \MicrosoftPe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -166,8 +166,8 @@ class SubsystemEnum {
 namespace \MicrosoftPe;
 
 class OptionalHeaderDataDirs extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftPe\OptionalHeader $parent = null, \MicrosoftPe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe\OptionalHeader $_parent = null, \MicrosoftPe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -223,8 +223,8 @@ class OptionalHeaderDataDirs extends \Kaitai\Struct\Struct {
 namespace \MicrosoftPe;
 
 class DataDir extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftPe\OptionalHeaderDataDirs $parent = null, \MicrosoftPe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe\OptionalHeaderDataDirs $_parent = null, \MicrosoftPe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -241,8 +241,8 @@ class DataDir extends \Kaitai\Struct\Struct {
 namespace \MicrosoftPe;
 
 class OptionalHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftPe $parent = null, \MicrosoftPe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe $_parent = null, \MicrosoftPe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -262,8 +262,8 @@ class OptionalHeader extends \Kaitai\Struct\Struct {
 namespace \MicrosoftPe;
 
 class Section extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftPe $parent = null, \MicrosoftPe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe $_parent = null, \MicrosoftPe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -314,8 +314,8 @@ class Section extends \Kaitai\Struct\Struct {
 namespace \MicrosoftPe;
 
 class MzPlaceholder extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftPe $parent = null, \MicrosoftPe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe $_parent = null, \MicrosoftPe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -335,8 +335,8 @@ class MzPlaceholder extends \Kaitai\Struct\Struct {
 namespace \MicrosoftPe;
 
 class OptionalHeaderStd extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftPe\OptionalHeader $parent = null, \MicrosoftPe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe\OptionalHeader $_parent = null, \MicrosoftPe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -376,8 +376,8 @@ class OptionalHeaderStd extends \Kaitai\Struct\Struct {
 namespace \MicrosoftPe;
 
 class CoffHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \MicrosoftPe $parent = null, \MicrosoftPe $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe $_parent = null, \MicrosoftPe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

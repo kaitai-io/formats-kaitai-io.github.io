@@ -22,21 +22,23 @@ namespace Kaitai
             return new DosMz(new KaitaiStream(fileName));
         }
 
-        public DosMz(KaitaiStream io, KaitaiStruct parent = null, DosMz root = null) : base(io)
+        public DosMz(KaitaiStream p__io, KaitaiStruct p__parent = null, DosMz p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _hdr = new MzHeader(m_io, this, m_root);
             _mzHeader2 = m_io.ReadBytes((Hdr.RelocationsOfs - 28));
             _relocations = new List<Relocation>((int) (Hdr.QtyRelocations));
-            for (var i = 0; i < Hdr.QtyRelocations; i++) {
+            for (var i = 0; i < Hdr.QtyRelocations; i++)
+            {
                 _relocations.Add(new Relocation(m_io, this, m_root));
             }
             _body = m_io.ReadBytesFull();
-            }
+        }
         public partial class MzHeader : KaitaiStruct
         {
             public static MzHeader FromFile(string fileName)
@@ -44,13 +46,14 @@ namespace Kaitai
                 return new MzHeader(new KaitaiStream(fileName));
             }
 
-            public MzHeader(KaitaiStream io, DosMz parent = null, DosMz root = null) : base(io)
+            public MzHeader(KaitaiStream p__io, DosMz p__parent = null, DosMz p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _magic = m_io.ReadBytes(2);
                 _lastPageExtraBytes = m_io.ReadU2le();
                 _qtyPages = m_io.ReadU2le();
@@ -65,7 +68,7 @@ namespace Kaitai
                 _initialCs = m_io.ReadU2le();
                 _relocationsOfs = m_io.ReadU2le();
                 _overlayId = m_io.ReadU2le();
-                }
+            }
             private byte[] _magic;
             private ushort _lastPageExtraBytes;
             private ushort _qtyPages;
@@ -106,16 +109,17 @@ namespace Kaitai
                 return new Relocation(new KaitaiStream(fileName));
             }
 
-            public Relocation(KaitaiStream io, DosMz parent = null, DosMz root = null) : base(io)
+            public Relocation(KaitaiStream p__io, DosMz p__parent = null, DosMz p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _ofs = m_io.ReadU2le();
                 _seg = m_io.ReadU2le();
-                }
+            }
             private ushort _ofs;
             private ushort _seg;
             private DosMz m_root;

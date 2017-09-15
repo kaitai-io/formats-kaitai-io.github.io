@@ -212,10 +212,10 @@ section#format-index .row {
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = DoomWad(KaitaiStream(raw))</code></pre>
+data = DoomWad(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -277,8 +277,10 @@ class DoomWad(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.Sector(self._io, self, self._root))
+                i += 1
 
 
 
@@ -478,8 +480,10 @@ class DoomWad(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.Vertex(self._io, self, self._root))
+                i += 1
 
 
 
@@ -508,8 +512,10 @@ class DoomWad(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.Thing(self._io, self, self._root))
+                i += 1
 
 
 
@@ -522,8 +528,10 @@ class DoomWad(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.Linedef(self._io, self, self._root))
+                i += 1
 
 
 
@@ -599,8 +607,10 @@ class DoomWad(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._root.Sidedef(self._io, self, self._root))
+                i += 1
 
 
 
@@ -640,11 +650,13 @@ class DoomWad(KaitaiStruct):
                 _pos = self._io.pos()
                 self._io.seek((self.offset * 2))
                 self._m_linedefs = []
+                i = 0
                 while True:
                     _ = self._io.read_s2le()
                     self._m_linedefs.append(_)
                     if _ == -1:
                         break
+                    i += 1
                 self._io.seek(_pos)
                 return self._m_linedefs if hasattr(self, &#39;_m_linedefs&#39;) else None
 

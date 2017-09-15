@@ -2,16 +2,18 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class ShapefileIndex extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \ShapefileIndex $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ShapefileIndex $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_header = new \ShapefileIndex\FileHeader($this->_io, $this, $this->_root);
         $this->_m_records = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_records[] = new \ShapefileIndex\Record($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_header;
@@ -27,8 +29,8 @@ class ShapefileIndex extends \Kaitai\Struct\Struct {
 namespace \ShapefileIndex;
 
 class FileHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileIndex $parent = null, \ShapefileIndex $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileIndex $_parent = null, \ShapefileIndex $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -77,8 +79,8 @@ class FileHeader extends \Kaitai\Struct\Struct {
 namespace \ShapefileIndex;
 
 class Record extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileIndex $parent = null, \ShapefileIndex $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileIndex $_parent = null, \ShapefileIndex $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -95,8 +97,8 @@ class Record extends \Kaitai\Struct\Struct {
 namespace \ShapefileIndex;
 
 class BoundingBoxXYZM extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileIndex\FileHeader $parent = null, \ShapefileIndex $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileIndex\FileHeader $_parent = null, \ShapefileIndex $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -119,8 +121,8 @@ class BoundingBoxXYZM extends \Kaitai\Struct\Struct {
 namespace \ShapefileIndex;
 
 class BoundsMinMax extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \ShapefileIndex\BoundingBoxXYZM $parent = null, \ShapefileIndex $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileIndex\BoundingBoxXYZM $_parent = null, \ShapefileIndex $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

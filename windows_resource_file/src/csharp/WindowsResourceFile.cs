@@ -38,18 +38,23 @@ namespace Kaitai
             return new WindowsResourceFile(new KaitaiStream(fileName));
         }
 
-        public WindowsResourceFile(KaitaiStream io, KaitaiStruct parent = null, WindowsResourceFile root = null) : base(io)
+        public WindowsResourceFile(KaitaiStream p__io, KaitaiStruct p__parent = null, WindowsResourceFile p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _resources = new List<Resource>();
-            while (!m_io.IsEof) {
-                _resources.Add(new Resource(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _resources.Add(new Resource(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
 
         /// <summary>
         /// Each resource has a `type` and a `name`, which can be used to
@@ -65,6 +70,7 @@ namespace Kaitai
             {
                 return new Resource(new KaitaiStream(fileName));
             }
+
 
             public enum PredefTypes
             {
@@ -90,15 +96,15 @@ namespace Kaitai
                 Html = 23,
                 Manifest = 24,
             }
-
-            public Resource(KaitaiStream io, WindowsResourceFile parent = null, WindowsResourceFile root = null) : base(io)
+            public Resource(KaitaiStream p__io, WindowsResourceFile p__parent = null, WindowsResourceFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_typeAsPredef = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _valueSize = m_io.ReadU4le();
                 _headerSize = m_io.ReadU4le();
                 _type = new UnicodeOrId(m_io, this, m_root);
@@ -111,7 +117,7 @@ namespace Kaitai
                 _characteristics = m_io.ReadU4le();
                 _value = m_io.ReadBytes(ValueSize);
                 _padding2 = m_io.ReadBytes(KaitaiStream.Mod((4 - M_Io.Pos), 4));
-                }
+            }
             private bool f_typeAsPredef;
             private PredefTypes _typeAsPredef;
 
@@ -195,17 +201,18 @@ namespace Kaitai
                 return new UnicodeOrId(new KaitaiStream(fileName));
             }
 
-            public UnicodeOrId(KaitaiStream io, WindowsResourceFile.Resource parent = null, WindowsResourceFile root = null) : base(io)
+            public UnicodeOrId(KaitaiStream p__io, WindowsResourceFile.Resource p__parent = null, WindowsResourceFile p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_savePos1 = false;
                 f_savePos2 = false;
                 f_isString = false;
                 f_asString = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 if (SavePos1 >= 0) {
                     _first = m_io.ReadU2le();
                 }
@@ -215,17 +222,19 @@ namespace Kaitai
                 if (IsString) {
                     _rest = new List<ushort>();
                     {
+                        var i = 0;
                         ushort M_;
                         do {
                             M_ = m_io.ReadU2le();
                             _rest.Add(M_);
+                            i++;
                         } while (!(M_ == 0));
                     }
                 }
                 if ( ((IsString) && (SavePos2 >= 0)) ) {
                     _noop = m_io.ReadBytes(0);
                 }
-                }
+            }
             private bool f_savePos1;
             private int _savePos1;
             public int SavePos1
@@ -283,14 +292,14 @@ namespace Kaitai
                     return _asString;
                 }
             }
-            private ushort _first;
-            private ushort _asNumeric;
+            private ushort? _first;
+            private ushort? _asNumeric;
             private List<ushort> _rest;
             private byte[] _noop;
             private WindowsResourceFile m_root;
             private WindowsResourceFile.Resource m_parent;
-            public ushort First { get { return _first; } }
-            public ushort AsNumeric { get { return _asNumeric; } }
+            public ushort? First { get { return _first; } }
+            public ushort? AsNumeric { get { return _asNumeric; } }
             public List<ushort> Rest { get { return _rest; } }
             public byte[] Noop { get { return _noop; } }
             public WindowsResourceFile M_Root { get { return m_root; } }

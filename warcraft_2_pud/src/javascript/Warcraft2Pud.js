@@ -258,8 +258,10 @@ var Warcraft2Pud = (function() {
   }
   Warcraft2Pud.prototype._read = function() {
     this.sections = [];
+    var i = 0;
     while (!this._io.isEof()) {
       this.sections.push(new Section(this._io, this, this._root));
+      i++;
     }
   }
 
@@ -273,8 +275,10 @@ var Warcraft2Pud = (function() {
     }
     SectionStartingResource.prototype._read = function() {
       this.resourcesByPlayer = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.resourcesByPlayer.push(this._io.readU2le());
+        i++;
       }
     }
 
@@ -377,8 +381,10 @@ var Warcraft2Pud = (function() {
     }
     SectionUnit.prototype._read = function() {
       this.units = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.units.push(new Unit(this._io, this, this._root));
+        i++;
       }
     }
 
@@ -470,8 +476,10 @@ var Warcraft2Pud = (function() {
     }
     SectionOwnr.prototype._read = function() {
       this.controllerByPlayer = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.controllerByPlayer.push(this._io.readU1());
+        i++;
       }
     }
 

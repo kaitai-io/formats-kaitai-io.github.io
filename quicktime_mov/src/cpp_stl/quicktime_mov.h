@@ -3,8 +3,7 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include <kaitai/kaitaistruct.h>
-#include <kaitai/kaitaistream.h>
+#include "kaitai/kaitaistruct.h"
 
 #include <stdint.h>
 #include <vector>
@@ -160,16 +159,24 @@ public:
         BRAND_UVVU = 1970697845
     };
 
-    quicktime_mov_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, quicktime_mov_t* p_root = 0);
+    quicktime_mov_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, quicktime_mov_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~quicktime_mov_t();
 
     class mvhd_body_t : public kaitai::kstruct {
 
     public:
 
-        mvhd_body_t(kaitai::kstream* p_io, quicktime_mov_t::atom_t* p_parent = 0, quicktime_mov_t* p_root = 0);
+        mvhd_body_t(kaitai::kstream* p__io, quicktime_mov_t::atom_t* p__parent = 0, quicktime_mov_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~mvhd_body_t();
 
     private:
@@ -271,8 +278,12 @@ public:
 
     public:
 
-        ftyp_body_t(kaitai::kstream* p_io, quicktime_mov_t::atom_t* p_parent = 0, quicktime_mov_t* p_root = 0);
+        ftyp_body_t(kaitai::kstream* p__io, quicktime_mov_t::atom_t* p__parent = 0, quicktime_mov_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~ftyp_body_t();
 
     private:
@@ -294,8 +305,12 @@ public:
 
     public:
 
-        fixed32_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, quicktime_mov_t* p_root = 0);
+        fixed32_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, quicktime_mov_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~fixed32_t();
 
     private:
@@ -315,8 +330,12 @@ public:
 
     public:
 
-        fixed16_t(kaitai::kstream* p_io, quicktime_mov_t::mvhd_body_t* p_parent = 0, quicktime_mov_t* p_root = 0);
+        fixed16_t(kaitai::kstream* p__io, quicktime_mov_t::mvhd_body_t* p__parent = 0, quicktime_mov_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~fixed16_t();
 
     private:
@@ -336,8 +355,12 @@ public:
 
     public:
 
-        atom_t(kaitai::kstream* p_io, quicktime_mov_t::atom_list_t* p_parent = 0, quicktime_mov_t* p_root = 0);
+        atom_t(kaitai::kstream* p__io, quicktime_mov_t::atom_list_t* p__parent = 0, quicktime_mov_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~atom_t();
 
     private:
@@ -358,6 +381,12 @@ public:
 
     private:
         kaitai::kstruct* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
         quicktime_mov_t* m__root;
         quicktime_mov_t::atom_list_t* m__parent;
         std::string m__raw_body;
@@ -378,8 +407,12 @@ public:
 
     public:
 
-        tkhd_body_t(kaitai::kstream* p_io, quicktime_mov_t::atom_t* p_parent = 0, quicktime_mov_t* p_root = 0);
+        tkhd_body_t(kaitai::kstream* p__io, quicktime_mov_t::atom_t* p__parent = 0, quicktime_mov_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~tkhd_body_t();
 
     private:
@@ -429,8 +462,12 @@ public:
 
     public:
 
-        atom_list_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, quicktime_mov_t* p_root = 0);
+        atom_list_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, quicktime_mov_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~atom_list_t();
 
     private:

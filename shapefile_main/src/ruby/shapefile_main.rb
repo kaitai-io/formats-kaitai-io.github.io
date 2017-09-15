@@ -43,8 +43,10 @@ class ShapefileMain < Kaitai::Struct::Struct
   def _read
     @header = FileHeader.new(@_io, self, @_root)
     @records = []
+    i = 0
     while not @_io.eof?
       @records << Record.new(@_io, self, @_root)
+      i += 1
     end
     self
   end

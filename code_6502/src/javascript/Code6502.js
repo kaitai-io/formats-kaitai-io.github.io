@@ -323,8 +323,10 @@ var Code6502 = (function() {
   }
   Code6502.prototype._read = function() {
     this.operations = [];
+    var i = 0;
     while (!this._io.isEof()) {
       this.operations.push(new Operation(this._io, this, this._root));
+      i++;
     }
   }
 

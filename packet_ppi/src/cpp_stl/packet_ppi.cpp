@@ -5,8 +5,8 @@
 
 #include "ethernet_frame.h"
 
-packet_ppi_t::packet_ppi_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, packet_ppi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+packet_ppi_t::packet_ppi_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, packet_ppi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -16,20 +16,26 @@ void packet_ppi_t::_read() {
     m__raw_fields = m__io->read_bytes((header()->pph_len() - 8));
     m__io__raw_fields = new kaitai::kstream(m__raw_fields);
     m_fields = new packet_ppi_fields_t(m__io__raw_fields, this, m__root);
+    n_body = true;
     switch (header()->pph_dlt()) {
-    case LINKTYPE_PPI:
+    case LINKTYPE_PPI: {
+        n_body = false;
         m__raw_body = m__io->read_bytes_full();
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new packet_ppi_t(m__io__raw_body);
         break;
-    case LINKTYPE_ETHERNET:
+    }
+    case LINKTYPE_ETHERNET: {
+        n_body = false;
         m__raw_body = m__io->read_bytes_full();
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new ethernet_frame_t(m__io__raw_body);
         break;
-    default:
+    }
+    default: {
         m__raw_body = m__io->read_bytes_full();
         break;
+    }
     }
 }
 
@@ -37,18 +43,26 @@ packet_ppi_t::~packet_ppi_t() {
     delete m_header;
     delete m__io__raw_fields;
     delete m_fields;
+    if (!n_body) {
+        delete m__io__raw_body;
+        delete m_body;
+    }
 }
 
-packet_ppi_t::packet_ppi_fields_t::packet_ppi_fields_t(kaitai::kstream *p_io, packet_ppi_t* p_parent, packet_ppi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+packet_ppi_t::packet_ppi_fields_t::packet_ppi_fields_t(kaitai::kstream* p__io, packet_ppi_t* p__parent, packet_ppi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void packet_ppi_t::packet_ppi_fields_t::_read() {
     m_entries = new std::vector<packet_ppi_field_t*>();
-    while (!m__io->is_eof()) {
-        m_entries->push_back(new packet_ppi_field_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new packet_ppi_field_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -59,9 +73,9 @@ packet_ppi_t::packet_ppi_fields_t::~packet_ppi_fields_t() {
     delete m_entries;
 }
 
-packet_ppi_t::radio_802_11n_mac_ext_body_t::radio_802_11n_mac_ext_body_t(kaitai::kstream *p_io, packet_ppi_t::packet_ppi_field_t* p_parent, packet_ppi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+packet_ppi_t::radio_802_11n_mac_ext_body_t::radio_802_11n_mac_ext_body_t(kaitai::kstream* p__io, packet_ppi_t::packet_ppi_field_t* p__parent, packet_ppi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -76,9 +90,9 @@ packet_ppi_t::radio_802_11n_mac_ext_body_t::~radio_802_11n_mac_ext_body_t() {
     delete m_flags;
 }
 
-packet_ppi_t::mac_flags_t::mac_flags_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, packet_ppi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+packet_ppi_t::mac_flags_t::mac_flags_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, packet_ppi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -98,9 +112,9 @@ void packet_ppi_t::mac_flags_t::_read() {
 packet_ppi_t::mac_flags_t::~mac_flags_t() {
 }
 
-packet_ppi_t::packet_ppi_header_t::packet_ppi_header_t(kaitai::kstream *p_io, packet_ppi_t* p_parent, packet_ppi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+packet_ppi_t::packet_ppi_header_t::packet_ppi_header_t(kaitai::kstream* p__io, packet_ppi_t* p__parent, packet_ppi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -114,9 +128,9 @@ void packet_ppi_t::packet_ppi_header_t::_read() {
 packet_ppi_t::packet_ppi_header_t::~packet_ppi_header_t() {
 }
 
-packet_ppi_t::radio_802_11_common_body_t::radio_802_11_common_body_t(kaitai::kstream *p_io, packet_ppi_t::packet_ppi_field_t* p_parent, packet_ppi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+packet_ppi_t::radio_802_11_common_body_t::radio_802_11_common_body_t(kaitai::kstream* p__io, packet_ppi_t::packet_ppi_field_t* p__parent, packet_ppi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -135,43 +149,55 @@ void packet_ppi_t::radio_802_11_common_body_t::_read() {
 packet_ppi_t::radio_802_11_common_body_t::~radio_802_11_common_body_t() {
 }
 
-packet_ppi_t::packet_ppi_field_t::packet_ppi_field_t(kaitai::kstream *p_io, packet_ppi_t::packet_ppi_fields_t* p_parent, packet_ppi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+packet_ppi_t::packet_ppi_field_t::packet_ppi_field_t(kaitai::kstream* p__io, packet_ppi_t::packet_ppi_fields_t* p__parent, packet_ppi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void packet_ppi_t::packet_ppi_field_t::_read() {
     m_pfh_type = static_cast<packet_ppi_t::pfh_type_t>(m__io->read_u2le());
     m_pfh_datalen = m__io->read_u2le();
+    n_body = true;
     switch (pfh_type()) {
-    case PFH_TYPE_RADIO_802_11_COMMON:
+    case PFH_TYPE_RADIO_802_11_COMMON: {
+        n_body = false;
         m__raw_body = m__io->read_bytes(pfh_datalen());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new radio_802_11_common_body_t(m__io__raw_body, this, m__root);
         break;
-    case PFH_TYPE_RADIO_802_11N_MAC_EXT:
+    }
+    case PFH_TYPE_RADIO_802_11N_MAC_EXT: {
+        n_body = false;
         m__raw_body = m__io->read_bytes(pfh_datalen());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new radio_802_11n_mac_ext_body_t(m__io__raw_body, this, m__root);
         break;
-    case PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT:
+    }
+    case PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT: {
+        n_body = false;
         m__raw_body = m__io->read_bytes(pfh_datalen());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new radio_802_11n_mac_phy_ext_body_t(m__io__raw_body, this, m__root);
         break;
-    default:
+    }
+    default: {
         m__raw_body = m__io->read_bytes(pfh_datalen());
         break;
+    }
     }
 }
 
 packet_ppi_t::packet_ppi_field_t::~packet_ppi_field_t() {
+    if (!n_body) {
+        delete m__io__raw_body;
+        delete m_body;
+    }
 }
 
-packet_ppi_t::radio_802_11n_mac_phy_ext_body_t::radio_802_11n_mac_phy_ext_body_t(kaitai::kstream *p_io, packet_ppi_t::packet_ppi_field_t* p_parent, packet_ppi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+packet_ppi_t::radio_802_11n_mac_phy_ext_body_t::radio_802_11n_mac_phy_ext_body_t(kaitai::kstream* p__io, packet_ppi_t::packet_ppi_field_t* p__parent, packet_ppi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -222,9 +248,9 @@ packet_ppi_t::radio_802_11n_mac_phy_ext_body_t::~radio_802_11n_mac_phy_ext_body_
     delete m_evm;
 }
 
-packet_ppi_t::radio_802_11n_mac_phy_ext_body_t::channel_flags_t::channel_flags_t(kaitai::kstream *p_io, packet_ppi_t::radio_802_11n_mac_phy_ext_body_t* p_parent, packet_ppi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+packet_ppi_t::radio_802_11n_mac_phy_ext_body_t::channel_flags_t::channel_flags_t(kaitai::kstream* p__io, packet_ppi_t::radio_802_11n_mac_phy_ext_body_t* p__parent, packet_ppi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -243,9 +269,9 @@ void packet_ppi_t::radio_802_11n_mac_phy_ext_body_t::channel_flags_t::_read() {
 packet_ppi_t::radio_802_11n_mac_phy_ext_body_t::channel_flags_t::~channel_flags_t() {
 }
 
-packet_ppi_t::radio_802_11n_mac_phy_ext_body_t::signal_noise_t::signal_noise_t(kaitai::kstream *p_io, packet_ppi_t::radio_802_11n_mac_phy_ext_body_t* p_parent, packet_ppi_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+packet_ppi_t::radio_802_11n_mac_phy_ext_body_t::signal_noise_t::signal_noise_t(kaitai::kstream* p__io, packet_ppi_t::radio_802_11n_mac_phy_ext_body_t* p__parent, packet_ppi_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

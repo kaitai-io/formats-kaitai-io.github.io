@@ -143,8 +143,10 @@ class S3m < Kaitai::Struct::Struct
 
     def _read
       @cells = []
+      i = 0
       while not @_io.eof?
         @cells << PatternCell.new(@_io, self, @_root)
+        i += 1
       end
       self
     end

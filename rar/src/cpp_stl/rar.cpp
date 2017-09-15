@@ -4,8 +4,8 @@
 
 
 
-rar_t::rar_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, rar_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+rar_t::rar_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -13,26 +13,40 @@ rar_t::rar_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, rar_t *p_root) : 
 void rar_t::_read() {
     m_magic = new magic_signature_t(m__io, this, m__root);
     m_blocks = new std::vector<kaitai::kstruct*>();
-    while (!m__io->is_eof()) {
-        switch (magic()->version()) {
-        case 0:
-            m_blocks->push_back(new block_t(m__io, this, m__root));
-            break;
-        case 1:
-            m_blocks->push_back(new block_v5_t(m__io, this, m__root));
-            break;
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            n_blocks = true;
+            switch (magic()->version()) {
+            case 0: {
+                n_blocks = false;
+                m_blocks->push_back(new block_t(m__io, this, m__root));
+                break;
+            }
+            case 1: {
+                n_blocks = false;
+                m_blocks->push_back(new block_v5_t(m__io, this, m__root));
+                break;
+            }
+            }
+            i++;
         }
     }
 }
 
 rar_t::~rar_t() {
     delete m_magic;
-    delete m_blocks;
+    if (!n_blocks) {
+        for (std::vector<kaitai::kstruct*>::iterator it = m_blocks->begin(); it != m_blocks->end(); ++it) {
+            delete *it;
+        }
+        delete m_blocks;
+    }
 }
 
-rar_t::block_v5_t::block_v5_t(kaitai::kstream *p_io, rar_t* p_parent, rar_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+rar_t::block_v5_t::block_v5_t(kaitai::kstream* p__io, rar_t* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -42,9 +56,9 @@ void rar_t::block_v5_t::_read() {
 rar_t::block_v5_t::~block_v5_t() {
 }
 
-rar_t::block_t::block_t(kaitai::kstream *p_io, rar_t* p_parent, rar_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+rar_t::block_t::block_t(kaitai::kstream* p__io, rar_t* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_has_add = false;
     f_header_size = false;
     f_body_size = false;
@@ -61,15 +75,19 @@ void rar_t::block_t::_read() {
         n_add_size = false;
         m_add_size = m__io->read_u4le();
     }
+    n_body = true;
     switch (block_type()) {
-    case BLOCK_TYPES_FILE_HEADER:
+    case BLOCK_TYPES_FILE_HEADER: {
+        n_body = false;
         m__raw_body = m__io->read_bytes(body_size());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new block_file_header_t(m__io__raw_body, this, m__root);
         break;
-    default:
+    }
+    default: {
         m__raw_body = m__io->read_bytes(body_size());
         break;
+    }
     }
     n_add_body = true;
     if (has_add()) {
@@ -79,6 +97,14 @@ void rar_t::block_t::_read() {
 }
 
 rar_t::block_t::~block_t() {
+    if (!n_add_size) {
+    }
+    if (!n_body) {
+        delete m__io__raw_body;
+        delete m_body;
+    }
+    if (!n_add_body) {
+    }
 }
 
 bool rar_t::block_t::has_add() {
@@ -105,9 +131,9 @@ int32_t rar_t::block_t::body_size() {
     return m_body_size;
 }
 
-rar_t::block_file_header_t::block_file_header_t(kaitai::kstream *p_io, rar_t::block_t* p_parent, rar_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+rar_t::block_file_header_t::block_file_header_t(kaitai::kstream* p__io, rar_t::block_t* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -135,11 +161,15 @@ void rar_t::block_file_header_t::_read() {
 
 rar_t::block_file_header_t::~block_file_header_t() {
     delete m_file_time;
+    if (!n_high_pack_size) {
+    }
+    if (!n_salt) {
+    }
 }
 
-rar_t::magic_signature_t::magic_signature_t(kaitai::kstream *p_io, rar_t* p_parent, rar_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+rar_t::magic_signature_t::magic_signature_t(kaitai::kstream* p__io, rar_t* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -154,11 +184,13 @@ void rar_t::magic_signature_t::_read() {
 }
 
 rar_t::magic_signature_t::~magic_signature_t() {
+    if (!n_magic3) {
+    }
 }
 
-rar_t::dos_time_t::dos_time_t(kaitai::kstream *p_io, rar_t::block_file_header_t* p_parent, rar_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+rar_t::dos_time_t::dos_time_t(kaitai::kstream* p__io, rar_t::block_file_header_t* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_month = false;
     f_seconds = false;
     f_year = false;

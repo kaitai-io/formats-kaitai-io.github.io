@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.nio.charset.Charset;
  */
 public class Bson extends KaitaiStruct {
     public static Bson fromFile(String fileName) throws IOException {
-        return new Bson(new KaitaiStream(fileName));
+        return new Bson(new ByteBufferKaitaiStream(fileName));
     }
 
     public Bson(KaitaiStream _io) {
@@ -37,7 +38,7 @@ public class Bson extends KaitaiStruct {
     private void _read() {
         this.len = this._io.readS4le();
         this._raw_fields = this._io.readBytes((len() - 5));
-        KaitaiStream _io__raw_fields = new KaitaiStream(_raw_fields);
+        KaitaiStream _io__raw_fields = new ByteBufferKaitaiStream(_raw_fields);
         this.fields = new ElementsList(_io__raw_fields, this, _root);
         this.terminator = this._io.ensureFixedContents(new byte[] { 0 });
     }
@@ -47,7 +48,7 @@ public class Bson extends KaitaiStruct {
      */
     public static class Timestamp extends KaitaiStruct {
         public static Timestamp fromFile(String fileName) throws IOException {
-            return new Timestamp(new KaitaiStream(fileName));
+            return new Timestamp(new ByteBufferKaitaiStream(fileName));
         }
 
         public Timestamp(KaitaiStream _io) {
@@ -83,7 +84,7 @@ public class Bson extends KaitaiStruct {
      */
     public static class BinData extends KaitaiStruct {
         public static BinData fromFile(String fileName) throws IOException {
-            return new BinData(new KaitaiStream(fileName));
+            return new BinData(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum Subtype {
@@ -126,7 +127,7 @@ public class Bson extends KaitaiStruct {
             switch (subtype()) {
             case BYTE_ARRAY_DEPRECATED: {
                 this._raw_content = this._io.readBytes(len());
-                KaitaiStream _io__raw_content = new KaitaiStream(_raw_content);
+                KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
                 this.content = new ByteArrayDeprecated(_io__raw_content, this, _root);
                 break;
             }
@@ -142,7 +143,7 @@ public class Bson extends KaitaiStruct {
          */
         public static class ByteArrayDeprecated extends KaitaiStruct {
             public static ByteArrayDeprecated fromFile(String fileName) throws IOException {
-                return new ByteArrayDeprecated(new KaitaiStream(fileName));
+                return new ByteArrayDeprecated(new ByteBufferKaitaiStream(fileName));
             }
 
             public ByteArrayDeprecated(KaitaiStream _io) {
@@ -187,7 +188,7 @@ public class Bson extends KaitaiStruct {
     }
     public static class ElementsList extends KaitaiStruct {
         public static ElementsList fromFile(String fileName) throws IOException {
-            return new ElementsList(new KaitaiStream(fileName));
+            return new ElementsList(new ByteBufferKaitaiStream(fileName));
         }
 
         public ElementsList(KaitaiStream _io) {
@@ -206,8 +207,12 @@ public class Bson extends KaitaiStruct {
         }
         private void _read() {
             this.elements = new ArrayList<Element>();
-            while (!this._io.isEof()) {
-                this.elements.add(new Element(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.elements.add(new Element(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<Element> elements;
@@ -219,7 +224,7 @@ public class Bson extends KaitaiStruct {
     }
     public static class Cstring extends KaitaiStruct {
         public static Cstring fromFile(String fileName) throws IOException {
-            return new Cstring(new KaitaiStream(fileName));
+            return new Cstring(new ByteBufferKaitaiStream(fileName));
         }
 
         public Cstring(KaitaiStream _io) {
@@ -252,7 +257,7 @@ public class Bson extends KaitaiStruct {
     }
     public static class String extends KaitaiStruct {
         public static String fromFile(String fileName) throws IOException {
-            return new String(new KaitaiStream(fileName));
+            return new String(new ByteBufferKaitaiStream(fileName));
         }
 
         public String(KaitaiStream _io) {
@@ -287,7 +292,7 @@ public class Bson extends KaitaiStruct {
     }
     public static class Element extends KaitaiStruct {
         public static Element fromFile(String fileName) throws IOException {
-            return new Element(new KaitaiStream(fileName));
+            return new Element(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum BsonType {
@@ -344,7 +349,7 @@ public class Bson extends KaitaiStruct {
             this.name = new Cstring(this._io, this, _root);
             switch (typeByte()) {
             case NUMBER_DOUBLE: {
-                this.content = this._io.readF8le();
+                this.content = (Object) (this._io.readF8le());
                 break;
             }
             case CODE_WITH_SCOPE: {
@@ -368,11 +373,11 @@ public class Bson extends KaitaiStruct {
                 break;
             }
             case UTC_DATETIME: {
-                this.content = this._io.readS8le();
+                this.content = (Object) (this._io.readS8le());
                 break;
             }
             case NUMBER_LONG: {
-                this.content = this._io.readS8le();
+                this.content = (Object) (this._io.readS8le());
                 break;
             }
             case TIMESTAMP: {
@@ -392,7 +397,7 @@ public class Bson extends KaitaiStruct {
                 break;
             }
             case BOOLEAN: {
-                this.content = this._io.readU1();
+                this.content = (Object) (this._io.readU1());
                 break;
             }
             case DOCUMENT: {
@@ -404,7 +409,7 @@ public class Bson extends KaitaiStruct {
                 break;
             }
             case NUMBER_INT: {
-                this.content = this._io.readS4le();
+                this.content = (Object) (this._io.readS4le());
                 break;
             }
             case BIN_DATA: {
@@ -426,7 +431,7 @@ public class Bson extends KaitaiStruct {
     }
     public static class DbPointer extends KaitaiStruct {
         public static DbPointer fromFile(String fileName) throws IOException {
-            return new DbPointer(new KaitaiStream(fileName));
+            return new DbPointer(new ByteBufferKaitaiStream(fileName));
         }
 
         public DbPointer(KaitaiStream _io) {
@@ -462,7 +467,7 @@ public class Bson extends KaitaiStruct {
      */
     public static class U3 extends KaitaiStruct {
         public static U3 fromFile(String fileName) throws IOException {
-            return new U3(new KaitaiStream(fileName));
+            return new U3(new ByteBufferKaitaiStream(fileName));
         }
 
         public U3(KaitaiStream _io) {
@@ -505,7 +510,7 @@ public class Bson extends KaitaiStruct {
     }
     public static class CodeWithScope extends KaitaiStruct {
         public static CodeWithScope fromFile(String fileName) throws IOException {
-            return new CodeWithScope(new KaitaiStream(fileName));
+            return new CodeWithScope(new ByteBufferKaitaiStream(fileName));
         }
 
         public CodeWithScope(KaitaiStream _io) {
@@ -548,7 +553,7 @@ public class Bson extends KaitaiStruct {
      */
     public static class F16 extends KaitaiStruct {
         public static F16 fromFile(String fileName) throws IOException {
-            return new F16(new KaitaiStream(fileName));
+            return new F16(new ByteBufferKaitaiStream(fileName));
         }
 
         public F16(KaitaiStream _io) {
@@ -591,7 +596,7 @@ public class Bson extends KaitaiStruct {
      */
     public static class ObjectId extends KaitaiStruct {
         public static ObjectId fromFile(String fileName) throws IOException {
-            return new ObjectId(new KaitaiStream(fileName));
+            return new ObjectId(new ByteBufferKaitaiStream(fileName));
         }
 
         public ObjectId(KaitaiStream _io) {
@@ -637,7 +642,7 @@ public class Bson extends KaitaiStruct {
     }
     public static class RegEx extends KaitaiStruct {
         public static RegEx fromFile(String fileName) throws IOException {
-            return new RegEx(new KaitaiStream(fileName));
+            return new RegEx(new ByteBufferKaitaiStream(fileName));
         }
 
         public RegEx(KaitaiStream _io) {

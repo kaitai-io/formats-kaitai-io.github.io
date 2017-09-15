@@ -4,8 +4,8 @@
 
 
 
-psx_tim_t::psx_tim_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, psx_tim_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+psx_tim_t::psx_tim_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, psx_tim_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_has_clut = false;
     f_bpp = false;
@@ -30,9 +30,9 @@ psx_tim_t::~psx_tim_t() {
     delete m_img;
 }
 
-psx_tim_t::bitmap_t::bitmap_t(kaitai::kstream *p_io, psx_tim_t* p_parent, psx_tim_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+psx_tim_t::bitmap_t::bitmap_t(kaitai::kstream* p__io, psx_tim_t* p__parent, psx_tim_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

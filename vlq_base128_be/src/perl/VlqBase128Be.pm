@@ -51,7 +51,7 @@ sub last {
 sub value {
     my ($self) = @_;
     return $self->{value} if ($self->{value});
-    $self->{value} = ((((((($self->groups()[$self->last()]->value() + ($self->last() >= 1 ? ($self->groups()[($self->last() - 1)]->value() << 7) : 0)) + ($self->last() >= 2 ? ($self->groups()[($self->last() - 2)]->value() << 14) : 0)) + ($self->last() >= 3 ? ($self->groups()[($self->last() - 3)]->value() << 21) : 0)) + ($self->last() >= 4 ? ($self->groups()[($self->last() - 4)]->value() << 28) : 0)) + ($self->last() >= 5 ? ($self->groups()[($self->last() - 5)]->value() << 35) : 0)) + ($self->last() >= 6 ? ($self->groups()[($self->last() - 6)]->value() << 42) : 0)) + ($self->last() >= 7 ? ($self->groups()[($self->last() - 7)]->value() << 49) : 0));
+    $self->{value} = (((((((@{$self->groups()}[$self->last()]->value() + ($self->last() >= 1 ? (@{$self->groups()}[($self->last() - 1)]->value() << 7) : 0)) + ($self->last() >= 2 ? (@{$self->groups()}[($self->last() - 2)]->value() << 14) : 0)) + ($self->last() >= 3 ? (@{$self->groups()}[($self->last() - 3)]->value() << 21) : 0)) + ($self->last() >= 4 ? (@{$self->groups()}[($self->last() - 4)]->value() << 28) : 0)) + ($self->last() >= 5 ? (@{$self->groups()}[($self->last() - 5)]->value() << 35) : 0)) + ($self->last() >= 6 ? (@{$self->groups()}[($self->last() - 6)]->value() << 42) : 0)) + ($self->last() >= 7 ? (@{$self->groups()}[($self->last() - 7)]->value() << 49) : 0));
     return $self->{value};
 }
 

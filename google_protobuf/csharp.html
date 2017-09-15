@@ -302,18 +302,23 @@ namespace Kaitai
             return new GoogleProtobuf(new KaitaiStream(fileName));
         }
 
-        public GoogleProtobuf(KaitaiStream io, KaitaiStruct parent = null, GoogleProtobuf root = null) : base(io)
+        public GoogleProtobuf(KaitaiStream p__io, KaitaiStruct p__parent = null, GoogleProtobuf p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _pairs = new List&lt;Pair&gt;();
-            while (!m_io.IsEof) {
-                _pairs.Add(new Pair(m_io, this, m_root));
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _pairs.Add(new Pair(m_io, this, m_root));
+                    i++;
+                }
             }
-            }
+        }
 
         /// &lt;summary&gt;
         /// Key-value pair
@@ -325,6 +330,7 @@ namespace Kaitai
                 return new Pair(new KaitaiStream(fileName));
             }
 
+
             public enum WireTypes
             {
                 Varint = 0,
@@ -334,16 +340,16 @@ namespace Kaitai
                 GroupEnd = 4,
                 Bit32 = 5,
             }
-
-            public Pair(KaitaiStream io, GoogleProtobuf parent = null, GoogleProtobuf root = null) : base(io)
+            public Pair(KaitaiStream p__io, GoogleProtobuf p__parent = null, GoogleProtobuf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_wireType = false;
                 f_fieldTag = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _key = new VlqBase128Le(m_io);
                 switch (WireType) {
                 case WireTypes.Varint: {
@@ -363,7 +369,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private bool f_wireType;
             private WireTypes _wireType;
 
@@ -435,16 +441,17 @@ namespace Kaitai
                 return new DelimitedBytes(new KaitaiStream(fileName));
             }
 
-            public DelimitedBytes(KaitaiStream io, GoogleProtobuf.Pair parent = null, GoogleProtobuf root = null) : base(io)
+            public DelimitedBytes(KaitaiStream p__io, GoogleProtobuf.Pair p__parent = null, GoogleProtobuf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _len = new VlqBase128Le(m_io);
                 _body = m_io.ReadBytes(Len.Value);
-                }
+            }
             private VlqBase128Le _len;
             private byte[] _body;
             private GoogleProtobuf m_root;

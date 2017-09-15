@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.HashMap;
 
 public class ExifLe extends KaitaiStruct {
     public static ExifLe fromFile(String fileName) throws IOException {
-        return new ExifLe(new KaitaiStream(fileName));
+        return new ExifLe(new ByteBufferKaitaiStream(fileName));
     }
 
     public ExifLe(KaitaiStream _io) {
@@ -32,7 +33,7 @@ public class ExifLe extends KaitaiStruct {
     }
     public static class Ifd extends KaitaiStruct {
         public static Ifd fromFile(String fileName) throws IOException {
-            return new Ifd(new KaitaiStream(fileName));
+            return new Ifd(new ByteBufferKaitaiStream(fileName));
         }
 
         public Ifd(KaitaiStream _io) {
@@ -82,7 +83,7 @@ public class ExifLe extends KaitaiStruct {
     }
     public static class IfdField extends KaitaiStruct {
         public static IfdField fromFile(String fileName) throws IOException {
-            return new IfdField(new KaitaiStream(fileName));
+            return new IfdField(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum FieldTypeEnum {

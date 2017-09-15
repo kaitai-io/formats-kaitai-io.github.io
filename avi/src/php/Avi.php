@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Avi extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Avi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Avi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -30,8 +30,8 @@ class Avi extends \Kaitai\Struct\Struct {
 namespace \Avi;
 
 class ListBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Avi\Block $parent = null, \Avi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Avi\Block $_parent = null, \Avi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -48,8 +48,8 @@ class ListBody extends \Kaitai\Struct\Struct {
 namespace \Avi;
 
 class Rect extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Avi\StrhBody $parent = null, \Avi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Avi\StrhBody $_parent = null, \Avi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -72,15 +72,17 @@ class Rect extends \Kaitai\Struct\Struct {
 namespace \Avi;
 
 class Blocks extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Avi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Avi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_entries = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_entries[] = new \Avi\Block($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_entries;
@@ -94,8 +96,8 @@ class Blocks extends \Kaitai\Struct\Struct {
 namespace \Avi;
 
 class AvihBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Avi\Block $parent = null, \Avi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Avi\Block $_parent = null, \Avi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -139,8 +141,8 @@ class AvihBody extends \Kaitai\Struct\Struct {
 namespace \Avi;
 
 class Block extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Avi\Blocks $parent = null, \Avi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Avi\Blocks $_parent = null, \Avi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -185,8 +187,8 @@ class Block extends \Kaitai\Struct\Struct {
 namespace \Avi;
 
 class StrhBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Avi\Block $parent = null, \Avi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Avi\Block $_parent = null, \Avi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -251,8 +253,8 @@ class StrhBody extends \Kaitai\Struct\Struct {
 namespace \Avi;
 
 class StrfBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Avi $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Avi $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

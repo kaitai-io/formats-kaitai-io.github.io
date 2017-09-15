@@ -4,8 +4,8 @@
 
 
 
-icc_4_t::icc_4_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+icc_4_t::icc_4_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -20,9 +20,9 @@ icc_4_t::~icc_4_t() {
     delete m_tag_table;
 }
 
-icc_4_t::u_8_fixed_8_number_t::u_8_fixed_8_number_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::u_8_fixed_8_number_t::u_8_fixed_8_number_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -33,9 +33,9 @@ void icc_4_t::u_8_fixed_8_number_t::_read() {
 icc_4_t::u_8_fixed_8_number_t::~u_8_fixed_8_number_t() {
 }
 
-icc_4_t::u_16_fixed_16_number_t::u_16_fixed_16_number_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::u_16_fixed_16_number_t::u_16_fixed_16_number_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -46,9 +46,9 @@ void icc_4_t::u_16_fixed_16_number_t::_read() {
 icc_4_t::u_16_fixed_16_number_t::~u_16_fixed_16_number_t() {
 }
 
-icc_4_t::standard_illuminant_encoding_t::standard_illuminant_encoding_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::standard_illuminant_encoding_t::standard_illuminant_encoding_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -59,9 +59,9 @@ void icc_4_t::standard_illuminant_encoding_t::_read() {
 icc_4_t::standard_illuminant_encoding_t::~standard_illuminant_encoding_t() {
 }
 
-icc_4_t::profile_header_t::profile_header_t(kaitai::kstream *p_io, icc_4_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::profile_header_t::profile_header_t(kaitai::kstream* p__io, icc_4_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -96,9 +96,9 @@ icc_4_t::profile_header_t::~profile_header_t() {
     delete m_creator;
 }
 
-icc_4_t::profile_header_t::version_field_t::version_field_t(kaitai::kstream *p_io, icc_4_t::profile_header_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::profile_header_t::version_field_t::version_field_t(kaitai::kstream* p__io, icc_4_t::profile_header_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -113,9 +113,9 @@ void icc_4_t::profile_header_t::version_field_t::_read() {
 icc_4_t::profile_header_t::version_field_t::~version_field_t() {
 }
 
-icc_4_t::profile_header_t::profile_flags_t::profile_flags_t(kaitai::kstream *p_io, icc_4_t::profile_header_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::profile_header_t::profile_flags_t::profile_flags_t(kaitai::kstream* p__io, icc_4_t::profile_header_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -128,9 +128,9 @@ void icc_4_t::profile_header_t::profile_flags_t::_read() {
 icc_4_t::profile_header_t::profile_flags_t::~profile_flags_t() {
 }
 
-icc_4_t::xyz_number_t::xyz_number_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::xyz_number_t::xyz_number_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -143,9 +143,9 @@ void icc_4_t::xyz_number_t::_read() {
 icc_4_t::xyz_number_t::~xyz_number_t() {
 }
 
-icc_4_t::date_time_number_t::date_time_number_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::date_time_number_t::date_time_number_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -161,9 +161,9 @@ void icc_4_t::date_time_number_t::_read() {
 icc_4_t::date_time_number_t::~date_time_number_t() {
 }
 
-icc_4_t::response_16_number_t::response_16_number_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::response_16_number_t::response_16_number_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -177,9 +177,9 @@ icc_4_t::response_16_number_t::~response_16_number_t() {
     delete m_measurement_value;
 }
 
-icc_4_t::u_1_fixed_15_number_t::u_1_fixed_15_number_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::u_1_fixed_15_number_t::u_1_fixed_15_number_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -190,9 +190,9 @@ void icc_4_t::u_1_fixed_15_number_t::_read() {
 icc_4_t::u_1_fixed_15_number_t::~u_1_fixed_15_number_t() {
 }
 
-icc_4_t::tag_table_t::tag_table_t(kaitai::kstream *p_io, icc_4_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_table_t(kaitai::kstream* p__io, icc_4_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -213,9 +213,9 @@ icc_4_t::tag_table_t::~tag_table_t() {
     delete m_tags;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::tag_definition_t(kaitai::kstream *p_io, icc_4_t::tag_table_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::tag_definition_t(kaitai::kstream* p__io, icc_4_t::tag_table_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_tag_data_element = false;
     _read();
 }
@@ -227,47 +227,63 @@ void icc_4_t::tag_table_t::tag_definition_t::_read() {
 }
 
 icc_4_t::tag_table_t::tag_definition_t::~tag_definition_t() {
+    if (f_tag_data_element && !n_tag_data_element) {
+        delete m__io__raw_tag_data_element;
+        delete m_tag_data_element;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::blue_matrix_column_tag_t::blue_matrix_column_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::blue_matrix_column_tag_t::blue_matrix_column_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::blue_matrix_column_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_XYZ_TYPE:
+    case TAG_TYPE_SIGNATURES_XYZ_TYPE: {
+        n_tag_data = false;
         m_tag_data = new xyz_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::blue_matrix_column_tag_t::~blue_matrix_column_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::device_mfg_desc_tag_t::device_mfg_desc_tag_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::device_mfg_desc_tag_t::device_mfg_desc_tag_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::device_mfg_desc_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new multi_localized_unicode_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::device_mfg_desc_tag_t::~device_mfg_desc_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::named_color_2_type_t::named_color_2_type_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::named_color_2_tag_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::named_color_2_type_t::named_color_2_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::named_color_2_tag_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -307,9 +323,9 @@ icc_4_t::tag_table_t::tag_definition_t::named_color_2_type_t::~named_color_2_typ
     delete m_named_colour_definitions;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::named_color_2_type_t::named_colour_definition_t::named_colour_definition_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::named_color_2_type_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::named_color_2_type_t::named_colour_definition_t::named_colour_definition_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::named_color_2_type_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -336,51 +352,67 @@ void icc_4_t::tag_table_t::tag_definition_t::named_color_2_type_t::named_colour_
 
 icc_4_t::tag_table_t::tag_definition_t::named_color_2_type_t::named_colour_definition_t::~named_colour_definition_t() {
     delete m_root_name_padding;
-    delete m_device_coordinates;
+    if (!n_device_coordinates) {
+        delete m_device_coordinates;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::viewing_conditions_tag_t::viewing_conditions_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::viewing_conditions_tag_t::viewing_conditions_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::viewing_conditions_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_VIEWING_CONDITIONS_TYPE:
+    case TAG_TYPE_SIGNATURES_VIEWING_CONDITIONS_TYPE: {
+        n_tag_data = false;
         m_tag_data = new viewing_conditions_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::viewing_conditions_tag_t::~viewing_conditions_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::blue_trc_tag_t::blue_trc_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::blue_trc_tag_t::blue_trc_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::blue_trc_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_CURVE_TYPE:
+    case TAG_TYPE_SIGNATURES_CURVE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new curve_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new parametric_curve_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::blue_trc_tag_t::~blue_trc_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::response_curve_set_16_type_t::response_curve_set_16_type_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::output_response_tag_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::response_curve_set_16_type_t::response_curve_set_16_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::output_response_tag_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -401,9 +433,9 @@ icc_4_t::tag_table_t::tag_definition_t::response_curve_set_16_type_t::~response_
     delete m_response_curve_structure_offsets;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::curve_type_t::curve_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::curve_type_t::curve_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -428,38 +460,52 @@ void icc_4_t::tag_table_t::tag_definition_t::curve_type_t::_read() {
 }
 
 icc_4_t::tag_table_t::tag_definition_t::curve_type_t::~curve_type_t() {
-    delete m_curve_values;
+    if (!n_curve_values) {
+        delete m_curve_values;
+    }
+    if (!n_curve_value) {
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::saturation_rendering_intent_gamut_tag_t::saturation_rendering_intent_gamut_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::saturation_rendering_intent_gamut_tag_t::saturation_rendering_intent_gamut_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::saturation_rendering_intent_gamut_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_SIGNATURE_TYPE:
+    case TAG_TYPE_SIGNATURES_SIGNATURE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new signature_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::saturation_rendering_intent_gamut_tag_t::~saturation_rendering_intent_gamut_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::xyz_type_t::xyz_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::xyz_type_t::xyz_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::xyz_type_t::_read() {
     m_reserved = m__io->ensure_fixed_contents(std::string("\x00\x00\x00\x00", 4));
     m_values = new std::vector<xyz_number_t*>();
-    while (!m__io->is_eof()) {
-        m_values->push_back(new xyz_number_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_values->push_back(new xyz_number_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -470,9 +516,9 @@ icc_4_t::tag_table_t::tag_definition_t::xyz_type_t::~xyz_type_t() {
     delete m_values;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::lut_8_type_t::lut_8_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::lut_8_type_t::lut_8_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -499,33 +545,43 @@ icc_4_t::tag_table_t::tag_definition_t::lut_8_type_t::~lut_8_type_t() {
     delete m_encoded_e_parameters;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::b_to_a_2_tag_t::b_to_a_2_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::b_to_a_2_tag_t::b_to_a_2_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::b_to_a_2_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_8_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_16_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_b_to_a_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::b_to_a_2_tag_t::~b_to_a_2_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::lut_a_to_b_type_t::lut_a_to_b_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::lut_a_to_b_type_t::lut_a_to_b_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -545,51 +601,67 @@ void icc_4_t::tag_table_t::tag_definition_t::lut_a_to_b_type_t::_read() {
 icc_4_t::tag_table_t::tag_definition_t::lut_a_to_b_type_t::~lut_a_to_b_type_t() {
 }
 
-icc_4_t::tag_table_t::tag_definition_t::b_to_a_0_tag_t::b_to_a_0_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::b_to_a_0_tag_t::b_to_a_0_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::b_to_a_0_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_8_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_16_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_b_to_a_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::b_to_a_0_tag_t::~b_to_a_0_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::media_white_point_tag_t::media_white_point_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::media_white_point_tag_t::media_white_point_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::media_white_point_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_XYZ_TYPE:
+    case TAG_TYPE_SIGNATURES_XYZ_TYPE: {
+        n_tag_data = false;
         m_tag_data = new xyz_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::media_white_point_tag_t::~media_white_point_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::lut_16_type_t::lut_16_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::lut_16_type_t::lut_16_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -616,35 +688,45 @@ icc_4_t::tag_table_t::tag_definition_t::lut_16_type_t::~lut_16_type_t() {
     delete m_encoded_e_parameters;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::perceptual_rendering_intent_gamut_tag_t::perceptual_rendering_intent_gamut_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::perceptual_rendering_intent_gamut_tag_t::perceptual_rendering_intent_gamut_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::perceptual_rendering_intent_gamut_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_SIGNATURE_TYPE:
+    case TAG_TYPE_SIGNATURES_SIGNATURE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new signature_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::perceptual_rendering_intent_gamut_tag_t::~perceptual_rendering_intent_gamut_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::u_16_fixed_16_array_type_t::u_16_fixed_16_array_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::u_16_fixed_16_array_type_t::u_16_fixed_16_array_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::u_16_fixed_16_array_type_t::_read() {
     m_reserved = m__io->ensure_fixed_contents(std::string("\x00\x00\x00\x00", 4));
     m_values = new std::vector<u_16_fixed_16_number_t*>();
-    while (!m__io->is_eof()) {
-        m_values->push_back(new u_16_fixed_16_number_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_values->push_back(new u_16_fixed_16_number_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -655,282 +737,380 @@ icc_4_t::tag_table_t::tag_definition_t::u_16_fixed_16_array_type_t::~u_16_fixed_
     delete m_values;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::colorant_table_out_tag_t::colorant_table_out_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::colorant_table_out_tag_t::colorant_table_out_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::colorant_table_out_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_COLORANT_TABLE_TYPE:
+    case TAG_TYPE_SIGNATURES_COLORANT_TABLE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new colorant_table_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::colorant_table_out_tag_t::~colorant_table_out_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::measurement_tag_t::measurement_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::measurement_tag_t::measurement_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::measurement_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MEASUREMENT_TYPE:
+    case TAG_TYPE_SIGNATURES_MEASUREMENT_TYPE: {
+        n_tag_data = false;
         m_tag_data = new measurement_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::measurement_tag_t::~measurement_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::profile_sequence_tag_t::profile_sequence_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::profile_sequence_tag_t::profile_sequence_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::profile_sequence_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_DESC_TYPE:
+    case TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_DESC_TYPE: {
+        n_tag_data = false;
         m_tag_data = new profile_sequence_desc_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::profile_sequence_tag_t::~profile_sequence_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::technology_tag_t::technology_tag_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::technology_tag_t::technology_tag_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::technology_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_SIGNATURE_TYPE:
+    case TAG_TYPE_SIGNATURES_SIGNATURE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new signature_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::technology_tag_t::~technology_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::a_to_b_0_tag_t::a_to_b_0_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::a_to_b_0_tag_t::a_to_b_0_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::a_to_b_0_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_8_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_16_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_a_to_b_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::a_to_b_0_tag_t::~a_to_b_0_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::d_to_b_0_tag_t::d_to_b_0_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::d_to_b_0_tag_t::d_to_b_0_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::d_to_b_0_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE: {
+        n_tag_data = false;
         m_tag_data = new multi_process_elements_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::d_to_b_0_tag_t::~d_to_b_0_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::output_response_tag_t::output_response_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::output_response_tag_t::output_response_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::output_response_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_RESPONSE_CURVE_SET_16_TYPE:
+    case TAG_TYPE_SIGNATURES_RESPONSE_CURVE_SET_16_TYPE: {
+        n_tag_data = false;
         m_tag_data = new response_curve_set_16_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::output_response_tag_t::~output_response_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::green_matrix_column_tag_t::green_matrix_column_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::green_matrix_column_tag_t::green_matrix_column_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::green_matrix_column_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_XYZ_TYPE:
+    case TAG_TYPE_SIGNATURES_XYZ_TYPE: {
+        n_tag_data = false;
         m_tag_data = new xyz_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::green_matrix_column_tag_t::~green_matrix_column_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::profile_description_tag_t::profile_description_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::profile_description_tag_t::profile_description_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::profile_description_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new multi_localized_unicode_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::profile_description_tag_t::~profile_description_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::preview_1_tag_t::preview_1_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::preview_1_tag_t::preview_1_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::preview_1_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_8_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_16_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_b_to_a_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::preview_1_tag_t::~preview_1_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::red_trc_tag_t::red_trc_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::red_trc_tag_t::red_trc_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::red_trc_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_CURVE_TYPE:
+    case TAG_TYPE_SIGNATURES_CURVE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new curve_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new parametric_curve_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::red_trc_tag_t::~red_trc_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::b_to_d_0_tag_t::b_to_d_0_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::b_to_d_0_tag_t::b_to_d_0_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::b_to_d_0_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE: {
+        n_tag_data = false;
         m_tag_data = new multi_process_elements_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::b_to_d_0_tag_t::~b_to_d_0_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::d_to_b_1_tag_t::d_to_b_1_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::d_to_b_1_tag_t::d_to_b_1_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::d_to_b_1_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE: {
+        n_tag_data = false;
         m_tag_data = new multi_process_elements_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::d_to_b_1_tag_t::~d_to_b_1_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::b_to_a_1_tag_t::b_to_a_1_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::b_to_a_1_tag_t::b_to_a_1_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::b_to_a_1_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_8_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_16_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_b_to_a_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::b_to_a_1_tag_t::~b_to_a_1_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::parametric_curve_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::parametric_curve_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -938,31 +1118,45 @@ void icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::_read() {
     m_reserved = m__io->ensure_fixed_contents(std::string("\x00\x00\x00\x00", 4));
     m_function_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::parametric_curve_type_functions_t>(m__io->read_u2be());
     m_reserved_2 = m__io->ensure_fixed_contents(std::string("\x00\x00", 2));
+    n_parameters = true;
     switch (function_type()) {
-    case PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_X_TO_POWER_OF_G:
+    case PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_X_TO_POWER_OF_G: {
+        n_parameters = false;
         m_parameters = new params_y_equals_x_to_power_of_g_t(m__io, this, m__root);
         break;
-    case PARAMETRIC_CURVE_TYPE_FUNCTIONS_CIE_122_1996:
+    }
+    case PARAMETRIC_CURVE_TYPE_FUNCTIONS_CIE_122_1996: {
+        n_parameters = false;
         m_parameters = new params_cie_122_1996_t(m__io, this, m__root);
         break;
-    case PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_2_1:
+    }
+    case PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_2_1: {
+        n_parameters = false;
         m_parameters = new params_iec_61966_2_1_t(m__io, this, m__root);
         break;
-    case PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_OB_AX_PLUS_B_CB_TO_POWER_OF_G_PLUS_C:
+    }
+    case PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_OB_AX_PLUS_B_CB_TO_POWER_OF_G_PLUS_C: {
+        n_parameters = false;
         m_parameters = new params_y_equals_ob_ax_plus_b_cb_to_power_of_g_plus_c_t(m__io, this, m__root);
         break;
-    case PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_3:
+    }
+    case PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_3: {
+        n_parameters = false;
         m_parameters = new params_iec_61966_3_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::~parametric_curve_type_t() {
+    if (!n_parameters) {
+        delete m_parameters;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_iec_61966_3_t::params_iec_61966_3_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_iec_61966_3_t::params_iec_61966_3_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -976,9 +1170,9 @@ void icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_iec
 icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_iec_61966_3_t::~params_iec_61966_3_t() {
 }
 
-icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_iec_61966_2_1_t::params_iec_61966_2_1_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_iec_61966_2_1_t::params_iec_61966_2_1_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -993,9 +1187,9 @@ void icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_iec
 icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_iec_61966_2_1_t::~params_iec_61966_2_1_t() {
 }
 
-icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_y_equals_x_to_power_of_g_t::params_y_equals_x_to_power_of_g_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_y_equals_x_to_power_of_g_t::params_y_equals_x_to_power_of_g_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1006,9 +1200,9 @@ void icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_y_e
 icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_y_equals_x_to_power_of_g_t::~params_y_equals_x_to_power_of_g_t() {
 }
 
-icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_y_equals_ob_ax_plus_b_cb_to_power_of_g_plus_c_t::params_y_equals_ob_ax_plus_b_cb_to_power_of_g_plus_c_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_y_equals_ob_ax_plus_b_cb_to_power_of_g_plus_c_t::params_y_equals_ob_ax_plus_b_cb_to_power_of_g_plus_c_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1025,9 +1219,9 @@ void icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_y_e
 icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_y_equals_ob_ax_plus_b_cb_to_power_of_g_plus_c_t::~params_y_equals_ob_ax_plus_b_cb_to_power_of_g_plus_c_t() {
 }
 
-icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_cie_122_1996_t::params_cie_122_1996_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_cie_122_1996_t::params_cie_122_1996_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1040,45 +1234,57 @@ void icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_cie
 icc_4_t::tag_table_t::tag_definition_t::parametric_curve_type_t::params_cie_122_1996_t::~params_cie_122_1996_t() {
 }
 
-icc_4_t::tag_table_t::tag_definition_t::chromaticity_tag_t::chromaticity_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::chromaticity_tag_t::chromaticity_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::chromaticity_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_CHROMATICITY_TYPE:
+    case TAG_TYPE_SIGNATURES_CHROMATICITY_TYPE: {
+        n_tag_data = false;
         m_tag_data = new chromaticity_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::chromaticity_tag_t::~chromaticity_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::chromatic_adaptation_tag_t::chromatic_adaptation_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::chromatic_adaptation_tag_t::chromatic_adaptation_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::chromatic_adaptation_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_S_15_FIXED_16_ARRAY_TYPE:
+    case TAG_TYPE_SIGNATURES_S_15_FIXED_16_ARRAY_TYPE: {
+        n_tag_data = false;
         m_tag_data = new s_15_fixed_16_array_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::chromatic_adaptation_tag_t::~chromatic_adaptation_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::measurement_type_t::measurement_type_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::measurement_tag_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::measurement_type_t::measurement_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::measurement_tag_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1096,9 +1302,9 @@ icc_4_t::tag_table_t::tag_definition_t::measurement_type_t::~measurement_type_t(
     delete m_standard_illuminant_encoding;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::text_type_t::text_type_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::char_target_tag_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::text_type_t::text_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::char_target_tag_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1110,9 +1316,9 @@ void icc_4_t::tag_table_t::tag_definition_t::text_type_t::_read() {
 icc_4_t::tag_table_t::tag_definition_t::text_type_t::~text_type_t() {
 }
 
-icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_type_t::profile_sequence_identifier_type_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_tag_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_type_t::profile_sequence_identifier_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_tag_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1144,9 +1350,9 @@ icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_type_t::~pro
     delete m_profile_identifiers;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_type_t::profile_identifier_t::profile_identifier_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_type_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_type_t::profile_identifier_t::profile_identifier_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_type_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1159,9 +1365,9 @@ icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_type_t::prof
     delete m_profile_description;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::colorant_table_type_t::colorant_table_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::colorant_table_type_t::colorant_table_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1183,9 +1389,9 @@ icc_4_t::tag_table_t::tag_definition_t::colorant_table_type_t::~colorant_table_t
     delete m_colorants;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::colorant_table_type_t::colorant_t::colorant_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::colorant_table_type_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::colorant_table_type_t::colorant_t::colorant_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::colorant_table_type_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1204,9 +1410,9 @@ icc_4_t::tag_table_t::tag_definition_t::colorant_table_type_t::colorant_t::~colo
     delete m_padding;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::signature_type_t::signature_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::signature_type_t::signature_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1218,54 +1424,72 @@ void icc_4_t::tag_table_t::tag_definition_t::signature_type_t::_read() {
 icc_4_t::tag_table_t::tag_definition_t::signature_type_t::~signature_type_t() {
 }
 
-icc_4_t::tag_table_t::tag_definition_t::copyright_tag_t::copyright_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::copyright_tag_t::copyright_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::copyright_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new multi_localized_unicode_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::copyright_tag_t::~copyright_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::preview_0_tag_t::preview_0_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::preview_0_tag_t::preview_0_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::preview_0_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_8_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_16_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_a_to_b_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_b_to_a_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::preview_0_tag_t::~preview_0_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::date_time_type_t::date_time_type_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::calibration_date_time_tag_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::date_time_type_t::date_time_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::calibration_date_time_tag_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1278,69 +1502,91 @@ icc_4_t::tag_table_t::tag_definition_t::date_time_type_t::~date_time_type_t() {
     delete m_date_and_time;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::d_to_b_3_tag_t::d_to_b_3_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::d_to_b_3_tag_t::d_to_b_3_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::d_to_b_3_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE: {
+        n_tag_data = false;
         m_tag_data = new multi_process_elements_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::d_to_b_3_tag_t::~d_to_b_3_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::preview_2_tag_t::preview_2_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::preview_2_tag_t::preview_2_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::preview_2_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_8_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_16_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_b_to_a_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::preview_2_tag_t::~preview_2_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::device_model_desc_tag_t::device_model_desc_tag_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::device_model_desc_tag_t::device_model_desc_tag_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::device_model_desc_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new multi_localized_unicode_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::device_model_desc_tag_t::~device_model_desc_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::multi_process_elements_type_t::multi_process_elements_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::multi_process_elements_type_t::multi_process_elements_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1365,17 +1611,21 @@ icc_4_t::tag_table_t::tag_definition_t::multi_process_elements_type_t::~multi_pr
     delete m_process_element_positions_table;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::u_int_16_array_type_t::u_int_16_array_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::u_int_16_array_type_t::u_int_16_array_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::u_int_16_array_type_t::_read() {
     m_reserved = m__io->ensure_fixed_contents(std::string("\x00\x00\x00\x00", 4));
     m_values = new std::vector<uint16_t>();
-    while (!m__io->is_eof()) {
-        m_values->push_back(m__io->read_u2be());
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_values->push_back(m__io->read_u2be());
+            i++;
+        }
     }
 }
 
@@ -1383,27 +1633,33 @@ icc_4_t::tag_table_t::tag_definition_t::u_int_16_array_type_t::~u_int_16_array_t
     delete m_values;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::colorant_order_tag_t::colorant_order_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::colorant_order_tag_t::colorant_order_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::colorant_order_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_COLORANT_ORDER_TYPE:
+    case TAG_TYPE_SIGNATURES_COLORANT_ORDER_TYPE: {
+        n_tag_data = false;
         m_tag_data = new colorant_order_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::colorant_order_tag_t::~colorant_order_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::data_type_t::data_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::data_type_t::data_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1414,9 +1670,9 @@ void icc_4_t::tag_table_t::tag_definition_t::data_type_t::_read() {
 icc_4_t::tag_table_t::tag_definition_t::data_type_t::~data_type_t() {
 }
 
-icc_4_t::tag_table_t::tag_definition_t::chromaticity_type_t::chromaticity_type_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::chromaticity_tag_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::chromaticity_type_t::chromaticity_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::chromaticity_tag_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1439,9 +1695,9 @@ icc_4_t::tag_table_t::tag_definition_t::chromaticity_type_t::~chromaticity_type_
     delete m_ciexy_coordinates_per_channel;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::chromaticity_type_t::ciexy_coordinate_values_t::ciexy_coordinate_values_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::chromaticity_type_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::chromaticity_type_t::ciexy_coordinate_values_t::ciexy_coordinate_values_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::chromaticity_type_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1453,35 +1709,45 @@ void icc_4_t::tag_table_t::tag_definition_t::chromaticity_type_t::ciexy_coordina
 icc_4_t::tag_table_t::tag_definition_t::chromaticity_type_t::ciexy_coordinate_values_t::~ciexy_coordinate_values_t() {
 }
 
-icc_4_t::tag_table_t::tag_definition_t::luminance_tag_t::luminance_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::luminance_tag_t::luminance_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::luminance_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_XYZ_TYPE:
+    case TAG_TYPE_SIGNATURES_XYZ_TYPE: {
+        n_tag_data = false;
         m_tag_data = new xyz_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::luminance_tag_t::~luminance_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::s_15_fixed_16_array_type_t::s_15_fixed_16_array_type_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::chromatic_adaptation_tag_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::s_15_fixed_16_array_type_t::s_15_fixed_16_array_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::chromatic_adaptation_tag_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::s_15_fixed_16_array_type_t::_read() {
     m_reserved = m__io->ensure_fixed_contents(std::string("\x00\x00\x00\x00", 4));
     m_values = new std::vector<s_15_fixed_16_number_t*>();
-    while (!m__io->is_eof()) {
-        m_values->push_back(new s_15_fixed_16_number_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_values->push_back(new s_15_fixed_16_number_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -1492,9 +1758,9 @@ icc_4_t::tag_table_t::tag_definition_t::s_15_fixed_16_array_type_t::~s_15_fixed_
     delete m_values;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::multi_localized_unicode_type_t::multi_localized_unicode_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::multi_localized_unicode_type_t::multi_localized_unicode_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1517,9 +1783,9 @@ icc_4_t::tag_table_t::tag_definition_t::multi_localized_unicode_type_t::~multi_l
     delete m_records;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::multi_localized_unicode_type_t::record_t::record_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::multi_localized_unicode_type_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::multi_localized_unicode_type_t::record_t::record_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::multi_localized_unicode_type_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_string_data = false;
     _read();
 }
@@ -1532,6 +1798,8 @@ void icc_4_t::tag_table_t::tag_definition_t::multi_localized_unicode_type_t::rec
 }
 
 icc_4_t::tag_table_t::tag_definition_t::multi_localized_unicode_type_t::record_t::~record_t() {
+    if (f_string_data) {
+    }
 }
 
 std::string icc_4_t::tag_table_t::tag_definition_t::multi_localized_unicode_type_t::record_t::string_data() {
@@ -1545,183 +1813,245 @@ std::string icc_4_t::tag_table_t::tag_definition_t::multi_localized_unicode_type
     return m_string_data;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::a_to_b_2_tag_t::a_to_b_2_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::a_to_b_2_tag_t::a_to_b_2_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::a_to_b_2_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_8_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_16_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_a_to_b_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::a_to_b_2_tag_t::~a_to_b_2_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::a_to_b_1_tag_t::a_to_b_1_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::a_to_b_1_tag_t::a_to_b_1_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::a_to_b_1_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_8_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_16_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_a_to_b_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::a_to_b_1_tag_t::~a_to_b_1_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::colorimetric_intent_image_state_tag_t::colorimetric_intent_image_state_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::colorimetric_intent_image_state_tag_t::colorimetric_intent_image_state_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::colorimetric_intent_image_state_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_SIGNATURE_TYPE:
+    case TAG_TYPE_SIGNATURES_SIGNATURE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new signature_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::colorimetric_intent_image_state_tag_t::~colorimetric_intent_image_state_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::char_target_tag_t::char_target_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::char_target_tag_t::char_target_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::char_target_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_TEXT_TYPE:
+    case TAG_TYPE_SIGNATURES_TEXT_TYPE: {
+        n_tag_data = false;
         m_tag_data = new text_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::char_target_tag_t::~char_target_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::colorant_table_tag_t::colorant_table_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::colorant_table_tag_t::colorant_table_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::colorant_table_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_COLORANT_TABLE_TYPE:
+    case TAG_TYPE_SIGNATURES_COLORANT_TABLE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new colorant_table_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::colorant_table_tag_t::~colorant_table_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::calibration_date_time_tag_t::calibration_date_time_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::calibration_date_time_tag_t::calibration_date_time_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::calibration_date_time_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_DATE_TIME_TYPE:
+    case TAG_TYPE_SIGNATURES_DATE_TIME_TYPE: {
+        n_tag_data = false;
         m_tag_data = new date_time_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::calibration_date_time_tag_t::~calibration_date_time_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::named_color_2_tag_t::named_color_2_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::named_color_2_tag_t::named_color_2_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::named_color_2_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_NAMED_COLOR_2_TYPE:
+    case TAG_TYPE_SIGNATURES_NAMED_COLOR_2_TYPE: {
+        n_tag_data = false;
         m_tag_data = new named_color_2_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::named_color_2_tag_t::~named_color_2_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::viewing_cond_desc_tag_t::viewing_cond_desc_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::viewing_cond_desc_tag_t::viewing_cond_desc_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::viewing_cond_desc_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new multi_localized_unicode_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::viewing_cond_desc_tag_t::~viewing_cond_desc_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::b_to_d_3_tag_t::b_to_d_3_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::b_to_d_3_tag_t::b_to_d_3_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::b_to_d_3_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE: {
+        n_tag_data = false;
         m_tag_data = new multi_process_elements_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::b_to_d_3_tag_t::~b_to_d_3_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::profile_sequence_desc_type_t::profile_sequence_desc_type_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_tag_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::profile_sequence_desc_type_t::profile_sequence_desc_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_tag_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1743,9 +2073,9 @@ icc_4_t::tag_table_t::tag_definition_t::profile_sequence_desc_type_t::~profile_s
     delete m_profile_descriptions;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::profile_sequence_desc_type_t::profile_description_t::profile_description_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_desc_type_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::profile_sequence_desc_type_t::profile_description_t::profile_description_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::profile_sequence_desc_type_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1766,45 +2096,57 @@ icc_4_t::tag_table_t::tag_definition_t::profile_sequence_desc_type_t::profile_de
     delete m_description_of_device_model;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_tag_t::profile_sequence_identifier_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_tag_t::profile_sequence_identifier_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER_TYPE:
+    case TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER_TYPE: {
+        n_tag_data = false;
         m_tag_data = new profile_sequence_identifier_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::profile_sequence_identifier_tag_t::~profile_sequence_identifier_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::b_to_d_1_tag_t::b_to_d_1_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::b_to_d_1_tag_t::b_to_d_1_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::b_to_d_1_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE: {
+        n_tag_data = false;
         m_tag_data = new multi_process_elements_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::b_to_d_1_tag_t::~b_to_d_1_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::colorant_order_type_t::colorant_order_type_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::colorant_order_tag_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::colorant_order_type_t::colorant_order_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::colorant_order_tag_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1823,48 +2165,62 @@ icc_4_t::tag_table_t::tag_definition_t::colorant_order_type_t::~colorant_order_t
     delete m_numbers_of_colorants_in_order_of_printing;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::d_to_b_2_tag_t::d_to_b_2_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::d_to_b_2_tag_t::d_to_b_2_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::d_to_b_2_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE: {
+        n_tag_data = false;
         m_tag_data = new multi_process_elements_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::d_to_b_2_tag_t::~d_to_b_2_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::gray_trc_tag_t::gray_trc_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::gray_trc_tag_t::gray_trc_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::gray_trc_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_CURVE_TYPE:
+    case TAG_TYPE_SIGNATURES_CURVE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new curve_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new parametric_curve_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::gray_trc_tag_t::~gray_trc_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::viewing_conditions_type_t::viewing_conditions_type_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::viewing_conditions_tag_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::viewing_conditions_type_t::viewing_conditions_type_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::viewing_conditions_tag_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1881,9 +2237,9 @@ icc_4_t::tag_table_t::tag_definition_t::viewing_conditions_type_t::~viewing_cond
     delete m_illuminant_type;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::lut_b_to_a_type_t::lut_b_to_a_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::lut_b_to_a_type_t::lut_b_to_a_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -1903,38 +2259,50 @@ void icc_4_t::tag_table_t::tag_definition_t::lut_b_to_a_type_t::_read() {
 icc_4_t::tag_table_t::tag_definition_t::lut_b_to_a_type_t::~lut_b_to_a_type_t() {
 }
 
-icc_4_t::tag_table_t::tag_definition_t::green_trc_tag_t::green_trc_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::green_trc_tag_t::green_trc_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::green_trc_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_CURVE_TYPE:
+    case TAG_TYPE_SIGNATURES_CURVE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new curve_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new parametric_curve_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::green_trc_tag_t::~green_trc_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::u_int_32_array_type_t::u_int_32_array_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::u_int_32_array_type_t::u_int_32_array_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::u_int_32_array_type_t::_read() {
     m_reserved = m__io->ensure_fixed_contents(std::string("\x00\x00\x00\x00", 4));
     m_values = new std::vector<uint32_t>();
-    while (!m__io->is_eof()) {
-        m_values->push_back(m__io->read_u4be());
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_values->push_back(m__io->read_u4be());
+            i++;
+        }
     }
 }
 
@@ -1942,41 +2310,55 @@ icc_4_t::tag_table_t::tag_definition_t::u_int_32_array_type_t::~u_int_32_array_t
     delete m_values;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::gamut_tag_t::gamut_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::gamut_tag_t::gamut_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::gamut_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_8_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_16_type_t(m__io, this, m__root);
         break;
-    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE:
+    }
+    case TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE: {
+        n_tag_data = false;
         m_tag_data = new lut_b_to_a_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::gamut_tag_t::~gamut_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::u_int_8_array_type_t::u_int_8_array_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::u_int_8_array_type_t::u_int_8_array_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::u_int_8_array_type_t::_read() {
     m_reserved = m__io->ensure_fixed_contents(std::string("\x00\x00\x00\x00", 4));
     m_values = new std::vector<uint8_t>();
-    while (!m__io->is_eof()) {
-        m_values->push_back(m__io->read_u1());
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_values->push_back(m__io->read_u1());
+            i++;
+        }
     }
 }
 
@@ -1984,35 +2366,45 @@ icc_4_t::tag_table_t::tag_definition_t::u_int_8_array_type_t::~u_int_8_array_typ
     delete m_values;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::red_matrix_column_tag_t::red_matrix_column_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::red_matrix_column_tag_t::red_matrix_column_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::red_matrix_column_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_XYZ_TYPE:
+    case TAG_TYPE_SIGNATURES_XYZ_TYPE: {
+        n_tag_data = false;
         m_tag_data = new xyz_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::red_matrix_column_tag_t::~red_matrix_column_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
-icc_4_t::tag_table_t::tag_definition_t::u_int_64_array_type_t::u_int_64_array_type_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::u_int_64_array_type_t::u_int_64_array_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::u_int_64_array_type_t::_read() {
     m_reserved = m__io->ensure_fixed_contents(std::string("\x00\x00\x00\x00", 4));
     m_values = new std::vector<uint64_t>();
-    while (!m__io->is_eof()) {
-        m_values->push_back(m__io->read_u8be());
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_values->push_back(m__io->read_u8be());
+            i++;
+        }
     }
 }
 
@@ -2020,22 +2412,28 @@ icc_4_t::tag_table_t::tag_definition_t::u_int_64_array_type_t::~u_int_64_array_t
     delete m_values;
 }
 
-icc_4_t::tag_table_t::tag_definition_t::b_to_d_2_tag_t::b_to_d_2_tag_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::tag_table_t::tag_definition_t::b_to_d_2_tag_t::b_to_d_2_tag_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void icc_4_t::tag_table_t::tag_definition_t::b_to_d_2_tag_t::_read() {
     m_tag_type = static_cast<icc_4_t::tag_table_t::tag_definition_t::tag_type_signatures_t>(m__io->read_u4be());
+    n_tag_data = true;
     switch (tag_type()) {
-    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE:
+    case TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE: {
+        n_tag_data = false;
         m_tag_data = new multi_process_elements_type_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
 icc_4_t::tag_table_t::tag_definition_t::b_to_d_2_tag_t::~b_to_d_2_tag_t() {
+    if (!n_tag_data) {
+        delete m_tag_data;
+    }
 }
 
 kaitai::kstruct* icc_4_t::tag_table_t::tag_definition_t::tag_data_element() {
@@ -2043,264 +2441,364 @@ kaitai::kstruct* icc_4_t::tag_table_t::tag_definition_t::tag_data_element() {
         return m_tag_data_element;
     std::streampos _pos = m__io->pos();
     m__io->seek(offset_to_data_element());
+    n_tag_data_element = true;
     switch (tag_signature()) {
-    case TAG_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER:
+    case TAG_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new profile_sequence_identifier_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_COLORIMETRIC_INTENT_IMAGE_STATE:
+    }
+    case TAG_SIGNATURES_COLORIMETRIC_INTENT_IMAGE_STATE: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new colorimetric_intent_image_state_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_RED_TRC:
+    }
+    case TAG_SIGNATURES_RED_TRC: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new red_trc_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_PREVIEW_0:
+    }
+    case TAG_SIGNATURES_PREVIEW_0: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new preview_0_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_GREEN_TRC:
+    }
+    case TAG_SIGNATURES_GREEN_TRC: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new green_trc_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_B_TO_D_0:
+    }
+    case TAG_SIGNATURES_B_TO_D_0: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new b_to_d_0_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_COLORANT_TABLE_OUT:
+    }
+    case TAG_SIGNATURES_COLORANT_TABLE_OUT: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new colorant_table_out_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_B_TO_A_2:
+    }
+    case TAG_SIGNATURES_B_TO_A_2: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new b_to_a_2_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_CALIBRATION_DATE_TIME:
+    }
+    case TAG_SIGNATURES_CALIBRATION_DATE_TIME: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new calibration_date_time_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_CHROMATIC_ADAPTATION:
+    }
+    case TAG_SIGNATURES_CHROMATIC_ADAPTATION: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new chromatic_adaptation_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_COLORANT_TABLE:
+    }
+    case TAG_SIGNATURES_COLORANT_TABLE: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new colorant_table_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_A_TO_B_2:
+    }
+    case TAG_SIGNATURES_A_TO_B_2: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new a_to_b_2_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_D_TO_B_1:
+    }
+    case TAG_SIGNATURES_D_TO_B_1: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new d_to_b_1_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_CHROMATICITY:
+    }
+    case TAG_SIGNATURES_CHROMATICITY: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new chromaticity_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_BLUE_MATRIX_COLUMN:
+    }
+    case TAG_SIGNATURES_BLUE_MATRIX_COLUMN: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new blue_matrix_column_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_A_TO_B_0:
+    }
+    case TAG_SIGNATURES_A_TO_B_0: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new a_to_b_0_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_B_TO_D_2:
+    }
+    case TAG_SIGNATURES_B_TO_D_2: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new b_to_d_2_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_B_TO_A_1:
+    }
+    case TAG_SIGNATURES_B_TO_A_1: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new b_to_a_1_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_MEDIA_WHITE_POINT:
+    }
+    case TAG_SIGNATURES_MEDIA_WHITE_POINT: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new media_white_point_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_D_TO_B_0:
+    }
+    case TAG_SIGNATURES_D_TO_B_0: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new d_to_b_0_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_NAMED_COLOR_2:
+    }
+    case TAG_SIGNATURES_NAMED_COLOR_2: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new named_color_2_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_D_TO_B_2:
+    }
+    case TAG_SIGNATURES_D_TO_B_2: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new d_to_b_2_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_RED_MATRIX_COLUMN:
+    }
+    case TAG_SIGNATURES_RED_MATRIX_COLUMN: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new red_matrix_column_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_VIEWING_CONDITIONS:
+    }
+    case TAG_SIGNATURES_VIEWING_CONDITIONS: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new viewing_conditions_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_A_TO_B_1:
+    }
+    case TAG_SIGNATURES_A_TO_B_1: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new a_to_b_1_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_PREVIEW_1:
+    }
+    case TAG_SIGNATURES_PREVIEW_1: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new preview_1_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_GRAY_TRC:
+    }
+    case TAG_SIGNATURES_GRAY_TRC: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new gray_trc_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_DEVICE_MFG_DESC:
+    }
+    case TAG_SIGNATURES_DEVICE_MFG_DESC: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new device_mfg_desc_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_B_TO_D_1:
+    }
+    case TAG_SIGNATURES_B_TO_D_1: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new b_to_d_1_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_COLORANT_ORDER:
+    }
+    case TAG_SIGNATURES_COLORANT_ORDER: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new colorant_order_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_COPYRIGHT:
+    }
+    case TAG_SIGNATURES_COPYRIGHT: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new copyright_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_GAMUT:
+    }
+    case TAG_SIGNATURES_GAMUT: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new gamut_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_CHAR_TARGET:
+    }
+    case TAG_SIGNATURES_CHAR_TARGET: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new char_target_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_OUTPUT_RESPONSE:
+    }
+    case TAG_SIGNATURES_OUTPUT_RESPONSE: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new output_response_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_TECHNOLOGY:
+    }
+    case TAG_SIGNATURES_TECHNOLOGY: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new technology_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_VIEWING_COND_DESC:
+    }
+    case TAG_SIGNATURES_VIEWING_COND_DESC: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new viewing_cond_desc_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_PROFILE_DESCRIPTION:
+    }
+    case TAG_SIGNATURES_PROFILE_DESCRIPTION: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new profile_description_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_LUMINANCE:
+    }
+    case TAG_SIGNATURES_LUMINANCE: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new luminance_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_D_TO_B_3:
+    }
+    case TAG_SIGNATURES_D_TO_B_3: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new d_to_b_3_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_B_TO_D_3:
+    }
+    case TAG_SIGNATURES_B_TO_D_3: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new b_to_d_3_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_B_TO_A_0:
+    }
+    case TAG_SIGNATURES_B_TO_A_0: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new b_to_a_0_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_PREVIEW_2:
+    }
+    case TAG_SIGNATURES_PREVIEW_2: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new preview_2_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_GREEN_MATRIX_COLUMN:
+    }
+    case TAG_SIGNATURES_GREEN_MATRIX_COLUMN: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new green_matrix_column_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_PROFILE_SEQUENCE:
+    }
+    case TAG_SIGNATURES_PROFILE_SEQUENCE: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new profile_sequence_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_SATURATION_RENDERING_INTENT_GAMUT:
+    }
+    case TAG_SIGNATURES_SATURATION_RENDERING_INTENT_GAMUT: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new saturation_rendering_intent_gamut_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_PERCEPTUAL_RENDERING_INTENT_GAMUT:
+    }
+    case TAG_SIGNATURES_PERCEPTUAL_RENDERING_INTENT_GAMUT: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new perceptual_rendering_intent_gamut_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_BLUE_TRC:
+    }
+    case TAG_SIGNATURES_BLUE_TRC: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new blue_trc_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_DEVICE_MODEL_DESC:
+    }
+    case TAG_SIGNATURES_DEVICE_MODEL_DESC: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new device_model_desc_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    case TAG_SIGNATURES_MEASUREMENT:
+    }
+    case TAG_SIGNATURES_MEASUREMENT: {
+        n_tag_data_element = false;
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         m__io__raw_tag_data_element = new kaitai::kstream(m__raw_tag_data_element);
         m_tag_data_element = new measurement_tag_t(m__io__raw_tag_data_element, this, m__root);
         break;
-    default:
+    }
+    default: {
         m__raw_tag_data_element = m__io->read_bytes(size_of_data_element());
         break;
+    }
     }
     m__io->seek(_pos);
     f_tag_data_element = true;
     return m_tag_data_element;
 }
 
-icc_4_t::device_attributes_t::device_attributes_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::device_attributes_t::device_attributes_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -2316,9 +2814,9 @@ void icc_4_t::device_attributes_t::_read() {
 icc_4_t::device_attributes_t::~device_attributes_t() {
 }
 
-icc_4_t::device_manufacturer_t::device_manufacturer_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::device_manufacturer_t::device_manufacturer_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -2329,9 +2827,9 @@ void icc_4_t::device_manufacturer_t::_read() {
 icc_4_t::device_manufacturer_t::~device_manufacturer_t() {
 }
 
-icc_4_t::s_15_fixed_16_number_t::s_15_fixed_16_number_t(kaitai::kstream *p_io, icc_4_t::tag_table_t::tag_definition_t::s_15_fixed_16_array_type_t* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::s_15_fixed_16_number_t::s_15_fixed_16_number_t(kaitai::kstream* p__io, icc_4_t::tag_table_t::tag_definition_t::s_15_fixed_16_array_type_t* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -2342,9 +2840,9 @@ void icc_4_t::s_15_fixed_16_number_t::_read() {
 icc_4_t::s_15_fixed_16_number_t::~s_15_fixed_16_number_t() {
 }
 
-icc_4_t::position_number_t::position_number_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, icc_4_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+icc_4_t::position_number_t::position_number_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, icc_4_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

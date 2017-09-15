@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Fallout2Dat extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Fallout2Dat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Fallout2Dat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -34,8 +34,8 @@ class Fallout2Dat extends \Kaitai\Struct\Struct {
 namespace \Fallout2Dat;
 
 class Pstr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Fallout2Dat\File $parent = null, \Fallout2Dat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Fallout2Dat\File $_parent = null, \Fallout2Dat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -52,8 +52,8 @@ class Pstr extends \Kaitai\Struct\Struct {
 namespace \Fallout2Dat;
 
 class Footer extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Fallout2Dat $parent = null, \Fallout2Dat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Fallout2Dat $_parent = null, \Fallout2Dat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -70,8 +70,8 @@ class Footer extends \Kaitai\Struct\Struct {
 namespace \Fallout2Dat;
 
 class Index extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Fallout2Dat $parent = null, \Fallout2Dat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Fallout2Dat $_parent = null, \Fallout2Dat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -92,8 +92,8 @@ class Index extends \Kaitai\Struct\Struct {
 namespace \Fallout2Dat;
 
 class File extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Fallout2Dat\Index $parent = null, \Fallout2Dat $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Fallout2Dat\Index $_parent = null, \Fallout2Dat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

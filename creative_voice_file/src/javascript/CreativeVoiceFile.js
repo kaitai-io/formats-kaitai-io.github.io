@@ -72,8 +72,10 @@ var CreativeVoiceFile = (function() {
     this.version = this._io.readU2le();
     this.checksum = this._io.readU2le();
     this.blocks = [];
+    var i = 0;
     while (!this._io.isEof()) {
       this.blocks.push(new Block(this._io, this, this._root));
+      i++;
     }
   }
 

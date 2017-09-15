@@ -10,8 +10,10 @@ var CpioOldLe = (function() {
   }
   CpioOldLe.prototype._read = function() {
     this.files = [];
+    var i = 0;
     while (!this._io.isEof()) {
       this.files.push(new File(this._io, this, this._root));
+      i++;
     }
   }
 

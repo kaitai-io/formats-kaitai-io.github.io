@@ -209,10 +209,10 @@ section#format-index .row {
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = Elf(KaitaiStream(raw))</code></pre>
+data = Elf(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -677,14 +677,18 @@ class Elf(KaitaiStruct):
 
             def _read_le(self):
                 self.entries = []
+                i = 0
                 while not self._io.is_eof():
                     self.entries.append((self._io.read_bytes_term(0, False, True, True)).decode(u&quot;ASCII&quot;))
+                    i += 1
 
 
             def _read_be(self):
                 self.entries = []
+                i = 0
                 while not self._io.is_eof():
                     self.entries.append((self._io.read_bytes_term(0, False, True, True)).decode(u&quot;ASCII&quot;))
+                    i += 1
 
 
 

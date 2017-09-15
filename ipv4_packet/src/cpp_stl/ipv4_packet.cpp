@@ -4,12 +4,12 @@
 
 
 #include "tcp_segment.h"
+#include "ipv6_packet.h"
 #include "udp_datagram.h"
 #include "icmp_packet.h"
-#include "ipv6_packet.h"
 
-ipv4_packet_t::ipv4_packet_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, ipv4_packet_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+ipv4_packet_t::ipv4_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ipv4_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     f_version = false;
     f_ihl = false;
@@ -31,48 +31,66 @@ void ipv4_packet_t::_read() {
     m__raw_options = m__io->read_bytes((ihl_bytes() - 20));
     m__io__raw_options = new kaitai::kstream(m__raw_options);
     m_options = new ipv4_options_t(m__io__raw_options, this, m__root);
+    n_body = true;
     switch (protocol()) {
-    case PROTOCOL_ENUM_TCP:
+    case PROTOCOL_ENUM_TCP: {
+        n_body = false;
         m__raw_body = m__io->read_bytes((total_length() - ihl_bytes()));
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new tcp_segment_t(m__io__raw_body);
         break;
-    case PROTOCOL_ENUM_ICMP:
+    }
+    case PROTOCOL_ENUM_ICMP: {
+        n_body = false;
         m__raw_body = m__io->read_bytes((total_length() - ihl_bytes()));
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new icmp_packet_t(m__io__raw_body);
         break;
-    case PROTOCOL_ENUM_UDP:
+    }
+    case PROTOCOL_ENUM_UDP: {
+        n_body = false;
         m__raw_body = m__io->read_bytes((total_length() - ihl_bytes()));
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new udp_datagram_t(m__io__raw_body);
         break;
-    case PROTOCOL_ENUM_IPV6:
+    }
+    case PROTOCOL_ENUM_IPV6: {
+        n_body = false;
         m__raw_body = m__io->read_bytes((total_length() - ihl_bytes()));
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new ipv6_packet_t(m__io__raw_body);
         break;
-    default:
+    }
+    default: {
         m__raw_body = m__io->read_bytes((total_length() - ihl_bytes()));
         break;
+    }
     }
 }
 
 ipv4_packet_t::~ipv4_packet_t() {
     delete m__io__raw_options;
     delete m_options;
+    if (!n_body) {
+        delete m__io__raw_body;
+        delete m_body;
+    }
 }
 
-ipv4_packet_t::ipv4_options_t::ipv4_options_t(kaitai::kstream *p_io, ipv4_packet_t* p_parent, ipv4_packet_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ipv4_packet_t::ipv4_options_t::ipv4_options_t(kaitai::kstream* p__io, ipv4_packet_t* p__parent, ipv4_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void ipv4_packet_t::ipv4_options_t::_read() {
     m_entries = new std::vector<ipv4_option_t*>();
-    while (!m__io->is_eof()) {
-        m_entries->push_back(new ipv4_option_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new ipv4_option_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -83,9 +101,9 @@ ipv4_packet_t::ipv4_options_t::~ipv4_options_t() {
     delete m_entries;
 }
 
-ipv4_packet_t::ipv4_option_t::ipv4_option_t(kaitai::kstream *p_io, ipv4_packet_t::ipv4_options_t* p_parent, ipv4_packet_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+ipv4_packet_t::ipv4_option_t::ipv4_option_t(kaitai::kstream* p__io, ipv4_packet_t::ipv4_options_t* p__parent, ipv4_packet_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_copy = false;
     f_opt_class = false;
     f_number = false;

@@ -22,6 +22,7 @@ namespace Kaitai
             return new MicrosoftNetworkMonitorV2(new KaitaiStream(fileName));
         }
 
+
         public enum Linktype
         {
             NullLinktype = 0,
@@ -129,15 +130,15 @@ namespace Kaitai
             WattstopperDlm = 263,
             Iso14443 = 264,
         }
-
-        public MicrosoftNetworkMonitorV2(KaitaiStream io, KaitaiStruct parent = null, MicrosoftNetworkMonitorV2 root = null) : base(io)
+        public MicrosoftNetworkMonitorV2(KaitaiStream p__io, KaitaiStruct p__parent = null, MicrosoftNetworkMonitorV2 p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             f_frameTable = false;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _signature = m_io.EnsureFixedContents(new byte[] { 71, 77, 66, 85 });
             _versionMinor = m_io.ReadU1();
             _versionMajor = m_io.ReadU1();
@@ -155,7 +156,7 @@ namespace Kaitai
             _networkInfoLen = m_io.ReadU4le();
             _conversationStatsOfs = m_io.ReadU4le();
             _conversationStatsLen = m_io.ReadU4le();
-            }
+        }
         public partial class FrameIndex : KaitaiStruct
         {
             public static FrameIndex FromFile(string fileName)
@@ -163,18 +164,23 @@ namespace Kaitai
                 return new FrameIndex(new KaitaiStream(fileName));
             }
 
-            public FrameIndex(KaitaiStream io, MicrosoftNetworkMonitorV2 parent = null, MicrosoftNetworkMonitorV2 root = null) : base(io)
+            public FrameIndex(KaitaiStream p__io, MicrosoftNetworkMonitorV2 p__parent = null, MicrosoftNetworkMonitorV2 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _entries = new List<FrameIndexEntry>();
-                while (!m_io.IsEof) {
-                    _entries.Add(new FrameIndexEntry(m_io, this, m_root));
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new FrameIndexEntry(m_io, this, m_root));
+                        i++;
+                    }
                 }
-                }
+            }
             private List<FrameIndexEntry> _entries;
             private MicrosoftNetworkMonitorV2 m_root;
             private MicrosoftNetworkMonitorV2 m_parent;
@@ -194,16 +200,17 @@ namespace Kaitai
                 return new FrameIndexEntry(new KaitaiStream(fileName));
             }
 
-            public FrameIndexEntry(KaitaiStream io, MicrosoftNetworkMonitorV2.FrameIndex parent = null, MicrosoftNetworkMonitorV2 root = null) : base(io)
+            public FrameIndexEntry(KaitaiStream p__io, MicrosoftNetworkMonitorV2.FrameIndex p__parent = null, MicrosoftNetworkMonitorV2 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_body = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _ofs = m_io.ReadU4le();
-                }
+            }
             private bool f_body;
             private Frame _body;
 
@@ -249,13 +256,14 @@ namespace Kaitai
                 return new Frame(new KaitaiStream(fileName));
             }
 
-            public Frame(KaitaiStream io, MicrosoftNetworkMonitorV2.FrameIndexEntry parent = null, MicrosoftNetworkMonitorV2 root = null) : base(io)
+            public Frame(KaitaiStream p__io, MicrosoftNetworkMonitorV2.FrameIndexEntry p__parent = null, MicrosoftNetworkMonitorV2 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _tsDelta = m_io.ReadU8le();
                 _origLen = m_io.ReadU4le();
                 _incLen = m_io.ReadU4le();
@@ -271,7 +279,7 @@ namespace Kaitai
                     break;
                 }
                 }
-                }
+            }
             private ulong _tsDelta;
             private uint _origLen;
             private uint _incLen;

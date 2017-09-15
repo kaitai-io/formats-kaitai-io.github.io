@@ -66,9 +66,11 @@ var Id3v24 = (function() {
         this.headerEx = new HeaderEx(this._io, this, this._root);
       }
       this.frames = []
+      var i = 0;
       do {
         var _ = new Frame(this._io, this, this._root);
         this.frames.push(_);
+        i++;
       } while (!( (((this._io.pos + _.size.value) > this.header.size.value) || (_.isInvalid)) ));
       if (!(this.header.flags.flagFooter)) {
         this.padding = new Padding(this._io, this, this._root);

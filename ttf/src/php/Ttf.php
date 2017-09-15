@@ -2,8 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Ttf extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -24,8 +24,8 @@ class Ttf extends \Kaitai\Struct\Struct {
 namespace \Ttf;
 
 class Post extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\DirTableEntry $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\DirTableEntry $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -68,8 +68,8 @@ class Post extends \Kaitai\Struct\Struct {
 namespace \Ttf\Post;
 
 class Format20 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Post $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Post $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -81,9 +81,11 @@ class Format20 extends \Kaitai\Struct\Struct {
             $this->_m_glyphNameIndex[] = $this->_io->readU2be();
         }
         $this->_m_glyphNames = [];
+        $i = 0;
         do {
             $_ = new \Ttf\Post\Format20\PascalString($this->_io, $this, $this->_root);
             $this->_m_glyphNames[] = $_;
+            $i++;
         } while (!($_->length() == 0));
     }
     protected $_m_numberOfGlyphs;
@@ -97,8 +99,8 @@ class Format20 extends \Kaitai\Struct\Struct {
 namespace \Ttf\Post\Format20;
 
 class PascalString extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Post\Format20 $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Post\Format20 $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -117,8 +119,8 @@ class PascalString extends \Kaitai\Struct\Struct {
 namespace \Ttf;
 
 class Name extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\DirTableEntry $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\DirTableEntry $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -145,8 +147,8 @@ class Name extends \Kaitai\Struct\Struct {
 namespace \Ttf\Name;
 
 class NameRecord extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Name $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Name $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -197,8 +199,8 @@ class NameRecord extends \Kaitai\Struct\Struct {
 namespace \Ttf;
 
 class Head extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\DirTableEntry $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\DirTableEntry $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -278,8 +280,8 @@ class FontDirectionHint {
 namespace \Ttf;
 
 class Prep extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\DirTableEntry $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\DirTableEntry $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -293,8 +295,8 @@ class Prep extends \Kaitai\Struct\Struct {
 namespace \Ttf;
 
 class Hhea extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\DirTableEntry $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\DirTableEntry $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -372,8 +374,8 @@ class Hhea extends \Kaitai\Struct\Struct {
 namespace \Ttf;
 
 class Fpgm extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\DirTableEntry $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\DirTableEntry $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -387,8 +389,8 @@ class Fpgm extends \Kaitai\Struct\Struct {
 namespace \Ttf;
 
 class Kern extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\DirTableEntry $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\DirTableEntry $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -412,8 +414,8 @@ class Kern extends \Kaitai\Struct\Struct {
 namespace \Ttf\Kern;
 
 class Subtable extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Kern $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Kern $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -454,8 +456,8 @@ class Subtable extends \Kaitai\Struct\Struct {
 namespace \Ttf\Kern\Subtable;
 
 class Format0 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Kern\Subtable $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Kern\Subtable $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -485,8 +487,8 @@ class Format0 extends \Kaitai\Struct\Struct {
 namespace \Ttf\Kern\Subtable\Format0;
 
 class KerningPair extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Kern\Subtable\Format0 $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Kern\Subtable\Format0 $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -506,8 +508,8 @@ class KerningPair extends \Kaitai\Struct\Struct {
 namespace \Ttf;
 
 class DirTableEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -611,8 +613,8 @@ class DirTableEntry extends \Kaitai\Struct\Struct {
 namespace \Ttf;
 
 class Os2 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\DirTableEntry $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\DirTableEntry $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -811,8 +813,8 @@ class Os2 extends \Kaitai\Struct\Struct {
 namespace \Ttf\Os2;
 
 class Panose extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Os2 $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Os2 $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1016,8 +1018,8 @@ class Midline {
 namespace \Ttf\Os2;
 
 class UnicodeRange extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Os2 $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Os2 $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1242,8 +1244,8 @@ class UnicodeRange extends \Kaitai\Struct\Struct {
 namespace \Ttf\Os2;
 
 class CodePageRange extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Os2 $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Os2 $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1410,8 +1412,8 @@ class FsSelection {
 namespace \Ttf;
 
 class Fixed extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1428,8 +1430,8 @@ class Fixed extends \Kaitai\Struct\Struct {
 namespace \Ttf;
 
 class Glyf extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\DirTableEntry $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\DirTableEntry $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1460,8 +1462,8 @@ class Glyf extends \Kaitai\Struct\Struct {
 namespace \Ttf\Glyf;
 
 class SimpleGlyph extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Glyf $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Glyf $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1499,8 +1501,8 @@ class SimpleGlyph extends \Kaitai\Struct\Struct {
 namespace \Ttf\Glyf\SimpleGlyph;
 
 class Flag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Glyf\SimpleGlyph $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Glyf\SimpleGlyph $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1542,15 +1544,17 @@ class Flag extends \Kaitai\Struct\Struct {
 namespace \Ttf;
 
 class Cvt extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\DirTableEntry $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\DirTableEntry $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_fwords = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_fwords[] = $this->_io->readS2be();
+            $i++;
         }
     }
     protected $_m_fwords;
@@ -1560,8 +1564,8 @@ class Cvt extends \Kaitai\Struct\Struct {
 namespace \Ttf;
 
 class Maxp extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\DirTableEntry $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\DirTableEntry $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1677,8 +1681,8 @@ class Maxp extends \Kaitai\Struct\Struct {
 namespace \Ttf;
 
 class OffsetTable extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1708,8 +1712,8 @@ class OffsetTable extends \Kaitai\Struct\Struct {
 namespace \Ttf;
 
 class Cmap extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\DirTableEntry $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\DirTableEntry $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1733,8 +1737,8 @@ class Cmap extends \Kaitai\Struct\Struct {
 namespace \Ttf\Cmap;
 
 class SubtableHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Cmap $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Cmap $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1765,8 +1769,8 @@ class SubtableHeader extends \Kaitai\Struct\Struct {
 namespace \Ttf\Cmap;
 
 class Subtable extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Cmap\SubtableHeader $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Cmap\SubtableHeader $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1815,8 +1819,8 @@ class Subtable extends \Kaitai\Struct\Struct {
 namespace \Ttf\Cmap\Subtable;
 
 class ByteEncodingTable extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Cmap\Subtable $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Cmap\Subtable $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1830,8 +1834,8 @@ class ByteEncodingTable extends \Kaitai\Struct\Struct {
 namespace \Ttf\Cmap\Subtable;
 
 class HighByteMappingThroughTable extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Cmap\Subtable $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Cmap\Subtable $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1849,8 +1853,8 @@ class HighByteMappingThroughTable extends \Kaitai\Struct\Struct {
 namespace \Ttf\Cmap\Subtable;
 
 class SegmentMappingToDeltaValues extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Cmap\Subtable $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Cmap\Subtable $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -1881,8 +1885,10 @@ class SegmentMappingToDeltaValues extends \Kaitai\Struct\Struct {
             $this->_m_idRangeOffset[] = $this->_io->readU2be();
         }
         $this->_m_glyphIdArray = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_glyphIdArray[] = $this->_io->readU2be();
+            $i++;
         }
     }
     protected $_m_segCount;
@@ -1917,8 +1923,8 @@ class SegmentMappingToDeltaValues extends \Kaitai\Struct\Struct {
 namespace \Ttf\Cmap\Subtable;
 
 class TrimmedTableMapping extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Ttf\Cmap\Subtable $parent = null, \Ttf $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Cmap\Subtable $_parent = null, \Ttf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

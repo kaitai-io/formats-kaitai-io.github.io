@@ -2,15 +2,17 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 class Jpeg extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Kaitai\Struct\Struct $parent = null, \Jpeg $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Jpeg $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
         $this->_m_segments = [];
+        $i = 0;
         while (!$this->_io->isEof()) {
             $this->_m_segments[] = new \Jpeg\Segment($this->_io, $this, $this->_root);
+            $i++;
         }
     }
     protected $_m_segments;
@@ -20,8 +22,8 @@ class Jpeg extends \Kaitai\Struct\Struct {
 namespace \Jpeg;
 
 class Segment extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Jpeg $parent = null, \Jpeg $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg $_parent = null, \Jpeg $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -117,8 +119,8 @@ class MarkerEnum {
 namespace \Jpeg;
 
 class SegmentSos extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Jpeg\Segment $parent = null, \Jpeg $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg\Segment $_parent = null, \Jpeg $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -168,8 +170,8 @@ class SegmentSos extends \Kaitai\Struct\Struct {
 namespace \Jpeg\SegmentSos;
 
 class Component extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Jpeg\SegmentSos $parent = null, \Jpeg $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg\SegmentSos $_parent = null, \Jpeg $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -190,8 +192,8 @@ class Component extends \Kaitai\Struct\Struct {
 namespace \Jpeg;
 
 class SegmentApp1 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Jpeg\Segment $parent = null, \Jpeg $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg\Segment $_parent = null, \Jpeg $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -212,8 +214,8 @@ class SegmentApp1 extends \Kaitai\Struct\Struct {
 namespace \Jpeg;
 
 class SegmentSof0 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Jpeg\Segment $parent = null, \Jpeg $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg\Segment $_parent = null, \Jpeg $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -243,8 +245,8 @@ class SegmentSof0 extends \Kaitai\Struct\Struct {
 namespace \Jpeg\SegmentSof0;
 
 class Component extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Jpeg\SegmentSof0 $parent = null, \Jpeg $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg\SegmentSof0 $_parent = null, \Jpeg $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -282,8 +284,8 @@ class Component extends \Kaitai\Struct\Struct {
 namespace \Jpeg;
 
 class ExifInJpeg extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Jpeg\SegmentApp1 $parent = null, \Jpeg $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg\SegmentApp1 $_parent = null, \Jpeg $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
@@ -304,8 +306,8 @@ class ExifInJpeg extends \Kaitai\Struct\Struct {
 namespace \Jpeg;
 
 class SegmentApp0 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $io, \Jpeg\Segment $parent = null, \Jpeg $root = null) {
-        parent::__construct($io, $parent, $root);
+    public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg\Segment $_parent = null, \Jpeg $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 

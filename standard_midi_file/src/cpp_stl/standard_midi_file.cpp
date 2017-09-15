@@ -5,8 +5,8 @@
 
 #include "vlq_base128_be.h"
 
-standard_midi_file_t::standard_midi_file_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, standard_midi_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+standard_midi_file_t::standard_midi_file_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -29,16 +29,20 @@ standard_midi_file_t::~standard_midi_file_t() {
     delete m_tracks;
 }
 
-standard_midi_file_t::track_events_t::track_events_t(kaitai::kstream *p_io, standard_midi_file_t::track_t* p_parent, standard_midi_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+standard_midi_file_t::track_events_t::track_events_t(kaitai::kstream* p__io, standard_midi_file_t::track_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
 void standard_midi_file_t::track_events_t::_read() {
     m_event = new std::vector<track_event_t*>();
-    while (!m__io->is_eof()) {
-        m_event->push_back(new track_event_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_event->push_back(new track_event_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -49,9 +53,9 @@ standard_midi_file_t::track_events_t::~track_events_t() {
     delete m_event;
 }
 
-standard_midi_file_t::track_event_t::track_event_t(kaitai::kstream *p_io, standard_midi_file_t::track_events_t* p_parent, standard_midi_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+standard_midi_file_t::track_event_t::track_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_events_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_event_type = false;
     f_channel = false;
     _read();
@@ -70,28 +74,43 @@ void standard_midi_file_t::track_event_t::_read() {
         n_sysex_body = false;
         m_sysex_body = new sysex_event_body_t(m__io, this, m__root);
     }
+    n_event_body = true;
     switch (event_type()) {
-    case 224:
+    case 224: {
+        n_event_body = false;
         m_event_body = new pitch_bend_event_t(m__io, this, m__root);
         break;
-    case 144:
+    }
+    case 144: {
+        n_event_body = false;
         m_event_body = new note_on_event_t(m__io, this, m__root);
         break;
-    case 208:
+    }
+    case 208: {
+        n_event_body = false;
         m_event_body = new channel_pressure_event_t(m__io, this, m__root);
         break;
-    case 192:
+    }
+    case 192: {
+        n_event_body = false;
         m_event_body = new program_change_event_t(m__io, this, m__root);
         break;
-    case 160:
+    }
+    case 160: {
+        n_event_body = false;
         m_event_body = new polyphonic_pressure_event_t(m__io, this, m__root);
         break;
-    case 176:
+    }
+    case 176: {
+        n_event_body = false;
         m_event_body = new controller_event_t(m__io, this, m__root);
         break;
-    case 128:
+    }
+    case 128: {
+        n_event_body = false;
         m_event_body = new note_off_event_t(m__io, this, m__root);
         break;
+    }
     }
 }
 
@@ -102,6 +121,9 @@ standard_midi_file_t::track_event_t::~track_event_t() {
     }
     if (!n_sysex_body) {
         delete m_sysex_body;
+    }
+    if (!n_event_body) {
+        delete m_event_body;
     }
 }
 
@@ -125,9 +147,9 @@ int32_t standard_midi_file_t::track_event_t::channel() {
     return m_channel;
 }
 
-standard_midi_file_t::pitch_bend_event_t::pitch_bend_event_t(kaitai::kstream *p_io, standard_midi_file_t::track_event_t* p_parent, standard_midi_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+standard_midi_file_t::pitch_bend_event_t::pitch_bend_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     f_bend_value = false;
     f_adj_bend_value = false;
     _read();
@@ -157,9 +179,9 @@ int32_t standard_midi_file_t::pitch_bend_event_t::adj_bend_value() {
     return m_adj_bend_value;
 }
 
-standard_midi_file_t::program_change_event_t::program_change_event_t(kaitai::kstream *p_io, standard_midi_file_t::track_event_t* p_parent, standard_midi_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+standard_midi_file_t::program_change_event_t::program_change_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -170,9 +192,9 @@ void standard_midi_file_t::program_change_event_t::_read() {
 standard_midi_file_t::program_change_event_t::~program_change_event_t() {
 }
 
-standard_midi_file_t::note_on_event_t::note_on_event_t(kaitai::kstream *p_io, standard_midi_file_t::track_event_t* p_parent, standard_midi_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+standard_midi_file_t::note_on_event_t::note_on_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -184,9 +206,9 @@ void standard_midi_file_t::note_on_event_t::_read() {
 standard_midi_file_t::note_on_event_t::~note_on_event_t() {
 }
 
-standard_midi_file_t::polyphonic_pressure_event_t::polyphonic_pressure_event_t(kaitai::kstream *p_io, standard_midi_file_t::track_event_t* p_parent, standard_midi_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+standard_midi_file_t::polyphonic_pressure_event_t::polyphonic_pressure_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -198,9 +220,9 @@ void standard_midi_file_t::polyphonic_pressure_event_t::_read() {
 standard_midi_file_t::polyphonic_pressure_event_t::~polyphonic_pressure_event_t() {
 }
 
-standard_midi_file_t::track_t::track_t(kaitai::kstream *p_io, standard_midi_file_t* p_parent, standard_midi_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+standard_midi_file_t::track_t::track_t(kaitai::kstream* p__io, standard_midi_file_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -217,9 +239,9 @@ standard_midi_file_t::track_t::~track_t() {
     delete m_events;
 }
 
-standard_midi_file_t::meta_event_body_t::meta_event_body_t(kaitai::kstream *p_io, standard_midi_file_t::track_event_t* p_parent, standard_midi_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+standard_midi_file_t::meta_event_body_t::meta_event_body_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -233,9 +255,9 @@ standard_midi_file_t::meta_event_body_t::~meta_event_body_t() {
     delete m_len;
 }
 
-standard_midi_file_t::controller_event_t::controller_event_t(kaitai::kstream *p_io, standard_midi_file_t::track_event_t* p_parent, standard_midi_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+standard_midi_file_t::controller_event_t::controller_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -247,9 +269,9 @@ void standard_midi_file_t::controller_event_t::_read() {
 standard_midi_file_t::controller_event_t::~controller_event_t() {
 }
 
-standard_midi_file_t::header_t::header_t(kaitai::kstream *p_io, standard_midi_file_t* p_parent, standard_midi_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+standard_midi_file_t::header_t::header_t(kaitai::kstream* p__io, standard_midi_file_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -264,9 +286,9 @@ void standard_midi_file_t::header_t::_read() {
 standard_midi_file_t::header_t::~header_t() {
 }
 
-standard_midi_file_t::sysex_event_body_t::sysex_event_body_t(kaitai::kstream *p_io, standard_midi_file_t::track_event_t* p_parent, standard_midi_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+standard_midi_file_t::sysex_event_body_t::sysex_event_body_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -279,9 +301,9 @@ standard_midi_file_t::sysex_event_body_t::~sysex_event_body_t() {
     delete m_len;
 }
 
-standard_midi_file_t::note_off_event_t::note_off_event_t(kaitai::kstream *p_io, standard_midi_file_t::track_event_t* p_parent, standard_midi_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+standard_midi_file_t::note_off_event_t::note_off_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -293,9 +315,9 @@ void standard_midi_file_t::note_off_event_t::_read() {
 standard_midi_file_t::note_off_event_t::~note_off_event_t() {
 }
 
-standard_midi_file_t::channel_pressure_event_t::channel_pressure_event_t(kaitai::kstream *p_io, standard_midi_file_t::track_event_t* p_parent, standard_midi_file_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+standard_midi_file_t::channel_pressure_event_t::channel_pressure_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 

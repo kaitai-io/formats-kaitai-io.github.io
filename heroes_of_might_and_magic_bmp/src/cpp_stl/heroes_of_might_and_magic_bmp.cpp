@@ -4,8 +4,8 @@
 
 
 
-heroes_of_might_and_magic_bmp_t::heroes_of_might_and_magic_bmp_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, heroes_of_might_and_magic_bmp_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+heroes_of_might_and_magic_bmp_t::heroes_of_might_and_magic_bmp_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, heroes_of_might_and_magic_bmp_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }

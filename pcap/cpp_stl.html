@@ -275,8 +275,7 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-#include &lt;kaitai/kaitaistruct.h&gt;
-#include &lt;kaitai/kaitaistream.h&gt;
+#include &quot;kaitai/kaitaistruct.h&quot;
 
 #include &lt;stdint.h&gt;
 #include &lt;vector&gt;
@@ -284,8 +283,8 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
 #if KAITAI_STRUCT_VERSION &lt; 7000L
 #error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
 #endif
-class ethernet_frame_t;
 class packet_ppi_t;
+class ethernet_frame_t;
 
 /**
  * \sa Source
@@ -404,8 +403,12 @@ public:
         LINKTYPE_ISO_14443 = 264
     };
 
-    pcap_t(kaitai::kstream* p_io, kaitai::kstruct* p_parent = 0, pcap_t* p_root = 0);
+    pcap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, pcap_t* p__root = 0);
+
+private:
     void _read();
+
+public:
     ~pcap_t();
 
     /**
@@ -416,8 +419,12 @@ public:
 
     public:
 
-        header_t(kaitai::kstream* p_io, pcap_t* p_parent = 0, pcap_t* p_root = 0);
+        header_t(kaitai::kstream* p__io, pcap_t* p__parent = 0, pcap_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~header_t();
 
     private:
@@ -472,8 +479,12 @@ public:
 
     public:
 
-        packet_t(kaitai::kstream* p_io, pcap_t* p_parent = 0, pcap_t* p_root = 0);
+        packet_t(kaitai::kstream* p__io, pcap_t* p__parent = 0, pcap_t* p__root = 0);
+
+    private:
         void _read();
+
+    public:
         ~packet_t();
 
     private:
@@ -482,6 +493,12 @@ public:
         uint32_t m_incl_len;
         uint32_t m_orig_len;
         kaitai::kstruct* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
         pcap_t* m__root;
         pcap_t* m__parent;
         std::string m__raw_body;
@@ -546,11 +563,11 @@ public:
 #include &quot;pcap.h&quot;
 
 
-#include &quot;ethernet_frame.h&quot;
 #include &quot;packet_ppi.h&quot;
+#include &quot;ethernet_frame.h&quot;
 
-pcap_t::pcap_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, pcap_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+pcap_t::pcap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, pcap_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -558,8 +575,12 @@ pcap_t::pcap_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, pcap_t *p_root)
 void pcap_t::_read() {
     m_hdr = new header_t(m__io, this, m__root);
     m_packets = new std::vector&lt;packet_t*&gt;();
-    while (!m__io-&gt;is_eof()) {
-        m_packets-&gt;push_back(new packet_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io-&gt;is_eof()) {
+            m_packets-&gt;push_back(new packet_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -571,9 +592,9 @@ pcap_t::~pcap_t() {
     delete m_packets;
 }
 
-pcap_t::header_t::header_t(kaitai::kstream *p_io, pcap_t* p_parent, pcap_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+pcap_t::header_t::header_t(kaitai::kstream* p__io, pcap_t* p__parent, pcap_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -590,9 +611,9 @@ void pcap_t::header_t::_read() {
 pcap_t::header_t::~header_t() {
 }
 
-pcap_t::packet_t::packet_t(kaitai::kstream *p_io, pcap_t* p_parent, pcap_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+pcap_t::packet_t::packet_t(kaitai::kstream* p__io, pcap_t* p__parent, pcap_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -601,24 +622,34 @@ void pcap_t::packet_t::_read() {
     m_ts_usec = m__io-&gt;read_u4le();
     m_incl_len = m__io-&gt;read_u4le();
     m_orig_len = m__io-&gt;read_u4le();
+    n_body = true;
     switch (_root()-&gt;hdr()-&gt;network()) {
-    case LINKTYPE_PPI:
+    case LINKTYPE_PPI: {
+        n_body = false;
         m__raw_body = m__io-&gt;read_bytes(incl_len());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new packet_ppi_t(m__io__raw_body);
         break;
-    case LINKTYPE_ETHERNET:
+    }
+    case LINKTYPE_ETHERNET: {
+        n_body = false;
         m__raw_body = m__io-&gt;read_bytes(incl_len());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new ethernet_frame_t(m__io__raw_body);
         break;
-    default:
+    }
+    default: {
         m__raw_body = m__io-&gt;read_bytes(incl_len());
         break;
+    }
     }
 }
 
 pcap_t::packet_t::~packet_t() {
+    if (!n_body) {
+        delete m__io__raw_body;
+        delete m_body;
+    }
 }
 </code></pre>
             

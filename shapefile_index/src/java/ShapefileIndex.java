@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 public class ShapefileIndex extends KaitaiStruct {
     public static ShapefileIndex fromFile(String fileName) throws IOException {
-        return new ShapefileIndex(new KaitaiStream(fileName));
+        return new ShapefileIndex(new ByteBufferKaitaiStream(fileName));
     }
 
     public enum ShapeType {
@@ -56,13 +57,17 @@ public class ShapefileIndex extends KaitaiStruct {
     private void _read() {
         this.header = new FileHeader(this._io, this, _root);
         this.records = new ArrayList<Record>();
-        while (!this._io.isEof()) {
-            this.records.add(new Record(this._io, this, _root));
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.records.add(new Record(this._io, this, _root));
+                i++;
+            }
         }
     }
     public static class FileHeader extends KaitaiStruct {
         public static FileHeader fromFile(String fileName) throws IOException {
-            return new FileHeader(new KaitaiStream(fileName));
+            return new FileHeader(new ByteBufferKaitaiStream(fileName));
         }
 
         public FileHeader(KaitaiStream _io) {
@@ -126,7 +131,7 @@ public class ShapefileIndex extends KaitaiStruct {
     }
     public static class Record extends KaitaiStruct {
         public static Record fromFile(String fileName) throws IOException {
-            return new Record(new KaitaiStream(fileName));
+            return new Record(new ByteBufferKaitaiStream(fileName));
         }
 
         public Record(KaitaiStream _io) {
@@ -158,7 +163,7 @@ public class ShapefileIndex extends KaitaiStruct {
     }
     public static class BoundingBoxXYZM extends KaitaiStruct {
         public static BoundingBoxXYZM fromFile(String fileName) throws IOException {
-            return new BoundingBoxXYZM(new KaitaiStream(fileName));
+            return new BoundingBoxXYZM(new ByteBufferKaitaiStream(fileName));
         }
 
         public BoundingBoxXYZM(KaitaiStream _io) {
@@ -196,7 +201,7 @@ public class ShapefileIndex extends KaitaiStruct {
     }
     public static class BoundsMinMax extends KaitaiStruct {
         public static BoundsMinMax fromFile(String fileName) throws IOException {
-            return new BoundsMinMax(new KaitaiStream(fileName));
+            return new BoundsMinMax(new ByteBufferKaitaiStream(fileName));
         }
 
         public BoundsMinMax(KaitaiStream _io) {

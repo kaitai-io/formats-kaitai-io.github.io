@@ -24,8 +24,10 @@ var QuakePak = (function() {
     }
     IndexStruct.prototype._read = function() {
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
         this.entries.push(new IndexEntry(this._io, this, this._root));
+        i++;
       }
     }
 

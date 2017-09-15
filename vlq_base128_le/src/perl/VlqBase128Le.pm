@@ -51,7 +51,7 @@ sub len {
 sub value {
     my ($self) = @_;
     return $self->{value} if ($self->{value});
-    $self->{value} = ((((((($self->groups()[0]->value() + ($self->len() >= 2 ? ($self->groups()[1]->value() << 7) : 0)) + ($self->len() >= 3 ? ($self->groups()[2]->value() << 14) : 0)) + ($self->len() >= 4 ? ($self->groups()[3]->value() << 21) : 0)) + ($self->len() >= 5 ? ($self->groups()[4]->value() << 28) : 0)) + ($self->len() >= 6 ? ($self->groups()[5]->value() << 35) : 0)) + ($self->len() >= 7 ? ($self->groups()[6]->value() << 42) : 0)) + ($self->len() >= 8 ? ($self->groups()[7]->value() << 49) : 0));
+    $self->{value} = (((((((@{$self->groups()}[0]->value() + ($self->len() >= 2 ? (@{$self->groups()}[1]->value() << 7) : 0)) + ($self->len() >= 3 ? (@{$self->groups()}[2]->value() << 14) : 0)) + ($self->len() >= 4 ? (@{$self->groups()}[3]->value() << 21) : 0)) + ($self->len() >= 5 ? (@{$self->groups()}[4]->value() << 28) : 0)) + ($self->len() >= 6 ? (@{$self->groups()}[5]->value() << 35) : 0)) + ($self->len() >= 7 ? (@{$self->groups()}[6]->value() << 42) : 0)) + ($self->len() >= 8 ? (@{$self->groups()}[7]->value() << 49) : 0));
     return $self->{value};
 }
 

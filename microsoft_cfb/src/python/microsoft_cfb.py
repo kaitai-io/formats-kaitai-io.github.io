@@ -59,8 +59,10 @@ class MicrosoftCfb(KaitaiStruct):
 
         def _read(self):
             self.entries = []
+            i = 0
             while not self._io.is_eof():
                 self.entries.append(self._io.read_s4le())
+                i += 1
 
 
 
@@ -110,6 +112,48 @@ class MicrosoftCfb(KaitaiStruct):
 
             return self._m_mini_stream if hasattr(self, '_m_mini_stream') else None
 
+        @property
+        def child(self):
+            if hasattr(self, '_m_child'):
+                return self._m_child if hasattr(self, '_m_child') else None
+
+            if self.child_id != -1:
+                io = self._root._io
+                _pos = io.pos()
+                io.seek((((self._root.header.ofs_dir + 1) * self._root.sector_size) + (self.child_id * 128)))
+                self._m_child = self._root.DirEntry(io, self, self._root)
+                io.seek(_pos)
+
+            return self._m_child if hasattr(self, '_m_child') else None
+
+        @property
+        def left_sibling(self):
+            if hasattr(self, '_m_left_sibling'):
+                return self._m_left_sibling if hasattr(self, '_m_left_sibling') else None
+
+            if self.left_sibling_id != -1:
+                io = self._root._io
+                _pos = io.pos()
+                io.seek((((self._root.header.ofs_dir + 1) * self._root.sector_size) + (self.left_sibling_id * 128)))
+                self._m_left_sibling = self._root.DirEntry(io, self, self._root)
+                io.seek(_pos)
+
+            return self._m_left_sibling if hasattr(self, '_m_left_sibling') else None
+
+        @property
+        def right_sibling(self):
+            if hasattr(self, '_m_right_sibling'):
+                return self._m_right_sibling if hasattr(self, '_m_right_sibling') else None
+
+            if self.right_sibling_id != -1:
+                io = self._root._io
+                _pos = io.pos()
+                io.seek((((self._root.header.ofs_dir + 1) * self._root.sector_size) + (self.right_sibling_id * 128)))
+                self._m_right_sibling = self._root.DirEntry(io, self, self._root)
+                io.seek(_pos)
+
+            return self._m_right_sibling if hasattr(self, '_m_right_sibling') else None
+
 
     @property
     def sector_size(self):
@@ -139,9 +183,7 @@ class MicrosoftCfb(KaitaiStruct):
 
         _pos = self._io.pos()
         self._io.seek(((self.header.ofs_dir + 1) * self.sector_size))
-        self._raw__m_dir = self._io.read_bytes(128)
-        io = KaitaiStream(BytesIO(self._raw__m_dir))
-        self._m_dir = self._root.DirEntry(io, self, self._root)
+        self._m_dir = self._root.DirEntry(self._io, self, self._root)
         self._io.seek(_pos)
         return self._m_dir if hasattr(self, '_m_dir') else None
 

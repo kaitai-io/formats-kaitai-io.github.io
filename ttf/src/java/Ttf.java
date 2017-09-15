@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -11,7 +12,7 @@ import java.util.Collections;
 
 public class Ttf extends KaitaiStruct {
     public static Ttf fromFile(String fileName) throws IOException {
-        return new Ttf(new KaitaiStream(fileName));
+        return new Ttf(new ByteBufferKaitaiStream(fileName));
     }
 
     public Ttf(KaitaiStream _io) {
@@ -37,7 +38,7 @@ public class Ttf extends KaitaiStruct {
     }
     public static class Post extends KaitaiStruct {
         public static Post fromFile(String fileName) throws IOException {
-            return new Post(new KaitaiStream(fileName));
+            return new Post(new ByteBufferKaitaiStream(fileName));
         }
 
         public Post(KaitaiStream _io) {
@@ -70,7 +71,7 @@ public class Ttf extends KaitaiStruct {
         }
         public static class Format20 extends KaitaiStruct {
             public static Format20 fromFile(String fileName) throws IOException {
-                return new Format20(new KaitaiStream(fileName));
+                return new Format20(new ByteBufferKaitaiStream(fileName));
             }
 
             public Format20(KaitaiStream _io) {
@@ -96,15 +97,17 @@ public class Ttf extends KaitaiStruct {
                 this.glyphNames = new ArrayList<PascalString>();
                 {
                     PascalString _it;
+                    int i = 0;
                     do {
                         _it = new PascalString(this._io, this, _root);
                         this.glyphNames.add(_it);
+                        i++;
                     } while (!(_it.length() == 0));
                 }
             }
             public static class PascalString extends KaitaiStruct {
                 public static PascalString fromFile(String fileName) throws IOException {
-                    return new PascalString(new KaitaiStream(fileName));
+                    return new PascalString(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public PascalString(KaitaiStream _io) {
@@ -174,7 +177,7 @@ public class Ttf extends KaitaiStruct {
     }
     public static class Name extends KaitaiStruct {
         public static Name fromFile(String fileName) throws IOException {
-            return new Name(new KaitaiStream(fileName));
+            return new Name(new ByteBufferKaitaiStream(fileName));
         }
 
         public Name(KaitaiStream _io) {
@@ -202,7 +205,7 @@ public class Ttf extends KaitaiStruct {
         }
         public static class NameRecord extends KaitaiStruct {
             public static NameRecord fromFile(String fileName) throws IOException {
-                return new NameRecord(new KaitaiStream(fileName));
+                return new NameRecord(new ByteBufferKaitaiStream(fileName));
             }
 
             public NameRecord(KaitaiStream _io) {
@@ -281,7 +284,7 @@ public class Ttf extends KaitaiStruct {
     }
     public static class Head extends KaitaiStruct {
         public static Head fromFile(String fileName) throws IOException {
-            return new Head(new KaitaiStream(fileName));
+            return new Head(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum Flags {
@@ -392,7 +395,7 @@ public class Ttf extends KaitaiStruct {
     }
     public static class Prep extends KaitaiStruct {
         public static Prep fromFile(String fileName) throws IOException {
-            return new Prep(new KaitaiStream(fileName));
+            return new Prep(new ByteBufferKaitaiStream(fileName));
         }
 
         public Prep(KaitaiStream _io) {
@@ -421,7 +424,7 @@ public class Ttf extends KaitaiStruct {
     }
     public static class Hhea extends KaitaiStruct {
         public static Hhea fromFile(String fileName) throws IOException {
-            return new Hhea(new KaitaiStream(fileName));
+            return new Hhea(new ByteBufferKaitaiStream(fileName));
         }
 
         public Hhea(KaitaiStream _io) {
@@ -514,7 +517,7 @@ public class Ttf extends KaitaiStruct {
     }
     public static class Fpgm extends KaitaiStruct {
         public static Fpgm fromFile(String fileName) throws IOException {
-            return new Fpgm(new KaitaiStream(fileName));
+            return new Fpgm(new ByteBufferKaitaiStream(fileName));
         }
 
         public Fpgm(KaitaiStream _io) {
@@ -543,7 +546,7 @@ public class Ttf extends KaitaiStruct {
     }
     public static class Kern extends KaitaiStruct {
         public static Kern fromFile(String fileName) throws IOException {
-            return new Kern(new KaitaiStream(fileName));
+            return new Kern(new ByteBufferKaitaiStream(fileName));
         }
 
         public Kern(KaitaiStream _io) {
@@ -570,7 +573,7 @@ public class Ttf extends KaitaiStruct {
         }
         public static class Subtable extends KaitaiStruct {
             public static Subtable fromFile(String fileName) throws IOException {
-                return new Subtable(new KaitaiStream(fileName));
+                return new Subtable(new ByteBufferKaitaiStream(fileName));
             }
 
             public Subtable(KaitaiStream _io) {
@@ -603,7 +606,7 @@ public class Ttf extends KaitaiStruct {
             }
             public static class Format0 extends KaitaiStruct {
                 public static Format0 fromFile(String fileName) throws IOException {
-                    return new Format0(new KaitaiStream(fileName));
+                    return new Format0(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public Format0(KaitaiStream _io) {
@@ -632,7 +635,7 @@ public class Ttf extends KaitaiStruct {
                 }
                 public static class KerningPair extends KaitaiStruct {
                     public static KerningPair fromFile(String fileName) throws IOException {
-                        return new KerningPair(new KaitaiStream(fileName));
+                        return new KerningPair(new ByteBufferKaitaiStream(fileName));
                     }
 
                     public KerningPair(KaitaiStream _io) {
@@ -716,7 +719,7 @@ public class Ttf extends KaitaiStruct {
     }
     public static class DirTableEntry extends KaitaiStruct {
         public static DirTableEntry fromFile(String fileName) throws IOException {
-            return new DirTableEntry(new KaitaiStream(fileName));
+            return new DirTableEntry(new ByteBufferKaitaiStream(fileName));
         }
 
         public DirTableEntry(KaitaiStream _io) {
@@ -749,73 +752,73 @@ public class Ttf extends KaitaiStruct {
             switch (tag()) {
             case "head": {
                 this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                 this.value = new Head(_io__raw_value, this, _root);
                 break;
             }
             case "cvt ": {
                 this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                 this.value = new Cvt(_io__raw_value, this, _root);
                 break;
             }
             case "prep": {
                 this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                 this.value = new Prep(_io__raw_value, this, _root);
                 break;
             }
             case "kern": {
                 this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                 this.value = new Kern(_io__raw_value, this, _root);
                 break;
             }
             case "hhea": {
                 this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                 this.value = new Hhea(_io__raw_value, this, _root);
                 break;
             }
             case "post": {
                 this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                 this.value = new Post(_io__raw_value, this, _root);
                 break;
             }
             case "OS/2": {
                 this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                 this.value = new Os2(_io__raw_value, this, _root);
                 break;
             }
             case "name": {
                 this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                 this.value = new Name(_io__raw_value, this, _root);
                 break;
             }
             case "maxp": {
                 this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                 this.value = new Maxp(_io__raw_value, this, _root);
                 break;
             }
             case "glyf": {
                 this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                 this.value = new Glyf(_io__raw_value, this, _root);
                 break;
             }
             case "fpgm": {
                 this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                 this.value = new Fpgm(_io__raw_value, this, _root);
                 break;
             }
             case "cmap": {
                 this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                 this.value = new Cmap(_io__raw_value, this, _root);
                 break;
             }
@@ -848,7 +851,7 @@ public class Ttf extends KaitaiStruct {
      */
     public static class Os2 extends KaitaiStruct {
         public static Os2 fromFile(String fileName) throws IOException {
-            return new Os2(new KaitaiStream(fileName));
+            return new Os2(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum WeightClass {
@@ -977,7 +980,7 @@ public class Ttf extends KaitaiStruct {
         }
         public static class Panose extends KaitaiStruct {
             public static Panose fromFile(String fileName) throws IOException {
-                return new Panose(new KaitaiStream(fileName));
+                return new Panose(new ByteBufferKaitaiStream(fileName));
             }
 
             public enum Weight {
@@ -1276,7 +1279,7 @@ public class Ttf extends KaitaiStruct {
         }
         public static class UnicodeRange extends KaitaiStruct {
             public static UnicodeRange fromFile(String fileName) throws IOException {
-                return new UnicodeRange(new KaitaiStream(fileName));
+                return new UnicodeRange(new ByteBufferKaitaiStream(fileName));
             }
 
             public UnicodeRange(KaitaiStream _io) {
@@ -1516,7 +1519,7 @@ public class Ttf extends KaitaiStruct {
         }
         public static class CodePageRange extends KaitaiStruct {
             public static CodePageRange fromFile(String fileName) throws IOException {
-                return new CodePageRange(new KaitaiStream(fileName));
+                return new CodePageRange(new ByteBufferKaitaiStream(fileName));
             }
 
             public CodePageRange(KaitaiStream _io) {
@@ -1815,7 +1818,7 @@ public class Ttf extends KaitaiStruct {
     }
     public static class Fixed extends KaitaiStruct {
         public static Fixed fromFile(String fileName) throws IOException {
-            return new Fixed(new KaitaiStream(fileName));
+            return new Fixed(new ByteBufferKaitaiStream(fileName));
         }
 
         public Fixed(KaitaiStream _io) {
@@ -1847,7 +1850,7 @@ public class Ttf extends KaitaiStruct {
     }
     public static class Glyf extends KaitaiStruct {
         public static Glyf fromFile(String fileName) throws IOException {
-            return new Glyf(new KaitaiStream(fileName));
+            return new Glyf(new ByteBufferKaitaiStream(fileName));
         }
 
         public Glyf(KaitaiStream _io) {
@@ -1876,7 +1879,7 @@ public class Ttf extends KaitaiStruct {
         }
         public static class SimpleGlyph extends KaitaiStruct {
             public static SimpleGlyph fromFile(String fileName) throws IOException {
-                return new SimpleGlyph(new KaitaiStream(fileName));
+                return new SimpleGlyph(new ByteBufferKaitaiStream(fileName));
             }
 
             public SimpleGlyph(KaitaiStream _io) {
@@ -1907,7 +1910,7 @@ public class Ttf extends KaitaiStruct {
             }
             public static class Flag extends KaitaiStruct {
                 public static Flag fromFile(String fileName) throws IOException {
-                    return new Flag(new KaitaiStream(fileName));
+                    return new Flag(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public Flag(KaitaiStream _io) {
@@ -2002,7 +2005,7 @@ public class Ttf extends KaitaiStruct {
      */
     public static class Cvt extends KaitaiStruct {
         public static Cvt fromFile(String fileName) throws IOException {
-            return new Cvt(new KaitaiStream(fileName));
+            return new Cvt(new ByteBufferKaitaiStream(fileName));
         }
 
         public Cvt(KaitaiStream _io) {
@@ -2021,8 +2024,12 @@ public class Ttf extends KaitaiStruct {
         }
         private void _read() {
             this.fwords = new ArrayList<Short>();
-            while (!this._io.isEof()) {
-                this.fwords.add(this._io.readS2be());
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.fwords.add(this._io.readS2be());
+                    i++;
+                }
             }
         }
         private ArrayList<Short> fwords;
@@ -2034,7 +2041,7 @@ public class Ttf extends KaitaiStruct {
     }
     public static class Maxp extends KaitaiStruct {
         public static Maxp fromFile(String fileName) throws IOException {
-            return new Maxp(new KaitaiStream(fileName));
+            return new Maxp(new ByteBufferKaitaiStream(fileName));
         }
 
         public Maxp(KaitaiStream _io) {
@@ -2165,7 +2172,7 @@ public class Ttf extends KaitaiStruct {
     }
     public static class OffsetTable extends KaitaiStruct {
         public static OffsetTable fromFile(String fileName) throws IOException {
-            return new OffsetTable(new KaitaiStream(fileName));
+            return new OffsetTable(new ByteBufferKaitaiStream(fileName));
         }
 
         public OffsetTable(KaitaiStream _io) {
@@ -2210,7 +2217,7 @@ public class Ttf extends KaitaiStruct {
      */
     public static class Cmap extends KaitaiStruct {
         public static Cmap fromFile(String fileName) throws IOException {
-            return new Cmap(new KaitaiStream(fileName));
+            return new Cmap(new ByteBufferKaitaiStream(fileName));
         }
 
         public Cmap(KaitaiStream _io) {
@@ -2237,7 +2244,7 @@ public class Ttf extends KaitaiStruct {
         }
         public static class SubtableHeader extends KaitaiStruct {
             public static SubtableHeader fromFile(String fileName) throws IOException {
-                return new SubtableHeader(new KaitaiStream(fileName));
+                return new SubtableHeader(new ByteBufferKaitaiStream(fileName));
             }
 
             public SubtableHeader(KaitaiStream _io) {
@@ -2283,7 +2290,7 @@ public class Ttf extends KaitaiStruct {
         }
         public static class Subtable extends KaitaiStruct {
             public static Subtable fromFile(String fileName) throws IOException {
-                return new Subtable(new KaitaiStream(fileName));
+                return new Subtable(new ByteBufferKaitaiStream(fileName));
             }
 
             public enum SubtableFormat {
@@ -2324,25 +2331,25 @@ public class Ttf extends KaitaiStruct {
                 switch (format()) {
                 case BYTE_ENCODING_TABLE: {
                     this._raw_value = this._io.readBytes((length() - 6));
-                    KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                     this.value = new ByteEncodingTable(_io__raw_value, this, _root);
                     break;
                 }
                 case HIGH_BYTE_MAPPING_THROUGH_TABLE: {
                     this._raw_value = this._io.readBytes((length() - 6));
-                    KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                     this.value = new HighByteMappingThroughTable(_io__raw_value, this, _root);
                     break;
                 }
                 case TRIMMED_TABLE_MAPPING: {
                     this._raw_value = this._io.readBytes((length() - 6));
-                    KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                     this.value = new TrimmedTableMapping(_io__raw_value, this, _root);
                     break;
                 }
                 case SEGMENT_MAPPING_TO_DELTA_VALUES: {
                     this._raw_value = this._io.readBytes((length() - 6));
-                    KaitaiStream _io__raw_value = new KaitaiStream(_raw_value);
+                    KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
                     this.value = new SegmentMappingToDeltaValues(_io__raw_value, this, _root);
                     break;
                 }
@@ -2354,7 +2361,7 @@ public class Ttf extends KaitaiStruct {
             }
             public static class ByteEncodingTable extends KaitaiStruct {
                 public static ByteEncodingTable fromFile(String fileName) throws IOException {
-                    return new ByteEncodingTable(new KaitaiStream(fileName));
+                    return new ByteEncodingTable(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public ByteEncodingTable(KaitaiStream _io) {
@@ -2383,7 +2390,7 @@ public class Ttf extends KaitaiStruct {
             }
             public static class HighByteMappingThroughTable extends KaitaiStruct {
                 public static HighByteMappingThroughTable fromFile(String fileName) throws IOException {
-                    return new HighByteMappingThroughTable(new KaitaiStream(fileName));
+                    return new HighByteMappingThroughTable(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public HighByteMappingThroughTable(KaitaiStream _io) {
@@ -2415,7 +2422,7 @@ public class Ttf extends KaitaiStruct {
             }
             public static class SegmentMappingToDeltaValues extends KaitaiStruct {
                 public static SegmentMappingToDeltaValues fromFile(String fileName) throws IOException {
-                    return new SegmentMappingToDeltaValues(new KaitaiStream(fileName));
+                    return new SegmentMappingToDeltaValues(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public SegmentMappingToDeltaValues(KaitaiStream _io) {
@@ -2455,8 +2462,12 @@ public class Ttf extends KaitaiStruct {
                         this.idRangeOffset.add(this._io.readU2be());
                     }
                     this.glyphIdArray = new ArrayList<Integer>();
-                    while (!this._io.isEof()) {
-                        this.glyphIdArray.add(this._io.readU2be());
+                    {
+                        int i = 0;
+                        while (!this._io.isEof()) {
+                            this.glyphIdArray.add(this._io.readU2be());
+                            i++;
+                        }
                     }
                 }
                 private Integer segCount;
@@ -2494,7 +2505,7 @@ public class Ttf extends KaitaiStruct {
             }
             public static class TrimmedTableMapping extends KaitaiStruct {
                 public static TrimmedTableMapping fromFile(String fileName) throws IOException {
-                    return new TrimmedTableMapping(new KaitaiStream(fileName));
+                    return new TrimmedTableMapping(new ByteBufferKaitaiStream(fileName));
                 }
 
                 public TrimmedTableMapping(KaitaiStream _io) {

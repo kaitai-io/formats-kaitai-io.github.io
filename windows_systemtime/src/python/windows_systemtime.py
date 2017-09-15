@@ -10,6 +10,9 @@ if parse_version(ks_version) < parse_version('0.7'):
 class WindowsSystemtime(KaitaiStruct):
     """Microsoft Windows SYSTEMTIME structure, stores individual components
     of date and time as individual fields, up to millisecond precision.
+    
+    .. seealso::
+       Source - https://msdn.microsoft.com/en-us/library/windows/desktop/ms724950.aspx
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

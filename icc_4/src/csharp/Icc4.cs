@@ -11,16 +11,17 @@ namespace Kaitai
             return new Icc4(new KaitaiStream(fileName));
         }
 
-        public Icc4(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+        public Icc4(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _header = new ProfileHeader(m_io, this, m_root);
             _tagTable = new TagTable(m_io, this, m_root);
-            }
+        }
         public partial class U8Fixed8Number : KaitaiStruct
         {
             public static U8Fixed8Number FromFile(string fileName)
@@ -28,15 +29,16 @@ namespace Kaitai
                 return new U8Fixed8Number(new KaitaiStream(fileName));
             }
 
-            public U8Fixed8Number(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+            public U8Fixed8Number(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _number = m_io.ReadBytes(2);
-                }
+            }
             private byte[] _number;
             private Icc4 m_root;
             private KaitaiStruct m_parent;
@@ -51,15 +53,16 @@ namespace Kaitai
                 return new U16Fixed16Number(new KaitaiStream(fileName));
             }
 
-            public U16Fixed16Number(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+            public U16Fixed16Number(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _number = m_io.ReadBytes(4);
-                }
+            }
             private byte[] _number;
             private Icc4 m_root;
             private KaitaiStruct m_parent;
@@ -74,6 +77,7 @@ namespace Kaitai
                 return new StandardIlluminantEncoding(new KaitaiStream(fileName));
             }
 
+
             public enum StandardIlluminantEncodings
             {
                 Unknown = 0,
@@ -86,16 +90,16 @@ namespace Kaitai
                 EquiPower = 7,
                 F8 = 8,
             }
-
-            public StandardIlluminantEncoding(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+            public StandardIlluminantEncoding(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _standardIlluminantEncoding = ((StandardIlluminantEncodings) m_io.ReadU4be());
-                }
+            }
             private StandardIlluminantEncodings _standardIlluminantEncoding;
             private Icc4 m_root;
             private KaitaiStruct m_parent;
@@ -109,6 +113,7 @@ namespace Kaitai
             {
                 return new ProfileHeader(new KaitaiStream(fileName));
             }
+
 
             public enum CmmSignatures
             {
@@ -193,14 +198,14 @@ namespace Kaitai
                 Ycbcr = 1497588338,
                 Cieyxy = 1501067552,
             }
-
-            public ProfileHeader(KaitaiStream io, Icc4 parent = null, Icc4 root = null) : base(io)
+            public ProfileHeader(KaitaiStream p__io, Icc4 p__parent = null, Icc4 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _size = m_io.ReadU4be();
                 _preferredCmmType = ((CmmSignatures) m_io.ReadU4be());
                 _version = new VersionField(m_io, this, m_root);
@@ -219,7 +224,7 @@ namespace Kaitai
                 _creator = new DeviceManufacturer(m_io, this, m_root);
                 _identifier = m_io.ReadBytes(16);
                 _reservedData = m_io.ReadBytes(28);
-                }
+            }
             public partial class VersionField : KaitaiStruct
             {
                 public static VersionField FromFile(string fileName)
@@ -227,19 +232,20 @@ namespace Kaitai
                     return new VersionField(new KaitaiStream(fileName));
                 }
 
-                public VersionField(KaitaiStream io, Icc4.ProfileHeader parent = null, Icc4 root = null) : base(io)
+                public VersionField(KaitaiStream p__io, Icc4.ProfileHeader p__parent = null, Icc4 p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _major = m_io.EnsureFixedContents(new byte[] { 4 });
                     _minor = m_io.ReadBitsInt(4);
                     _bugFixLevel = m_io.ReadBitsInt(4);
                     m_io.AlignToByte();
                     _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0 });
-                    }
+                }
                 private byte[] _major;
                 private ulong _minor;
                 private ulong _bugFixLevel;
@@ -260,17 +266,18 @@ namespace Kaitai
                     return new ProfileFlags(new KaitaiStream(fileName));
                 }
 
-                public ProfileFlags(KaitaiStream io, Icc4.ProfileHeader parent = null, Icc4 root = null) : base(io)
+                public ProfileFlags(KaitaiStream p__io, Icc4.ProfileHeader p__parent = null, Icc4 p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _embeddedProfile = m_io.ReadBitsInt(1) != 0;
                     _profileCanBeUsedIndependentlyOfEmbeddedColourData = m_io.ReadBitsInt(1) != 0;
                     _otherFlags = m_io.ReadBitsInt(30);
-                    }
+                }
                 private bool _embeddedProfile;
                 private bool _profileCanBeUsedIndependentlyOfEmbeddedColourData;
                 private ulong _otherFlags;
@@ -330,17 +337,18 @@ namespace Kaitai
                 return new XyzNumber(new KaitaiStream(fileName));
             }
 
-            public XyzNumber(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+            public XyzNumber(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _x = m_io.ReadBytes(4);
                 _y = m_io.ReadBytes(4);
                 _z = m_io.ReadBytes(4);
-                }
+            }
             private byte[] _x;
             private byte[] _y;
             private byte[] _z;
@@ -359,20 +367,21 @@ namespace Kaitai
                 return new DateTimeNumber(new KaitaiStream(fileName));
             }
 
-            public DateTimeNumber(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+            public DateTimeNumber(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _year = m_io.ReadU2be();
                 _month = m_io.ReadU2be();
                 _day = m_io.ReadU2be();
                 _hour = m_io.ReadU2be();
                 _minute = m_io.ReadU2be();
                 _second = m_io.ReadU2be();
-                }
+            }
             private ushort _year;
             private ushort _month;
             private ushort _day;
@@ -397,17 +406,18 @@ namespace Kaitai
                 return new Response16Number(new KaitaiStream(fileName));
             }
 
-            public Response16Number(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+            public Response16Number(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _number = m_io.ReadU4be();
                 _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0 });
                 _measurementValue = new S15Fixed16Number(m_io, this, m_root);
-                }
+            }
             private uint _number;
             private byte[] _reserved;
             private S15Fixed16Number _measurementValue;
@@ -426,15 +436,16 @@ namespace Kaitai
                 return new U1Fixed15Number(new KaitaiStream(fileName));
             }
 
-            public U1Fixed15Number(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+            public U1Fixed15Number(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _number = m_io.ReadBytes(2);
-                }
+            }
             private byte[] _number;
             private Icc4 m_root;
             private KaitaiStruct m_parent;
@@ -449,25 +460,28 @@ namespace Kaitai
                 return new TagTable(new KaitaiStream(fileName));
             }
 
-            public TagTable(KaitaiStream io, Icc4 parent = null, Icc4 root = null) : base(io)
+            public TagTable(KaitaiStream p__io, Icc4 p__parent = null, Icc4 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _tagCount = m_io.ReadU4be();
                 _tags = new List<TagDefinition>((int) (TagCount));
-                for (var i = 0; i < TagCount; i++) {
+                for (var i = 0; i < TagCount; i++)
+                {
                     _tags.Add(new TagDefinition(m_io, this, m_root));
                 }
-                }
+            }
             public partial class TagDefinition : KaitaiStruct
             {
                 public static TagDefinition FromFile(string fileName)
                 {
                     return new TagDefinition(new KaitaiStream(fileName));
                 }
+
 
                 public enum TagSignatures
                 {
@@ -563,19 +577,19 @@ namespace Kaitai
                     FormulaCurveSegmentsType = 1885434470,
                     SampledCurveSegmentType = 1935764838,
                 }
-
-                public TagDefinition(KaitaiStream io, Icc4.TagTable parent = null, Icc4 root = null) : base(io)
+                public TagDefinition(KaitaiStream p__io, Icc4.TagTable p__parent = null, Icc4 p__root = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     f_tagDataElement = false;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
                     _tagSignature = ((TagSignatures) m_io.ReadU4be());
                     _offsetToDataElement = m_io.ReadU4be();
                     _sizeOfDataElement = m_io.ReadU4be();
-                    }
+                }
                 public partial class BlueMatrixColumnTag : KaitaiStruct
                 {
                     public static BlueMatrixColumnTag FromFile(string fileName)
@@ -583,13 +597,14 @@ namespace Kaitai
                         return new BlueMatrixColumnTag(new KaitaiStream(fileName));
                     }
 
-                    public BlueMatrixColumnTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public BlueMatrixColumnTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.XyzType: {
@@ -597,7 +612,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private XyzType _tagData;
                     private Icc4 m_root;
@@ -614,13 +629,14 @@ namespace Kaitai
                         return new DeviceMfgDescTag(new KaitaiStream(fileName));
                     }
 
-                    public DeviceMfgDescTag(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public DeviceMfgDescTag(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiLocalizedUnicodeType: {
@@ -628,7 +644,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private MultiLocalizedUnicodeType _tagData;
                     private Icc4 m_root;
@@ -645,32 +661,36 @@ namespace Kaitai
                         return new NamedColor2Type(new KaitaiStream(fileName));
                     }
 
-                    public NamedColor2Type(KaitaiStream io, Icc4.TagTable.TagDefinition.NamedColor2Tag parent = null, Icc4 root = null) : base(io)
+                    public NamedColor2Type(KaitaiStream p__io, Icc4.TagTable.TagDefinition.NamedColor2Tag p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _vendorSpecificFlag = m_io.ReadU4be();
                         _countOfNamedColours = m_io.ReadU4be();
                         _numberOfDeviceCoordinatesForEachNamedColour = m_io.ReadU4be();
                         _prefixForEachColourName = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true));
                         _prefixForEachColourNamePadding = new List<byte[]>((int) ((32 - PrefixForEachColourName.Length)));
-                        for (var i = 0; i < (32 - PrefixForEachColourName.Length); i++) {
+                        for (var i = 0; i < (32 - PrefixForEachColourName.Length); i++)
+                        {
                             _prefixForEachColourNamePadding = m_io.EnsureFixedContents(new byte[] { 0 });
                         }
                         _suffixForEachColourName = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true));
                         _suffixForEachColourNamePadding = new List<byte[]>((int) ((32 - SuffixForEachColourName.Length)));
-                        for (var i = 0; i < (32 - SuffixForEachColourName.Length); i++) {
+                        for (var i = 0; i < (32 - SuffixForEachColourName.Length); i++)
+                        {
                             _suffixForEachColourNamePadding = m_io.EnsureFixedContents(new byte[] { 0 });
                         }
                         _namedColourDefinitions = new List<NamedColourDefinition>((int) (CountOfNamedColours));
-                        for (var i = 0; i < CountOfNamedColours; i++) {
+                        for (var i = 0; i < CountOfNamedColours; i++)
+                        {
                             _namedColourDefinitions.Add(new NamedColourDefinition(m_io, this, m_root));
                         }
-                        }
+                    }
                     public partial class NamedColourDefinition : KaitaiStruct
                     {
                         public static NamedColourDefinition FromFile(string fileName)
@@ -678,26 +698,29 @@ namespace Kaitai
                             return new NamedColourDefinition(new KaitaiStream(fileName));
                         }
 
-                        public NamedColourDefinition(KaitaiStream io, Icc4.TagTable.TagDefinition.NamedColor2Type parent = null, Icc4 root = null) : base(io)
+                        public NamedColourDefinition(KaitaiStream p__io, Icc4.TagTable.TagDefinition.NamedColor2Type p__parent = null, Icc4 p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _rootName = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true));
                             _rootNamePadding = new List<byte[]>((int) ((32 - RootName.Length)));
-                            for (var i = 0; i < (32 - RootName.Length); i++) {
+                            for (var i = 0; i < (32 - RootName.Length); i++)
+                            {
                                 _rootNamePadding = m_io.EnsureFixedContents(new byte[] { 0 });
                             }
                             _pcsCoordinates = m_io.ReadBytes(6);
                             if (M_Parent.NumberOfDeviceCoordinatesForEachNamedColour > 0) {
                                 _deviceCoordinates = new List<ushort>((int) (M_Parent.CountOfNamedColours));
-                                for (var i = 0; i < M_Parent.CountOfNamedColours; i++) {
+                                for (var i = 0; i < M_Parent.CountOfNamedColours; i++)
+                                {
                                     _deviceCoordinates.Add(m_io.ReadU2be());
                                 }
                             }
-                            }
+                        }
                         private string _rootName;
                         private List<byte[]> _rootNamePadding;
                         private byte[] _pcsCoordinates;
@@ -741,13 +764,14 @@ namespace Kaitai
                         return new ViewingConditionsTag(new KaitaiStream(fileName));
                     }
 
-                    public ViewingConditionsTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public ViewingConditionsTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.ViewingConditionsType: {
@@ -755,7 +779,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private ViewingConditionsType _tagData;
                     private Icc4 m_root;
@@ -772,13 +796,14 @@ namespace Kaitai
                         return new BlueTrcTag(new KaitaiStream(fileName));
                     }
 
-                    public BlueTrcTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public BlueTrcTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.CurveType: {
@@ -790,7 +815,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private KaitaiStruct _tagData;
                     private Icc4 m_root;
@@ -807,22 +832,24 @@ namespace Kaitai
                         return new ResponseCurveSet16Type(new KaitaiStream(fileName));
                     }
 
-                    public ResponseCurveSet16Type(KaitaiStream io, Icc4.TagTable.TagDefinition.OutputResponseTag parent = null, Icc4 root = null) : base(io)
+                    public ResponseCurveSet16Type(KaitaiStream p__io, Icc4.TagTable.TagDefinition.OutputResponseTag p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _numberOfChannels = m_io.ReadU2be();
                         _countOfMeasurementTypes = m_io.ReadU2be();
                         _responseCurveStructureOffsets = new List<uint>((int) (CountOfMeasurementTypes));
-                        for (var i = 0; i < CountOfMeasurementTypes; i++) {
+                        for (var i = 0; i < CountOfMeasurementTypes; i++)
+                        {
                             _responseCurveStructureOffsets.Add(m_io.ReadU4be());
                         }
                         _responseCurveStructures = m_io.ReadBytesFull();
-                        }
+                    }
                     private byte[] _reserved;
                     private ushort _numberOfChannels;
                     private ushort _countOfMeasurementTypes;
@@ -845,35 +872,37 @@ namespace Kaitai
                         return new CurveType(new KaitaiStream(fileName));
                     }
 
-                    public CurveType(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public CurveType(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _numberOfEntries = m_io.ReadU4be();
                         if (NumberOfEntries > 1) {
                             _curveValues = new List<uint>((int) (NumberOfEntries));
-                            for (var i = 0; i < NumberOfEntries; i++) {
+                            for (var i = 0; i < NumberOfEntries; i++)
+                            {
                                 _curveValues.Add(m_io.ReadU4be());
                             }
                         }
                         if (NumberOfEntries == 1) {
                             _curveValue = m_io.ReadU1();
                         }
-                        }
+                    }
                     private byte[] _reserved;
                     private uint _numberOfEntries;
                     private List<uint> _curveValues;
-                    private byte _curveValue;
+                    private byte? _curveValue;
                     private Icc4 m_root;
                     private KaitaiStruct m_parent;
                     public byte[] Reserved { get { return _reserved; } }
                     public uint NumberOfEntries { get { return _numberOfEntries; } }
                     public List<uint> CurveValues { get { return _curveValues; } }
-                    public byte CurveValue { get { return _curveValue; } }
+                    public byte? CurveValue { get { return _curveValue; } }
                     public Icc4 M_Root { get { return m_root; } }
                     public KaitaiStruct M_Parent { get { return m_parent; } }
                 }
@@ -884,13 +913,14 @@ namespace Kaitai
                         return new SaturationRenderingIntentGamutTag(new KaitaiStream(fileName));
                     }
 
-                    public SaturationRenderingIntentGamutTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public SaturationRenderingIntentGamutTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.SignatureType: {
@@ -898,7 +928,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private SignatureType _tagData;
                     private Icc4 m_root;
@@ -915,19 +945,24 @@ namespace Kaitai
                         return new XyzType(new KaitaiStream(fileName));
                     }
 
-                    public XyzType(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public XyzType(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _values = new List<XyzNumber>();
-                        while (!m_io.IsEof) {
-                            _values.Add(new XyzNumber(m_io, this, m_root));
+                        {
+                            var i = 0;
+                            while (!m_io.IsEof) {
+                                _values.Add(new XyzNumber(m_io, this, m_root));
+                                i++;
+                            }
                         }
-                        }
+                    }
                     private byte[] _reserved;
                     private List<XyzNumber> _values;
                     private Icc4 m_root;
@@ -944,20 +979,22 @@ namespace Kaitai
                         return new Lut8Type(new KaitaiStream(fileName));
                     }
 
-                    public Lut8Type(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public Lut8Type(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _numberOfInputChannels = m_io.ReadU1();
                         _numberOfOutputChannels = m_io.ReadU1();
                         _numberOfClutGridPoints = m_io.ReadU1();
                         _padding = m_io.EnsureFixedContents(new byte[] { 0 });
                         _encodedEParameters = new List<int>((int) (9));
-                        for (var i = 0; i < 9; i++) {
+                        for (var i = 0; i < 9; i++)
+                        {
                             _encodedEParameters.Add(m_io.ReadS4be());
                         }
                         _numberOfInputTableEntries = m_io.ReadU4be();
@@ -965,7 +1002,7 @@ namespace Kaitai
                         _inputTables = m_io.ReadBytes((256 * NumberOfInputChannels));
                         _clutValues = m_io.ReadBytes(((NumberOfClutGridPoints ^ NumberOfInputChannels) * NumberOfOutputChannels));
                         _outputTables = m_io.ReadBytes((256 * NumberOfOutputChannels));
-                        }
+                    }
                     private byte[] _reserved;
                     private byte _numberOfInputChannels;
                     private byte _numberOfOutputChannels;
@@ -1000,13 +1037,14 @@ namespace Kaitai
                         return new BToA2Tag(new KaitaiStream(fileName));
                     }
 
-                    public BToA2Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public BToA2Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiFunctionTableWithOneBytePrecisionType: {
@@ -1022,7 +1060,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private KaitaiStruct _tagData;
                     private Icc4 m_root;
@@ -1039,13 +1077,14 @@ namespace Kaitai
                         return new LutAToBType(new KaitaiStream(fileName));
                     }
 
-                    public LutAToBType(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public LutAToBType(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _numberOfInputChannels = m_io.ReadU1();
                         _numberOfOutputChannels = m_io.ReadU1();
@@ -1056,7 +1095,7 @@ namespace Kaitai
                         _offsetToClut = m_io.ReadU4be();
                         _offsetToFirstACurve = m_io.ReadU4be();
                         _data = m_io.ReadBytesFull();
-                        }
+                    }
                     private byte[] _reserved;
                     private byte _numberOfInputChannels;
                     private byte _numberOfOutputChannels;
@@ -1089,13 +1128,14 @@ namespace Kaitai
                         return new BToA0Tag(new KaitaiStream(fileName));
                     }
 
-                    public BToA0Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public BToA0Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiFunctionTableWithOneBytePrecisionType: {
@@ -1111,7 +1151,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private KaitaiStruct _tagData;
                     private Icc4 m_root;
@@ -1128,13 +1168,14 @@ namespace Kaitai
                         return new MediaWhitePointTag(new KaitaiStream(fileName));
                     }
 
-                    public MediaWhitePointTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public MediaWhitePointTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.XyzType: {
@@ -1142,7 +1183,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private XyzType _tagData;
                     private Icc4 m_root;
@@ -1159,20 +1200,22 @@ namespace Kaitai
                         return new Lut16Type(new KaitaiStream(fileName));
                     }
 
-                    public Lut16Type(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public Lut16Type(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _numberOfInputChannels = m_io.ReadU1();
                         _numberOfOutputChannels = m_io.ReadU1();
                         _numberOfClutGridPoints = m_io.ReadU1();
                         _padding = m_io.EnsureFixedContents(new byte[] { 0 });
                         _encodedEParameters = new List<int>((int) (9));
-                        for (var i = 0; i < 9; i++) {
+                        for (var i = 0; i < 9; i++)
+                        {
                             _encodedEParameters.Add(m_io.ReadS4be());
                         }
                         _numberOfInputTableEntries = m_io.ReadU4be();
@@ -1180,7 +1223,7 @@ namespace Kaitai
                         _inputTables = m_io.ReadBytes(((2 * NumberOfInputChannels) * NumberOfInputTableEntries));
                         _clutValues = m_io.ReadBytes(((2 * (NumberOfClutGridPoints ^ NumberOfInputChannels)) * NumberOfOutputChannels));
                         _outputTables = m_io.ReadBytes(((2 * NumberOfOutputChannels) * NumberOfOutputTableEntries));
-                        }
+                    }
                     private byte[] _reserved;
                     private byte _numberOfInputChannels;
                     private byte _numberOfOutputChannels;
@@ -1215,13 +1258,14 @@ namespace Kaitai
                         return new PerceptualRenderingIntentGamutTag(new KaitaiStream(fileName));
                     }
 
-                    public PerceptualRenderingIntentGamutTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public PerceptualRenderingIntentGamutTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.SignatureType: {
@@ -1229,7 +1273,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private SignatureType _tagData;
                     private Icc4 m_root;
@@ -1246,19 +1290,24 @@ namespace Kaitai
                         return new U16Fixed16ArrayType(new KaitaiStream(fileName));
                     }
 
-                    public U16Fixed16ArrayType(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public U16Fixed16ArrayType(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _values = new List<U16Fixed16Number>();
-                        while (!m_io.IsEof) {
-                            _values.Add(new U16Fixed16Number(m_io, this, m_root));
+                        {
+                            var i = 0;
+                            while (!m_io.IsEof) {
+                                _values.Add(new U16Fixed16Number(m_io, this, m_root));
+                                i++;
+                            }
                         }
-                        }
+                    }
                     private byte[] _reserved;
                     private List<U16Fixed16Number> _values;
                     private Icc4 m_root;
@@ -1275,13 +1324,14 @@ namespace Kaitai
                         return new ColorantTableOutTag(new KaitaiStream(fileName));
                     }
 
-                    public ColorantTableOutTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public ColorantTableOutTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.ColorantTableType: {
@@ -1289,7 +1339,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private ColorantTableType _tagData;
                     private Icc4 m_root;
@@ -1306,13 +1356,14 @@ namespace Kaitai
                         return new MeasurementTag(new KaitaiStream(fileName));
                     }
 
-                    public MeasurementTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public MeasurementTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MeasurementType: {
@@ -1320,7 +1371,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private MeasurementType _tagData;
                     private Icc4 m_root;
@@ -1337,13 +1388,14 @@ namespace Kaitai
                         return new ProfileSequenceTag(new KaitaiStream(fileName));
                     }
 
-                    public ProfileSequenceTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public ProfileSequenceTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.ProfileSequenceDescType: {
@@ -1351,7 +1403,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private ProfileSequenceDescType _tagData;
                     private Icc4 m_root;
@@ -1368,13 +1420,14 @@ namespace Kaitai
                         return new TechnologyTag(new KaitaiStream(fileName));
                     }
 
-                    public TechnologyTag(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public TechnologyTag(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.SignatureType: {
@@ -1382,7 +1435,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private SignatureType _tagData;
                     private Icc4 m_root;
@@ -1399,13 +1452,14 @@ namespace Kaitai
                         return new AToB0Tag(new KaitaiStream(fileName));
                     }
 
-                    public AToB0Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public AToB0Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiFunctionTableWithOneBytePrecisionType: {
@@ -1421,7 +1475,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private KaitaiStruct _tagData;
                     private Icc4 m_root;
@@ -1438,13 +1492,14 @@ namespace Kaitai
                         return new DToB0Tag(new KaitaiStream(fileName));
                     }
 
-                    public DToB0Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public DToB0Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiProcessElementsType: {
@@ -1452,7 +1507,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private MultiProcessElementsType _tagData;
                     private Icc4 m_root;
@@ -1469,13 +1524,14 @@ namespace Kaitai
                         return new OutputResponseTag(new KaitaiStream(fileName));
                     }
 
-                    public OutputResponseTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public OutputResponseTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.ResponseCurveSet16Type: {
@@ -1483,7 +1539,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private ResponseCurveSet16Type _tagData;
                     private Icc4 m_root;
@@ -1500,13 +1556,14 @@ namespace Kaitai
                         return new GreenMatrixColumnTag(new KaitaiStream(fileName));
                     }
 
-                    public GreenMatrixColumnTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public GreenMatrixColumnTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.XyzType: {
@@ -1514,7 +1571,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private XyzType _tagData;
                     private Icc4 m_root;
@@ -1531,13 +1588,14 @@ namespace Kaitai
                         return new ProfileDescriptionTag(new KaitaiStream(fileName));
                     }
 
-                    public ProfileDescriptionTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public ProfileDescriptionTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiLocalizedUnicodeType: {
@@ -1545,7 +1603,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private MultiLocalizedUnicodeType _tagData;
                     private Icc4 m_root;
@@ -1562,13 +1620,14 @@ namespace Kaitai
                         return new Preview1Tag(new KaitaiStream(fileName));
                     }
 
-                    public Preview1Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public Preview1Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiFunctionTableWithOneBytePrecisionType: {
@@ -1584,7 +1643,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private KaitaiStruct _tagData;
                     private Icc4 m_root;
@@ -1601,13 +1660,14 @@ namespace Kaitai
                         return new RedTrcTag(new KaitaiStream(fileName));
                     }
 
-                    public RedTrcTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public RedTrcTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.CurveType: {
@@ -1619,7 +1679,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private KaitaiStruct _tagData;
                     private Icc4 m_root;
@@ -1636,13 +1696,14 @@ namespace Kaitai
                         return new BToD0Tag(new KaitaiStream(fileName));
                     }
 
-                    public BToD0Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public BToD0Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiProcessElementsType: {
@@ -1650,7 +1711,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private MultiProcessElementsType _tagData;
                     private Icc4 m_root;
@@ -1667,13 +1728,14 @@ namespace Kaitai
                         return new DToB1Tag(new KaitaiStream(fileName));
                     }
 
-                    public DToB1Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public DToB1Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiProcessElementsType: {
@@ -1681,7 +1743,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private MultiProcessElementsType _tagData;
                     private Icc4 m_root;
@@ -1698,13 +1760,14 @@ namespace Kaitai
                         return new BToA1Tag(new KaitaiStream(fileName));
                     }
 
-                    public BToA1Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public BToA1Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiFunctionTableWithOneBytePrecisionType: {
@@ -1720,7 +1783,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private KaitaiStruct _tagData;
                     private Icc4 m_root;
@@ -1737,6 +1800,7 @@ namespace Kaitai
                         return new ParametricCurveType(new KaitaiStream(fileName));
                     }
 
+
                     public enum ParametricCurveTypeFunctions
                     {
                         YEqualsXToPowerOfG = 0,
@@ -1745,14 +1809,14 @@ namespace Kaitai
                         Iec6196621 = 3,
                         YEqualsObAxPlusBCbToPowerOfGPlusC = 4,
                     }
-
-                    public ParametricCurveType(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public ParametricCurveType(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _functionType = ((ParametricCurveTypeFunctions) m_io.ReadU2be());
                         _reserved2 = m_io.EnsureFixedContents(new byte[] { 0, 0 });
@@ -1778,7 +1842,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     public partial class ParamsIec619663 : KaitaiStruct
                     {
                         public static ParamsIec619663 FromFile(string fileName)
@@ -1786,18 +1850,19 @@ namespace Kaitai
                             return new ParamsIec619663(new KaitaiStream(fileName));
                         }
 
-                        public ParamsIec619663(KaitaiStream io, Icc4.TagTable.TagDefinition.ParametricCurveType parent = null, Icc4 root = null) : base(io)
+                        public ParamsIec619663(KaitaiStream p__io, Icc4.TagTable.TagDefinition.ParametricCurveType p__parent = null, Icc4 p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _g = m_io.ReadS4be();
                             _a = m_io.ReadS4be();
                             _b = m_io.ReadS4be();
                             _c = m_io.ReadS4be();
-                            }
+                        }
                         private int _g;
                         private int _a;
                         private int _b;
@@ -1818,19 +1883,20 @@ namespace Kaitai
                             return new ParamsIec6196621(new KaitaiStream(fileName));
                         }
 
-                        public ParamsIec6196621(KaitaiStream io, Icc4.TagTable.TagDefinition.ParametricCurveType parent = null, Icc4 root = null) : base(io)
+                        public ParamsIec6196621(KaitaiStream p__io, Icc4.TagTable.TagDefinition.ParametricCurveType p__parent = null, Icc4 p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _g = m_io.ReadS4be();
                             _a = m_io.ReadS4be();
                             _b = m_io.ReadS4be();
                             _c = m_io.ReadS4be();
                             _d = m_io.ReadS4be();
-                            }
+                        }
                         private int _g;
                         private int _a;
                         private int _b;
@@ -1853,15 +1919,16 @@ namespace Kaitai
                             return new ParamsYEqualsXToPowerOfG(new KaitaiStream(fileName));
                         }
 
-                        public ParamsYEqualsXToPowerOfG(KaitaiStream io, Icc4.TagTable.TagDefinition.ParametricCurveType parent = null, Icc4 root = null) : base(io)
+                        public ParamsYEqualsXToPowerOfG(KaitaiStream p__io, Icc4.TagTable.TagDefinition.ParametricCurveType p__parent = null, Icc4 p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _g = m_io.ReadS4be();
-                            }
+                        }
                         private int _g;
                         private Icc4 m_root;
                         private Icc4.TagTable.TagDefinition.ParametricCurveType m_parent;
@@ -1876,13 +1943,14 @@ namespace Kaitai
                             return new ParamsYEqualsObAxPlusBCbToPowerOfGPlusC(new KaitaiStream(fileName));
                         }
 
-                        public ParamsYEqualsObAxPlusBCbToPowerOfGPlusC(KaitaiStream io, Icc4.TagTable.TagDefinition.ParametricCurveType parent = null, Icc4 root = null) : base(io)
+                        public ParamsYEqualsObAxPlusBCbToPowerOfGPlusC(KaitaiStream p__io, Icc4.TagTable.TagDefinition.ParametricCurveType p__parent = null, Icc4 p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _g = m_io.ReadS4be();
                             _a = m_io.ReadS4be();
                             _b = m_io.ReadS4be();
@@ -1890,7 +1958,7 @@ namespace Kaitai
                             _d = m_io.ReadS4be();
                             _e = m_io.ReadS4be();
                             _f = m_io.ReadS4be();
-                            }
+                        }
                         private int _g;
                         private int _a;
                         private int _b;
@@ -1917,17 +1985,18 @@ namespace Kaitai
                             return new ParamsCie1221996(new KaitaiStream(fileName));
                         }
 
-                        public ParamsCie1221996(KaitaiStream io, Icc4.TagTable.TagDefinition.ParametricCurveType parent = null, Icc4 root = null) : base(io)
+                        public ParamsCie1221996(KaitaiStream p__io, Icc4.TagTable.TagDefinition.ParametricCurveType p__parent = null, Icc4 p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _g = m_io.ReadS4be();
                             _a = m_io.ReadS4be();
                             _b = m_io.ReadS4be();
-                            }
+                        }
                         private int _g;
                         private int _a;
                         private int _b;
@@ -1959,13 +2028,14 @@ namespace Kaitai
                         return new ChromaticityTag(new KaitaiStream(fileName));
                     }
 
-                    public ChromaticityTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public ChromaticityTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.ChromaticityType: {
@@ -1973,7 +2043,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private ChromaticityType _tagData;
                     private Icc4 m_root;
@@ -1990,13 +2060,14 @@ namespace Kaitai
                         return new ChromaticAdaptationTag(new KaitaiStream(fileName));
                     }
 
-                    public ChromaticAdaptationTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public ChromaticAdaptationTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.S15Fixed16ArrayType: {
@@ -2004,7 +2075,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private S15Fixed16ArrayType _tagData;
                     private Icc4 m_root;
@@ -2020,6 +2091,7 @@ namespace Kaitai
                     {
                         return new MeasurementType(new KaitaiStream(fileName));
                     }
+
 
                     public enum StandardObserverEncodings
                     {
@@ -2040,21 +2112,21 @@ namespace Kaitai
                         ZeroPercent = 0,
                         OneHundredPercent = 65536,
                     }
-
-                    public MeasurementType(KaitaiStream io, Icc4.TagTable.TagDefinition.MeasurementTag parent = null, Icc4 root = null) : base(io)
+                    public MeasurementType(KaitaiStream p__io, Icc4.TagTable.TagDefinition.MeasurementTag p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _standardObserverEncoding = ((StandardObserverEncodings) m_io.ReadU4be());
                         _nciexyzTristimulusValuesForMeasurementBacking = new XyzNumber(m_io, this, m_root);
                         _measurementGeometryEncoding = ((MeasurementGeometryEncodings) m_io.ReadU4be());
                         _measurementFlareEncoding = ((MeasurementFlareEncodings) m_io.ReadU4be());
                         _standardIlluminantEncoding = new StandardIlluminantEncoding(m_io, this, m_root);
-                        }
+                    }
                     private byte[] _reserved;
                     private StandardObserverEncodings _standardObserverEncoding;
                     private XyzNumber _nciexyzTristimulusValuesForMeasurementBacking;
@@ -2079,16 +2151,17 @@ namespace Kaitai
                         return new TextType(new KaitaiStream(fileName));
                     }
 
-                    public TextType(KaitaiStream io, Icc4.TagTable.TagDefinition.CharTargetTag parent = null, Icc4 root = null) : base(io)
+                    public TextType(KaitaiStream p__io, Icc4.TagTable.TagDefinition.CharTargetTag p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _value = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytesFull(), 0, false));
-                        }
+                    }
                     private byte[] _reserved;
                     private string _value;
                     private Icc4 m_root;
@@ -2105,24 +2178,27 @@ namespace Kaitai
                         return new ProfileSequenceIdentifierType(new KaitaiStream(fileName));
                     }
 
-                    public ProfileSequenceIdentifierType(KaitaiStream io, Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierTag parent = null, Icc4 root = null) : base(io)
+                    public ProfileSequenceIdentifierType(KaitaiStream p__io, Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierTag p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _numberOfStructures = m_io.ReadU4be();
                         _positionsTable = new List<PositionNumber>((int) (NumberOfStructures));
-                        for (var i = 0; i < NumberOfStructures; i++) {
+                        for (var i = 0; i < NumberOfStructures; i++)
+                        {
                             _positionsTable.Add(new PositionNumber(m_io, this, m_root));
                         }
                         _profileIdentifiers = new List<ProfileIdentifier>((int) (NumberOfStructures));
-                        for (var i = 0; i < NumberOfStructures; i++) {
+                        for (var i = 0; i < NumberOfStructures; i++)
+                        {
                             _profileIdentifiers.Add(new ProfileIdentifier(m_io, this, m_root));
                         }
-                        }
+                    }
                     public partial class ProfileIdentifier : KaitaiStruct
                     {
                         public static ProfileIdentifier FromFile(string fileName)
@@ -2130,16 +2206,17 @@ namespace Kaitai
                             return new ProfileIdentifier(new KaitaiStream(fileName));
                         }
 
-                        public ProfileIdentifier(KaitaiStream io, Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierType parent = null, Icc4 root = null) : base(io)
+                        public ProfileIdentifier(KaitaiStream p__io, Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierType p__parent = null, Icc4 p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _profileId = m_io.ReadBytes(16);
                             _profileDescription = new MultiLocalizedUnicodeType(m_io, this, m_root);
-                            }
+                        }
                         private byte[] _profileId;
                         private MultiLocalizedUnicodeType _profileDescription;
                         private Icc4 m_root;
@@ -2169,20 +2246,22 @@ namespace Kaitai
                         return new ColorantTableType(new KaitaiStream(fileName));
                     }
 
-                    public ColorantTableType(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public ColorantTableType(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _countOfColorants = m_io.ReadU4be();
                         _colorants = new List<Colorant>((int) (CountOfColorants));
-                        for (var i = 0; i < CountOfColorants; i++) {
+                        for (var i = 0; i < CountOfColorants; i++)
+                        {
                             _colorants.Add(new Colorant(m_io, this, m_root));
                         }
-                        }
+                    }
                     public partial class Colorant : KaitaiStruct
                     {
                         public static Colorant FromFile(string fileName)
@@ -2190,20 +2269,22 @@ namespace Kaitai
                             return new Colorant(new KaitaiStream(fileName));
                         }
 
-                        public Colorant(KaitaiStream io, Icc4.TagTable.TagDefinition.ColorantTableType parent = null, Icc4 root = null) : base(io)
+                        public Colorant(KaitaiStream p__io, Icc4.TagTable.TagDefinition.ColorantTableType p__parent = null, Icc4 p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _name = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true));
                             _padding = new List<byte[]>((int) ((32 - Name.Length)));
-                            for (var i = 0; i < (32 - Name.Length); i++) {
+                            for (var i = 0; i < (32 - Name.Length); i++)
+                            {
                                 _padding = m_io.EnsureFixedContents(new byte[] { 0 });
                             }
                             _pcsValues = m_io.ReadBytes(6);
-                            }
+                        }
                         private string _name;
                         private List<byte[]> _padding;
                         private byte[] _pcsValues;
@@ -2233,16 +2314,17 @@ namespace Kaitai
                         return new SignatureType(new KaitaiStream(fileName));
                     }
 
-                    public SignatureType(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public SignatureType(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _signature = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(4));
-                        }
+                    }
                     private byte[] _reserved;
                     private string _signature;
                     private Icc4 m_root;
@@ -2259,13 +2341,14 @@ namespace Kaitai
                         return new CopyrightTag(new KaitaiStream(fileName));
                     }
 
-                    public CopyrightTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public CopyrightTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiLocalizedUnicodeType: {
@@ -2273,7 +2356,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private MultiLocalizedUnicodeType _tagData;
                     private Icc4 m_root;
@@ -2290,13 +2373,14 @@ namespace Kaitai
                         return new Preview0Tag(new KaitaiStream(fileName));
                     }
 
-                    public Preview0Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public Preview0Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiFunctionTableWithOneBytePrecisionType: {
@@ -2316,7 +2400,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private KaitaiStruct _tagData;
                     private Icc4 m_root;
@@ -2333,16 +2417,17 @@ namespace Kaitai
                         return new DateTimeType(new KaitaiStream(fileName));
                     }
 
-                    public DateTimeType(KaitaiStream io, Icc4.TagTable.TagDefinition.CalibrationDateTimeTag parent = null, Icc4 root = null) : base(io)
+                    public DateTimeType(KaitaiStream p__io, Icc4.TagTable.TagDefinition.CalibrationDateTimeTag p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _dateAndTime = new DateTimeNumber(m_io, this, m_root);
-                        }
+                    }
                     private byte[] _reserved;
                     private DateTimeNumber _dateAndTime;
                     private Icc4 m_root;
@@ -2359,13 +2444,14 @@ namespace Kaitai
                         return new DToB3Tag(new KaitaiStream(fileName));
                     }
 
-                    public DToB3Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public DToB3Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiProcessElementsType: {
@@ -2373,7 +2459,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private MultiProcessElementsType _tagData;
                     private Icc4 m_root;
@@ -2390,13 +2476,14 @@ namespace Kaitai
                         return new Preview2Tag(new KaitaiStream(fileName));
                     }
 
-                    public Preview2Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public Preview2Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiFunctionTableWithOneBytePrecisionType: {
@@ -2412,7 +2499,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private KaitaiStruct _tagData;
                     private Icc4 m_root;
@@ -2429,13 +2516,14 @@ namespace Kaitai
                         return new DeviceModelDescTag(new KaitaiStream(fileName));
                     }
 
-                    public DeviceModelDescTag(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public DeviceModelDescTag(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiLocalizedUnicodeType: {
@@ -2443,7 +2531,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private MultiLocalizedUnicodeType _tagData;
                     private Icc4 m_root;
@@ -2460,23 +2548,25 @@ namespace Kaitai
                         return new MultiProcessElementsType(new KaitaiStream(fileName));
                     }
 
-                    public MultiProcessElementsType(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public MultiProcessElementsType(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _numberOfInputChannels = m_io.ReadU2be();
                         _numberOfOutputChannels = m_io.ReadU2be();
                         _numberOfProcessingElements = m_io.ReadU4be();
                         _processElementPositionsTable = new List<PositionNumber>((int) (NumberOfProcessingElements));
-                        for (var i = 0; i < NumberOfProcessingElements; i++) {
+                        for (var i = 0; i < NumberOfProcessingElements; i++)
+                        {
                             _processElementPositionsTable.Add(new PositionNumber(m_io, this, m_root));
                         }
                         _data = m_io.ReadBytesFull();
-                        }
+                    }
                     private byte[] _reserved;
                     private ushort _numberOfInputChannels;
                     private ushort _numberOfOutputChannels;
@@ -2501,19 +2591,24 @@ namespace Kaitai
                         return new UInt16ArrayType(new KaitaiStream(fileName));
                     }
 
-                    public UInt16ArrayType(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public UInt16ArrayType(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _values = new List<ushort>();
-                        while (!m_io.IsEof) {
-                            _values.Add(m_io.ReadU2be());
+                        {
+                            var i = 0;
+                            while (!m_io.IsEof) {
+                                _values.Add(m_io.ReadU2be());
+                                i++;
+                            }
                         }
-                        }
+                    }
                     private byte[] _reserved;
                     private List<ushort> _values;
                     private Icc4 m_root;
@@ -2530,13 +2625,14 @@ namespace Kaitai
                         return new ColorantOrderTag(new KaitaiStream(fileName));
                     }
 
-                    public ColorantOrderTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public ColorantOrderTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.ColorantOrderType: {
@@ -2544,7 +2640,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private ColorantOrderType _tagData;
                     private Icc4 m_root;
@@ -2561,21 +2657,22 @@ namespace Kaitai
                         return new DataType(new KaitaiStream(fileName));
                     }
 
+
                     public enum DataTypes
                     {
                         AsciiData = 0,
                         BinaryData = 1,
                     }
-
-                    public DataType(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public DataType(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _dataFlag = ((DataTypes) m_io.ReadU4be());
-                        }
+                    }
                     private DataTypes _dataFlag;
                     private Icc4 m_root;
                     private KaitaiStruct m_parent;
@@ -2590,6 +2687,7 @@ namespace Kaitai
                         return new ChromaticityType(new KaitaiStream(fileName));
                     }
 
+
                     public enum ColorantAndPhosphorEncodings
                     {
                         Unknown = 0,
@@ -2598,22 +2696,23 @@ namespace Kaitai
                         EbuTech3213E = 3,
                         P22 = 4,
                     }
-
-                    public ChromaticityType(KaitaiStream io, Icc4.TagTable.TagDefinition.ChromaticityTag parent = null, Icc4 root = null) : base(io)
+                    public ChromaticityType(KaitaiStream p__io, Icc4.TagTable.TagDefinition.ChromaticityTag p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _numberOfDeviceChannels = m_io.ReadU2be();
                         _colorantAndPhosphorEncoding = ((ColorantAndPhosphorEncodings) m_io.ReadU2be());
                         _ciexyCoordinatesPerChannel = new List<CiexyCoordinateValues>((int) (NumberOfDeviceChannels));
-                        for (var i = 0; i < NumberOfDeviceChannels; i++) {
+                        for (var i = 0; i < NumberOfDeviceChannels; i++)
+                        {
                             _ciexyCoordinatesPerChannel.Add(new CiexyCoordinateValues(m_io, this, m_root));
                         }
-                        }
+                    }
                     public partial class CiexyCoordinateValues : KaitaiStruct
                     {
                         public static CiexyCoordinateValues FromFile(string fileName)
@@ -2621,16 +2720,17 @@ namespace Kaitai
                             return new CiexyCoordinateValues(new KaitaiStream(fileName));
                         }
 
-                        public CiexyCoordinateValues(KaitaiStream io, Icc4.TagTable.TagDefinition.ChromaticityType parent = null, Icc4 root = null) : base(io)
+                        public CiexyCoordinateValues(KaitaiStream p__io, Icc4.TagTable.TagDefinition.ChromaticityType p__parent = null, Icc4 p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _xCoordinate = m_io.ReadU2be();
                             _yCoordinate = m_io.ReadU2be();
-                            }
+                        }
                         private ushort _xCoordinate;
                         private ushort _yCoordinate;
                         private Icc4 m_root;
@@ -2660,13 +2760,14 @@ namespace Kaitai
                         return new LuminanceTag(new KaitaiStream(fileName));
                     }
 
-                    public LuminanceTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public LuminanceTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.XyzType: {
@@ -2674,7 +2775,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private XyzType _tagData;
                     private Icc4 m_root;
@@ -2691,19 +2792,24 @@ namespace Kaitai
                         return new S15Fixed16ArrayType(new KaitaiStream(fileName));
                     }
 
-                    public S15Fixed16ArrayType(KaitaiStream io, Icc4.TagTable.TagDefinition.ChromaticAdaptationTag parent = null, Icc4 root = null) : base(io)
+                    public S15Fixed16ArrayType(KaitaiStream p__io, Icc4.TagTable.TagDefinition.ChromaticAdaptationTag p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _values = new List<S15Fixed16Number>();
-                        while (!m_io.IsEof) {
-                            _values.Add(new S15Fixed16Number(m_io, this, m_root));
+                        {
+                            var i = 0;
+                            while (!m_io.IsEof) {
+                                _values.Add(new S15Fixed16Number(m_io, this, m_root));
+                                i++;
+                            }
                         }
-                        }
+                    }
                     private byte[] _reserved;
                     private List<S15Fixed16Number> _values;
                     private Icc4 m_root;
@@ -2720,21 +2826,23 @@ namespace Kaitai
                         return new MultiLocalizedUnicodeType(new KaitaiStream(fileName));
                     }
 
-                    public MultiLocalizedUnicodeType(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public MultiLocalizedUnicodeType(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _numberOfRecords = m_io.ReadU4be();
                         _recordSize = m_io.ReadU4be();
                         _records = new List<Record>((int) (NumberOfRecords));
-                        for (var i = 0; i < NumberOfRecords; i++) {
+                        for (var i = 0; i < NumberOfRecords; i++)
+                        {
                             _records.Add(new Record(m_io, this, m_root));
                         }
-                        }
+                    }
                     public partial class Record : KaitaiStruct
                     {
                         public static Record FromFile(string fileName)
@@ -2742,19 +2850,20 @@ namespace Kaitai
                             return new Record(new KaitaiStream(fileName));
                         }
 
-                        public Record(KaitaiStream io, Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType parent = null, Icc4 root = null) : base(io)
+                        public Record(KaitaiStream p__io, Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType p__parent = null, Icc4 p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             f_stringData = false;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _languageCode = m_io.ReadU2be();
                             _countryCode = m_io.ReadU2be();
                             _stringLength = m_io.ReadU4be();
                             _stringOffset = m_io.ReadU4be();
-                            }
+                        }
                         private bool f_stringData;
                         private string _stringData;
                         public string StringData
@@ -2804,13 +2913,14 @@ namespace Kaitai
                         return new AToB2Tag(new KaitaiStream(fileName));
                     }
 
-                    public AToB2Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public AToB2Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiFunctionTableWithOneBytePrecisionType: {
@@ -2826,7 +2936,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private KaitaiStruct _tagData;
                     private Icc4 m_root;
@@ -2843,13 +2953,14 @@ namespace Kaitai
                         return new AToB1Tag(new KaitaiStream(fileName));
                     }
 
-                    public AToB1Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public AToB1Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiFunctionTableWithOneBytePrecisionType: {
@@ -2865,7 +2976,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private KaitaiStruct _tagData;
                     private Icc4 m_root;
@@ -2882,13 +2993,14 @@ namespace Kaitai
                         return new ColorimetricIntentImageStateTag(new KaitaiStream(fileName));
                     }
 
-                    public ColorimetricIntentImageStateTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public ColorimetricIntentImageStateTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.SignatureType: {
@@ -2896,7 +3008,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private SignatureType _tagData;
                     private Icc4 m_root;
@@ -2913,13 +3025,14 @@ namespace Kaitai
                         return new CharTargetTag(new KaitaiStream(fileName));
                     }
 
-                    public CharTargetTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public CharTargetTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.TextType: {
@@ -2927,7 +3040,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private TextType _tagData;
                     private Icc4 m_root;
@@ -2944,13 +3057,14 @@ namespace Kaitai
                         return new ColorantTableTag(new KaitaiStream(fileName));
                     }
 
-                    public ColorantTableTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public ColorantTableTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.ColorantTableType: {
@@ -2958,7 +3072,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private ColorantTableType _tagData;
                     private Icc4 m_root;
@@ -2975,13 +3089,14 @@ namespace Kaitai
                         return new CalibrationDateTimeTag(new KaitaiStream(fileName));
                     }
 
-                    public CalibrationDateTimeTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public CalibrationDateTimeTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.DateTimeType: {
@@ -2989,7 +3104,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private DateTimeType _tagData;
                     private Icc4 m_root;
@@ -3006,13 +3121,14 @@ namespace Kaitai
                         return new NamedColor2Tag(new KaitaiStream(fileName));
                     }
 
-                    public NamedColor2Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public NamedColor2Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.NamedColor2Type: {
@@ -3020,7 +3136,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private NamedColor2Type _tagData;
                     private Icc4 m_root;
@@ -3037,13 +3153,14 @@ namespace Kaitai
                         return new ViewingCondDescTag(new KaitaiStream(fileName));
                     }
 
-                    public ViewingCondDescTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public ViewingCondDescTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiLocalizedUnicodeType: {
@@ -3051,7 +3168,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private MultiLocalizedUnicodeType _tagData;
                     private Icc4 m_root;
@@ -3068,13 +3185,14 @@ namespace Kaitai
                         return new BToD3Tag(new KaitaiStream(fileName));
                     }
 
-                    public BToD3Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public BToD3Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiProcessElementsType: {
@@ -3082,7 +3200,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private MultiProcessElementsType _tagData;
                     private Icc4 m_root;
@@ -3099,20 +3217,22 @@ namespace Kaitai
                         return new ProfileSequenceDescType(new KaitaiStream(fileName));
                     }
 
-                    public ProfileSequenceDescType(KaitaiStream io, Icc4.TagTable.TagDefinition.ProfileSequenceTag parent = null, Icc4 root = null) : base(io)
+                    public ProfileSequenceDescType(KaitaiStream p__io, Icc4.TagTable.TagDefinition.ProfileSequenceTag p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _numberOfDescriptionStructures = m_io.ReadU4be();
                         _profileDescriptions = new List<ProfileDescription>((int) (NumberOfDescriptionStructures));
-                        for (var i = 0; i < NumberOfDescriptionStructures; i++) {
+                        for (var i = 0; i < NumberOfDescriptionStructures; i++)
+                        {
                             _profileDescriptions.Add(new ProfileDescription(m_io, this, m_root));
                         }
-                        }
+                    }
                     public partial class ProfileDescription : KaitaiStruct
                     {
                         public static ProfileDescription FromFile(string fileName)
@@ -3120,20 +3240,21 @@ namespace Kaitai
                             return new ProfileDescription(new KaitaiStream(fileName));
                         }
 
-                        public ProfileDescription(KaitaiStream io, Icc4.TagTable.TagDefinition.ProfileSequenceDescType parent = null, Icc4 root = null) : base(io)
+                        public ProfileDescription(KaitaiStream p__io, Icc4.TagTable.TagDefinition.ProfileSequenceDescType p__parent = null, Icc4 p__root = null) : base(p__io)
                         {
-                            m_parent = parent;
-                            m_root = root;
+                            m_parent = p__parent;
+                            m_root = p__root;
                             _read();
                         }
-                        private void _read() {
+                        private void _read()
+                        {
                             _deviceManufacturer = new DeviceManufacturer(m_io, this, m_root);
                             _deviceModel = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(4));
                             _deviceAttributes = new DeviceAttributes(m_io, this, m_root);
                             _deviceTechnology = new TechnologyTag(m_io, this, m_root);
                             _descriptionOfDeviceManufacturer = new DeviceMfgDescTag(m_io, this, m_root);
                             _descriptionOfDeviceModel = new DeviceModelDescTag(m_io, this, m_root);
-                            }
+                        }
                         private DeviceManufacturer _deviceManufacturer;
                         private string _deviceModel;
                         private DeviceAttributes _deviceAttributes;
@@ -3169,13 +3290,14 @@ namespace Kaitai
                         return new ProfileSequenceIdentifierTag(new KaitaiStream(fileName));
                     }
 
-                    public ProfileSequenceIdentifierTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public ProfileSequenceIdentifierTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.ProfileSequenceIdentifierType: {
@@ -3183,7 +3305,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private ProfileSequenceIdentifierType _tagData;
                     private Icc4 m_root;
@@ -3200,13 +3322,14 @@ namespace Kaitai
                         return new BToD1Tag(new KaitaiStream(fileName));
                     }
 
-                    public BToD1Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public BToD1Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiProcessElementsType: {
@@ -3214,7 +3337,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private MultiProcessElementsType _tagData;
                     private Icc4 m_root;
@@ -3231,20 +3354,22 @@ namespace Kaitai
                         return new ColorantOrderType(new KaitaiStream(fileName));
                     }
 
-                    public ColorantOrderType(KaitaiStream io, Icc4.TagTable.TagDefinition.ColorantOrderTag parent = null, Icc4 root = null) : base(io)
+                    public ColorantOrderType(KaitaiStream p__io, Icc4.TagTable.TagDefinition.ColorantOrderTag p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _countOfColorants = m_io.ReadU4be();
                         _numbersOfColorantsInOrderOfPrinting = new List<byte>((int) (CountOfColorants));
-                        for (var i = 0; i < CountOfColorants; i++) {
+                        for (var i = 0; i < CountOfColorants; i++)
+                        {
                             _numbersOfColorantsInOrderOfPrinting.Add(m_io.ReadU1());
                         }
-                        }
+                    }
                     private byte[] _reserved;
                     private uint _countOfColorants;
                     private List<byte> _numbersOfColorantsInOrderOfPrinting;
@@ -3263,13 +3388,14 @@ namespace Kaitai
                         return new DToB2Tag(new KaitaiStream(fileName));
                     }
 
-                    public DToB2Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public DToB2Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiProcessElementsType: {
@@ -3277,7 +3403,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private MultiProcessElementsType _tagData;
                     private Icc4 m_root;
@@ -3294,13 +3420,14 @@ namespace Kaitai
                         return new GrayTrcTag(new KaitaiStream(fileName));
                     }
 
-                    public GrayTrcTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public GrayTrcTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.CurveType: {
@@ -3312,7 +3439,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private KaitaiStruct _tagData;
                     private Icc4 m_root;
@@ -3329,18 +3456,19 @@ namespace Kaitai
                         return new ViewingConditionsType(new KaitaiStream(fileName));
                     }
 
-                    public ViewingConditionsType(KaitaiStream io, Icc4.TagTable.TagDefinition.ViewingConditionsTag parent = null, Icc4 root = null) : base(io)
+                    public ViewingConditionsType(KaitaiStream p__io, Icc4.TagTable.TagDefinition.ViewingConditionsTag p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _unNormalizedCiexyzValuesForIlluminant = new XyzNumber(m_io, this, m_root);
                         _unNormalizedCiexyzValuesForSurround = new XyzNumber(m_io, this, m_root);
                         _illuminantType = new StandardIlluminantEncoding(m_io, this, m_root);
-                        }
+                    }
                     private byte[] _reserved;
                     private XyzNumber _unNormalizedCiexyzValuesForIlluminant;
                     private XyzNumber _unNormalizedCiexyzValuesForSurround;
@@ -3361,13 +3489,14 @@ namespace Kaitai
                         return new LutBToAType(new KaitaiStream(fileName));
                     }
 
-                    public LutBToAType(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public LutBToAType(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _numberOfInputChannels = m_io.ReadU1();
                         _numberOfOutputChannels = m_io.ReadU1();
@@ -3378,7 +3507,7 @@ namespace Kaitai
                         _offsetToClut = m_io.ReadU4be();
                         _offsetToFirstACurve = m_io.ReadU4be();
                         _data = m_io.ReadBytesFull();
-                        }
+                    }
                     private byte[] _reserved;
                     private byte _numberOfInputChannels;
                     private byte _numberOfOutputChannels;
@@ -3411,13 +3540,14 @@ namespace Kaitai
                         return new GreenTrcTag(new KaitaiStream(fileName));
                     }
 
-                    public GreenTrcTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public GreenTrcTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.CurveType: {
@@ -3429,7 +3559,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private KaitaiStruct _tagData;
                     private Icc4 m_root;
@@ -3446,19 +3576,24 @@ namespace Kaitai
                         return new UInt32ArrayType(new KaitaiStream(fileName));
                     }
 
-                    public UInt32ArrayType(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public UInt32ArrayType(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _values = new List<uint>();
-                        while (!m_io.IsEof) {
-                            _values.Add(m_io.ReadU4be());
+                        {
+                            var i = 0;
+                            while (!m_io.IsEof) {
+                                _values.Add(m_io.ReadU4be());
+                                i++;
+                            }
                         }
-                        }
+                    }
                     private byte[] _reserved;
                     private List<uint> _values;
                     private Icc4 m_root;
@@ -3475,13 +3610,14 @@ namespace Kaitai
                         return new GamutTag(new KaitaiStream(fileName));
                     }
 
-                    public GamutTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public GamutTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiFunctionTableWithOneBytePrecisionType: {
@@ -3497,7 +3633,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private KaitaiStruct _tagData;
                     private Icc4 m_root;
@@ -3514,19 +3650,24 @@ namespace Kaitai
                         return new UInt8ArrayType(new KaitaiStream(fileName));
                     }
 
-                    public UInt8ArrayType(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public UInt8ArrayType(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _values = new List<byte>();
-                        while (!m_io.IsEof) {
-                            _values.Add(m_io.ReadU1());
+                        {
+                            var i = 0;
+                            while (!m_io.IsEof) {
+                                _values.Add(m_io.ReadU1());
+                                i++;
+                            }
                         }
-                        }
+                    }
                     private byte[] _reserved;
                     private List<byte> _values;
                     private Icc4 m_root;
@@ -3543,13 +3684,14 @@ namespace Kaitai
                         return new RedMatrixColumnTag(new KaitaiStream(fileName));
                     }
 
-                    public RedMatrixColumnTag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public RedMatrixColumnTag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.XyzType: {
@@ -3557,7 +3699,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private XyzType _tagData;
                     private Icc4 m_root;
@@ -3574,19 +3716,24 @@ namespace Kaitai
                         return new UInt64ArrayType(new KaitaiStream(fileName));
                     }
 
-                    public UInt64ArrayType(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+                    public UInt64ArrayType(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _reserved = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 0 });
                         _values = new List<ulong>();
-                        while (!m_io.IsEof) {
-                            _values.Add(m_io.ReadU8be());
+                        {
+                            var i = 0;
+                            while (!m_io.IsEof) {
+                                _values.Add(m_io.ReadU8be());
+                                i++;
+                            }
                         }
-                        }
+                    }
                     private byte[] _reserved;
                     private List<ulong> _values;
                     private Icc4 m_root;
@@ -3603,13 +3750,14 @@ namespace Kaitai
                         return new BToD2Tag(new KaitaiStream(fileName));
                     }
 
-                    public BToD2Tag(KaitaiStream io, Icc4.TagTable.TagDefinition parent = null, Icc4 root = null) : base(io)
+                    public BToD2Tag(KaitaiStream p__io, Icc4.TagTable.TagDefinition p__parent = null, Icc4 p__root = null) : base(p__io)
                     {
-                        m_parent = parent;
-                        m_root = root;
+                        m_parent = p__parent;
+                        m_root = p__root;
                         _read();
                     }
-                    private void _read() {
+                    private void _read()
+                    {
                         _tagType = ((Icc4.TagTable.TagDefinition.TagTypeSignatures) m_io.ReadU4be());
                         switch (TagType) {
                         case Icc4.TagTable.TagDefinition.TagTypeSignatures.MultiProcessElementsType: {
@@ -3617,7 +3765,7 @@ namespace Kaitai
                             break;
                         }
                         }
-                        }
+                    }
                     private TagTypeSignatures _tagType;
                     private MultiProcessElementsType _tagData;
                     private Icc4 m_root;
@@ -3971,6 +4119,7 @@ namespace Kaitai
                 return new DeviceAttributes(new KaitaiStream(fileName));
             }
 
+
             public enum DeviceAttributesReflectiveOrTransparency
             {
                 Reflective = 0,
@@ -3994,21 +4143,21 @@ namespace Kaitai
                 ColourMedia = 0,
                 BlackAndWhiteMedia = 1,
             }
-
-            public DeviceAttributes(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+            public DeviceAttributes(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _reflectiveOrTransparency = ((DeviceAttributesReflectiveOrTransparency) m_io.ReadBitsInt(1));
                 _glossyOrMatte = ((DeviceAttributesGlossyOrMatte) m_io.ReadBitsInt(1));
                 _positiveOrNegativeMediaPolarity = ((DeviceAttributesPositiveOrNegativeMediaPolarity) m_io.ReadBitsInt(1));
                 _colourOrBlackAndWhiteMedia = ((DeviceAttributesColourOrBlackAndWhiteMedia) m_io.ReadBitsInt(1));
                 _reserved = m_io.ReadBitsInt(28);
                 _vendorSpecific = m_io.ReadBitsInt(32);
-                }
+            }
             private DeviceAttributesReflectiveOrTransparency _reflectiveOrTransparency;
             private DeviceAttributesGlossyOrMatte _glossyOrMatte;
             private DeviceAttributesPositiveOrNegativeMediaPolarity _positiveOrNegativeMediaPolarity;
@@ -4032,6 +4181,7 @@ namespace Kaitai
             {
                 return new DeviceManufacturer(new KaitaiStream(fileName));
             }
+
 
             public enum DeviceManufacturers
             {
@@ -4299,16 +4449,16 @@ namespace Kaitai
                 SiwiGrafikaCorporation = 1936291689,
                 YxymasterGmbh = 2037938541,
             }
-
-            public DeviceManufacturer(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+            public DeviceManufacturer(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _deviceManufacturer = ((DeviceManufacturers) m_io.ReadU4be());
-                }
+            }
             private DeviceManufacturers _deviceManufacturer;
             private Icc4 m_root;
             private KaitaiStruct m_parent;
@@ -4323,15 +4473,16 @@ namespace Kaitai
                 return new S15Fixed16Number(new KaitaiStream(fileName));
             }
 
-            public S15Fixed16Number(KaitaiStream io, Icc4.TagTable.TagDefinition.S15Fixed16ArrayType parent = null, Icc4 root = null) : base(io)
+            public S15Fixed16Number(KaitaiStream p__io, Icc4.TagTable.TagDefinition.S15Fixed16ArrayType p__parent = null, Icc4 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _number = m_io.ReadBytes(4);
-                }
+            }
             private byte[] _number;
             private Icc4 m_root;
             private Icc4.TagTable.TagDefinition.S15Fixed16ArrayType m_parent;
@@ -4346,16 +4497,17 @@ namespace Kaitai
                 return new PositionNumber(new KaitaiStream(fileName));
             }
 
-            public PositionNumber(KaitaiStream io, KaitaiStruct parent = null, Icc4 root = null) : base(io)
+            public PositionNumber(KaitaiStream p__io, KaitaiStruct p__parent = null, Icc4 p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 _offsetToDataElement = m_io.ReadU4be();
                 _sizeOfDataElement = m_io.ReadU4be();
-                }
+            }
             private uint _offsetToDataElement;
             private uint _sizeOfDataElement;
             private Icc4 m_root;

@@ -17,8 +17,10 @@ class CpioOldLe(KaitaiStruct):
 
     def _read(self):
         self.files = []
+        i = 0
         while not self._io.is_eof():
             self.files.append(self._root.File(self._io, self, self._root))
+            i += 1
 
 
     class File(KaitaiStruct):

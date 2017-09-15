@@ -733,8 +733,10 @@ var RenderwareBinaryStream = (function() {
         break;
       }
       this.entries = [];
+      var i = 0;
       while (!this._io.isEof()) {
-        this.entries.push(new RenderwareBinaryStream(this._io));
+        this.entries.push(new RenderwareBinaryStream(this._io, this, null));
+        i++;
       }
     }
 

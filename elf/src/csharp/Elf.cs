@@ -12,6 +12,7 @@ namespace Kaitai
             return new Elf(new KaitaiStream(fileName));
         }
 
+
         public enum Endian
         {
             Le = 1,
@@ -121,14 +122,14 @@ namespace Kaitai
             Shared = 3,
             Core = 4,
         }
-
-        public Elf(KaitaiStream io, KaitaiStruct parent = null, Elf root = null) : base(io)
+        public Elf(KaitaiStream p__io, KaitaiStruct p__parent = null, Elf p__root = null) : base(p__io)
         {
-            m_parent = parent;
-            m_root = root ?? this;
+            m_parent = p__parent;
+            m_root = p__root ?? this;
             _read();
         }
-        private void _read() {
+        private void _read()
+        {
             _magic = m_io.EnsureFixedContents(new byte[] { 127, 69, 76, 70 });
             _bits = ((Bits) m_io.ReadU1());
             _endian = ((Endian) m_io.ReadU1());
@@ -137,25 +138,26 @@ namespace Kaitai
             _abiVersion = m_io.ReadU1();
             _pad = m_io.ReadBytes(7);
             _header = new EndianElf(m_io, this, m_root);
-            }
+        }
         public partial class EndianElf : KaitaiStruct
         {
             public static EndianElf FromFile(string fileName)
             {
                 return new EndianElf(new KaitaiStream(fileName));
             }
-            private bool? m_isLe;
 
-            public EndianElf(KaitaiStream io, Elf parent = null, Elf root = null) : base(io)
+            private bool? m_isLe;
+            public EndianElf(KaitaiStream p__io, Elf p__parent = null, Elf p__root = null) : base(p__io)
             {
-                m_parent = parent;
-                m_root = root;
+                m_parent = p__parent;
+                m_root = p__root;
                 f_programHeaders = false;
                 f_sectionHeaders = false;
                 f_strings = false;
                 _read();
             }
-            private void _read() {
+            private void _read()
+            {
                 switch (M_Root.Endian) {
                 case Elf.Endian.Le: {
                     m_isLe = (bool) (true);
@@ -174,8 +176,9 @@ namespace Kaitai
                 } else {
                     _readBE();
                 }
-                }
-            private void _readLE() {
+            }
+            private void _readLE()
+            {
                 _eType = ((Elf.ObjType) m_io.ReadU2le());
                 _machine = ((Elf.Machine) m_io.ReadU2le());
                 _eVersion = m_io.ReadU4le();
@@ -216,8 +219,9 @@ namespace Kaitai
                 _sectionHeaderEntrySize = m_io.ReadU2le();
                 _qtySectionHeader = m_io.ReadU2le();
                 _sectionNamesIdx = m_io.ReadU2le();
-                }
-            private void _readBE() {
+            }
+            private void _readBE()
+            {
                 _eType = ((Elf.ObjType) m_io.ReadU2be());
                 _machine = ((Elf.Machine) m_io.ReadU2be());
                 _eVersion = m_io.ReadU4be();
@@ -258,23 +262,24 @@ namespace Kaitai
                 _sectionHeaderEntrySize = m_io.ReadU2be();
                 _qtySectionHeader = m_io.ReadU2be();
                 _sectionNamesIdx = m_io.ReadU2be();
-                }
+            }
             public partial class ProgramHeader : KaitaiStruct
             {
                 public static ProgramHeader FromFile(string fileName)
                 {
                     return new ProgramHeader(new KaitaiStream(fileName));
                 }
-                private bool? m_isLe;
 
-                public ProgramHeader(KaitaiStream io, Elf.EndianElf parent = null, Elf root = null, bool? isLe = null) : base(io)
+                private bool? m_isLe;
+                public ProgramHeader(KaitaiStream p__io, Elf.EndianElf p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     m_isLe = isLe;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
 
                     if (m_isLe == null) {
                         throw new Exception("Unable to decide on endianness");
@@ -283,8 +288,9 @@ namespace Kaitai
                     } else {
                         _readBE();
                     }
-                    }
-                private void _readLE() {
+                }
+                private void _readLE()
+                {
                     _type = ((Elf.PhType) m_io.ReadU4le());
                     if (M_Root.Bits == Elf.Bits.B64) {
                         _flags64 = m_io.ReadU4le();
@@ -352,8 +358,9 @@ namespace Kaitai
                         break;
                     }
                     }
-                    }
-                private void _readBE() {
+                }
+                private void _readBE()
+                {
                     _type = ((Elf.PhType) m_io.ReadU4be());
                     if (M_Root.Bits == Elf.Bits.B64) {
                         _flags64 = m_io.ReadU4be();
@@ -421,26 +428,26 @@ namespace Kaitai
                         break;
                     }
                     }
-                    }
+                }
                 private PhType _type;
-                private uint _flags64;
+                private uint? _flags64;
                 private ulong _offset;
                 private ulong _vaddr;
                 private ulong _paddr;
                 private ulong _filesz;
                 private ulong _memsz;
-                private uint _flags32;
+                private uint? _flags32;
                 private ulong _align;
                 private Elf m_root;
                 private Elf.EndianElf m_parent;
                 public PhType Type { get { return _type; } }
-                public uint Flags64 { get { return _flags64; } }
+                public uint? Flags64 { get { return _flags64; } }
                 public ulong Offset { get { return _offset; } }
                 public ulong Vaddr { get { return _vaddr; } }
                 public ulong Paddr { get { return _paddr; } }
                 public ulong Filesz { get { return _filesz; } }
                 public ulong Memsz { get { return _memsz; } }
-                public uint Flags32 { get { return _flags32; } }
+                public uint? Flags32 { get { return _flags32; } }
                 public ulong Align { get { return _align; } }
                 public Elf M_Root { get { return m_root; } }
                 public Elf.EndianElf M_Parent { get { return m_parent; } }
@@ -451,18 +458,19 @@ namespace Kaitai
                 {
                     return new SectionHeader(new KaitaiStream(fileName));
                 }
-                private bool? m_isLe;
 
-                public SectionHeader(KaitaiStream io, Elf.EndianElf parent = null, Elf root = null, bool? isLe = null) : base(io)
+                private bool? m_isLe;
+                public SectionHeader(KaitaiStream p__io, Elf.EndianElf p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     m_isLe = isLe;
                     f_body = false;
                     f_name = false;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
 
                     if (m_isLe == null) {
                         throw new Exception("Unable to decide on endianness");
@@ -471,8 +479,9 @@ namespace Kaitai
                     } else {
                         _readBE();
                     }
-                    }
-                private void _readLE() {
+                }
+                private void _readLE()
+                {
                     _nameOffset = m_io.ReadU4le();
                     _type = ((Elf.ShType) m_io.ReadU4le());
                     switch (M_Root.Bits) {
@@ -537,8 +546,9 @@ namespace Kaitai
                         break;
                     }
                     }
-                    }
-                private void _readBE() {
+                }
+                private void _readBE()
+                {
                     _nameOffset = m_io.ReadU4be();
                     _type = ((Elf.ShType) m_io.ReadU4be());
                     switch (M_Root.Bits) {
@@ -603,7 +613,7 @@ namespace Kaitai
                         break;
                     }
                     }
-                    }
+                }
                 private bool f_body;
                 private byte[] _body;
                 public byte[] Body
@@ -677,16 +687,17 @@ namespace Kaitai
                 {
                     return new StringsStruct(new KaitaiStream(fileName));
                 }
-                private bool? m_isLe;
 
-                public StringsStruct(KaitaiStream io, Elf.EndianElf parent = null, Elf root = null, bool? isLe = null) : base(io)
+                private bool? m_isLe;
+                public StringsStruct(KaitaiStream p__io, Elf.EndianElf p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
                 {
-                    m_parent = parent;
-                    m_root = root;
+                    m_parent = p__parent;
+                    m_root = p__root;
                     m_isLe = isLe;
                     _read();
                 }
-                private void _read() {
+                private void _read()
+                {
 
                     if (m_isLe == null) {
                         throw new Exception("Unable to decide on endianness");
@@ -695,19 +706,29 @@ namespace Kaitai
                     } else {
                         _readBE();
                     }
-                    }
-                private void _readLE() {
+                }
+                private void _readLE()
+                {
                     _entries = new List<string>();
-                    while (!m_io.IsEof) {
-                        _entries.Add(System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _entries.Add(System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                            i++;
+                        }
                     }
-                    }
-                private void _readBE() {
+                }
+                private void _readBE()
+                {
                     _entries = new List<string>();
-                    while (!m_io.IsEof) {
-                        _entries.Add(System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _entries.Add(System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                            i++;
+                        }
                     }
-                    }
+                }
                 private List<string> _entries;
                 private Elf m_root;
                 private Elf.EndianElf m_parent;
@@ -728,7 +749,8 @@ namespace Kaitai
                     if (m_isLe == true) {
                         __raw_programHeaders = new List<byte[]>((int) (QtyProgramHeader));
                         _programHeaders = new List<ProgramHeader>((int) (QtyProgramHeader));
-                        for (var i = 0; i < QtyProgramHeader; i++) {
+                        for (var i = 0; i < QtyProgramHeader; i++)
+                        {
                             __raw_programHeaders.Add(m_io.ReadBytes(ProgramHeaderEntrySize));
                             var io___raw_programHeaders = new KaitaiStream(__raw_programHeaders[__raw_programHeaders.Count - 1]);
                             _programHeaders.Add(new ProgramHeader(io___raw_programHeaders, this, m_root, m_isLe));
@@ -736,7 +758,8 @@ namespace Kaitai
                     } else {
                         __raw_programHeaders = new List<byte[]>((int) (QtyProgramHeader));
                         _programHeaders = new List<ProgramHeader>((int) (QtyProgramHeader));
-                        for (var i = 0; i < QtyProgramHeader; i++) {
+                        for (var i = 0; i < QtyProgramHeader; i++)
+                        {
                             __raw_programHeaders.Add(m_io.ReadBytes(ProgramHeaderEntrySize));
                             var io___raw_programHeaders = new KaitaiStream(__raw_programHeaders[__raw_programHeaders.Count - 1]);
                             _programHeaders.Add(new ProgramHeader(io___raw_programHeaders, this, m_root, m_isLe));
@@ -760,7 +783,8 @@ namespace Kaitai
                     if (m_isLe == true) {
                         __raw_sectionHeaders = new List<byte[]>((int) (QtySectionHeader));
                         _sectionHeaders = new List<SectionHeader>((int) (QtySectionHeader));
-                        for (var i = 0; i < QtySectionHeader; i++) {
+                        for (var i = 0; i < QtySectionHeader; i++)
+                        {
                             __raw_sectionHeaders.Add(m_io.ReadBytes(SectionHeaderEntrySize));
                             var io___raw_sectionHeaders = new KaitaiStream(__raw_sectionHeaders[__raw_sectionHeaders.Count - 1]);
                             _sectionHeaders.Add(new SectionHeader(io___raw_sectionHeaders, this, m_root, m_isLe));
@@ -768,7 +792,8 @@ namespace Kaitai
                     } else {
                         __raw_sectionHeaders = new List<byte[]>((int) (QtySectionHeader));
                         _sectionHeaders = new List<SectionHeader>((int) (QtySectionHeader));
-                        for (var i = 0; i < QtySectionHeader; i++) {
+                        for (var i = 0; i < QtySectionHeader; i++)
+                        {
                             __raw_sectionHeaders.Add(m_io.ReadBytes(SectionHeaderEntrySize));
                             var io___raw_sectionHeaders = new KaitaiStream(__raw_sectionHeaders[__raw_sectionHeaders.Count - 1]);
                             _sectionHeaders.Add(new SectionHeader(io___raw_sectionHeaders, this, m_root, m_isLe));

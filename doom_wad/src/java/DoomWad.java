@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.util.HashMap;
 
 public class DoomWad extends KaitaiStruct {
     public static DoomWad fromFile(String fileName) throws IOException {
-        return new DoomWad(new KaitaiStream(fileName));
+        return new DoomWad(new ByteBufferKaitaiStream(fileName));
     }
 
     public DoomWad(KaitaiStream _io) {
@@ -34,7 +35,7 @@ public class DoomWad extends KaitaiStruct {
     }
     public static class Sectors extends KaitaiStruct {
         public static Sectors fromFile(String fileName) throws IOException {
-            return new Sectors(new KaitaiStream(fileName));
+            return new Sectors(new ByteBufferKaitaiStream(fileName));
         }
 
         public Sectors(KaitaiStream _io) {
@@ -53,8 +54,12 @@ public class DoomWad extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<Sector>();
-            while (!this._io.isEof()) {
-                this.entries.add(new Sector(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Sector(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<Sector> entries;
@@ -66,7 +71,7 @@ public class DoomWad extends KaitaiStruct {
     }
     public static class Vertex extends KaitaiStruct {
         public static Vertex fromFile(String fileName) throws IOException {
-            return new Vertex(new KaitaiStream(fileName));
+            return new Vertex(new ByteBufferKaitaiStream(fileName));
         }
 
         public Vertex(KaitaiStream _io) {
@@ -107,7 +112,7 @@ public class DoomWad extends KaitaiStruct {
      */
     public static class Texture12 extends KaitaiStruct {
         public static Texture12 fromFile(String fileName) throws IOException {
-            return new Texture12(new KaitaiStream(fileName));
+            return new Texture12(new ByteBufferKaitaiStream(fileName));
         }
 
         public Texture12(KaitaiStream _io) {
@@ -133,7 +138,7 @@ public class DoomWad extends KaitaiStruct {
         }
         public static class TextureIndex extends KaitaiStruct {
             public static TextureIndex fromFile(String fileName) throws IOException {
-                return new TextureIndex(new KaitaiStream(fileName));
+                return new TextureIndex(new ByteBufferKaitaiStream(fileName));
             }
 
             public TextureIndex(KaitaiStream _io) {
@@ -172,7 +177,7 @@ public class DoomWad extends KaitaiStruct {
         }
         public static class TextureBody extends KaitaiStruct {
             public static TextureBody fromFile(String fileName) throws IOException {
-                return new TextureBody(new KaitaiStream(fileName));
+                return new TextureBody(new ByteBufferKaitaiStream(fileName));
             }
 
             public TextureBody(KaitaiStream _io) {
@@ -234,7 +239,7 @@ public class DoomWad extends KaitaiStruct {
         }
         public static class Patch extends KaitaiStruct {
             public static Patch fromFile(String fileName) throws IOException {
-                return new Patch(new KaitaiStream(fileName));
+                return new Patch(new ByteBufferKaitaiStream(fileName));
             }
 
             public Patch(KaitaiStream _io) {
@@ -300,7 +305,7 @@ public class DoomWad extends KaitaiStruct {
     }
     public static class Linedef extends KaitaiStruct {
         public static Linedef fromFile(String fileName) throws IOException {
-            return new Linedef(new KaitaiStream(fileName));
+            return new Linedef(new ByteBufferKaitaiStream(fileName));
         }
 
         public Linedef(KaitaiStream _io) {
@@ -351,7 +356,7 @@ public class DoomWad extends KaitaiStruct {
      */
     public static class Pnames extends KaitaiStruct {
         public static Pnames fromFile(String fileName) throws IOException {
-            return new Pnames(new KaitaiStream(fileName));
+            return new Pnames(new ByteBufferKaitaiStream(fileName));
         }
 
         public Pnames(KaitaiStream _io) {
@@ -390,7 +395,7 @@ public class DoomWad extends KaitaiStruct {
     }
     public static class Thing extends KaitaiStruct {
         public static Thing fromFile(String fileName) throws IOException {
-            return new Thing(new KaitaiStream(fileName));
+            return new Thing(new ByteBufferKaitaiStream(fileName));
         }
 
         public Thing(KaitaiStream _io) {
@@ -431,7 +436,7 @@ public class DoomWad extends KaitaiStruct {
     }
     public static class Sector extends KaitaiStruct {
         public static Sector fromFile(String fileName) throws IOException {
-            return new Sector(new KaitaiStream(fileName));
+            return new Sector(new ByteBufferKaitaiStream(fileName));
         }
 
         public enum SpecialSector {
@@ -526,7 +531,7 @@ public class DoomWad extends KaitaiStruct {
     }
     public static class Vertexes extends KaitaiStruct {
         public static Vertexes fromFile(String fileName) throws IOException {
-            return new Vertexes(new KaitaiStream(fileName));
+            return new Vertexes(new ByteBufferKaitaiStream(fileName));
         }
 
         public Vertexes(KaitaiStream _io) {
@@ -545,8 +550,12 @@ public class DoomWad extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<Vertex>();
-            while (!this._io.isEof()) {
-                this.entries.add(new Vertex(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Vertex(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<Vertex> entries;
@@ -558,7 +567,7 @@ public class DoomWad extends KaitaiStruct {
     }
     public static class Sidedef extends KaitaiStruct {
         public static Sidedef fromFile(String fileName) throws IOException {
-            return new Sidedef(new KaitaiStream(fileName));
+            return new Sidedef(new ByteBufferKaitaiStream(fileName));
         }
 
         public Sidedef(KaitaiStream _io) {
@@ -602,7 +611,7 @@ public class DoomWad extends KaitaiStruct {
     }
     public static class Things extends KaitaiStruct {
         public static Things fromFile(String fileName) throws IOException {
-            return new Things(new KaitaiStream(fileName));
+            return new Things(new ByteBufferKaitaiStream(fileName));
         }
 
         public Things(KaitaiStream _io) {
@@ -621,8 +630,12 @@ public class DoomWad extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<Thing>();
-            while (!this._io.isEof()) {
-                this.entries.add(new Thing(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Thing(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<Thing> entries;
@@ -634,7 +647,7 @@ public class DoomWad extends KaitaiStruct {
     }
     public static class Linedefs extends KaitaiStruct {
         public static Linedefs fromFile(String fileName) throws IOException {
-            return new Linedefs(new KaitaiStream(fileName));
+            return new Linedefs(new ByteBufferKaitaiStream(fileName));
         }
 
         public Linedefs(KaitaiStream _io) {
@@ -653,8 +666,12 @@ public class DoomWad extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<Linedef>();
-            while (!this._io.isEof()) {
-                this.entries.add(new Linedef(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Linedef(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<Linedef> entries;
@@ -666,7 +683,7 @@ public class DoomWad extends KaitaiStruct {
     }
     public static class IndexEntry extends KaitaiStruct {
         public static IndexEntry fromFile(String fileName) throws IOException {
-            return new IndexEntry(new KaitaiStream(fileName));
+            return new IndexEntry(new ByteBufferKaitaiStream(fileName));
         }
 
         public IndexEntry(KaitaiStream _io) {
@@ -698,55 +715,55 @@ public class DoomWad extends KaitaiStruct {
             switch (name()) {
             case "SECTORS": {
                 this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new KaitaiStream(_raw_contents);
+                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
                 this.contents = new Sectors(_io__raw_contents, this, _root);
                 break;
             }
             case "TEXTURE1": {
                 this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new KaitaiStream(_raw_contents);
+                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
                 this.contents = new Texture12(_io__raw_contents, this, _root);
                 break;
             }
             case "VERTEXES": {
                 this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new KaitaiStream(_raw_contents);
+                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
                 this.contents = new Vertexes(_io__raw_contents, this, _root);
                 break;
             }
             case "BLOCKMAP": {
                 this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new KaitaiStream(_raw_contents);
+                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
                 this.contents = new Blockmap(_io__raw_contents, this, _root);
                 break;
             }
             case "PNAMES": {
                 this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new KaitaiStream(_raw_contents);
+                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
                 this.contents = new Pnames(_io__raw_contents, this, _root);
                 break;
             }
             case "TEXTURE2": {
                 this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new KaitaiStream(_raw_contents);
+                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
                 this.contents = new Texture12(_io__raw_contents, this, _root);
                 break;
             }
             case "THINGS": {
                 this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new KaitaiStream(_raw_contents);
+                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
                 this.contents = new Things(_io__raw_contents, this, _root);
                 break;
             }
             case "LINEDEFS": {
                 this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new KaitaiStream(_raw_contents);
+                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
                 this.contents = new Linedefs(_io__raw_contents, this, _root);
                 break;
             }
             case "SIDEDEFS": {
                 this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new KaitaiStream(_raw_contents);
+                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
                 this.contents = new Sidedefs(_io__raw_contents, this, _root);
                 break;
             }
@@ -773,7 +790,7 @@ public class DoomWad extends KaitaiStruct {
     }
     public static class Sidedefs extends KaitaiStruct {
         public static Sidedefs fromFile(String fileName) throws IOException {
-            return new Sidedefs(new KaitaiStream(fileName));
+            return new Sidedefs(new ByteBufferKaitaiStream(fileName));
         }
 
         public Sidedefs(KaitaiStream _io) {
@@ -792,8 +809,12 @@ public class DoomWad extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<Sidedef>();
-            while (!this._io.isEof()) {
-                this.entries.add(new Sidedef(this._io, this, _root));
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Sidedef(this._io, this, _root));
+                    i++;
+                }
             }
         }
         private ArrayList<Sidedef> entries;
@@ -805,7 +826,7 @@ public class DoomWad extends KaitaiStruct {
     }
     public static class Blockmap extends KaitaiStruct {
         public static Blockmap fromFile(String fileName) throws IOException {
-            return new Blockmap(new KaitaiStream(fileName));
+            return new Blockmap(new ByteBufferKaitaiStream(fileName));
         }
 
         public Blockmap(KaitaiStream _io) {
@@ -834,7 +855,7 @@ public class DoomWad extends KaitaiStruct {
         }
         public static class Blocklist extends KaitaiStruct {
             public static Blocklist fromFile(String fileName) throws IOException {
-                return new Blocklist(new KaitaiStream(fileName));
+                return new Blocklist(new ByteBufferKaitaiStream(fileName));
             }
 
             public Blocklist(KaitaiStream _io) {
@@ -867,9 +888,11 @@ public class DoomWad extends KaitaiStruct {
                 this.linedefs = new ArrayList<Short>();
                 {
                     short _it;
+                    int i = 0;
                     do {
                         _it = this._io.readS2le();
                         this.linedefs.add(_it);
+                        i++;
                     } while (!(_it == -1));
                 }
                 this._io.seek(_pos);

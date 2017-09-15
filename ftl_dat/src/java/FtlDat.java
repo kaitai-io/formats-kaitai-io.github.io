@@ -1,5 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.nio.charset.Charset;
 
 public class FtlDat extends KaitaiStruct {
     public static FtlDat fromFile(String fileName) throws IOException {
-        return new FtlDat(new KaitaiStream(fileName));
+        return new FtlDat(new ByteBufferKaitaiStream(fileName));
     }
 
     public FtlDat(KaitaiStream _io) {
@@ -34,7 +35,7 @@ public class FtlDat extends KaitaiStruct {
     }
     public static class File extends KaitaiStruct {
         public static File fromFile(String fileName) throws IOException {
-            return new File(new KaitaiStream(fileName));
+            return new File(new ByteBufferKaitaiStream(fileName));
         }
 
         public File(KaitaiStream _io) {
@@ -75,7 +76,7 @@ public class FtlDat extends KaitaiStruct {
     }
     public static class Meta extends KaitaiStruct {
         public static Meta fromFile(String fileName) throws IOException {
-            return new Meta(new KaitaiStream(fileName));
+            return new Meta(new ByteBufferKaitaiStream(fileName));
         }
 
         public Meta(KaitaiStream _io) {

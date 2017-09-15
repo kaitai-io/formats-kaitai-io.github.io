@@ -1,10 +1,10 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 if (typeof require === 'function')
-  var Ipv4Packet = require('./Ipv4Packet.js');
+  var Ipv6Packet = require('./Ipv6Packet.js');
 
 if (typeof require === 'function')
-  var Ipv6Packet = require('./Ipv6Packet.js');
+  var Ipv4Packet = require('./Ipv4Packet.js');
 
 var EthernetFrame = (function() {
   EthernetFrame.EtherTypeEnum = Object.freeze({
@@ -42,12 +42,12 @@ var EthernetFrame = (function() {
     case EthernetFrame.EtherTypeEnum.IPV4:
       this._raw_body = this._io.readBytesFull();
       var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new Ipv4Packet(_io__raw_body);
+      this.body = new Ipv4Packet(_io__raw_body, this, null);
       break;
     case EthernetFrame.EtherTypeEnum.IPV6:
       this._raw_body = this._io.readBytesFull();
       var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new Ipv6Packet(_io__raw_body);
+      this.body = new Ipv6Packet(_io__raw_body, this, null);
       break;
     default:
       this.body = this._io.readBytesFull();

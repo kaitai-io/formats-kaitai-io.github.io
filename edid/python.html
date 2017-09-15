@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>edid: Python parsing library</title>
+  <title>EDID (VESA Enhanced Extended Display Identification Data): Python parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Hardware Protocols</li>
-        <li class="active">edid</li>
+        <li class="active">EDID (VESA Enhanced Extended Display Identification Data)</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>edid:
+        <h1>EDID (VESA Enhanced Extended Display Identification Data):
             
             Python parsing library
             
@@ -105,6 +105,16 @@ section#format-index .row {
                     
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
                 </div>
             </div>
         </div>
@@ -112,7 +122,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of edid
+            This page hosts a formal specification of EDID (VESA Enhanced Extended Display Identification Data)
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -123,52 +133,52 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="index.html" title="edid parsing Overview library">Overview</a></li>
+                <a href="index.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="edid parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="edid parsing C# library">C#</a></li>
+                <a href="csharp.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="edid parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="edid parsing Java library">Java</a></li>
+                <a href="java.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title="edid parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title="edid parsing Perl library">Perl</a></li>
+                <a href="perl.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="edid parsing PHP library">PHP</a></li>
+                <a href="php.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing PHP library">PHP</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="python.html" title="edid parsing Python library">Python</a></li>
+                <a href="python.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title="edid parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title="EDID (VESA Enhanced Extended Display Identification Data) parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -184,14 +194,14 @@ section#format-index .row {
 
 
 
-<pre><code class="python">data = Edid.from_file("path/to/local/file.edid")</code></pre>
+<pre><code class="python">data = Edid.from_file("path/to/local/file.EDID (VESA Enhanced Extended Display Identification Data)")</code></pre>
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = Edid(KaitaiStream(raw))</code></pre>
+data = Edid(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -205,7 +215,7 @@ data = Edid(KaitaiStream(raw))</code></pre>
     <div class="container">
         <h2>
             
-            Python source code to parse edid
+            Python source code to parse EDID (VESA Enhanced Extended Display Identification Data)
             
         </h2>
 
@@ -227,6 +237,7 @@ data = Edid(KaitaiStream(raw))</code></pre>
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 import struct
+from enum import Enum
 
 
 if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
@@ -253,7 +264,244 @@ class Edid(KaitaiStruct):
         self.screen_size_v = self._io.read_u1()
         self.gamma_mod = self._io.read_u1()
         self.features_flags = self._io.read_u1()
-        self.chromacity = self._io.read_bytes(10)
+        self.chromacity = self._root.ChromacityInfo(self._io, self, self._root)
+        self.est_timings = self._root.EstTimingsInfo(self._io, self, self._root)
+        self.std_timings = [None] * (8)
+        for i in range(8):
+            self.std_timings[i] = self._root.StdTiming(self._io, self, self._root)
+
+
+    class ChromacityInfo(KaitaiStruct):
+        &quot;&quot;&quot;Chromaticity information: colorimetry and white point
+        coordinates. All coordinates are stored as fixed precision
+        10-bit numbers, bits are shuffled for compactness.
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.red_x_1_0 = self._io.read_bits_int(2)
+            self.red_y_1_0 = self._io.read_bits_int(2)
+            self.green_x_1_0 = self._io.read_bits_int(2)
+            self.green_y_1_0 = self._io.read_bits_int(2)
+            self.blue_x_1_0 = self._io.read_bits_int(2)
+            self.blue_y_1_0 = self._io.read_bits_int(2)
+            self.white_x_1_0 = self._io.read_bits_int(2)
+            self.white_y_1_0 = self._io.read_bits_int(2)
+            self._io.align_to_byte()
+            self.red_x_9_2 = self._io.read_u1()
+            self.red_y_9_2 = self._io.read_u1()
+            self.green_x_9_2 = self._io.read_u1()
+            self.green_y_9_2 = self._io.read_u1()
+            self.blue_x_9_2 = self._io.read_u1()
+            self.blue_y_9_2 = self._io.read_u1()
+            self.white_x_9_2 = self._io.read_u1()
+            self.white_y_9_2 = self._io.read_u1()
+
+        @property
+        def green_x_int(self):
+            if hasattr(self, &#39;_m_green_x_int&#39;):
+                return self._m_green_x_int if hasattr(self, &#39;_m_green_x_int&#39;) else None
+
+            self._m_green_x_int = ((self.green_x_9_2 &lt;&lt; 2) | self.green_x_1_0)
+            return self._m_green_x_int if hasattr(self, &#39;_m_green_x_int&#39;) else None
+
+        @property
+        def red_y(self):
+            &quot;&quot;&quot;Red Y coordinate.&quot;&quot;&quot;
+            if hasattr(self, &#39;_m_red_y&#39;):
+                return self._m_red_y if hasattr(self, &#39;_m_red_y&#39;) else None
+
+            self._m_red_y = (self.red_y_int / 1024.0)
+            return self._m_red_y if hasattr(self, &#39;_m_red_y&#39;) else None
+
+        @property
+        def green_y_int(self):
+            if hasattr(self, &#39;_m_green_y_int&#39;):
+                return self._m_green_y_int if hasattr(self, &#39;_m_green_y_int&#39;) else None
+
+            self._m_green_y_int = ((self.green_y_9_2 &lt;&lt; 2) | self.green_y_1_0)
+            return self._m_green_y_int if hasattr(self, &#39;_m_green_y_int&#39;) else None
+
+        @property
+        def white_y(self):
+            &quot;&quot;&quot;White Y coordinate.&quot;&quot;&quot;
+            if hasattr(self, &#39;_m_white_y&#39;):
+                return self._m_white_y if hasattr(self, &#39;_m_white_y&#39;) else None
+
+            self._m_white_y = (self.white_y_int / 1024.0)
+            return self._m_white_y if hasattr(self, &#39;_m_white_y&#39;) else None
+
+        @property
+        def red_x(self):
+            &quot;&quot;&quot;Red X coordinate.&quot;&quot;&quot;
+            if hasattr(self, &#39;_m_red_x&#39;):
+                return self._m_red_x if hasattr(self, &#39;_m_red_x&#39;) else None
+
+            self._m_red_x = (self.red_x_int / 1024.0)
+            return self._m_red_x if hasattr(self, &#39;_m_red_x&#39;) else None
+
+        @property
+        def white_x(self):
+            &quot;&quot;&quot;White X coordinate.&quot;&quot;&quot;
+            if hasattr(self, &#39;_m_white_x&#39;):
+                return self._m_white_x if hasattr(self, &#39;_m_white_x&#39;) else None
+
+            self._m_white_x = (self.white_x_int / 1024.0)
+            return self._m_white_x if hasattr(self, &#39;_m_white_x&#39;) else None
+
+        @property
+        def blue_x(self):
+            &quot;&quot;&quot;Blue X coordinate.&quot;&quot;&quot;
+            if hasattr(self, &#39;_m_blue_x&#39;):
+                return self._m_blue_x if hasattr(self, &#39;_m_blue_x&#39;) else None
+
+            self._m_blue_x = (self.blue_x_int / 1024.0)
+            return self._m_blue_x if hasattr(self, &#39;_m_blue_x&#39;) else None
+
+        @property
+        def white_x_int(self):
+            if hasattr(self, &#39;_m_white_x_int&#39;):
+                return self._m_white_x_int if hasattr(self, &#39;_m_white_x_int&#39;) else None
+
+            self._m_white_x_int = ((self.white_x_9_2 &lt;&lt; 2) | self.white_x_1_0)
+            return self._m_white_x_int if hasattr(self, &#39;_m_white_x_int&#39;) else None
+
+        @property
+        def white_y_int(self):
+            if hasattr(self, &#39;_m_white_y_int&#39;):
+                return self._m_white_y_int if hasattr(self, &#39;_m_white_y_int&#39;) else None
+
+            self._m_white_y_int = ((self.white_y_9_2 &lt;&lt; 2) | self.white_y_1_0)
+            return self._m_white_y_int if hasattr(self, &#39;_m_white_y_int&#39;) else None
+
+        @property
+        def green_x(self):
+            &quot;&quot;&quot;Green X coordinate.&quot;&quot;&quot;
+            if hasattr(self, &#39;_m_green_x&#39;):
+                return self._m_green_x if hasattr(self, &#39;_m_green_x&#39;) else None
+
+            self._m_green_x = (self.green_x_int / 1024.0)
+            return self._m_green_x if hasattr(self, &#39;_m_green_x&#39;) else None
+
+        @property
+        def red_x_int(self):
+            if hasattr(self, &#39;_m_red_x_int&#39;):
+                return self._m_red_x_int if hasattr(self, &#39;_m_red_x_int&#39;) else None
+
+            self._m_red_x_int = ((self.red_x_9_2 &lt;&lt; 2) | self.red_x_1_0)
+            return self._m_red_x_int if hasattr(self, &#39;_m_red_x_int&#39;) else None
+
+        @property
+        def red_y_int(self):
+            if hasattr(self, &#39;_m_red_y_int&#39;):
+                return self._m_red_y_int if hasattr(self, &#39;_m_red_y_int&#39;) else None
+
+            self._m_red_y_int = ((self.red_y_9_2 &lt;&lt; 2) | self.red_y_1_0)
+            return self._m_red_y_int if hasattr(self, &#39;_m_red_y_int&#39;) else None
+
+        @property
+        def blue_x_int(self):
+            if hasattr(self, &#39;_m_blue_x_int&#39;):
+                return self._m_blue_x_int if hasattr(self, &#39;_m_blue_x_int&#39;) else None
+
+            self._m_blue_x_int = ((self.blue_x_9_2 &lt;&lt; 2) | self.blue_x_1_0)
+            return self._m_blue_x_int if hasattr(self, &#39;_m_blue_x_int&#39;) else None
+
+        @property
+        def blue_y(self):
+            &quot;&quot;&quot;Blue Y coordinate.&quot;&quot;&quot;
+            if hasattr(self, &#39;_m_blue_y&#39;):
+                return self._m_blue_y if hasattr(self, &#39;_m_blue_y&#39;) else None
+
+            self._m_blue_y = (self.blue_y_int / 1024.0)
+            return self._m_blue_y if hasattr(self, &#39;_m_blue_y&#39;) else None
+
+        @property
+        def green_y(self):
+            &quot;&quot;&quot;Green Y coordinate.&quot;&quot;&quot;
+            if hasattr(self, &#39;_m_green_y&#39;):
+                return self._m_green_y if hasattr(self, &#39;_m_green_y&#39;) else None
+
+            self._m_green_y = (self.green_y_int / 1024.0)
+            return self._m_green_y if hasattr(self, &#39;_m_green_y&#39;) else None
+
+        @property
+        def blue_y_int(self):
+            if hasattr(self, &#39;_m_blue_y_int&#39;):
+                return self._m_blue_y_int if hasattr(self, &#39;_m_blue_y_int&#39;) else None
+
+            self._m_blue_y_int = ((self.blue_y_9_2 &lt;&lt; 2) | self.blue_y_1_0)
+            return self._m_blue_y_int if hasattr(self, &#39;_m_blue_y_int&#39;) else None
+
+
+    class EstTimingsInfo(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.can_720_400_70 = self._io.read_bits_int(1) != 0
+            self.can_720_400_88 = self._io.read_bits_int(1) != 0
+            self.can_640_480_60 = self._io.read_bits_int(1) != 0
+            self.can_640_480_67 = self._io.read_bits_int(1) != 0
+            self.can_640_480_72 = self._io.read_bits_int(1) != 0
+            self.can_640_480_75 = self._io.read_bits_int(1) != 0
+            self.can_800_600_56 = self._io.read_bits_int(1) != 0
+            self.can_800_600_60 = self._io.read_bits_int(1) != 0
+            self.can_800_600_72 = self._io.read_bits_int(1) != 0
+            self.can_800_600_75 = self._io.read_bits_int(1) != 0
+            self.can_832_624_75 = self._io.read_bits_int(1) != 0
+            self.can_1024_768_87_i = self._io.read_bits_int(1) != 0
+            self.can_1024_768_60 = self._io.read_bits_int(1) != 0
+            self.can_1024_768_70 = self._io.read_bits_int(1) != 0
+            self.can_1024_768_75 = self._io.read_bits_int(1) != 0
+            self.can_1280_1024_75 = self._io.read_bits_int(1) != 0
+            self.can_1152_870_75 = self._io.read_bits_int(1) != 0
+            self.reserved = self._io.read_bits_int(7)
+
+
+    class StdTiming(KaitaiStruct):
+
+        class AspectRatios(Enum):
+            ratio_16_10 = 0
+            ratio_4_3 = 1
+            ratio_5_4 = 2
+            ratio_16_9 = 3
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.horiz_active_pixels_mod = self._io.read_u1()
+            self.aspect_ratio = self._root.StdTiming.AspectRatios(self._io.read_bits_int(2))
+            self.refresh_rate_mod = self._io.read_bits_int(5)
+
+        @property
+        def horiz_active_pixels(self):
+            &quot;&quot;&quot;Range of horizontal active pixels.&quot;&quot;&quot;
+            if hasattr(self, &#39;_m_horiz_active_pixels&#39;):
+                return self._m_horiz_active_pixels if hasattr(self, &#39;_m_horiz_active_pixels&#39;) else None
+
+            self._m_horiz_active_pixels = ((self.horiz_active_pixels_mod + 31) * 8)
+            return self._m_horiz_active_pixels if hasattr(self, &#39;_m_horiz_active_pixels&#39;) else None
+
+        @property
+        def refresh_rate(self):
+            &quot;&quot;&quot;Vertical refresh rate, Hz.&quot;&quot;&quot;
+            if hasattr(self, &#39;_m_refresh_rate&#39;):
+                return self._m_refresh_rate if hasattr(self, &#39;_m_refresh_rate&#39;) else None
+
+            self._m_refresh_rate = (self.refresh_rate_mod + 60)
+            return self._m_refresh_rate if hasattr(self, &#39;_m_refresh_rate&#39;) else None
+
 
     @property
     def mfg_year(self):

@@ -205,10 +205,10 @@ section#format-index .row {
 
 <p>Or parse structure from a bytes:</p>
 
-<pre><code class="python">from kaitaistruct import KaitaiStream
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = Id3v23(KaitaiStream(raw))</code></pre>
+data = Id3v23(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
@@ -304,11 +304,13 @@ class Id3v23(KaitaiStruct):
                 self.header_ex = self._root.HeaderEx(self._io, self, self._root)
 
             self.frames = []
+            i = 0
             while True:
                 _ = self._root.Frame(self._io, self, self._root)
                 self.frames.append(_)
                 if  (((self._io.pos() + _.size) &gt; self.header.size.value) or (_.is_invalid)) :
                     break
+                i += 1
             if self.header.flags.flag_headerex:
                 self.padding = self._io.read_bytes((self.header_ex.padding_size - self._io.pos()))
 

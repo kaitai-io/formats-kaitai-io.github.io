@@ -4,8 +4,8 @@
 
 
 
-shapefile_index_t::shapefile_index_t(kaitai::kstream *p_io, kaitai::kstruct* p_parent, shapefile_index_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
+shapefile_index_t::shapefile_index_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, shapefile_index_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
     m__root = this;
     _read();
 }
@@ -13,8 +13,12 @@ shapefile_index_t::shapefile_index_t(kaitai::kstream *p_io, kaitai::kstruct* p_p
 void shapefile_index_t::_read() {
     m_header = new file_header_t(m__io, this, m__root);
     m_records = new std::vector<record_t*>();
-    while (!m__io->is_eof()) {
-        m_records->push_back(new record_t(m__io, this, m__root));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_records->push_back(new record_t(m__io, this, m__root));
+            i++;
+        }
     }
 }
 
@@ -26,9 +30,9 @@ shapefile_index_t::~shapefile_index_t() {
     delete m_records;
 }
 
-shapefile_index_t::file_header_t::file_header_t(kaitai::kstream *p_io, shapefile_index_t* p_parent, shapefile_index_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_index_t::file_header_t::file_header_t(kaitai::kstream* p__io, shapefile_index_t* p__parent, shapefile_index_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -49,9 +53,9 @@ shapefile_index_t::file_header_t::~file_header_t() {
     delete m_bounding_box;
 }
 
-shapefile_index_t::record_t::record_t(kaitai::kstream *p_io, shapefile_index_t* p_parent, shapefile_index_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_index_t::record_t::record_t(kaitai::kstream* p__io, shapefile_index_t* p__parent, shapefile_index_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -63,9 +67,9 @@ void shapefile_index_t::record_t::_read() {
 shapefile_index_t::record_t::~record_t() {
 }
 
-shapefile_index_t::bounding_box_x_y_z_m_t::bounding_box_x_y_z_m_t(kaitai::kstream *p_io, shapefile_index_t::file_header_t* p_parent, shapefile_index_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_index_t::bounding_box_x_y_z_m_t::bounding_box_x_y_z_m_t(kaitai::kstream* p__io, shapefile_index_t::file_header_t* p__parent, shapefile_index_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
@@ -83,9 +87,9 @@ shapefile_index_t::bounding_box_x_y_z_m_t::~bounding_box_x_y_z_m_t() {
     delete m_m;
 }
 
-shapefile_index_t::bounds_min_max_t::bounds_min_max_t(kaitai::kstream *p_io, shapefile_index_t::bounding_box_x_y_z_m_t* p_parent, shapefile_index_t *p_root) : kaitai::kstruct(p_io) {
-    m__parent = p_parent;
-    m__root = p_root;
+shapefile_index_t::bounds_min_max_t::bounds_min_max_t(kaitai::kstream* p__io, shapefile_index_t::bounding_box_x_y_z_m_t* p__parent, shapefile_index_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
     _read();
 }
 
