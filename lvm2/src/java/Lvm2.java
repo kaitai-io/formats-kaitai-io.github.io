@@ -11,8 +11,9 @@ import java.util.HashMap;
 
 
 /**
- * === Building a test file
- * ....
+ * ### Building a test file
+ * 
+ * ```
  * dd if=/dev/zero of=image.img bs=512 count=$(( 4 * 1024 * 2 ))
  * sudo losetup /dev/loop1 image.img
  * sudo pvcreate /dev/loop1
@@ -553,6 +554,10 @@ public class Lvm2 extends KaitaiStruct {
     private PhysicalVolume pv;
     private Lvm2 _root;
     private KaitaiStruct _parent;
+
+    /**
+     * Physical volume
+     */
     public PhysicalVolume pv() { return pv; }
     public Lvm2 _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }

@@ -13,8 +13,9 @@
 #endif
 
 /**
- * === Building a test file
- * ....
+ * ### Building a test file
+ * 
+ * ```
  * dd if=/dev/zero of=image.img bs=512 count=$(( 4 * 1024 * 2 ))
  * sudo losetup /dev/loop1 image.img
  * sudo pvcreate /dev/loop1
@@ -441,6 +442,10 @@ private:
     kaitai::kstruct* m__parent;
 
 public:
+
+    /**
+     * Physical volume
+     */
     physical_volume_t* pv() const { return m_pv; }
     lvm2_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }

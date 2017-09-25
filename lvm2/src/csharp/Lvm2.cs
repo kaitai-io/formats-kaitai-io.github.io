@@ -6,8 +6,9 @@ namespace Kaitai
 {
 
     /// <summary>
-    /// === Building a test file
-    /// ....
+    /// ### Building a test file
+    /// 
+    /// ```
     /// dd if=/dev/zero of=image.img bs=512 count=$(( 4 * 1024 * 2 ))
     /// sudo losetup /dev/loop1 image.img
     /// sudo pvcreate /dev/loop1
@@ -513,6 +514,10 @@ namespace Kaitai
         private PhysicalVolume _pv;
         private Lvm2 m_root;
         private KaitaiStruct m_parent;
+
+        /// <summary>
+        /// Physical volume
+        /// </summary>
         public PhysicalVolume Pv { get { return _pv; } }
         public Lvm2 M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }

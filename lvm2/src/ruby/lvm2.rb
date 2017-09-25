@@ -8,8 +8,9 @@ end
 
 
 ##
-# === Building a test file
-# ....
+# ### Building a test file
+# 
+# ```
 # dd if=/dev/zero of=image.img bs=512 count=$(( 4 * 1024 * 2 ))
 # sudo losetup /dev/loop1 image.img
 # sudo pvcreate /dev/loop1
@@ -299,5 +300,8 @@ class Lvm2 < Kaitai::Struct::Struct
     @sector_size = 512
     @sector_size
   end
+
+  ##
+  # Physical volume
   attr_reader :pv
 end

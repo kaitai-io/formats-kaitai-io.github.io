@@ -10,8 +10,9 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 class Lvm2(KaitaiStruct):
-    """=== Building a test file
-    ....
+    """### Building a test file
+    
+    ```
     dd if=/dev/zero of=image.img bs=512 count=$(( 4 * 1024 * 2 ))
     sudo losetup /dev/loop1 image.img
     sudo pvcreate /dev/loop1

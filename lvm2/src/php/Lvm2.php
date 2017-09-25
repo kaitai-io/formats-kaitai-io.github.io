@@ -2,8 +2,9 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 /**
- * === Building a test file
- * ....
+ * ### Building a test file
+ * 
+ * ```
  * dd if=/dev/zero of=image.img bs=512 count=$(( 4 * 1024 * 2 ))
  * sudo losetup /dev/loop1 image.img
  * sudo pvcreate /dev/loop1
@@ -30,6 +31,10 @@ class Lvm2 extends \Kaitai\Struct\Struct {
         return $this->_m_sectorSize;
     }
     protected $_m_pv;
+
+    /**
+     * Physical volume
+     */
     public function pv() { return $this->_m_pv; }
 }
 
