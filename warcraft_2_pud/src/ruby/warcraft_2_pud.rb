@@ -19,6 +19,7 @@ end
 # features got limited support in v1.3).
 # 
 # File consists of a sequence of typed sections.
+# @see http://cade.datamax.bg/war2x/pudspec.html Source
 class Warcraft2Pud < Kaitai::Struct::Struct
 
   CONTROLLER = {
@@ -243,7 +244,7 @@ class Warcraft2Pud < Kaitai::Struct::Struct
     attr_reader :unused
 
     ##
-    # id tag (for consistence check in multiplayer)
+    # id tag (for consistency check in multiplayer)
     attr_reader :id_tag
   end
   class SectionUnit < Kaitai::Struct::Struct

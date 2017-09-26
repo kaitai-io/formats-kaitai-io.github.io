@@ -20,6 +20,9 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
     
     There are at least 2 different versions of the format: v1 and
     v2. Netmon v3 seems to use the same file format as v1.
+    
+    .. seealso::
+       Source - https://msdn.microsoft.com/en-us/library/windows/desktop/ee817717.aspx
     """
 
     class Linktype(Enum):
@@ -199,6 +202,9 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
         """A container for actually captured network data. Allow to
         timestamp individual frames and designates how much data from
         the original packet was actually written into the file.
+        
+        .. seealso::
+           Source - https://msdn.microsoft.com/en-us/library/windows/desktop/ee831821.aspx
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io

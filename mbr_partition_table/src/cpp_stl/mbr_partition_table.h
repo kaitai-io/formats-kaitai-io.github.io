@@ -12,6 +12,18 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 
+/**
+ * MBR (Master Boot Record) partition table is a traditional way of
+ * MS-DOS to partition larger hard disc drives into distinct
+ * partitions.
+ * 
+ * This table is stored in the end of the boot sector (first sector) of
+ * the drive, after the bootstrap code. Original DOS 2.0 specification
+ * allowed only 4 partitions per disc, but DOS 3.2 introduced concept
+ * of "extended partitions", which work as nested extra "boot records"
+ * which are pointed to by original ("primary") partitions in MBR.
+ */
+
 class mbr_partition_table_t : public kaitai::kstruct {
 
 public:

@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <remarks>
+    /// Reference: <a href="https://quakewiki.org/wiki/.pak#Format_specification">Source</a>
+    /// </remarks>
     public partial class QuakePak : KaitaiStruct
     {
         public static QuakePak FromFile(string fileName)
@@ -21,8 +25,8 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.EnsureFixedContents(new byte[] { 80, 65, 67, 75 });
-            _indexOfs = m_io.ReadU4le();
-            _indexSize = m_io.ReadU4le();
+            _ofsIndex = m_io.ReadU4le();
+            _lenIndex = m_io.ReadU4le();
         }
         public partial class IndexStruct : KaitaiStruct
         {
@@ -112,8 +116,8 @@ namespace Kaitai
                 if (f_index)
                     return _index;
                 long _pos = m_io.Pos;
-                m_io.Seek(IndexOfs);
-                __raw_index = m_io.ReadBytes(IndexSize);
+                m_io.Seek(OfsIndex);
+                __raw_index = m_io.ReadBytes(LenIndex);
                 var io___raw_index = new KaitaiStream(__raw_index);
                 _index = new IndexStruct(io___raw_index, this, m_root);
                 m_io.Seek(_pos);
@@ -122,14 +126,14 @@ namespace Kaitai
             }
         }
         private byte[] _magic;
-        private uint _indexOfs;
-        private uint _indexSize;
+        private uint _ofsIndex;
+        private uint _lenIndex;
         private QuakePak m_root;
         private KaitaiStruct m_parent;
         private byte[] __raw_index;
         public byte[] Magic { get { return _magic; } }
-        public uint IndexOfs { get { return _indexOfs; } }
-        public uint IndexSize { get { return _indexSize; } }
+        public uint OfsIndex { get { return _ofsIndex; } }
+        public uint LenIndex { get { return _lenIndex; } }
         public QuakePak M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
         public byte[] M_RawIndex { get { return __raw_index; } }

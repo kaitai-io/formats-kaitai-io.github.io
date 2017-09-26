@@ -24,6 +24,7 @@
  * features got limited support in v1.3).
  * 
  * File consists of a sequence of typed sections.
+ * \sa Source
  */
 
 class warcraft_2_pud_t : public kaitai::kstruct {
@@ -304,7 +305,7 @@ public:
         std::string unused() const { return m_unused; }
 
         /**
-         * id tag (for consistence check in multiplayer)
+         * id tag (for consistency check in multiplayer)
          */
         uint32_t id_tag() const { return m_id_tag; }
         warcraft_2_pud_t* _root() const { return m__root; }

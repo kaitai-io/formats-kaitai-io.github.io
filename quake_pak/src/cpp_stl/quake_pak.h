@@ -12,6 +12,10 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 
+/**
+ * \sa Source
+ */
+
 class quake_pak_t : public kaitai::kstruct {
 
 public:
@@ -92,8 +96,8 @@ public:
 
 private:
     std::string m_magic;
-    uint32_t m_index_ofs;
-    uint32_t m_index_size;
+    uint32_t m_ofs_index;
+    uint32_t m_len_index;
     quake_pak_t* m__root;
     kaitai::kstruct* m__parent;
     std::string m__raw_index;
@@ -101,8 +105,8 @@ private:
 
 public:
     std::string magic() const { return m_magic; }
-    uint32_t index_ofs() const { return m_index_ofs; }
-    uint32_t index_size() const { return m_index_size; }
+    uint32_t ofs_index() const { return m_ofs_index; }
+    uint32_t len_index() const { return m_len_index; }
     quake_pak_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
     std::string _raw_index() const { return m__raw_index; }

@@ -13,6 +13,13 @@
 #endif
 
 /**
+ * WMF (Windows Metafile) is a relatively early vector image format
+ * introduced for Microsoft Windows in 1990.
+ * 
+ * Inside, it provides a serialized list of Windows GDI (Graphics
+ * Device Interface) function calls, which, if played back, result in
+ * an image being drawn on a given surface (display, off-screen buffer,
+ * printer, etc).
  * \sa Source
  */
 

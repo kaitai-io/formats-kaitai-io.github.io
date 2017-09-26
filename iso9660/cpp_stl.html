@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>.iso file format: C++/STL parsing library</title>
+  <title>ISO9660 CD filesystem: C++/STL parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Filesystems</li>
-        <li class="active">.iso file format</li>
+        <li class="active">ISO9660 CD filesystem</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>.iso file format:
+        <h1>ISO9660 CD filesystem:
             
             C++/STL parsing library
             
@@ -98,7 +98,15 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p></p>
+                <p><p>ISO9660 is standard filesystem used on read-only optical discs
+(mostly CD-ROM). The standard was based on earlier High Sierra
+Format (HSF), proposed for CD-ROMs in 1985, and, after several
+revisions, it was accepted as ISO9960:1998.</p>
+<p>The format emphasizes portability (thus having pretty minimal
+features and very conservative file names standards) and sequential
+access (which favors disc devices with relatively slow rotation
+speed).</p>
+</p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
@@ -112,6 +120,16 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
                 </div>
             </div>
         </div>
@@ -119,7 +137,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of .iso file format
+            This page hosts a formal specification of ISO9660 CD filesystem
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -130,52 +148,52 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="index.html" title=".iso file format parsing Overview library">Overview</a></li>
+                <a href="index.html" title="ISO9660 CD filesystem parsing Overview library">Overview</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="cpp_stl.html" title=".iso file format parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title="ISO9660 CD filesystem parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title=".iso file format parsing C# library">C#</a></li>
+                <a href="csharp.html" title="ISO9660 CD filesystem parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title=".iso file format parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title="ISO9660 CD filesystem parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title=".iso file format parsing Java library">Java</a></li>
+                <a href="java.html" title="ISO9660 CD filesystem parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title=".iso file format parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title="ISO9660 CD filesystem parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title=".iso file format parsing Perl library">Perl</a></li>
+                <a href="perl.html" title="ISO9660 CD filesystem parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title=".iso file format parsing PHP library">PHP</a></li>
+                <a href="php.html" title="ISO9660 CD filesystem parsing PHP library">PHP</a></li>
                 
                 
                 <li>
                 
-                <a href="python.html" title=".iso file format parsing Python library">Python</a></li>
+                <a href="python.html" title="ISO9660 CD filesystem parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title=".iso file format parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title="ISO9660 CD filesystem parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -239,7 +257,7 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
     <div class="container">
         <h2>
             
-            C++/STL source code to parse .iso file format
+            C++/STL source code to parse ISO9660 CD filesystem
             
         </h2>
 
@@ -270,6 +288,18 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
 #error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
 #endif
 
+/**
+ * ISO9660 is standard filesystem used on read-only optical discs
+ * (mostly CD-ROM). The standard was based on earlier High Sierra
+ * Format (HSF), proposed for CD-ROMs in 1985, and, after several
+ * revisions, it was accepted as ISO9960:1998.
+ * 
+ * The format emphasizes portability (thus having pretty minimal
+ * features and very conservative file names standards) and sequential
+ * access (which favors disc devices with relatively slow rotation
+ * speed).
+ */
+
 class iso9660_t : public kaitai::kstruct {
 
 public:
@@ -293,6 +323,10 @@ private:
 
 public:
     ~iso9660_t();
+
+    /**
+     * \sa Source
+     */
 
     class vol_desc_primary_t : public kaitai::kstruct {
 
@@ -638,6 +672,10 @@ public:
         kaitai::kstruct* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa Source
+     */
+
     class path_table_le_t : public kaitai::kstruct {
 
     public:
@@ -660,6 +698,10 @@ public:
         iso9660_t* _root() const { return m__root; }
         iso9660_t::vol_desc_primary_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa Source
+     */
 
     class dec_datetime_t : public kaitai::kstruct {
 

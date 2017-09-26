@@ -1,5 +1,24 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * STL files are used to represent simple 3D models, defined using
+ * triangular 3D faces.
+ * 
+ * Initially it was introduced as native format for 3D Systems
+ * Stereolithography CAD system, but due to its extreme simplicity, it
+ * was adopted by a wide range of 3D modelling, CAD, rapid prototyping
+ * and 3D printing applications as the simplest 3D model exchange
+ * format.
+ * 
+ * STL is extremely bare-bones format: there are no complex headers, no
+ * texture / color support, no units specifications, no distinct vertex
+ * arrays. Whole model is specified as a collection of triangular
+ * faces.
+ * 
+ * There are two versions of the format (text and binary), this spec
+ * describes binary version.
+ */
+
 var Stl = (function() {
   function Stl(_io, _parent, _root) {
     this._io = _io;
@@ -16,6 +35,12 @@ var Stl = (function() {
       this.triangles[i] = new Triangle(this._io, this, this._root);
     }
   }
+
+  /**
+   * Each STL triangle is defined by its 3 points in 3D space and a
+   * normal vector, which is generally used to determine where is
+   * "inside" and "outside" of the model.
+   */
 
   var Triangle = Stl.Triangle = (function() {
     function Triangle(_io, _parent, _root) {

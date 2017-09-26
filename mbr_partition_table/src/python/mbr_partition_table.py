@@ -9,6 +9,16 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 class MbrPartitionTable(KaitaiStruct):
+    """MBR (Master Boot Record) partition table is a traditional way of
+    MS-DOS to partition larger hard disc drives into distinct
+    partitions.
+    
+    This table is stored in the end of the boot sector (first sector) of
+    the drive, after the bootstrap code. Original DOS 2.0 specification
+    allowed only 4 partitions per disc, but DOS 3.2 introduced concept
+    of "extended partitions", which work as nested extra "boot records"
+    which are pointed to by original ("primary") partitions in MBR.
+    """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent

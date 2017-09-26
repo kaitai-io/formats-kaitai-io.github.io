@@ -119,6 +119,16 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
                 </div>
             </div>
         </div>
@@ -247,6 +257,10 @@ if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
     raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
 
 class QuakePak(KaitaiStruct):
+    &quot;&quot;&quot;
+    .. seealso::
+       Source - https://quakewiki.org/wiki/.pak#Format_specification
+    &quot;&quot;&quot;
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -255,8 +269,8 @@ class QuakePak(KaitaiStruct):
 
     def _read(self):
         self.magic = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 80, 65, 67, 75))
-        self.index_ofs = self._io.read_u4le()
-        self.index_size = self._io.read_u4le()
+        self.ofs_index = self._io.read_u4le()
+        self.len_index = self._io.read_u4le()
 
     class IndexStruct(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -305,8 +319,8 @@ class QuakePak(KaitaiStruct):
             return self._m_index if hasattr(self, &#39;_m_index&#39;) else None
 
         _pos = self._io.pos()
-        self._io.seek(self.index_ofs)
-        self._raw__m_index = self._io.read_bytes(self.index_size)
+        self._io.seek(self.ofs_index)
+        self._raw__m_index = self._io.read_bytes(self.len_index)
         io = KaitaiStream(BytesIO(self._raw__m_index))
         self._m_index = self._root.IndexStruct(io, self, self._root)
         self._io.seek(_pos)

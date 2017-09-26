@@ -1,5 +1,17 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * ISO9660 is standard filesystem used on read-only optical discs
+ * (mostly CD-ROM). The standard was based on earlier High Sierra
+ * Format (HSF), proposed for CD-ROMs in 1985, and, after several
+ * revisions, it was accepted as ISO9960:1998.
+ * 
+ * The format emphasizes portability (thus having pretty minimal
+ * features and very conservative file names standards) and sequential
+ * access (which favors disc devices with relatively slow rotation
+ * speed).
+ */
+
 var Iso9660 = (function() {
   function Iso9660(_io, _parent, _root) {
     this._io = _io;
@@ -10,6 +22,10 @@ var Iso9660 = (function() {
   }
   Iso9660.prototype._read = function() {
   }
+
+  /**
+   * @see {@link http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor|Source}
+   */
 
   var VolDescPrimary = Iso9660.VolDescPrimary = (function() {
     function VolDescPrimary(_io, _parent, _root) {
@@ -224,6 +240,10 @@ var Iso9660 = (function() {
     return U2bi;
   })();
 
+  /**
+   * @see {@link http://wiki.osdev.org/ISO_9660#The_Path_Table|Source}
+   */
+
   var PathTableLe = Iso9660.PathTableLe = (function() {
     function PathTableLe(_io, _parent, _root) {
       this._io = _io;
@@ -243,6 +263,10 @@ var Iso9660 = (function() {
 
     return PathTableLe;
   })();
+
+  /**
+   * @see {@link http://wiki.osdev.org/ISO_9660#Date.2Ftime_format|Source}
+   */
 
   var DecDatetime = Iso9660.DecDatetime = (function() {
     function DecDatetime(_io, _parent, _root) {

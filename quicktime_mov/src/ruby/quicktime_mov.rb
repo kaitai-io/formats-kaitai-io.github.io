@@ -6,6 +6,9 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# @see https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF Source
 class QuicktimeMov < Kaitai::Struct::Struct
 
   ATOM_TYPE = {
@@ -154,6 +157,9 @@ class QuicktimeMov < Kaitai::Struct::Struct
     @atoms = AtomList.new(@_io, self, @_root)
     self
   end
+
+  ##
+  # @see https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG Source
   class MvhdBody < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -189,11 +195,18 @@ class QuicktimeMov < Kaitai::Struct::Struct
     attr_reader :modification_time
 
     ##
-    # A time value that indicates the time scale for this movie—that is, the number of time units that pass per second in its time coordinate system. A time coordinate system that measures time in sixtieths of a second, for example, has a time scale of 60.
+    # A time value that indicates the time scale for this
+    # movie—that is, the number of time units that pass per second
+    # in its time coordinate system. A time coordinate system that
+    # measures time in sixtieths of a second, for example, has a
+    # time scale of 60.
     attr_reader :time_scale
 
     ##
-    # A time value that indicates the duration of the movie in time scale units. Note that this property is derived from the movie’s tracks. The value of this field corresponds to the duration of the longest track in the movie.
+    # A time value that indicates the duration of the movie in
+    # time scale units. Note that this property is derived from
+    # the movie’s tracks. The value of this field corresponds to
+    # the duration of the longest track in the movie.
     attr_reader :duration
 
     ##
@@ -234,9 +247,14 @@ class QuicktimeMov < Kaitai::Struct::Struct
     attr_reader :current_time
 
     ##
-    # Indicates a value to use for the track ID number of the next track added to this movie. Note that 0 is not a valid track ID value.
+    # Indicates a value to use for the track ID number of the next
+    # track added to this movie. Note that 0 is not a valid track
+    # ID value.
     attr_reader :next_track_id
   end
+
+  ##
+  # @see https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF Source
   class FtypBody < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -258,6 +276,9 @@ class QuicktimeMov < Kaitai::Struct::Struct
     attr_reader :minor_version
     attr_reader :compatible_brands
   end
+
+  ##
+  # Fixed-point 32-bit number.
   class Fixed32 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -272,6 +293,9 @@ class QuicktimeMov < Kaitai::Struct::Struct
     attr_reader :int_part
     attr_reader :frac_part
   end
+
+  ##
+  # Fixed-point 16-bit number.
   class Fixed16 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -359,6 +383,9 @@ class QuicktimeMov < Kaitai::Struct::Struct
     attr_reader :body
     attr_reader :_raw_body
   end
+
+  ##
+  # @see https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550 Source
   class TkhdBody < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

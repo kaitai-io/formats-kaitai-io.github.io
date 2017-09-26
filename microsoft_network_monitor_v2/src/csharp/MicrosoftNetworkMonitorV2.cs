@@ -15,6 +15,9 @@ namespace Kaitai
     /// There are at least 2 different versions of the format: v1 and
     /// v2. Netmon v3 seems to use the same file format as v1.
     /// </summary>
+    /// <remarks>
+    /// Reference: <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ee817717.aspx">Source</a>
+    /// </remarks>
     public partial class MicrosoftNetworkMonitorV2 : KaitaiStruct
     {
         public static MicrosoftNetworkMonitorV2 FromFile(string fileName)
@@ -249,6 +252,9 @@ namespace Kaitai
         /// timestamp individual frames and designates how much data from
         /// the original packet was actually written into the file.
         /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ee831821.aspx">Source</a>
+        /// </remarks>
         public partial class Frame : KaitaiStruct
         {
             public static Frame FromFile(string fileName)

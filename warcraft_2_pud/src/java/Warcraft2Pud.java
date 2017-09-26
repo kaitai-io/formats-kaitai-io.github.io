@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
  * features got limited support in v1.3).
  * 
  * File consists of a sequence of typed sections.
+ * @see <a href="http://cade.datamax.bg/war2x/pudspec.html">Source</a>
  */
 public class Warcraft2Pud extends KaitaiStruct {
     public static Warcraft2Pud fromFile(String fileName) throws IOException {
@@ -380,7 +381,7 @@ public class Warcraft2Pud extends KaitaiStruct {
         public byte[] unused() { return unused; }
 
         /**
-         * id tag (for consistence check in multiplayer)
+         * id tag (for consistency check in multiplayer)
          */
         public long idTag() { return idTag; }
         public Warcraft2Pud _root() { return _root; }

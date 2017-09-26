@@ -7,6 +7,18 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
+
+/**
+ * ISO9660 is standard filesystem used on read-only optical discs
+ * (mostly CD-ROM). The standard was based on earlier High Sierra
+ * Format (HSF), proposed for CD-ROMs in 1985, and, after several
+ * revisions, it was accepted as ISO9960:1998.
+ * 
+ * The format emphasizes portability (thus having pretty minimal
+ * features and very conservative file names standards) and sequential
+ * access (which favors disc devices with relatively slow rotation
+ * speed).
+ */
 public class Iso9660 extends KaitaiStruct {
     public static Iso9660 fromFile(String fileName) throws IOException {
         return new Iso9660(new ByteBufferKaitaiStream(fileName));
@@ -28,6 +40,10 @@ public class Iso9660 extends KaitaiStruct {
     }
     private void _read() {
     }
+
+    /**
+     * @see <a href="http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor">Source</a>
+     */
     public static class VolDescPrimary extends KaitaiStruct {
         public static VolDescPrimary fromFile(String fileName) throws IOException {
             return new VolDescPrimary(new ByteBufferKaitaiStream(fileName));
@@ -469,6 +485,10 @@ public class Iso9660 extends KaitaiStruct {
         public Iso9660 _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="http://wiki.osdev.org/ISO_9660#The_Path_Table">Source</a>
+     */
     public static class PathTableLe extends KaitaiStruct {
         public static PathTableLe fromFile(String fileName) throws IOException {
             return new PathTableLe(new ByteBufferKaitaiStream(fileName));
@@ -505,6 +525,10 @@ public class Iso9660 extends KaitaiStruct {
         public Iso9660 _root() { return _root; }
         public Iso9660.VolDescPrimary _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="http://wiki.osdev.org/ISO_9660#Date.2Ftime_format">Source</a>
+     */
     public static class DecDatetime extends KaitaiStruct {
         public static DecDatetime fromFile(String fileName) throws IOException {
             return new DecDatetime(new ByteBufferKaitaiStream(fileName));

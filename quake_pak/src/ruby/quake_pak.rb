@@ -6,6 +6,9 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# @see https://quakewiki.org/wiki/.pak#Format_specification Source
 class QuakePak < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -14,8 +17,8 @@ class QuakePak < Kaitai::Struct::Struct
 
   def _read
     @magic = @_io.ensure_fixed_contents([80, 65, 67, 75].pack('C*'))
-    @index_ofs = @_io.read_u4le
-    @index_size = @_io.read_u4le
+    @ofs_index = @_io.read_u4le
+    @len_index = @_io.read_u4le
     self
   end
   class IndexStruct < Kaitai::Struct::Struct
@@ -63,15 +66,15 @@ class QuakePak < Kaitai::Struct::Struct
   def index
     return @index unless @index.nil?
     _pos = @_io.pos
-    @_io.seek(index_ofs)
-    @_raw_index = @_io.read_bytes(index_size)
+    @_io.seek(ofs_index)
+    @_raw_index = @_io.read_bytes(len_index)
     io = Kaitai::Struct::Stream.new(@_raw_index)
     @index = IndexStruct.new(io, self, @_root)
     @_io.seek(_pos)
     @index
   end
   attr_reader :magic
-  attr_reader :index_ofs
-  attr_reader :index_size
+  attr_reader :ofs_index
+  attr_reader :len_index
   attr_reader :_raw_index
 end

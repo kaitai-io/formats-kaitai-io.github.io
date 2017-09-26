@@ -18,6 +18,9 @@ namespace Kaitai
     /// 
     /// File consists of a sequence of typed sections.
     /// </summary>
+    /// <remarks>
+    /// Reference: <a href="http://cade.datamax.bg/war2x/pudspec.html">Source</a>
+    /// </remarks>
     public partial class Warcraft2Pud : KaitaiStruct
     {
         public static Warcraft2Pud FromFile(string fileName)
@@ -318,7 +321,7 @@ namespace Kaitai
             public byte[] Unused { get { return _unused; } }
 
             /// <summary>
-            /// id tag (for consistence check in multiplayer)
+            /// id tag (for consistency check in multiplayer)
             /// </summary>
             public uint IdTag { get { return _idTag; } }
             public Warcraft2Pud M_Root { get { return m_root; } }

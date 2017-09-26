@@ -6,6 +6,17 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# MBR (Master Boot Record) partition table is a traditional way of
+# MS-DOS to partition larger hard disc drives into distinct
+# partitions.
+# 
+# This table is stored in the end of the boot sector (first sector) of
+# the drive, after the bootstrap code. Original DOS 2.0 specification
+# allowed only 4 partitions per disc, but DOS 3.2 introduced concept
+# of "extended partitions", which work as nested extra "boot records"
+# which are pointed to by original ("primary") partitions in MBR.
 class MbrPartitionTable < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

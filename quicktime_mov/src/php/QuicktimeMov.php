@@ -68,12 +68,19 @@ class MvhdBody extends \Kaitai\Struct\Struct {
     public function modificationTime() { return $this->_m_modificationTime; }
 
     /**
-     * A time value that indicates the time scale for this movie—that is, the number of time units that pass per second in its time coordinate system. A time coordinate system that measures time in sixtieths of a second, for example, has a time scale of 60.
+     * A time value that indicates the time scale for this
+     * movie—that is, the number of time units that pass per second
+     * in its time coordinate system. A time coordinate system that
+     * measures time in sixtieths of a second, for example, has a
+     * time scale of 60.
      */
     public function timeScale() { return $this->_m_timeScale; }
 
     /**
-     * A time value that indicates the duration of the movie in time scale units. Note that this property is derived from the movie’s tracks. The value of this field corresponds to the duration of the longest track in the movie.
+     * A time value that indicates the duration of the movie in
+     * time scale units. Note that this property is derived from
+     * the movie’s tracks. The value of this field corresponds to
+     * the duration of the longest track in the movie.
      */
     public function duration() { return $this->_m_duration; }
 
@@ -124,7 +131,9 @@ class MvhdBody extends \Kaitai\Struct\Struct {
     public function currentTime() { return $this->_m_currentTime; }
 
     /**
-     * Indicates a value to use for the track ID number of the next track added to this movie. Note that 0 is not a valid track ID value.
+     * Indicates a value to use for the track ID number of the next
+     * track added to this movie. Note that 0 is not a valid track
+     * ID value.
      */
     public function nextTrackId() { return $this->_m_nextTrackId; }
 }
@@ -155,6 +164,10 @@ class FtypBody extends \Kaitai\Struct\Struct {
     public function compatibleBrands() { return $this->_m_compatibleBrands; }
 }
 
+/**
+ * Fixed-point 32-bit number.
+ */
+
 namespace \QuicktimeMov;
 
 class Fixed32 extends \Kaitai\Struct\Struct {
@@ -172,6 +185,10 @@ class Fixed32 extends \Kaitai\Struct\Struct {
     public function intPart() { return $this->_m_intPart; }
     public function fracPart() { return $this->_m_fracPart; }
 }
+
+/**
+ * Fixed-point 16-bit number.
+ */
 
 namespace \QuicktimeMov;
 

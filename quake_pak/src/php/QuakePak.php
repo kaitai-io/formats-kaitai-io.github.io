@@ -9,28 +9,28 @@ class QuakePak extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m_magic = $this->_io->ensureFixedContents("\x50\x41\x43\x4B");
-        $this->_m_indexOfs = $this->_io->readU4le();
-        $this->_m_indexSize = $this->_io->readU4le();
+        $this->_m_ofsIndex = $this->_io->readU4le();
+        $this->_m_lenIndex = $this->_io->readU4le();
     }
     protected $_m_index;
     public function index() {
         if ($this->_m_index !== null)
             return $this->_m_index;
         $_pos = $this->_io->pos();
-        $this->_io->seek($this->indexOfs());
-        $this->_m__raw_index = $this->_io->readBytes($this->indexSize());
+        $this->_io->seek($this->ofsIndex());
+        $this->_m__raw_index = $this->_io->readBytes($this->lenIndex());
         $io = new \Kaitai\Struct\Stream($this->_m__raw_index);
         $this->_m_index = new \QuakePak\IndexStruct($io, $this, $this->_root);
         $this->_io->seek($_pos);
         return $this->_m_index;
     }
     protected $_m_magic;
-    protected $_m_indexOfs;
-    protected $_m_indexSize;
+    protected $_m_ofsIndex;
+    protected $_m_lenIndex;
     protected $_m__raw_index;
     public function magic() { return $this->_m_magic; }
-    public function indexOfs() { return $this->_m_indexOfs; }
-    public function indexSize() { return $this->_m_indexSize; }
+    public function ofsIndex() { return $this->_m_ofsIndex; }
+    public function lenIndex() { return $this->_m_lenIndex; }
     public function _raw_index() { return $this->_m__raw_index; }
 }
 

@@ -36,16 +36,16 @@ sub _read {
     my ($self) = @_;
 
     $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (80, 65, 67, 75)));
-    $self->{index_ofs} = $self->{_io}->read_u4le();
-    $self->{index_size} = $self->{_io}->read_u4le();
+    $self->{ofs_index} = $self->{_io}->read_u4le();
+    $self->{len_index} = $self->{_io}->read_u4le();
 }
 
 sub index {
     my ($self) = @_;
     return $self->{index} if ($self->{index});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek($self->index_ofs());
-    $self->{_raw_index} = $self->{_io}->read_bytes($self->index_size());
+    $self->{_io}->seek($self->ofs_index());
+    $self->{_raw_index} = $self->{_io}->read_bytes($self->len_index());
     my $io__raw_index = IO::KaitaiStruct::Stream->new($self->{_raw_index});
     $self->{index} = QuakePak::IndexStruct->new($io__raw_index, $self, $self->{_root});
     $self->{_io}->seek($_pos);
@@ -57,14 +57,14 @@ sub magic {
     return $self->{magic};
 }
 
-sub index_ofs {
+sub ofs_index {
     my ($self) = @_;
-    return $self->{index_ofs};
+    return $self->{ofs_index};
 }
 
-sub index_size {
+sub len_index {
     my ($self) = @_;
-    return $self->{index_size};
+    return $self->{len_index};
 }
 
 sub _raw_index {

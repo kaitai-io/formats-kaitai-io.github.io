@@ -1,6 +1,18 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * MBR (Master Boot Record) partition table is a traditional way of
+ * MS-DOS to partition larger hard disc drives into distinct
+ * partitions.
+ * 
+ * This table is stored in the end of the boot sector (first sector) of
+ * the drive, after the bootstrap code. Original DOS 2.0 specification
+ * allowed only 4 partitions per disc, but DOS 3.2 introduced concept
+ * of "extended partitions", which work as nested extra "boot records"
+ * which are pointed to by original ("primary") partitions in MBR.
+ */
+
 class MbrPartitionTable extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MbrPartitionTable $_root = null) {
         parent::__construct($_io, $_parent, $_root);

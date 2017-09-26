@@ -119,6 +119,16 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
                 </div>
             </div>
         </div>
@@ -222,12 +232,12 @@ section#format-index .row {
 		quake_pak__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;magic_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;magic_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;50 41 43 4B&lt;/TD&gt;&lt;TD PORT=&quot;magic_type&quot;&gt;magic&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;index_ofs_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;index_ofs_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;index_ofs_type&quot;&gt;index_ofs&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;index_size_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;index_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;index_size_type&quot;&gt;index_size&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;ofs_index_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;ofs_index_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;ofs_index_type&quot;&gt;ofs_index&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;len_index_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;len_index_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_index_type&quot;&gt;len_index&lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
 		quake_pak__inst__index [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;index_pos&quot;&gt;index_ofs&lt;/TD&gt;&lt;TD PORT=&quot;index_size&quot;&gt;index_size&lt;/TD&gt;&lt;TD&gt;IndexStruct&lt;/TD&gt;&lt;TD PORT=&quot;index_type&quot;&gt;index&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;index_pos&quot;&gt;ofs_index&lt;/TD&gt;&lt;TD PORT=&quot;index_size&quot;&gt;len_index&lt;/TD&gt;&lt;TD&gt;IndexStruct&lt;/TD&gt;&lt;TD PORT=&quot;index_type&quot;&gt;index&lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
 		subgraph cluster__index_struct {
 			label=&quot;QuakePak::IndexStruct&quot;;
@@ -255,8 +265,8 @@ section#format-index .row {
 			&lt;/TABLE&gt;&gt;];
 		}
 	}
-	quake_pak__seq:index_ofs_type -&gt; quake_pak__inst__index:index_pos [color=&quot;#404040&quot;];
-	quake_pak__seq:index_size_type -&gt; quake_pak__inst__index:index_size [color=&quot;#404040&quot;];
+	quake_pak__seq:ofs_index_type -&gt; quake_pak__inst__index:index_pos [color=&quot;#404040&quot;];
+	quake_pak__seq:len_index_type -&gt; quake_pak__inst__index:index_size [color=&quot;#404040&quot;];
 	quake_pak__inst__index:index_type -&gt; index_struct__seq [style=bold];
 	index_struct__seq:entries_type -&gt; index_entry__seq [style=bold];
 	index_entry__seq:ofs_type -&gt; index_entry__inst__body:body_pos [color=&quot;#404040&quot;];

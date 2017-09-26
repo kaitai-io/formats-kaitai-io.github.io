@@ -6,6 +6,18 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
+/**
+ * MBR (Master Boot Record) partition table is a traditional way of
+ * MS-DOS to partition larger hard disc drives into distinct
+ * partitions.
+ * 
+ * This table is stored in the end of the boot sector (first sector) of
+ * the drive, after the bootstrap code. Original DOS 2.0 specification
+ * allowed only 4 partitions per disc, but DOS 3.2 introduced concept
+ * of "extended partitions", which work as nested extra "boot records"
+ * which are pointed to by original ("primary") partitions in MBR.
+ */
 public class MbrPartitionTable extends KaitaiStruct {
     public static MbrPartitionTable fromFile(String fileName) throws IOException {
         return new MbrPartitionTable(new ByteBufferKaitaiStream(fileName));

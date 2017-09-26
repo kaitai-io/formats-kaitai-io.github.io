@@ -4,6 +4,18 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// ISO9660 is standard filesystem used on read-only optical discs
+    /// (mostly CD-ROM). The standard was based on earlier High Sierra
+    /// Format (HSF), proposed for CD-ROMs in 1985, and, after several
+    /// revisions, it was accepted as ISO9960:1998.
+    /// 
+    /// The format emphasizes portability (thus having pretty minimal
+    /// features and very conservative file names standards) and sequential
+    /// access (which favors disc devices with relatively slow rotation
+    /// speed).
+    /// </summary>
     public partial class Iso9660 : KaitaiStruct
     {
         public static Iso9660 FromFile(string fileName)
@@ -22,6 +34,10 @@ namespace Kaitai
         private void _read()
         {
         }
+
+        /// <remarks>
+        /// Reference: <a href="http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor">Source</a>
+        /// </remarks>
         public partial class VolDescPrimary : KaitaiStruct
         {
             public static VolDescPrimary FromFile(string fileName)
@@ -425,6 +441,10 @@ namespace Kaitai
             public Iso9660 M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="http://wiki.osdev.org/ISO_9660#The_Path_Table">Source</a>
+        /// </remarks>
         public partial class PathTableLe : KaitaiStruct
         {
             public static PathTableLe FromFile(string fileName)
@@ -456,6 +476,10 @@ namespace Kaitai
             public Iso9660 M_Root { get { return m_root; } }
             public Iso9660.VolDescPrimary M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="http://wiki.osdev.org/ISO_9660#Date.2Ftime_format">Source</a>
+        /// </remarks>
         public partial class DecDatetime : KaitaiStruct
         {
             public static DecDatetime FromFile(string fileName)

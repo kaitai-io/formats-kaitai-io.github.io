@@ -6,6 +6,17 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# ISO9660 is standard filesystem used on read-only optical discs
+# (mostly CD-ROM). The standard was based on earlier High Sierra
+# Format (HSF), proposed for CD-ROMs in 1985, and, after several
+# revisions, it was accepted as ISO9960:1998.
+# 
+# The format emphasizes portability (thus having pretty minimal
+# features and very conservative file names standards) and sequential
+# access (which favors disc devices with relatively slow rotation
+# speed).
 class Iso9660 < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -15,6 +26,9 @@ class Iso9660 < Kaitai::Struct::Struct
   def _read
     self
   end
+
+  ##
+  # @see http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor Source
   class VolDescPrimary < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -248,6 +262,9 @@ class Iso9660 < Kaitai::Struct::Struct
     attr_reader :le
     attr_reader :be
   end
+
+  ##
+  # @see http://wiki.osdev.org/ISO_9660#The_Path_Table Source
   class PathTableLe < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -265,6 +282,9 @@ class Iso9660 < Kaitai::Struct::Struct
     end
     attr_reader :entries
   end
+
+  ##
+  # @see http://wiki.osdev.org/ISO_9660#Date.2Ftime_format Source
   class DecDatetime < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

@@ -23,6 +23,7 @@ class ethernet_frame_t;
  * 
  * There are at least 2 different versions of the format: v1 and
  * v2. Netmon v3 seems to use the same file format as v1.
+ * \sa Source
  */
 
 class microsoft_network_monitor_v2_t : public kaitai::kstruct {
@@ -217,6 +218,7 @@ public:
      * A container for actually captured network data. Allow to
      * timestamp individual frames and designates how much data from
      * the original packet was actually written into the file.
+     * \sa Source
      */
 
     class frame_t : public kaitai::kstruct {

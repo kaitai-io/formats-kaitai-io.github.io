@@ -98,7 +98,20 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p></p>
+                <p><p>STL files are used to represent simple 3D models, defined using
+triangular 3D faces.</p>
+<p>Initially it was introduced as native format for 3D Systems
+Stereolithography CAD system, but due to its extreme simplicity, it
+was adopted by a wide range of 3D modelling, CAD, rapid prototyping
+and 3D printing applications as the simplest 3D model exchange
+format.</p>
+<p>STL is extremely bare-bones format: there are no complex headers, no
+texture / color support, no units specifications, no distinct vertex
+arrays. Whole model is specified as a collection of triangular
+faces.</p>
+<p>There are two versions of the format (text and binary), this spec
+describes binary version.</p>
+</p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
@@ -117,6 +130,16 @@ section#format-index .row {
                     <div class="panel-body">
                         stl
                     </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
                     
                     
                 </div>
@@ -240,6 +263,25 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// &lt;summary&gt;
+    /// STL files are used to represent simple 3D models, defined using
+    /// triangular 3D faces.
+    /// 
+    /// Initially it was introduced as native format for 3D Systems
+    /// Stereolithography CAD system, but due to its extreme simplicity, it
+    /// was adopted by a wide range of 3D modelling, CAD, rapid prototyping
+    /// and 3D printing applications as the simplest 3D model exchange
+    /// format.
+    /// 
+    /// STL is extremely bare-bones format: there are no complex headers, no
+    /// texture / color support, no units specifications, no distinct vertex
+    /// arrays. Whole model is specified as a collection of triangular
+    /// faces.
+    /// 
+    /// There are two versions of the format (text and binary), this spec
+    /// describes binary version.
+    /// &lt;/summary&gt;
     public partial class Stl : KaitaiStruct
     {
         public static Stl FromFile(string fileName)
@@ -263,6 +305,12 @@ namespace Kaitai
                 _triangles.Add(new Triangle(m_io, this, m_root));
             }
         }
+
+        /// &lt;summary&gt;
+        /// Each STL triangle is defined by its 3 points in 3D space and a
+        /// normal vector, which is generally used to determine where is
+        /// &amp;quot;inside&amp;quot; and &amp;quot;outside&amp;quot; of the model.
+        /// &lt;/summary&gt;
         public partial class Triangle : KaitaiStruct
         {
             public static Triangle FromFile(string fileName)

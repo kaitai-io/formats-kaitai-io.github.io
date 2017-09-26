@@ -13,8 +13,8 @@ quake_pak_t::quake_pak_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, qua
 
 void quake_pak_t::_read() {
     m_magic = m__io->ensure_fixed_contents(std::string("\x50\x41\x43\x4B", 4));
-    m_index_ofs = m__io->read_u4le();
-    m_index_size = m__io->read_u4le();
+    m_ofs_index = m__io->read_u4le();
+    m_len_index = m__io->read_u4le();
 }
 
 quake_pak_t::~quake_pak_t() {
@@ -82,8 +82,8 @@ quake_pak_t::index_struct_t* quake_pak_t::index() {
     if (f_index)
         return m_index;
     std::streampos _pos = m__io->pos();
-    m__io->seek(index_ofs());
-    m__raw_index = m__io->read_bytes(index_size());
+    m__io->seek(ofs_index());
+    m__raw_index = m__io->read_bytes(len_index());
     m__io__raw_index = new kaitai::kstream(m__raw_index);
     m_index = new index_struct_t(m__io__raw_index, this, m__root);
     m__io->seek(_pos);

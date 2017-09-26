@@ -8,6 +8,10 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+
+/**
+ * @see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF">Source</a>
+ */
 public class QuicktimeMov extends KaitaiStruct {
     public static QuicktimeMov fromFile(String fileName) throws IOException {
         return new QuicktimeMov(new ByteBufferKaitaiStream(fileName));
@@ -186,6 +190,10 @@ public class QuicktimeMov extends KaitaiStruct {
     private void _read() {
         this.atoms = new AtomList(this._io, this, _root);
     }
+
+    /**
+     * @see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG">Source</a>
+     */
     public static class MvhdBody extends KaitaiStruct {
         public static MvhdBody fromFile(String fileName) throws IOException {
             return new MvhdBody(new ByteBufferKaitaiStream(fileName));
@@ -253,12 +261,19 @@ public class QuicktimeMov extends KaitaiStruct {
         public long modificationTime() { return modificationTime; }
 
         /**
-         * A time value that indicates the time scale for this movie—that is, the number of time units that pass per second in its time coordinate system. A time coordinate system that measures time in sixtieths of a second, for example, has a time scale of 60.
+         * A time value that indicates the time scale for this
+         * movie—that is, the number of time units that pass per second
+         * in its time coordinate system. A time coordinate system that
+         * measures time in sixtieths of a second, for example, has a
+         * time scale of 60.
          */
         public long timeScale() { return timeScale; }
 
         /**
-         * A time value that indicates the duration of the movie in time scale units. Note that this property is derived from the movie’s tracks. The value of this field corresponds to the duration of the longest track in the movie.
+         * A time value that indicates the duration of the movie in
+         * time scale units. Note that this property is derived from
+         * the movie’s tracks. The value of this field corresponds to
+         * the duration of the longest track in the movie.
          */
         public long duration() { return duration; }
 
@@ -309,12 +324,18 @@ public class QuicktimeMov extends KaitaiStruct {
         public long currentTime() { return currentTime; }
 
         /**
-         * Indicates a value to use for the track ID number of the next track added to this movie. Note that 0 is not a valid track ID value.
+         * Indicates a value to use for the track ID number of the next
+         * track added to this movie. Note that 0 is not a valid track
+         * ID value.
          */
         public long nextTrackId() { return nextTrackId; }
         public QuicktimeMov _root() { return _root; }
         public QuicktimeMov.Atom _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF">Source</a>
+     */
     public static class FtypBody extends KaitaiStruct {
         public static FtypBody fromFile(String fileName) throws IOException {
             return new FtypBody(new ByteBufferKaitaiStream(fileName));
@@ -357,6 +378,10 @@ public class QuicktimeMov extends KaitaiStruct {
         public QuicktimeMov _root() { return _root; }
         public QuicktimeMov.Atom _parent() { return _parent; }
     }
+
+    /**
+     * Fixed-point 32-bit number.
+     */
     public static class Fixed32 extends KaitaiStruct {
         public static Fixed32 fromFile(String fileName) throws IOException {
             return new Fixed32(new ByteBufferKaitaiStream(fileName));
@@ -389,6 +414,10 @@ public class QuicktimeMov extends KaitaiStruct {
         public QuicktimeMov _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
+
+    /**
+     * Fixed-point 16-bit number.
+     */
     public static class Fixed16 extends KaitaiStruct {
         public static Fixed16 fromFile(String fileName) throws IOException {
             return new Fixed16(new ByteBufferKaitaiStream(fileName));
@@ -542,6 +571,10 @@ public class QuicktimeMov extends KaitaiStruct {
         public QuicktimeMov.AtomList _parent() { return _parent; }
         public byte[] _raw_body() { return _raw_body; }
     }
+
+    /**
+     * @see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550">Source</a>
+     */
     public static class TkhdBody extends KaitaiStruct {
         public static TkhdBody fromFile(String fileName) throws IOException {
             return new TkhdBody(new ByteBufferKaitaiStream(fileName));

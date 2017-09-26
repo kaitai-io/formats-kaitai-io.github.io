@@ -1,5 +1,9 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * @see {@link https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF|Source}
+ */
+
 var QuicktimeMov = (function() {
   QuicktimeMov.AtomType = Object.freeze({
     XTRA: 1484026465,
@@ -280,6 +284,10 @@ var QuicktimeMov = (function() {
     this.atoms = new AtomList(this._io, this, this._root);
   }
 
+  /**
+   * @see {@link https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG|Source}
+   */
+
   var MvhdBody = QuicktimeMov.MvhdBody = (function() {
     function MvhdBody(_io, _parent, _root) {
       this._io = _io;
@@ -313,11 +321,18 @@ var QuicktimeMov = (function() {
      */
 
     /**
-     * A time value that indicates the time scale for this movie—that is, the number of time units that pass per second in its time coordinate system. A time coordinate system that measures time in sixtieths of a second, for example, has a time scale of 60.
+     * A time value that indicates the time scale for this
+     * movie—that is, the number of time units that pass per second
+     * in its time coordinate system. A time coordinate system that
+     * measures time in sixtieths of a second, for example, has a
+     * time scale of 60.
      */
 
     /**
-     * A time value that indicates the duration of the movie in time scale units. Note that this property is derived from the movie’s tracks. The value of this field corresponds to the duration of the longest track in the movie.
+     * A time value that indicates the duration of the movie in
+     * time scale units. Note that this property is derived from
+     * the movie’s tracks. The value of this field corresponds to
+     * the duration of the longest track in the movie.
      */
 
     /**
@@ -357,11 +372,17 @@ var QuicktimeMov = (function() {
      */
 
     /**
-     * Indicates a value to use for the track ID number of the next track added to this movie. Note that 0 is not a valid track ID value.
+     * Indicates a value to use for the track ID number of the next
+     * track added to this movie. Note that 0 is not a valid track
+     * ID value.
      */
 
     return MvhdBody;
   })();
+
+  /**
+   * @see {@link https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF|Source}
+   */
 
   var FtypBody = QuicktimeMov.FtypBody = (function() {
     function FtypBody(_io, _parent, _root) {
@@ -385,6 +406,10 @@ var QuicktimeMov = (function() {
     return FtypBody;
   })();
 
+  /**
+   * Fixed-point 32-bit number.
+   */
+
   var Fixed32 = QuicktimeMov.Fixed32 = (function() {
     function Fixed32(_io, _parent, _root) {
       this._io = _io;
@@ -400,6 +425,10 @@ var QuicktimeMov = (function() {
 
     return Fixed32;
   })();
+
+  /**
+   * Fixed-point 16-bit number.
+   */
 
   var Fixed16 = QuicktimeMov.Fixed16 = (function() {
     function Fixed16(_io, _parent, _root) {
@@ -503,6 +532,10 @@ var QuicktimeMov = (function() {
 
     return Atom;
   })();
+
+  /**
+   * @see {@link https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550|Source}
+   */
 
   var TkhdBody = QuicktimeMov.TkhdBody = (function() {
     function TkhdBody(_io, _parent, _root) {

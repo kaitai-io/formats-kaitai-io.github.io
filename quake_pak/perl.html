@@ -119,6 +119,16 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
                 </div>
             </div>
         </div>
@@ -250,16 +260,16 @@ sub _read {
     my ($self) = @_;
 
     $self-&gt;{magic} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (80, 65, 67, 75)));
-    $self-&gt;{index_ofs} = $self-&gt;{_io}-&gt;read_u4le();
-    $self-&gt;{index_size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{ofs_index} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{len_index} = $self-&gt;{_io}-&gt;read_u4le();
 }
 
 sub index {
     my ($self) = @_;
     return $self-&gt;{index} if ($self-&gt;{index});
     my $_pos = $self-&gt;{_io}-&gt;pos();
-    $self-&gt;{_io}-&gt;seek($self-&gt;index_ofs());
-    $self-&gt;{_raw_index} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;index_size());
+    $self-&gt;{_io}-&gt;seek($self-&gt;ofs_index());
+    $self-&gt;{_raw_index} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_index());
     my $io__raw_index = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_index});
     $self-&gt;{index} = QuakePak::IndexStruct-&gt;new($io__raw_index, $self, $self-&gt;{_root});
     $self-&gt;{_io}-&gt;seek($_pos);
@@ -271,14 +281,14 @@ sub magic {
     return $self-&gt;{magic};
 }
 
-sub index_ofs {
+sub ofs_index {
     my ($self) = @_;
-    return $self-&gt;{index_ofs};
+    return $self-&gt;{ofs_index};
 }
 
-sub index_size {
+sub len_index {
     my ($self) = @_;
-    return $self-&gt;{index_size};
+    return $self-&gt;{len_index};
 }
 
 sub _raw_index {

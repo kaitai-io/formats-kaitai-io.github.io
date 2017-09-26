@@ -9,6 +9,16 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 class Iso9660(KaitaiStruct):
+    """ISO9660 is standard filesystem used on read-only optical discs
+    (mostly CD-ROM). The standard was based on earlier High Sierra
+    Format (HSF), proposed for CD-ROMs in 1985, and, after several
+    revisions, it was accepted as ISO9960:1998.
+    
+    The format emphasizes portability (thus having pretty minimal
+    features and very conservative file names standards) and sequential
+    access (which favors disc devices with relatively slow rotation
+    speed).
+    """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -19,6 +29,10 @@ class Iso9660(KaitaiStruct):
         pass
 
     class VolDescPrimary(KaitaiStruct):
+        """
+        .. seealso::
+           Source - http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -197,6 +211,10 @@ class Iso9660(KaitaiStruct):
 
 
     class PathTableLe(KaitaiStruct):
+        """
+        .. seealso::
+           Source - http://wiki.osdev.org/ISO_9660#The_Path_Table
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -213,6 +231,10 @@ class Iso9660(KaitaiStruct):
 
 
     class DecDatetime(KaitaiStruct):
+        """
+        .. seealso::
+           Source - http://wiki.osdev.org/ISO_9660#Date.2Ftime_format
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent

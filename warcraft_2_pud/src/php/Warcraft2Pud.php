@@ -140,7 +140,7 @@ class SectionType extends \Kaitai\Struct\Struct {
     public function unused() { return $this->_m_unused; }
 
     /**
-     * id tag (for consistence check in multiplayer)
+     * id tag (for consistency check in multiplayer)
      */
     public function idTag() { return $this->_m_idTag; }
 }

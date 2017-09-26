@@ -21,6 +21,9 @@ class Warcraft2Pud(KaitaiStruct):
     features got limited support in v1.3).
     
     File consists of a sequence of typed sections.
+    
+    .. seealso::
+       Source - http://cade.datamax.bg/war2x/pudspec.html
     """
 
     class Controller(Enum):

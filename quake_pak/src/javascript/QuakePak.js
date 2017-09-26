@@ -1,5 +1,9 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * @see {@link https://quakewiki.org/wiki/.pak#Format_specification|Source}
+ */
+
 var QuakePak = (function() {
   function QuakePak(_io, _parent, _root) {
     this._io = _io;
@@ -10,8 +14,8 @@ var QuakePak = (function() {
   }
   QuakePak.prototype._read = function() {
     this.magic = this._io.ensureFixedContents([80, 65, 67, 75]);
-    this.indexOfs = this._io.readU4le();
-    this.indexSize = this._io.readU4le();
+    this.ofsIndex = this._io.readU4le();
+    this.lenIndex = this._io.readU4le();
   }
 
   var IndexStruct = QuakePak.IndexStruct = (function() {
@@ -67,8 +71,8 @@ var QuakePak = (function() {
       if (this._m_index !== undefined)
         return this._m_index;
       var _pos = this._io.pos;
-      this._io.seek(this.indexOfs);
-      this._raw__m_index = this._io.readBytes(this.indexSize);
+      this._io.seek(this.ofsIndex);
+      this._raw__m_index = this._io.readBytes(this.lenIndex);
       var _io__raw__m_index = new KaitaiStream(this._raw__m_index);
       this._m_index = new IndexStruct(_io__raw__m_index, this, this._root);
       this._io.seek(_pos);

@@ -12,6 +12,18 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 
+/**
+ * ISO9660 is standard filesystem used on read-only optical discs
+ * (mostly CD-ROM). The standard was based on earlier High Sierra
+ * Format (HSF), proposed for CD-ROMs in 1985, and, after several
+ * revisions, it was accepted as ISO9960:1998.
+ * 
+ * The format emphasizes portability (thus having pretty minimal
+ * features and very conservative file names standards) and sequential
+ * access (which favors disc devices with relatively slow rotation
+ * speed).
+ */
+
 class iso9660_t : public kaitai::kstruct {
 
 public:
@@ -35,6 +47,10 @@ private:
 
 public:
     ~iso9660_t();
+
+    /**
+     * \sa Source
+     */
 
     class vol_desc_primary_t : public kaitai::kstruct {
 
@@ -380,6 +396,10 @@ public:
         kaitai::kstruct* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa Source
+     */
+
     class path_table_le_t : public kaitai::kstruct {
 
     public:
@@ -402,6 +422,10 @@ public:
         iso9660_t* _root() const { return m__root; }
         iso9660_t::vol_desc_primary_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa Source
+     */
 
     class dec_datetime_t : public kaitai::kstruct {
 

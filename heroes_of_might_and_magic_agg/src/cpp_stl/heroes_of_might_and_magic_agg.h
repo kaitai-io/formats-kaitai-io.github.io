@@ -12,6 +12,10 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 
+/**
+ * \sa Source
+ */
+
 class heroes_of_might_and_magic_agg_t : public kaitai::kstruct {
 
 public:

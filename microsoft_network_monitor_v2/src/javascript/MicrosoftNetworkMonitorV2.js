@@ -15,6 +15,7 @@ if (typeof require === 'function')
  * 
  * There are at least 2 different versions of the format: v1 and
  * v2. Netmon v3 seems to use the same file format as v1.
+ * @see {@link https://msdn.microsoft.com/en-us/library/windows/desktop/ee817717.aspx|Source}
  */
 
 var MicrosoftNetworkMonitorV2 = (function() {
@@ -321,6 +322,7 @@ var MicrosoftNetworkMonitorV2 = (function() {
    * A container for actually captured network data. Allow to
    * timestamp individual frames and designates how much data from
    * the original packet was actually written into the file.
+   * @see {@link https://msdn.microsoft.com/en-us/library/windows/desktop/ee831821.aspx|Source}
    */
 
   var Frame = MicrosoftNetworkMonitorV2.Frame = (function() {

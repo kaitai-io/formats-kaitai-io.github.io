@@ -1,6 +1,13 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 /**
+ * WMF (Windows Metafile) is a relatively early vector image format
+ * introduced for Microsoft Windows in 1990.
+ * 
+ * Inside, it provides a serialized list of Windows GDI (Graphics
+ * Device Interface) function calls, which, if played back, result in
+ * an image being drawn on a given surface (display, off-screen buffer,
+ * printer, etc).
  * @see {@link http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf|Source}
  */
 

@@ -9,6 +9,10 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 class QuicktimeMov(KaitaiStruct):
+    """
+    .. seealso::
+       Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF
+    """
 
     class AtomType(Enum):
         xtra = 1484026465
@@ -153,6 +157,10 @@ class QuicktimeMov(KaitaiStruct):
         self.atoms = self._root.AtomList(self._io, self, self._root)
 
     class MvhdBody(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -180,6 +188,10 @@ class QuicktimeMov(KaitaiStruct):
 
 
     class FtypBody(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -198,6 +210,7 @@ class QuicktimeMov(KaitaiStruct):
 
 
     class Fixed32(KaitaiStruct):
+        """Fixed-point 32-bit number."""
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -210,6 +223,7 @@ class QuicktimeMov(KaitaiStruct):
 
 
     class Fixed16(KaitaiStruct):
+        """Fixed-point 16-bit number."""
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -292,6 +306,10 @@ class QuicktimeMov(KaitaiStruct):
 
 
     class TkhdBody(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent

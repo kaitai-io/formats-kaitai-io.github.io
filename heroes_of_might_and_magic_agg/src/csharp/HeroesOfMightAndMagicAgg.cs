@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <remarks>
+    /// Reference: <a href="http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic)">Source</a>
+    /// </remarks>
     public partial class HeroesOfMightAndMagicAgg : KaitaiStruct
     {
         public static HeroesOfMightAndMagicAgg FromFile(string fileName)

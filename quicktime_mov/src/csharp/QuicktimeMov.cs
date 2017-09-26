@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <remarks>
+    /// Reference: <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF">Source</a>
+    /// </remarks>
     public partial class QuicktimeMov : KaitaiStruct
     {
         public static QuicktimeMov FromFile(string fileName)
@@ -159,6 +163,10 @@ namespace Kaitai
         {
             _atoms = new AtomList(m_io, this, m_root);
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG">Source</a>
+        /// </remarks>
         public partial class MvhdBody : KaitaiStruct
         {
             public static MvhdBody FromFile(string fileName)
@@ -221,12 +229,19 @@ namespace Kaitai
             public uint ModificationTime { get { return _modificationTime; } }
 
             /// <summary>
-            /// A time value that indicates the time scale for this movie—that is, the number of time units that pass per second in its time coordinate system. A time coordinate system that measures time in sixtieths of a second, for example, has a time scale of 60.
+            /// A time value that indicates the time scale for this
+            /// movie—that is, the number of time units that pass per second
+            /// in its time coordinate system. A time coordinate system that
+            /// measures time in sixtieths of a second, for example, has a
+            /// time scale of 60.
             /// </summary>
             public uint TimeScale { get { return _timeScale; } }
 
             /// <summary>
-            /// A time value that indicates the duration of the movie in time scale units. Note that this property is derived from the movie’s tracks. The value of this field corresponds to the duration of the longest track in the movie.
+            /// A time value that indicates the duration of the movie in
+            /// time scale units. Note that this property is derived from
+            /// the movie’s tracks. The value of this field corresponds to
+            /// the duration of the longest track in the movie.
             /// </summary>
             public uint Duration { get { return _duration; } }
 
@@ -277,12 +292,18 @@ namespace Kaitai
             public uint CurrentTime { get { return _currentTime; } }
 
             /// <summary>
-            /// Indicates a value to use for the track ID number of the next track added to this movie. Note that 0 is not a valid track ID value.
+            /// Indicates a value to use for the track ID number of the next
+            /// track added to this movie. Note that 0 is not a valid track
+            /// ID value.
             /// </summary>
             public uint NextTrackId { get { return _nextTrackId; } }
             public QuicktimeMov M_Root { get { return m_root; } }
             public QuicktimeMov.Atom M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF">Source</a>
+        /// </remarks>
         public partial class FtypBody : KaitaiStruct
         {
             public static FtypBody FromFile(string fileName)
@@ -320,6 +341,10 @@ namespace Kaitai
             public QuicktimeMov M_Root { get { return m_root; } }
             public QuicktimeMov.Atom M_Parent { get { return m_parent; } }
         }
+
+        /// <summary>
+        /// Fixed-point 32-bit number.
+        /// </summary>
         public partial class Fixed32 : KaitaiStruct
         {
             public static Fixed32 FromFile(string fileName)
@@ -347,6 +372,10 @@ namespace Kaitai
             public QuicktimeMov M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
+
+        /// <summary>
+        /// Fixed-point 16-bit number.
+        /// </summary>
         public partial class Fixed16 : KaitaiStruct
         {
             public static Fixed16 FromFile(string fileName)
@@ -496,6 +525,10 @@ namespace Kaitai
             public QuicktimeMov.AtomList M_Parent { get { return m_parent; } }
             public byte[] M_RawBody { get { return __raw_body; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550">Source</a>
+        /// </remarks>
         public partial class TkhdBody : KaitaiStruct
         {
             public static TkhdBody FromFile(string fileName)

@@ -1,6 +1,18 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * ISO9660 is standard filesystem used on read-only optical discs
+ * (mostly CD-ROM). The standard was based on earlier High Sierra
+ * Format (HSF), proposed for CD-ROMs in 1985, and, after several
+ * revisions, it was accepted as ISO9960:1998.
+ * 
+ * The format emphasizes portability (thus having pretty minimal
+ * features and very conservative file names standards) and sequential
+ * access (which favors disc devices with relatively slow rotation
+ * speed).
+ */
+
 class Iso9660 extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Iso9660 $_root = null) {
         parent::__construct($_io, $_parent, $_root);

@@ -10,7 +10,14 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 class Wmf(KaitaiStruct):
-    """
+    """WMF (Windows Metafile) is a relatively early vector image format
+    introduced for Microsoft Windows in 1990.
+    
+    Inside, it provides a serialized list of Windows GDI (Graphics
+    Device Interface) function calls, which, if played back, result in
+    an image being drawn on a given surface (display, off-screen buffer,
+    printer, etc).
+    
     .. seealso::
        Source - http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf
     """

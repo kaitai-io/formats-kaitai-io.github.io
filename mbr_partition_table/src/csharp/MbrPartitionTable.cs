@@ -4,6 +4,18 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// MBR (Master Boot Record) partition table is a traditional way of
+    /// MS-DOS to partition larger hard disc drives into distinct
+    /// partitions.
+    /// 
+    /// This table is stored in the end of the boot sector (first sector) of
+    /// the drive, after the bootstrap code. Original DOS 2.0 specification
+    /// allowed only 4 partitions per disc, but DOS 3.2 introduced concept
+    /// of &quot;extended partitions&quot;, which work as nested extra &quot;boot records&quot;
+    /// which are pointed to by original (&quot;primary&quot;) partitions in MBR.
+    /// </summary>
     public partial class MbrPartitionTable : KaitaiStruct
     {
         public static MbrPartitionTable FromFile(string fileName)

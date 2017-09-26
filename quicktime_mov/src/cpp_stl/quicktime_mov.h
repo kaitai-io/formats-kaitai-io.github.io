@@ -12,6 +12,10 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 
+/**
+ * \sa Source
+ */
+
 class quicktime_mov_t : public kaitai::kstruct {
 
 public:
@@ -167,6 +171,10 @@ private:
 public:
     ~quicktime_mov_t();
 
+    /**
+     * \sa Source
+     */
+
     class mvhd_body_t : public kaitai::kstruct {
 
     public:
@@ -211,12 +219,19 @@ public:
         uint32_t modification_time() const { return m_modification_time; }
 
         /**
-         * A time value that indicates the time scale for this movie—that is, the number of time units that pass per second in its time coordinate system. A time coordinate system that measures time in sixtieths of a second, for example, has a time scale of 60.
+         * A time value that indicates the time scale for this
+         * movie—that is, the number of time units that pass per second
+         * in its time coordinate system. A time coordinate system that
+         * measures time in sixtieths of a second, for example, has a
+         * time scale of 60.
          */
         uint32_t time_scale() const { return m_time_scale; }
 
         /**
-         * A time value that indicates the duration of the movie in time scale units. Note that this property is derived from the movie’s tracks. The value of this field corresponds to the duration of the longest track in the movie.
+         * A time value that indicates the duration of the movie in
+         * time scale units. Note that this property is derived from
+         * the movie’s tracks. The value of this field corresponds to
+         * the duration of the longest track in the movie.
          */
         uint32_t duration() const { return m_duration; }
 
@@ -267,12 +282,18 @@ public:
         uint32_t current_time() const { return m_current_time; }
 
         /**
-         * Indicates a value to use for the track ID number of the next track added to this movie. Note that 0 is not a valid track ID value.
+         * Indicates a value to use for the track ID number of the next
+         * track added to this movie. Note that 0 is not a valid track
+         * ID value.
          */
         uint32_t next_track_id() const { return m_next_track_id; }
         quicktime_mov_t* _root() const { return m__root; }
         quicktime_mov_t::atom_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa Source
+     */
 
     class ftyp_body_t : public kaitai::kstruct {
 
@@ -301,6 +322,10 @@ public:
         quicktime_mov_t::atom_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * Fixed-point 32-bit number.
+     */
+
     class fixed32_t : public kaitai::kstruct {
 
     public:
@@ -325,6 +350,10 @@ public:
         quicktime_mov_t* _root() const { return m__root; }
         kaitai::kstruct* _parent() const { return m__parent; }
     };
+
+    /**
+     * Fixed-point 16-bit number.
+     */
 
     class fixed16_t : public kaitai::kstruct {
 
@@ -402,6 +431,10 @@ public:
         std::string _raw_body() const { return m__raw_body; }
         kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
     };
+
+    /**
+     * \sa Source
+     */
 
     class tkhd_body_t : public kaitai::kstruct {
 

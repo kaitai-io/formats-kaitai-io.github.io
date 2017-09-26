@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
+
+/**
+ * @see <a href="https://quakewiki.org/wiki/.pak#Format_specification">Source</a>
+ */
 public class QuakePak extends KaitaiStruct {
     public static QuakePak fromFile(String fileName) throws IOException {
         return new QuakePak(new ByteBufferKaitaiStream(fileName));
@@ -28,8 +32,8 @@ public class QuakePak extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.ensureFixedContents(new byte[] { 80, 65, 67, 75 });
-        this.indexOfs = this._io.readU4le();
-        this.indexSize = this._io.readU4le();
+        this.ofsIndex = this._io.readU4le();
+        this.lenIndex = this._io.readU4le();
     }
     public static class IndexStruct extends KaitaiStruct {
         public static IndexStruct fromFile(String fileName) throws IOException {
@@ -118,22 +122,22 @@ public class QuakePak extends KaitaiStruct {
         if (this.index != null)
             return this.index;
         long _pos = this._io.pos();
-        this._io.seek(indexOfs());
-        this._raw_index = this._io.readBytes(indexSize());
+        this._io.seek(ofsIndex());
+        this._raw_index = this._io.readBytes(lenIndex());
         KaitaiStream _io__raw_index = new ByteBufferKaitaiStream(_raw_index);
         this.index = new IndexStruct(_io__raw_index, this, _root);
         this._io.seek(_pos);
         return this.index;
     }
     private byte[] magic;
-    private long indexOfs;
-    private long indexSize;
+    private long ofsIndex;
+    private long lenIndex;
     private QuakePak _root;
     private KaitaiStruct _parent;
     private byte[] _raw_index;
     public byte[] magic() { return magic; }
-    public long indexOfs() { return indexOfs; }
-    public long indexSize() { return indexSize; }
+    public long ofsIndex() { return ofsIndex; }
+    public long lenIndex() { return lenIndex; }
     public QuakePak _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
     public byte[] _raw_index() { return _raw_index; }

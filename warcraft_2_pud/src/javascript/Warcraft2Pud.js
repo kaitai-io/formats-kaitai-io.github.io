@@ -12,6 +12,7 @@
  * features got limited support in v1.3).
  * 
  * File consists of a sequence of typed sections.
+ * @see {@link http://cade.datamax.bg/war2x/pudspec.html|Source}
  */
 
 var Warcraft2Pud = (function() {
@@ -365,7 +366,7 @@ var Warcraft2Pud = (function() {
      */
 
     /**
-     * id tag (for consistence check in multiplayer)
+     * id tag (for consistency check in multiplayer)
      */
 
     return SectionType;

@@ -1,6 +1,16 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * WMF (Windows Metafile) is a relatively early vector image format
+ * introduced for Microsoft Windows in 1990.
+ * 
+ * Inside, it provides a serialized list of Windows GDI (Graphics
+ * Device Interface) function calls, which, if played back, result in
+ * an image being drawn on a given surface (display, off-screen buffer,
+ * printer, etc).
+ */
+
 class Wmf extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Wmf $_root = null) {
         parent::__construct($_io, $_parent, $_root);

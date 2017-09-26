@@ -98,7 +98,20 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p></p>
+                <p><p>STL files are used to represent simple 3D models, defined using
+triangular 3D faces.</p>
+<p>Initially it was introduced as native format for 3D Systems
+Stereolithography CAD system, but due to its extreme simplicity, it
+was adopted by a wide range of 3D modelling, CAD, rapid prototyping
+and 3D printing applications as the simplest 3D model exchange
+format.</p>
+<p>STL is extremely bare-bones format: there are no complex headers, no
+texture / color support, no units specifications, no distinct vertex
+arrays. Whole model is specified as a collection of triangular
+faces.</p>
+<p>There are two versions of the format (text and binary), this spec
+describes binary version.</p>
+</p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
@@ -117,6 +130,16 @@ section#format-index .row {
                     <div class="panel-body">
                         stl
                     </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
                     
                     
                 </div>
@@ -214,6 +237,25 @@ section#format-index .row {
         <div class="row">
             <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * STL files are used to represent simple 3D models, defined using
+ * triangular 3D faces.
+ * 
+ * Initially it was introduced as native format for 3D Systems
+ * Stereolithography CAD system, but due to its extreme simplicity, it
+ * was adopted by a wide range of 3D modelling, CAD, rapid prototyping
+ * and 3D printing applications as the simplest 3D model exchange
+ * format.
+ * 
+ * STL is extremely bare-bones format: there are no complex headers, no
+ * texture / color support, no units specifications, no distinct vertex
+ * arrays. Whole model is specified as a collection of triangular
+ * faces.
+ * 
+ * There are two versions of the format (text and binary), this spec
+ * describes binary version.
+ */
+
 var Stl = (function() {
   function Stl(_io, _parent, _root) {
     this._io = _io;
@@ -230,6 +272,12 @@ var Stl = (function() {
       this.triangles[i] = new Triangle(this._io, this, this._root);
     }
   }
+
+  /**
+   * Each STL triangle is defined by its 3 points in 3D space and a
+   * normal vector, which is generally used to determine where is
+   * &quot;inside&quot; and &quot;outside&quot; of the model.
+   */
 
   var Triangle = Stl.Triangle = (function() {
     function Triangle(_io, _parent, _root) {

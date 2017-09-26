@@ -1,5 +1,9 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * @see {@link http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic)|Source}
+ */
+
 var HeroesOfMightAndMagicAgg = (function() {
   function HeroesOfMightAndMagicAgg(_io, _parent, _root) {
     this._io = _io;
