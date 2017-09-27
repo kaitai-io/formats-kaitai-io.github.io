@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// (No support for Auth-Name + Add-Name for simplicity)
+    /// </summary>
     public partial class DnsPacket : KaitaiStruct
     {
         public static DnsPacket FromFile(string fileName)

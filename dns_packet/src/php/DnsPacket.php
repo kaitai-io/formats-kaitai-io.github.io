@@ -1,6 +1,10 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * (No support for Auth-Name + Add-Name for simplicity)
+ */
+
 class DnsPacket extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \DnsPacket $_root = null) {
         parent::__construct($_io, $_parent, $_root);

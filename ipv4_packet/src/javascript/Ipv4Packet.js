@@ -7,10 +7,10 @@ if (typeof require === 'function')
   var Ipv6Packet = require('./Ipv6Packet.js');
 
 if (typeof require === 'function')
-  var IcmpPacket = require('./IcmpPacket.js');
+  var UdpDatagram = require('./UdpDatagram.js');
 
 if (typeof require === 'function')
-  var UdpDatagram = require('./UdpDatagram.js');
+  var IcmpPacket = require('./IcmpPacket.js');
 
 var Ipv4Packet = (function() {
   Ipv4Packet.ProtocolEnum = Object.freeze({

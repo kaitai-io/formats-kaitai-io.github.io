@@ -1,0 +1,232 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__vdi {
+		label="Vdi";
+		graph[style=dotted];
+
+		vdi__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">...</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
+		</TABLE>>];
+		vdi__inst__block_discarded [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>block_discarded</TD><TD>4294967294</TD></TR>
+		</TABLE>>];
+		vdi__inst__block_unallocated [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>block_unallocated</TD><TD>4294967295</TD></TR>
+		</TABLE>>];
+		vdi__inst__blocks_map [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="blocks_map_pos">header.bmap_offset</TD><TD PORT="blocks_map_size">header.bmap_size</TD><TD>BlocksMap</TD><TD PORT="blocks_map_type">blocks_map</TD></TR>
+		</TABLE>>];
+		vdi__inst__disk [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="disk_pos">header.blocks_offset</TD><TD PORT="disk_size">...</TD><TD>Disk</TD><TD PORT="disk_type">disk</TD></TR>
+		</TABLE>>];
+		subgraph cluster__header {
+			label="Vdi::Header";
+			graph[style=dotted];
+
+			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="text_pos">0</TD><TD PORT="text_size">64</TD><TD>str(utf-8)</TD><TD PORT="text_type">text</TD></TR>
+				<TR><TD PORT="signature_pos">64</TD><TD PORT="signature_size">4</TD><TD>7F 10 DA BE</TD><TD PORT="signature_type">signature</TD></TR>
+				<TR><TD PORT="version_pos">68</TD><TD PORT="version_size">4</TD><TD>Version</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="header_size_optional_pos">72</TD><TD PORT="header_size_optional_size">4</TD><TD>u4le</TD><TD PORT="header_size_optional_type">header_size_optional</TD></TR>
+				<TR><TD PORT="header_main_pos">76</TD><TD PORT="header_main_size">header_size</TD><TD>HeaderMain</TD><TD PORT="header_main_type">header_main</TD></TR>
+			</TABLE>>];
+			header__inst__bmap_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>bmap_size</TD><TD>(((((header_main.blocks_in_image * 4) + header_main.geometry.sector_size) - 1) / header_main.geometry.sector_size) * header_main.geometry.sector_size)</TD></TR>
+			</TABLE>>];
+			header__inst__header_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>header_size</TD><TD>(subheader_size_is_dynamic ? header_size_optional : 336)</TD></TR>
+			</TABLE>>];
+			header__inst__bmap_offset [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>bmap_offset</TD><TD>header_main.offset_bmap</TD></TR>
+			</TABLE>>];
+			header__inst__subheader_size_is_dynamic [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>subheader_size_is_dynamic</TD><TD>version.major &gt;= 1</TD></TR>
+			</TABLE>>];
+			header__inst__blocks_offset [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>blocks_offset</TD><TD>header_main.offset_data</TD></TR>
+			</TABLE>>];
+			header__inst__block_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>block_size</TD><TD>(header_main.block_metadata_size + header_main.block_data_size)</TD></TR>
+			</TABLE>>];
+			subgraph cluster__uuid {
+				label="Vdi::Header::Uuid";
+				graph[style=dotted];
+
+				uuid__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="uuid_pos">0</TD><TD PORT="uuid_size">16</TD><TD></TD><TD PORT="uuid_type">uuid</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__version {
+				label="Vdi::Header::Version";
+				graph[style=dotted];
+
+				version__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="major_pos">0</TD><TD PORT="major_size">2</TD><TD>u2le</TD><TD PORT="major_type">major</TD></TR>
+					<TR><TD PORT="minor_pos">2</TD><TD PORT="minor_size">2</TD><TD>u2le</TD><TD PORT="minor_type">minor</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__header_main {
+				label="Vdi::Header::HeaderMain";
+				graph[style=dotted];
+
+				header_main__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="image_type_pos">0</TD><TD PORT="image_type_size">4</TD><TD>u4le→ImageType</TD><TD PORT="image_type_type">image_type</TD></TR>
+					<TR><TD PORT="image_flags_pos">4</TD><TD PORT="image_flags_size">4</TD><TD>Flags</TD><TD PORT="image_flags_type">image_flags</TD></TR>
+					<TR><TD PORT="description_pos">8</TD><TD PORT="description_size">256</TD><TD>str(utf-8)</TD><TD PORT="description_type">description</TD></TR>
+					<TR><TD PORT="offset_bmap_pos">264</TD><TD PORT="offset_bmap_size">4</TD><TD>u4le</TD><TD PORT="offset_bmap_type">offset_bmap</TD></TR>
+					<TR><TD PORT="offset_data_pos">268</TD><TD PORT="offset_data_size">4</TD><TD>u4le</TD><TD PORT="offset_data_type">offset_data</TD></TR>
+					<TR><TD PORT="geometry_pos">272</TD><TD PORT="geometry_size">16</TD><TD>Geometry</TD><TD PORT="geometry_type">geometry</TD></TR>
+					<TR><TD PORT="reserved1_pos">288</TD><TD PORT="reserved1_size">4</TD><TD>u4le</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+					<TR><TD PORT="disk_size_pos">292</TD><TD PORT="disk_size_size">8</TD><TD>u8le</TD><TD PORT="disk_size_type">disk_size</TD></TR>
+					<TR><TD PORT="block_data_size_pos">300</TD><TD PORT="block_data_size_size">4</TD><TD>u4le</TD><TD PORT="block_data_size_type">block_data_size</TD></TR>
+					<TR><TD PORT="block_metadata_size_pos">304</TD><TD PORT="block_metadata_size_size">4</TD><TD>u4le</TD><TD PORT="block_metadata_size_type">block_metadata_size</TD></TR>
+					<TR><TD PORT="blocks_in_image_pos">308</TD><TD PORT="blocks_in_image_size">4</TD><TD>u4le</TD><TD PORT="blocks_in_image_type">blocks_in_image</TD></TR>
+					<TR><TD PORT="blocks_allocated_pos">312</TD><TD PORT="blocks_allocated_size">4</TD><TD>u4le</TD><TD PORT="blocks_allocated_type">blocks_allocated</TD></TR>
+					<TR><TD PORT="uuid_image_pos">316</TD><TD PORT="uuid_image_size">16</TD><TD>Uuid</TD><TD PORT="uuid_image_type">uuid_image</TD></TR>
+					<TR><TD PORT="uuid_last_snap_pos">332</TD><TD PORT="uuid_last_snap_size">16</TD><TD>Uuid</TD><TD PORT="uuid_last_snap_type">uuid_last_snap</TD></TR>
+					<TR><TD PORT="uuid_link_pos">348</TD><TD PORT="uuid_link_size">16</TD><TD>Uuid</TD><TD PORT="uuid_link_type">uuid_link</TD></TR>
+					<TR><TD PORT="uuid_parent_pos">364</TD><TD PORT="uuid_parent_size">16</TD><TD>Uuid</TD><TD PORT="uuid_parent_type">uuid_parent</TD></TR>
+					<TR><TD PORT="lchc_geometry_pos">380</TD><TD PORT="lchc_geometry_size">16</TD><TD>Geometry</TD><TD PORT="lchc_geometry_type">lchc_geometry</TD></TR>
+				</TABLE>>];
+				subgraph cluster__geometry {
+					label="Vdi::Header::HeaderMain::Geometry";
+					graph[style=dotted];
+
+					geometry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="cylinders_pos">0</TD><TD PORT="cylinders_size">4</TD><TD>u4le</TD><TD PORT="cylinders_type">cylinders</TD></TR>
+						<TR><TD PORT="heads_pos">4</TD><TD PORT="heads_size">4</TD><TD>u4le</TD><TD PORT="heads_type">heads</TD></TR>
+						<TR><TD PORT="sectors_pos">8</TD><TD PORT="sectors_size">4</TD><TD>u4le</TD><TD PORT="sectors_type">sectors</TD></TR>
+						<TR><TD PORT="sector_size_pos">12</TD><TD PORT="sector_size_size">4</TD><TD>u4le</TD><TD PORT="sector_size_type">sector_size</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__flags {
+					label="Vdi::Header::HeaderMain::Flags";
+					graph[style=dotted];
+
+					flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="reserved0_pos">0</TD><TD PORT="reserved0_size">15b</TD><TD>b15</TD><TD PORT="reserved0_type">reserved0</TD></TR>
+						<TR><TD PORT="zero_expand_pos">1:7</TD><TD PORT="zero_expand_size">1b</TD><TD>BitsType1</TD><TD PORT="zero_expand_type">zero_expand</TD></TR>
+						<TR><TD PORT="reserved1_pos">2</TD><TD PORT="reserved1_size">6b</TD><TD>b6</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+						<TR><TD PORT="diff_pos">2:6</TD><TD PORT="diff_size">1b</TD><TD>BitsType1</TD><TD PORT="diff_type">diff</TD></TR>
+						<TR><TD PORT="fixed_pos">2:7</TD><TD PORT="fixed_size">1b</TD><TD>BitsType1</TD><TD PORT="fixed_type">fixed</TD></TR>
+						<TR><TD PORT="reserved2_pos">3</TD><TD PORT="reserved2_size">1</TD><TD>b8</TD><TD PORT="reserved2_type">reserved2</TD></TR>
+					</TABLE>>];
+				}
+			}
+		}
+		subgraph cluster__blocks_map {
+			label="Vdi::BlocksMap";
+			graph[style=dotted];
+
+			blocks_map__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="index_pos">0</TD><TD PORT="index_size">4</TD><TD>BlockIndex</TD><TD PORT="index_type">index</TD></TR>
+				<TR><TD COLSPAN="4" PORT="index__repeat">repeat _root.header.header_main.blocks_in_image times</TD></TR>
+			</TABLE>>];
+			subgraph cluster__block_index {
+				label="Vdi::BlocksMap::BlockIndex";
+				graph[style=dotted];
+
+				block_index__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="index_pos">0</TD><TD PORT="index_size">4</TD><TD>u4le</TD><TD PORT="index_type">index</TD></TR>
+				</TABLE>>];
+				block_index__inst__is_allocated [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>is_allocated</TD><TD>index &lt; _root.block_discarded</TD></TR>
+				</TABLE>>];
+				block_index__inst__block [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>block</TD><TD>_root.disk.blocks[index]</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__disk {
+			label="Vdi::Disk";
+			graph[style=dotted];
+
+			disk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="blocks_pos">0</TD><TD PORT="blocks_size">...</TD><TD>Block</TD><TD PORT="blocks_type">blocks</TD></TR>
+				<TR><TD COLSPAN="4" PORT="blocks__repeat">repeat _root.header.header_main.blocks_in_image times</TD></TR>
+			</TABLE>>];
+			subgraph cluster__block {
+				label="Vdi::Disk::Block";
+				graph[style=dotted];
+
+				block__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="metadata_pos">0</TD><TD PORT="metadata_size">_root.header.header_main.block_metadata_size</TD><TD></TD><TD PORT="metadata_type">metadata</TD></TR>
+					<TR><TD PORT="data_pos">...</TD><TD PORT="data_size">_root.header.header_main.block_data_size</TD><TD>Sector</TD><TD PORT="data_type">data</TD></TR>
+					<TR><TD COLSPAN="4" PORT="data__repeat">repeat to end of stream</TD></TR>
+				</TABLE>>];
+				subgraph cluster__sector {
+					label="Vdi::Disk::Block::Sector";
+					graph[style=dotted];
+
+					sector__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">_root.header.header_main.geometry.sector_size</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+					</TABLE>>];
+				}
+			}
+		}
+	}
+	vdi__seq:header_type -> header__seq [style=bold];
+	header__inst__bmap_offset:bmap_offset_type -> vdi__inst__blocks_map:blocks_map_pos [color="#404040"];
+	header__inst__bmap_size:bmap_size_type -> vdi__inst__blocks_map:blocks_map_size [color="#404040"];
+	vdi__inst__blocks_map:blocks_map_type -> blocks_map__seq [style=bold];
+	header__inst__blocks_offset:blocks_offset_type -> vdi__inst__disk:disk_pos [color="#404040"];
+	vdi__inst__disk:disk_type -> disk__seq [style=bold];
+	header__seq:version_type -> version__seq [style=bold];
+	header__inst__header_size:header_size_type -> header__seq:header_main_size [color="#404040"];
+	header__seq:header_main_type -> header_main__seq [style=bold];
+	header_main__seq:blocks_in_image_type -> header__inst__bmap_size [color="#404040"];
+	geometry__seq:sector_size_type -> header__inst__bmap_size [color="#404040"];
+	geometry__seq:sector_size_type -> header__inst__bmap_size [color="#404040"];
+	geometry__seq:sector_size_type -> header__inst__bmap_size [color="#404040"];
+	header__inst__subheader_size_is_dynamic:subheader_size_is_dynamic_type -> header__inst__header_size [color="#404040"];
+	header__seq:header_size_optional_type -> header__inst__header_size [color="#404040"];
+	header_main__seq:offset_bmap_type -> header__inst__bmap_offset [color="#404040"];
+	version__seq:major_type -> header__inst__subheader_size_is_dynamic [color="#404040"];
+	header_main__seq:offset_data_type -> header__inst__blocks_offset [color="#404040"];
+	header_main__seq:block_metadata_size_type -> header__inst__block_size [color="#404040"];
+	header_main__seq:block_data_size_type -> header__inst__block_size [color="#404040"];
+	header_main__seq:image_flags_type -> flags__seq [style=bold];
+	header_main__seq:geometry_type -> geometry__seq [style=bold];
+	header_main__seq:uuid_image_type -> uuid__seq [style=bold];
+	header_main__seq:uuid_last_snap_type -> uuid__seq [style=bold];
+	header_main__seq:uuid_link_type -> uuid__seq [style=bold];
+	header_main__seq:uuid_parent_type -> uuid__seq [style=bold];
+	header_main__seq:lchc_geometry_type -> geometry__seq [style=bold];
+	blocks_map__seq:index_type -> block_index__seq [style=bold];
+	header_main__seq:blocks_in_image_type -> blocks_map__seq:index__repeat [color="#404040"];
+	block_index__seq:index_type -> block_index__inst__is_allocated [color="#404040"];
+	vdi__inst__block_discarded:block_discarded_type -> block_index__inst__is_allocated [color="#404040"];
+	disk__seq:blocks_type -> block_index__inst__block [color="#404040"];
+	block_index__seq:index_type -> block_index__inst__block [color="#404040"];
+	disk__seq:blocks_type -> block__seq [style=bold];
+	header_main__seq:blocks_in_image_type -> disk__seq:blocks__repeat [color="#404040"];
+	header_main__seq:block_metadata_size_type -> block__seq:metadata_size [color="#404040"];
+	header_main__seq:block_data_size_type -> block__seq:data_size [color="#404040"];
+	block__seq:data_type -> sector__seq [style=bold];
+	geometry__seq:sector_size_type -> sector__seq:data_size [color="#404040"];
+}

@@ -9,6 +9,10 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
+
+/**
+ * (No support for Auth-Name + Add-Name for simplicity)
+ */
 public class DnsPacket extends KaitaiStruct {
     public static DnsPacket fromFile(String fileName) throws IOException {
         return new DnsPacket(new ByteBufferKaitaiStream(fileName));

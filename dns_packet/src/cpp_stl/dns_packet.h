@@ -12,6 +12,10 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 
+/**
+ * (No support for Auth-Name + Add-Name for simplicity)
+ */
+
 class dns_packet_t : public kaitai::kstruct {
 
 public:

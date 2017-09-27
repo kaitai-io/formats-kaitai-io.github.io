@@ -1,5 +1,9 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * (No support for Auth-Name + Add-Name for simplicity)
+ */
+
 var DnsPacket = (function() {
   DnsPacket.ClassType = Object.freeze({
     IN_CLASS: 1,
