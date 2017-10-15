@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.Specpr = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * Specpr records are fixed format, 1536 bytes/record. Record number
  * counting starts at 0. Binary data are in IEEE format real numbers
@@ -499,15 +508,5 @@ var Specpr = (function() {
 
   return Specpr;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('Specpr', [], function() {
-    return Specpr;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = Specpr;
-}
+return Specpr;
+}));

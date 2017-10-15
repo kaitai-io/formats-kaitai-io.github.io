@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.NtMdt = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * A native file format of NT-MDT scientific software. Usually contains
  * any of:
@@ -78,6 +87,38 @@ var NtMdt = (function() {
     5: "VLB",
     6: "VRT",
     7: "VRB",
+  });
+
+  NtMdt.DataType = Object.freeze({
+    FLOATFIX: -65544,
+    FLOAT80: -16138,
+    FLOAT64: -13320,
+    FLOAT48: -9990,
+    FLOAT32: -5892,
+    INT64: -8,
+    INT32: -4,
+    INT16: -2,
+    INT8: -1,
+    UNKNOWN0: 0,
+    UINT8: 1,
+    UINT16: 2,
+    UINT32: 4,
+    UINT64: 8,
+
+    "-65544": "FLOATFIX",
+    "-16138": "FLOAT80",
+    "-13320": "FLOAT64",
+    "-9990": "FLOAT48",
+    "-5892": "FLOAT32",
+    "-8": "INT64",
+    "-4": "INT32",
+    "-2": "INT16",
+    "-1": "INT8",
+    0: "UNKNOWN0",
+    1: "UINT8",
+    2: "UINT16",
+    4: "UINT32",
+    8: "UINT64",
   });
 
   NtMdt.XmlParamType = Object.freeze({
@@ -166,7 +207,7 @@ var NtMdt = (function() {
     KILO_HERTZ: 4,
     DEGREES: 5,
     PERCENT: 6,
-    CELSIUM_DEGREE: 7,
+    CELSIUS_DEGREE: 7,
     VOLT_HIGH: 8,
     SECOND: 9,
     MILLI_SECOND: 10,
@@ -217,7 +258,7 @@ var NtMdt = (function() {
     4: "KILO_HERTZ",
     5: "DEGREES",
     6: "PERCENT",
-    7: "CELSIUM_DEGREE",
+    7: "CELSIUS_DEGREE",
     8: "VOLT_HIGH",
     9: "SECOND",
     10: "MILLI_SECOND",
@@ -614,8 +655,76 @@ var NtMdt = (function() {
         for (var i = 0; i < this.nMesurands; i++) {
           this.mesurands[i] = new Calibration(this._io, this, this._root);
         }
-        this.image = this._io.readBytesFull();
       }
+
+      var Image = FdMetaData.Image = (function() {
+        function Image(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root || this;
+
+          this._read();
+        }
+        Image.prototype._read = function() {
+          this.image = [];
+          var i = 0;
+          while (!this._io.isEof()) {
+            this.image.push(new Vec(this._io, this, this._root));
+            i++;
+          }
+        }
+
+        var Vec = Image.Vec = (function() {
+          function Vec(_io, _parent, _root) {
+            this._io = _io;
+            this._parent = _parent;
+            this._root = _root || this;
+
+            this._read();
+          }
+          Vec.prototype._read = function() {
+            this.items = new Array(this._parent._parent.nMesurands);
+            for (var i = 0; i < this._parent._parent.nMesurands; i++) {
+              switch (this._parent._parent.mesurands[i].dataType) {
+              case NtMdt.DataType.UINT8:
+                this.items[i] = this._io.readU1();
+                break;
+              case NtMdt.DataType.INT8:
+                this.items[i] = this._io.readS1();
+                break;
+              case NtMdt.DataType.INT16:
+                this.items[i] = this._io.readS2le();
+                break;
+              case NtMdt.DataType.UINT64:
+                this.items[i] = this._io.readU8le();
+                break;
+              case NtMdt.DataType.FLOAT64:
+                this.items[i] = this._io.readF8le();
+                break;
+              case NtMdt.DataType.INT32:
+                this.items[i] = this._io.readS4le();
+                break;
+              case NtMdt.DataType.FLOAT32:
+                this.items[i] = this._io.readF4le();
+                break;
+              case NtMdt.DataType.UINT16:
+                this.items[i] = this._io.readU2le();
+                break;
+              case NtMdt.DataType.INT64:
+                this.items[i] = this._io.readS8le();
+                break;
+              case NtMdt.DataType.UINT32:
+                this.items[i] = this._io.readU4le();
+                break;
+              }
+            }
+          }
+
+          return Vec;
+        })();
+
+        return Image;
+      })();
 
       var Calibration = FdMetaData.Calibration = (function() {
         function Calibration(_io, _parent, _root) {
@@ -645,9 +754,30 @@ var NtMdt = (function() {
           this.unit = KaitaiStream.bytesToStr(this._io.readBytes(this.lenUnit), "utf-8");
           this.author = KaitaiStream.bytesToStr(this._io.readBytes(this.lenAuthor), "utf-8");
         }
+        Object.defineProperty(Calibration.prototype, 'count', {
+          get: function() {
+            if (this._m_count !== undefined)
+              return this._m_count;
+            this._m_count = ((this.maxIndex - this.minIndex) + 1);
+            return this._m_count;
+          }
+        });
 
         return Calibration;
       })();
+      Object.defineProperty(FdMetaData.prototype, 'image', {
+        get: function() {
+          if (this._m_image !== undefined)
+            return this._m_image;
+          var _pos = this._io.pos;
+          this._io.seek(this.dataOffset);
+          this._raw__m_image = this._io.readBytes(this.dataSize);
+          var _io__raw__m_image = new KaitaiStream(this._raw__m_image);
+          this._m_image = new Image(_io__raw__m_image, this, this._root);
+          this._io.seek(_pos);
+          return this._m_image;
+        }
+      });
 
       return FdMetaData;
     })();
@@ -1157,15 +1287,5 @@ var NtMdt = (function() {
 
   return NtMdt;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('NtMdt', [], function() {
-    return NtMdt;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = NtMdt;
-}
+return NtMdt;
+}));

@@ -1,11 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-if (typeof require === 'function')
-  var Ipv6Packet = require('./Ipv6Packet.js');
-
-if (typeof require === 'function')
-  var Ipv4Packet = require('./Ipv4Packet.js');
-
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream', './Ipv6Packet', './Ipv4Packet'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./Ipv6Packet'), require('./Ipv4Packet'));
+  } else {
+    root.EthernetFrame = factory(root.KaitaiStream, root.Ipv6Packet, root.Ipv4Packet);
+  }
+}(this, function (KaitaiStream, Ipv6Packet, Ipv4Packet) {
 var EthernetFrame = (function() {
   EthernetFrame.EtherTypeEnum = Object.freeze({
     IPV4: 2048,
@@ -57,15 +60,5 @@ var EthernetFrame = (function() {
 
   return EthernetFrame;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('EthernetFrame', [], function() {
-    return EthernetFrame;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = EthernetFrame;
-}
+return EthernetFrame;
+}));

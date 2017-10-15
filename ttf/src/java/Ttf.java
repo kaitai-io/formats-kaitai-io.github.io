@@ -175,9 +175,69 @@ public class Ttf extends KaitaiStruct {
         public Ttf _root() { return _root; }
         public Ttf.DirTableEntry _parent() { return _parent; }
     }
+
+    /**
+     * Name table is meant to include human-readable string metadata
+     * that describes font: name of the font, its styles, copyright &
+     * trademark notices, vendor and designer info, etc.
+     * 
+     * The table includes a list of "name records", each of which
+     * corresponds to a single metadata entry.
+     * @see <a href="https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html">Source</a>
+     */
     public static class Name extends KaitaiStruct {
         public static Name fromFile(String fileName) throws IOException {
             return new Name(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public enum Platforms {
+            UNICODE(0),
+            MACINTOSH(1),
+            RESERVED_2(2),
+            MICROSOFT(3);
+
+            private final long id;
+            Platforms(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, Platforms> byId = new HashMap<Long, Platforms>(4);
+            static {
+                for (Platforms e : Platforms.values())
+                    byId.put(e.id(), e);
+            }
+            public static Platforms byId(long id) { return byId.get(id); }
+        }
+
+        public enum Names {
+            COPYRIGHT(0),
+            FONT_FAMILY(1),
+            FONT_SUBFAMILY(2),
+            UNIQUE_SUBFAMILY_ID(3),
+            FULL_FONT_NAME(4),
+            NAME_TABLE_VERSION(5),
+            POSTSCRIPT_FONT_NAME(6),
+            TRADEMARK(7),
+            MANUFACTURER(8),
+            DESIGNER(9),
+            DESCRIPTION(10),
+            URL_VENDOR(11),
+            URL_DESIGNER(12),
+            LICENSE(13),
+            URL_LICENSE(14),
+            RESERVED_15(15),
+            PREFERRED_FAMILY(16),
+            PREFERRED_SUBFAMILY(17),
+            COMPATIBLE_FULL_NAME(18),
+            SAMPLE_TEXT(19);
+
+            private final long id;
+            Names(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, Names> byId = new HashMap<Long, Names>(20);
+            static {
+                for (Names e : Names.values())
+                    byId.put(e.id(), e);
+            }
+            public static Names byId(long id) { return byId.get(id); }
         }
 
         public Name(KaitaiStream _io) {
@@ -196,10 +256,10 @@ public class Ttf extends KaitaiStruct {
         }
         private void _read() {
             this.formatSelector = this._io.readU2be();
-            this.nameRecordCount = this._io.readU2be();
-            this.stringStorageOffset = this._io.readU2be();
-            nameRecords = new ArrayList<NameRecord>((int) (nameRecordCount()));
-            for (int i = 0; i < nameRecordCount(); i++) {
+            this.numNameRecords = this._io.readU2be();
+            this.ofsStrings = this._io.readU2be();
+            nameRecords = new ArrayList<NameRecord>((int) (numNameRecords()));
+            for (int i = 0; i < numNameRecords(); i++) {
                 this.nameRecords.add(new NameRecord(this._io, this, _root));
             }
         }
@@ -223,12 +283,12 @@ public class Ttf extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.platformId = this._io.readU2be();
+                this.platformId = Ttf.Name.Platforms.byId(this._io.readU2be());
                 this.encodingId = this._io.readU2be();
                 this.languageId = this._io.readU2be();
-                this.nameId = this._io.readU2be();
-                this.stringLength = this._io.readU2be();
-                this.stringOffset = this._io.readU2be();
+                this.nameId = Ttf.Name.Names.byId(this._io.readU2be());
+                this.lenStr = this._io.readU2be();
+                this.ofsStr = this._io.readU2be();
             }
             private String asciiValue;
             public String asciiValue() {
@@ -236,8 +296,8 @@ public class Ttf extends KaitaiStruct {
                     return this.asciiValue;
                 KaitaiStream io = _parent()._io();
                 long _pos = io.pos();
-                io.seek((_parent().stringStorageOffset() + stringOffset()));
-                this.asciiValue = new String(io.readBytes(stringLength()), Charset.forName("ascii"));
+                io.seek((_parent().ofsStrings() + ofsStr()));
+                this.asciiValue = new String(io.readBytes(lenStr()), Charset.forName("ascii"));
                 io.seek(_pos);
                 return this.asciiValue;
             }
@@ -247,37 +307,37 @@ public class Ttf extends KaitaiStruct {
                     return this.unicodeValue;
                 KaitaiStream io = _parent()._io();
                 long _pos = io.pos();
-                io.seek((_parent().stringStorageOffset() + stringOffset()));
-                this.unicodeValue = new String(io.readBytes(stringLength()), Charset.forName("utf-16be"));
+                io.seek((_parent().ofsStrings() + ofsStr()));
+                this.unicodeValue = new String(io.readBytes(lenStr()), Charset.forName("utf-16be"));
                 io.seek(_pos);
                 return this.unicodeValue;
             }
-            private int platformId;
+            private Platforms platformId;
             private int encodingId;
             private int languageId;
-            private int nameId;
-            private int stringLength;
-            private int stringOffset;
+            private Names nameId;
+            private int lenStr;
+            private int ofsStr;
             private Ttf _root;
             private Ttf.Name _parent;
-            public int platformId() { return platformId; }
+            public Platforms platformId() { return platformId; }
             public int encodingId() { return encodingId; }
             public int languageId() { return languageId; }
-            public int nameId() { return nameId; }
-            public int stringLength() { return stringLength; }
-            public int stringOffset() { return stringOffset; }
+            public Names nameId() { return nameId; }
+            public int lenStr() { return lenStr; }
+            public int ofsStr() { return ofsStr; }
             public Ttf _root() { return _root; }
             public Ttf.Name _parent() { return _parent; }
         }
         private int formatSelector;
-        private int nameRecordCount;
-        private int stringStorageOffset;
+        private int numNameRecords;
+        private int ofsStrings;
         private ArrayList<NameRecord> nameRecords;
         private Ttf _root;
         private Ttf.DirTableEntry _parent;
         public int formatSelector() { return formatSelector; }
-        public int nameRecordCount() { return nameRecordCount; }
-        public int stringStorageOffset() { return stringStorageOffset; }
+        public int numNameRecords() { return numNameRecords; }
+        public int ofsStrings() { return ofsStrings; }
         public ArrayList<NameRecord> nameRecords() { return nameRecords; }
         public Ttf _root() { return _root; }
         public Ttf.DirTableEntry _parent() { return _parent; }

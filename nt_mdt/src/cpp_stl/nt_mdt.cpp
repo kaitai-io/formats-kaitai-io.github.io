@@ -321,6 +321,7 @@ nt_mdt_t::frame_t::fd_curves_new_t::block_descr_t::~block_descr_t() {
 nt_mdt_t::frame_t::fd_meta_data_t::fd_meta_data_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::frame_main_t* p__parent, nt_mdt_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    f_image = false;
     _read();
 }
 
@@ -361,7 +362,6 @@ void nt_mdt_t::frame_t::fd_meta_data_t::_read() {
     for (int i = 0; i < l_mesurands; i++) {
         m_mesurands->push_back(new calibration_t(m__io, this, m__root));
     }
-    m_image = m__io->read_bytes_full();
 }
 
 nt_mdt_t::frame_t::fd_meta_data_t::~fd_meta_data_t() {
@@ -377,11 +377,113 @@ nt_mdt_t::frame_t::fd_meta_data_t::~fd_meta_data_t() {
         delete *it;
     }
     delete m_mesurands;
+    if (f_image) {
+        delete m__io__raw_image;
+        delete m_image;
+    }
+}
+
+nt_mdt_t::frame_t::fd_meta_data_t::image_t::image_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t* p__parent, nt_mdt_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void nt_mdt_t::frame_t::fd_meta_data_t::image_t::_read() {
+    m_image = new std::vector<vec_t*>();
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_image->push_back(new vec_t(m__io, this, m__root));
+            i++;
+        }
+    }
+}
+
+nt_mdt_t::frame_t::fd_meta_data_t::image_t::~image_t() {
+    for (std::vector<vec_t*>::iterator it = m_image->begin(); it != m_image->end(); ++it) {
+        delete *it;
+    }
+    delete m_image;
+}
+
+nt_mdt_t::frame_t::fd_meta_data_t::image_t::vec_t::vec_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t::image_t* p__parent, nt_mdt_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void nt_mdt_t::frame_t::fd_meta_data_t::image_t::vec_t::_read() {
+    int l_items = _parent()->_parent()->n_mesurands();
+    m_items = new std::vector<double>();
+    m_items->reserve(l_items);
+    for (int i = 0; i < l_items; i++) {
+        n_items = true;
+        switch (_parent()->_parent()->mesurands()->at(i)->data_type()) {
+        case DATA_TYPE_UINT8: {
+            n_items = false;
+            m_items->push_back(m__io->read_u1());
+            break;
+        }
+        case DATA_TYPE_INT8: {
+            n_items = false;
+            m_items->push_back(m__io->read_s1());
+            break;
+        }
+        case DATA_TYPE_INT16: {
+            n_items = false;
+            m_items->push_back(m__io->read_s2le());
+            break;
+        }
+        case DATA_TYPE_UINT64: {
+            n_items = false;
+            m_items->push_back(m__io->read_u8le());
+            break;
+        }
+        case DATA_TYPE_FLOAT64: {
+            n_items = false;
+            m_items->push_back(m__io->read_f8le());
+            break;
+        }
+        case DATA_TYPE_INT32: {
+            n_items = false;
+            m_items->push_back(m__io->read_s4le());
+            break;
+        }
+        case DATA_TYPE_FLOAT32: {
+            n_items = false;
+            m_items->push_back(m__io->read_f4le());
+            break;
+        }
+        case DATA_TYPE_UINT16: {
+            n_items = false;
+            m_items->push_back(m__io->read_u2le());
+            break;
+        }
+        case DATA_TYPE_INT64: {
+            n_items = false;
+            m_items->push_back(m__io->read_s8le());
+            break;
+        }
+        case DATA_TYPE_UINT32: {
+            n_items = false;
+            m_items->push_back(m__io->read_u4le());
+            break;
+        }
+        }
+    }
+}
+
+nt_mdt_t::frame_t::fd_meta_data_t::image_t::vec_t::~vec_t() {
+    if (!n_items) {
+        delete m_items;
+    }
 }
 
 nt_mdt_t::frame_t::fd_meta_data_t::calibration_t::calibration_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t* p__parent, nt_mdt_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    f_count = false;
     _read();
 }
 
@@ -398,7 +500,7 @@ void nt_mdt_t::frame_t::fd_meta_data_t::calibration_t::_read() {
     m_scale = m__io->read_f8le();
     m_min_index = m__io->read_u8le();
     m_max_index = m__io->read_u8le();
-    m_data_type = m__io->read_s4le();
+    m_data_type = static_cast<nt_mdt_t::data_type_t>(m__io->read_s4le());
     m_len_author = m__io->read_u4le();
     m_name = kaitai::kstream::bytes_to_str(m__io->read_bytes(len_name()), std::string("utf-8"));
     m_comment = kaitai::kstream::bytes_to_str(m__io->read_bytes(len_comment()), std::string("utf-8"));
@@ -407,6 +509,27 @@ void nt_mdt_t::frame_t::fd_meta_data_t::calibration_t::_read() {
 }
 
 nt_mdt_t::frame_t::fd_meta_data_t::calibration_t::~calibration_t() {
+}
+
+int32_t nt_mdt_t::frame_t::fd_meta_data_t::calibration_t::count() {
+    if (f_count)
+        return m_count;
+    m_count = ((max_index() - min_index()) + 1);
+    f_count = true;
+    return m_count;
+}
+
+nt_mdt_t::frame_t::fd_meta_data_t::image_t* nt_mdt_t::frame_t::fd_meta_data_t::image() {
+    if (f_image)
+        return m_image;
+    std::streampos _pos = m__io->pos();
+    m__io->seek(data_offset());
+    m__raw_image = m__io->read_bytes(data_size());
+    m__io__raw_image = new kaitai::kstream(m__raw_image);
+    m_image = new image_t(m__io__raw_image, this, m__root);
+    m__io->seek(_pos);
+    f_image = true;
+    return m_image;
 }
 
 nt_mdt_t::frame_t::fd_spectroscopy_t::fd_spectroscopy_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::frame_main_t* p__parent, nt_mdt_t* p__root) : kaitai::kstruct(p__io) {

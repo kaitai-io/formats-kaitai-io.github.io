@@ -179,8 +179,34 @@ frame_main__seq_frame_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLS
 					<TR><TD COLSPAN="4" PORT="dimensions__repeat">repeat n_dimensions times</TD></TR>
 					<TR><TD PORT="mesurands_pos">...</TD><TD PORT="mesurands_size">...</TD><TD>Calibration</TD><TD PORT="mesurands_type">mesurands</TD></TR>
 					<TR><TD COLSPAN="4" PORT="mesurands__repeat">repeat n_mesurands times</TD></TR>
-					<TR><TD PORT="image_pos">...</TD><TD PORT="image_size">⇲</TD><TD></TD><TD PORT="image_type">image</TD></TR>
 				</TABLE>>];
+				fd_meta_data__inst__image [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="image_pos">data_offset</TD><TD PORT="image_size">data_size</TD><TD>Image</TD><TD PORT="image_type">image</TD></TR>
+				</TABLE>>];
+				subgraph cluster__image {
+					label="NtMdt::Frame::FdMetaData::Image";
+					graph[style=dotted];
+
+					image__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="image_pos">0</TD><TD PORT="image_size">...</TD><TD>Vec</TD><TD PORT="image_type">image</TD></TR>
+						<TR><TD COLSPAN="4" PORT="image__repeat">repeat to end of stream</TD></TR>
+					</TABLE>>];
+					subgraph cluster__vec {
+						label="NtMdt::Frame::FdMetaData::Image::Vec";
+						graph[style=dotted];
+
+						vec__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+							<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">...</TD><TD>switch (_parent._parent.mesurands[i].data_type)</TD><TD PORT="items_type">items</TD></TR>
+							<TR><TD COLSPAN="4" PORT="items__repeat">repeat _parent._parent.n_mesurands times</TD></TR>
+						</TABLE>>];
+vec__seq_items_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+</TABLE>>];
+					}
+				}
 				subgraph cluster__calibration {
 					label="NtMdt::Frame::FdMetaData::Calibration";
 					graph[style=dotted];
@@ -199,12 +225,16 @@ frame_main__seq_frame_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLS
 						<TR><TD PORT="scale_pos">52</TD><TD PORT="scale_size">8</TD><TD>f8le</TD><TD PORT="scale_type">scale</TD></TR>
 						<TR><TD PORT="min_index_pos">60</TD><TD PORT="min_index_size">8</TD><TD>u8le</TD><TD PORT="min_index_type">min_index</TD></TR>
 						<TR><TD PORT="max_index_pos">68</TD><TD PORT="max_index_size">8</TD><TD>u8le</TD><TD PORT="max_index_type">max_index</TD></TR>
-						<TR><TD PORT="data_type_pos">76</TD><TD PORT="data_type_size">4</TD><TD>s4le</TD><TD PORT="data_type_type">data_type</TD></TR>
+						<TR><TD PORT="data_type_pos">76</TD><TD PORT="data_type_size">4</TD><TD>s4le→DataType</TD><TD PORT="data_type_type">data_type</TD></TR>
 						<TR><TD PORT="len_author_pos">80</TD><TD PORT="len_author_size">4</TD><TD>u4le</TD><TD PORT="len_author_type">len_author</TD></TR>
 						<TR><TD PORT="name_pos">84</TD><TD PORT="name_size">len_name</TD><TD>str(utf-8)</TD><TD PORT="name_type">name</TD></TR>
 						<TR><TD PORT="comment_pos">...</TD><TD PORT="comment_size">len_comment</TD><TD>str(utf-8)</TD><TD PORT="comment_type">comment</TD></TR>
 						<TR><TD PORT="unit_pos">...</TD><TD PORT="unit_size">len_unit</TD><TD>str(utf-8)</TD><TD PORT="unit_type">unit</TD></TR>
 						<TR><TD PORT="author_pos">...</TD><TD PORT="author_size">len_author</TD><TD>str(utf-8)</TD><TD PORT="author_type">author</TD></TR>
+					</TABLE>>];
+					calibration__inst__count [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>count</TD><TD>((max_index - min_index) + 1)</TD></TR>
 					</TABLE>>];
 				}
 			}
@@ -442,10 +472,19 @@ frame_main__seq_frame_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLS
 	fd_meta_data__seq:n_dimensions_type -> fd_meta_data__seq:dimensions__repeat [color="#404040"];
 	fd_meta_data__seq:mesurands_type -> calibration__seq [style=bold];
 	fd_meta_data__seq:n_mesurands_type -> fd_meta_data__seq:mesurands__repeat [color="#404040"];
+	fd_meta_data__seq:data_offset_type -> fd_meta_data__inst__image:image_pos [color="#404040"];
+	fd_meta_data__seq:data_size_type -> fd_meta_data__inst__image:image_size [color="#404040"];
+	fd_meta_data__inst__image:image_type -> image__seq [style=bold];
+	image__seq:image_type -> vec__seq [style=bold];
+	vec__seq:items_type -> vec__seq_items_switch [style=bold];
+	calibration__seq:data_type_type -> vec__seq:items_type [color="#404040"];
+	fd_meta_data__seq:n_mesurands_type -> vec__seq:items__repeat [color="#404040"];
 	calibration__seq:len_name_type -> calibration__seq:name_size [color="#404040"];
 	calibration__seq:len_comment_type -> calibration__seq:comment_size [color="#404040"];
 	calibration__seq:len_unit_type -> calibration__seq:unit_size [color="#404040"];
 	calibration__seq:len_author_type -> calibration__seq:author_size [color="#404040"];
+	calibration__seq:max_index_type -> calibration__inst__count [color="#404040"];
+	calibration__seq:min_index_type -> calibration__inst__count [color="#404040"];
 	frame_main__seq:var_size_type -> fd_spectroscopy__seq:vars_size [color="#404040"];
 	fd_spectroscopy__seq:vars_type -> vars__seq [style=bold];
 	fd_spectroscopy__seq:dots_type -> dots__seq [style=bold];

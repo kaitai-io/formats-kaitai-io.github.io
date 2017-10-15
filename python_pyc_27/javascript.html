@@ -215,6 +215,15 @@ a simple header prepended.</p>
         <div class="row">
             <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
+  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
+  } else {
+    root.PythonPyc27 = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * Python interpreter runs .py files in 2 step process: first, it
  * produces bytecode, which it then executes. Translation of .py source
@@ -825,18 +834,8 @@ var PythonPyc27 = (function() {
 
   return PythonPyc27;
 })();
-
-// Export for amd environments
-if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-  define(&#39;PythonPyc27&#39;, [], function() {
-    return PythonPyc27;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === &#39;object&#39; &amp;&amp; module &amp;&amp; module.exports) {
-  module.exports = PythonPyc27;
-}
+return PythonPyc27;
+}));
 </code></pre>
             
         </div>

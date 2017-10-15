@@ -58,6 +58,24 @@ class NtMdt < Kaitai::Struct::Struct
   }
   I__XML_SCAN_LOCATION = XML_SCAN_LOCATION.invert
 
+  DATA_TYPE = {
+    -65544 => :data_type_floatfix,
+    -16138 => :data_type_float80,
+    -13320 => :data_type_float64,
+    -9990 => :data_type_float48,
+    -5892 => :data_type_float32,
+    -8 => :data_type_int64,
+    -4 => :data_type_int32,
+    -2 => :data_type_int16,
+    -1 => :data_type_int8,
+    0 => :data_type_unknown0,
+    1 => :data_type_uint8,
+    2 => :data_type_uint16,
+    4 => :data_type_uint32,
+    8 => :data_type_uint64,
+  }
+  I__DATA_TYPE = DATA_TYPE.invert
+
   XML_PARAM_TYPE = {
     0 => :xml_param_type_none,
     1 => :xml_param_type_laser_wavelength,
@@ -114,7 +132,7 @@ class NtMdt < Kaitai::Struct::Struct
     4 => :unit_kilo_hertz,
     5 => :unit_degrees,
     6 => :unit_percent,
-    7 => :unit_celsium_degree,
+    7 => :unit_celsius_degree,
     8 => :unit_volt_high,
     9 => :unit_second,
     10 => :unit_milli_second,
@@ -469,8 +487,60 @@ class NtMdt < Kaitai::Struct::Struct
         (n_mesurands).times { |i|
           @mesurands[i] = Calibration.new(@_io, self, @_root)
         }
-        @image = @_io.read_bytes_full
         self
+      end
+      class Image < Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = self)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @image = []
+          i = 0
+          while not @_io.eof?
+            @image << Vec.new(@_io, self, @_root)
+            i += 1
+          end
+          self
+        end
+        class Vec < Kaitai::Struct::Struct
+          def initialize(_io, _parent = nil, _root = self)
+            super(_io, _parent, _root)
+            _read
+          end
+
+          def _read
+            @items = Array.new(_parent._parent.n_mesurands)
+            (_parent._parent.n_mesurands).times { |i|
+              case _parent._parent.mesurands[i].data_type
+              when :data_type_uint8
+                @items[i] = @_io.read_u1
+              when :data_type_int8
+                @items[i] = @_io.read_s1
+              when :data_type_int16
+                @items[i] = @_io.read_s2le
+              when :data_type_uint64
+                @items[i] = @_io.read_u8le
+              when :data_type_float64
+                @items[i] = @_io.read_f8le
+              when :data_type_int32
+                @items[i] = @_io.read_s4le
+              when :data_type_float32
+                @items[i] = @_io.read_f4le
+              when :data_type_uint16
+                @items[i] = @_io.read_u2le
+              when :data_type_int64
+                @items[i] = @_io.read_s8le
+              when :data_type_uint32
+                @items[i] = @_io.read_u4le
+              end
+            }
+            self
+          end
+          attr_reader :items
+        end
+        attr_reader :image
       end
       class Calibration < Kaitai::Struct::Struct
         def initialize(_io, _parent = nil, _root = self)
@@ -491,13 +561,18 @@ class NtMdt < Kaitai::Struct::Struct
           @scale = @_io.read_f8le
           @min_index = @_io.read_u8le
           @max_index = @_io.read_u8le
-          @data_type = @_io.read_s4le
+          @data_type = Kaitai::Struct::Stream::resolve_enum(DATA_TYPE, @_io.read_s4le)
           @len_author = @_io.read_u4le
           @name = (@_io.read_bytes(len_name)).force_encoding("utf-8")
           @comment = (@_io.read_bytes(len_comment)).force_encoding("utf-8")
           @unit = (@_io.read_bytes(len_unit)).force_encoding("utf-8")
           @author = (@_io.read_bytes(len_author)).force_encoding("utf-8")
           self
+        end
+        def count
+          return @count unless @count.nil?
+          @count = ((max_index - min_index) + 1)
+          @count
         end
         attr_reader :len_tot
         attr_reader :len_struct
@@ -517,6 +592,16 @@ class NtMdt < Kaitai::Struct::Struct
         attr_reader :comment
         attr_reader :unit
         attr_reader :author
+      end
+      def image
+        return @image unless @image.nil?
+        _pos = @_io.pos
+        @_io.seek(data_offset)
+        @_raw_image = @_io.read_bytes(data_size)
+        io = Kaitai::Struct::Stream.new(@_raw_image)
+        @image = Image.new(io, self, @_root)
+        @_io.seek(_pos)
+        @image
       end
       attr_reader :head_size
       attr_reader :tot_len
@@ -539,7 +624,7 @@ class NtMdt < Kaitai::Struct::Struct
       attr_reader :n_mesurands
       attr_reader :dimensions
       attr_reader :mesurands
-      attr_reader :image
+      attr_reader :_raw_image
     end
     class FdSpectroscopy < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)

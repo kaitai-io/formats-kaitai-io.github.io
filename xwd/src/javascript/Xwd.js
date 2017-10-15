@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.Xwd = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * xwd is a file format written by eponymous X11 screen capture
  * application (xwd stands for "X Window Dump"). Typically, an average
@@ -237,15 +246,5 @@ var Xwd = (function() {
 
   return Xwd;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('Xwd', [], function() {
-    return Xwd;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = Xwd;
-}
+return Xwd;
+}));

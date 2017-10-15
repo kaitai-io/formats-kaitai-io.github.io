@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.Id3v11 = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
  * tag is appended to the end of file and spans exactly 128 bytes.
@@ -343,15 +352,5 @@ var Id3v11 = (function() {
 
   return Id3v11;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('Id3v11', [], function() {
-    return Id3v11;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = Id3v11;
-}
+return Id3v11;
+}));

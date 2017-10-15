@@ -1,8 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-if (typeof require === 'function')
-  var WindowsShellItems = require('./WindowsShellItems.js');
-
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream', './WindowsShellItems'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./WindowsShellItems'));
+  } else {
+    root.WindowsLnkFile = factory(root.KaitaiStream, root.WindowsShellItems);
+  }
+}(this, function (KaitaiStream, WindowsShellItems) {
 /**
  * Windows .lnk files (AKA "shell link" file) are most frequently used
  * in Windows shell to create "shortcuts" to another files, usually for
@@ -384,15 +390,5 @@ var WindowsLnkFile = (function() {
 
   return WindowsLnkFile;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('WindowsLnkFile', [], function() {
-    return WindowsLnkFile;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = WindowsLnkFile;
-}
+return WindowsLnkFile;
+}));

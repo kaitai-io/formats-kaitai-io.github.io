@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.Code6502 = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * This spec can be used to disassemble raw stream of 6502 CPU machine
  * code into individual operations. Each operation includes an opcode
@@ -715,15 +724,5 @@ var Code6502 = (function() {
 
   return Code6502;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('Code6502', [], function() {
-    return Code6502;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = Code6502;
-}
+return Code6502;
+}));

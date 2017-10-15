@@ -59,10 +59,10 @@ digraph {
 			name__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="format_selector_pos">0</TD><TD PORT="format_selector_size">2</TD><TD>u2be</TD><TD PORT="format_selector_type">format_selector</TD></TR>
-				<TR><TD PORT="name_record_count_pos">2</TD><TD PORT="name_record_count_size">2</TD><TD>u2be</TD><TD PORT="name_record_count_type">name_record_count</TD></TR>
-				<TR><TD PORT="string_storage_offset_pos">4</TD><TD PORT="string_storage_offset_size">2</TD><TD>u2be</TD><TD PORT="string_storage_offset_type">string_storage_offset</TD></TR>
+				<TR><TD PORT="num_name_records_pos">2</TD><TD PORT="num_name_records_size">2</TD><TD>u2be</TD><TD PORT="num_name_records_type">num_name_records</TD></TR>
+				<TR><TD PORT="ofs_strings_pos">4</TD><TD PORT="ofs_strings_size">2</TD><TD>u2be</TD><TD PORT="ofs_strings_type">ofs_strings</TD></TR>
 				<TR><TD PORT="name_records_pos">6</TD><TD PORT="name_records_size">12</TD><TD>NameRecord</TD><TD PORT="name_records_type">name_records</TD></TR>
-				<TR><TD COLSPAN="4" PORT="name_records__repeat">repeat name_record_count times</TD></TR>
+				<TR><TD COLSPAN="4" PORT="name_records__repeat">repeat num_name_records times</TD></TR>
 			</TABLE>>];
 			subgraph cluster__name_record {
 				label="Ttf::Name::NameRecord";
@@ -70,20 +70,20 @@ digraph {
 
 				name_record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="platform_id_pos">0</TD><TD PORT="platform_id_size">2</TD><TD>u2be</TD><TD PORT="platform_id_type">platform_id</TD></TR>
+					<TR><TD PORT="platform_id_pos">0</TD><TD PORT="platform_id_size">2</TD><TD>u2be→Platforms</TD><TD PORT="platform_id_type">platform_id</TD></TR>
 					<TR><TD PORT="encoding_id_pos">2</TD><TD PORT="encoding_id_size">2</TD><TD>u2be</TD><TD PORT="encoding_id_type">encoding_id</TD></TR>
 					<TR><TD PORT="language_id_pos">4</TD><TD PORT="language_id_size">2</TD><TD>u2be</TD><TD PORT="language_id_type">language_id</TD></TR>
-					<TR><TD PORT="name_id_pos">6</TD><TD PORT="name_id_size">2</TD><TD>u2be</TD><TD PORT="name_id_type">name_id</TD></TR>
-					<TR><TD PORT="string_length_pos">8</TD><TD PORT="string_length_size">2</TD><TD>u2be</TD><TD PORT="string_length_type">string_length</TD></TR>
-					<TR><TD PORT="string_offset_pos">10</TD><TD PORT="string_offset_size">2</TD><TD>u2be</TD><TD PORT="string_offset_type">string_offset</TD></TR>
+					<TR><TD PORT="name_id_pos">6</TD><TD PORT="name_id_size">2</TD><TD>u2be→Names</TD><TD PORT="name_id_type">name_id</TD></TR>
+					<TR><TD PORT="len_str_pos">8</TD><TD PORT="len_str_size">2</TD><TD>u2be</TD><TD PORT="len_str_type">len_str</TD></TR>
+					<TR><TD PORT="ofs_str_pos">10</TD><TD PORT="ofs_str_size">2</TD><TD>u2be</TD><TD PORT="ofs_str_type">ofs_str</TD></TR>
 				</TABLE>>];
 				name_record__inst__ascii_value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="ascii_value_pos">(_parent.string_storage_offset + string_offset)</TD><TD PORT="ascii_value_size">string_length</TD><TD>str(ascii)</TD><TD PORT="ascii_value_type">ascii_value</TD></TR>
+					<TR><TD PORT="ascii_value_pos">(_parent.ofs_strings + ofs_str)</TD><TD PORT="ascii_value_size">len_str</TD><TD>str(ascii)</TD><TD PORT="ascii_value_type">ascii_value</TD></TR>
 				</TABLE>>];
 				name_record__inst__unicode_value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="unicode_value_pos">(_parent.string_storage_offset + string_offset)</TD><TD PORT="unicode_value_size">string_length</TD><TD>str(utf-16be)</TD><TD PORT="unicode_value_type">unicode_value</TD></TR>
+					<TR><TD PORT="unicode_value_pos">(_parent.ofs_strings + ofs_str)</TD><TD PORT="unicode_value_size">len_str</TD><TD>str(utf-16be)</TD><TD PORT="unicode_value_type">unicode_value</TD></TR>
 				</TABLE>>];
 			}
 		}
@@ -633,13 +633,13 @@ subtable__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING=
 	pascal_string__seq:length_type -> format20__seq:glyph_names__repeat [color="#404040"];
 	pascal_string__seq:length_type -> pascal_string__seq:value_size [color="#404040"];
 	name__seq:name_records_type -> name_record__seq [style=bold];
-	name__seq:name_record_count_type -> name__seq:name_records__repeat [color="#404040"];
-	name__seq:string_storage_offset_type -> name_record__inst__ascii_value:ascii_value_pos [color="#404040"];
-	name_record__seq:string_offset_type -> name_record__inst__ascii_value:ascii_value_pos [color="#404040"];
-	name_record__seq:string_length_type -> name_record__inst__ascii_value:ascii_value_size [color="#404040"];
-	name__seq:string_storage_offset_type -> name_record__inst__unicode_value:unicode_value_pos [color="#404040"];
-	name_record__seq:string_offset_type -> name_record__inst__unicode_value:unicode_value_pos [color="#404040"];
-	name_record__seq:string_length_type -> name_record__inst__unicode_value:unicode_value_size [color="#404040"];
+	name__seq:num_name_records_type -> name__seq:name_records__repeat [color="#404040"];
+	name__seq:ofs_strings_type -> name_record__inst__ascii_value:ascii_value_pos [color="#404040"];
+	name_record__seq:ofs_str_type -> name_record__inst__ascii_value:ascii_value_pos [color="#404040"];
+	name_record__seq:len_str_type -> name_record__inst__ascii_value:ascii_value_size [color="#404040"];
+	name__seq:ofs_strings_type -> name_record__inst__unicode_value:unicode_value_pos [color="#404040"];
+	name_record__seq:ofs_str_type -> name_record__inst__unicode_value:unicode_value_pos [color="#404040"];
+	name_record__seq:len_str_type -> name_record__inst__unicode_value:unicode_value_size [color="#404040"];
 	head__seq:version_type -> fixed__seq [style=bold];
 	head__seq:font_revision_type -> fixed__seq [style=bold];
 	hhea__seq:version_type -> fixed__seq [style=bold];

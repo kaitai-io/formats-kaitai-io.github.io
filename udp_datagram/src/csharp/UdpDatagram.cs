@@ -4,6 +4,13 @@
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// UDP is a simple stateless transport layer (AKA OSI layer 4)
+    /// protocol, one of the core Internet protocols. It provides source and
+    /// destination ports, basic checksumming, but provides not guarantees
+    /// of delivery, order of packets, or duplicate delivery.
+    /// </summary>
     public partial class UdpDatagram : KaitaiStruct
     {
         public static UdpDatagram FromFile(string fileName)

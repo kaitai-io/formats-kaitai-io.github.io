@@ -1,8 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-if (typeof require === 'function')
-  var Exif = require('./Exif.js');
-
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream', './Exif'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./Exif'));
+  } else {
+    root.Jpeg = factory(root.KaitaiStream, root.Exif);
+  }
+}(this, function (KaitaiStream, Exif) {
 var Jpeg = (function() {
   Jpeg.ComponentId = Object.freeze({
     Y: 1,
@@ -367,15 +373,5 @@ var Jpeg = (function() {
 
   return Jpeg;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('Jpeg', [], function() {
-    return Jpeg;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = Jpeg;
-}
+return Jpeg;
+}));

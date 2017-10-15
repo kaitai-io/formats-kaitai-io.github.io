@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.Elf = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 var Elf = (function() {
   Elf.Endian = Object.freeze({
     LE: 1,
@@ -166,6 +175,7 @@ var Elf = (function() {
     TLS: 7,
     GNU_EH_FRAME: 1685382480,
     GNU_STACK: 1685382481,
+    GNU_RELRO: 1685382482,
     HIOS: 1879048191,
 
     0: "NULL_TYPE",
@@ -178,6 +188,7 @@ var Elf = (function() {
     7: "TLS",
     1685382480: "GNU_EH_FRAME",
     1685382481: "GNU_STACK",
+    1685382482: "GNU_RELRO",
     1879048191: "HIOS",
   });
 
@@ -755,15 +766,5 @@ var Elf = (function() {
 
   return Elf;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('Elf', [], function() {
-    return Elf;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = Elf;
-}
+return Elf;
+}));

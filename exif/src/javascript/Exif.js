@@ -1,11 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-if (typeof require === 'function')
-  var ExifBe = require('./ExifBe.js');
-
-if (typeof require === 'function')
-  var ExifLe = require('./ExifLe.js');
-
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream', './ExifBe', './ExifLe'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./ExifBe'), require('./ExifLe'));
+  } else {
+    root.Exif = factory(root.KaitaiStream, root.ExifBe, root.ExifLe);
+  }
+}(this, function (KaitaiStream, ExifBe, ExifLe) {
 var Exif = (function() {
   function Exif(_io, _parent, _root) {
     this._io = _io;
@@ -28,15 +31,5 @@ var Exif = (function() {
 
   return Exif;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('Exif', [], function() {
-    return Exif;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = Exif;
-}
+return Exif;
+}));

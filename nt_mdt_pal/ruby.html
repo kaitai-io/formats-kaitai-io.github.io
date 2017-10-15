@@ -283,15 +283,40 @@ class NtMdtPal &lt; Kaitai::Struct::Struct
     end
 
     def _read
-      @unkn0 = @_io.read_bytes(7)
+      @unkn00 = @_io.read_bytes(3)
+      @unkn01 = @_io.read_bytes(2)
+      @unkn02 = @_io.read_bytes(1)
+      @unkn03 = @_io.read_bytes(1)
       @colors_count = @_io.read_u2le
-      @unkn1 = @_io.read_bytes(5)
+      @unkn10 = @_io.read_bytes(2)
+      @unkn11 = @_io.read_bytes(1)
+      @unkn12 = @_io.read_bytes(2)
       @name_size = @_io.read_u2be
       self
     end
-    attr_reader :unkn0
+
+    ##
+    # usually 0s
+    attr_reader :unkn00
+    attr_reader :unkn01
+    attr_reader :unkn02
+
+    ##
+    # usually 0s
+    attr_reader :unkn03
     attr_reader :colors_count
-    attr_reader :unkn1
+
+    ##
+    # usually 0s
+    attr_reader :unkn10
+
+    ##
+    # usually 4
+    attr_reader :unkn11
+
+    ##
+    # usually 0s
+    attr_reader :unkn12
     attr_reader :name_size
   end
   class Color &lt; Kaitai::Struct::Struct
@@ -301,10 +326,16 @@ class NtMdtPal &lt; Kaitai::Struct::Struct
     end
 
     def _read
-      @data = @_io.read_bytes(4)
+      @red = @_io.read_u1
+      @unkn = @_io.read_u1
+      @blue = @_io.read_u1
+      @green = @_io.read_u1
       self
     end
-    attr_reader :data
+    attr_reader :red
+    attr_reader :unkn
+    attr_reader :blue
+    attr_reader :green
   end
   class ColTable &lt; Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self, index)

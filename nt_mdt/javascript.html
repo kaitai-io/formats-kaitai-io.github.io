@@ -236,6 +236,15 @@ any of:</p>
         <div class="row">
             <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
+  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
+  } else {
+    root.NtMdt = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * A native file format of NT-MDT scientific software. Usually contains
  * any of:
@@ -314,6 +323,38 @@ var NtMdt = (function() {
     5: &quot;VLB&quot;,
     6: &quot;VRT&quot;,
     7: &quot;VRB&quot;,
+  });
+
+  NtMdt.DataType = Object.freeze({
+    FLOATFIX: -65544,
+    FLOAT80: -16138,
+    FLOAT64: -13320,
+    FLOAT48: -9990,
+    FLOAT32: -5892,
+    INT64: -8,
+    INT32: -4,
+    INT16: -2,
+    INT8: -1,
+    UNKNOWN0: 0,
+    UINT8: 1,
+    UINT16: 2,
+    UINT32: 4,
+    UINT64: 8,
+
+    &quot;-65544&quot;: &quot;FLOATFIX&quot;,
+    &quot;-16138&quot;: &quot;FLOAT80&quot;,
+    &quot;-13320&quot;: &quot;FLOAT64&quot;,
+    &quot;-9990&quot;: &quot;FLOAT48&quot;,
+    &quot;-5892&quot;: &quot;FLOAT32&quot;,
+    &quot;-8&quot;: &quot;INT64&quot;,
+    &quot;-4&quot;: &quot;INT32&quot;,
+    &quot;-2&quot;: &quot;INT16&quot;,
+    &quot;-1&quot;: &quot;INT8&quot;,
+    0: &quot;UNKNOWN0&quot;,
+    1: &quot;UINT8&quot;,
+    2: &quot;UINT16&quot;,
+    4: &quot;UINT32&quot;,
+    8: &quot;UINT64&quot;,
   });
 
   NtMdt.XmlParamType = Object.freeze({
@@ -402,7 +443,7 @@ var NtMdt = (function() {
     KILO_HERTZ: 4,
     DEGREES: 5,
     PERCENT: 6,
-    CELSIUM_DEGREE: 7,
+    CELSIUS_DEGREE: 7,
     VOLT_HIGH: 8,
     SECOND: 9,
     MILLI_SECOND: 10,
@@ -453,7 +494,7 @@ var NtMdt = (function() {
     4: &quot;KILO_HERTZ&quot;,
     5: &quot;DEGREES&quot;,
     6: &quot;PERCENT&quot;,
-    7: &quot;CELSIUM_DEGREE&quot;,
+    7: &quot;CELSIUS_DEGREE&quot;,
     8: &quot;VOLT_HIGH&quot;,
     9: &quot;SECOND&quot;,
     10: &quot;MILLI_SECOND&quot;,
@@ -850,8 +891,76 @@ var NtMdt = (function() {
         for (var i = 0; i &lt; this.nMesurands; i++) {
           this.mesurands[i] = new Calibration(this._io, this, this._root);
         }
-        this.image = this._io.readBytesFull();
       }
+
+      var Image = FdMetaData.Image = (function() {
+        function Image(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root || this;
+
+          this._read();
+        }
+        Image.prototype._read = function() {
+          this.image = [];
+          var i = 0;
+          while (!this._io.isEof()) {
+            this.image.push(new Vec(this._io, this, this._root));
+            i++;
+          }
+        }
+
+        var Vec = Image.Vec = (function() {
+          function Vec(_io, _parent, _root) {
+            this._io = _io;
+            this._parent = _parent;
+            this._root = _root || this;
+
+            this._read();
+          }
+          Vec.prototype._read = function() {
+            this.items = new Array(this._parent._parent.nMesurands);
+            for (var i = 0; i &lt; this._parent._parent.nMesurands; i++) {
+              switch (this._parent._parent.mesurands[i].dataType) {
+              case NtMdt.DataType.UINT8:
+                this.items[i] = this._io.readU1();
+                break;
+              case NtMdt.DataType.INT8:
+                this.items[i] = this._io.readS1();
+                break;
+              case NtMdt.DataType.INT16:
+                this.items[i] = this._io.readS2le();
+                break;
+              case NtMdt.DataType.UINT64:
+                this.items[i] = this._io.readU8le();
+                break;
+              case NtMdt.DataType.FLOAT64:
+                this.items[i] = this._io.readF8le();
+                break;
+              case NtMdt.DataType.INT32:
+                this.items[i] = this._io.readS4le();
+                break;
+              case NtMdt.DataType.FLOAT32:
+                this.items[i] = this._io.readF4le();
+                break;
+              case NtMdt.DataType.UINT16:
+                this.items[i] = this._io.readU2le();
+                break;
+              case NtMdt.DataType.INT64:
+                this.items[i] = this._io.readS8le();
+                break;
+              case NtMdt.DataType.UINT32:
+                this.items[i] = this._io.readU4le();
+                break;
+              }
+            }
+          }
+
+          return Vec;
+        })();
+
+        return Image;
+      })();
 
       var Calibration = FdMetaData.Calibration = (function() {
         function Calibration(_io, _parent, _root) {
@@ -881,9 +990,30 @@ var NtMdt = (function() {
           this.unit = KaitaiStream.bytesToStr(this._io.readBytes(this.lenUnit), &quot;utf-8&quot;);
           this.author = KaitaiStream.bytesToStr(this._io.readBytes(this.lenAuthor), &quot;utf-8&quot;);
         }
+        Object.defineProperty(Calibration.prototype, &#39;count&#39;, {
+          get: function() {
+            if (this._m_count !== undefined)
+              return this._m_count;
+            this._m_count = ((this.maxIndex - this.minIndex) + 1);
+            return this._m_count;
+          }
+        });
 
         return Calibration;
       })();
+      Object.defineProperty(FdMetaData.prototype, &#39;image&#39;, {
+        get: function() {
+          if (this._m_image !== undefined)
+            return this._m_image;
+          var _pos = this._io.pos;
+          this._io.seek(this.dataOffset);
+          this._raw__m_image = this._io.readBytes(this.dataSize);
+          var _io__raw__m_image = new KaitaiStream(this._raw__m_image);
+          this._m_image = new Image(_io__raw__m_image, this, this._root);
+          this._io.seek(_pos);
+          return this._m_image;
+        }
+      });
 
       return FdMetaData;
     })();
@@ -1393,18 +1523,8 @@ var NtMdt = (function() {
 
   return NtMdt;
 })();
-
-// Export for amd environments
-if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-  define(&#39;NtMdt&#39;, [], function() {
-    return NtMdt;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === &#39;object&#39; &amp;&amp; module &amp;&amp; module.exports) {
-  module.exports = NtMdt;
-}
+return NtMdt;
+}));
 </code></pre>
             
         </div>

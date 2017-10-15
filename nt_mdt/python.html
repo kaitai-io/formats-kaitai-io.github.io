@@ -318,6 +318,22 @@ class NtMdt(KaitaiStruct):
         vrt = 6
         vrb = 7
 
+    class DataType(Enum):
+        floatfix = -65544
+        float80 = -16138
+        float64 = -13320
+        float48 = -9990
+        float32 = -5892
+        int64 = -8
+        int32 = -4
+        int16 = -2
+        int8 = -1
+        unknown0 = 0
+        uint8 = 1
+        uint16 = 2
+        uint32 = 4
+        uint64 = 8
+
     class XmlParamType(Enum):
         none = 0
         laser_wavelength = 1
@@ -370,7 +386,7 @@ class NtMdt(KaitaiStruct):
         kilo_hertz = 4
         degrees = 5
         percent = 6
-        celsium_degree = 7
+        celsius_degree = 7
         volt_high = 8
         second = 9
         milli_second = 10
@@ -677,7 +693,56 @@ class NtMdt(KaitaiStruct):
                 for i in range(self.n_mesurands):
                     self.mesurands[i] = self._root.Frame.FdMetaData.Calibration(self._io, self, self._root)
 
-                self.image = self._io.read_bytes_full()
+
+            class Image(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    self._io = _io
+                    self._parent = _parent
+                    self._root = _root if _root else self
+                    self._read()
+
+                def _read(self):
+                    self.image = []
+                    i = 0
+                    while not self._io.is_eof():
+                        self.image.append(self._root.Frame.FdMetaData.Image.Vec(self._io, self, self._root))
+                        i += 1
+
+
+                class Vec(KaitaiStruct):
+                    def __init__(self, _io, _parent=None, _root=None):
+                        self._io = _io
+                        self._parent = _parent
+                        self._root = _root if _root else self
+                        self._read()
+
+                    def _read(self):
+                        self.items = [None] * (self._parent._parent.n_mesurands)
+                        for i in range(self._parent._parent.n_mesurands):
+                            _on = self._parent._parent.mesurands[i].data_type
+                            if _on == self._root.DataType.uint8:
+                                self.items[i] = self._io.read_u1()
+                            elif _on == self._root.DataType.int8:
+                                self.items[i] = self._io.read_s1()
+                            elif _on == self._root.DataType.int16:
+                                self.items[i] = self._io.read_s2le()
+                            elif _on == self._root.DataType.uint64:
+                                self.items[i] = self._io.read_u8le()
+                            elif _on == self._root.DataType.float64:
+                                self.items[i] = self._io.read_f8le()
+                            elif _on == self._root.DataType.int32:
+                                self.items[i] = self._io.read_s4le()
+                            elif _on == self._root.DataType.float32:
+                                self.items[i] = self._io.read_f4le()
+                            elif _on == self._root.DataType.uint16:
+                                self.items[i] = self._io.read_u2le()
+                            elif _on == self._root.DataType.int64:
+                                self.items[i] = self._io.read_s8le()
+                            elif _on == self._root.DataType.uint32:
+                                self.items[i] = self._io.read_u4le()
+
+
+
 
             class Calibration(KaitaiStruct):
                 def __init__(self, _io, _parent=None, _root=None):
@@ -699,13 +764,34 @@ class NtMdt(KaitaiStruct):
                     self.scale = self._io.read_f8le()
                     self.min_index = self._io.read_u8le()
                     self.max_index = self._io.read_u8le()
-                    self.data_type = self._io.read_s4le()
+                    self.data_type = self._root.DataType(self._io.read_s4le())
                     self.len_author = self._io.read_u4le()
                     self.name = (self._io.read_bytes(self.len_name)).decode(u&quot;utf-8&quot;)
                     self.comment = (self._io.read_bytes(self.len_comment)).decode(u&quot;utf-8&quot;)
                     self.unit = (self._io.read_bytes(self.len_unit)).decode(u&quot;utf-8&quot;)
                     self.author = (self._io.read_bytes(self.len_author)).decode(u&quot;utf-8&quot;)
 
+                @property
+                def count(self):
+                    if hasattr(self, &#39;_m_count&#39;):
+                        return self._m_count if hasattr(self, &#39;_m_count&#39;) else None
+
+                    self._m_count = ((self.max_index - self.min_index) + 1)
+                    return self._m_count if hasattr(self, &#39;_m_count&#39;) else None
+
+
+            @property
+            def image(self):
+                if hasattr(self, &#39;_m_image&#39;):
+                    return self._m_image if hasattr(self, &#39;_m_image&#39;) else None
+
+                _pos = self._io.pos()
+                self._io.seek(self.data_offset)
+                self._raw__m_image = self._io.read_bytes(self.data_size)
+                io = KaitaiStream(BytesIO(self._raw__m_image))
+                self._m_image = self._root.Frame.FdMetaData.Image(io, self, self._root)
+                self._io.seek(_pos)
+                return self._m_image if hasattr(self, &#39;_m_image&#39;) else None
 
 
         class FdSpectroscopy(KaitaiStruct):

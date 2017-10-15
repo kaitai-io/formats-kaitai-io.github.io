@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.Iso9660 = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * ISO9660 is standard filesystem used on read-only optical discs
  * (mostly CD-ROM). The standard was based on earlier High Sierra
@@ -369,15 +378,5 @@ var Iso9660 = (function() {
 
   return Iso9660;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('Iso9660', [], function() {
-    return Iso9660;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = Iso9660;
-}
+return Iso9660;
+}));

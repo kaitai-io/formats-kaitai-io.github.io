@@ -418,7 +418,18 @@ class FdMetaData extends \Kaitai\Struct\Struct {
         for ($i = 0; $i < $n; $i++) {
             $this->_m_mesurands[] = new \NtMdt\Frame\FdMetaData\Calibration($this->_io, $this, $this->_root);
         }
-        $this->_m_image = $this->_io->readBytesFull();
+    }
+    protected $_m_image;
+    public function image() {
+        if ($this->_m_image !== null)
+            return $this->_m_image;
+        $_pos = $this->_io->pos();
+        $this->_io->seek($this->dataOffset());
+        $this->_m__raw_image = $this->_io->readBytes($this->dataSize());
+        $io = new \Kaitai\Struct\Stream($this->_m__raw_image);
+        $this->_m_image = new \NtMdt\Frame\FdMetaData\Image($io, $this, $this->_root);
+        $this->_io->seek($_pos);
+        return $this->_m_image;
     }
     protected $_m_headSize;
     protected $_m_totLen;
@@ -441,7 +452,7 @@ class FdMetaData extends \Kaitai\Struct\Struct {
     protected $_m_nMesurands;
     protected $_m_dimensions;
     protected $_m_mesurands;
-    protected $_m_image;
+    protected $_m__raw_image;
     public function headSize() { return $this->_m_headSize; }
     public function totLen() { return $this->_m_totLen; }
     public function guids() { return $this->_m_guids; }
@@ -463,7 +474,77 @@ class FdMetaData extends \Kaitai\Struct\Struct {
     public function nMesurands() { return $this->_m_nMesurands; }
     public function dimensions() { return $this->_m_dimensions; }
     public function mesurands() { return $this->_m_mesurands; }
+    public function _raw_image() { return $this->_m__raw_image; }
+}
+
+namespace \NtMdt\Frame\FdMetaData;
+
+class Image extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdMetaData $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_image = [];
+        $i = 0;
+        while (!$this->_io->isEof()) {
+            $this->_m_image[] = new \NtMdt\Frame\FdMetaData\Image\Vec($this->_io, $this, $this->_root);
+            $i++;
+        }
+    }
+    protected $_m_image;
     public function image() { return $this->_m_image; }
+}
+
+namespace \NtMdt\Frame\FdMetaData\Image;
+
+class Vec extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdMetaData\Image $_parent = null, \NtMdt $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_items = [];
+        $n = $this->_parent()->_parent()->nMesurands();
+        for ($i = 0; $i < $n; $i++) {
+            switch ($this->_parent()->_parent()->mesurands()[$i]->dataType()) {
+                case \NtMdt\DataType::UINT8:
+                    $this->_m_items[] = $this->_io->readU1();
+                    break;
+                case \NtMdt\DataType::INT8:
+                    $this->_m_items[] = $this->_io->readS1();
+                    break;
+                case \NtMdt\DataType::INT16:
+                    $this->_m_items[] = $this->_io->readS2le();
+                    break;
+                case \NtMdt\DataType::UINT64:
+                    $this->_m_items[] = $this->_io->readU8le();
+                    break;
+                case \NtMdt\DataType::FLOAT64:
+                    $this->_m_items[] = $this->_io->readF8le();
+                    break;
+                case \NtMdt\DataType::INT32:
+                    $this->_m_items[] = $this->_io->readS4le();
+                    break;
+                case \NtMdt\DataType::FLOAT32:
+                    $this->_m_items[] = $this->_io->readF4le();
+                    break;
+                case \NtMdt\DataType::UINT16:
+                    $this->_m_items[] = $this->_io->readU2le();
+                    break;
+                case \NtMdt\DataType::INT64:
+                    $this->_m_items[] = $this->_io->readS8le();
+                    break;
+                case \NtMdt\DataType::UINT32:
+                    $this->_m_items[] = $this->_io->readU4le();
+                    break;
+            }
+        }
+    }
+    protected $_m_items;
+    public function items() { return $this->_m_items; }
 }
 
 namespace \NtMdt\Frame\FdMetaData;
@@ -493,6 +574,13 @@ class Calibration extends \Kaitai\Struct\Struct {
         $this->_m_comment = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenComment()), "utf-8");
         $this->_m_unit = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenUnit()), "utf-8");
         $this->_m_author = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenAuthor()), "utf-8");
+    }
+    protected $_m_count;
+    public function count() {
+        if ($this->_m_count !== null)
+            return $this->_m_count;
+        $this->_m_count = (($this->maxIndex() - $this->minIndex()) + 1);
+        return $this->_m_count;
     }
     protected $_m_lenTot;
     protected $_m_lenStruct;
@@ -1223,6 +1311,25 @@ class XmlScanLocation {
 
 namespace \NtMdt;
 
+class DataType {
+    const FLOATFIX = -65544;
+    const FLOAT80 = -16138;
+    const FLOAT64 = -13320;
+    const FLOAT48 = -9990;
+    const FLOAT32 = -5892;
+    const INT64 = -8;
+    const INT32 = -4;
+    const INT16 = -2;
+    const INT8 = -1;
+    const UNKNOWN0 = 0;
+    const UINT8 = 1;
+    const UINT16 = 2;
+    const UINT32 = 4;
+    const UINT64 = 8;
+}
+
+namespace \NtMdt;
+
 class XmlParamType {
     const NONE = 0;
     const LASER_WAVELENGTH = 1;
@@ -1281,7 +1388,7 @@ class Unit {
     const KILO_HERTZ = 4;
     const DEGREES = 5;
     const PERCENT = 6;
-    const CELSIUM_DEGREE = 7;
+    const CELSIUS_DEGREE = 7;
     const VOLT_HIGH = 8;
     const SECOND = 9;
     const MILLI_SECOND = 10;

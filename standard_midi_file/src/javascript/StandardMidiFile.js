@@ -1,8 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-if (typeof require === 'function')
-  var VlqBase128Be = require('./VlqBase128Be.js');
-
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream', './VlqBase128Be'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./VlqBase128Be'));
+  } else {
+    root.StandardMidiFile = factory(root.KaitaiStream, root.VlqBase128Be);
+  }
+}(this, function (KaitaiStream, VlqBase128Be) {
 var StandardMidiFile = (function() {
   function StandardMidiFile(_io, _parent, _root) {
     this._io = _io;
@@ -335,15 +341,5 @@ var StandardMidiFile = (function() {
 
   return StandardMidiFile;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('StandardMidiFile', [], function() {
-    return StandardMidiFile;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = StandardMidiFile;
-}
+return StandardMidiFile;
+}));

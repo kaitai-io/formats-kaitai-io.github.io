@@ -47,18 +47,53 @@ class Meta extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this->_m_unkn0 = $this->_io->readBytes(7);
+        $this->_m_unkn00 = $this->_io->readBytes(3);
+        $this->_m_unkn01 = $this->_io->readBytes(2);
+        $this->_m_unkn02 = $this->_io->readBytes(1);
+        $this->_m_unkn03 = $this->_io->readBytes(1);
         $this->_m_colorsCount = $this->_io->readU2le();
-        $this->_m_unkn1 = $this->_io->readBytes(5);
+        $this->_m_unkn10 = $this->_io->readBytes(2);
+        $this->_m_unkn11 = $this->_io->readBytes(1);
+        $this->_m_unkn12 = $this->_io->readBytes(2);
         $this->_m_nameSize = $this->_io->readU2be();
     }
-    protected $_m_unkn0;
+    protected $_m_unkn00;
+    protected $_m_unkn01;
+    protected $_m_unkn02;
+    protected $_m_unkn03;
     protected $_m_colorsCount;
-    protected $_m_unkn1;
+    protected $_m_unkn10;
+    protected $_m_unkn11;
+    protected $_m_unkn12;
     protected $_m_nameSize;
-    public function unkn0() { return $this->_m_unkn0; }
+
+    /**
+     * usually 0s
+     */
+    public function unkn00() { return $this->_m_unkn00; }
+    public function unkn01() { return $this->_m_unkn01; }
+    public function unkn02() { return $this->_m_unkn02; }
+
+    /**
+     * usually 0s
+     */
+    public function unkn03() { return $this->_m_unkn03; }
     public function colorsCount() { return $this->_m_colorsCount; }
-    public function unkn1() { return $this->_m_unkn1; }
+
+    /**
+     * usually 0s
+     */
+    public function unkn10() { return $this->_m_unkn10; }
+
+    /**
+     * usually 4
+     */
+    public function unkn11() { return $this->_m_unkn11; }
+
+    /**
+     * usually 0s
+     */
+    public function unkn12() { return $this->_m_unkn12; }
     public function nameSize() { return $this->_m_nameSize; }
 }
 
@@ -71,10 +106,19 @@ class Color extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this->_m_data = $this->_io->readBytes(4);
+        $this->_m_red = $this->_io->readU1();
+        $this->_m_unkn = $this->_io->readU1();
+        $this->_m_blue = $this->_io->readU1();
+        $this->_m_green = $this->_io->readU1();
     }
-    protected $_m_data;
-    public function data() { return $this->_m_data; }
+    protected $_m_red;
+    protected $_m_unkn;
+    protected $_m_blue;
+    protected $_m_green;
+    public function red() { return $this->_m_red; }
+    public function unkn() { return $this->_m_unkn; }
+    public function blue() { return $this->_m_blue; }
+    public function green() { return $this->_m_green; }
 }
 
 namespace \NtMdtPal;

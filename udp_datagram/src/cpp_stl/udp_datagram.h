@@ -11,6 +11,13 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 
+/**
+ * UDP is a simple stateless transport layer (AKA OSI layer 4)
+ * protocol, one of the core Internet protocols. It provides source and
+ * destination ports, basic checksumming, but provides not guarantees
+ * of delivery, order of packets, or duplicate delivery.
+ */
+
 class udp_datagram_t : public kaitai::kstruct {
 
 public:

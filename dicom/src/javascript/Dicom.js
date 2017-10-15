@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.Dicom = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * DICOM (Digital Imaging and Communications in Medicine), AKA NEMA
  * PS3, AKA ISO 12052:2006, is a file format and network protocol
@@ -8309,15 +8318,5 @@ var Dicom = (function() {
 
   return Dicom;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('Dicom', [], function() {
-    return Dicom;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = Dicom;
-}
+return Dicom;
+}));

@@ -272,18 +272,53 @@ class Meta extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this-&gt;_m_unkn0 = $this-&gt;_io-&gt;readBytes(7);
+        $this-&gt;_m_unkn00 = $this-&gt;_io-&gt;readBytes(3);
+        $this-&gt;_m_unkn01 = $this-&gt;_io-&gt;readBytes(2);
+        $this-&gt;_m_unkn02 = $this-&gt;_io-&gt;readBytes(1);
+        $this-&gt;_m_unkn03 = $this-&gt;_io-&gt;readBytes(1);
         $this-&gt;_m_colorsCount = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_unkn1 = $this-&gt;_io-&gt;readBytes(5);
+        $this-&gt;_m_unkn10 = $this-&gt;_io-&gt;readBytes(2);
+        $this-&gt;_m_unkn11 = $this-&gt;_io-&gt;readBytes(1);
+        $this-&gt;_m_unkn12 = $this-&gt;_io-&gt;readBytes(2);
         $this-&gt;_m_nameSize = $this-&gt;_io-&gt;readU2be();
     }
-    protected $_m_unkn0;
+    protected $_m_unkn00;
+    protected $_m_unkn01;
+    protected $_m_unkn02;
+    protected $_m_unkn03;
     protected $_m_colorsCount;
-    protected $_m_unkn1;
+    protected $_m_unkn10;
+    protected $_m_unkn11;
+    protected $_m_unkn12;
     protected $_m_nameSize;
-    public function unkn0() { return $this-&gt;_m_unkn0; }
+
+    /**
+     * usually 0s
+     */
+    public function unkn00() { return $this-&gt;_m_unkn00; }
+    public function unkn01() { return $this-&gt;_m_unkn01; }
+    public function unkn02() { return $this-&gt;_m_unkn02; }
+
+    /**
+     * usually 0s
+     */
+    public function unkn03() { return $this-&gt;_m_unkn03; }
     public function colorsCount() { return $this-&gt;_m_colorsCount; }
-    public function unkn1() { return $this-&gt;_m_unkn1; }
+
+    /**
+     * usually 0s
+     */
+    public function unkn10() { return $this-&gt;_m_unkn10; }
+
+    /**
+     * usually 4
+     */
+    public function unkn11() { return $this-&gt;_m_unkn11; }
+
+    /**
+     * usually 0s
+     */
+    public function unkn12() { return $this-&gt;_m_unkn12; }
     public function nameSize() { return $this-&gt;_m_nameSize; }
 }
 
@@ -296,10 +331,19 @@ class Color extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this-&gt;_m_data = $this-&gt;_io-&gt;readBytes(4);
+        $this-&gt;_m_red = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_unkn = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_blue = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_green = $this-&gt;_io-&gt;readU1();
     }
-    protected $_m_data;
-    public function data() { return $this-&gt;_m_data; }
+    protected $_m_red;
+    protected $_m_unkn;
+    protected $_m_blue;
+    protected $_m_green;
+    public function red() { return $this-&gt;_m_red; }
+    public function unkn() { return $this-&gt;_m_unkn; }
+    public function blue() { return $this-&gt;_m_blue; }
+    public function green() { return $this-&gt;_m_green; }
 }
 
 namespace \NtMdtPal;

@@ -310,20 +310,55 @@ public class NtMdtPal extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.unkn0 = this._io.readBytes(7);
+            this.unkn00 = this._io.readBytes(3);
+            this.unkn01 = this._io.readBytes(2);
+            this.unkn02 = this._io.readBytes(1);
+            this.unkn03 = this._io.readBytes(1);
             this.colorsCount = this._io.readU2le();
-            this.unkn1 = this._io.readBytes(5);
+            this.unkn10 = this._io.readBytes(2);
+            this.unkn11 = this._io.readBytes(1);
+            this.unkn12 = this._io.readBytes(2);
             this.nameSize = this._io.readU2be();
         }
-        private byte[] unkn0;
+        private byte[] unkn00;
+        private byte[] unkn01;
+        private byte[] unkn02;
+        private byte[] unkn03;
         private int colorsCount;
-        private byte[] unkn1;
+        private byte[] unkn10;
+        private byte[] unkn11;
+        private byte[] unkn12;
         private int nameSize;
         private NtMdtPal _root;
         private NtMdtPal _parent;
-        public byte[] unkn0() { return unkn0; }
+
+        /**
+         * usually 0s
+         */
+        public byte[] unkn00() { return unkn00; }
+        public byte[] unkn01() { return unkn01; }
+        public byte[] unkn02() { return unkn02; }
+
+        /**
+         * usually 0s
+         */
+        public byte[] unkn03() { return unkn03; }
         public int colorsCount() { return colorsCount; }
-        public byte[] unkn1() { return unkn1; }
+
+        /**
+         * usually 0s
+         */
+        public byte[] unkn10() { return unkn10; }
+
+        /**
+         * usually 4
+         */
+        public byte[] unkn11() { return unkn11; }
+
+        /**
+         * usually 0s
+         */
+        public byte[] unkn12() { return unkn12; }
         public int nameSize() { return nameSize; }
         public NtMdtPal _root() { return _root; }
         public NtMdtPal _parent() { return _parent; }
@@ -348,12 +383,21 @@ public class NtMdtPal extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.data = this._io.readBytes(4);
+            this.red = this._io.readU1();
+            this.unkn = this._io.readU1();
+            this.blue = this._io.readU1();
+            this.green = this._io.readU1();
         }
-        private byte[] data;
+        private int red;
+        private int unkn;
+        private int blue;
+        private int green;
         private NtMdtPal _root;
         private NtMdtPal.ColTable _parent;
-        public byte[] data() { return data; }
+        public int red() { return red; }
+        public int unkn() { return unkn; }
+        public int blue() { return blue; }
+        public int green() { return green; }
         public NtMdtPal _root() { return _root; }
         public NtMdtPal.ColTable _parent() { return _parent; }
     }

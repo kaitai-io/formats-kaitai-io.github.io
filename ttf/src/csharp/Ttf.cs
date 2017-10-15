@@ -152,6 +152,18 @@ namespace Kaitai
             public Ttf M_Root { get { return m_root; } }
             public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
         }
+
+        /// <summary>
+        /// Name table is meant to include human-readable string metadata
+        /// that describes font: name of the font, its styles, copyright &amp;
+        /// trademark notices, vendor and designer info, etc.
+        /// 
+        /// The table includes a list of &quot;name records&quot;, each of which
+        /// corresponds to a single metadata entry.
+        /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html">Source</a>
+        /// </remarks>
         public partial class Name : KaitaiStruct
         {
             public static Name FromFile(string fileName)
@@ -159,6 +171,38 @@ namespace Kaitai
                 return new Name(new KaitaiStream(fileName));
             }
 
+
+            public enum Platforms
+            {
+                Unicode = 0,
+                Macintosh = 1,
+                Reserved2 = 2,
+                Microsoft = 3,
+            }
+
+            public enum Names
+            {
+                Copyright = 0,
+                FontFamily = 1,
+                FontSubfamily = 2,
+                UniqueSubfamilyId = 3,
+                FullFontName = 4,
+                NameTableVersion = 5,
+                PostscriptFontName = 6,
+                Trademark = 7,
+                Manufacturer = 8,
+                Designer = 9,
+                Description = 10,
+                UrlVendor = 11,
+                UrlDesigner = 12,
+                License = 13,
+                UrlLicense = 14,
+                Reserved15 = 15,
+                PreferredFamily = 16,
+                PreferredSubfamily = 17,
+                CompatibleFullName = 18,
+                SampleText = 19,
+            }
             public Name(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
@@ -168,10 +212,10 @@ namespace Kaitai
             private void _read()
             {
                 _formatSelector = m_io.ReadU2be();
-                _nameRecordCount = m_io.ReadU2be();
-                _stringStorageOffset = m_io.ReadU2be();
-                _nameRecords = new List<NameRecord>((int) (NameRecordCount));
-                for (var i = 0; i < NameRecordCount; i++)
+                _numNameRecords = m_io.ReadU2be();
+                _ofsStrings = m_io.ReadU2be();
+                _nameRecords = new List<NameRecord>((int) (NumNameRecords));
+                for (var i = 0; i < NumNameRecords; i++)
                 {
                     _nameRecords.Add(new NameRecord(m_io, this, m_root));
                 }
@@ -193,12 +237,12 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _platformId = m_io.ReadU2be();
+                    _platformId = ((Ttf.Name.Platforms) m_io.ReadU2be());
                     _encodingId = m_io.ReadU2be();
                     _languageId = m_io.ReadU2be();
-                    _nameId = m_io.ReadU2be();
-                    _stringLength = m_io.ReadU2be();
-                    _stringOffset = m_io.ReadU2be();
+                    _nameId = ((Ttf.Name.Names) m_io.ReadU2be());
+                    _lenStr = m_io.ReadU2be();
+                    _ofsStr = m_io.ReadU2be();
                 }
                 private bool f_asciiValue;
                 private string _asciiValue;
@@ -210,8 +254,8 @@ namespace Kaitai
                             return _asciiValue;
                         KaitaiStream io = M_Parent.M_Io;
                         long _pos = io.Pos;
-                        io.Seek((M_Parent.StringStorageOffset + StringOffset));
-                        _asciiValue = System.Text.Encoding.GetEncoding("ascii").GetString(io.ReadBytes(StringLength));
+                        io.Seek((M_Parent.OfsStrings + OfsStr));
+                        _asciiValue = System.Text.Encoding.GetEncoding("ascii").GetString(io.ReadBytes(LenStr));
                         io.Seek(_pos);
                         f_asciiValue = true;
                         return _asciiValue;
@@ -227,39 +271,39 @@ namespace Kaitai
                             return _unicodeValue;
                         KaitaiStream io = M_Parent.M_Io;
                         long _pos = io.Pos;
-                        io.Seek((M_Parent.StringStorageOffset + StringOffset));
-                        _unicodeValue = System.Text.Encoding.GetEncoding("utf-16be").GetString(io.ReadBytes(StringLength));
+                        io.Seek((M_Parent.OfsStrings + OfsStr));
+                        _unicodeValue = System.Text.Encoding.GetEncoding("utf-16be").GetString(io.ReadBytes(LenStr));
                         io.Seek(_pos);
                         f_unicodeValue = true;
                         return _unicodeValue;
                     }
                 }
-                private ushort _platformId;
+                private Platforms _platformId;
                 private ushort _encodingId;
                 private ushort _languageId;
-                private ushort _nameId;
-                private ushort _stringLength;
-                private ushort _stringOffset;
+                private Names _nameId;
+                private ushort _lenStr;
+                private ushort _ofsStr;
                 private Ttf m_root;
                 private Ttf.Name m_parent;
-                public ushort PlatformId { get { return _platformId; } }
+                public Platforms PlatformId { get { return _platformId; } }
                 public ushort EncodingId { get { return _encodingId; } }
                 public ushort LanguageId { get { return _languageId; } }
-                public ushort NameId { get { return _nameId; } }
-                public ushort StringLength { get { return _stringLength; } }
-                public ushort StringOffset { get { return _stringOffset; } }
+                public Names NameId { get { return _nameId; } }
+                public ushort LenStr { get { return _lenStr; } }
+                public ushort OfsStr { get { return _ofsStr; } }
                 public Ttf M_Root { get { return m_root; } }
                 public Ttf.Name M_Parent { get { return m_parent; } }
             }
             private ushort _formatSelector;
-            private ushort _nameRecordCount;
-            private ushort _stringStorageOffset;
+            private ushort _numNameRecords;
+            private ushort _ofsStrings;
             private List<NameRecord> _nameRecords;
             private Ttf m_root;
             private Ttf.DirTableEntry m_parent;
             public ushort FormatSelector { get { return _formatSelector; } }
-            public ushort NameRecordCount { get { return _nameRecordCount; } }
-            public ushort StringStorageOffset { get { return _stringStorageOffset; } }
+            public ushort NumNameRecords { get { return _numNameRecords; } }
+            public ushort OfsStrings { get { return _ofsStrings; } }
             public List<NameRecord> NameRecords { get { return _nameRecords; } }
             public Ttf M_Root { get { return m_root; } }
             public Ttf.DirTableEntry M_Parent { get { return m_parent; } }

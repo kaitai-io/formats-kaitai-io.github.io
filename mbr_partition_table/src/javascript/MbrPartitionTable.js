@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.MbrPartitionTable = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * MBR (Master Boot Record) partition table is a traditional way of
  * MS-DOS to partition larger hard disc drives into distinct
@@ -84,15 +93,5 @@ var MbrPartitionTable = (function() {
 
   return MbrPartitionTable;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('MbrPartitionTable', [], function() {
-    return MbrPartitionTable;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = MbrPartitionTable;
-}
+return MbrPartitionTable;
+}));

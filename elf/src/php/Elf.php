@@ -761,6 +761,7 @@ class PhType {
     const TLS = 7;
     const GNU_EH_FRAME = 1685382480;
     const GNU_STACK = 1685382481;
+    const GNU_RELRO = 1685382482;
     const HIOS = 1879048191;
 }
 

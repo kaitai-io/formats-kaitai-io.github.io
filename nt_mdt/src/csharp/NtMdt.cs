@@ -65,6 +65,24 @@ namespace Kaitai
             Vrb = 7,
         }
 
+        public enum DataType
+        {
+            Floatfix = -65544,
+            Float80 = -16138,
+            Float64 = -13320,
+            Float48 = -9990,
+            Float32 = -5892,
+            Int64 = -8,
+            Int32 = -4,
+            Int16 = -2,
+            Int8 = -1,
+            Unknown0 = 0,
+            Uint8 = 1,
+            Uint16 = 2,
+            Uint32 = 4,
+            Uint64 = 8,
+        }
+
         public enum XmlParamType
         {
             None = 0,
@@ -122,7 +140,7 @@ namespace Kaitai
             KiloHertz = 4,
             Degrees = 5,
             Percent = 6,
-            CelsiumDegree = 7,
+            CelsiusDegree = 7,
             VoltHigh = 8,
             Second = 9,
             MilliSecond = 10,
@@ -618,6 +636,7 @@ namespace Kaitai
                 {
                     m_parent = p__parent;
                     m_root = p__root;
+                    f_image = false;
                     _read();
                 }
                 private void _read()
@@ -655,7 +674,106 @@ namespace Kaitai
                     {
                         _mesurands.Add(new Calibration(m_io, this, m_root));
                     }
-                    _image = m_io.ReadBytesFull();
+                }
+                public partial class Image : KaitaiStruct
+                {
+                    public static Image FromFile(string fileName)
+                    {
+                        return new Image(new KaitaiStream(fileName));
+                    }
+
+                    public Image(KaitaiStream p__io, NtMdt.Frame.FdMetaData p__parent = null, NtMdt p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _image = new List<Vec>();
+                        {
+                            var i = 0;
+                            while (!m_io.IsEof) {
+                                _image.Add(new Vec(m_io, this, m_root));
+                                i++;
+                            }
+                        }
+                    }
+                    public partial class Vec : KaitaiStruct
+                    {
+                        public static Vec FromFile(string fileName)
+                        {
+                            return new Vec(new KaitaiStream(fileName));
+                        }
+
+                        public Vec(KaitaiStream p__io, NtMdt.Frame.FdMetaData.Image p__parent = null, NtMdt p__root = null) : base(p__io)
+                        {
+                            m_parent = p__parent;
+                            m_root = p__root;
+                            _read();
+                        }
+                        private void _read()
+                        {
+                            _items = new List<double>((int) (M_Parent.M_Parent.NMesurands));
+                            for (var i = 0; i < M_Parent.M_Parent.NMesurands; i++)
+                            {
+                                switch (M_Parent.M_Parent.Mesurands[i].DataType) {
+                                case NtMdt.DataType.Uint8: {
+                                    _items.Add(m_io.ReadU1());
+                                    break;
+                                }
+                                case NtMdt.DataType.Int8: {
+                                    _items.Add(m_io.ReadS1());
+                                    break;
+                                }
+                                case NtMdt.DataType.Int16: {
+                                    _items.Add(m_io.ReadS2le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Uint64: {
+                                    _items.Add(m_io.ReadU8le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Float64: {
+                                    _items.Add(m_io.ReadF8le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Int32: {
+                                    _items.Add(m_io.ReadS4le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Float32: {
+                                    _items.Add(m_io.ReadF4le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Uint16: {
+                                    _items.Add(m_io.ReadU2le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Int64: {
+                                    _items.Add(m_io.ReadS8le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Uint32: {
+                                    _items.Add(m_io.ReadU4le());
+                                    break;
+                                }
+                                }
+                            }
+                        }
+                        private List<double> _items;
+                        private NtMdt m_root;
+                        private NtMdt.Frame.FdMetaData.Image m_parent;
+                        public List<double> Items { get { return _items; } }
+                        public NtMdt M_Root { get { return m_root; } }
+                        public NtMdt.Frame.FdMetaData.Image M_Parent { get { return m_parent; } }
+                    }
+                    private List<Vec> _image;
+                    private NtMdt m_root;
+                    private NtMdt.Frame.FdMetaData m_parent;
+                    public List<Vec> Image { get { return _image; } }
+                    public NtMdt M_Root { get { return m_root; } }
+                    public NtMdt.Frame.FdMetaData M_Parent { get { return m_parent; } }
                 }
                 public partial class Calibration : KaitaiStruct
                 {
@@ -668,6 +786,7 @@ namespace Kaitai
                     {
                         m_parent = p__parent;
                         m_root = p__root;
+                        f_count = false;
                         _read();
                     }
                     private void _read()
@@ -684,12 +803,25 @@ namespace Kaitai
                         _scale = m_io.ReadF8le();
                         _minIndex = m_io.ReadU8le();
                         _maxIndex = m_io.ReadU8le();
-                        _dataType = m_io.ReadS4le();
+                        _dataType = ((NtMdt.DataType) m_io.ReadS4le());
                         _lenAuthor = m_io.ReadU4le();
                         _name = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytes(LenName));
                         _comment = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytes(LenComment));
                         _unit = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytes(LenUnit));
                         _author = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytes(LenAuthor));
+                    }
+                    private bool f_count;
+                    private int _count;
+                    public int Count
+                    {
+                        get
+                        {
+                            if (f_count)
+                                return _count;
+                            _count = (int) (((MaxIndex - MinIndex) + 1));
+                            f_count = true;
+                            return _count;
+                        }
                     }
                     private uint _lenTot;
                     private uint _lenStruct;
@@ -703,7 +835,7 @@ namespace Kaitai
                     private double _scale;
                     private ulong _minIndex;
                     private ulong _maxIndex;
-                    private int _dataType;
+                    private DataType _dataType;
                     private uint _lenAuthor;
                     private string _name;
                     private string _comment;
@@ -723,7 +855,7 @@ namespace Kaitai
                     public double Scale { get { return _scale; } }
                     public ulong MinIndex { get { return _minIndex; } }
                     public ulong MaxIndex { get { return _maxIndex; } }
-                    public int DataType { get { return _dataType; } }
+                    public DataType DataType { get { return _dataType; } }
                     public uint LenAuthor { get { return _lenAuthor; } }
                     public string Name { get { return _name; } }
                     public string Comment { get { return _comment; } }
@@ -731,6 +863,24 @@ namespace Kaitai
                     public string Author { get { return _author; } }
                     public NtMdt M_Root { get { return m_root; } }
                     public NtMdt.Frame.FdMetaData M_Parent { get { return m_parent; } }
+                }
+                private bool f_image;
+                private Image _image;
+                public Image Image
+                {
+                    get
+                    {
+                        if (f_image)
+                            return _image;
+                        long _pos = m_io.Pos;
+                        m_io.Seek(DataOffset);
+                        __raw_image = m_io.ReadBytes(DataSize);
+                        var io___raw_image = new KaitaiStream(__raw_image);
+                        _image = new Image(io___raw_image, this, m_root);
+                        m_io.Seek(_pos);
+                        f_image = true;
+                        return _image;
+                    }
                 }
                 private uint _headSize;
                 private uint _totLen;
@@ -753,9 +903,9 @@ namespace Kaitai
                 private uint _nMesurands;
                 private List<Calibration> _dimensions;
                 private List<Calibration> _mesurands;
-                private byte[] _image;
                 private NtMdt m_root;
                 private NtMdt.Frame.FrameMain m_parent;
+                private byte[] __raw_image;
                 public uint HeadSize { get { return _headSize; } }
                 public uint TotLen { get { return _totLen; } }
                 public List<Uuid> Guids { get { return _guids; } }
@@ -777,9 +927,9 @@ namespace Kaitai
                 public uint NMesurands { get { return _nMesurands; } }
                 public List<Calibration> Dimensions { get { return _dimensions; } }
                 public List<Calibration> Mesurands { get { return _mesurands; } }
-                public byte[] Image { get { return _image; } }
                 public NtMdt M_Root { get { return m_root; } }
                 public NtMdt.Frame.FrameMain M_Parent { get { return m_parent; } }
+                public byte[] M_RawImage { get { return __raw_image; } }
             }
             public partial class FdSpectroscopy : KaitaiStruct
             {

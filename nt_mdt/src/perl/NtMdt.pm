@@ -49,6 +49,21 @@ our $XML_SCAN_LOCATION_VLB = 5;
 our $XML_SCAN_LOCATION_VRT = 6;
 our $XML_SCAN_LOCATION_VRB = 7;
 
+our $DATA_TYPE_FLOATFIX = -65544;
+our $DATA_TYPE_FLOAT80 = -16138;
+our $DATA_TYPE_FLOAT64 = -13320;
+our $DATA_TYPE_FLOAT48 = -9990;
+our $DATA_TYPE_FLOAT32 = -5892;
+our $DATA_TYPE_INT64 = -8;
+our $DATA_TYPE_INT32 = -4;
+our $DATA_TYPE_INT16 = -2;
+our $DATA_TYPE_INT8 = -1;
+our $DATA_TYPE_UNKNOWN0 = 0;
+our $DATA_TYPE_UINT8 = 1;
+our $DATA_TYPE_UINT16 = 2;
+our $DATA_TYPE_UINT32 = 4;
+our $DATA_TYPE_UINT64 = 8;
+
 our $XML_PARAM_TYPE_NONE = 0;
 our $XML_PARAM_TYPE_LASER_WAVELENGTH = 1;
 our $XML_PARAM_TYPE_UNITS = 2;
@@ -98,7 +113,7 @@ our $UNIT_NONE = 3;
 our $UNIT_KILO_HERTZ = 4;
 our $UNIT_DEGREES = 5;
 our $UNIT_PERCENT = 6;
-our $UNIT_CELSIUM_DEGREE = 7;
+our $UNIT_CELSIUS_DEGREE = 7;
 our $UNIT_VOLT_HIGH = 8;
 our $UNIT_SECOND = 9;
 our $UNIT_MILLI_SECOND = 10;
@@ -905,7 +920,18 @@ sub _read {
     for (my $i = 0; $i < $n_mesurands; $i++) {
         $self->{mesurands}[$i] = NtMdt::Frame::FdMetaData::Calibration->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{image} = $self->{_io}->read_bytes_full();
+}
+
+sub image {
+    my ($self) = @_;
+    return $self->{image} if ($self->{image});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek($self->data_offset());
+    $self->{_raw_image} = $self->{_io}->read_bytes($self->data_size());
+    my $io__raw_image = IO::KaitaiStruct::Stream->new($self->{_raw_image});
+    $self->{image} = NtMdt::Frame::FdMetaData::Image->new($io__raw_image, $self, $self->{_root});
+    $self->{_io}->seek($_pos);
+    return $self->{image};
 }
 
 sub head_size {
@@ -1013,9 +1039,122 @@ sub mesurands {
     return $self->{mesurands};
 }
 
+sub _raw_image {
+    my ($self) = @_;
+    return $self->{_raw_image};
+}
+
+########################################################################
+package NtMdt::Frame::FdMetaData::Image;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{image} = ();
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{image}}, NtMdt::Frame::FdMetaData::Image::Vec->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
 sub image {
     my ($self) = @_;
     return $self->{image};
+}
+
+########################################################################
+package NtMdt::Frame::FdMetaData::Image::Vec;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{items} = ();
+    my $n_items = $self->_parent()->_parent()->n_mesurands();
+    for (my $i = 0; $i < $n_items; $i++) {
+        my $_on = @{$self->_parent()->_parent()->mesurands()}[$i]->data_type();
+        if ($_on == $DATA_TYPE_UINT8) {
+            $self->{items}[$i] = $self->{_io}->read_u1();
+        }
+        elsif ($_on == $DATA_TYPE_INT8) {
+            $self->{items}[$i] = $self->{_io}->read_s1();
+        }
+        elsif ($_on == $DATA_TYPE_INT16) {
+            $self->{items}[$i] = $self->{_io}->read_s2le();
+        }
+        elsif ($_on == $DATA_TYPE_UINT64) {
+            $self->{items}[$i] = $self->{_io}->read_u8le();
+        }
+        elsif ($_on == $DATA_TYPE_FLOAT64) {
+            $self->{items}[$i] = $self->{_io}->read_f8le();
+        }
+        elsif ($_on == $DATA_TYPE_INT32) {
+            $self->{items}[$i] = $self->{_io}->read_s4le();
+        }
+        elsif ($_on == $DATA_TYPE_FLOAT32) {
+            $self->{items}[$i] = $self->{_io}->read_f4le();
+        }
+        elsif ($_on == $DATA_TYPE_UINT16) {
+            $self->{items}[$i] = $self->{_io}->read_u2le();
+        }
+        elsif ($_on == $DATA_TYPE_INT64) {
+            $self->{items}[$i] = $self->{_io}->read_s8le();
+        }
+        elsif ($_on == $DATA_TYPE_UINT32) {
+            $self->{items}[$i] = $self->{_io}->read_u4le();
+        }
+    }
+}
+
+sub items {
+    my ($self) = @_;
+    return $self->{items};
 }
 
 ########################################################################
@@ -1066,6 +1205,13 @@ sub _read {
     $self->{comment} = Encode::decode("utf-8", $self->{_io}->read_bytes($self->len_comment()));
     $self->{unit} = Encode::decode("utf-8", $self->{_io}->read_bytes($self->len_unit()));
     $self->{author} = Encode::decode("utf-8", $self->{_io}->read_bytes($self->len_author()));
+}
+
+sub count {
+    my ($self) = @_;
+    return $self->{count} if ($self->{count});
+    $self->{count} = (($self->max_index() - $self->min_index()) + 1);
+    return $self->{count};
 }
 
 sub len_tot {

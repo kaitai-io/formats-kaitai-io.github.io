@@ -116,6 +116,15 @@ class PascalString extends \Kaitai\Struct\Struct {
     public function value() { return $this->_m_value; }
 }
 
+/**
+ * Name table is meant to include human-readable string metadata
+ * that describes font: name of the font, its styles, copyright &
+ * trademark notices, vendor and designer info, etc.
+ * 
+ * The table includes a list of "name records", each of which
+ * corresponds to a single metadata entry.
+ */
+
 namespace \Ttf;
 
 class Name extends \Kaitai\Struct\Struct {
@@ -126,21 +135,21 @@ class Name extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m_formatSelector = $this->_io->readU2be();
-        $this->_m_nameRecordCount = $this->_io->readU2be();
-        $this->_m_stringStorageOffset = $this->_io->readU2be();
+        $this->_m_numNameRecords = $this->_io->readU2be();
+        $this->_m_ofsStrings = $this->_io->readU2be();
         $this->_m_nameRecords = [];
-        $n = $this->nameRecordCount();
+        $n = $this->numNameRecords();
         for ($i = 0; $i < $n; $i++) {
             $this->_m_nameRecords[] = new \Ttf\Name\NameRecord($this->_io, $this, $this->_root);
         }
     }
     protected $_m_formatSelector;
-    protected $_m_nameRecordCount;
-    protected $_m_stringStorageOffset;
+    protected $_m_numNameRecords;
+    protected $_m_ofsStrings;
     protected $_m_nameRecords;
     public function formatSelector() { return $this->_m_formatSelector; }
-    public function nameRecordCount() { return $this->_m_nameRecordCount; }
-    public function stringStorageOffset() { return $this->_m_stringStorageOffset; }
+    public function numNameRecords() { return $this->_m_numNameRecords; }
+    public function ofsStrings() { return $this->_m_ofsStrings; }
     public function nameRecords() { return $this->_m_nameRecords; }
 }
 
@@ -157,8 +166,8 @@ class NameRecord extends \Kaitai\Struct\Struct {
         $this->_m_encodingId = $this->_io->readU2be();
         $this->_m_languageId = $this->_io->readU2be();
         $this->_m_nameId = $this->_io->readU2be();
-        $this->_m_stringLength = $this->_io->readU2be();
-        $this->_m_stringOffset = $this->_io->readU2be();
+        $this->_m_lenStr = $this->_io->readU2be();
+        $this->_m_ofsStr = $this->_io->readU2be();
     }
     protected $_m_asciiValue;
     public function asciiValue() {
@@ -166,8 +175,8 @@ class NameRecord extends \Kaitai\Struct\Struct {
             return $this->_m_asciiValue;
         $io = $this->_parent()->_io();
         $_pos = $io->pos();
-        $io->seek(($this->_parent()->stringStorageOffset() + $this->stringOffset()));
-        $this->_m_asciiValue = \Kaitai\Struct\Stream::bytesToStr($io->readBytes($this->stringLength()), "ascii");
+        $io->seek(($this->_parent()->ofsStrings() + $this->ofsStr()));
+        $this->_m_asciiValue = \Kaitai\Struct\Stream::bytesToStr($io->readBytes($this->lenStr()), "ascii");
         $io->seek($_pos);
         return $this->_m_asciiValue;
     }
@@ -177,8 +186,8 @@ class NameRecord extends \Kaitai\Struct\Struct {
             return $this->_m_unicodeValue;
         $io = $this->_parent()->_io();
         $_pos = $io->pos();
-        $io->seek(($this->_parent()->stringStorageOffset() + $this->stringOffset()));
-        $this->_m_unicodeValue = \Kaitai\Struct\Stream::bytesToStr($io->readBytes($this->stringLength()), "utf-16be");
+        $io->seek(($this->_parent()->ofsStrings() + $this->ofsStr()));
+        $this->_m_unicodeValue = \Kaitai\Struct\Stream::bytesToStr($io->readBytes($this->lenStr()), "utf-16be");
         $io->seek($_pos);
         return $this->_m_unicodeValue;
     }
@@ -186,14 +195,48 @@ class NameRecord extends \Kaitai\Struct\Struct {
     protected $_m_encodingId;
     protected $_m_languageId;
     protected $_m_nameId;
-    protected $_m_stringLength;
-    protected $_m_stringOffset;
+    protected $_m_lenStr;
+    protected $_m_ofsStr;
     public function platformId() { return $this->_m_platformId; }
     public function encodingId() { return $this->_m_encodingId; }
     public function languageId() { return $this->_m_languageId; }
     public function nameId() { return $this->_m_nameId; }
-    public function stringLength() { return $this->_m_stringLength; }
-    public function stringOffset() { return $this->_m_stringOffset; }
+    public function lenStr() { return $this->_m_lenStr; }
+    public function ofsStr() { return $this->_m_ofsStr; }
+}
+
+namespace \Ttf\Name;
+
+class Platforms {
+    const UNICODE = 0;
+    const MACINTOSH = 1;
+    const RESERVED_2 = 2;
+    const MICROSOFT = 3;
+}
+
+namespace \Ttf\Name;
+
+class Names {
+    const COPYRIGHT = 0;
+    const FONT_FAMILY = 1;
+    const FONT_SUBFAMILY = 2;
+    const UNIQUE_SUBFAMILY_ID = 3;
+    const FULL_FONT_NAME = 4;
+    const NAME_TABLE_VERSION = 5;
+    const POSTSCRIPT_FONT_NAME = 6;
+    const TRADEMARK = 7;
+    const MANUFACTURER = 8;
+    const DESIGNER = 9;
+    const DESCRIPTION = 10;
+    const URL_VENDOR = 11;
+    const URL_DESIGNER = 12;
+    const LICENSE = 13;
+    const URL_LICENSE = 14;
+    const RESERVED_15 = 15;
+    const PREFERRED_FAMILY = 16;
+    const PREFERRED_SUBFAMILY = 17;
+    const COMPATIBLE_FULL_NAME = 18;
+    const SAMPLE_TEXT = 19;
 }
 
 namespace \Ttf;

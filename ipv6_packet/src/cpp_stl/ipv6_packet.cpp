@@ -3,8 +3,8 @@
 #include "ipv6_packet.h"
 
 
-#include "tcp_segment.h"
 #include "udp_datagram.h"
+#include "tcp_segment.h"
 #include "ipv4_packet.h"
 
 ipv6_packet_t::ipv6_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ipv6_packet_t* p__root) : kaitai::kstruct(p__io) {

@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.Ttf = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 var Ttf = (function() {
   function Ttf(_io, _parent, _root) {
     this._io = _io;
@@ -86,7 +95,73 @@ var Ttf = (function() {
     return Post;
   })();
 
+  /**
+   * Name table is meant to include human-readable string metadata
+   * that describes font: name of the font, its styles, copyright &
+   * trademark notices, vendor and designer info, etc.
+   * 
+   * The table includes a list of "name records", each of which
+   * corresponds to a single metadata entry.
+   * @see {@link https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html|Source}
+   */
+
   var Name = Ttf.Name = (function() {
+    Name.Platforms = Object.freeze({
+      UNICODE: 0,
+      MACINTOSH: 1,
+      RESERVED_2: 2,
+      MICROSOFT: 3,
+
+      0: "UNICODE",
+      1: "MACINTOSH",
+      2: "RESERVED_2",
+      3: "MICROSOFT",
+    });
+
+    Name.Names = Object.freeze({
+      COPYRIGHT: 0,
+      FONT_FAMILY: 1,
+      FONT_SUBFAMILY: 2,
+      UNIQUE_SUBFAMILY_ID: 3,
+      FULL_FONT_NAME: 4,
+      NAME_TABLE_VERSION: 5,
+      POSTSCRIPT_FONT_NAME: 6,
+      TRADEMARK: 7,
+      MANUFACTURER: 8,
+      DESIGNER: 9,
+      DESCRIPTION: 10,
+      URL_VENDOR: 11,
+      URL_DESIGNER: 12,
+      LICENSE: 13,
+      URL_LICENSE: 14,
+      RESERVED_15: 15,
+      PREFERRED_FAMILY: 16,
+      PREFERRED_SUBFAMILY: 17,
+      COMPATIBLE_FULL_NAME: 18,
+      SAMPLE_TEXT: 19,
+
+      0: "COPYRIGHT",
+      1: "FONT_FAMILY",
+      2: "FONT_SUBFAMILY",
+      3: "UNIQUE_SUBFAMILY_ID",
+      4: "FULL_FONT_NAME",
+      5: "NAME_TABLE_VERSION",
+      6: "POSTSCRIPT_FONT_NAME",
+      7: "TRADEMARK",
+      8: "MANUFACTURER",
+      9: "DESIGNER",
+      10: "DESCRIPTION",
+      11: "URL_VENDOR",
+      12: "URL_DESIGNER",
+      13: "LICENSE",
+      14: "URL_LICENSE",
+      15: "RESERVED_15",
+      16: "PREFERRED_FAMILY",
+      17: "PREFERRED_SUBFAMILY",
+      18: "COMPATIBLE_FULL_NAME",
+      19: "SAMPLE_TEXT",
+    });
+
     function Name(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
@@ -96,10 +171,10 @@ var Ttf = (function() {
     }
     Name.prototype._read = function() {
       this.formatSelector = this._io.readU2be();
-      this.nameRecordCount = this._io.readU2be();
-      this.stringStorageOffset = this._io.readU2be();
-      this.nameRecords = new Array(this.nameRecordCount);
-      for (var i = 0; i < this.nameRecordCount; i++) {
+      this.numNameRecords = this._io.readU2be();
+      this.ofsStrings = this._io.readU2be();
+      this.nameRecords = new Array(this.numNameRecords);
+      for (var i = 0; i < this.numNameRecords; i++) {
         this.nameRecords[i] = new NameRecord(this._io, this, this._root);
       }
     }
@@ -117,8 +192,8 @@ var Ttf = (function() {
         this.encodingId = this._io.readU2be();
         this.languageId = this._io.readU2be();
         this.nameId = this._io.readU2be();
-        this.stringLength = this._io.readU2be();
-        this.stringOffset = this._io.readU2be();
+        this.lenStr = this._io.readU2be();
+        this.ofsStr = this._io.readU2be();
       }
       Object.defineProperty(NameRecord.prototype, 'asciiValue', {
         get: function() {
@@ -126,8 +201,8 @@ var Ttf = (function() {
             return this._m_asciiValue;
           var io = this._parent._io;
           var _pos = io.pos;
-          io.seek((this._parent.stringStorageOffset + this.stringOffset));
-          this._m_asciiValue = KaitaiStream.bytesToStr(io.readBytes(this.stringLength), "ascii");
+          io.seek((this._parent.ofsStrings + this.ofsStr));
+          this._m_asciiValue = KaitaiStream.bytesToStr(io.readBytes(this.lenStr), "ascii");
           io.seek(_pos);
           return this._m_asciiValue;
         }
@@ -138,8 +213,8 @@ var Ttf = (function() {
             return this._m_unicodeValue;
           var io = this._parent._io;
           var _pos = io.pos;
-          io.seek((this._parent.stringStorageOffset + this.stringOffset));
-          this._m_unicodeValue = KaitaiStream.bytesToStr(io.readBytes(this.stringLength), "utf-16be");
+          io.seek((this._parent.ofsStrings + this.ofsStr));
+          this._m_unicodeValue = KaitaiStream.bytesToStr(io.readBytes(this.lenStr), "utf-16be");
           io.seek(_pos);
           return this._m_unicodeValue;
         }
@@ -1556,15 +1631,5 @@ var Ttf = (function() {
 
   return Ttf;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('Ttf', [], function() {
-    return Ttf;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = Ttf;
-}
+return Ttf;
+}));

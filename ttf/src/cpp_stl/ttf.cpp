@@ -121,9 +121,9 @@ ttf_t::name_t::name_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__paren
 
 void ttf_t::name_t::_read() {
     m_format_selector = m__io->read_u2be();
-    m_name_record_count = m__io->read_u2be();
-    m_string_storage_offset = m__io->read_u2be();
-    int l_name_records = name_record_count();
+    m_num_name_records = m__io->read_u2be();
+    m_ofs_strings = m__io->read_u2be();
+    int l_name_records = num_name_records();
     m_name_records = new std::vector<name_record_t*>();
     m_name_records->reserve(l_name_records);
     for (int i = 0; i < l_name_records; i++) {
@@ -147,12 +147,12 @@ ttf_t::name_t::name_record_t::name_record_t(kaitai::kstream* p__io, ttf_t::name_
 }
 
 void ttf_t::name_t::name_record_t::_read() {
-    m_platform_id = m__io->read_u2be();
+    m_platform_id = static_cast<ttf_t::name_t::platforms_t>(m__io->read_u2be());
     m_encoding_id = m__io->read_u2be();
     m_language_id = m__io->read_u2be();
-    m_name_id = m__io->read_u2be();
-    m_string_length = m__io->read_u2be();
-    m_string_offset = m__io->read_u2be();
+    m_name_id = static_cast<ttf_t::name_t::names_t>(m__io->read_u2be());
+    m_len_str = m__io->read_u2be();
+    m_ofs_str = m__io->read_u2be();
 }
 
 ttf_t::name_t::name_record_t::~name_record_t() {
@@ -167,8 +167,8 @@ std::string ttf_t::name_t::name_record_t::ascii_value() {
         return m_ascii_value;
     kaitai::kstream *io = _parent()->_io();
     std::streampos _pos = io->pos();
-    io->seek((_parent()->string_storage_offset() + string_offset()));
-    m_ascii_value = kaitai::kstream::bytes_to_str(io->read_bytes(string_length()), std::string("ascii"));
+    io->seek((_parent()->ofs_strings() + ofs_str()));
+    m_ascii_value = kaitai::kstream::bytes_to_str(io->read_bytes(len_str()), std::string("ascii"));
     io->seek(_pos);
     f_ascii_value = true;
     return m_ascii_value;
@@ -179,8 +179,8 @@ std::string ttf_t::name_t::name_record_t::unicode_value() {
         return m_unicode_value;
     kaitai::kstream *io = _parent()->_io();
     std::streampos _pos = io->pos();
-    io->seek((_parent()->string_storage_offset() + string_offset()));
-    m_unicode_value = kaitai::kstream::bytes_to_str(io->read_bytes(string_length()), std::string("utf-16be"));
+    io->seek((_parent()->ofs_strings() + ofs_str()));
+    m_unicode_value = kaitai::kstream::bytes_to_str(io->read_bytes(len_str()), std::string("utf-16be"));
     io->seek(_pos);
     f_unicode_value = true;
     return m_unicode_value;

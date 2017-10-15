@@ -415,8 +415,34 @@ frame_main__seq_frame_data_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELL
 					&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;dimensions__repeat&quot;&gt;repeat n_dimensions times&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;mesurands_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;mesurands_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Calibration&lt;/TD&gt;&lt;TD PORT=&quot;mesurands_type&quot;&gt;mesurands&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;mesurands__repeat&quot;&gt;repeat n_mesurands times&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;image_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;image_size&quot;&gt;⇲&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;image_type&quot;&gt;image&lt;/TD&gt;&lt;/TR&gt;
 				&lt;/TABLE&gt;&gt;];
+				fd_meta_data__inst__image [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;image_pos&quot;&gt;data_offset&lt;/TD&gt;&lt;TD PORT=&quot;image_size&quot;&gt;data_size&lt;/TD&gt;&lt;TD&gt;Image&lt;/TD&gt;&lt;TD PORT=&quot;image_type&quot;&gt;image&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+				subgraph cluster__image {
+					label=&quot;NtMdt::Frame::FdMetaData::Image&quot;;
+					graph[style=dotted];
+
+					image__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+						&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+						&lt;TR&gt;&lt;TD PORT=&quot;image_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;image_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Vec&lt;/TD&gt;&lt;TD PORT=&quot;image_type&quot;&gt;image&lt;/TD&gt;&lt;/TR&gt;
+						&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;image__repeat&quot;&gt;repeat to end of stream&lt;/TD&gt;&lt;/TR&gt;
+					&lt;/TABLE&gt;&gt;];
+					subgraph cluster__vec {
+						label=&quot;NtMdt::Frame::FdMetaData::Image::Vec&quot;;
+						graph[style=dotted];
+
+						vec__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+							&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+							&lt;TR&gt;&lt;TD PORT=&quot;items_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;items_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (_parent._parent.mesurands[i].data_type)&lt;/TD&gt;&lt;TD PORT=&quot;items_type&quot;&gt;items&lt;/TD&gt;&lt;/TR&gt;
+							&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;items__repeat&quot;&gt;repeat _parent._parent.n_mesurands times&lt;/TD&gt;&lt;/TR&gt;
+						&lt;/TABLE&gt;&gt;];
+vec__seq_items_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
+&lt;/TABLE&gt;&gt;];
+					}
+				}
 				subgraph cluster__calibration {
 					label=&quot;NtMdt::Frame::FdMetaData::Calibration&quot;;
 					graph[style=dotted];
@@ -435,12 +461,16 @@ frame_main__seq_frame_data_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELL
 						&lt;TR&gt;&lt;TD PORT=&quot;scale_pos&quot;&gt;52&lt;/TD&gt;&lt;TD PORT=&quot;scale_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;f8le&lt;/TD&gt;&lt;TD PORT=&quot;scale_type&quot;&gt;scale&lt;/TD&gt;&lt;/TR&gt;
 						&lt;TR&gt;&lt;TD PORT=&quot;min_index_pos&quot;&gt;60&lt;/TD&gt;&lt;TD PORT=&quot;min_index_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;u8le&lt;/TD&gt;&lt;TD PORT=&quot;min_index_type&quot;&gt;min_index&lt;/TD&gt;&lt;/TR&gt;
 						&lt;TR&gt;&lt;TD PORT=&quot;max_index_pos&quot;&gt;68&lt;/TD&gt;&lt;TD PORT=&quot;max_index_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;u8le&lt;/TD&gt;&lt;TD PORT=&quot;max_index_type&quot;&gt;max_index&lt;/TD&gt;&lt;/TR&gt;
-						&lt;TR&gt;&lt;TD PORT=&quot;data_type_pos&quot;&gt;76&lt;/TD&gt;&lt;TD PORT=&quot;data_type_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;s4le&lt;/TD&gt;&lt;TD PORT=&quot;data_type_type&quot;&gt;data_type&lt;/TD&gt;&lt;/TR&gt;
+						&lt;TR&gt;&lt;TD PORT=&quot;data_type_pos&quot;&gt;76&lt;/TD&gt;&lt;TD PORT=&quot;data_type_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;s4le→DataType&lt;/TD&gt;&lt;TD PORT=&quot;data_type_type&quot;&gt;data_type&lt;/TD&gt;&lt;/TR&gt;
 						&lt;TR&gt;&lt;TD PORT=&quot;len_author_pos&quot;&gt;80&lt;/TD&gt;&lt;TD PORT=&quot;len_author_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_author_type&quot;&gt;len_author&lt;/TD&gt;&lt;/TR&gt;
 						&lt;TR&gt;&lt;TD PORT=&quot;name_pos&quot;&gt;84&lt;/TD&gt;&lt;TD PORT=&quot;name_size&quot;&gt;len_name&lt;/TD&gt;&lt;TD&gt;str(utf-8)&lt;/TD&gt;&lt;TD PORT=&quot;name_type&quot;&gt;name&lt;/TD&gt;&lt;/TR&gt;
 						&lt;TR&gt;&lt;TD PORT=&quot;comment_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;comment_size&quot;&gt;len_comment&lt;/TD&gt;&lt;TD&gt;str(utf-8)&lt;/TD&gt;&lt;TD PORT=&quot;comment_type&quot;&gt;comment&lt;/TD&gt;&lt;/TR&gt;
 						&lt;TR&gt;&lt;TD PORT=&quot;unit_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;unit_size&quot;&gt;len_unit&lt;/TD&gt;&lt;TD&gt;str(utf-8)&lt;/TD&gt;&lt;TD PORT=&quot;unit_type&quot;&gt;unit&lt;/TD&gt;&lt;/TR&gt;
 						&lt;TR&gt;&lt;TD PORT=&quot;author_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;author_size&quot;&gt;len_author&lt;/TD&gt;&lt;TD&gt;str(utf-8)&lt;/TD&gt;&lt;TD PORT=&quot;author_type&quot;&gt;author&lt;/TD&gt;&lt;/TR&gt;
+					&lt;/TABLE&gt;&gt;];
+					calibration__inst__count [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+						&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+						&lt;TR&gt;&lt;TD&gt;count&lt;/TD&gt;&lt;TD&gt;((max_index - min_index) + 1)&lt;/TD&gt;&lt;/TR&gt;
 					&lt;/TABLE&gt;&gt;];
 				}
 			}
@@ -678,10 +708,19 @@ frame_main__seq_frame_data_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELL
 	fd_meta_data__seq:n_dimensions_type -&gt; fd_meta_data__seq:dimensions__repeat [color=&quot;#404040&quot;];
 	fd_meta_data__seq:mesurands_type -&gt; calibration__seq [style=bold];
 	fd_meta_data__seq:n_mesurands_type -&gt; fd_meta_data__seq:mesurands__repeat [color=&quot;#404040&quot;];
+	fd_meta_data__seq:data_offset_type -&gt; fd_meta_data__inst__image:image_pos [color=&quot;#404040&quot;];
+	fd_meta_data__seq:data_size_type -&gt; fd_meta_data__inst__image:image_size [color=&quot;#404040&quot;];
+	fd_meta_data__inst__image:image_type -&gt; image__seq [style=bold];
+	image__seq:image_type -&gt; vec__seq [style=bold];
+	vec__seq:items_type -&gt; vec__seq_items_switch [style=bold];
+	calibration__seq:data_type_type -&gt; vec__seq:items_type [color=&quot;#404040&quot;];
+	fd_meta_data__seq:n_mesurands_type -&gt; vec__seq:items__repeat [color=&quot;#404040&quot;];
 	calibration__seq:len_name_type -&gt; calibration__seq:name_size [color=&quot;#404040&quot;];
 	calibration__seq:len_comment_type -&gt; calibration__seq:comment_size [color=&quot;#404040&quot;];
 	calibration__seq:len_unit_type -&gt; calibration__seq:unit_size [color=&quot;#404040&quot;];
 	calibration__seq:len_author_type -&gt; calibration__seq:author_size [color=&quot;#404040&quot;];
+	calibration__seq:max_index_type -&gt; calibration__inst__count [color=&quot;#404040&quot;];
+	calibration__seq:min_index_type -&gt; calibration__inst__count [color=&quot;#404040&quot;];
 	frame_main__seq:var_size_type -&gt; fd_spectroscopy__seq:vars_size [color=&quot;#404040&quot;];
 	fd_spectroscopy__seq:vars_type -&gt; vars__seq [style=bold];
 	fd_spectroscopy__seq:dots_type -&gt; dots__seq [style=bold];

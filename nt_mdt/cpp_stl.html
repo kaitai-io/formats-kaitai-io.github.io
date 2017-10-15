@@ -358,6 +358,23 @@ public:
         XML_SCAN_LOCATION_VRB = 7
     };
 
+    enum data_type_t {
+        DATA_TYPE_FLOATFIX = -65544,
+        DATA_TYPE_FLOAT80 = -16138,
+        DATA_TYPE_FLOAT64 = -13320,
+        DATA_TYPE_FLOAT48 = -9990,
+        DATA_TYPE_FLOAT32 = -5892,
+        DATA_TYPE_INT64 = -8,
+        DATA_TYPE_INT32 = -4,
+        DATA_TYPE_INT16 = -2,
+        DATA_TYPE_INT8 = -1,
+        DATA_TYPE_UNKNOWN0 = 0,
+        DATA_TYPE_UINT8 = 1,
+        DATA_TYPE_UINT16 = 2,
+        DATA_TYPE_UINT32 = 4,
+        DATA_TYPE_UINT64 = 8
+    };
+
     enum xml_param_type_t {
         XML_PARAM_TYPE_NONE = 0,
         XML_PARAM_TYPE_LASER_WAVELENGTH = 1,
@@ -412,7 +429,7 @@ public:
         UNIT_KILO_HERTZ = 4,
         UNIT_DEGREES = 5,
         UNIT_PERCENT = 6,
-        UNIT_CELSIUM_DEGREE = 7,
+        UNIT_CELSIUS_DEGREE = 7,
         UNIT_VOLT_HIGH = 8,
         UNIT_SECOND = 9,
         UNIT_MILLI_SECOND = 10,
@@ -810,6 +827,7 @@ public:
         class fd_meta_data_t : public kaitai::kstruct {
 
         public:
+            class image_t;
             class calibration_t;
 
             fd_meta_data_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::frame_main_t* p__parent = 0, nt_mdt_t* p__root = 0);
@@ -819,6 +837,59 @@ public:
 
         public:
             ~fd_meta_data_t();
+
+            class image_t : public kaitai::kstruct {
+
+            public:
+                class vec_t;
+
+                image_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+            private:
+                void _read();
+
+            public:
+                ~image_t();
+
+                class vec_t : public kaitai::kstruct {
+
+                public:
+
+                    vec_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t::image_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+                private:
+                    void _read();
+
+                public:
+                    ~vec_t();
+
+                private:
+                    std::vector&lt;double&gt;* m_items;
+                    bool n_items;
+
+                public:
+                    bool _is_null_items() { items(); return n_items; };
+
+                private:
+                    nt_mdt_t* m__root;
+                    nt_mdt_t::frame_t::fd_meta_data_t::image_t* m__parent;
+
+                public:
+                    std::vector&lt;double&gt;* items() const { return m_items; }
+                    nt_mdt_t* _root() const { return m__root; }
+                    nt_mdt_t::frame_t::fd_meta_data_t::image_t* _parent() const { return m__parent; }
+                };
+
+            private:
+                std::vector&lt;vec_t*&gt;* m_image;
+                nt_mdt_t* m__root;
+                nt_mdt_t::frame_t::fd_meta_data_t* m__parent;
+
+            public:
+                std::vector&lt;vec_t*&gt;* image() const { return m_image; }
+                nt_mdt_t* _root() const { return m__root; }
+                nt_mdt_t::frame_t::fd_meta_data_t* _parent() const { return m__parent; }
+            };
 
             class calibration_t : public kaitai::kstruct {
 
@@ -833,6 +904,13 @@ public:
                 ~calibration_t();
 
             private:
+                bool f_count;
+                int32_t m_count;
+
+            public:
+                int32_t count();
+
+            private:
                 uint32_t m_len_tot;
                 uint32_t m_len_struct;
                 uint32_t m_len_name;
@@ -845,7 +923,7 @@ public:
                 double m_scale;
                 uint64_t m_min_index;
                 uint64_t m_max_index;
-                int32_t m_data_type;
+                data_type_t m_data_type;
                 uint32_t m_len_author;
                 std::string m_name;
                 std::string m_comment;
@@ -867,7 +945,7 @@ public:
                 double scale() const { return m_scale; }
                 uint64_t min_index() const { return m_min_index; }
                 uint64_t max_index() const { return m_max_index; }
-                int32_t data_type() const { return m_data_type; }
+                data_type_t data_type() const { return m_data_type; }
                 uint32_t len_author() const { return m_len_author; }
                 std::string name() const { return m_name; }
                 std::string comment() const { return m_comment; }
@@ -876,6 +954,13 @@ public:
                 nt_mdt_t* _root() const { return m__root; }
                 nt_mdt_t::frame_t::fd_meta_data_t* _parent() const { return m__parent; }
             };
+
+        private:
+            bool f_image;
+            image_t* m_image;
+
+        public:
+            image_t* image();
 
         private:
             uint32_t m_head_size;
@@ -899,9 +984,10 @@ public:
             uint32_t m_n_mesurands;
             std::vector&lt;calibration_t*&gt;* m_dimensions;
             std::vector&lt;calibration_t*&gt;* m_mesurands;
-            std::string m_image;
             nt_mdt_t* m__root;
             nt_mdt_t::frame_t::frame_main_t* m__parent;
+            std::string m__raw_image;
+            kaitai::kstream* m__io__raw_image;
 
         public:
             uint32_t head_size() const { return m_head_size; }
@@ -925,9 +1011,10 @@ public:
             uint32_t n_mesurands() const { return m_n_mesurands; }
             std::vector&lt;calibration_t*&gt;* dimensions() const { return m_dimensions; }
             std::vector&lt;calibration_t*&gt;* mesurands() const { return m_mesurands; }
-            std::string image() const { return m_image; }
             nt_mdt_t* _root() const { return m__root; }
             nt_mdt_t::frame_t::frame_main_t* _parent() const { return m__parent; }
+            std::string _raw_image() const { return m__raw_image; }
+            kaitai::kstream* _io__raw_image() const { return m__io__raw_image; }
         };
 
         class fd_spectroscopy_t : public kaitai::kstruct {
@@ -2004,6 +2091,7 @@ nt_mdt_t::frame_t::fd_curves_new_t::block_descr_t::~block_descr_t() {
 nt_mdt_t::frame_t::fd_meta_data_t::fd_meta_data_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::frame_main_t* p__parent, nt_mdt_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    f_image = false;
     _read();
 }
 
@@ -2044,7 +2132,6 @@ void nt_mdt_t::frame_t::fd_meta_data_t::_read() {
     for (int i = 0; i &lt; l_mesurands; i++) {
         m_mesurands-&gt;push_back(new calibration_t(m__io, this, m__root));
     }
-    m_image = m__io-&gt;read_bytes_full();
 }
 
 nt_mdt_t::frame_t::fd_meta_data_t::~fd_meta_data_t() {
@@ -2060,11 +2147,113 @@ nt_mdt_t::frame_t::fd_meta_data_t::~fd_meta_data_t() {
         delete *it;
     }
     delete m_mesurands;
+    if (f_image) {
+        delete m__io__raw_image;
+        delete m_image;
+    }
+}
+
+nt_mdt_t::frame_t::fd_meta_data_t::image_t::image_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t* p__parent, nt_mdt_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void nt_mdt_t::frame_t::fd_meta_data_t::image_t::_read() {
+    m_image = new std::vector&lt;vec_t*&gt;();
+    {
+        int i = 0;
+        while (!m__io-&gt;is_eof()) {
+            m_image-&gt;push_back(new vec_t(m__io, this, m__root));
+            i++;
+        }
+    }
+}
+
+nt_mdt_t::frame_t::fd_meta_data_t::image_t::~image_t() {
+    for (std::vector&lt;vec_t*&gt;::iterator it = m_image-&gt;begin(); it != m_image-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_image;
+}
+
+nt_mdt_t::frame_t::fd_meta_data_t::image_t::vec_t::vec_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t::image_t* p__parent, nt_mdt_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void nt_mdt_t::frame_t::fd_meta_data_t::image_t::vec_t::_read() {
+    int l_items = _parent()-&gt;_parent()-&gt;n_mesurands();
+    m_items = new std::vector&lt;double&gt;();
+    m_items-&gt;reserve(l_items);
+    for (int i = 0; i &lt; l_items; i++) {
+        n_items = true;
+        switch (_parent()-&gt;_parent()-&gt;mesurands()-&gt;at(i)-&gt;data_type()) {
+        case DATA_TYPE_UINT8: {
+            n_items = false;
+            m_items-&gt;push_back(m__io-&gt;read_u1());
+            break;
+        }
+        case DATA_TYPE_INT8: {
+            n_items = false;
+            m_items-&gt;push_back(m__io-&gt;read_s1());
+            break;
+        }
+        case DATA_TYPE_INT16: {
+            n_items = false;
+            m_items-&gt;push_back(m__io-&gt;read_s2le());
+            break;
+        }
+        case DATA_TYPE_UINT64: {
+            n_items = false;
+            m_items-&gt;push_back(m__io-&gt;read_u8le());
+            break;
+        }
+        case DATA_TYPE_FLOAT64: {
+            n_items = false;
+            m_items-&gt;push_back(m__io-&gt;read_f8le());
+            break;
+        }
+        case DATA_TYPE_INT32: {
+            n_items = false;
+            m_items-&gt;push_back(m__io-&gt;read_s4le());
+            break;
+        }
+        case DATA_TYPE_FLOAT32: {
+            n_items = false;
+            m_items-&gt;push_back(m__io-&gt;read_f4le());
+            break;
+        }
+        case DATA_TYPE_UINT16: {
+            n_items = false;
+            m_items-&gt;push_back(m__io-&gt;read_u2le());
+            break;
+        }
+        case DATA_TYPE_INT64: {
+            n_items = false;
+            m_items-&gt;push_back(m__io-&gt;read_s8le());
+            break;
+        }
+        case DATA_TYPE_UINT32: {
+            n_items = false;
+            m_items-&gt;push_back(m__io-&gt;read_u4le());
+            break;
+        }
+        }
+    }
+}
+
+nt_mdt_t::frame_t::fd_meta_data_t::image_t::vec_t::~vec_t() {
+    if (!n_items) {
+        delete m_items;
+    }
 }
 
 nt_mdt_t::frame_t::fd_meta_data_t::calibration_t::calibration_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t* p__parent, nt_mdt_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    f_count = false;
     _read();
 }
 
@@ -2081,7 +2270,7 @@ void nt_mdt_t::frame_t::fd_meta_data_t::calibration_t::_read() {
     m_scale = m__io-&gt;read_f8le();
     m_min_index = m__io-&gt;read_u8le();
     m_max_index = m__io-&gt;read_u8le();
-    m_data_type = m__io-&gt;read_s4le();
+    m_data_type = static_cast&lt;nt_mdt_t::data_type_t&gt;(m__io-&gt;read_s4le());
     m_len_author = m__io-&gt;read_u4le();
     m_name = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(len_name()), std::string(&quot;utf-8&quot;));
     m_comment = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(len_comment()), std::string(&quot;utf-8&quot;));
@@ -2090,6 +2279,27 @@ void nt_mdt_t::frame_t::fd_meta_data_t::calibration_t::_read() {
 }
 
 nt_mdt_t::frame_t::fd_meta_data_t::calibration_t::~calibration_t() {
+}
+
+int32_t nt_mdt_t::frame_t::fd_meta_data_t::calibration_t::count() {
+    if (f_count)
+        return m_count;
+    m_count = ((max_index() - min_index()) + 1);
+    f_count = true;
+    return m_count;
+}
+
+nt_mdt_t::frame_t::fd_meta_data_t::image_t* nt_mdt_t::frame_t::fd_meta_data_t::image() {
+    if (f_image)
+        return m_image;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(data_offset());
+    m__raw_image = m__io-&gt;read_bytes(data_size());
+    m__io__raw_image = new kaitai::kstream(m__raw_image);
+    m_image = new image_t(m__io__raw_image, this, m__root);
+    m__io-&gt;seek(_pos);
+    f_image = true;
+    return m_image;
 }
 
 nt_mdt_t::frame_t::fd_spectroscopy_t::fd_spectroscopy_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::frame_main_t* p__parent, nt_mdt_t* p__root) : kaitai::kstruct(p__io) {

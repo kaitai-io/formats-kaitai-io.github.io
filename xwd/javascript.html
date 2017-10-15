@@ -225,6 +225,15 @@ and thus is probably a poor choice for true cross-platform usage.</p>
         <div class="row">
             <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
+  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
+  } else {
+    root.Xwd = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * xwd is a file format written by eponymous X11 screen capture
  * application (xwd stands for &quot;X Window Dump&quot;). Typically, an average
@@ -462,18 +471,8 @@ var Xwd = (function() {
 
   return Xwd;
 })();
-
-// Export for amd environments
-if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-  define(&#39;Xwd&#39;, [], function() {
-    return Xwd;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === &#39;object&#39; &amp;&amp; module &amp;&amp; module.exports) {
-  module.exports = Xwd;
-}
+return Xwd;
+}));
 </code></pre>
             
         </div>

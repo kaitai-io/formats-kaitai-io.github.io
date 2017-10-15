@@ -229,6 +229,15 @@ magic header and a record.</p>
         <div class="row">
             <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
+  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
+  } else {
+    root.RubyMarshal = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * Ruby&#39;s Marshal module allows serialization and deserialization of
  * many standard and arbitrary Ruby objects in a compact binary
@@ -632,18 +641,8 @@ var RubyMarshal = (function() {
 
   return RubyMarshal;
 })();
-
-// Export for amd environments
-if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-  define(&#39;RubyMarshal&#39;, [], function() {
-    return RubyMarshal;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === &#39;object&#39; &amp;&amp; module &amp;&amp; module.exports) {
-  module.exports = RubyMarshal;
-}
+return RubyMarshal;
+}));
 </code></pre>
             
         </div>

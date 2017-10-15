@@ -37,9 +37,14 @@ class NtMdtPal(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.unkn0 = self._io.read_bytes(7)
+            self.unkn00 = self._io.read_bytes(3)
+            self.unkn01 = self._io.read_bytes(2)
+            self.unkn02 = self._io.read_bytes(1)
+            self.unkn03 = self._io.read_bytes(1)
             self.colors_count = self._io.read_u2le()
-            self.unkn1 = self._io.read_bytes(5)
+            self.unkn10 = self._io.read_bytes(2)
+            self.unkn11 = self._io.read_bytes(1)
+            self.unkn12 = self._io.read_bytes(2)
             self.name_size = self._io.read_u2be()
 
 
@@ -51,7 +56,10 @@ class NtMdtPal(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.data = self._io.read_bytes(4)
+            self.red = self._io.read_u1()
+            self.unkn = self._io.read_u1()
+            self.blue = self._io.read_u1()
+            self.green = self._io.read_u1()
 
 
     class ColTable(KaitaiStruct):

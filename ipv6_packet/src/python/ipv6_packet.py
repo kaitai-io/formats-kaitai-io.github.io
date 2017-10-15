@@ -7,8 +7,8 @@ from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, 
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-from tcp_segment import TcpSegment
 from udp_datagram import UdpDatagram
+from tcp_segment import TcpSegment
 from ipv4_packet import Ipv4Packet
 class Ipv6Packet(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):

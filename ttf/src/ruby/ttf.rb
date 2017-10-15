@@ -93,7 +93,48 @@ class Ttf < Kaitai::Struct::Struct
     attr_reader :max_mem_type1
     attr_reader :format20
   end
+
+  ##
+  # Name table is meant to include human-readable string metadata
+  # that describes font: name of the font, its styles, copyright &
+  # trademark notices, vendor and designer info, etc.
+  # 
+  # The table includes a list of "name records", each of which
+  # corresponds to a single metadata entry.
+  # @see https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html Source
   class Name < Kaitai::Struct::Struct
+
+    PLATFORMS = {
+      0 => :platforms_unicode,
+      1 => :platforms_macintosh,
+      2 => :platforms_reserved_2,
+      3 => :platforms_microsoft,
+    }
+    I__PLATFORMS = PLATFORMS.invert
+
+    NAMES = {
+      0 => :names_copyright,
+      1 => :names_font_family,
+      2 => :names_font_subfamily,
+      3 => :names_unique_subfamily_id,
+      4 => :names_full_font_name,
+      5 => :names_name_table_version,
+      6 => :names_postscript_font_name,
+      7 => :names_trademark,
+      8 => :names_manufacturer,
+      9 => :names_designer,
+      10 => :names_description,
+      11 => :names_url_vendor,
+      12 => :names_url_designer,
+      13 => :names_license,
+      14 => :names_url_license,
+      15 => :names_reserved_15,
+      16 => :names_preferred_family,
+      17 => :names_preferred_subfamily,
+      18 => :names_compatible_full_name,
+      19 => :names_sample_text,
+    }
+    I__NAMES = NAMES.invert
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
@@ -101,10 +142,10 @@ class Ttf < Kaitai::Struct::Struct
 
     def _read
       @format_selector = @_io.read_u2be
-      @name_record_count = @_io.read_u2be
-      @string_storage_offset = @_io.read_u2be
-      @name_records = Array.new(name_record_count)
-      (name_record_count).times { |i|
+      @num_name_records = @_io.read_u2be
+      @ofs_strings = @_io.read_u2be
+      @name_records = Array.new(num_name_records)
+      (num_name_records).times { |i|
         @name_records[i] = NameRecord.new(@_io, self, @_root)
       }
       self
@@ -116,20 +157,20 @@ class Ttf < Kaitai::Struct::Struct
       end
 
       def _read
-        @platform_id = @_io.read_u2be
+        @platform_id = Kaitai::Struct::Stream::resolve_enum(PLATFORMS, @_io.read_u2be)
         @encoding_id = @_io.read_u2be
         @language_id = @_io.read_u2be
-        @name_id = @_io.read_u2be
-        @string_length = @_io.read_u2be
-        @string_offset = @_io.read_u2be
+        @name_id = Kaitai::Struct::Stream::resolve_enum(NAMES, @_io.read_u2be)
+        @len_str = @_io.read_u2be
+        @ofs_str = @_io.read_u2be
         self
       end
       def ascii_value
         return @ascii_value unless @ascii_value.nil?
         io = _parent._io
         _pos = io.pos
-        io.seek((_parent.string_storage_offset + string_offset))
-        @ascii_value = (io.read_bytes(string_length)).force_encoding("ascii")
+        io.seek((_parent.ofs_strings + ofs_str))
+        @ascii_value = (io.read_bytes(len_str)).force_encoding("ascii")
         io.seek(_pos)
         @ascii_value
       end
@@ -137,8 +178,8 @@ class Ttf < Kaitai::Struct::Struct
         return @unicode_value unless @unicode_value.nil?
         io = _parent._io
         _pos = io.pos
-        io.seek((_parent.string_storage_offset + string_offset))
-        @unicode_value = (io.read_bytes(string_length)).force_encoding("utf-16be")
+        io.seek((_parent.ofs_strings + ofs_str))
+        @unicode_value = (io.read_bytes(len_str)).force_encoding("utf-16be")
         io.seek(_pos)
         @unicode_value
       end
@@ -146,12 +187,12 @@ class Ttf < Kaitai::Struct::Struct
       attr_reader :encoding_id
       attr_reader :language_id
       attr_reader :name_id
-      attr_reader :string_length
-      attr_reader :string_offset
+      attr_reader :len_str
+      attr_reader :ofs_str
     end
     attr_reader :format_selector
-    attr_reader :name_record_count
-    attr_reader :string_storage_offset
+    attr_reader :num_name_records
+    attr_reader :ofs_strings
     attr_reader :name_records
   end
   class Head < Kaitai::Struct::Struct

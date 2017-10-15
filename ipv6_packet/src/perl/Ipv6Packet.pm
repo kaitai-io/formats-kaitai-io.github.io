@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
-use TcpSegment;
 use UdpDatagram;
+use TcpSegment;
 use Ipv4Packet;
 
 ########################################################################

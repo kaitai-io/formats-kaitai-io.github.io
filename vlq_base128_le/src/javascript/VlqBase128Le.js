@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.VlqBase128Le = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * A variable-length unsigned integer using base128 encoding. 1-byte groups
  * consists of 1-bit flag of continuation and 7-bit value, and are ordered
@@ -106,15 +115,5 @@ var VlqBase128Le = (function() {
 
   return VlqBase128Le;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('VlqBase128Le', [], function() {
-    return VlqBase128Le;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = VlqBase128Le;
-}
+return VlqBase128Le;
+}));

@@ -221,9 +221,15 @@ with certain preconfigured arguments and some other options.</p>
         <div class="row">
             <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-if (typeof require === &#39;function&#39;)
-  var WindowsShellItems = require(&#39;./WindowsShellItems.js&#39;);
-
+(function (root, factory) {
+  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+    define([&#39;kaitai-struct/KaitaiStream&#39;, &#39;./WindowsShellItems&#39;], factory);
+  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;), require(&#39;./WindowsShellItems&#39;));
+  } else {
+    root.WindowsLnkFile = factory(root.KaitaiStream, root.WindowsShellItems);
+  }
+}(this, function (KaitaiStream, WindowsShellItems) {
 /**
  * Windows .lnk files (AKA &quot;shell link&quot; file) are most frequently used
  * in Windows shell to create &quot;shortcuts&quot; to another files, usually for
@@ -605,18 +611,8 @@ var WindowsLnkFile = (function() {
 
   return WindowsLnkFile;
 })();
-
-// Export for amd environments
-if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-  define(&#39;WindowsLnkFile&#39;, [], function() {
-    return WindowsLnkFile;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === &#39;object&#39; &amp;&amp; module &amp;&amp; module.exports) {
-  module.exports = WindowsLnkFile;
-}
+return WindowsLnkFile;
+}));
 </code></pre>
             
         </div>

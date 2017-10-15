@@ -483,6 +483,32 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
 }
 
+our $PLATFORMS_UNICODE = 0;
+our $PLATFORMS_MACINTOSH = 1;
+our $PLATFORMS_RESERVED_2 = 2;
+our $PLATFORMS_MICROSOFT = 3;
+
+our $NAMES_COPYRIGHT = 0;
+our $NAMES_FONT_FAMILY = 1;
+our $NAMES_FONT_SUBFAMILY = 2;
+our $NAMES_UNIQUE_SUBFAMILY_ID = 3;
+our $NAMES_FULL_FONT_NAME = 4;
+our $NAMES_NAME_TABLE_VERSION = 5;
+our $NAMES_POSTSCRIPT_FONT_NAME = 6;
+our $NAMES_TRADEMARK = 7;
+our $NAMES_MANUFACTURER = 8;
+our $NAMES_DESIGNER = 9;
+our $NAMES_DESCRIPTION = 10;
+our $NAMES_URL_VENDOR = 11;
+our $NAMES_URL_DESIGNER = 12;
+our $NAMES_LICENSE = 13;
+our $NAMES_URL_LICENSE = 14;
+our $NAMES_RESERVED_15 = 15;
+our $NAMES_PREFERRED_FAMILY = 16;
+our $NAMES_PREFERRED_SUBFAMILY = 17;
+our $NAMES_COMPATIBLE_FULL_NAME = 18;
+our $NAMES_SAMPLE_TEXT = 19;
+
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
     my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
@@ -500,10 +526,10 @@ sub _read {
     my ($self) = @_;
 
     $self-&gt;{format_selector} = $self-&gt;{_io}-&gt;read_u2be();
-    $self-&gt;{name_record_count} = $self-&gt;{_io}-&gt;read_u2be();
-    $self-&gt;{string_storage_offset} = $self-&gt;{_io}-&gt;read_u2be();
+    $self-&gt;{num_name_records} = $self-&gt;{_io}-&gt;read_u2be();
+    $self-&gt;{ofs_strings} = $self-&gt;{_io}-&gt;read_u2be();
     $self-&gt;{name_records} = ();
-    my $n_name_records = $self-&gt;name_record_count();
+    my $n_name_records = $self-&gt;num_name_records();
     for (my $i = 0; $i &lt; $n_name_records; $i++) {
         $self-&gt;{name_records}[$i] = Ttf::Name::NameRecord-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
@@ -514,14 +540,14 @@ sub format_selector {
     return $self-&gt;{format_selector};
 }
 
-sub name_record_count {
+sub num_name_records {
     my ($self) = @_;
-    return $self-&gt;{name_record_count};
+    return $self-&gt;{num_name_records};
 }
 
-sub string_storage_offset {
+sub ofs_strings {
     my ($self) = @_;
-    return $self-&gt;{string_storage_offset};
+    return $self-&gt;{ofs_strings};
 }
 
 sub name_records {
@@ -563,8 +589,8 @@ sub _read {
     $self-&gt;{encoding_id} = $self-&gt;{_io}-&gt;read_u2be();
     $self-&gt;{language_id} = $self-&gt;{_io}-&gt;read_u2be();
     $self-&gt;{name_id} = $self-&gt;{_io}-&gt;read_u2be();
-    $self-&gt;{string_length} = $self-&gt;{_io}-&gt;read_u2be();
-    $self-&gt;{string_offset} = $self-&gt;{_io}-&gt;read_u2be();
+    $self-&gt;{len_str} = $self-&gt;{_io}-&gt;read_u2be();
+    $self-&gt;{ofs_str} = $self-&gt;{_io}-&gt;read_u2be();
 }
 
 sub ascii_value {
@@ -572,8 +598,8 @@ sub ascii_value {
     return $self-&gt;{ascii_value} if ($self-&gt;{ascii_value});
     my $io = $self-&gt;_parent()-&gt;_io();
     my $_pos = $io-&gt;pos();
-    $io-&gt;seek(($self-&gt;_parent()-&gt;string_storage_offset() + $self-&gt;string_offset()));
-    $self-&gt;{ascii_value} = Encode::decode(&quot;ascii&quot;, $io-&gt;read_bytes($self-&gt;string_length()));
+    $io-&gt;seek(($self-&gt;_parent()-&gt;ofs_strings() + $self-&gt;ofs_str()));
+    $self-&gt;{ascii_value} = Encode::decode(&quot;ascii&quot;, $io-&gt;read_bytes($self-&gt;len_str()));
     $io-&gt;seek($_pos);
     return $self-&gt;{ascii_value};
 }
@@ -583,8 +609,8 @@ sub unicode_value {
     return $self-&gt;{unicode_value} if ($self-&gt;{unicode_value});
     my $io = $self-&gt;_parent()-&gt;_io();
     my $_pos = $io-&gt;pos();
-    $io-&gt;seek(($self-&gt;_parent()-&gt;string_storage_offset() + $self-&gt;string_offset()));
-    $self-&gt;{unicode_value} = Encode::decode(&quot;utf-16be&quot;, $io-&gt;read_bytes($self-&gt;string_length()));
+    $io-&gt;seek(($self-&gt;_parent()-&gt;ofs_strings() + $self-&gt;ofs_str()));
+    $self-&gt;{unicode_value} = Encode::decode(&quot;utf-16be&quot;, $io-&gt;read_bytes($self-&gt;len_str()));
     $io-&gt;seek($_pos);
     return $self-&gt;{unicode_value};
 }
@@ -609,14 +635,14 @@ sub name_id {
     return $self-&gt;{name_id};
 }
 
-sub string_length {
+sub len_str {
     my ($self) = @_;
-    return $self-&gt;{string_length};
+    return $self-&gt;{len_str};
 }
 
-sub string_offset {
+sub ofs_str {
     my ($self) = @_;
-    return $self-&gt;{string_offset};
+    return $self-&gt;{ofs_str};
 }
 
 ########################################################################

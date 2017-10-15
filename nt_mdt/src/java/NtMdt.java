@@ -83,6 +83,33 @@ public class NtMdt extends KaitaiStruct {
         public static XmlScanLocation byId(long id) { return byId.get(id); }
     }
 
+    public enum DataType {
+        FLOATFIX(-65544),
+        FLOAT80(-16138),
+        FLOAT64(-13320),
+        FLOAT48(-9990),
+        FLOAT32(-5892),
+        INT64(-8),
+        INT32(-4),
+        INT16(-2),
+        INT8(-1),
+        UNKNOWN0(0),
+        UINT8(1),
+        UINT16(2),
+        UINT32(4),
+        UINT64(8);
+
+        private final long id;
+        DataType(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, DataType> byId = new HashMap<Long, DataType>(14);
+        static {
+            for (DataType e : DataType.values())
+                byId.put(e.id(), e);
+        }
+        public static DataType byId(long id) { return byId.get(id); }
+    }
+
     public enum XmlParamType {
         NONE(0),
         LASER_WAVELENGTH(1),
@@ -157,7 +184,7 @@ public class NtMdt extends KaitaiStruct {
         KILO_HERTZ(4),
         DEGREES(5),
         PERCENT(6),
-        CELSIUM_DEGREE(7),
+        CELSIUS_DEGREE(7),
         VOLT_HIGH(8),
         SECOND(9),
         MILLI_SECOND(10),
@@ -785,7 +812,115 @@ public class NtMdt extends KaitaiStruct {
                 for (int i = 0; i < nMesurands(); i++) {
                     this.mesurands.add(new Calibration(this._io, this, _root));
                 }
-                this.image = this._io.readBytesFull();
+            }
+            public static class Image extends KaitaiStruct {
+                public static Image fromFile(String fileName) throws IOException {
+                    return new Image(new ByteBufferKaitaiStream(fileName));
+                }
+
+                public Image(KaitaiStream _io) {
+                    this(_io, null, null);
+                }
+
+                public Image(KaitaiStream _io, NtMdt.Frame.FdMetaData _parent) {
+                    this(_io, _parent, null);
+                }
+
+                public Image(KaitaiStream _io, NtMdt.Frame.FdMetaData _parent, NtMdt _root) {
+                    super(_io);
+                    this._parent = _parent;
+                    this._root = _root;
+                    _read();
+                }
+                private void _read() {
+                    this.image = new ArrayList<Vec>();
+                    {
+                        int i = 0;
+                        while (!this._io.isEof()) {
+                            this.image.add(new Vec(this._io, this, _root));
+                            i++;
+                        }
+                    }
+                }
+                public static class Vec extends KaitaiStruct {
+                    public static Vec fromFile(String fileName) throws IOException {
+                        return new Vec(new ByteBufferKaitaiStream(fileName));
+                    }
+
+                    public Vec(KaitaiStream _io) {
+                        this(_io, null, null);
+                    }
+
+                    public Vec(KaitaiStream _io, NtMdt.Frame.FdMetaData.Image _parent) {
+                        this(_io, _parent, null);
+                    }
+
+                    public Vec(KaitaiStream _io, NtMdt.Frame.FdMetaData.Image _parent, NtMdt _root) {
+                        super(_io);
+                        this._parent = _parent;
+                        this._root = _root;
+                        _read();
+                    }
+                    private void _read() {
+                        items = new ArrayList<Double>((int) (_parent()._parent().nMesurands()));
+                        for (int i = 0; i < _parent()._parent().nMesurands(); i++) {
+                            switch (_parent()._parent().mesurands().get((int) i).dataType()) {
+                            case UINT8: {
+                                this.items.add((double) (this._io.readU1()));
+                                break;
+                            }
+                            case INT8: {
+                                this.items.add((double) (this._io.readS1()));
+                                break;
+                            }
+                            case INT16: {
+                                this.items.add((double) (this._io.readS2le()));
+                                break;
+                            }
+                            case UINT64: {
+                                this.items.add((double) (this._io.readU8le()));
+                                break;
+                            }
+                            case FLOAT64: {
+                                this.items.add((double) (this._io.readF8le()));
+                                break;
+                            }
+                            case INT32: {
+                                this.items.add((double) (this._io.readS4le()));
+                                break;
+                            }
+                            case FLOAT32: {
+                                this.items.add((double) (this._io.readF4le()));
+                                break;
+                            }
+                            case UINT16: {
+                                this.items.add((double) (this._io.readU2le()));
+                                break;
+                            }
+                            case INT64: {
+                                this.items.add((double) (this._io.readS8le()));
+                                break;
+                            }
+                            case UINT32: {
+                                this.items.add((double) (this._io.readU4le()));
+                                break;
+                            }
+                            }
+                        }
+                    }
+                    private ArrayList<Double> items;
+                    private NtMdt _root;
+                    private NtMdt.Frame.FdMetaData.Image _parent;
+                    public ArrayList<Double> items() { return items; }
+                    public NtMdt _root() { return _root; }
+                    public NtMdt.Frame.FdMetaData.Image _parent() { return _parent; }
+                }
+                private ArrayList<Vec> image;
+                private NtMdt _root;
+                private NtMdt.Frame.FdMetaData _parent;
+                public ArrayList<Vec> image() { return image; }
+                public NtMdt _root() { return _root; }
+                public NtMdt.Frame.FdMetaData _parent() { return _parent; }
             }
             public static class Calibration extends KaitaiStruct {
                 public static Calibration fromFile(String fileName) throws IOException {
@@ -819,12 +954,20 @@ public class NtMdt extends KaitaiStruct {
                     this.scale = this._io.readF8le();
                     this.minIndex = this._io.readU8le();
                     this.maxIndex = this._io.readU8le();
-                    this.dataType = this._io.readS4le();
+                    this.dataType = NtMdt.DataType.byId(this._io.readS4le());
                     this.lenAuthor = this._io.readU4le();
                     this.name = new String(this._io.readBytes(lenName()), Charset.forName("utf-8"));
                     this.comment = new String(this._io.readBytes(lenComment()), Charset.forName("utf-8"));
                     this.unit = new String(this._io.readBytes(lenUnit()), Charset.forName("utf-8"));
                     this.author = new String(this._io.readBytes(lenAuthor()), Charset.forName("utf-8"));
+                }
+                private Integer count;
+                public Integer count() {
+                    if (this.count != null)
+                        return this.count;
+                    int _tmp = (int) (((maxIndex() - minIndex()) + 1));
+                    this.count = _tmp;
+                    return this.count;
                 }
                 private long lenTot;
                 private long lenStruct;
@@ -838,7 +981,7 @@ public class NtMdt extends KaitaiStruct {
                 private double scale;
                 private long minIndex;
                 private long maxIndex;
-                private int dataType;
+                private DataType dataType;
                 private long lenAuthor;
                 private String name;
                 private String comment;
@@ -858,7 +1001,7 @@ public class NtMdt extends KaitaiStruct {
                 public double scale() { return scale; }
                 public long minIndex() { return minIndex; }
                 public long maxIndex() { return maxIndex; }
-                public int dataType() { return dataType; }
+                public DataType dataType() { return dataType; }
                 public long lenAuthor() { return lenAuthor; }
                 public String name() { return name; }
                 public String comment() { return comment; }
@@ -866,6 +1009,18 @@ public class NtMdt extends KaitaiStruct {
                 public String author() { return author; }
                 public NtMdt _root() { return _root; }
                 public NtMdt.Frame.FdMetaData _parent() { return _parent; }
+            }
+            private Image image;
+            public Image image() {
+                if (this.image != null)
+                    return this.image;
+                long _pos = this._io.pos();
+                this._io.seek(dataOffset());
+                this._raw_image = this._io.readBytes(dataSize());
+                KaitaiStream _io__raw_image = new ByteBufferKaitaiStream(_raw_image);
+                this.image = new Image(_io__raw_image, this, _root);
+                this._io.seek(_pos);
+                return this.image;
             }
             private long headSize;
             private long totLen;
@@ -888,9 +1043,9 @@ public class NtMdt extends KaitaiStruct {
             private long nMesurands;
             private ArrayList<Calibration> dimensions;
             private ArrayList<Calibration> mesurands;
-            private byte[] image;
             private NtMdt _root;
             private NtMdt.Frame.FrameMain _parent;
+            private byte[] _raw_image;
             public long headSize() { return headSize; }
             public long totLen() { return totLen; }
             public ArrayList<Uuid> guids() { return guids; }
@@ -912,9 +1067,9 @@ public class NtMdt extends KaitaiStruct {
             public long nMesurands() { return nMesurands; }
             public ArrayList<Calibration> dimensions() { return dimensions; }
             public ArrayList<Calibration> mesurands() { return mesurands; }
-            public byte[] image() { return image; }
             public NtMdt _root() { return _root; }
             public NtMdt.Frame.FrameMain _parent() { return _parent; }
+            public byte[] _raw_image() { return _raw_image; }
         }
         public static class FdSpectroscopy extends KaitaiStruct {
             public static FdSpectroscopy fromFile(String fileName) throws IOException {

@@ -44,17 +44,47 @@ public:
         ~meta_t();
 
     private:
-        std::string m_unkn0;
+        std::string m_unkn00;
+        std::string m_unkn01;
+        std::string m_unkn02;
+        std::string m_unkn03;
         uint16_t m_colors_count;
-        std::string m_unkn1;
+        std::string m_unkn10;
+        std::string m_unkn11;
+        std::string m_unkn12;
         uint16_t m_name_size;
         nt_mdt_pal_t* m__root;
         nt_mdt_pal_t* m__parent;
 
     public:
-        std::string unkn0() const { return m_unkn0; }
+
+        /**
+         * usually 0s
+         */
+        std::string unkn00() const { return m_unkn00; }
+        std::string unkn01() const { return m_unkn01; }
+        std::string unkn02() const { return m_unkn02; }
+
+        /**
+         * usually 0s
+         */
+        std::string unkn03() const { return m_unkn03; }
         uint16_t colors_count() const { return m_colors_count; }
-        std::string unkn1() const { return m_unkn1; }
+
+        /**
+         * usually 0s
+         */
+        std::string unkn10() const { return m_unkn10; }
+
+        /**
+         * usually 4
+         */
+        std::string unkn11() const { return m_unkn11; }
+
+        /**
+         * usually 0s
+         */
+        std::string unkn12() const { return m_unkn12; }
         uint16_t name_size() const { return m_name_size; }
         nt_mdt_pal_t* _root() const { return m__root; }
         nt_mdt_pal_t* _parent() const { return m__parent; }
@@ -73,12 +103,18 @@ public:
         ~color_t();
 
     private:
-        std::string m_data;
+        uint8_t m_red;
+        uint8_t m_unkn;
+        uint8_t m_blue;
+        uint8_t m_green;
         nt_mdt_pal_t* m__root;
         nt_mdt_pal_t::col_table_t* m__parent;
 
     public:
-        std::string data() const { return m_data; }
+        uint8_t red() const { return m_red; }
+        uint8_t unkn() const { return m_unkn; }
+        uint8_t blue() const { return m_blue; }
+        uint8_t green() const { return m_green; }
         nt_mdt_pal_t* _root() const { return m__root; }
         nt_mdt_pal_t::col_table_t* _parent() const { return m__parent; }
     };

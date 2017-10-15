@@ -105,15 +105,35 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{unkn0} = $self->{_io}->read_bytes(7);
+    $self->{unkn00} = $self->{_io}->read_bytes(3);
+    $self->{unkn01} = $self->{_io}->read_bytes(2);
+    $self->{unkn02} = $self->{_io}->read_bytes(1);
+    $self->{unkn03} = $self->{_io}->read_bytes(1);
     $self->{colors_count} = $self->{_io}->read_u2le();
-    $self->{unkn1} = $self->{_io}->read_bytes(5);
+    $self->{unkn10} = $self->{_io}->read_bytes(2);
+    $self->{unkn11} = $self->{_io}->read_bytes(1);
+    $self->{unkn12} = $self->{_io}->read_bytes(2);
     $self->{name_size} = $self->{_io}->read_u2be();
 }
 
-sub unkn0 {
+sub unkn00 {
     my ($self) = @_;
-    return $self->{unkn0};
+    return $self->{unkn00};
+}
+
+sub unkn01 {
+    my ($self) = @_;
+    return $self->{unkn01};
+}
+
+sub unkn02 {
+    my ($self) = @_;
+    return $self->{unkn02};
+}
+
+sub unkn03 {
+    my ($self) = @_;
+    return $self->{unkn03};
 }
 
 sub colors_count {
@@ -121,9 +141,19 @@ sub colors_count {
     return $self->{colors_count};
 }
 
-sub unkn1 {
+sub unkn10 {
     my ($self) = @_;
-    return $self->{unkn1};
+    return $self->{unkn10};
+}
+
+sub unkn11 {
+    my ($self) = @_;
+    return $self->{unkn11};
+}
+
+sub unkn12 {
+    my ($self) = @_;
+    return $self->{unkn12};
 }
 
 sub name_size {
@@ -161,12 +191,30 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{data} = $self->{_io}->read_bytes(4);
+    $self->{red} = $self->{_io}->read_u1();
+    $self->{unkn} = $self->{_io}->read_u1();
+    $self->{blue} = $self->{_io}->read_u1();
+    $self->{green} = $self->{_io}->read_u1();
 }
 
-sub data {
+sub red {
     my ($self) = @_;
-    return $self->{data};
+    return $self->{red};
+}
+
+sub unkn {
+    my ($self) = @_;
+    return $self->{unkn};
+}
+
+sub blue {
+    my ($self) = @_;
+    return $self->{blue};
+}
+
+sub green {
+    my ($self) = @_;
+    return $self->{green};
 }
 
 ########################################################################

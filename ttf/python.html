@@ -324,6 +324,44 @@ class Ttf(KaitaiStruct):
 
 
     class Name(KaitaiStruct):
+        &quot;&quot;&quot;Name table is meant to include human-readable string metadata
+        that describes font: name of the font, its styles, copyright &amp;
+        trademark notices, vendor and designer info, etc.
+        
+        The table includes a list of &quot;name records&quot;, each of which
+        corresponds to a single metadata entry.
+        
+        .. seealso::
+           Source - https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html
+        &quot;&quot;&quot;
+
+        class Platforms(Enum):
+            unicode = 0
+            macintosh = 1
+            reserved_2 = 2
+            microsoft = 3
+
+        class Names(Enum):
+            copyright = 0
+            font_family = 1
+            font_subfamily = 2
+            unique_subfamily_id = 3
+            full_font_name = 4
+            name_table_version = 5
+            postscript_font_name = 6
+            trademark = 7
+            manufacturer = 8
+            designer = 9
+            description = 10
+            url_vendor = 11
+            url_designer = 12
+            license = 13
+            url_license = 14
+            reserved_15 = 15
+            preferred_family = 16
+            preferred_subfamily = 17
+            compatible_full_name = 18
+            sample_text = 19
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -332,10 +370,10 @@ class Ttf(KaitaiStruct):
 
         def _read(self):
             self.format_selector = self._io.read_u2be()
-            self.name_record_count = self._io.read_u2be()
-            self.string_storage_offset = self._io.read_u2be()
-            self.name_records = [None] * (self.name_record_count)
-            for i in range(self.name_record_count):
+            self.num_name_records = self._io.read_u2be()
+            self.ofs_strings = self._io.read_u2be()
+            self.name_records = [None] * (self.num_name_records)
+            for i in range(self.num_name_records):
                 self.name_records[i] = self._root.Name.NameRecord(self._io, self, self._root)
 
 
@@ -347,12 +385,12 @@ class Ttf(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.platform_id = self._io.read_u2be()
+                self.platform_id = self._root.Name.Platforms(self._io.read_u2be())
                 self.encoding_id = self._io.read_u2be()
                 self.language_id = self._io.read_u2be()
-                self.name_id = self._io.read_u2be()
-                self.string_length = self._io.read_u2be()
-                self.string_offset = self._io.read_u2be()
+                self.name_id = self._root.Name.Names(self._io.read_u2be())
+                self.len_str = self._io.read_u2be()
+                self.ofs_str = self._io.read_u2be()
 
             @property
             def ascii_value(self):
@@ -361,8 +399,8 @@ class Ttf(KaitaiStruct):
 
                 io = self._parent._io
                 _pos = io.pos()
-                io.seek((self._parent.string_storage_offset + self.string_offset))
-                self._m_ascii_value = (io.read_bytes(self.string_length)).decode(u&quot;ascii&quot;)
+                io.seek((self._parent.ofs_strings + self.ofs_str))
+                self._m_ascii_value = (io.read_bytes(self.len_str)).decode(u&quot;ascii&quot;)
                 io.seek(_pos)
                 return self._m_ascii_value if hasattr(self, &#39;_m_ascii_value&#39;) else None
 
@@ -373,8 +411,8 @@ class Ttf(KaitaiStruct):
 
                 io = self._parent._io
                 _pos = io.pos()
-                io.seek((self._parent.string_storage_offset + self.string_offset))
-                self._m_unicode_value = (io.read_bytes(self.string_length)).decode(u&quot;utf-16be&quot;)
+                io.seek((self._parent.ofs_strings + self.ofs_str))
+                self._m_unicode_value = (io.read_bytes(self.len_str)).decode(u&quot;utf-16be&quot;)
                 io.seek(_pos)
                 return self._m_unicode_value if hasattr(self, &#39;_m_unicode_value&#39;) else None
 

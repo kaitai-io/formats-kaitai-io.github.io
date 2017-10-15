@@ -1,14 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-if (typeof require === 'function')
-  var TcpSegment = require('./TcpSegment.js');
-
-if (typeof require === 'function')
-  var UdpDatagram = require('./UdpDatagram.js');
-
-if (typeof require === 'function')
-  var Ipv4Packet = require('./Ipv4Packet.js');
-
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream', './UdpDatagram', './TcpSegment', './Ipv4Packet'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./UdpDatagram'), require('./TcpSegment'), require('./Ipv4Packet'));
+  } else {
+    root.Ipv6Packet = factory(root.KaitaiStream, root.UdpDatagram, root.TcpSegment, root.Ipv4Packet);
+  }
+}(this, function (KaitaiStream, UdpDatagram, TcpSegment, Ipv4Packet) {
 var Ipv6Packet = (function() {
   function Ipv6Packet(_io, _parent, _root) {
     this._io = _io;
@@ -91,15 +91,5 @@ var Ipv6Packet = (function() {
 
   return Ipv6Packet;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('Ipv6Packet', [], function() {
-    return Ipv6Packet;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = Ipv6Packet;
-}
+return Ipv6Packet;
+}));

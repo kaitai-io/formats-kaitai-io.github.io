@@ -1,8 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-if (typeof require === 'function')
-  var VlqBase128Le = require('./VlqBase128Le.js');
-
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream', './VlqBase128Le'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./VlqBase128Le'));
+  } else {
+    root.GoogleProtobuf = factory(root.KaitaiStream, root.VlqBase128Le);
+  }
+}(this, function (KaitaiStream, VlqBase128Le) {
 /**
  * Google Protocol Buffers (AKA protobuf) is a popular data
  * serialization scheme used for communication protocols, data storage,
@@ -167,15 +173,5 @@ var GoogleProtobuf = (function() {
 
   return GoogleProtobuf;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('GoogleProtobuf', [], function() {
-    return GoogleProtobuf;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = GoogleProtobuf;
-}
+return GoogleProtobuf;
+}));

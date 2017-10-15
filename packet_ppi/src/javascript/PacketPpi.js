@@ -1,8 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-if (typeof require === 'function')
-  var EthernetFrame = require('./EthernetFrame.js');
-
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream', './EthernetFrame'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./EthernetFrame'));
+  } else {
+    root.PacketPpi = factory(root.KaitaiStream, root.EthernetFrame);
+  }
+}(this, function (KaitaiStream, EthernetFrame) {
 /**
  * PPI is a standard for link layer packet encapsulation, proposed as
  * generic extensible container to store both captured in-band data and
@@ -613,15 +619,5 @@ var PacketPpi = (function() {
 
   return PacketPpi;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('PacketPpi', [], function() {
-    return PacketPpi;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = PacketPpi;
-}
+return PacketPpi;
+}));

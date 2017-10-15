@@ -266,6 +266,32 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
+our $PLATFORMS_UNICODE = 0;
+our $PLATFORMS_MACINTOSH = 1;
+our $PLATFORMS_RESERVED_2 = 2;
+our $PLATFORMS_MICROSOFT = 3;
+
+our $NAMES_COPYRIGHT = 0;
+our $NAMES_FONT_FAMILY = 1;
+our $NAMES_FONT_SUBFAMILY = 2;
+our $NAMES_UNIQUE_SUBFAMILY_ID = 3;
+our $NAMES_FULL_FONT_NAME = 4;
+our $NAMES_NAME_TABLE_VERSION = 5;
+our $NAMES_POSTSCRIPT_FONT_NAME = 6;
+our $NAMES_TRADEMARK = 7;
+our $NAMES_MANUFACTURER = 8;
+our $NAMES_DESIGNER = 9;
+our $NAMES_DESCRIPTION = 10;
+our $NAMES_URL_VENDOR = 11;
+our $NAMES_URL_DESIGNER = 12;
+our $NAMES_LICENSE = 13;
+our $NAMES_URL_LICENSE = 14;
+our $NAMES_RESERVED_15 = 15;
+our $NAMES_PREFERRED_FAMILY = 16;
+our $NAMES_PREFERRED_SUBFAMILY = 17;
+our $NAMES_COMPATIBLE_FULL_NAME = 18;
+our $NAMES_SAMPLE_TEXT = 19;
+
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
     my $self = IO::KaitaiStruct::Struct->new($_io);
@@ -283,10 +309,10 @@ sub _read {
     my ($self) = @_;
 
     $self->{format_selector} = $self->{_io}->read_u2be();
-    $self->{name_record_count} = $self->{_io}->read_u2be();
-    $self->{string_storage_offset} = $self->{_io}->read_u2be();
+    $self->{num_name_records} = $self->{_io}->read_u2be();
+    $self->{ofs_strings} = $self->{_io}->read_u2be();
     $self->{name_records} = ();
-    my $n_name_records = $self->name_record_count();
+    my $n_name_records = $self->num_name_records();
     for (my $i = 0; $i < $n_name_records; $i++) {
         $self->{name_records}[$i] = Ttf::Name::NameRecord->new($self->{_io}, $self, $self->{_root});
     }
@@ -297,14 +323,14 @@ sub format_selector {
     return $self->{format_selector};
 }
 
-sub name_record_count {
+sub num_name_records {
     my ($self) = @_;
-    return $self->{name_record_count};
+    return $self->{num_name_records};
 }
 
-sub string_storage_offset {
+sub ofs_strings {
     my ($self) = @_;
-    return $self->{string_storage_offset};
+    return $self->{ofs_strings};
 }
 
 sub name_records {
@@ -346,8 +372,8 @@ sub _read {
     $self->{encoding_id} = $self->{_io}->read_u2be();
     $self->{language_id} = $self->{_io}->read_u2be();
     $self->{name_id} = $self->{_io}->read_u2be();
-    $self->{string_length} = $self->{_io}->read_u2be();
-    $self->{string_offset} = $self->{_io}->read_u2be();
+    $self->{len_str} = $self->{_io}->read_u2be();
+    $self->{ofs_str} = $self->{_io}->read_u2be();
 }
 
 sub ascii_value {
@@ -355,8 +381,8 @@ sub ascii_value {
     return $self->{ascii_value} if ($self->{ascii_value});
     my $io = $self->_parent()->_io();
     my $_pos = $io->pos();
-    $io->seek(($self->_parent()->string_storage_offset() + $self->string_offset()));
-    $self->{ascii_value} = Encode::decode("ascii", $io->read_bytes($self->string_length()));
+    $io->seek(($self->_parent()->ofs_strings() + $self->ofs_str()));
+    $self->{ascii_value} = Encode::decode("ascii", $io->read_bytes($self->len_str()));
     $io->seek($_pos);
     return $self->{ascii_value};
 }
@@ -366,8 +392,8 @@ sub unicode_value {
     return $self->{unicode_value} if ($self->{unicode_value});
     my $io = $self->_parent()->_io();
     my $_pos = $io->pos();
-    $io->seek(($self->_parent()->string_storage_offset() + $self->string_offset()));
-    $self->{unicode_value} = Encode::decode("utf-16be", $io->read_bytes($self->string_length()));
+    $io->seek(($self->_parent()->ofs_strings() + $self->ofs_str()));
+    $self->{unicode_value} = Encode::decode("utf-16be", $io->read_bytes($self->len_str()));
     $io->seek($_pos);
     return $self->{unicode_value};
 }
@@ -392,14 +418,14 @@ sub name_id {
     return $self->{name_id};
 }
 
-sub string_length {
+sub len_str {
     my ($self) = @_;
-    return $self->{string_length};
+    return $self->{len_str};
 }
 
-sub string_offset {
+sub ofs_str {
     my ($self) = @_;
-    return $self->{string_offset};
+    return $self->{ofs_str};
 }
 
 ########################################################################

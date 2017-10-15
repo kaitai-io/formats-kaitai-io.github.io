@@ -147,7 +147,7 @@ specpr_t::icflag_t::~icflag_t() {
 specpr_t::record_type_t specpr_t::icflag_t::type() {
     if (f_type)
         return m_type;
-    m_type = static_cast<specpr_t::record_type_t>(((text() * 1) + (continuation() * 2)));
+    m_type = static_cast<specpr_t::record_type_t>(((((text()) ? 1 : 0) * 1) + (((continuation()) ? 1 : 0) * 2)));
     f_type = true;
     return m_type;
 }

@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.GenmidiOp2 = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * GENMIDI.OP2 is a sound bank file used by players based on DMX sound
  * library to play MIDI files with General MIDI instruments using OPL2
@@ -135,15 +144,5 @@ var GenmidiOp2 = (function() {
 
   return GenmidiOp2;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('GenmidiOp2', [], function() {
-    return GenmidiOp2;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = GenmidiOp2;
-}
+return GenmidiOp2;
+}));

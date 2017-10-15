@@ -46,9 +46,14 @@ nt_mdt_pal_t::meta_t::meta_t(kaitai::kstream* p__io, nt_mdt_pal_t* p__parent, nt
 }
 
 void nt_mdt_pal_t::meta_t::_read() {
-    m_unkn0 = m__io->read_bytes(7);
+    m_unkn00 = m__io->read_bytes(3);
+    m_unkn01 = m__io->read_bytes(2);
+    m_unkn02 = m__io->read_bytes(1);
+    m_unkn03 = m__io->read_bytes(1);
     m_colors_count = m__io->read_u2le();
-    m_unkn1 = m__io->read_bytes(5);
+    m_unkn10 = m__io->read_bytes(2);
+    m_unkn11 = m__io->read_bytes(1);
+    m_unkn12 = m__io->read_bytes(2);
     m_name_size = m__io->read_u2be();
 }
 
@@ -62,7 +67,10 @@ nt_mdt_pal_t::color_t::color_t(kaitai::kstream* p__io, nt_mdt_pal_t::col_table_t
 }
 
 void nt_mdt_pal_t::color_t::_read() {
-    m_data = m__io->read_bytes(4);
+    m_red = m__io->read_u1();
+    m_unkn = m__io->read_u1();
+    m_blue = m__io->read_u1();
+    m_green = m__io->read_u1();
 }
 
 nt_mdt_pal_t::color_t::~color_t() {

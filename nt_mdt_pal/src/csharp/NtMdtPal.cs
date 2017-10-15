@@ -52,20 +52,55 @@ namespace Kaitai
             }
             private void _read()
             {
-                _unkn0 = m_io.ReadBytes(7);
+                _unkn00 = m_io.ReadBytes(3);
+                _unkn01 = m_io.ReadBytes(2);
+                _unkn02 = m_io.ReadBytes(1);
+                _unkn03 = m_io.ReadBytes(1);
                 _colorsCount = m_io.ReadU2le();
-                _unkn1 = m_io.ReadBytes(5);
+                _unkn10 = m_io.ReadBytes(2);
+                _unkn11 = m_io.ReadBytes(1);
+                _unkn12 = m_io.ReadBytes(2);
                 _nameSize = m_io.ReadU2be();
             }
-            private byte[] _unkn0;
+            private byte[] _unkn00;
+            private byte[] _unkn01;
+            private byte[] _unkn02;
+            private byte[] _unkn03;
             private ushort _colorsCount;
-            private byte[] _unkn1;
+            private byte[] _unkn10;
+            private byte[] _unkn11;
+            private byte[] _unkn12;
             private ushort _nameSize;
             private NtMdtPal m_root;
             private NtMdtPal m_parent;
-            public byte[] Unkn0 { get { return _unkn0; } }
+
+            /// <summary>
+            /// usually 0s
+            /// </summary>
+            public byte[] Unkn00 { get { return _unkn00; } }
+            public byte[] Unkn01 { get { return _unkn01; } }
+            public byte[] Unkn02 { get { return _unkn02; } }
+
+            /// <summary>
+            /// usually 0s
+            /// </summary>
+            public byte[] Unkn03 { get { return _unkn03; } }
             public ushort ColorsCount { get { return _colorsCount; } }
-            public byte[] Unkn1 { get { return _unkn1; } }
+
+            /// <summary>
+            /// usually 0s
+            /// </summary>
+            public byte[] Unkn10 { get { return _unkn10; } }
+
+            /// <summary>
+            /// usually 4
+            /// </summary>
+            public byte[] Unkn11 { get { return _unkn11; } }
+
+            /// <summary>
+            /// usually 0s
+            /// </summary>
+            public byte[] Unkn12 { get { return _unkn12; } }
             public ushort NameSize { get { return _nameSize; } }
             public NtMdtPal M_Root { get { return m_root; } }
             public NtMdtPal M_Parent { get { return m_parent; } }
@@ -85,12 +120,21 @@ namespace Kaitai
             }
             private void _read()
             {
-                _data = m_io.ReadBytes(4);
+                _red = m_io.ReadU1();
+                _unkn = m_io.ReadU1();
+                _blue = m_io.ReadU1();
+                _green = m_io.ReadU1();
             }
-            private byte[] _data;
+            private byte _red;
+            private byte _unkn;
+            private byte _blue;
+            private byte _green;
             private NtMdtPal m_root;
             private NtMdtPal.ColTable m_parent;
-            public byte[] Data { get { return _data; } }
+            public byte Red { get { return _red; } }
+            public byte Unkn { get { return _unkn; } }
+            public byte Blue { get { return _blue; } }
+            public byte Green { get { return _green; } }
             public NtMdtPal M_Root { get { return m_root; } }
             public NtMdtPal.ColTable M_Parent { get { return m_parent; } }
         }

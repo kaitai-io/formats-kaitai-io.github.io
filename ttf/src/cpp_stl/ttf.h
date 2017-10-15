@@ -146,10 +146,50 @@ public:
         ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * Name table is meant to include human-readable string metadata
+     * that describes font: name of the font, its styles, copyright &
+     * trademark notices, vendor and designer info, etc.
+     * 
+     * The table includes a list of "name records", each of which
+     * corresponds to a single metadata entry.
+     * \sa Source
+     */
+
     class name_t : public kaitai::kstruct {
 
     public:
         class name_record_t;
+
+        enum platforms_t {
+            PLATFORMS_UNICODE = 0,
+            PLATFORMS_MACINTOSH = 1,
+            PLATFORMS_RESERVED_2 = 2,
+            PLATFORMS_MICROSOFT = 3
+        };
+
+        enum names_t {
+            NAMES_COPYRIGHT = 0,
+            NAMES_FONT_FAMILY = 1,
+            NAMES_FONT_SUBFAMILY = 2,
+            NAMES_UNIQUE_SUBFAMILY_ID = 3,
+            NAMES_FULL_FONT_NAME = 4,
+            NAMES_NAME_TABLE_VERSION = 5,
+            NAMES_POSTSCRIPT_FONT_NAME = 6,
+            NAMES_TRADEMARK = 7,
+            NAMES_MANUFACTURER = 8,
+            NAMES_DESIGNER = 9,
+            NAMES_DESCRIPTION = 10,
+            NAMES_URL_VENDOR = 11,
+            NAMES_URL_DESIGNER = 12,
+            NAMES_LICENSE = 13,
+            NAMES_URL_LICENSE = 14,
+            NAMES_RESERVED_15 = 15,
+            NAMES_PREFERRED_FAMILY = 16,
+            NAMES_PREFERRED_SUBFAMILY = 17,
+            NAMES_COMPATIBLE_FULL_NAME = 18,
+            NAMES_SAMPLE_TEXT = 19
+        };
 
         name_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = 0, ttf_t* p__root = 0);
 
@@ -186,38 +226,38 @@ public:
             std::string unicode_value();
 
         private:
-            uint16_t m_platform_id;
+            platforms_t m_platform_id;
             uint16_t m_encoding_id;
             uint16_t m_language_id;
-            uint16_t m_name_id;
-            uint16_t m_string_length;
-            uint16_t m_string_offset;
+            names_t m_name_id;
+            uint16_t m_len_str;
+            uint16_t m_ofs_str;
             ttf_t* m__root;
             ttf_t::name_t* m__parent;
 
         public:
-            uint16_t platform_id() const { return m_platform_id; }
+            platforms_t platform_id() const { return m_platform_id; }
             uint16_t encoding_id() const { return m_encoding_id; }
             uint16_t language_id() const { return m_language_id; }
-            uint16_t name_id() const { return m_name_id; }
-            uint16_t string_length() const { return m_string_length; }
-            uint16_t string_offset() const { return m_string_offset; }
+            names_t name_id() const { return m_name_id; }
+            uint16_t len_str() const { return m_len_str; }
+            uint16_t ofs_str() const { return m_ofs_str; }
             ttf_t* _root() const { return m__root; }
             ttf_t::name_t* _parent() const { return m__parent; }
         };
 
     private:
         uint16_t m_format_selector;
-        uint16_t m_name_record_count;
-        uint16_t m_string_storage_offset;
+        uint16_t m_num_name_records;
+        uint16_t m_ofs_strings;
         std::vector<name_record_t*>* m_name_records;
         ttf_t* m__root;
         ttf_t::dir_table_entry_t* m__parent;
 
     public:
         uint16_t format_selector() const { return m_format_selector; }
-        uint16_t name_record_count() const { return m_name_record_count; }
-        uint16_t string_storage_offset() const { return m_string_storage_offset; }
+        uint16_t num_name_records() const { return m_num_name_records; }
+        uint16_t ofs_strings() const { return m_ofs_strings; }
         std::vector<name_record_t*>* name_records() const { return m_name_records; }
         ttf_t* _root() const { return m__root; }
         ttf_t::dir_table_entry_t* _parent() const { return m__parent; }

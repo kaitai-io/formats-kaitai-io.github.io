@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.JavaClass = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * @see {@link https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1|Source}
  */
@@ -859,15 +868,5 @@ var JavaClass = (function() {
 
   return JavaClass;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('JavaClass', [], function() {
-    return JavaClass;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = JavaClass;
-}
+return JavaClass;
+}));

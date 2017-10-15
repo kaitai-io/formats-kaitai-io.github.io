@@ -226,6 +226,15 @@ subtypes to force parsing in particular transfer syntax.</p>
         <div class="row">
             <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
+  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
+  } else {
+    root.Dicom = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * DICOM (Digital Imaging and Communications in Medicine), AKA NEMA
  * PS3, AKA ISO 12052:2006, is a file format and network protocol
@@ -8535,18 +8544,8 @@ var Dicom = (function() {
 
   return Dicom;
 })();
-
-// Export for amd environments
-if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-  define(&#39;Dicom&#39;, [], function() {
-    return Dicom;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === &#39;object&#39; &amp;&amp; module &amp;&amp; module.exports) {
-  module.exports = Dicom;
-}
+return Dicom;
+}));
 </code></pre>
             
         </div>

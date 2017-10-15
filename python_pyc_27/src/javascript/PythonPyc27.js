@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.PythonPyc27 = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * Python interpreter runs .py files in 2 step process: first, it
  * produces bytecode, which it then executes. Translation of .py source
@@ -610,15 +619,5 @@ var PythonPyc27 = (function() {
 
   return PythonPyc27;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('PythonPyc27', [], function() {
-    return PythonPyc27;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = PythonPyc27;
-}
+return PythonPyc27;
+}));

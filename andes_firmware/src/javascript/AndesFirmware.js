@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.AndesFirmware = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * Firmware image found with MediaTek MT76xx wifi chipsets.
  */
@@ -42,15 +51,5 @@ var AndesFirmware = (function() {
 
   return AndesFirmware;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('AndesFirmware', [], function() {
-    return AndesFirmware;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = AndesFirmware;
-}
+return AndesFirmware;
+}));

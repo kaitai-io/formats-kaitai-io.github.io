@@ -215,9 +215,15 @@ radio information, but can be used for other purposes as well.</p>
         <div class="row">
             <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-if (typeof require === &#39;function&#39;)
-  var EthernetFrame = require(&#39;./EthernetFrame.js&#39;);
-
+(function (root, factory) {
+  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+    define([&#39;kaitai-struct/KaitaiStream&#39;, &#39;./EthernetFrame&#39;], factory);
+  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;), require(&#39;./EthernetFrame&#39;));
+  } else {
+    root.PacketPpi = factory(root.KaitaiStream, root.EthernetFrame);
+  }
+}(this, function (KaitaiStream, EthernetFrame) {
 /**
  * PPI is a standard for link layer packet encapsulation, proposed as
  * generic extensible container to store both captured in-band data and
@@ -828,18 +834,8 @@ var PacketPpi = (function() {
 
   return PacketPpi;
 })();
-
-// Export for amd environments
-if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-  define(&#39;PacketPpi&#39;, [], function() {
-    return PacketPpi;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === &#39;object&#39; &amp;&amp; module &amp;&amp; module.exports) {
-  module.exports = PacketPpi;
-}
+return PacketPpi;
+}));
 </code></pre>
             
         </div>

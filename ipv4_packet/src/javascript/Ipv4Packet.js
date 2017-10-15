@@ -1,17 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-if (typeof require === 'function')
-  var TcpSegment = require('./TcpSegment.js');
-
-if (typeof require === 'function')
-  var Ipv6Packet = require('./Ipv6Packet.js');
-
-if (typeof require === 'function')
-  var UdpDatagram = require('./UdpDatagram.js');
-
-if (typeof require === 'function')
-  var IcmpPacket = require('./IcmpPacket.js');
-
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream', './UdpDatagram', './IcmpPacket', './TcpSegment', './Ipv6Packet'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./UdpDatagram'), require('./IcmpPacket'), require('./TcpSegment'), require('./Ipv6Packet'));
+  } else {
+    root.Ipv4Packet = factory(root.KaitaiStream, root.UdpDatagram, root.IcmpPacket, root.TcpSegment, root.Ipv6Packet);
+  }
+}(this, function (KaitaiStream, UdpDatagram, IcmpPacket, TcpSegment, Ipv6Packet) {
 var Ipv4Packet = (function() {
   Ipv4Packet.ProtocolEnum = Object.freeze({
     HOPOPT: 0,
@@ -440,15 +437,5 @@ var Ipv4Packet = (function() {
 
   return Ipv4Packet;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('Ipv4Packet', [], function() {
-    return Ipv4Packet;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = Ipv4Packet;
-}
+return Ipv4Packet;
+}));

@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.NtMdtPal = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * It is a color scheme for visualising SPM scans.
  */
@@ -35,11 +44,36 @@ var NtMdtPal = (function() {
       this._read();
     }
     Meta.prototype._read = function() {
-      this.unkn0 = this._io.readBytes(7);
+      this.unkn00 = this._io.readBytes(3);
+      this.unkn01 = this._io.readBytes(2);
+      this.unkn02 = this._io.readBytes(1);
+      this.unkn03 = this._io.readBytes(1);
       this.colorsCount = this._io.readU2le();
-      this.unkn1 = this._io.readBytes(5);
+      this.unkn10 = this._io.readBytes(2);
+      this.unkn11 = this._io.readBytes(1);
+      this.unkn12 = this._io.readBytes(2);
       this.nameSize = this._io.readU2be();
     }
+
+    /**
+     * usually 0s
+     */
+
+    /**
+     * usually 0s
+     */
+
+    /**
+     * usually 0s
+     */
+
+    /**
+     * usually 4
+     */
+
+    /**
+     * usually 0s
+     */
 
     return Meta;
   })();
@@ -53,7 +87,10 @@ var NtMdtPal = (function() {
       this._read();
     }
     Color.prototype._read = function() {
-      this.data = this._io.readBytes(4);
+      this.red = this._io.readU1();
+      this.unkn = this._io.readU1();
+      this.blue = this._io.readU1();
+      this.green = this._io.readU1();
     }
 
     return Color;
@@ -84,15 +121,5 @@ var NtMdtPal = (function() {
 
   return NtMdtPal;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('NtMdtPal', [], function() {
-    return NtMdtPal;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = NtMdtPal;
-}
+return NtMdtPal;
+}));

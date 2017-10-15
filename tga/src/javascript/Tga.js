@@ -1,5 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+  } else {
+    root.Tga = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
 /**
  * TGA (AKA Truevision TGA, AKA TARGA), is a raster image file format created by Truevision. It supports up to 32 bits per pixel (three 8-bit RGB channels + 8-bit alpha channel), color mapping and optional lossless RLE compression.
  * @see {@link http://www.dca.fee.unicamp.br/~martino/disciplinas/ea978/tgaffs.pdf|Source}
@@ -217,15 +226,5 @@ var Tga = (function() {
 
   return Tga;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('Tga', [], function() {
-    return Tga;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = Tga;
-}
+return Tga;
+}));
