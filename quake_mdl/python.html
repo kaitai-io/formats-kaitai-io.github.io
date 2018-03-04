@@ -254,7 +254,6 @@ data = QuakeMdl(KaitaiStream(BytesIO(raw)))</code></pre>
 
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-import struct
 
 
 if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
@@ -322,8 +321,8 @@ class QuakeMdl(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.ident = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 73, 68, 80, 79))
-            self.version_must_be_6 = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 6, 0, 0, 0))
+            self.ident = self._io.ensure_fixed_contents(b&quot;\x49\x44\x50\x4F&quot;)
+            self.version_must_be_6 = self._io.ensure_fixed_contents(b&quot;\x06\x00\x00\x00&quot;)
             self.scale = self._root.Vec3(self._io, self, self._root)
             self.origin = self._root.Vec3(self._io, self, self._root)
             self.radius = self._io.read_f4le()
@@ -341,18 +340,18 @@ class QuakeMdl(KaitaiStruct):
         @property
         def version(self):
             if hasattr(self, &#39;_m_version&#39;):
-                return self._m_version if hasattr(self, &#39;_m_version&#39;) else None
+                return self._m_version
 
             self._m_version = 6
-            return self._m_version if hasattr(self, &#39;_m_version&#39;) else None
+            return self._m_version
 
         @property
         def skin_size(self):
             if hasattr(self, &#39;_m_skin_size&#39;):
-                return self._m_skin_size if hasattr(self, &#39;_m_skin_size&#39;) else None
+                return self._m_skin_size
 
             self._m_skin_size = (self.skin_width * self.skin_height)
-            return self._m_skin_size if hasattr(self, &#39;_m_skin_size&#39;) else None
+            return self._m_skin_size
 
 
     class MdlSkin(KaitaiStruct):
@@ -413,10 +412,10 @@ class QuakeMdl(KaitaiStruct):
         @property
         def num_simple_frames(self):
             if hasattr(self, &#39;_m_num_simple_frames&#39;):
-                return self._m_num_simple_frames if hasattr(self, &#39;_m_num_simple_frames&#39;) else None
+                return self._m_num_simple_frames
 
             self._m_num_simple_frames = (1 if self.type == 0 else self.type)
-            return self._m_num_simple_frames if hasattr(self, &#39;_m_num_simple_frames&#39;) else None
+            return self._m_num_simple_frames
 
 
     class MdlSimpleFrame(KaitaiStruct):

@@ -2,7 +2,6 @@
 
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-import struct
 from enum import Enum
 
 
@@ -63,7 +62,7 @@ class WindowsEvtLog(KaitaiStruct):
 
         def _read(self):
             self.len_header = self._io.read_u4le()
-            self.magic = self._io.ensure_fixed_contents(struct.pack('4b', 76, 102, 76, 101))
+            self.magic = self._io.ensure_fixed_contents(b"\x4C\x66\x4C\x65")
             self.version_major = self._io.read_u4le()
             self.version_minor = self._io.read_u4le()
             self.ofs_start = self._io.read_u4le()
@@ -155,24 +154,24 @@ class WindowsEvtLog(KaitaiStruct):
         @property
         def user_sid(self):
             if hasattr(self, '_m_user_sid'):
-                return self._m_user_sid if hasattr(self, '_m_user_sid') else None
+                return self._m_user_sid
 
             _pos = self._io.pos()
             self._io.seek((self.ofs_user_sid - 8))
             self._m_user_sid = self._io.read_bytes(self.len_user_sid)
             self._io.seek(_pos)
-            return self._m_user_sid if hasattr(self, '_m_user_sid') else None
+            return self._m_user_sid
 
         @property
         def data(self):
             if hasattr(self, '_m_data'):
-                return self._m_data if hasattr(self, '_m_data') else None
+                return self._m_data
 
             _pos = self._io.pos()
             self._io.seek((self.ofs_data - 8))
             self._m_data = self._io.read_bytes(self.len_data)
             self._io.seek(_pos)
-            return self._m_data if hasattr(self, '_m_data') else None
+            return self._m_data
 
 
     class CursorRecordBody(KaitaiStruct):
@@ -187,7 +186,7 @@ class WindowsEvtLog(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack('12b', 34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68))
+            self.magic = self._io.ensure_fixed_contents(b"\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44")
             self.ofs_first_record = self._io.read_u4le()
             self.ofs_next_record = self._io.read_u4le()
             self.idx_next_record = self._io.read_u4le()

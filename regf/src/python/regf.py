@@ -2,7 +2,6 @@
 
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-import struct
 from enum import Enum
 
 
@@ -83,7 +82,7 @@ class Regf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.signature = self._io.ensure_fixed_contents(struct.pack('4b', 104, 98, 105, 110))
+            self.signature = self._io.ensure_fixed_contents(b"\x68\x62\x69\x6E")
             self.offset = self._io.read_u4le()
             self.size = self._io.read_u4le()
             self.unknown1 = self._io.read_u4le()
@@ -310,18 +309,18 @@ class Regf(KaitaiStruct):
         @property
         def cell_size(self):
             if hasattr(self, '_m_cell_size'):
-                return self._m_cell_size if hasattr(self, '_m_cell_size') else None
+                return self._m_cell_size
 
             self._m_cell_size = ((-1 if self.cell_size_raw < 0 else 1) * self.cell_size_raw)
-            return self._m_cell_size if hasattr(self, '_m_cell_size') else None
+            return self._m_cell_size
 
         @property
         def is_allocated(self):
             if hasattr(self, '_m_is_allocated'):
-                return self._m_is_allocated if hasattr(self, '_m_is_allocated') else None
+                return self._m_is_allocated
 
             self._m_is_allocated = self.cell_size_raw < 0
-            return self._m_is_allocated if hasattr(self, '_m_is_allocated') else None
+            return self._m_is_allocated
 
 
     class FileHeader(KaitaiStruct):
@@ -339,7 +338,7 @@ class Regf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.signature = self._io.ensure_fixed_contents(struct.pack('4b', 114, 101, 103, 102))
+            self.signature = self._io.ensure_fixed_contents(b"\x72\x65\x67\x66")
             self.primary_sequence_number = self._io.read_u4le()
             self.secondary_sequence_number = self._io.read_u4le()
             self.last_modification_date_and_time = self._root.Filetime(self._io, self, self._root)

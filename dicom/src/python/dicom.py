@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -4073,7 +4072,7 @@ class Dicom(KaitaiStruct):
 
         def _read(self):
             self.preamble = self._io.read_bytes(128)
-            self.magic = self._io.ensure_fixed_contents(struct.pack('4b', 68, 73, 67, 77))
+            self.magic = self._io.ensure_fixed_contents(b"\x44\x49\x43\x4D")
 
 
     class TDataElementExplicit(KaitaiStruct):
@@ -4126,34 +4125,34 @@ class Dicom(KaitaiStruct):
         @property
         def is_forced_implicit(self):
             if hasattr(self, '_m_is_forced_implicit'):
-                return self._m_is_forced_implicit if hasattr(self, '_m_is_forced_implicit') else None
+                return self._m_is_forced_implicit
 
             self._m_is_forced_implicit = self.tag_group == 65534
-            return self._m_is_forced_implicit if hasattr(self, '_m_is_forced_implicit') else None
+            return self._m_is_forced_implicit
 
         @property
         def is_long_len(self):
             if hasattr(self, '_m_is_long_len'):
-                return self._m_is_long_len if hasattr(self, '_m_is_long_len') else None
+                return self._m_is_long_len
 
             self._m_is_long_len =  ((self.is_forced_implicit) or (self.vr == u"OB") or (self.vr == u"OD") or (self.vr == u"OF") or (self.vr == u"OL") or (self.vr == u"OW") or (self.vr == u"SQ") or (self.vr == u"UC") or (self.vr == u"UR") or (self.vr == u"UT") or (self.vr == u"UN")) 
-            return self._m_is_long_len if hasattr(self, '_m_is_long_len') else None
+            return self._m_is_long_len
 
         @property
         def is_transfer_syntax_change_implicit(self):
             if hasattr(self, '_m_is_transfer_syntax_change_implicit'):
-                return self._m_is_transfer_syntax_change_implicit if hasattr(self, '_m_is_transfer_syntax_change_implicit') else None
+                return self._m_is_transfer_syntax_change_implicit
 
             self._m_is_transfer_syntax_change_implicit = False
-            return self._m_is_transfer_syntax_change_implicit if hasattr(self, '_m_is_transfer_syntax_change_implicit') else None
+            return self._m_is_transfer_syntax_change_implicit
 
         @property
         def tag(self):
             if hasattr(self, '_m_tag'):
-                return self._m_tag if hasattr(self, '_m_tag') else None
+                return self._m_tag
 
             self._m_tag = self._root.Tags(((self.tag_group << 16) | self.tag_elem))
-            return self._m_tag if hasattr(self, '_m_tag') else None
+            return self._m_tag
 
 
     class TDataElementImplicit(KaitaiStruct):
@@ -4206,42 +4205,42 @@ class Dicom(KaitaiStruct):
         @property
         def tag(self):
             if hasattr(self, '_m_tag'):
-                return self._m_tag if hasattr(self, '_m_tag') else None
+                return self._m_tag
 
             self._m_tag = self._root.Tags(((self.tag_group << 16) | self.tag_elem))
-            return self._m_tag if hasattr(self, '_m_tag') else None
+            return self._m_tag
 
         @property
         def is_transfer_syntax_change_explicit(self):
             if hasattr(self, '_m_is_transfer_syntax_change_explicit'):
-                return self._m_is_transfer_syntax_change_explicit if hasattr(self, '_m_is_transfer_syntax_change_explicit') else None
+                return self._m_is_transfer_syntax_change_explicit
 
             self._m_is_transfer_syntax_change_explicit = self.p_is_transfer_syntax_change_explicit
-            return self._m_is_transfer_syntax_change_explicit if hasattr(self, '_m_is_transfer_syntax_change_explicit') else None
+            return self._m_is_transfer_syntax_change_explicit
 
         @property
         def is_long_len(self):
             if hasattr(self, '_m_is_long_len'):
-                return self._m_is_long_len if hasattr(self, '_m_is_long_len') else None
+                return self._m_is_long_len
 
             self._m_is_long_len =  ((self.is_forced_explicit) and ( ((self.vr == u"OB") or (self.vr == u"OD") or (self.vr == u"OF") or (self.vr == u"OL") or (self.vr == u"OW") or (self.vr == u"SQ") or (self.vr == u"UC") or (self.vr == u"UR") or (self.vr == u"UT") or (self.vr == u"UN")) )) 
-            return self._m_is_long_len if hasattr(self, '_m_is_long_len') else None
+            return self._m_is_long_len
 
         @property
         def p_is_transfer_syntax_change_explicit(self):
             if hasattr(self, '_m_p_is_transfer_syntax_change_explicit'):
-                return self._m_p_is_transfer_syntax_change_explicit if hasattr(self, '_m_p_is_transfer_syntax_change_explicit') else None
+                return self._m_p_is_transfer_syntax_change_explicit
 
-            self._m_p_is_transfer_syntax_change_explicit = self.value == struct.pack('20b', 49, 46, 50, 46, 56, 52, 48, 46, 49, 48, 48, 48, 56, 46, 49, 46, 50, 46, 49, 0)
-            return self._m_p_is_transfer_syntax_change_explicit if hasattr(self, '_m_p_is_transfer_syntax_change_explicit') else None
+            self._m_p_is_transfer_syntax_change_explicit = self.value == b"\x31\x2E\x32\x2E\x38\x34\x30\x2E\x31\x30\x30\x30\x38\x2E\x31\x2E\x32\x2E\x31\x00"
+            return self._m_p_is_transfer_syntax_change_explicit
 
         @property
         def is_forced_explicit(self):
             if hasattr(self, '_m_is_forced_explicit'):
-                return self._m_is_forced_explicit if hasattr(self, '_m_is_forced_explicit') else None
+                return self._m_is_forced_explicit
 
             self._m_is_forced_explicit = self.tag_group == 2
-            return self._m_is_forced_explicit if hasattr(self, '_m_is_forced_explicit') else None
+            return self._m_is_forced_explicit
 
 
     class SeqItem(KaitaiStruct):
@@ -4252,7 +4251,7 @@ class Dicom(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.tag_group = self._io.ensure_fixed_contents(struct.pack('2b', -2, -1))
+            self.tag_group = self._io.ensure_fixed_contents(b"\xFE\xFF")
             self.tag_elem = self._io.read_u2le()
             self.value_len = self._io.read_u4le()
             if self.value_len != 4294967295:

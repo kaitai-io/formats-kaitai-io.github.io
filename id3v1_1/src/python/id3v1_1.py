@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -175,7 +174,7 @@ class Id3v11(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack('3b', 84, 65, 71))
+            self.magic = self._io.ensure_fixed_contents(b"\x54\x41\x47")
             self.title = self._io.read_bytes(30)
             self.artist = self._io.read_bytes(30)
             self.album = self._io.read_bytes(30)
@@ -187,12 +186,12 @@ class Id3v11(KaitaiStruct):
     @property
     def id3v1_tag(self):
         if hasattr(self, '_m_id3v1_tag'):
-            return self._m_id3v1_tag if hasattr(self, '_m_id3v1_tag') else None
+            return self._m_id3v1_tag
 
         _pos = self._io.pos()
         self._io.seek((self._io.size() - 128))
         self._m_id3v1_tag = self._root.Id3V11Tag(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_id3v1_tag if hasattr(self, '_m_id3v1_tag') else None
+        return self._m_id3v1_tag
 
 

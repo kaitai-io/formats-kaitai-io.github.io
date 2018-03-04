@@ -2,7 +2,6 @@
 
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-import struct
 from enum import Enum
 
 
@@ -37,7 +36,7 @@ class S3m(KaitaiStruct):
 
     def _read(self):
         self.song_name = KaitaiStream.bytes_terminate(self._io.read_bytes(28), 0, False)
-        self.magic1 = self._io.ensure_fixed_contents(struct.pack('1b', 26))
+        self.magic1 = self._io.ensure_fixed_contents(b"\x1A")
         self.file_type = self._io.read_u1()
         self.reserved1 = self._io.read_bytes(2)
         self.num_orders = self._io.read_u2le()
@@ -46,7 +45,7 @@ class S3m(KaitaiStruct):
         self.flags = self._io.read_u2le()
         self.version = self._io.read_u2le()
         self.samples_format = self._io.read_u2le()
-        self.magic2 = self._io.ensure_fixed_contents(struct.pack('4b', 83, 67, 82, 77))
+        self.magic2 = self._io.ensure_fixed_contents(b"\x53\x43\x52\x4D")
         self.global_volume = self._io.read_u1()
         self.initial_speed = self._io.read_u1()
         self.initial_tempo = self._io.read_u1()
@@ -164,10 +163,10 @@ class S3m(KaitaiStruct):
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value if hasattr(self, '_m_value') else None
+                return self._m_value
 
             self._m_value = (self.lo | (self.hi << 16))
-            return self._m_value if hasattr(self, '_m_value') else None
+            return self._m_value
 
 
     class Pattern(KaitaiStruct):
@@ -197,13 +196,13 @@ class S3m(KaitaiStruct):
         @property
         def body(self):
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             _pos = self._io.pos()
             self._io.seek((self.paraptr * 16))
             self._m_body = self._root.Pattern(self._io, self, self._root)
             self._io.seek(_pos)
-            return self._m_body if hasattr(self, '_m_body') else None
+            return self._m_body
 
 
     class InstrumentPtr(KaitaiStruct):
@@ -219,13 +218,13 @@ class S3m(KaitaiStruct):
         @property
         def body(self):
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             _pos = self._io.pos()
             self._io.seek((self.paraptr * 16))
             self._m_body = self._root.Instrument(self._io, self, self._root)
             self._io.seek(_pos)
-            return self._m_body if hasattr(self, '_m_body') else None
+            return self._m_body
 
 
     class Instrument(KaitaiStruct):
@@ -255,7 +254,7 @@ class S3m(KaitaiStruct):
             self.tuning_hz = self._io.read_u4le()
             self.reserved2 = self._io.read_bytes(12)
             self.sample_name = KaitaiStream.bytes_terminate(self._io.read_bytes(28), 0, False)
-            self.magic = self._io.ensure_fixed_contents(struct.pack('4b', 83, 67, 82, 83))
+            self.magic = self._io.ensure_fixed_contents(b"\x53\x43\x52\x53")
 
         class Sampled(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
@@ -277,13 +276,13 @@ class S3m(KaitaiStruct):
             @property
             def sample(self):
                 if hasattr(self, '_m_sample'):
-                    return self._m_sample if hasattr(self, '_m_sample') else None
+                    return self._m_sample
 
                 _pos = self._io.pos()
                 self._io.seek((self.paraptr_sample.value * 16))
                 self._m_sample = self._io.read_bytes(self.len_sample)
                 self._io.seek(_pos)
-                return self._m_sample if hasattr(self, '_m_sample') else None
+                return self._m_sample
 
 
         class Adlib(KaitaiStruct):
@@ -294,7 +293,7 @@ class S3m(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.reserved1 = self._io.ensure_fixed_contents(struct.pack('3b', 0, 0, 0))
+                self.reserved1 = self._io.ensure_fixed_contents(b"\x00\x00\x00")
                 self._unnamed1 = self._io.read_bytes(16)
 
 

@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -55,7 +54,7 @@ class RubyMarshal(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.version = self._io.ensure_fixed_contents(struct.pack('2b', 4, 8))
+        self.version = self._io.ensure_fixed_contents(b"\x04\x08")
         self.records = self._root.Record(self._io, self, self._root)
 
     class RubyArray(KaitaiStruct):
@@ -190,18 +189,18 @@ class RubyMarshal(KaitaiStruct):
         @property
         def is_immediate(self):
             if hasattr(self, '_m_is_immediate'):
-                return self._m_is_immediate if hasattr(self, '_m_is_immediate') else None
+                return self._m_is_immediate
 
             self._m_is_immediate =  ((self.code > 4) and (self.code < 252)) 
-            return self._m_is_immediate if hasattr(self, '_m_is_immediate') else None
+            return self._m_is_immediate
 
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value if hasattr(self, '_m_value') else None
+                return self._m_value
 
             self._m_value = (((self.code - 5) if self.code < 128 else (4 - (~(self.code) & 127))) if self.is_immediate else (0 if self.code == 0 else ((self.encoded - 256) if self.code == 255 else ((self.encoded - 65536) if self.code == 254 else ((((self.encoded2 << 16) | self.encoded) - 16777216) if self.code == 253 else (((self.encoded2 << 16) | self.encoded) if self.code == 3 else self.encoded))))))
-            return self._m_value if hasattr(self, '_m_value') else None
+            return self._m_value
 
 
     class Pair(KaitaiStruct):

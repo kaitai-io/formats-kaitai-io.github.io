@@ -244,7 +244,6 @@ data = Pcx(KaitaiStream(BytesIO(raw)))</code></pre>
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
@@ -284,7 +283,7 @@ class Pcx(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack(&#39;1b&#39;, 10))
+            self.magic = self._io.ensure_fixed_contents(b&quot;\x0A&quot;)
             self.version = self._root.Versions(self._io.read_u1())
             self.encoding = self._root.Encodings(self._io.read_u1())
             self.bits_per_pixel = self._io.read_u1()
@@ -295,7 +294,7 @@ class Pcx(KaitaiStruct):
             self.hdpi = self._io.read_u2le()
             self.vdpi = self._io.read_u2le()
             self.palette_16 = self._io.read_bytes(48)
-            self.reserved = self._io.ensure_fixed_contents(struct.pack(&#39;1b&#39;, 0))
+            self.reserved = self._io.ensure_fixed_contents(b&quot;\x00&quot;)
             self.num_planes = self._io.read_u1()
             self.bytes_per_line = self._io.read_u2le()
             self.palette_info = self._io.read_u2le()
@@ -311,7 +310,7 @@ class Pcx(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack(&#39;1b&#39;, 12))
+            self.magic = self._io.ensure_fixed_contents(b&quot;\x0C&quot;)
             self.colors = [None] * (256)
             for i in range(256):
                 self.colors[i] = self._root.Rgb(self._io, self, self._root)
@@ -338,7 +337,7 @@ class Pcx(KaitaiStruct):
            - &quot;VGA 256 Color Palette Information&quot; - http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt
         &quot;&quot;&quot;
         if hasattr(self, &#39;_m_palette_256&#39;):
-            return self._m_palette_256 if hasattr(self, &#39;_m_palette_256&#39;) else None
+            return self._m_palette_256
 
         if  ((self.hdr.version == self._root.Versions.v3_0) and (self.hdr.bits_per_pixel == 8) and (self.hdr.num_planes == 1)) :
             _pos = self._io.pos()
@@ -346,7 +345,7 @@ class Pcx(KaitaiStruct):
             self._m_palette_256 = self._root.TPalette256(self._io, self, self._root)
             self._io.seek(_pos)
 
-        return self._m_palette_256 if hasattr(self, &#39;_m_palette_256&#39;) else None
+        return self._m_palette_256
 
 
 </code></pre>

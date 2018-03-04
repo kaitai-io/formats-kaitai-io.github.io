@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -137,7 +136,7 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.signature = self._io.ensure_fixed_contents(struct.pack('4b', 71, 77, 66, 85))
+        self.signature = self._io.ensure_fixed_contents(b"\x47\x4D\x42\x55")
         self.version_minor = self._io.read_u1()
         self.version_major = self._io.read_u1()
         self.mac_type = self._root.Linktype(self._io.read_u2le())
@@ -188,14 +187,14 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
         def body(self):
             """Frame body itself."""
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             io = self._root._io
             _pos = io.pos()
             io.seek(self.ofs)
             self._m_body = self._root.Frame(io, self, self._root)
             io.seek(_pos)
-            return self._m_body if hasattr(self, '_m_body') else None
+            return self._m_body
 
 
     class Frame(KaitaiStruct):
@@ -229,7 +228,7 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
     def frame_table(self):
         """Index that is used to access individual captured frames."""
         if hasattr(self, '_m_frame_table'):
-            return self._m_frame_table if hasattr(self, '_m_frame_table') else None
+            return self._m_frame_table
 
         _pos = self._io.pos()
         self._io.seek(self.frame_table_ofs)
@@ -237,6 +236,6 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
         io = KaitaiStream(BytesIO(self._raw__m_frame_table))
         self._m_frame_table = self._root.FrameIndex(io, self, self._root)
         self._io.seek(_pos)
-        return self._m_frame_table if hasattr(self, '_m_frame_table') else None
+        return self._m_frame_table
 
 

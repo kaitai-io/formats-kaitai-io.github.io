@@ -99,7 +99,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-8">
                 <p><p>A variable-length unsigned integer using base128 encoding. 1-byte groups
-consists of 1-bit flag of continuation and 7-bit value, and are ordered
+consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
 &quot;least significant group first&quot;, i.e. in &quot;little-endian&quot; manner.</p>
 <p>This particular encoding is specified and used in:</p>
 <ul>
@@ -296,7 +296,7 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
 
 /**
  * A variable-length unsigned integer using base128 encoding. 1-byte groups
- * consists of 1-bit flag of continuation and 7-bit value, and are ordered
+ * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
  * &quot;least significant group first&quot;, i.e. in &quot;little-endian&quot; manner.
  * 
  * This particular encoding is specified and used in:
@@ -330,8 +330,7 @@ public:
     ~vlq_base128_le_t();
 
     /**
-     * One byte group, clearly divided into 7-bit &quot;value&quot; and 1-bit &quot;has continuation
-     * in the next byte&quot; flag.
+     * One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.
      */
 
     class group_t : public kaitai::kstruct {
@@ -364,7 +363,7 @@ public:
     public:
 
         /**
-         * The 7-bit (base128) numeric value of this group
+         * The 7-bit (base128) numeric value chunk of this group
          */
         int32_t value();
 

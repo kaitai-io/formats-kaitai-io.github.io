@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -94,7 +93,7 @@ class PythonPyc27(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.string_magic = self._io.ensure_fixed_contents(struct.pack('1b', 115))
+            self.string_magic = self._io.ensure_fixed_contents(b"\x73")
             self.length = self._io.read_u4le()
             self._raw_items = self._io.read_bytes(self.length)
             io = KaitaiStream(BytesIO(self._raw_items))

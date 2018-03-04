@@ -176,6 +176,7 @@ var Elf = (function() {
     GNU_EH_FRAME: 1685382480,
     GNU_STACK: 1685382481,
     GNU_RELRO: 1685382482,
+    PAX_FLAGS: 1694766464,
     HIOS: 1879048191,
 
     0: "NULL_TYPE",
@@ -189,6 +190,7 @@ var Elf = (function() {
     1685382480: "GNU_EH_FRAME",
     1685382481: "GNU_STACK",
     1685382482: "GNU_RELRO",
+    1694766464: "PAX_FLAGS",
     1879048191: "HIOS",
   });
 

@@ -41,13 +41,13 @@ class HeroesOfMightAndMagicAgg(KaitaiStruct):
         @property
         def body(self):
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             _pos = self._io.pos()
             self._io.seek(self.offset)
             self._m_body = self._io.read_bytes(self.size)
             self._io.seek(_pos)
-            return self._m_body if hasattr(self, '_m_body') else None
+            return self._m_body
 
 
     class Filename(KaitaiStruct):
@@ -64,7 +64,7 @@ class HeroesOfMightAndMagicAgg(KaitaiStruct):
     @property
     def filenames(self):
         if hasattr(self, '_m_filenames'):
-            return self._m_filenames if hasattr(self, '_m_filenames') else None
+            return self._m_filenames
 
         _pos = self._io.pos()
         self._io.seek((self.entries[-1].offset + self.entries[-1].size))
@@ -76,6 +76,6 @@ class HeroesOfMightAndMagicAgg(KaitaiStruct):
             self._m_filenames[i] = self._root.Filename(io, self, self._root)
 
         self._io.seek(_pos)
-        return self._m_filenames if hasattr(self, '_m_filenames') else None
+        return self._m_filenames
 
 

@@ -11,7 +11,7 @@ digraph {
 			<TR><TD PORT="logical_screen_descriptor_pos">6</TD><TD PORT="logical_screen_descriptor_size">7</TD><TD>LogicalScreenDescriptorStruct</TD><TD PORT="logical_screen_descriptor_type">logical_screen_descriptor</TD></TR>
 			<TR><TD PORT="global_color_table_pos">13</TD><TD PORT="global_color_table_size">(logical_screen_descriptor.color_table_size * 3)</TD><TD>ColorTable</TD><TD PORT="global_color_table_type">global_color_table</TD></TR>
 			<TR><TD PORT="blocks_pos">...</TD><TD PORT="blocks_size">...</TD><TD>Block</TD><TD PORT="blocks_type">blocks</TD></TR>
-			<TR><TD COLSPAN="4" PORT="blocks__repeat">repeat to end of stream</TD></TR>
+			<TR><TD COLSPAN="4" PORT="blocks__repeat">repeat until  ((_io.eof?) || (_.block_type == :block_type_end_of_file)) </TD></TR>
 		</TABLE>>];
 		subgraph cluster__image_data {
 			label="Gif::ImageData";
@@ -196,6 +196,7 @@ extension__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING=
 	logical_screen_descriptor_struct__inst__color_table_size:color_table_size_type -> gif__seq:global_color_table_size [color="#404040"];
 	gif__seq:global_color_table_type -> color_table__seq [style=bold];
 	gif__seq:blocks_type -> block__seq [style=bold];
+	block__seq:block_type_type -> gif__seq:blocks__repeat [color="#404040"];
 	image_data__seq:subblocks_type -> subblocks__seq [style=bold];
 	logical_screen_descriptor_struct__seq:flags_type -> logical_screen_descriptor_struct__inst__has_color_table [color="#404040"];
 	logical_screen_descriptor_struct__seq:flags_type -> logical_screen_descriptor_struct__inst__color_table_size [color="#404040"];

@@ -107,6 +107,7 @@ class Elf < Kaitai::Struct::Struct
     1685382480 => :ph_type_gnu_eh_frame,
     1685382481 => :ph_type_gnu_stack,
     1685382482 => :ph_type_gnu_relro,
+    1694766464 => :ph_type_pax_flags,
     1879048191 => :ph_type_hios,
   }
   I__PH_TYPE = PH_TYPE.invert

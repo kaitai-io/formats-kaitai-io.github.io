@@ -244,7 +244,6 @@ data = ShapefileMain(KaitaiStream(BytesIO(raw)))</code></pre>
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
@@ -566,14 +565,14 @@ class ShapefileMain(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.file_code = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 0, 0, 39, 10))
-            self.unused_field_1 = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 0, 0, 0, 0))
-            self.unused_field_2 = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 0, 0, 0, 0))
-            self.unused_field_3 = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 0, 0, 0, 0))
-            self.unused_field_4 = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 0, 0, 0, 0))
-            self.unused_field_5 = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 0, 0, 0, 0))
+            self.file_code = self._io.ensure_fixed_contents(b&quot;\x00\x00\x27\x0A&quot;)
+            self.unused_field_1 = self._io.ensure_fixed_contents(b&quot;\x00\x00\x00\x00&quot;)
+            self.unused_field_2 = self._io.ensure_fixed_contents(b&quot;\x00\x00\x00\x00&quot;)
+            self.unused_field_3 = self._io.ensure_fixed_contents(b&quot;\x00\x00\x00\x00&quot;)
+            self.unused_field_4 = self._io.ensure_fixed_contents(b&quot;\x00\x00\x00\x00&quot;)
+            self.unused_field_5 = self._io.ensure_fixed_contents(b&quot;\x00\x00\x00\x00&quot;)
             self.file_length = self._io.read_s4be()
-            self.version = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, -24, 3, 0, 0))
+            self.version = self._io.ensure_fixed_contents(b&quot;\xE8\x03\x00\x00&quot;)
             self.shape_type = self._root.ShapeType(self._io.read_s4le())
             self.bounding_box = self._root.BoundingBoxXYZM(self._io, self, self._root)
 

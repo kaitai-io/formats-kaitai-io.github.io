@@ -63,10 +63,12 @@ namespace Kaitai
             _blocks = new List<Block>();
             {
                 var i = 0;
-                while (!m_io.IsEof) {
-                    _blocks.Add(new Block(m_io, this, m_root));
+                Block M_;
+                do {
+                    M_ = new Block(m_io, this, m_root);
+                    _blocks.Add(M_);
                     i++;
-                }
+                } while (!( ((M_Io.IsEof) || (M_.BlockType == BlockType.EndOfFile)) ));
             }
         }
 

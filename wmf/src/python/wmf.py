@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -279,14 +278,14 @@ class Wmf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack('4b', -41, -51, -58, -102))
-            self.handle = self._io.ensure_fixed_contents(struct.pack('2b', 0, 0))
+            self.magic = self._io.ensure_fixed_contents(b"\xD7\xCD\xC6\x9A")
+            self.handle = self._io.ensure_fixed_contents(b"\x00\x00")
             self.left = self._io.read_s2le()
             self.top = self._io.read_s2le()
             self.right = self._io.read_s2le()
             self.bottom = self._io.read_s2le()
             self.inch = self._io.read_u2le()
-            self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+            self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
             self.checksum = self._io.read_u2le()
 
 

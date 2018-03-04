@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -272,34 +271,34 @@ class RenderwareBinaryStream(KaitaiStruct):
         @property
         def is_textured(self):
             if hasattr(self, '_m_is_textured'):
-                return self._m_is_textured if hasattr(self, '_m_is_textured') else None
+                return self._m_is_textured
 
             self._m_is_textured = (self.format & 4) != 0
-            return self._m_is_textured if hasattr(self, '_m_is_textured') else None
+            return self._m_is_textured
 
         @property
         def is_prelit(self):
             if hasattr(self, '_m_is_prelit'):
-                return self._m_is_prelit if hasattr(self, '_m_is_prelit') else None
+                return self._m_is_prelit
 
             self._m_is_prelit = (self.format & 8) != 0
-            return self._m_is_prelit if hasattr(self, '_m_is_prelit') else None
+            return self._m_is_prelit
 
         @property
         def is_textured2(self):
             if hasattr(self, '_m_is_textured2'):
-                return self._m_is_textured2 if hasattr(self, '_m_is_textured2') else None
+                return self._m_is_textured2
 
             self._m_is_textured2 = (self.format & 128) != 0
-            return self._m_is_textured2 if hasattr(self, '_m_is_textured2') else None
+            return self._m_is_textured2
 
         @property
         def is_native(self):
             if hasattr(self, '_m_is_native'):
-                return self._m_is_native if hasattr(self, '_m_is_native') else None
+                return self._m_is_native
 
             self._m_is_native = (self.format & 16777216) != 0
-            return self._m_is_native if hasattr(self, '_m_is_native') else None
+            return self._m_is_native
 
 
     class GeometryNonNative(KaitaiStruct):
@@ -482,7 +481,7 @@ class RenderwareBinaryStream(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.code = self._io.ensure_fixed_contents(struct.pack('4b', 1, 0, 0, 0))
+            self.code = self._io.ensure_fixed_contents(b"\x01\x00\x00\x00")
             self.header_size = self._io.read_u4le()
             self.version = self._io.read_u4le()
             _on = self._parent.code

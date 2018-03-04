@@ -90,10 +90,10 @@ class Specpr(KaitaiStruct):
         def phase_angle_arcsec(self):
             """The phase angle between iangl and eangl in seconds."""
             if hasattr(self, '_m_phase_angle_arcsec'):
-                return self._m_phase_angle_arcsec if hasattr(self, '_m_phase_angle_arcsec') else None
+                return self._m_phase_angle_arcsec
 
             self._m_phase_angle_arcsec = (self.sphase / 1500)
-            return self._m_phase_angle_arcsec if hasattr(self, '_m_phase_angle_arcsec') else None
+            return self._m_phase_angle_arcsec
 
 
     class CoarseTimestamp(KaitaiStruct):
@@ -109,10 +109,10 @@ class Specpr(KaitaiStruct):
         @property
         def seconds(self):
             if hasattr(self, '_m_seconds'):
-                return self._m_seconds if hasattr(self, '_m_seconds') else None
+                return self._m_seconds
 
             self._m_seconds = (self.scaled_seconds * 24000)
-            return self._m_seconds if hasattr(self, '_m_seconds') else None
+            return self._m_seconds
 
 
     class Icflag(KaitaiStruct):
@@ -135,10 +135,10 @@ class Specpr(KaitaiStruct):
         @property
         def type(self):
             if hasattr(self, '_m_type'):
-                return self._m_type if hasattr(self, '_m_type') else None
+                return self._m_type
 
             self._m_type = self._root.RecordType(((int(self.text) * 1) + (int(self.continuation) * 2)))
-            return self._m_type if hasattr(self, '_m_type') else None
+            return self._m_type
 
 
     class DataContinuation(KaitaiStruct):
@@ -180,26 +180,26 @@ class Specpr(KaitaiStruct):
         @property
         def seconds_total(self):
             if hasattr(self, '_m_seconds_total'):
-                return self._m_seconds_total if hasattr(self, '_m_seconds_total') else None
+                return self._m_seconds_total
 
             self._m_seconds_total = self.angl // 6000
-            return self._m_seconds_total if hasattr(self, '_m_seconds_total') else None
+            return self._m_seconds_total
 
         @property
         def minutes_total(self):
             if hasattr(self, '_m_minutes_total'):
-                return self._m_minutes_total if hasattr(self, '_m_minutes_total') else None
+                return self._m_minutes_total
 
             self._m_minutes_total = self.seconds_total // 60
-            return self._m_minutes_total if hasattr(self, '_m_minutes_total') else None
+            return self._m_minutes_total
 
         @property
         def degrees_total(self):
             if hasattr(self, '_m_degrees_total'):
-                return self._m_degrees_total if hasattr(self, '_m_degrees_total') else None
+                return self._m_degrees_total
 
             self._m_degrees_total = self.minutes_total // 60
-            return self._m_degrees_total if hasattr(self, '_m_degrees_total') else None
+            return self._m_degrees_total
 
 
     class TextInitial(KaitaiStruct):

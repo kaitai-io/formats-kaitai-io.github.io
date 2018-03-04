@@ -99,7 +99,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-8">
                 <p><p>A variable-length unsigned integer using base128 encoding. 1-byte groups
-consists of 1-bit flag of continuation and 7-bit value, and are ordered
+consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
 &quot;most significant group first&quot;, i.e. in &quot;big-endian&quot; manner.</p>
 <p>This particular encoding is specified and used in:</p>
 <ul>
@@ -254,7 +254,7 @@ namespace Kaitai
 
     /// &lt;summary&gt;
     /// A variable-length unsigned integer using base128 encoding. 1-byte groups
-    /// consists of 1-bit flag of continuation and 7-bit value, and are ordered
+    /// consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
     /// &amp;quot;most significant group first&amp;quot;, i.e. in &amp;quot;big-endian&amp;quot; manner.
     /// 
     /// This particular encoding is specified and used in:
@@ -297,8 +297,7 @@ namespace Kaitai
         }
 
         /// &lt;summary&gt;
-        /// One byte group, clearly divided into 7-bit &amp;quot;value&amp;quot; and 1-bit &amp;quot;has continuation
-        /// in the next byte&amp;quot; flag.
+        /// One byte group, clearly divided into 7-bit &amp;quot;value&amp;quot; chunk and 1-bit &amp;quot;continuation&amp;quot; flag.
         /// &lt;/summary&gt;
         public partial class Group : KaitaiStruct
         {
@@ -340,7 +339,7 @@ namespace Kaitai
             private int _value;
 
             /// &lt;summary&gt;
-            /// The 7-bit (base128) numeric value of this group
+            /// The 7-bit (base128) numeric value chunk of this group
             /// &lt;/summary&gt;
             public int Value
             {

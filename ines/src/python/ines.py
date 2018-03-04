@@ -2,7 +2,6 @@
 
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-import struct
 from enum import Enum
 
 
@@ -44,7 +43,7 @@ class Ines(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack('4b', 78, 69, 83, 26))
+            self.magic = self._io.ensure_fixed_contents(b"\x4E\x45\x53\x1A")
             self.len_prg_rom = self._io.read_u1()
             self.len_chr_rom = self._io.read_u1()
             self._raw_f6 = self._io.read_bytes(1)
@@ -60,7 +59,7 @@ class Ines(KaitaiStruct):
             self._raw_f10 = self._io.read_bytes(1)
             io = KaitaiStream(BytesIO(self._raw_f10))
             self.f10 = self._root.Header.F10(io, self, self._root)
-            self.reserved = self._io.ensure_fixed_contents(struct.pack('5b', 0, 0, 0, 0, 0))
+            self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00\x00")
 
         class F6(KaitaiStruct):
             """
@@ -155,10 +154,10 @@ class Ines(KaitaiStruct):
                Source - https://wiki.nesdev.com/w/index.php/Mapper
             """
             if hasattr(self, '_m_mapper'):
-                return self._m_mapper if hasattr(self, '_m_mapper') else None
+                return self._m_mapper
 
             self._m_mapper = (self.f6.lower_mapper | (self.f7.upper_mapper << 4))
-            return self._m_mapper if hasattr(self, '_m_mapper') else None
+            return self._m_mapper
 
 
     class Playchoice10(KaitaiStruct):

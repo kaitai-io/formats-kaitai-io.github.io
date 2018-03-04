@@ -251,7 +251,6 @@ data = PsxTim(KaitaiStream(BytesIO(raw)))</code></pre>
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
@@ -271,7 +270,7 @@ class PsxTim(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = self._io.ensure_fixed_contents(struct.pack(&#39;4b&#39;, 16, 0, 0, 0))
+        self.magic = self._io.ensure_fixed_contents(b&quot;\x10\x00\x00\x00&quot;)
         self.flags = self._io.read_u4le()
         if self.has_clut:
             self.clut = self._root.Bitmap(self._io, self, self._root)
@@ -297,18 +296,18 @@ class PsxTim(KaitaiStruct):
     @property
     def has_clut(self):
         if hasattr(self, &#39;_m_has_clut&#39;):
-            return self._m_has_clut if hasattr(self, &#39;_m_has_clut&#39;) else None
+            return self._m_has_clut
 
         self._m_has_clut = (self.flags &amp; 8) != 0
-        return self._m_has_clut if hasattr(self, &#39;_m_has_clut&#39;) else None
+        return self._m_has_clut
 
     @property
     def bpp(self):
         if hasattr(self, &#39;_m_bpp&#39;):
-            return self._m_bpp if hasattr(self, &#39;_m_bpp&#39;) else None
+            return self._m_bpp
 
         self._m_bpp = (self.flags &amp; 3)
-        return self._m_bpp if hasattr(self, &#39;_m_bpp&#39;) else None
+        return self._m_bpp
 
 
 </code></pre>

@@ -2,7 +2,6 @@
 
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -40,12 +39,12 @@ class Iso9660(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.unused1 = self._io.ensure_fixed_contents(struct.pack('1b', 0))
+            self.unused1 = self._io.ensure_fixed_contents(b"\x00")
             self.system_id = (self._io.read_bytes(32)).decode(u"UTF-8")
             self.volume_id = (self._io.read_bytes(32)).decode(u"UTF-8")
-            self.unused2 = self._io.ensure_fixed_contents(struct.pack('8b', 0, 0, 0, 0, 0, 0, 0, 0))
+            self.unused2 = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00\x00\x00\x00\x00")
             self.vol_space_size = self._root.U4bi(self._io, self, self._root)
-            self.unused3 = self._io.ensure_fixed_contents(struct.pack('32b', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+            self.unused3 = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")
             self.vol_set_size = self._root.U2bi(self._io, self, self._root)
             self.vol_seq_num = self._root.U2bi(self._io, self, self._root)
             self.logical_block_size = self._root.U2bi(self._io, self, self._root)
@@ -75,7 +74,7 @@ class Iso9660(KaitaiStruct):
         @property
         def path_table(self):
             if hasattr(self, '_m_path_table'):
-                return self._m_path_table if hasattr(self, '_m_path_table') else None
+                return self._m_path_table
 
             _pos = self._io.pos()
             self._io.seek((self.lba_path_table_le * self._root.sector_size))
@@ -83,7 +82,7 @@ class Iso9660(KaitaiStruct):
             io = KaitaiStream(BytesIO(self._raw__m_path_table))
             self._m_path_table = self._root.PathTableLe(io, self, self._root)
             self._io.seek(_pos)
-            return self._m_path_table if hasattr(self, '_m_path_table') else None
+            return self._m_path_table
 
 
     class VolDescBootRecord(KaitaiStruct):
@@ -140,7 +139,7 @@ class Iso9660(KaitaiStruct):
 
         def _read(self):
             self.type = self._io.read_u1()
-            self.magic = self._io.ensure_fixed_contents(struct.pack('5b', 67, 68, 48, 48, 49))
+            self.magic = self._io.ensure_fixed_contents(b"\x43\x44\x30\x30\x31")
             self.version = self._io.read_u1()
             if self.type == 0:
                 self.vol_desc_boot_record = self._root.VolDescBootRecord(self._io, self, self._root)
@@ -278,7 +277,7 @@ class Iso9660(KaitaiStruct):
         @property
         def extent_as_dir(self):
             if hasattr(self, '_m_extent_as_dir'):
-                return self._m_extent_as_dir if hasattr(self, '_m_extent_as_dir') else None
+                return self._m_extent_as_dir
 
             if (self.file_flags & 2) != 0:
                 io = self._root._io
@@ -289,12 +288,12 @@ class Iso9660(KaitaiStruct):
                 self._m_extent_as_dir = self._root.DirEntries(io, self, self._root)
                 io.seek(_pos)
 
-            return self._m_extent_as_dir if hasattr(self, '_m_extent_as_dir') else None
+            return self._m_extent_as_dir
 
         @property
         def extent_as_file(self):
             if hasattr(self, '_m_extent_as_file'):
-                return self._m_extent_as_file if hasattr(self, '_m_extent_as_file') else None
+                return self._m_extent_as_file
 
             if (self.file_flags & 2) == 0:
                 io = self._root._io
@@ -303,26 +302,26 @@ class Iso9660(KaitaiStruct):
                 self._m_extent_as_file = io.read_bytes(self.size_extent.le)
                 io.seek(_pos)
 
-            return self._m_extent_as_file if hasattr(self, '_m_extent_as_file') else None
+            return self._m_extent_as_file
 
 
     @property
     def sector_size(self):
         if hasattr(self, '_m_sector_size'):
-            return self._m_sector_size if hasattr(self, '_m_sector_size') else None
+            return self._m_sector_size
 
         self._m_sector_size = 2048
-        return self._m_sector_size if hasattr(self, '_m_sector_size') else None
+        return self._m_sector_size
 
     @property
     def primary_vol_desc(self):
         if hasattr(self, '_m_primary_vol_desc'):
-            return self._m_primary_vol_desc if hasattr(self, '_m_primary_vol_desc') else None
+            return self._m_primary_vol_desc
 
         _pos = self._io.pos()
         self._io.seek((16 * self.sector_size))
         self._m_primary_vol_desc = self._root.VolDesc(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_primary_vol_desc if hasattr(self, '_m_primary_vol_desc') else None
+        return self._m_primary_vol_desc
 
 

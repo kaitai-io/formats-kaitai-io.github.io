@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -111,26 +110,26 @@ class Rar(KaitaiStruct):
         def has_add(self):
             """True if block has additional content attached to it."""
             if hasattr(self, '_m_has_add'):
-                return self._m_has_add if hasattr(self, '_m_has_add') else None
+                return self._m_has_add
 
             self._m_has_add = (self.flags & 32768) != 0
-            return self._m_has_add if hasattr(self, '_m_has_add') else None
+            return self._m_has_add
 
         @property
         def header_size(self):
             if hasattr(self, '_m_header_size'):
-                return self._m_header_size if hasattr(self, '_m_header_size') else None
+                return self._m_header_size
 
             self._m_header_size = (11 if self.has_add else 7)
-            return self._m_header_size if hasattr(self, '_m_header_size') else None
+            return self._m_header_size
 
         @property
         def body_size(self):
             if hasattr(self, '_m_body_size'):
-                return self._m_body_size if hasattr(self, '_m_body_size') else None
+                return self._m_body_size
 
             self._m_body_size = (self.block_size - self.header_size)
-            return self._m_body_size if hasattr(self, '_m_body_size') else None
+            return self._m_body_size
 
 
     class BlockFileHeader(KaitaiStruct):
@@ -174,10 +173,10 @@ class Rar(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic1 = self._io.ensure_fixed_contents(struct.pack('6b', 82, 97, 114, 33, 26, 7))
+            self.magic1 = self._io.ensure_fixed_contents(b"\x52\x61\x72\x21\x1A\x07")
             self.version = self._io.read_u1()
             if self.version == 1:
-                self.magic3 = self._io.ensure_fixed_contents(struct.pack('1b', 0))
+                self.magic3 = self._io.ensure_fixed_contents(b"\x00")
 
 
 
@@ -195,50 +194,50 @@ class Rar(KaitaiStruct):
         @property
         def month(self):
             if hasattr(self, '_m_month'):
-                return self._m_month if hasattr(self, '_m_month') else None
+                return self._m_month
 
             self._m_month = ((self.date & 480) >> 5)
-            return self._m_month if hasattr(self, '_m_month') else None
+            return self._m_month
 
         @property
         def seconds(self):
             if hasattr(self, '_m_seconds'):
-                return self._m_seconds if hasattr(self, '_m_seconds') else None
+                return self._m_seconds
 
             self._m_seconds = ((self.time & 31) * 2)
-            return self._m_seconds if hasattr(self, '_m_seconds') else None
+            return self._m_seconds
 
         @property
         def year(self):
             if hasattr(self, '_m_year'):
-                return self._m_year if hasattr(self, '_m_year') else None
+                return self._m_year
 
             self._m_year = (((self.date & 65024) >> 9) + 1980)
-            return self._m_year if hasattr(self, '_m_year') else None
+            return self._m_year
 
         @property
         def minutes(self):
             if hasattr(self, '_m_minutes'):
-                return self._m_minutes if hasattr(self, '_m_minutes') else None
+                return self._m_minutes
 
             self._m_minutes = ((self.time & 2016) >> 5)
-            return self._m_minutes if hasattr(self, '_m_minutes') else None
+            return self._m_minutes
 
         @property
         def day(self):
             if hasattr(self, '_m_day'):
-                return self._m_day if hasattr(self, '_m_day') else None
+                return self._m_day
 
             self._m_day = (self.date & 31)
-            return self._m_day if hasattr(self, '_m_day') else None
+            return self._m_day
 
         @property
         def hours(self):
             if hasattr(self, '_m_hours'):
-                return self._m_hours if hasattr(self, '_m_hours') else None
+                return self._m_hours
 
             self._m_hours = ((self.time & 63488) >> 11)
-            return self._m_hours if hasattr(self, '_m_hours') else None
+            return self._m_hours
 
 
 

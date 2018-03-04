@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -70,15 +69,15 @@ class Tga(KaitaiStruct):
         @property
         def is_valid(self):
             if hasattr(self, '_m_is_valid'):
-                return self._m_is_valid if hasattr(self, '_m_is_valid') else None
+                return self._m_is_valid
 
-            self._m_is_valid = self.version_magic == struct.pack('18b', 84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0)
-            return self._m_is_valid if hasattr(self, '_m_is_valid') else None
+            self._m_is_valid = self.version_magic == b"\x54\x52\x55\x45\x56\x49\x53\x49\x4F\x4E\x2D\x58\x46\x49\x4C\x45\x2E\x00"
+            return self._m_is_valid
 
         @property
         def ext_area(self):
             if hasattr(self, '_m_ext_area'):
-                return self._m_ext_area if hasattr(self, '_m_ext_area') else None
+                return self._m_ext_area
 
             if self.is_valid:
                 _pos = self._io.pos()
@@ -86,7 +85,7 @@ class Tga(KaitaiStruct):
                 self._m_ext_area = self._root.TgaExtArea(self._io, self, self._root)
                 self._io.seek(_pos)
 
-            return self._m_ext_area if hasattr(self, '_m_ext_area') else None
+            return self._m_ext_area
 
 
     class TgaExtArea(KaitaiStruct):
@@ -120,12 +119,12 @@ class Tga(KaitaiStruct):
     @property
     def footer(self):
         if hasattr(self, '_m_footer'):
-            return self._m_footer if hasattr(self, '_m_footer') else None
+            return self._m_footer
 
         _pos = self._io.pos()
         self._io.seek((self._io.size() - 26))
         self._m_footer = self._root.TgaFooter(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_footer if hasattr(self, '_m_footer') else None
+        return self._m_footer
 
 

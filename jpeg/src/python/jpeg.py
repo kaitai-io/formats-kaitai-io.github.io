@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -75,7 +74,7 @@ class Jpeg(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack('1b', -1))
+            self.magic = self._io.ensure_fixed_contents(b"\xFF")
             self.marker = self._root.Segment.MarkerEnum(self._io.read_u1())
             if  ((self.marker != self._root.Segment.MarkerEnum.soi) and (self.marker != self._root.Segment.MarkerEnum.eoi)) :
                 self.length = self._io.read_u2be()
@@ -182,18 +181,18 @@ class Jpeg(KaitaiStruct):
             @property
             def sampling_x(self):
                 if hasattr(self, '_m_sampling_x'):
-                    return self._m_sampling_x if hasattr(self, '_m_sampling_x') else None
+                    return self._m_sampling_x
 
                 self._m_sampling_x = ((self.sampling_factors & 240) >> 4)
-                return self._m_sampling_x if hasattr(self, '_m_sampling_x') else None
+                return self._m_sampling_x
 
             @property
             def sampling_y(self):
                 if hasattr(self, '_m_sampling_y'):
-                    return self._m_sampling_y if hasattr(self, '_m_sampling_y') else None
+                    return self._m_sampling_y
 
                 self._m_sampling_y = (self.sampling_factors & 15)
-                return self._m_sampling_y if hasattr(self, '_m_sampling_y') else None
+                return self._m_sampling_y
 
 
 
@@ -205,7 +204,7 @@ class Jpeg(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.extra_zero = self._io.ensure_fixed_contents(struct.pack('1b', 0))
+            self.extra_zero = self._io.ensure_fixed_contents(b"\x00")
             self._raw_data = self._io.read_bytes_full()
             io = KaitaiStream(BytesIO(self._raw_data))
             self.data = Exif(io)

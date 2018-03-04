@@ -1,11 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-if (typeof require === 'function')
-  var WindowsSystemtime = require('./WindowsSystemtime.js');
-
-if (typeof require === 'function')
-  var EthernetFrame = require('./EthernetFrame.js');
-
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream', './WindowsSystemtime', './EthernetFrame'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./WindowsSystemtime'), require('./EthernetFrame'));
+  } else {
+    root.MicrosoftNetworkMonitorV2 = factory(root.KaitaiStream, root.WindowsSystemtime, root.EthernetFrame);
+  }
+}(this, function (KaitaiStream, WindowsSystemtime, EthernetFrame) {
 /**
  * Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
  * network packet sniffing and analysis tool. It can save captured
@@ -403,15 +406,5 @@ var MicrosoftNetworkMonitorV2 = (function() {
 
   return MicrosoftNetworkMonitorV2;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('MicrosoftNetworkMonitorV2', [], function() {
-    return MicrosoftNetworkMonitorV2;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = MicrosoftNetworkMonitorV2;
-}
+return MicrosoftNetworkMonitorV2;
+}));

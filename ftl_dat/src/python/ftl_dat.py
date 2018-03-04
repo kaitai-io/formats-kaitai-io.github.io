@@ -34,7 +34,7 @@ class FtlDat(KaitaiStruct):
         @property
         def meta(self):
             if hasattr(self, '_m_meta'):
-                return self._m_meta if hasattr(self, '_m_meta') else None
+                return self._m_meta
 
             if self.meta_ofs != 0:
                 _pos = self._io.pos()
@@ -42,7 +42,7 @@ class FtlDat(KaitaiStruct):
                 self._m_meta = self._root.Meta(self._io, self, self._root)
                 self._io.seek(_pos)
 
-            return self._m_meta if hasattr(self, '_m_meta') else None
+            return self._m_meta
 
 
     class Meta(KaitaiStruct):

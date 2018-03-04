@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Hashcat capture old format: JavaScript parsing library</title>
+  <title>Hashcat capture file (old version): JavaScript parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Networking Protocols</li>
-        <li class="active">Hashcat capture old format</li>
+        <li class="active">Hashcat capture file (old version)</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>Hashcat capture old format:
+        <h1>Hashcat capture file (old version):
             
             JavaScript parsing library
             
@@ -98,8 +98,8 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>Native format of Hashcat password &quot;recovery&quot; utility
-A sample of file for testing can be downloaded from https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap</p>
+                <p><p>Native format of Hashcat password &quot;recovery&quot; utility.</p>
+<p>A sample of file for testing can be downloaded from https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -138,7 +138,7 @@ A sample of file for testing can be downloaded from https://web.archive.org/web/
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of Hashcat capture old format
+            This page hosts a formal specification of Hashcat capture file (old version)
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -149,52 +149,52 @@ A sample of file for testing can be downloaded from https://web.archive.org/web/
                 
                 <li>
                 
-                <a href="index.html" title="Hashcat capture old format parsing Overview library">Overview</a></li>
+                <a href="index.html" title="Hashcat capture file (old version) parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Hashcat capture old format parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title="Hashcat capture file (old version) parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="Hashcat capture old format parsing C# library">C#</a></li>
+                <a href="csharp.html" title="Hashcat capture file (old version) parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="Hashcat capture old format parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title="Hashcat capture file (old version) parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="Hashcat capture old format parsing Java library">Java</a></li>
+                <a href="java.html" title="Hashcat capture file (old version) parsing Java library">Java</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="javascript.html" title="Hashcat capture old format parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title="Hashcat capture file (old version) parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title="Hashcat capture old format parsing Perl library">Perl</a></li>
+                <a href="perl.html" title="Hashcat capture file (old version) parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="Hashcat capture old format parsing PHP library">PHP</a></li>
+                <a href="php.html" title="Hashcat capture file (old version) parsing PHP library">PHP</a></li>
                 
                 
                 <li>
                 
-                <a href="python.html" title="Hashcat capture old format parsing Python library">Python</a></li>
+                <a href="python.html" title="Hashcat capture file (old version) parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title="Hashcat capture old format parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title="Hashcat capture file (old version) parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -207,7 +207,7 @@ A sample of file for testing can be downloaded from https://web.archive.org/web/
     <div class="container">
         <h2>
             
-            JavaScript source code to parse Hashcat capture old format
+            JavaScript source code to parse Hashcat capture file (old version)
             
         </h2>
 
@@ -236,7 +236,8 @@ A sample of file for testing can be downloaded from https://web.archive.org/web/
   }
 }(this, function (KaitaiStream) {
 /**
- * Native format of Hashcat password &quot;recovery&quot; utility
+ * Native format of Hashcat password &quot;recovery&quot; utility.
+ * 
  * A sample of file for testing can be downloaded from https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap
  * @see {@link https://hashcat.net/wiki/doku.php?id=hccap|Source}
  */
@@ -253,79 +254,94 @@ var Hccap = (function() {
     this.records = [];
     var i = 0;
     while (!this._io.isEof()) {
-      this.records.push(new Hccap(this._io, this, this._root));
+      this.records.push(new HccapRecord(this._io, this, this._root));
       i++;
     }
   }
 
-  var Hccap = Hccap.Hccap = (function() {
-    function Hccap(_io, _parent, _root) {
+  var HccapRecord = Hccap.HccapRecord = (function() {
+    function HccapRecord(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
       this._root = _root || this;
 
       this._read();
     }
-    Hccap.prototype._read = function() {
-      this.essid = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(36), 0, false), &quot;utf-8&quot;);
-      this.apMac = this._io.readBytes(6);
-      this.stantionMac = this._io.readBytes(6);
-      this.stantionNonce = this._io.readBytes(32);
-      this.apNonce = this._io.readBytes(32);
-      this._raw_eapol = this._io.readBytes(256);
-      var _io__raw_eapol = new KaitaiStream(this._raw_eapol);
-      this.eapol = new EapolFrame(_io__raw_eapol, this, this._root);
-      this.eapolSize = this._io.readU4le();
+    HccapRecord.prototype._read = function() {
+      this.essid = this._io.readBytes(36);
+      this.macAp = this._io.readBytes(6);
+      this.macStation = this._io.readBytes(6);
+      this.nonceStation = this._io.readBytes(32);
+      this.nonceAp = this._io.readBytes(32);
+      this._raw_eapolBuffer = this._io.readBytes(256);
+      var _io__raw_eapolBuffer = new KaitaiStream(this._raw_eapolBuffer);
+      this.eapolBuffer = new EapolDummy(_io__raw_eapolBuffer, this, this._root);
+      this.lenEapol = this._io.readU4le();
       this.keyver = this._io.readU4le();
       this.keymic = this._io.readBytes(16);
     }
+    Object.defineProperty(HccapRecord.prototype, &#39;eapol&#39;, {
+      get: function() {
+        if (this._m_eapol !== undefined)
+          return this._m_eapol;
+        var io = this.eapolBuffer._io;
+        var _pos = io.pos;
+        io.seek(0);
+        this._m_eapol = io.readBytes(this.lenEapol);
+        io.seek(_pos);
+        return this._m_eapol;
+      }
+    });
 
     /**
-     * the bssid(MAC) of the access point
+     * The BSSID (MAC address) of the access point
      */
 
     /**
-     * the MAC address of a client connecting to the access point
+     * The MAC address of a client connecting to the access point
      */
 
     /**
-     * size of eapol
+     * Nonce (random salt) generated by the client connecting to the access point.
      */
 
     /**
-     * the flag used to distinguish WPA from WPA2 ciphers. Value of 1 means WPA, other - WPA2
+     * Nonce (random salt) generated by the access point.
      */
 
     /**
-     * the final hash value. MD5 for WPA and SHA-1 for WPA2 (truncated to 128 bit)
+     * Buffer for EAPOL data, only first `len_eapol` bytes are used
      */
 
-    return Hccap;
+    /**
+     * Size of EAPOL data
+     */
+
+    /**
+     * The flag used to distinguish WPA from WPA2 ciphers. Value of
+     * 1 means WPA, other - WPA2.
+     */
+
+    /**
+     * The final hash value. MD5 for WPA and SHA-1 for WPA2
+     * (truncated to 128 bit).
+     */
+
+    return HccapRecord;
   })();
 
-  var EapolFrame = Hccap.EapolFrame = (function() {
-    function EapolFrame(_io, _parent, _root) {
+  var EapolDummy = Hccap.EapolDummy = (function() {
+    function EapolDummy(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
       this._root = _root || this;
 
       this._read();
     }
-    EapolFrame.prototype._read = function() {
+    EapolDummy.prototype._read = function() {
     }
-    Object.defineProperty(EapolFrame.prototype, &#39;body&#39;, {
-      get: function() {
-        if (this._m_body !== undefined)
-          return this._m_body;
-        var _pos = this._io.pos;
-        this._io.seek(0);
-        this._m_body = this._io.readBytes(this._parent.eapolSize);
-        this._io.seek(_pos);
-        return this._m_body;
-      }
-    });
 
-    return EapolFrame;
+    return EapolDummy;
   })();
 
   return Hccap;

@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -154,26 +153,26 @@ class Ttf(KaitaiStruct):
             @property
             def ascii_value(self):
                 if hasattr(self, '_m_ascii_value'):
-                    return self._m_ascii_value if hasattr(self, '_m_ascii_value') else None
+                    return self._m_ascii_value
 
                 io = self._parent._io
                 _pos = io.pos()
                 io.seek((self._parent.ofs_strings + self.ofs_str))
                 self._m_ascii_value = (io.read_bytes(self.len_str)).decode(u"ascii")
                 io.seek(_pos)
-                return self._m_ascii_value if hasattr(self, '_m_ascii_value') else None
+                return self._m_ascii_value
 
             @property
             def unicode_value(self):
                 if hasattr(self, '_m_unicode_value'):
-                    return self._m_unicode_value if hasattr(self, '_m_unicode_value') else None
+                    return self._m_unicode_value
 
                 io = self._parent._io
                 _pos = io.pos()
                 io.seek((self._parent.ofs_strings + self.ofs_str))
                 self._m_unicode_value = (io.read_bytes(self.len_str)).decode(u"utf-16be")
                 io.seek(_pos)
-                return self._m_unicode_value if hasattr(self, '_m_unicode_value') else None
+                return self._m_unicode_value
 
 
 
@@ -200,7 +199,7 @@ class Ttf(KaitaiStruct):
             self.version = self._root.Fixed(self._io, self, self._root)
             self.font_revision = self._root.Fixed(self._io, self, self._root)
             self.checksum_adjustment = self._io.read_u4be()
-            self.magic_number = self._io.ensure_fixed_contents(struct.pack('4b', 95, 15, 60, -11))
+            self.magic_number = self._io.ensure_fixed_contents(b"\x5F\x0F\x3C\xF5")
             self.flags = self._root.Head.Flags(self._io.read_u2be())
             self.units_per_em = self._io.read_u2be()
             self.created = self._io.read_u8be()
@@ -245,7 +244,7 @@ class Ttf(KaitaiStruct):
             self.x_max_extend = self._io.read_s2be()
             self.caret_slope_rise = self._io.read_s2be()
             self.caret_slope_run = self._io.read_s2be()
-            self.reserved = self._io.ensure_fixed_contents(struct.pack('10b', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+            self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")
             self.metric_data_format = self._io.read_s2be()
             self.number_of_hmetrics = self._io.read_u2be()
 
@@ -346,7 +345,7 @@ class Ttf(KaitaiStruct):
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value if hasattr(self, '_m_value') else None
+                return self._m_value
 
             io = self._root._io
             _pos = io.pos()
@@ -403,7 +402,7 @@ class Ttf(KaitaiStruct):
             else:
                 self._m_value = io.read_bytes(self.length)
             io.seek(_pos)
-            return self._m_value if hasattr(self, '_m_value') else None
+            return self._m_value
 
 
     class Os2(KaitaiStruct):
@@ -834,10 +833,10 @@ class Ttf(KaitaiStruct):
             @property
             def point_count(self):
                 if hasattr(self, '_m_point_count'):
-                    return self._m_point_count if hasattr(self, '_m_point_count') else None
+                    return self._m_point_count
 
                 self._m_point_count = (max(self.end_pts_of_contours) + 1)
-                return self._m_point_count if hasattr(self, '_m_point_count') else None
+                return self._m_point_count
 
 
 
@@ -931,14 +930,14 @@ class Ttf(KaitaiStruct):
             @property
             def table(self):
                 if hasattr(self, '_m_table'):
-                    return self._m_table if hasattr(self, '_m_table') else None
+                    return self._m_table
 
                 io = self._parent._io
                 _pos = io.pos()
                 io.seek(self.subtable_offset)
                 self._m_table = self._root.Cmap.Subtable(io, self, self._root)
                 io.seek(_pos)
-                return self._m_table if hasattr(self, '_m_table') else None
+                return self._m_table
 
 
         class Subtable(KaitaiStruct):
@@ -1042,10 +1041,10 @@ class Ttf(KaitaiStruct):
                 @property
                 def seg_count(self):
                     if hasattr(self, '_m_seg_count'):
-                        return self._m_seg_count if hasattr(self, '_m_seg_count') else None
+                        return self._m_seg_count
 
                     self._m_seg_count = self.seg_count_x2 // 2
-                    return self._m_seg_count if hasattr(self, '_m_seg_count') else None
+                    return self._m_seg_count
 
 
             class TrimmedTableMapping(KaitaiStruct):

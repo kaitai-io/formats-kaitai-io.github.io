@@ -2,7 +2,6 @@
 
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -44,10 +43,10 @@ class Id3v23(KaitaiStruct):
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value if hasattr(self, '_m_value') else None
+                return self._m_value
 
             self._m_value = ((self.byte0.value << 7) | self.byte1.value)
-            return self._m_value if hasattr(self, '_m_value') else None
+            return self._m_value
 
 
     class Tag(KaitaiStruct):
@@ -89,10 +88,10 @@ class Id3v23(KaitaiStruct):
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value if hasattr(self, '_m_value') else None
+                return self._m_value
 
             self._m_value = ((self.short0.value << 14) | self.short1.value)
-            return self._m_value if hasattr(self, '_m_value') else None
+            return self._m_value
 
 
     class Frame(KaitaiStruct):
@@ -129,10 +128,10 @@ class Id3v23(KaitaiStruct):
         @property
         def is_invalid(self):
             if hasattr(self, '_m_is_invalid'):
-                return self._m_is_invalid if hasattr(self, '_m_is_invalid') else None
+                return self._m_is_invalid
 
             self._m_is_invalid = self.id == u"\000\000\000\000"
-            return self._m_is_invalid if hasattr(self, '_m_is_invalid') else None
+            return self._m_is_invalid
 
 
     class HeaderEx(KaitaiStruct):
@@ -181,7 +180,7 @@ class Id3v23(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack('3b', 73, 68, 51))
+            self.magic = self._io.ensure_fixed_contents(b"\x49\x44\x33")
             self.version_major = self._io.read_u1()
             self.version_revision = self._io.read_u1()
             self.flags = self._root.Header.Flags(self._io, self, self._root)

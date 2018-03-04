@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -62,7 +61,7 @@ class Bmp(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack('2b', 66, 77))
+            self.magic = self._io.ensure_fixed_contents(b"\x42\x4D")
             self.len_file = self._io.read_u4le()
             self.reserved1 = self._io.read_u2le()
             self.reserved2 = self._io.read_u2le()
@@ -114,12 +113,12 @@ class Bmp(KaitaiStruct):
     @property
     def image(self):
         if hasattr(self, '_m_image'):
-            return self._m_image if hasattr(self, '_m_image') else None
+            return self._m_image
 
         _pos = self._io.pos()
         self._io.seek(self.file_hdr.ofs_bitmap)
         self._m_image = self._io.read_bytes_full()
         self._io.seek(_pos)
-        return self._m_image if hasattr(self, '_m_image') else None
+        return self._m_image
 
 

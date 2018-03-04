@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Hashcat capture old format: Perl parsing library</title>
+  <title>Hashcat capture file (old version): Perl parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Networking Protocols</li>
-        <li class="active">Hashcat capture old format</li>
+        <li class="active">Hashcat capture file (old version)</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>Hashcat capture old format:
+        <h1>Hashcat capture file (old version):
             
             Perl parsing library
             
@@ -98,8 +98,8 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>Native format of Hashcat password &quot;recovery&quot; utility
-A sample of file for testing can be downloaded from https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap</p>
+                <p><p>Native format of Hashcat password &quot;recovery&quot; utility.</p>
+<p>A sample of file for testing can be downloaded from https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -138,7 +138,7 @@ A sample of file for testing can be downloaded from https://web.archive.org/web/
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of Hashcat capture old format
+            This page hosts a formal specification of Hashcat capture file (old version)
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -149,52 +149,52 @@ A sample of file for testing can be downloaded from https://web.archive.org/web/
                 
                 <li>
                 
-                <a href="index.html" title="Hashcat capture old format parsing Overview library">Overview</a></li>
+                <a href="index.html" title="Hashcat capture file (old version) parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Hashcat capture old format parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title="Hashcat capture file (old version) parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="Hashcat capture old format parsing C# library">C#</a></li>
+                <a href="csharp.html" title="Hashcat capture file (old version) parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="Hashcat capture old format parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title="Hashcat capture file (old version) parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="Hashcat capture old format parsing Java library">Java</a></li>
+                <a href="java.html" title="Hashcat capture file (old version) parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title="Hashcat capture old format parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title="Hashcat capture file (old version) parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="perl.html" title="Hashcat capture old format parsing Perl library">Perl</a></li>
+                <a href="perl.html" title="Hashcat capture file (old version) parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="Hashcat capture old format parsing PHP library">PHP</a></li>
+                <a href="php.html" title="Hashcat capture file (old version) parsing PHP library">PHP</a></li>
                 
                 
                 <li>
                 
-                <a href="python.html" title="Hashcat capture old format parsing Python library">Python</a></li>
+                <a href="python.html" title="Hashcat capture file (old version) parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title="Hashcat capture old format parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title="Hashcat capture file (old version) parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -207,7 +207,7 @@ A sample of file for testing can be downloaded from https://web.archive.org/web/
     <div class="container">
         <h2>
             
-            Perl source code to parse Hashcat capture old format
+            Perl source code to parse Hashcat capture file (old version)
             
         </h2>
 
@@ -229,7 +229,6 @@ A sample of file for testing can be downloaded from https://web.archive.org/web/
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
-use Encode;
 
 ########################################################################
 package Hccap;
@@ -263,7 +262,7 @@ sub _read {
 
     $self-&gt;{records} = ();
     while (!$self-&gt;{_io}-&gt;is_eof()) {
-        push @{$self-&gt;{records}}, Hccap::Hccap-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+        push @{$self-&gt;{records}}, Hccap::HccapRecord-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
 }
 
@@ -273,7 +272,7 @@ sub records {
 }
 
 ########################################################################
-package Hccap::Hccap;
+package Hccap::HccapRecord;
 
 our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
 
@@ -302,17 +301,28 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{essid} = Encode::decode(&quot;utf-8&quot;, IO::KaitaiStruct::Stream::bytes_terminate($self-&gt;{_io}-&gt;read_bytes(36), 0, 0));
-    $self-&gt;{ap_mac} = $self-&gt;{_io}-&gt;read_bytes(6);
-    $self-&gt;{stantion_mac} = $self-&gt;{_io}-&gt;read_bytes(6);
-    $self-&gt;{stantion_nonce} = $self-&gt;{_io}-&gt;read_bytes(32);
-    $self-&gt;{ap_nonce} = $self-&gt;{_io}-&gt;read_bytes(32);
-    $self-&gt;{_raw_eapol} = $self-&gt;{_io}-&gt;read_bytes(256);
-    my $io__raw_eapol = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_eapol});
-    $self-&gt;{eapol} = Hccap::EapolFrame-&gt;new($io__raw_eapol, $self, $self-&gt;{_root});
-    $self-&gt;{eapol_size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{essid} = $self-&gt;{_io}-&gt;read_bytes(36);
+    $self-&gt;{mac_ap} = $self-&gt;{_io}-&gt;read_bytes(6);
+    $self-&gt;{mac_station} = $self-&gt;{_io}-&gt;read_bytes(6);
+    $self-&gt;{nonce_station} = $self-&gt;{_io}-&gt;read_bytes(32);
+    $self-&gt;{nonce_ap} = $self-&gt;{_io}-&gt;read_bytes(32);
+    $self-&gt;{_raw_eapol_buffer} = $self-&gt;{_io}-&gt;read_bytes(256);
+    my $io__raw_eapol_buffer = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_eapol_buffer});
+    $self-&gt;{eapol_buffer} = Hccap::EapolDummy-&gt;new($io__raw_eapol_buffer, $self, $self-&gt;{_root});
+    $self-&gt;{len_eapol} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{keyver} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{keymic} = $self-&gt;{_io}-&gt;read_bytes(16);
+}
+
+sub eapol {
+    my ($self) = @_;
+    return $self-&gt;{eapol} if ($self-&gt;{eapol});
+    my $io = $self-&gt;eapol_buffer()-&gt;_io();
+    my $_pos = $io-&gt;pos();
+    $io-&gt;seek(0);
+    $self-&gt;{eapol} = $io-&gt;read_bytes($self-&gt;len_eapol());
+    $io-&gt;seek($_pos);
+    return $self-&gt;{eapol};
 }
 
 sub essid {
@@ -320,34 +330,34 @@ sub essid {
     return $self-&gt;{essid};
 }
 
-sub ap_mac {
+sub mac_ap {
     my ($self) = @_;
-    return $self-&gt;{ap_mac};
+    return $self-&gt;{mac_ap};
 }
 
-sub stantion_mac {
+sub mac_station {
     my ($self) = @_;
-    return $self-&gt;{stantion_mac};
+    return $self-&gt;{mac_station};
 }
 
-sub stantion_nonce {
+sub nonce_station {
     my ($self) = @_;
-    return $self-&gt;{stantion_nonce};
+    return $self-&gt;{nonce_station};
 }
 
-sub ap_nonce {
+sub nonce_ap {
     my ($self) = @_;
-    return $self-&gt;{ap_nonce};
+    return $self-&gt;{nonce_ap};
 }
 
-sub eapol {
+sub eapol_buffer {
     my ($self) = @_;
-    return $self-&gt;{eapol};
+    return $self-&gt;{eapol_buffer};
 }
 
-sub eapol_size {
+sub len_eapol {
     my ($self) = @_;
-    return $self-&gt;{eapol_size};
+    return $self-&gt;{len_eapol};
 }
 
 sub keyver {
@@ -360,13 +370,13 @@ sub keymic {
     return $self-&gt;{keymic};
 }
 
-sub _raw_eapol {
+sub _raw_eapol_buffer {
     my ($self) = @_;
-    return $self-&gt;{_raw_eapol};
+    return $self-&gt;{_raw_eapol_buffer};
 }
 
 ########################################################################
-package Hccap::EapolFrame;
+package Hccap::EapolDummy;
 
 our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
 
@@ -395,16 +405,6 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-}
-
-sub body {
-    my ($self) = @_;
-    return $self-&gt;{body} if ($self-&gt;{body});
-    my $_pos = $self-&gt;{_io}-&gt;pos();
-    $self-&gt;{_io}-&gt;seek(0);
-    $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;_parent()-&gt;eapol_size());
-    $self-&gt;{_io}-&gt;seek($_pos);
-    return $self-&gt;{body};
 }
 
 1;

@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -45,6 +44,16 @@ class IcmpPacket(KaitaiStruct):
             port_unreachable = 3
             fragmentation_needed_and_df_set = 4
             source_route_failed = 5
+            dst_net_unkown = 6
+            sdt_host_unkown = 7
+            src_isolated = 8
+            net_prohibited_by_admin = 9
+            host_prohibited_by_admin = 10
+            net_unreachable_for_tos = 11
+            host_unreachable_for_tos = 12
+            communication_prohibited_by_admin = 13
+            host_precedence_violation = 14
+            precedence_cuttoff_in_effect = 15
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -80,7 +89,7 @@ class IcmpPacket(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.code = self._io.ensure_fixed_contents(struct.pack('1b', 0))
+            self.code = self._io.ensure_fixed_contents(b"\x00")
             self.checksum = self._io.read_u2be()
             self.identifier = self._io.read_u2be()
             self.seq_num = self._io.read_u2be()

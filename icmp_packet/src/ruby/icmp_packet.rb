@@ -44,6 +44,16 @@ class IcmpPacket < Kaitai::Struct::Struct
       3 => :destination_unreachable_code_port_unreachable,
       4 => :destination_unreachable_code_fragmentation_needed_and_df_set,
       5 => :destination_unreachable_code_source_route_failed,
+      6 => :destination_unreachable_code_dst_net_unkown,
+      7 => :destination_unreachable_code_sdt_host_unkown,
+      8 => :destination_unreachable_code_src_isolated,
+      9 => :destination_unreachable_code_net_prohibited_by_admin,
+      10 => :destination_unreachable_code_host_prohibited_by_admin,
+      11 => :destination_unreachable_code_net_unreachable_for_tos,
+      12 => :destination_unreachable_code_host_unreachable_for_tos,
+      13 => :destination_unreachable_code_communication_prohibited_by_admin,
+      14 => :destination_unreachable_code_host_precedence_violation,
+      15 => :destination_unreachable_code_precedence_cuttoff_in_effect,
     }
     I__DESTINATION_UNREACHABLE_CODE = DESTINATION_UNREACHABLE_CODE.invert
     def initialize(_io, _parent = nil, _root = self)

@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -100,6 +99,7 @@ class Elf(KaitaiStruct):
         gnu_eh_frame = 1685382480
         gnu_stack = 1685382481
         gnu_relro = 1685382482
+        pax_flags = 1694766464
         hios = 1879048191
 
     class ObjType(Enum):
@@ -114,7 +114,7 @@ class Elf(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = self._io.ensure_fixed_contents(struct.pack('4b', 127, 69, 76, 70))
+        self.magic = self._io.ensure_fixed_contents(b"\x7F\x45\x4C\x46")
         self.bits = self._root.Bits(self._io.read_u1())
         self.endian = self._root.Endian(self._io.read_u1())
         self.ei_version = self._io.read_u1()
@@ -386,7 +386,7 @@ class Elf(KaitaiStruct):
             @property
             def body(self):
                 if hasattr(self, '_m_body'):
-                    return self._m_body if hasattr(self, '_m_body') else None
+                    return self._m_body
 
                 io = self._root._io
                 _pos = io.pos()
@@ -396,12 +396,12 @@ class Elf(KaitaiStruct):
                 else:
                     self._m_body = io.read_bytes(self.size)
                 io.seek(_pos)
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             @property
             def name(self):
                 if hasattr(self, '_m_name'):
-                    return self._m_name if hasattr(self, '_m_name') else None
+                    return self._m_name
 
                 io = self._root.header.strings._io
                 _pos = io.pos()
@@ -411,7 +411,7 @@ class Elf(KaitaiStruct):
                 else:
                     self._m_name = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
                 io.seek(_pos)
-                return self._m_name if hasattr(self, '_m_name') else None
+                return self._m_name
 
 
         class StringsStruct(KaitaiStruct):
@@ -451,7 +451,7 @@ class Elf(KaitaiStruct):
         @property
         def program_headers(self):
             if hasattr(self, '_m_program_headers'):
-                return self._m_program_headers if hasattr(self, '_m_program_headers') else None
+                return self._m_program_headers
 
             _pos = self._io.pos()
             self._io.seek(self.program_header_offset)
@@ -472,12 +472,12 @@ class Elf(KaitaiStruct):
                     self._m_program_headers[i] = self._root.EndianElf.ProgramHeader(io, self, self._root, self._is_le)
 
             self._io.seek(_pos)
-            return self._m_program_headers if hasattr(self, '_m_program_headers') else None
+            return self._m_program_headers
 
         @property
         def section_headers(self):
             if hasattr(self, '_m_section_headers'):
-                return self._m_section_headers if hasattr(self, '_m_section_headers') else None
+                return self._m_section_headers
 
             _pos = self._io.pos()
             self._io.seek(self.section_header_offset)
@@ -498,12 +498,12 @@ class Elf(KaitaiStruct):
                     self._m_section_headers[i] = self._root.EndianElf.SectionHeader(io, self, self._root, self._is_le)
 
             self._io.seek(_pos)
-            return self._m_section_headers if hasattr(self, '_m_section_headers') else None
+            return self._m_section_headers
 
         @property
         def strings(self):
             if hasattr(self, '_m_strings'):
-                return self._m_strings if hasattr(self, '_m_strings') else None
+                return self._m_strings
 
             _pos = self._io.pos()
             self._io.seek(self.section_headers[self.section_names_idx].offset)
@@ -516,7 +516,7 @@ class Elf(KaitaiStruct):
                 io = KaitaiStream(BytesIO(self._raw__m_strings))
                 self._m_strings = self._root.EndianElf.StringsStruct(io, self, self._root, self._is_le)
             self._io.seek(_pos)
-            return self._m_strings if hasattr(self, '_m_strings') else None
+            return self._m_strings
 
 
 

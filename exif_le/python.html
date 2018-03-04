@@ -261,7 +261,7 @@ class ExifLe(KaitaiStruct):
         @property
         def next_ifd(self):
             if hasattr(self, &#39;_m_next_ifd&#39;):
-                return self._m_next_ifd if hasattr(self, &#39;_m_next_ifd&#39;) else None
+                return self._m_next_ifd
 
             if self.next_ifd_ofs != 0:
                 _pos = self._io.pos()
@@ -269,7 +269,7 @@ class ExifLe(KaitaiStruct):
                 self._m_next_ifd = self._root.Ifd(self._io, self, self._root)
                 self._io.seek(_pos)
 
-            return self._m_next_ifd if hasattr(self, &#39;_m_next_ifd&#39;) else None
+            return self._m_next_ifd
 
 
     class IfdField(KaitaiStruct):
@@ -755,31 +755,31 @@ class ExifLe(KaitaiStruct):
         @property
         def type_byte_length(self):
             if hasattr(self, &#39;_m_type_byte_length&#39;):
-                return self._m_type_byte_length if hasattr(self, &#39;_m_type_byte_length&#39;) else None
+                return self._m_type_byte_length
 
             self._m_type_byte_length = (2 if self.field_type == self._root.IfdField.FieldTypeEnum.word else (4 if self.field_type == self._root.IfdField.FieldTypeEnum.dword else 1))
-            return self._m_type_byte_length if hasattr(self, &#39;_m_type_byte_length&#39;) else None
+            return self._m_type_byte_length
 
         @property
         def byte_length(self):
             if hasattr(self, &#39;_m_byte_length&#39;):
-                return self._m_byte_length if hasattr(self, &#39;_m_byte_length&#39;) else None
+                return self._m_byte_length
 
             self._m_byte_length = (self.length * self.type_byte_length)
-            return self._m_byte_length if hasattr(self, &#39;_m_byte_length&#39;) else None
+            return self._m_byte_length
 
         @property
         def is_immediate_data(self):
             if hasattr(self, &#39;_m_is_immediate_data&#39;):
-                return self._m_is_immediate_data if hasattr(self, &#39;_m_is_immediate_data&#39;) else None
+                return self._m_is_immediate_data
 
             self._m_is_immediate_data = self.byte_length &lt;= 4
-            return self._m_is_immediate_data if hasattr(self, &#39;_m_is_immediate_data&#39;) else None
+            return self._m_is_immediate_data
 
         @property
         def data(self):
             if hasattr(self, &#39;_m_data&#39;):
-                return self._m_data if hasattr(self, &#39;_m_data&#39;) else None
+                return self._m_data
 
             if not (self.is_immediate_data):
                 io = self._root._io
@@ -788,19 +788,19 @@ class ExifLe(KaitaiStruct):
                 self._m_data = io.read_bytes(self.byte_length)
                 io.seek(_pos)
 
-            return self._m_data if hasattr(self, &#39;_m_data&#39;) else None
+            return self._m_data
 
 
     @property
     def ifd0(self):
         if hasattr(self, &#39;_m_ifd0&#39;):
-            return self._m_ifd0 if hasattr(self, &#39;_m_ifd0&#39;) else None
+            return self._m_ifd0
 
         _pos = self._io.pos()
         self._io.seek(self.ifd0_ofs)
         self._m_ifd0 = self._root.Ifd(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_ifd0 if hasattr(self, &#39;_m_ifd0&#39;) else None
+        return self._m_ifd0
 
 
 </code></pre>

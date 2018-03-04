@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -41,7 +40,7 @@ class BlenderBlend(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack('7b', 66, 76, 69, 78, 68, 69, 82))
+            self.magic = self._io.ensure_fixed_contents(b"\x42\x4C\x45\x4E\x44\x45\x52")
             self.ptr_size_id = self._root.PtrSize(self._io.read_u1())
             self.endian = self._root.Endian(self._io.read_u1())
             self.version = (self._io.read_bytes(3)).decode(u"ASCII")
@@ -50,10 +49,10 @@ class BlenderBlend(KaitaiStruct):
         def psize(self):
             """Number of bytes that a pointer occupies."""
             if hasattr(self, '_m_psize'):
-                return self._m_psize if hasattr(self, '_m_psize') else None
+                return self._m_psize
 
             self._m_psize = (8 if self.ptr_size_id == self._root.PtrSize.bits_64 else 4)
-            return self._m_psize if hasattr(self, '_m_psize') else None
+            return self._m_psize
 
 
     class FileBlock(KaitaiStruct):

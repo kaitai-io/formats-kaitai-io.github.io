@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Hashcat capture old format: Ruby parsing library</title>
+  <title>Hashcat capture file (old version): Ruby parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Networking Protocols</li>
-        <li class="active">Hashcat capture old format</li>
+        <li class="active">Hashcat capture file (old version)</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>Hashcat capture old format:
+        <h1>Hashcat capture file (old version):
             
             Ruby parsing library
             
@@ -98,8 +98,8 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>Native format of Hashcat password &quot;recovery&quot; utility
-A sample of file for testing can be downloaded from https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap</p>
+                <p><p>Native format of Hashcat password &quot;recovery&quot; utility.</p>
+<p>A sample of file for testing can be downloaded from https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -138,7 +138,7 @@ A sample of file for testing can be downloaded from https://web.archive.org/web/
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of Hashcat capture old format
+            This page hosts a formal specification of Hashcat capture file (old version)
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -149,52 +149,52 @@ A sample of file for testing can be downloaded from https://web.archive.org/web/
                 
                 <li>
                 
-                <a href="index.html" title="Hashcat capture old format parsing Overview library">Overview</a></li>
+                <a href="index.html" title="Hashcat capture file (old version) parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Hashcat capture old format parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title="Hashcat capture file (old version) parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="Hashcat capture old format parsing C# library">C#</a></li>
+                <a href="csharp.html" title="Hashcat capture file (old version) parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="Hashcat capture old format parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title="Hashcat capture file (old version) parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="Hashcat capture old format parsing Java library">Java</a></li>
+                <a href="java.html" title="Hashcat capture file (old version) parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title="Hashcat capture old format parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title="Hashcat capture file (old version) parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title="Hashcat capture old format parsing Perl library">Perl</a></li>
+                <a href="perl.html" title="Hashcat capture file (old version) parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="Hashcat capture old format parsing PHP library">PHP</a></li>
+                <a href="php.html" title="Hashcat capture file (old version) parsing PHP library">PHP</a></li>
                 
                 
                 <li>
                 
-                <a href="python.html" title="Hashcat capture old format parsing Python library">Python</a></li>
+                <a href="python.html" title="Hashcat capture file (old version) parsing Python library">Python</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="ruby.html" title="Hashcat capture old format parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title="Hashcat capture file (old version) parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -229,7 +229,7 @@ data = Hccap.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
     <div class="container">
         <h2>
             
-            Ruby source code to parse Hashcat capture old format
+            Ruby source code to parse Hashcat capture file (old version)
             
         </h2>
 
@@ -256,7 +256,8 @@ end
 
 
 ##
-# Native format of Hashcat password &quot;recovery&quot; utility
+# Native format of Hashcat password &quot;recovery&quot; utility.
+# 
 # A sample of file for testing can be downloaded from https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap
 # @see https://hashcat.net/wiki/doku.php?id=hccap Source
 class Hccap &lt; Kaitai::Struct::Struct
@@ -269,58 +270,78 @@ class Hccap &lt; Kaitai::Struct::Struct
     @records = []
     i = 0
     while not @_io.eof?
-      @records &lt;&lt; Hccap.new(@_io, self, @_root)
+      @records &lt;&lt; HccapRecord.new(@_io, self, @_root)
       i += 1
     end
     self
   end
-  class Hccap &lt; Kaitai::Struct::Struct
+  class HccapRecord &lt; Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @essid = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(36), 0, false)).force_encoding(&quot;utf-8&quot;)
-      @ap_mac = @_io.read_bytes(6)
-      @stantion_mac = @_io.read_bytes(6)
-      @stantion_nonce = @_io.read_bytes(32)
-      @ap_nonce = @_io.read_bytes(32)
-      @_raw_eapol = @_io.read_bytes(256)
-      io = Kaitai::Struct::Stream.new(@_raw_eapol)
-      @eapol = EapolFrame.new(io, self, @_root)
-      @eapol_size = @_io.read_u4le
+      @essid = @_io.read_bytes(36)
+      @mac_ap = @_io.read_bytes(6)
+      @mac_station = @_io.read_bytes(6)
+      @nonce_station = @_io.read_bytes(32)
+      @nonce_ap = @_io.read_bytes(32)
+      @_raw_eapol_buffer = @_io.read_bytes(256)
+      io = Kaitai::Struct::Stream.new(@_raw_eapol_buffer)
+      @eapol_buffer = EapolDummy.new(io, self, @_root)
+      @len_eapol = @_io.read_u4le
       @keyver = @_io.read_u4le
       @keymic = @_io.read_bytes(16)
       self
     end
+    def eapol
+      return @eapol unless @eapol.nil?
+      io = eapol_buffer._io
+      _pos = io.pos
+      io.seek(0)
+      @eapol = io.read_bytes(len_eapol)
+      io.seek(_pos)
+      @eapol
+    end
     attr_reader :essid
 
     ##
-    # the bssid(MAC) of the access point
-    attr_reader :ap_mac
+    # The BSSID (MAC address) of the access point
+    attr_reader :mac_ap
 
     ##
-    # the MAC address of a client connecting to the access point
-    attr_reader :stantion_mac
-    attr_reader :stantion_nonce
-    attr_reader :ap_nonce
-    attr_reader :eapol
+    # The MAC address of a client connecting to the access point
+    attr_reader :mac_station
 
     ##
-    # size of eapol
-    attr_reader :eapol_size
+    # Nonce (random salt) generated by the client connecting to the access point.
+    attr_reader :nonce_station
 
     ##
-    # the flag used to distinguish WPA from WPA2 ciphers. Value of 1 means WPA, other - WPA2
+    # Nonce (random salt) generated by the access point.
+    attr_reader :nonce_ap
+
+    ##
+    # Buffer for EAPOL data, only first `len_eapol` bytes are used
+    attr_reader :eapol_buffer
+
+    ##
+    # Size of EAPOL data
+    attr_reader :len_eapol
+
+    ##
+    # The flag used to distinguish WPA from WPA2 ciphers. Value of
+    # 1 means WPA, other - WPA2.
     attr_reader :keyver
 
     ##
-    # the final hash value. MD5 for WPA and SHA-1 for WPA2 (truncated to 128 bit)
+    # The final hash value. MD5 for WPA and SHA-1 for WPA2
+    # (truncated to 128 bit).
     attr_reader :keymic
-    attr_reader :_raw_eapol
+    attr_reader :_raw_eapol_buffer
   end
-  class EapolFrame &lt; Kaitai::Struct::Struct
+  class EapolDummy &lt; Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
@@ -328,14 +349,6 @@ class Hccap &lt; Kaitai::Struct::Struct
 
     def _read
       self
-    end
-    def body
-      return @body unless @body.nil?
-      _pos = @_io.pos
-      @_io.seek(0)
-      @body = @_io.read_bytes(_parent.eapol_size)
-      @_io.seek(_pos)
-      @body
     end
   end
   attr_reader :records

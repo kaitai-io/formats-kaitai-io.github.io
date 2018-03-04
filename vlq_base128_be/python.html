@@ -99,7 +99,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-8">
                 <p><p>A variable-length unsigned integer using base128 encoding. 1-byte groups
-consists of 1-bit flag of continuation and 7-bit value, and are ordered
+consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
 &quot;most significant group first&quot;, i.e. in &quot;big-endian&quot; manner.</p>
 <p>This particular encoding is specified and used in:</p>
 <ul>
@@ -258,7 +258,7 @@ if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
 
 class VlqBase128Be(KaitaiStruct):
     &quot;&quot;&quot;A variable-length unsigned integer using base128 encoding. 1-byte groups
-    consists of 1-bit flag of continuation and 7-bit value, and are ordered
+    consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
     &quot;most significant group first&quot;, i.e. in &quot;big-endian&quot; manner.
     
     This particular encoding is specified and used in:
@@ -288,8 +288,7 @@ class VlqBase128Be(KaitaiStruct):
             i += 1
 
     class Group(KaitaiStruct):
-        &quot;&quot;&quot;One byte group, clearly divided into 7-bit &quot;value&quot; and 1-bit &quot;has continuation
-        in the next byte&quot; flag.
+        &quot;&quot;&quot;One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.
         &quot;&quot;&quot;
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -304,37 +303,37 @@ class VlqBase128Be(KaitaiStruct):
         def has_next(self):
             &quot;&quot;&quot;If true, then we have more bytes to read.&quot;&quot;&quot;
             if hasattr(self, &#39;_m_has_next&#39;):
-                return self._m_has_next if hasattr(self, &#39;_m_has_next&#39;) else None
+                return self._m_has_next
 
             self._m_has_next = (self.b &amp; 128) != 0
-            return self._m_has_next if hasattr(self, &#39;_m_has_next&#39;) else None
+            return self._m_has_next
 
         @property
         def value(self):
-            &quot;&quot;&quot;The 7-bit (base128) numeric value of this group.&quot;&quot;&quot;
+            &quot;&quot;&quot;The 7-bit (base128) numeric value chunk of this group.&quot;&quot;&quot;
             if hasattr(self, &#39;_m_value&#39;):
-                return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+                return self._m_value
 
             self._m_value = (self.b &amp; 127)
-            return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+            return self._m_value
 
 
     @property
     def last(self):
         if hasattr(self, &#39;_m_last&#39;):
-            return self._m_last if hasattr(self, &#39;_m_last&#39;) else None
+            return self._m_last
 
         self._m_last = (len(self.groups) - 1)
-        return self._m_last if hasattr(self, &#39;_m_last&#39;) else None
+        return self._m_last
 
     @property
     def value(self):
         &quot;&quot;&quot;Resulting value as normal integer.&quot;&quot;&quot;
         if hasattr(self, &#39;_m_value&#39;):
-            return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+            return self._m_value
 
         self._m_value = (((((((self.groups[self.last].value + ((self.groups[(self.last - 1)].value &lt;&lt; 7) if self.last &gt;= 1 else 0)) + ((self.groups[(self.last - 2)].value &lt;&lt; 14) if self.last &gt;= 2 else 0)) + ((self.groups[(self.last - 3)].value &lt;&lt; 21) if self.last &gt;= 3 else 0)) + ((self.groups[(self.last - 4)].value &lt;&lt; 28) if self.last &gt;= 4 else 0)) + ((self.groups[(self.last - 5)].value &lt;&lt; 35) if self.last &gt;= 5 else 0)) + ((self.groups[(self.last - 6)].value &lt;&lt; 42) if self.last &gt;= 6 else 0)) + ((self.groups[(self.last - 7)].value &lt;&lt; 49) if self.last &gt;= 7 else 0))
-        return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+        return self._m_value
 
 
 </code></pre>

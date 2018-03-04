@@ -238,7 +238,6 @@ data = Luks(KaitaiStream(BytesIO(raw)))</code></pre>
 
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-import struct
 from enum import Enum
 
 
@@ -269,8 +268,8 @@ class Luks(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack(&#39;6b&#39;, 76, 85, 75, 83, -70, -66))
-            self.version = self._io.ensure_fixed_contents(struct.pack(&#39;2b&#39;, 0, 1))
+            self.magic = self._io.ensure_fixed_contents(b&quot;\x4C\x55\x4B\x53\xBA\xBE&quot;)
+            self.version = self._io.ensure_fixed_contents(b&quot;\x00\x01&quot;)
             self.cipher_name_specification = (self._io.read_bytes(32)).decode(u&quot;ASCII&quot;)
             self.cipher_mode_specification = (self._io.read_bytes(32)).decode(u&quot;ASCII&quot;)
             self.hash_specification = (self._io.read_bytes(32)).decode(u&quot;ASCII&quot;)
@@ -306,26 +305,26 @@ class Luks(KaitaiStruct):
             @property
             def key_material(self):
                 if hasattr(self, &#39;_m_key_material&#39;):
-                    return self._m_key_material if hasattr(self, &#39;_m_key_material&#39;) else None
+                    return self._m_key_material
 
                 _pos = self._io.pos()
                 self._io.seek((self.start_sector_of_key_material * 512))
                 self._m_key_material = self._io.read_bytes((self._parent.number_of_key_bytes * self.number_of_anti_forensic_stripes))
                 self._io.seek(_pos)
-                return self._m_key_material if hasattr(self, &#39;_m_key_material&#39;) else None
+                return self._m_key_material
 
 
 
     @property
     def payload(self):
         if hasattr(self, &#39;_m_payload&#39;):
-            return self._m_payload if hasattr(self, &#39;_m_payload&#39;) else None
+            return self._m_payload
 
         _pos = self._io.pos()
         self._io.seek((self.partition_header.payload_offset * 512))
         self._m_payload = self._io.read_bytes_full()
         self._io.seek(_pos)
-        return self._m_payload if hasattr(self, &#39;_m_payload&#39;) else None
+        return self._m_payload
 
 
 </code></pre>

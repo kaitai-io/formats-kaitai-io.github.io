@@ -3,7 +3,7 @@
 
 /**
  * A variable-length unsigned integer using base128 encoding. 1-byte groups
- * consists of 1-bit flag of continuation and 7-bit value, and are ordered
+ * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
  * "most significant group first", i.e. in "big-endian" manner.
  * 
  * This particular encoding is specified and used in:
@@ -55,8 +55,7 @@ class VlqBase128Be extends \Kaitai\Struct\Struct {
 }
 
 /**
- * One byte group, clearly divided into 7-bit "value" and 1-bit "has continuation
- * in the next byte" flag.
+ * One byte group, clearly divided into 7-bit "value" chunk and 1-bit "continuation" flag.
  */
 
 namespace \VlqBase128Be;
@@ -84,7 +83,7 @@ class Group extends \Kaitai\Struct\Struct {
     protected $_m_value;
 
     /**
-     * The 7-bit (base128) numeric value of this group
+     * The 7-bit (base128) numeric value chunk of this group
      */
     public function value() {
         if ($this->_m_value !== null)

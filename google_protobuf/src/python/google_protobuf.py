@@ -94,10 +94,10 @@ class GoogleProtobuf(KaitaiStruct):
             arbitrary bytes from UTF-8 encoded strings, etc.
             """
             if hasattr(self, '_m_wire_type'):
-                return self._m_wire_type if hasattr(self, '_m_wire_type') else None
+                return self._m_wire_type
 
             self._m_wire_type = self._root.Pair.WireTypes((self.key.value & 7))
-            return self._m_wire_type if hasattr(self, '_m_wire_type') else None
+            return self._m_wire_type
 
         @property
         def field_tag(self):
@@ -105,10 +105,10 @@ class GoogleProtobuf(KaitaiStruct):
             field name in a `.proto` file by this field tag.
             """
             if hasattr(self, '_m_field_tag'):
-                return self._m_field_tag if hasattr(self, '_m_field_tag') else None
+                return self._m_field_tag
 
             self._m_field_tag = (self.key.value >> 3)
-            return self._m_field_tag if hasattr(self, '_m_field_tag') else None
+            return self._m_field_tag
 
 
     class DelimitedBytes(KaitaiStruct):

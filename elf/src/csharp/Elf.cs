@@ -113,6 +113,7 @@ namespace Kaitai
             GnuEhFrame = 1685382480,
             GnuStack = 1685382481,
             GnuRelro = 1685382482,
+            PaxFlags = 1694766464,
             Hios = 1879048191,
         }
 

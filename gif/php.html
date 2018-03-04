@@ -268,10 +268,11 @@ class Gif extends \Kaitai\Struct\Struct {
         }
         $this-&gt;_m_blocks = [];
         $i = 0;
-        while (!$this-&gt;_io-&gt;isEof()) {
-            $this-&gt;_m_blocks[] = new \Gif\Block($this-&gt;_io, $this, $this-&gt;_root);
+        do {
+            $_ = new \Gif\Block($this-&gt;_io, $this, $this-&gt;_root);
+            $this-&gt;_m_blocks[] = $_;
             $i++;
-        }
+        } while (!( (($this-&gt;_io()-&gt;isEof()) || ($_-&gt;blockType() == \Gif\BlockType::END_OF_FILE)) ));
     }
     protected $_m_hdr;
     protected $_m_logicalScreenDescriptor;

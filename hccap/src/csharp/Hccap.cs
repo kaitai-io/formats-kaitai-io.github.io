@@ -6,7 +6,8 @@ namespace Kaitai
 {
 
     /// <summary>
-    /// Native format of Hashcat password &quot;recovery&quot; utility
+    /// Native format of Hashcat password &quot;recovery&quot; utility.
+    /// 
     /// A sample of file for testing can be downloaded from https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap
     /// </summary>
     /// <remarks>
@@ -27,129 +28,144 @@ namespace Kaitai
         }
         private void _read()
         {
-            _records = new List<Hccap>();
+            _records = new List<HccapRecord>();
             {
                 var i = 0;
                 while (!m_io.IsEof) {
-                    _records.Add(new Hccap(m_io, this, m_root));
+                    _records.Add(new HccapRecord(m_io, this, m_root));
                     i++;
                 }
             }
         }
-        public partial class Hccap : KaitaiStruct
+        public partial class HccapRecord : KaitaiStruct
         {
-            public static Hccap FromFile(string fileName)
+            public static HccapRecord FromFile(string fileName)
             {
-                return new Hccap(new KaitaiStream(fileName));
+                return new HccapRecord(new KaitaiStream(fileName));
             }
 
-            public Hccap(KaitaiStream p__io, Hccap p__parent = null, Hccap p__root = null) : base(p__io)
+            public HccapRecord(KaitaiStream p__io, Hccap p__parent = null, Hccap p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
-                m_root = p__root ?? this;
+                m_root = p__root;
+                f_eapol = false;
                 _read();
             }
             private void _read()
             {
-                _essid = System.Text.Encoding.GetEncoding("utf-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(36), 0, false));
-                _apMac = m_io.ReadBytes(6);
-                _stantionMac = m_io.ReadBytes(6);
-                _stantionNonce = m_io.ReadBytes(32);
-                _apNonce = m_io.ReadBytes(32);
-                __raw_eapol = m_io.ReadBytes(256);
-                var io___raw_eapol = new KaitaiStream(__raw_eapol);
-                _eapol = new EapolFrame(io___raw_eapol, this, m_root);
-                _eapolSize = m_io.ReadU4le();
+                _essid = m_io.ReadBytes(36);
+                _macAp = m_io.ReadBytes(6);
+                _macStation = m_io.ReadBytes(6);
+                _nonceStation = m_io.ReadBytes(32);
+                _nonceAp = m_io.ReadBytes(32);
+                __raw_eapolBuffer = m_io.ReadBytes(256);
+                var io___raw_eapolBuffer = new KaitaiStream(__raw_eapolBuffer);
+                _eapolBuffer = new EapolDummy(io___raw_eapolBuffer, this, m_root);
+                _lenEapol = m_io.ReadU4le();
                 _keyver = m_io.ReadU4le();
                 _keymic = m_io.ReadBytes(16);
             }
-            private string _essid;
-            private byte[] _apMac;
-            private byte[] _stantionMac;
-            private byte[] _stantionNonce;
-            private byte[] _apNonce;
-            private EapolFrame _eapol;
-            private uint _eapolSize;
+            private bool f_eapol;
+            private byte[] _eapol;
+            public byte[] Eapol
+            {
+                get
+                {
+                    if (f_eapol)
+                        return _eapol;
+                    KaitaiStream io = EapolBuffer.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(0);
+                    _eapol = io.ReadBytes(LenEapol);
+                    io.Seek(_pos);
+                    f_eapol = true;
+                    return _eapol;
+                }
+            }
+            private byte[] _essid;
+            private byte[] _macAp;
+            private byte[] _macStation;
+            private byte[] _nonceStation;
+            private byte[] _nonceAp;
+            private EapolDummy _eapolBuffer;
+            private uint _lenEapol;
             private uint _keyver;
             private byte[] _keymic;
             private Hccap m_root;
             private Hccap m_parent;
-            private byte[] __raw_eapol;
-            public string Essid { get { return _essid; } }
+            private byte[] __raw_eapolBuffer;
+            public byte[] Essid { get { return _essid; } }
 
             /// <summary>
-            /// the bssid(MAC) of the access point
+            /// The BSSID (MAC address) of the access point
             /// </summary>
-            public byte[] ApMac { get { return _apMac; } }
+            public byte[] MacAp { get { return _macAp; } }
 
             /// <summary>
-            /// the MAC address of a client connecting to the access point
+            /// The MAC address of a client connecting to the access point
             /// </summary>
-            public byte[] StantionMac { get { return _stantionMac; } }
-            public byte[] StantionNonce { get { return _stantionNonce; } }
-            public byte[] ApNonce { get { return _apNonce; } }
-            public EapolFrame Eapol { get { return _eapol; } }
+            public byte[] MacStation { get { return _macStation; } }
 
             /// <summary>
-            /// size of eapol
+            /// Nonce (random salt) generated by the client connecting to the access point.
             /// </summary>
-            public uint EapolSize { get { return _eapolSize; } }
+            public byte[] NonceStation { get { return _nonceStation; } }
 
             /// <summary>
-            /// the flag used to distinguish WPA from WPA2 ciphers. Value of 1 means WPA, other - WPA2
+            /// Nonce (random salt) generated by the access point.
+            /// </summary>
+            public byte[] NonceAp { get { return _nonceAp; } }
+
+            /// <summary>
+            /// Buffer for EAPOL data, only first `len_eapol` bytes are used
+            /// </summary>
+            public EapolDummy EapolBuffer { get { return _eapolBuffer; } }
+
+            /// <summary>
+            /// Size of EAPOL data
+            /// </summary>
+            public uint LenEapol { get { return _lenEapol; } }
+
+            /// <summary>
+            /// The flag used to distinguish WPA from WPA2 ciphers. Value of
+            /// 1 means WPA, other - WPA2.
             /// </summary>
             public uint Keyver { get { return _keyver; } }
 
             /// <summary>
-            /// the final hash value. MD5 for WPA and SHA-1 for WPA2 (truncated to 128 bit)
+            /// The final hash value. MD5 for WPA and SHA-1 for WPA2
+            /// (truncated to 128 bit).
             /// </summary>
             public byte[] Keymic { get { return _keymic; } }
             public Hccap M_Root { get { return m_root; } }
             public Hccap M_Parent { get { return m_parent; } }
-            public byte[] M_RawEapol { get { return __raw_eapol; } }
+            public byte[] M_RawEapolBuffer { get { return __raw_eapolBuffer; } }
         }
-        public partial class EapolFrame : KaitaiStruct
+        public partial class EapolDummy : KaitaiStruct
         {
-            public static EapolFrame FromFile(string fileName)
+            public static EapolDummy FromFile(string fileName)
             {
-                return new EapolFrame(new KaitaiStream(fileName));
+                return new EapolDummy(new KaitaiStream(fileName));
             }
 
-            public EapolFrame(KaitaiStream p__io, Hccap.Hccap p__parent = null, Hccap p__root = null) : base(p__io)
+            public EapolDummy(KaitaiStream p__io, Hccap.HccapRecord p__parent = null, Hccap p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_body = false;
                 _read();
             }
             private void _read()
             {
             }
-            private bool f_body;
-            private byte[] _body;
-            public byte[] Body
-            {
-                get
-                {
-                    if (f_body)
-                        return _body;
-                    long _pos = m_io.Pos;
-                    m_io.Seek(0);
-                    _body = m_io.ReadBytes(M_Parent.EapolSize);
-                    m_io.Seek(_pos);
-                    f_body = true;
-                    return _body;
-                }
-            }
             private Hccap m_root;
-            private Hccap.Hccap m_parent;
+            private Hccap.HccapRecord m_parent;
             public Hccap M_Root { get { return m_root; } }
-            public Hccap.Hccap M_Parent { get { return m_parent; } }
+            public Hccap.HccapRecord M_Parent { get { return m_parent; } }
         }
-        private List<Hccap> _records;
+        private List<HccapRecord> _records;
         private Hccap m_root;
         private KaitaiStruct m_parent;
-        public List<Hccap> Records { get { return _records; } }
+        public List<HccapRecord> Records { get { return _records; } }
         public Hccap M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
     }

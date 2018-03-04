@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -47,9 +46,9 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack('4b', 100, 101, 120, 10))
+            self.magic = self._io.ensure_fixed_contents(b"\x64\x65\x78\x0A")
             self.version_str = (self._io.read_bytes(3)).decode(u"ascii")
-            self.magic2 = self._io.ensure_fixed_contents(struct.pack('1b', 0))
+            self.magic2 = self._io.ensure_fixed_contents(b"\x00")
             self.checksum = self._io.read_u4le()
             self.signature = self._io.read_bytes(20)
             self.file_size = self._io.read_u4le()
@@ -219,10 +218,10 @@ class Dex(KaitaiStruct):
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value if hasattr(self, '_m_value') else None
+                return self._m_value
 
             self._m_value = (((self.b1 % 128) << 0) + (0 if (self.b1 & 128) == 0 else (((self.b2 % 128) << 7) + (0 if (self.b2 & 128) == 0 else (((self.b3 % 128) << 14) + (0 if (self.b3 & 128) == 0 else (((self.b4 % 128) << 21) + (0 if (self.b4 & 128) == 0 else (((self.b5 % 128) << 28) + (0 if (self.b5 & 128) == 0 else (((self.b6 % 128) << 35) + (0 if (self.b6 & 128) == 0 else (((self.b7 % 128) << 42) + (0 if (self.b7 & 128) == 0 else (((self.b8 % 128) << 49) + (0 if (self.b8 & 128) == 0 else (((self.b9 % 128) << 56) + (0 if (self.b8 & 128) == 0 else ((self.b10 % 128) << 63)))))))))))))))))))
-            return self._m_value if hasattr(self, '_m_value') else None
+            return self._m_value
 
 
     class TypeIdItem(KaitaiStruct):
@@ -238,10 +237,10 @@ class Dex(KaitaiStruct):
         @property
         def type_name(self):
             if hasattr(self, '_m_type_name'):
-                return self._m_type_name if hasattr(self, '_m_type_name') else None
+                return self._m_type_name
 
             self._m_type_name = self._root.string_ids[self.descriptor_idx].value.data
-            return self._m_type_name if hasattr(self, '_m_type_name') else None
+            return self._m_type_name
 
 
     class AnnotationElement(KaitaiStruct):
@@ -358,15 +357,15 @@ class Dex(KaitaiStruct):
         @property
         def type_name(self):
             if hasattr(self, '_m_type_name'):
-                return self._m_type_name if hasattr(self, '_m_type_name') else None
+                return self._m_type_name
 
             self._m_type_name = self._root.type_ids[self.class_idx].type_name
-            return self._m_type_name if hasattr(self, '_m_type_name') else None
+            return self._m_type_name
 
         @property
         def class_data(self):
             if hasattr(self, '_m_class_data'):
-                return self._m_class_data if hasattr(self, '_m_class_data') else None
+                return self._m_class_data
 
             if self.class_data_off != 0:
                 _pos = self._io.pos()
@@ -374,12 +373,12 @@ class Dex(KaitaiStruct):
                 self._m_class_data = self._root.ClassDataItem(self._io, self, self._root)
                 self._io.seek(_pos)
 
-            return self._m_class_data if hasattr(self, '_m_class_data') else None
+            return self._m_class_data
 
         @property
         def static_values(self):
             if hasattr(self, '_m_static_values'):
-                return self._m_static_values if hasattr(self, '_m_static_values') else None
+                return self._m_static_values
 
             if self.static_values_off != 0:
                 _pos = self._io.pos()
@@ -387,7 +386,7 @@ class Dex(KaitaiStruct):
                 self._m_static_values = self._root.EncodedArrayItem(self._io, self, self._root)
                 self._io.seek(_pos)
 
-            return self._m_static_values if hasattr(self, '_m_static_values') else None
+            return self._m_static_values
 
 
     class StringIdItem(KaitaiStruct):
@@ -415,13 +414,13 @@ class Dex(KaitaiStruct):
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value if hasattr(self, '_m_value') else None
+                return self._m_value
 
             _pos = self._io.pos()
             self._io.seek(self.string_data_off)
             self._m_value = self._root.StringIdItem.StringDataItem(self._io, self, self._root)
             self._io.seek(_pos)
-            return self._m_value if hasattr(self, '_m_value') else None
+            return self._m_value
 
 
     class ProtoIdItem(KaitaiStruct):
@@ -508,7 +507,7 @@ class Dex(KaitaiStruct):
         This list must be sorted by string contents, using UTF-16 code point values (not in a locale-sensitive manner), and it must not contain any duplicate entries.    
         """
         if hasattr(self, '_m_string_ids'):
-            return self._m_string_ids if hasattr(self, '_m_string_ids') else None
+            return self._m_string_ids
 
         _pos = self._io.pos()
         self._io.seek(self.header.string_ids_off)
@@ -517,7 +516,7 @@ class Dex(KaitaiStruct):
             self._m_string_ids[i] = self._root.StringIdItem(self._io, self, self._root)
 
         self._io.seek(_pos)
-        return self._m_string_ids if hasattr(self, '_m_string_ids') else None
+        return self._m_string_ids
 
     @property
     def method_ids(self):
@@ -527,7 +526,7 @@ class Dex(KaitaiStruct):
         The list must not contain any duplicate entries.
         """
         if hasattr(self, '_m_method_ids'):
-            return self._m_method_ids if hasattr(self, '_m_method_ids') else None
+            return self._m_method_ids
 
         _pos = self._io.pos()
         self._io.seek(self.header.method_ids_off)
@@ -536,7 +535,7 @@ class Dex(KaitaiStruct):
             self._m_method_ids[i] = self._root.MethodIdItem(self._io, self, self._root)
 
         self._io.seek(_pos)
-        return self._m_method_ids if hasattr(self, '_m_method_ids') else None
+        return self._m_method_ids
 
     @property
     def link_data(self):
@@ -545,24 +544,24 @@ class Dex(KaitaiStruct):
         This section is empty in unlinked files, and runtime implementations may use it as they see fit.
         """
         if hasattr(self, '_m_link_data'):
-            return self._m_link_data if hasattr(self, '_m_link_data') else None
+            return self._m_link_data
 
         _pos = self._io.pos()
         self._io.seek(self.header.link_off)
         self._m_link_data = self._io.read_bytes(self.header.link_size)
         self._io.seek(_pos)
-        return self._m_link_data if hasattr(self, '_m_link_data') else None
+        return self._m_link_data
 
     @property
     def map(self):
         if hasattr(self, '_m_map'):
-            return self._m_map if hasattr(self, '_m_map') else None
+            return self._m_map
 
         _pos = self._io.pos()
         self._io.seek(self.header.map_off)
         self._m_map = self._root.MapList(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_map if hasattr(self, '_m_map') else None
+        return self._m_map
 
     @property
     def class_defs(self):
@@ -571,7 +570,7 @@ class Dex(KaitaiStruct):
         Furthermore, it is invalid for a definition for the same-named class to appear more than once in the list.
         """
         if hasattr(self, '_m_class_defs'):
-            return self._m_class_defs if hasattr(self, '_m_class_defs') else None
+            return self._m_class_defs
 
         _pos = self._io.pos()
         self._io.seek(self.header.class_defs_off)
@@ -580,7 +579,7 @@ class Dex(KaitaiStruct):
             self._m_class_defs[i] = self._root.ClassDefItem(self._io, self, self._root)
 
         self._io.seek(_pos)
-        return self._m_class_defs if hasattr(self, '_m_class_defs') else None
+        return self._m_class_defs
 
     @property
     def data(self):
@@ -588,13 +587,13 @@ class Dex(KaitaiStruct):
         Different items have different alignment requirements, and padding bytes are inserted before each item if necessary to achieve proper alignment.
         """
         if hasattr(self, '_m_data'):
-            return self._m_data if hasattr(self, '_m_data') else None
+            return self._m_data
 
         _pos = self._io.pos()
         self._io.seek(self.header.data_off)
         self._m_data = self._io.read_bytes(self.header.data_size)
         self._io.seek(_pos)
-        return self._m_data if hasattr(self, '_m_data') else None
+        return self._m_data
 
     @property
     def type_ids(self):
@@ -603,7 +602,7 @@ class Dex(KaitaiStruct):
         This list must be sorted by string_id index, and it must not contain any duplicate entries.
         """
         if hasattr(self, '_m_type_ids'):
-            return self._m_type_ids if hasattr(self, '_m_type_ids') else None
+            return self._m_type_ids
 
         _pos = self._io.pos()
         self._io.seek(self.header.type_ids_off)
@@ -612,7 +611,7 @@ class Dex(KaitaiStruct):
             self._m_type_ids[i] = self._root.TypeIdItem(self._io, self, self._root)
 
         self._io.seek(_pos)
-        return self._m_type_ids if hasattr(self, '_m_type_ids') else None
+        return self._m_type_ids
 
     @property
     def proto_ids(self):
@@ -621,7 +620,7 @@ class Dex(KaitaiStruct):
         This list must be sorted in return-type (by type_id index) major order, and then by argument list (lexicographic ordering, individual arguments ordered by type_id index). The list must not contain any duplicate entries.
         """
         if hasattr(self, '_m_proto_ids'):
-            return self._m_proto_ids if hasattr(self, '_m_proto_ids') else None
+            return self._m_proto_ids
 
         _pos = self._io.pos()
         self._io.seek(self.header.proto_ids_off)
@@ -630,7 +629,7 @@ class Dex(KaitaiStruct):
             self._m_proto_ids[i] = self._root.ProtoIdItem(self._io, self, self._root)
 
         self._io.seek(_pos)
-        return self._m_proto_ids if hasattr(self, '_m_proto_ids') else None
+        return self._m_proto_ids
 
     @property
     def field_ids(self):
@@ -640,7 +639,7 @@ class Dex(KaitaiStruct):
         The list must not contain any duplicate entries.
         """
         if hasattr(self, '_m_field_ids'):
-            return self._m_field_ids if hasattr(self, '_m_field_ids') else None
+            return self._m_field_ids
 
         _pos = self._io.pos()
         self._io.seek(self.header.field_ids_off)
@@ -649,6 +648,6 @@ class Dex(KaitaiStruct):
             self._m_field_ids[i] = self._root.FieldIdItem(self._io, self, self._root)
 
         self._io.seek(_pos)
-        return self._m_field_ids if hasattr(self, '_m_field_ids') else None
+        return self._m_field_ids
 
 

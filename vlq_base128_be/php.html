@@ -99,7 +99,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-8">
                 <p><p>A variable-length unsigned integer using base128 encoding. 1-byte groups
-consists of 1-bit flag of continuation and 7-bit value, and are ordered
+consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
 &quot;most significant group first&quot;, i.e. in &quot;big-endian&quot; manner.</p>
 <p>This particular encoding is specified and used in:</p>
 <ul>
@@ -228,7 +228,7 @@ https://en.wikipedia.org/wiki/Variable-length_quantity</p>
 
 /**
  * A variable-length unsigned integer using base128 encoding. 1-byte groups
- * consists of 1-bit flag of continuation and 7-bit value, and are ordered
+ * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
  * &quot;most significant group first&quot;, i.e. in &quot;big-endian&quot; manner.
  * 
  * This particular encoding is specified and used in:
@@ -280,8 +280,7 @@ class VlqBase128Be extends \Kaitai\Struct\Struct {
 }
 
 /**
- * One byte group, clearly divided into 7-bit &quot;value&quot; and 1-bit &quot;has continuation
- * in the next byte&quot; flag.
+ * One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.
  */
 
 namespace \VlqBase128Be;
@@ -309,7 +308,7 @@ class Group extends \Kaitai\Struct\Struct {
     protected $_m_value;
 
     /**
-     * The 7-bit (base128) numeric value of this group
+     * The 7-bit (base128) numeric value chunk of this group
      */
     public function value() {
         if ($this-&gt;_m_value !== null)

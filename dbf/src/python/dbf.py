@@ -2,7 +2,6 @@
 
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -84,10 +83,10 @@ class Dbf(KaitaiStruct):
         @property
         def dbase_level(self):
             if hasattr(self, '_m_dbase_level'):
-                return self._m_dbase_level if hasattr(self, '_m_dbase_level') else None
+                return self._m_dbase_level
 
             self._m_dbase_level = (self.version & 7)
-            return self._m_dbase_level if hasattr(self, '_m_dbase_level') else None
+            return self._m_dbase_level
 
 
     class HeaderDbase3(KaitaiStruct):
@@ -111,13 +110,13 @@ class Dbf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.reserved1 = self._io.ensure_fixed_contents(struct.pack('2b', 0, 0))
+            self.reserved1 = self._io.ensure_fixed_contents(b"\x00\x00")
             self.has_incomplete_transaction = self._io.read_u1()
             self.dbase_iv_encryption = self._io.read_u1()
             self.reserved2 = self._io.read_bytes(12)
             self.production_mdx = self._io.read_u1()
             self.language_driver_id = self._io.read_u1()
-            self.reserved3 = self._io.ensure_fixed_contents(struct.pack('2b', 0, 0))
+            self.reserved3 = self._io.ensure_fixed_contents(b"\x00\x00")
             self.language_driver_name = self._io.read_bytes(32)
             self.reserved4 = self._io.read_bytes(4)
 

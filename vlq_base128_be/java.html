@@ -99,7 +99,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-8">
                 <p><p>A variable-length unsigned integer using base128 encoding. 1-byte groups
-consists of 1-bit flag of continuation and 7-bit value, and are ordered
+consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
 &quot;most significant group first&quot;, i.e. in &quot;big-endian&quot; manner.</p>
 <p>This particular encoding is specified and used in:</p>
 <ul>
@@ -256,7 +256,7 @@ import java.util.ArrayList;
 
 /**
  * A variable-length unsigned integer using base128 encoding. 1-byte groups
- * consists of 1-bit flag of continuation and 7-bit value, and are ordered
+ * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
  * &quot;most significant group first&quot;, i.e. in &quot;big-endian&quot; manner.
  * 
  * This particular encoding is specified and used in:
@@ -302,8 +302,7 @@ public class VlqBase128Be extends KaitaiStruct {
     }
 
     /**
-     * One byte group, clearly divided into 7-bit &quot;value&quot; and 1-bit &quot;has continuation
-     * in the next byte&quot; flag.
+     * One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.
      */
     public static class Group extends KaitaiStruct {
         public static Group fromFile(String fileName) throws IOException {
@@ -342,7 +341,7 @@ public class VlqBase128Be extends KaitaiStruct {
         private Integer value;
 
         /**
-         * The 7-bit (base128) numeric value of this group
+         * The 7-bit (base128) numeric value chunk of this group
          */
         public Integer value() {
             if (this.value != null)

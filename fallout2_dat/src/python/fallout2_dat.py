@@ -79,7 +79,7 @@ class Fallout2Dat(KaitaiStruct):
         @property
         def contents(self):
             if hasattr(self, '_m_contents'):
-                return self._m_contents if hasattr(self, '_m_contents') else None
+                return self._m_contents
 
             if self.flags == self._root.Compression.zlib:
                 io = self._root._io
@@ -89,29 +89,29 @@ class Fallout2Dat(KaitaiStruct):
                 self._m_contents = zlib.decompress(self._raw__m_contents)
                 io.seek(_pos)
 
-            return self._m_contents if hasattr(self, '_m_contents') else None
+            return self._m_contents
 
 
     @property
     def footer(self):
         if hasattr(self, '_m_footer'):
-            return self._m_footer if hasattr(self, '_m_footer') else None
+            return self._m_footer
 
         _pos = self._io.pos()
         self._io.seek((self._io.size() - 8))
         self._m_footer = self._root.Footer(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_footer if hasattr(self, '_m_footer') else None
+        return self._m_footer
 
     @property
     def index(self):
         if hasattr(self, '_m_index'):
-            return self._m_index if hasattr(self, '_m_index') else None
+            return self._m_index
 
         _pos = self._io.pos()
         self._io.seek(((self._io.size() - 8) - self.footer.index_size))
         self._m_index = self._root.Index(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_index if hasattr(self, '_m_index') else None
+        return self._m_index
 
 

@@ -296,12 +296,13 @@ var Gif = (function() {
       var _io__raw_globalColorTable = new KaitaiStream(this._raw_globalColorTable);
       this.globalColorTable = new ColorTable(_io__raw_globalColorTable, this, this._root);
     }
-    this.blocks = [];
+    this.blocks = []
     var i = 0;
-    while (!this._io.isEof()) {
-      this.blocks.push(new Block(this._io, this, this._root));
+    do {
+      var _ = new Block(this._io, this, this._root);
+      this.blocks.push(_);
       i++;
-    }
+    } while (!( ((this._io.isEof()) || (_.blockType == Gif.BlockType.END_OF_FILE)) ));
   }
 
   /**

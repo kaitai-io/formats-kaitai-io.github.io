@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 import zlib
 
 
@@ -29,9 +28,9 @@ class Png(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = self._io.ensure_fixed_contents(struct.pack('8b', -119, 80, 78, 71, 13, 10, 26, 10))
-        self.ihdr_len = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 13))
-        self.ihdr_type = self._io.ensure_fixed_contents(struct.pack('4b', 73, 72, 68, 82))
+        self.magic = self._io.ensure_fixed_contents(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A")
+        self.ihdr_len = self._io.ensure_fixed_contents(b"\x00\x00\x00\x0D")
+        self.ihdr_type = self._io.ensure_fixed_contents(b"\x49\x48\x44\x52")
         self.ihdr = self._root.IhdrChunk(self._io, self, self._root)
         self.ihdr_crc = self._io.read_bytes(4)
         self.chunks = []
@@ -137,18 +136,18 @@ class Png(KaitaiStruct):
         @property
         def x(self):
             if hasattr(self, '_m_x'):
-                return self._m_x if hasattr(self, '_m_x') else None
+                return self._m_x
 
             self._m_x = (self.x_int / 100000.0)
-            return self._m_x if hasattr(self, '_m_x') else None
+            return self._m_x
 
         @property
         def y(self):
             if hasattr(self, '_m_y'):
-                return self._m_y if hasattr(self, '_m_y') else None
+                return self._m_y
 
             self._m_y = (self.y_int / 100000.0)
-            return self._m_y if hasattr(self, '_m_y') else None
+            return self._m_y
 
 
     class BkgdGreyscale(KaitaiStruct):
@@ -266,10 +265,10 @@ class Png(KaitaiStruct):
         @property
         def gamma_ratio(self):
             if hasattr(self, '_m_gamma_ratio'):
-                return self._m_gamma_ratio if hasattr(self, '_m_gamma_ratio') else None
+                return self._m_gamma_ratio
 
             self._m_gamma_ratio = (100000.0 / self.gamma_int)
-            return self._m_gamma_ratio if hasattr(self, '_m_gamma_ratio') else None
+            return self._m_gamma_ratio
 
 
     class BkgdChunk(KaitaiStruct):

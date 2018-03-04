@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
-use Encode;
 
 ########################################################################
 package Hccap;
@@ -37,7 +36,7 @@ sub _read {
 
     $self->{records} = ();
     while (!$self->{_io}->is_eof()) {
-        push @{$self->{records}}, Hccap::Hccap->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{records}}, Hccap::HccapRecord->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -47,7 +46,7 @@ sub records {
 }
 
 ########################################################################
-package Hccap::Hccap;
+package Hccap::HccapRecord;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -76,17 +75,28 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{essid} = Encode::decode("utf-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(36), 0, 0));
-    $self->{ap_mac} = $self->{_io}->read_bytes(6);
-    $self->{stantion_mac} = $self->{_io}->read_bytes(6);
-    $self->{stantion_nonce} = $self->{_io}->read_bytes(32);
-    $self->{ap_nonce} = $self->{_io}->read_bytes(32);
-    $self->{_raw_eapol} = $self->{_io}->read_bytes(256);
-    my $io__raw_eapol = IO::KaitaiStruct::Stream->new($self->{_raw_eapol});
-    $self->{eapol} = Hccap::EapolFrame->new($io__raw_eapol, $self, $self->{_root});
-    $self->{eapol_size} = $self->{_io}->read_u4le();
+    $self->{essid} = $self->{_io}->read_bytes(36);
+    $self->{mac_ap} = $self->{_io}->read_bytes(6);
+    $self->{mac_station} = $self->{_io}->read_bytes(6);
+    $self->{nonce_station} = $self->{_io}->read_bytes(32);
+    $self->{nonce_ap} = $self->{_io}->read_bytes(32);
+    $self->{_raw_eapol_buffer} = $self->{_io}->read_bytes(256);
+    my $io__raw_eapol_buffer = IO::KaitaiStruct::Stream->new($self->{_raw_eapol_buffer});
+    $self->{eapol_buffer} = Hccap::EapolDummy->new($io__raw_eapol_buffer, $self, $self->{_root});
+    $self->{len_eapol} = $self->{_io}->read_u4le();
     $self->{keyver} = $self->{_io}->read_u4le();
     $self->{keymic} = $self->{_io}->read_bytes(16);
+}
+
+sub eapol {
+    my ($self) = @_;
+    return $self->{eapol} if ($self->{eapol});
+    my $io = $self->eapol_buffer()->_io();
+    my $_pos = $io->pos();
+    $io->seek(0);
+    $self->{eapol} = $io->read_bytes($self->len_eapol());
+    $io->seek($_pos);
+    return $self->{eapol};
 }
 
 sub essid {
@@ -94,34 +104,34 @@ sub essid {
     return $self->{essid};
 }
 
-sub ap_mac {
+sub mac_ap {
     my ($self) = @_;
-    return $self->{ap_mac};
+    return $self->{mac_ap};
 }
 
-sub stantion_mac {
+sub mac_station {
     my ($self) = @_;
-    return $self->{stantion_mac};
+    return $self->{mac_station};
 }
 
-sub stantion_nonce {
+sub nonce_station {
     my ($self) = @_;
-    return $self->{stantion_nonce};
+    return $self->{nonce_station};
 }
 
-sub ap_nonce {
+sub nonce_ap {
     my ($self) = @_;
-    return $self->{ap_nonce};
+    return $self->{nonce_ap};
 }
 
-sub eapol {
+sub eapol_buffer {
     my ($self) = @_;
-    return $self->{eapol};
+    return $self->{eapol_buffer};
 }
 
-sub eapol_size {
+sub len_eapol {
     my ($self) = @_;
-    return $self->{eapol_size};
+    return $self->{len_eapol};
 }
 
 sub keyver {
@@ -134,13 +144,13 @@ sub keymic {
     return $self->{keymic};
 }
 
-sub _raw_eapol {
+sub _raw_eapol_buffer {
     my ($self) = @_;
-    return $self->{_raw_eapol};
+    return $self->{_raw_eapol_buffer};
 }
 
 ########################################################################
-package Hccap::EapolFrame;
+package Hccap::EapolDummy;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -169,16 +179,6 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-}
-
-sub body {
-    my ($self) = @_;
-    return $self->{body} if ($self->{body});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(0);
-    $self->{body} = $self->{_io}->read_bytes($self->_parent()->eapol_size());
-    $self->{_io}->seek($_pos);
-    return $self->{body};
 }
 
 1;

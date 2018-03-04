@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -221,7 +220,7 @@ class Warcraft2Pud(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack('10b', 87, 65, 82, 50, 32, 77, 65, 80, 0, 0))
+            self.magic = self._io.ensure_fixed_contents(b"\x57\x41\x52\x32\x20\x4D\x41\x50\x00\x00")
             self.unused = self._io.read_bytes(2)
             self.id_tag = self._io.read_u4le()
 
@@ -331,12 +330,12 @@ class Warcraft2Pud(KaitaiStruct):
         @property
         def resource(self):
             if hasattr(self, '_m_resource'):
-                return self._m_resource if hasattr(self, '_m_resource') else None
+                return self._m_resource
 
             if  ((self.u_type == self._root.UnitType.gold_mine) or (self.u_type == self._root.UnitType.human_oil_well) or (self.u_type == self._root.UnitType.orc_oil_well) or (self.u_type == self._root.UnitType.oil_patch)) :
                 self._m_resource = (self.options * 2500)
 
-            return self._m_resource if hasattr(self, '_m_resource') else None
+            return self._m_resource
 
 
 

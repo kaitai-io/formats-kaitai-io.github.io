@@ -90,11 +90,13 @@ public class Gif extends KaitaiStruct {
         }
         this.blocks = new ArrayList<Block>();
         {
+            Block _it;
             int i = 0;
-            while (!this._io.isEof()) {
-                this.blocks.add(new Block(this._io, this, _root));
+            do {
+                _it = new Block(this._io, this, _root);
+                this.blocks.add(_it);
                 i++;
-            }
+            } while (!( ((_io().isEof()) || (_it.blockType() == BlockType.END_OF_FILE)) ));
         }
     }
 

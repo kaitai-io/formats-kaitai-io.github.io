@@ -129,18 +129,18 @@ class WindowsShellItems(KaitaiStruct):
         @property
         def is_dir(self):
             if hasattr(self, '_m_is_dir'):
-                return self._m_is_dir if hasattr(self, '_m_is_dir') else None
+                return self._m_is_dir
 
             self._m_is_dir = (self._parent.code & 1) != 0
-            return self._m_is_dir if hasattr(self, '_m_is_dir') else None
+            return self._m_is_dir
 
         @property
         def is_file(self):
             if hasattr(self, '_m_is_file'):
-                return self._m_is_file if hasattr(self, '_m_is_file') else None
+                return self._m_is_file
 
             self._m_is_file = (self._parent.code & 2) != 0
-            return self._m_is_file if hasattr(self, '_m_is_file') else None
+            return self._m_is_file
 
 
 

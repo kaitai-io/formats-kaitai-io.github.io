@@ -1,11 +1,14 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-if (typeof require === 'function')
-  var PacketPpi = require('./PacketPpi.js');
-
-if (typeof require === 'function')
-  var EthernetFrame = require('./EthernetFrame.js');
-
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['kaitai-struct/KaitaiStream', './PacketPpi', './EthernetFrame'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./PacketPpi'), require('./EthernetFrame'));
+  } else {
+    root.Pcap = factory(root.KaitaiStream, root.PacketPpi, root.EthernetFrame);
+  }
+}(this, function (KaitaiStream, PacketPpi, EthernetFrame) {
 /**
  * @see {@link http://wiki.wireshark.org/Development/LibpcapFileFormat|Source}
  */
@@ -337,15 +340,5 @@ var Pcap = (function() {
 
   return Pcap;
 })();
-
-// Export for amd environments
-if (typeof define === 'function' && define.amd) {
-  define('Pcap', [], function() {
-    return Pcap;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === 'object' && module && module.exports) {
-  module.exports = Pcap;
-}
+return Pcap;
+}));

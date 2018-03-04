@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -153,7 +152,7 @@ class Icc4(KaitaiStruct):
             self.color_space = self._root.ProfileHeader.DataColourSpaces(self._io.read_u4be())
             self.pcs = (self._io.read_bytes(4)).decode(u"ASCII")
             self.creation_date_time = self._root.DateTimeNumber(self._io, self, self._root)
-            self.file_signature = self._io.ensure_fixed_contents(struct.pack('4b', 97, 99, 115, 112))
+            self.file_signature = self._io.ensure_fixed_contents(b"\x61\x63\x73\x70")
             self.primary_platform = self._root.ProfileHeader.PrimaryPlatforms(self._io.read_u4be())
             self.profile_flags = self._root.ProfileHeader.ProfileFlags(self._io, self, self._root)
             self.device_manufacturer = self._root.DeviceManufacturer(self._io, self, self._root)
@@ -173,11 +172,11 @@ class Icc4(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.major = self._io.ensure_fixed_contents(struct.pack('1b', 4))
+                self.major = self._io.ensure_fixed_contents(b"\x04")
                 self.minor = self._io.read_bits_int(4)
                 self.bug_fix_level = self._io.read_bits_int(4)
                 self._io.align_to_byte()
-                self.reserved = self._io.ensure_fixed_contents(struct.pack('2b', 0, 0))
+                self.reserved = self._io.ensure_fixed_contents(b"\x00\x00")
 
 
         class ProfileFlags(KaitaiStruct):
@@ -232,7 +231,7 @@ class Icc4(KaitaiStruct):
 
         def _read(self):
             self.number = self._io.read_u4be()
-            self.reserved = self._io.ensure_fixed_contents(struct.pack('2b', 0, 0))
+            self.reserved = self._io.ensure_fixed_contents(b"\x00\x00")
             self.measurement_value = self._root.S15Fixed16Number(self._io, self, self._root)
 
 
@@ -398,19 +397,19 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.vendor_specific_flag = self._io.read_u4be()
                     self.count_of_named_colours = self._io.read_u4be()
                     self.number_of_device_coordinates_for_each_named_colour = self._io.read_u4be()
                     self.prefix_for_each_colour_name = (self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
                     self.prefix_for_each_colour_name_padding = [None] * ((32 - len(self.prefix_for_each_colour_name)))
                     for i in range((32 - len(self.prefix_for_each_colour_name))):
-                        self.prefix_for_each_colour_name_padding = self._io.ensure_fixed_contents(struct.pack('1b', 0))
+                        self.prefix_for_each_colour_name_padding = self._io.ensure_fixed_contents(b"\x00")
 
                     self.suffix_for_each_colour_name = (self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
                     self.suffix_for_each_colour_name_padding = [None] * ((32 - len(self.suffix_for_each_colour_name)))
                     for i in range((32 - len(self.suffix_for_each_colour_name))):
-                        self.suffix_for_each_colour_name_padding = self._io.ensure_fixed_contents(struct.pack('1b', 0))
+                        self.suffix_for_each_colour_name_padding = self._io.ensure_fixed_contents(b"\x00")
 
                     self.named_colour_definitions = [None] * (self.count_of_named_colours)
                     for i in range(self.count_of_named_colours):
@@ -428,7 +427,7 @@ class Icc4(KaitaiStruct):
                         self.root_name = (self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
                         self.root_name_padding = [None] * ((32 - len(self.root_name)))
                         for i in range((32 - len(self.root_name))):
-                            self.root_name_padding = self._io.ensure_fixed_contents(struct.pack('1b', 0))
+                            self.root_name_padding = self._io.ensure_fixed_contents(b"\x00")
 
                         self.pcs_coordinates = self._io.read_bytes(6)
                         if self._parent.number_of_device_coordinates_for_each_named_colour > 0:
@@ -478,7 +477,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.number_of_channels = self._io.read_u2be()
                     self.count_of_measurement_types = self._io.read_u2be()
                     self.response_curve_structure_offsets = [None] * (self.count_of_measurement_types)
@@ -496,7 +495,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.number_of_entries = self._io.read_u4be()
                     if self.number_of_entries > 1:
                         self.curve_values = [None] * (self.number_of_entries)
@@ -531,7 +530,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.values = []
                     i = 0
                     while not self._io.is_eof():
@@ -548,11 +547,11 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.number_of_input_channels = self._io.read_u1()
                     self.number_of_output_channels = self._io.read_u1()
                     self.number_of_clut_grid_points = self._io.read_u1()
-                    self.padding = self._io.ensure_fixed_contents(struct.pack('1b', 0))
+                    self.padding = self._io.ensure_fixed_contents(b"\x00")
                     self.encoded_e_parameters = [None] * (9)
                     for i in range(9):
                         self.encoded_e_parameters[i] = self._io.read_s4be()
@@ -590,10 +589,10 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.number_of_input_channels = self._io.read_u1()
                     self.number_of_output_channels = self._io.read_u1()
-                    self.padding = self._io.ensure_fixed_contents(struct.pack('2b', 0, 0))
+                    self.padding = self._io.ensure_fixed_contents(b"\x00\x00")
                     self.offset_to_first_b_curve = self._io.read_u4be()
                     self.offset_to_matrix = self._io.read_u4be()
                     self.offset_to_first_m_curve = self._io.read_u4be()
@@ -642,11 +641,11 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.number_of_input_channels = self._io.read_u1()
                     self.number_of_output_channels = self._io.read_u1()
                     self.number_of_clut_grid_points = self._io.read_u1()
-                    self.padding = self._io.ensure_fixed_contents(struct.pack('1b', 0))
+                    self.padding = self._io.ensure_fixed_contents(b"\x00")
                     self.encoded_e_parameters = [None] * (9)
                     for i in range(9):
                         self.encoded_e_parameters[i] = self._io.read_s4be()
@@ -680,7 +679,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.values = []
                     i = 0
                     while not self._io.is_eof():
@@ -914,9 +913,9 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.function_type = self._root.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions(self._io.read_u2be())
-                    self.reserved_2 = self._io.ensure_fixed_contents(struct.pack('2b', 0, 0))
+                    self.reserved_2 = self._io.ensure_fixed_contents(b"\x00\x00")
                     _on = self.function_type
                     if _on == self._root.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.y_equals_x_to_power_of_g:
                         self.parameters = self._root.TagTable.TagDefinition.ParametricCurveType.ParamsYEqualsXToPowerOfG(self._io, self, self._root)
@@ -1050,7 +1049,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.standard_observer_encoding = self._root.TagTable.TagDefinition.MeasurementType.StandardObserverEncodings(self._io.read_u4be())
                     self.nciexyz_tristimulus_values_for_measurement_backing = self._root.XyzNumber(self._io, self, self._root)
                     self.measurement_geometry_encoding = self._root.TagTable.TagDefinition.MeasurementType.MeasurementGeometryEncodings(self._io.read_u4be())
@@ -1066,7 +1065,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.value = (KaitaiStream.bytes_terminate(self._io.read_bytes_full(), 0, False)).decode(u"ASCII")
 
 
@@ -1078,7 +1077,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.number_of_structures = self._io.read_u4be()
                     self.positions_table = [None] * (self.number_of_structures)
                     for i in range(self.number_of_structures):
@@ -1110,7 +1109,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.count_of_colorants = self._io.read_u4be()
                     self.colorants = [None] * (self.count_of_colorants)
                     for i in range(self.count_of_colorants):
@@ -1128,7 +1127,7 @@ class Icc4(KaitaiStruct):
                         self.name = (self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
                         self.padding = [None] * ((32 - len(self.name)))
                         for i in range((32 - len(self.name))):
-                            self.padding = self._io.ensure_fixed_contents(struct.pack('1b', 0))
+                            self.padding = self._io.ensure_fixed_contents(b"\x00")
 
                         self.pcs_values = self._io.read_bytes(6)
 
@@ -1142,7 +1141,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.signature = (self._io.read_bytes(4)).decode(u"ASCII")
 
 
@@ -1188,7 +1187,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.date_and_time = self._root.DateTimeNumber(self._io, self, self._root)
 
 
@@ -1246,7 +1245,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.number_of_input_channels = self._io.read_u2be()
                     self.number_of_output_channels = self._io.read_u2be()
                     self.number_of_processing_elements = self._io.read_u4be()
@@ -1265,7 +1264,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.values = []
                     i = 0
                     while not self._io.is_eof():
@@ -1318,7 +1317,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.number_of_device_channels = self._io.read_u2be()
                     self.colorant_and_phosphor_encoding = self._root.TagTable.TagDefinition.ChromaticityType.ColorantAndPhosphorEncodings(self._io.read_u2be())
                     self.ciexy_coordinates_per_channel = [None] * (self.number_of_device_channels)
@@ -1361,7 +1360,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.values = []
                     i = 0
                     while not self._io.is_eof():
@@ -1378,7 +1377,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.number_of_records = self._io.read_u4be()
                     self.record_size = self._io.read_u4be()
                     self.records = [None] * (self.number_of_records)
@@ -1402,13 +1401,13 @@ class Icc4(KaitaiStruct):
                     @property
                     def string_data(self):
                         if hasattr(self, '_m_string_data'):
-                            return self._m_string_data if hasattr(self, '_m_string_data') else None
+                            return self._m_string_data
 
                         _pos = self._io.pos()
                         self._io.seek(self.string_offset)
                         self._m_string_data = (self._io.read_bytes(self.string_length)).decode(u"UTF-16BE")
                         self._io.seek(_pos)
-                        return self._m_string_data if hasattr(self, '_m_string_data') else None
+                        return self._m_string_data
 
 
 
@@ -1554,7 +1553,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.number_of_description_structures = self._io.read_u4be()
                     self.profile_descriptions = [None] * (self.number_of_description_structures)
                     for i in range(self.number_of_description_structures):
@@ -1614,7 +1613,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.count_of_colorants = self._io.read_u4be()
                     self.numbers_of_colorants_in_order_of_printing = [None] * (self.count_of_colorants)
                     for i in range(self.count_of_colorants):
@@ -1660,7 +1659,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.un_normalized_ciexyz_values_for_illuminant = self._root.XyzNumber(self._io, self, self._root)
                     self.un_normalized_ciexyz_values_for_surround = self._root.XyzNumber(self._io, self, self._root)
                     self.illuminant_type = self._root.StandardIlluminantEncoding(self._io, self, self._root)
@@ -1674,10 +1673,10 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.number_of_input_channels = self._io.read_u1()
                     self.number_of_output_channels = self._io.read_u1()
-                    self.padding = self._io.ensure_fixed_contents(struct.pack('2b', 0, 0))
+                    self.padding = self._io.ensure_fixed_contents(b"\x00\x00")
                     self.offset_to_first_b_curve = self._io.read_u4be()
                     self.offset_to_matrix = self._io.read_u4be()
                     self.offset_to_first_m_curve = self._io.read_u4be()
@@ -1710,7 +1709,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.values = []
                     i = 0
                     while not self._io.is_eof():
@@ -1745,7 +1744,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.values = []
                     i = 0
                     while not self._io.is_eof():
@@ -1776,7 +1775,7 @@ class Icc4(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.reserved = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 0, 0))
+                    self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00")
                     self.values = []
                     i = 0
                     while not self._io.is_eof():
@@ -1802,7 +1801,7 @@ class Icc4(KaitaiStruct):
             @property
             def tag_data_element(self):
                 if hasattr(self, '_m_tag_data_element'):
-                    return self._m_tag_data_element if hasattr(self, '_m_tag_data_element') else None
+                    return self._m_tag_data_element
 
                 _pos = self._io.pos()
                 self._io.seek(self.offset_to_data_element)
@@ -2006,7 +2005,7 @@ class Icc4(KaitaiStruct):
                 else:
                     self._m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
                 self._io.seek(_pos)
-                return self._m_tag_data_element if hasattr(self, '_m_tag_data_element') else None
+                return self._m_tag_data_element
 
 
 

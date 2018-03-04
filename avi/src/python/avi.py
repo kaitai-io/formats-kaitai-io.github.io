@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -47,9 +46,9 @@ class Avi(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic1 = self._io.ensure_fixed_contents(struct.pack('4b', 82, 73, 70, 70))
+        self.magic1 = self._io.ensure_fixed_contents(b"\x52\x49\x46\x46")
         self.file_size = self._io.read_u4le()
-        self.magic2 = self._io.ensure_fixed_contents(struct.pack('4b', 65, 86, 73, 32))
+        self.magic2 = self._io.ensure_fixed_contents(b"\x41\x56\x49\x20")
         self._raw_data = self._io.read_bytes((self.file_size - 4))
         io = KaitaiStream(BytesIO(self._raw_data))
         self.data = self._root.Blocks(io, self, self._root)

@@ -2,7 +2,6 @@
 
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -30,14 +29,14 @@ class HeapsPak(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic1 = self._io.ensure_fixed_contents(struct.pack('3b', 80, 65, 75))
+            self.magic1 = self._io.ensure_fixed_contents(b"\x50\x41\x4B")
             self.version = self._io.read_u1()
             self.len_header = self._io.read_u4le()
             self.len_data = self._io.read_u4le()
             self._raw_root_entry = self._io.read_bytes((self.len_header - 16))
             io = KaitaiStream(BytesIO(self._raw_root_entry))
             self.root_entry = self._root.Header.Entry(io, self, self._root)
-            self.magic2 = self._io.ensure_fixed_contents(struct.pack('4b', 68, 65, 84, 65))
+            self.magic2 = self._io.ensure_fixed_contents(b"\x44\x41\x54\x41")
 
         class Entry(KaitaiStruct):
             """
@@ -88,14 +87,14 @@ class HeapsPak(KaitaiStruct):
             @property
             def data(self):
                 if hasattr(self, '_m_data'):
-                    return self._m_data if hasattr(self, '_m_data') else None
+                    return self._m_data
 
                 io = self._root._io
                 _pos = io.pos()
                 io.seek((self._root.header.len_header + self.ofs_data))
                 self._m_data = io.read_bytes(self.len_data)
                 io.seek(_pos)
-                return self._m_data if hasattr(self, '_m_data') else None
+                return self._m_data
 
 
         class Dir(KaitaiStruct):

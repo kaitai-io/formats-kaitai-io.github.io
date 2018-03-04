@@ -258,7 +258,6 @@ data = Rar(KaitaiStream(BytesIO(raw)))</code></pre>
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
@@ -366,26 +365,26 @@ class Rar(KaitaiStruct):
         def has_add(self):
             &quot;&quot;&quot;True if block has additional content attached to it.&quot;&quot;&quot;
             if hasattr(self, &#39;_m_has_add&#39;):
-                return self._m_has_add if hasattr(self, &#39;_m_has_add&#39;) else None
+                return self._m_has_add
 
             self._m_has_add = (self.flags &amp; 32768) != 0
-            return self._m_has_add if hasattr(self, &#39;_m_has_add&#39;) else None
+            return self._m_has_add
 
         @property
         def header_size(self):
             if hasattr(self, &#39;_m_header_size&#39;):
-                return self._m_header_size if hasattr(self, &#39;_m_header_size&#39;) else None
+                return self._m_header_size
 
             self._m_header_size = (11 if self.has_add else 7)
-            return self._m_header_size if hasattr(self, &#39;_m_header_size&#39;) else None
+            return self._m_header_size
 
         @property
         def body_size(self):
             if hasattr(self, &#39;_m_body_size&#39;):
-                return self._m_body_size if hasattr(self, &#39;_m_body_size&#39;) else None
+                return self._m_body_size
 
             self._m_body_size = (self.block_size - self.header_size)
-            return self._m_body_size if hasattr(self, &#39;_m_body_size&#39;) else None
+            return self._m_body_size
 
 
     class BlockFileHeader(KaitaiStruct):
@@ -429,10 +428,10 @@ class Rar(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic1 = self._io.ensure_fixed_contents(struct.pack(&#39;6b&#39;, 82, 97, 114, 33, 26, 7))
+            self.magic1 = self._io.ensure_fixed_contents(b&quot;\x52\x61\x72\x21\x1A\x07&quot;)
             self.version = self._io.read_u1()
             if self.version == 1:
-                self.magic3 = self._io.ensure_fixed_contents(struct.pack(&#39;1b&#39;, 0))
+                self.magic3 = self._io.ensure_fixed_contents(b&quot;\x00&quot;)
 
 
 
@@ -450,50 +449,50 @@ class Rar(KaitaiStruct):
         @property
         def month(self):
             if hasattr(self, &#39;_m_month&#39;):
-                return self._m_month if hasattr(self, &#39;_m_month&#39;) else None
+                return self._m_month
 
             self._m_month = ((self.date &amp; 480) &gt;&gt; 5)
-            return self._m_month if hasattr(self, &#39;_m_month&#39;) else None
+            return self._m_month
 
         @property
         def seconds(self):
             if hasattr(self, &#39;_m_seconds&#39;):
-                return self._m_seconds if hasattr(self, &#39;_m_seconds&#39;) else None
+                return self._m_seconds
 
             self._m_seconds = ((self.time &amp; 31) * 2)
-            return self._m_seconds if hasattr(self, &#39;_m_seconds&#39;) else None
+            return self._m_seconds
 
         @property
         def year(self):
             if hasattr(self, &#39;_m_year&#39;):
-                return self._m_year if hasattr(self, &#39;_m_year&#39;) else None
+                return self._m_year
 
             self._m_year = (((self.date &amp; 65024) &gt;&gt; 9) + 1980)
-            return self._m_year if hasattr(self, &#39;_m_year&#39;) else None
+            return self._m_year
 
         @property
         def minutes(self):
             if hasattr(self, &#39;_m_minutes&#39;):
-                return self._m_minutes if hasattr(self, &#39;_m_minutes&#39;) else None
+                return self._m_minutes
 
             self._m_minutes = ((self.time &amp; 2016) &gt;&gt; 5)
-            return self._m_minutes if hasattr(self, &#39;_m_minutes&#39;) else None
+            return self._m_minutes
 
         @property
         def day(self):
             if hasattr(self, &#39;_m_day&#39;):
-                return self._m_day if hasattr(self, &#39;_m_day&#39;) else None
+                return self._m_day
 
             self._m_day = (self.date &amp; 31)
-            return self._m_day if hasattr(self, &#39;_m_day&#39;) else None
+            return self._m_day
 
         @property
         def hours(self):
             if hasattr(self, &#39;_m_hours&#39;):
-                return self._m_hours if hasattr(self, &#39;_m_hours&#39;) else None
+                return self._m_hours
 
             self._m_hours = ((self.time &amp; 63488) &gt;&gt; 11)
-            return self._m_hours if hasattr(self, &#39;_m_hours&#39;) else None
+            return self._m_hours
 
 
 

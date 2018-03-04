@@ -2,7 +2,6 @@
 
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -24,7 +23,7 @@ class Ico(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.magic = self._io.ensure_fixed_contents(struct.pack('4b', 0, 0, 1, 0))
+        self.magic = self._io.ensure_fixed_contents(b"\x00\x00\x01\x00")
         self.num_images = self._io.read_u2le()
         self.images = [None] * (self.num_images)
         for i in range(self.num_images):
@@ -42,7 +41,7 @@ class Ico(KaitaiStruct):
             self.width = self._io.read_u1()
             self.height = self._io.read_u1()
             self.num_colors = self._io.read_u1()
-            self.reserved = self._io.ensure_fixed_contents(struct.pack('1b', 0))
+            self.reserved = self._io.ensure_fixed_contents(b"\x00")
             self.num_planes = self._io.read_u2le()
             self.bpp = self._io.read_u2le()
             self.len_img = self._io.read_u4le()
@@ -55,13 +54,13 @@ class Ico(KaitaiStruct):
             relevant parser, if needed to parse image data further.
             """
             if hasattr(self, '_m_img'):
-                return self._m_img if hasattr(self, '_m_img') else None
+                return self._m_img
 
             _pos = self._io.pos()
             self._io.seek(self.ofs_img)
             self._m_img = self._io.read_bytes(self.len_img)
             self._io.seek(_pos)
-            return self._m_img if hasattr(self, '_m_img') else None
+            return self._m_img
 
         @property
         def png_header(self):
@@ -69,22 +68,22 @@ class Ico(KaitaiStruct):
             embedded PNG file.
             """
             if hasattr(self, '_m_png_header'):
-                return self._m_png_header if hasattr(self, '_m_png_header') else None
+                return self._m_png_header
 
             _pos = self._io.pos()
             self._io.seek(self.ofs_img)
             self._m_png_header = self._io.read_bytes(8)
             self._io.seek(_pos)
-            return self._m_png_header if hasattr(self, '_m_png_header') else None
+            return self._m_png_header
 
         @property
         def is_png(self):
             """True if this image is in PNG format."""
             if hasattr(self, '_m_is_png'):
-                return self._m_is_png if hasattr(self, '_m_is_png') else None
+                return self._m_is_png
 
-            self._m_is_png = self.png_header == struct.pack('8b', -119, 80, 78, 71, 13, 10, 26, 10)
-            return self._m_is_png if hasattr(self, '_m_is_png') else None
+            self._m_is_png = self.png_header == b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A"
+            return self._m_is_png
 
 
 

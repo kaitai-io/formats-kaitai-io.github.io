@@ -2,7 +2,6 @@
 
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -31,7 +30,7 @@ class MbrPartitionTable(KaitaiStruct):
         for i in range(4):
             self.partitions[i] = self._root.PartitionEntry(self._io, self, self._root)
 
-        self.boot_signature = self._io.ensure_fixed_contents(struct.pack('2b', 85, -86))
+        self.boot_signature = self._io.ensure_fixed_contents(b"\x55\xAA")
 
     class PartitionEntry(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -64,18 +63,18 @@ class MbrPartitionTable(KaitaiStruct):
         @property
         def sector(self):
             if hasattr(self, '_m_sector'):
-                return self._m_sector if hasattr(self, '_m_sector') else None
+                return self._m_sector
 
             self._m_sector = (self.b2 & 63)
-            return self._m_sector if hasattr(self, '_m_sector') else None
+            return self._m_sector
 
         @property
         def cylinder(self):
             if hasattr(self, '_m_cylinder'):
-                return self._m_cylinder if hasattr(self, '_m_cylinder') else None
+                return self._m_cylinder
 
             self._m_cylinder = (self.b3 + ((self.b2 & 192) << 2))
-            return self._m_cylinder if hasattr(self, '_m_cylinder') else None
+            return self._m_cylinder
 
 
 

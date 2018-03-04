@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Hashcat capture old format: Python parsing library</title>
+  <title>Hashcat capture file (old version): Python parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Networking Protocols</li>
-        <li class="active">Hashcat capture old format</li>
+        <li class="active">Hashcat capture file (old version)</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>Hashcat capture old format:
+        <h1>Hashcat capture file (old version):
             
             Python parsing library
             
@@ -98,8 +98,8 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>Native format of Hashcat password &quot;recovery&quot; utility
-A sample of file for testing can be downloaded from https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap</p>
+                <p><p>Native format of Hashcat password &quot;recovery&quot; utility.</p>
+<p>A sample of file for testing can be downloaded from https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -138,7 +138,7 @@ A sample of file for testing can be downloaded from https://web.archive.org/web/
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of Hashcat capture old format
+            This page hosts a formal specification of Hashcat capture file (old version)
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -149,52 +149,52 @@ A sample of file for testing can be downloaded from https://web.archive.org/web/
                 
                 <li>
                 
-                <a href="index.html" title="Hashcat capture old format parsing Overview library">Overview</a></li>
+                <a href="index.html" title="Hashcat capture file (old version) parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Hashcat capture old format parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title="Hashcat capture file (old version) parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="Hashcat capture old format parsing C# library">C#</a></li>
+                <a href="csharp.html" title="Hashcat capture file (old version) parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="Hashcat capture old format parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title="Hashcat capture file (old version) parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="Hashcat capture old format parsing Java library">Java</a></li>
+                <a href="java.html" title="Hashcat capture file (old version) parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title="Hashcat capture old format parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title="Hashcat capture file (old version) parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title="Hashcat capture old format parsing Perl library">Perl</a></li>
+                <a href="perl.html" title="Hashcat capture file (old version) parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="Hashcat capture old format parsing PHP library">PHP</a></li>
+                <a href="php.html" title="Hashcat capture file (old version) parsing PHP library">PHP</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="python.html" title="Hashcat capture old format parsing Python library">Python</a></li>
+                <a href="python.html" title="Hashcat capture file (old version) parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title="Hashcat capture old format parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title="Hashcat capture file (old version) parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -231,7 +231,7 @@ data = Hccap(KaitaiStream(BytesIO(raw)))</code></pre>
     <div class="container">
         <h2>
             
-            Python source code to parse Hashcat capture old format
+            Python source code to parse Hashcat capture file (old version)
             
         </h2>
 
@@ -258,7 +258,8 @@ if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
     raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
 
 class Hccap(KaitaiStruct):
-    &quot;&quot;&quot;Native format of Hashcat password &quot;recovery&quot; utility
+    &quot;&quot;&quot;Native format of Hashcat password &quot;recovery&quot; utility.
+    
     A sample of file for testing can be downloaded from https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap
     
     .. seealso::
@@ -274,11 +275,11 @@ class Hccap(KaitaiStruct):
         self.records = []
         i = 0
         while not self._io.is_eof():
-            self.records.append(self._root.Hccap(self._io, self, self._root))
+            self.records.append(self._root.HccapRecord(self._io, self, self._root))
             i += 1
 
 
-    class Hccap(KaitaiStruct):
+    class HccapRecord(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -286,20 +287,32 @@ class Hccap(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.essid = (KaitaiStream.bytes_terminate(self._io.read_bytes(36), 0, False)).decode(u&quot;utf-8&quot;)
-            self.ap_mac = self._io.read_bytes(6)
-            self.stantion_mac = self._io.read_bytes(6)
-            self.stantion_nonce = self._io.read_bytes(32)
-            self.ap_nonce = self._io.read_bytes(32)
-            self._raw_eapol = self._io.read_bytes(256)
-            io = KaitaiStream(BytesIO(self._raw_eapol))
-            self.eapol = self._root.EapolFrame(io, self, self._root)
-            self.eapol_size = self._io.read_u4le()
+            self.essid = self._io.read_bytes(36)
+            self.mac_ap = self._io.read_bytes(6)
+            self.mac_station = self._io.read_bytes(6)
+            self.nonce_station = self._io.read_bytes(32)
+            self.nonce_ap = self._io.read_bytes(32)
+            self._raw_eapol_buffer = self._io.read_bytes(256)
+            io = KaitaiStream(BytesIO(self._raw_eapol_buffer))
+            self.eapol_buffer = self._root.EapolDummy(io, self, self._root)
+            self.len_eapol = self._io.read_u4le()
             self.keyver = self._io.read_u4le()
             self.keymic = self._io.read_bytes(16)
 
+        @property
+        def eapol(self):
+            if hasattr(self, &#39;_m_eapol&#39;):
+                return self._m_eapol
 
-    class EapolFrame(KaitaiStruct):
+            io = self.eapol_buffer._io
+            _pos = io.pos()
+            io.seek(0)
+            self._m_eapol = io.read_bytes(self.len_eapol)
+            io.seek(_pos)
+            return self._m_eapol
+
+
+    class EapolDummy(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -308,17 +321,6 @@ class Hccap(KaitaiStruct):
 
         def _read(self):
             pass
-
-        @property
-        def body(self):
-            if hasattr(self, &#39;_m_body&#39;):
-                return self._m_body if hasattr(self, &#39;_m_body&#39;) else None
-
-            _pos = self._io.pos()
-            self._io.seek(0)
-            self._m_body = self._io.read_bytes(self._parent.eapol_size)
-            self._io.seek(_pos)
-            return self._m_body if hasattr(self, &#39;_m_body&#39;) else None
 
 
 

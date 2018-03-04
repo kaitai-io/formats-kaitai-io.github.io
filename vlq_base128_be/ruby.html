@@ -99,7 +99,7 @@ section#format-index .row {
         <div class="row">
             <div class="col-md-8">
                 <p><p>A variable-length unsigned integer using base128 encoding. 1-byte groups
-consists of 1-bit flag of continuation and 7-bit value, and are ordered
+consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
 &quot;most significant group first&quot;, i.e. in &quot;big-endian&quot; manner.</p>
 <p>This particular encoding is specified and used in:</p>
 <ul>
@@ -256,7 +256,7 @@ end
 
 ##
 # A variable-length unsigned integer using base128 encoding. 1-byte groups
-# consists of 1-bit flag of continuation and 7-bit value, and are ordered
+# consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
 # &quot;most significant group first&quot;, i.e. in &quot;big-endian&quot; manner.
 # 
 # This particular encoding is specified and used in:
@@ -286,8 +286,7 @@ class VlqBase128Be &lt; Kaitai::Struct::Struct
   end
 
   ##
-  # One byte group, clearly divided into 7-bit &quot;value&quot; and 1-bit &quot;has continuation
-  # in the next byte&quot; flag.
+  # One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.
   class Group &lt; Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -308,7 +307,7 @@ class VlqBase128Be &lt; Kaitai::Struct::Struct
     end
 
     ##
-    # The 7-bit (base128) numeric value of this group
+    # The 7-bit (base128) numeric value chunk of this group
     def value
       return @value unless @value.nil?
       @value = (b &amp; 127)

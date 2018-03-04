@@ -56,6 +56,16 @@ class DestinationUnreachableCode {
     const PORT_UNREACHABLE = 3;
     const FRAGMENTATION_NEEDED_AND_DF_SET = 4;
     const SOURCE_ROUTE_FAILED = 5;
+    const DST_NET_UNKOWN = 6;
+    const SDT_HOST_UNKOWN = 7;
+    const SRC_ISOLATED = 8;
+    const NET_PROHIBITED_BY_ADMIN = 9;
+    const HOST_PROHIBITED_BY_ADMIN = 10;
+    const NET_UNREACHABLE_FOR_TOS = 11;
+    const HOST_UNREACHABLE_FOR_TOS = 12;
+    const COMMUNICATION_PROHIBITED_BY_ADMIN = 13;
+    const HOST_PRECEDENCE_VIOLATION = 14;
+    const PRECEDENCE_CUTTOFF_IN_EFFECT = 15;
 }
 
 namespace \IcmpPacket;

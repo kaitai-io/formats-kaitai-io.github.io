@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -132,15 +131,15 @@ class WindowsLnkFile(KaitaiStruct):
             @property
             def is_unicode(self):
                 if hasattr(self, '_m_is_unicode'):
-                    return self._m_is_unicode if hasattr(self, '_m_is_unicode') else None
+                    return self._m_is_unicode
 
                 self._m_is_unicode = self.ofs_volume_label == 20
-                return self._m_is_unicode if hasattr(self, '_m_is_unicode') else None
+                return self._m_is_unicode
 
             @property
             def volume_label_ansi(self):
                 if hasattr(self, '_m_volume_label_ansi'):
-                    return self._m_volume_label_ansi if hasattr(self, '_m_volume_label_ansi') else None
+                    return self._m_volume_label_ansi
 
                 if not (self.is_unicode):
                     _pos = self._io.pos()
@@ -148,7 +147,7 @@ class WindowsLnkFile(KaitaiStruct):
                     self._m_volume_label_ansi = (self._io.read_bytes_term(0, False, True, True)).decode(u"cp437")
                     self._io.seek(_pos)
 
-                return self._m_volume_label_ansi if hasattr(self, '_m_volume_label_ansi') else None
+                return self._m_volume_label_ansi
 
 
         class All(KaitaiStruct):
@@ -171,7 +170,7 @@ class WindowsLnkFile(KaitaiStruct):
             @property
             def volume_id(self):
                 if hasattr(self, '_m_volume_id'):
-                    return self._m_volume_id if hasattr(self, '_m_volume_id') else None
+                    return self._m_volume_id
 
                 if self.header.flags.has_volume_id_and_local_base_path:
                     _pos = self._io.pos()
@@ -179,12 +178,12 @@ class WindowsLnkFile(KaitaiStruct):
                     self._m_volume_id = self._root.LinkInfo.VolumeIdSpec(self._io, self, self._root)
                     self._io.seek(_pos)
 
-                return self._m_volume_id if hasattr(self, '_m_volume_id') else None
+                return self._m_volume_id
 
             @property
             def local_base_path(self):
                 if hasattr(self, '_m_local_base_path'):
-                    return self._m_local_base_path if hasattr(self, '_m_local_base_path') else None
+                    return self._m_local_base_path
 
                 if self.header.flags.has_volume_id_and_local_base_path:
                     _pos = self._io.pos()
@@ -192,7 +191,7 @@ class WindowsLnkFile(KaitaiStruct):
                     self._m_local_base_path = self._io.read_bytes_term(0, False, True, True)
                     self._io.seek(_pos)
 
-                return self._m_local_base_path if hasattr(self, '_m_local_base_path') else None
+                return self._m_local_base_path
 
 
         class VolumeIdSpec(KaitaiStruct):
@@ -295,8 +294,8 @@ class WindowsLnkFile(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.len_header = self._io.ensure_fixed_contents(struct.pack('4b', 76, 0, 0, 0))
-            self.link_clsid = self._io.ensure_fixed_contents(struct.pack('16b', 1, 20, 2, 0, 0, 0, 0, 0, -64, 0, 0, 0, 0, 0, 0, 70))
+            self.len_header = self._io.ensure_fixed_contents(b"\x4C\x00\x00\x00")
+            self.link_clsid = self._io.ensure_fixed_contents(b"\x01\x14\x02\x00\x00\x00\x00\x00\xC0\x00\x00\x00\x00\x00\x00\x46")
             self._raw_flags = self._io.read_bytes(4)
             io = KaitaiStream(BytesIO(self._raw_flags))
             self.flags = self._root.LinkFlags(io, self, self._root)
@@ -308,7 +307,7 @@ class WindowsLnkFile(KaitaiStruct):
             self.icon_index = self._io.read_s4le()
             self.show_command = self._root.WindowState(self._io.read_u4le())
             self.hotkey = self._io.read_u2le()
-            self.reserved = self._io.ensure_fixed_contents(struct.pack('10b', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+            self.reserved = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")
 
 
 

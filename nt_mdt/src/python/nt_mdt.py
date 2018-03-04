@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -180,7 +179,7 @@ class NtMdt(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.signature = self._io.ensure_fixed_contents(struct.pack('4b', 1, -80, -109, -1))
+        self.signature = self._io.ensure_fixed_contents(b"\x01\xB0\x93\xFF")
         self.size = self._io.read_u4le()
         self.reserved0 = self._io.read_bytes(4)
         self.last_frame = self._io.read_u2le()
@@ -514,16 +513,16 @@ class NtMdt(KaitaiStruct):
                 @property
                 def count(self):
                     if hasattr(self, '_m_count'):
-                        return self._m_count if hasattr(self, '_m_count') else None
+                        return self._m_count
 
                     self._m_count = ((self.max_index - self.min_index) + 1)
-                    return self._m_count if hasattr(self, '_m_count') else None
+                    return self._m_count
 
 
             @property
             def image(self):
                 if hasattr(self, '_m_image'):
-                    return self._m_image if hasattr(self, '_m_image') else None
+                    return self._m_image
 
                 _pos = self._io.pos()
                 self._io.seek(self.data_offset)
@@ -531,7 +530,7 @@ class NtMdt(KaitaiStruct):
                 io = KaitaiStream(BytesIO(self._raw__m_image))
                 self._m_image = self._root.Frame.FdMetaData.Image(io, self, self._root)
                 self._io.seek(_pos)
-                return self._m_image if hasattr(self, '_m_image') else None
+                return self._m_image
 
 
         class FdSpectroscopy(KaitaiStruct):

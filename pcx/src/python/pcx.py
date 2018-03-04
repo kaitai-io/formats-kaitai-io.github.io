@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -43,7 +42,7 @@ class Pcx(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack('1b', 10))
+            self.magic = self._io.ensure_fixed_contents(b"\x0A")
             self.version = self._root.Versions(self._io.read_u1())
             self.encoding = self._root.Encodings(self._io.read_u1())
             self.bits_per_pixel = self._io.read_u1()
@@ -54,7 +53,7 @@ class Pcx(KaitaiStruct):
             self.hdpi = self._io.read_u2le()
             self.vdpi = self._io.read_u2le()
             self.palette_16 = self._io.read_bytes(48)
-            self.reserved = self._io.ensure_fixed_contents(struct.pack('1b', 0))
+            self.reserved = self._io.ensure_fixed_contents(b"\x00")
             self.num_planes = self._io.read_u1()
             self.bytes_per_line = self._io.read_u2le()
             self.palette_info = self._io.read_u2le()
@@ -70,7 +69,7 @@ class Pcx(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack('1b', 12))
+            self.magic = self._io.ensure_fixed_contents(b"\x0C")
             self.colors = [None] * (256)
             for i in range(256):
                 self.colors[i] = self._root.Rgb(self._io, self, self._root)
@@ -97,7 +96,7 @@ class Pcx(KaitaiStruct):
            - "VGA 256 Color Palette Information" - http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt
         """
         if hasattr(self, '_m_palette_256'):
-            return self._m_palette_256 if hasattr(self, '_m_palette_256') else None
+            return self._m_palette_256
 
         if  ((self.hdr.version == self._root.Versions.v3_0) and (self.hdr.bits_per_pixel == 8) and (self.hdr.num_planes == 1)) :
             _pos = self._io.pos()
@@ -105,6 +104,6 @@ class Pcx(KaitaiStruct):
             self._m_palette_256 = self._root.TPalette256(self._io, self, self._root)
             self._io.seek(_pos)
 
-        return self._m_palette_256 if hasattr(self, '_m_palette_256') else None
+        return self._m_palette_256
 
 

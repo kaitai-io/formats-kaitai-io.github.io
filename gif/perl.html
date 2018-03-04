@@ -282,9 +282,10 @@ sub _read {
         $self-&gt;{global_color_table} = Gif::ColorTable-&gt;new($io__raw_global_color_table, $self, $self-&gt;{_root});
     }
     $self-&gt;{blocks} = ();
-    while (!$self-&gt;{_io}-&gt;is_eof()) {
-        push @{$self-&gt;{blocks}}, Gif::Block-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
+    do {
+        $_ = Gif::Block-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+        push @{$self-&gt;{blocks}}, $_;
+    } until ( (($self-&gt;_io()-&gt;is_eof()) || ($_-&gt;block_type() == $BLOCK_TYPE_END_OF_FILE)) );
 }
 
 sub hdr {

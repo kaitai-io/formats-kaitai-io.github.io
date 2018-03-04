@@ -242,7 +242,7 @@ metainformation or image data.</p>
 			&lt;TR&gt;&lt;TD PORT=&quot;logical_screen_descriptor_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;logical_screen_descriptor_size&quot;&gt;7&lt;/TD&gt;&lt;TD&gt;LogicalScreenDescriptorStruct&lt;/TD&gt;&lt;TD PORT=&quot;logical_screen_descriptor_type&quot;&gt;logical_screen_descriptor&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;global_color_table_pos&quot;&gt;13&lt;/TD&gt;&lt;TD PORT=&quot;global_color_table_size&quot;&gt;(logical_screen_descriptor.color_table_size * 3)&lt;/TD&gt;&lt;TD&gt;ColorTable&lt;/TD&gt;&lt;TD PORT=&quot;global_color_table_type&quot;&gt;global_color_table&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;blocks_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;blocks_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Block&lt;/TD&gt;&lt;TD PORT=&quot;blocks_type&quot;&gt;blocks&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;blocks__repeat&quot;&gt;repeat to end of stream&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;blocks__repeat&quot;&gt;repeat until  ((_io.eof?) || (_.block_type == :block_type_end_of_file)) &lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
 		subgraph cluster__image_data {
 			label=&quot;Gif::ImageData&quot;;
@@ -427,6 +427,7 @@ extension__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=
 	logical_screen_descriptor_struct__inst__color_table_size:color_table_size_type -&gt; gif__seq:global_color_table_size [color=&quot;#404040&quot;];
 	gif__seq:global_color_table_type -&gt; color_table__seq [style=bold];
 	gif__seq:blocks_type -&gt; block__seq [style=bold];
+	block__seq:block_type_type -&gt; gif__seq:blocks__repeat [color=&quot;#404040&quot;];
 	image_data__seq:subblocks_type -&gt; subblocks__seq [style=bold];
 	logical_screen_descriptor_struct__seq:flags_type -&gt; logical_screen_descriptor_struct__inst__has_color_table [color=&quot;#404040&quot;];
 	logical_screen_descriptor_struct__seq:flags_type -&gt; logical_screen_descriptor_struct__inst__color_table_size [color=&quot;#404040&quot;];

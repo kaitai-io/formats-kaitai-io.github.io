@@ -835,10 +835,12 @@ void gif_t::_read() {
     m_blocks = new std::vector&lt;block_t*&gt;();
     {
         int i = 0;
-        while (!m__io-&gt;is_eof()) {
-            m_blocks-&gt;push_back(new block_t(m__io, this, m__root));
+        block_t* _;
+        do {
+            _ = new block_t(m__io, this, m__root);
+            m_blocks-&gt;push_back(_);
             i++;
-        }
+        } while (!( ((_io()-&gt;is_eof()) || (_-&gt;block_type() == BLOCK_TYPE_END_OF_FILE)) ));
     }
 }
 

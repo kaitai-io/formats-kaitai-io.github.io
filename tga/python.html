@@ -245,7 +245,6 @@ data = Tga(KaitaiStream(BytesIO(raw)))</code></pre>
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
@@ -312,15 +311,15 @@ class Tga(KaitaiStruct):
         @property
         def is_valid(self):
             if hasattr(self, &#39;_m_is_valid&#39;):
-                return self._m_is_valid if hasattr(self, &#39;_m_is_valid&#39;) else None
+                return self._m_is_valid
 
-            self._m_is_valid = self.version_magic == struct.pack(&#39;18b&#39;, 84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0)
-            return self._m_is_valid if hasattr(self, &#39;_m_is_valid&#39;) else None
+            self._m_is_valid = self.version_magic == b&quot;\x54\x52\x55\x45\x56\x49\x53\x49\x4F\x4E\x2D\x58\x46\x49\x4C\x45\x2E\x00&quot;
+            return self._m_is_valid
 
         @property
         def ext_area(self):
             if hasattr(self, &#39;_m_ext_area&#39;):
-                return self._m_ext_area if hasattr(self, &#39;_m_ext_area&#39;) else None
+                return self._m_ext_area
 
             if self.is_valid:
                 _pos = self._io.pos()
@@ -328,7 +327,7 @@ class Tga(KaitaiStruct):
                 self._m_ext_area = self._root.TgaExtArea(self._io, self, self._root)
                 self._io.seek(_pos)
 
-            return self._m_ext_area if hasattr(self, &#39;_m_ext_area&#39;) else None
+            return self._m_ext_area
 
 
     class TgaExtArea(KaitaiStruct):
@@ -362,13 +361,13 @@ class Tga(KaitaiStruct):
     @property
     def footer(self):
         if hasattr(self, &#39;_m_footer&#39;):
-            return self._m_footer if hasattr(self, &#39;_m_footer&#39;) else None
+            return self._m_footer
 
         _pos = self._io.pos()
         self._io.seek((self._io.size() - 26))
         self._m_footer = self._root.TgaFooter(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_footer if hasattr(self, &#39;_m_footer&#39;) else None
+        return self._m_footer
 
 
 </code></pre>

@@ -300,12 +300,22 @@ public class IcmpPacket extends KaitaiStruct {
             PROTOCOL_UNREACHABLE(2),
             PORT_UNREACHABLE(3),
             FRAGMENTATION_NEEDED_AND_DF_SET(4),
-            SOURCE_ROUTE_FAILED(5);
+            SOURCE_ROUTE_FAILED(5),
+            DST_NET_UNKOWN(6),
+            SDT_HOST_UNKOWN(7),
+            SRC_ISOLATED(8),
+            NET_PROHIBITED_BY_ADMIN(9),
+            HOST_PROHIBITED_BY_ADMIN(10),
+            NET_UNREACHABLE_FOR_TOS(11),
+            HOST_UNREACHABLE_FOR_TOS(12),
+            COMMUNICATION_PROHIBITED_BY_ADMIN(13),
+            HOST_PRECEDENCE_VIOLATION(14),
+            PRECEDENCE_CUTTOFF_IN_EFFECT(15);
 
             private final long id;
             DestinationUnreachableCode(long id) { this.id = id; }
             public long id() { return id; }
-            private static final Map&lt;Long, DestinationUnreachableCode&gt; byId = new HashMap&lt;Long, DestinationUnreachableCode&gt;(6);
+            private static final Map&lt;Long, DestinationUnreachableCode&gt; byId = new HashMap&lt;Long, DestinationUnreachableCode&gt;(16);
             static {
                 for (DestinationUnreachableCode e : DestinationUnreachableCode.values())
                     byId.put(e.id(), e);

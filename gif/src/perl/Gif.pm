@@ -51,9 +51,10 @@ sub _read {
         $self->{global_color_table} = Gif::ColorTable->new($io__raw_global_color_table, $self, $self->{_root});
     }
     $self->{blocks} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{blocks}}, Gif::Block->new($self->{_io}, $self, $self->{_root});
-    }
+    do {
+        $_ = Gif::Block->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{blocks}}, $_;
+    } until ( (($self->_io()->is_eof()) || ($_->block_type() == $BLOCK_TYPE_END_OF_FILE)) );
 }
 
 sub hdr {

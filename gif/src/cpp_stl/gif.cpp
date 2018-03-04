@@ -23,10 +23,12 @@ void gif_t::_read() {
     m_blocks = new std::vector<block_t*>();
     {
         int i = 0;
-        while (!m__io->is_eof()) {
-            m_blocks->push_back(new block_t(m__io, this, m__root));
+        block_t* _;
+        do {
+            _ = new block_t(m__io, this, m__root);
+            m_blocks->push_back(_);
             i++;
-        }
+        } while (!( ((_io()->is_eof()) || (_->block_type() == BLOCK_TYPE_END_OF_FILE)) ));
     }
 }
 

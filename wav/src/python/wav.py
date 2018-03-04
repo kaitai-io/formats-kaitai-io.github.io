@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -51,9 +50,9 @@ class Wav(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.riff_id = self._io.ensure_fixed_contents(struct.pack('4b', 82, 73, 70, 70))
+        self.riff_id = self._io.ensure_fixed_contents(b"\x52\x49\x46\x46")
         self.file_size = self._io.read_u4le()
-        self.wave_id = self._io.ensure_fixed_contents(struct.pack('4b', 87, 65, 86, 69))
+        self.wave_id = self._io.ensure_fixed_contents(b"\x57\x41\x56\x45")
         self._raw_chunks = self._io.read_bytes((self.file_size - 5))
         io = KaitaiStream(BytesIO(self._raw_chunks))
         self.chunks = self._root.ChunksType(io, self, self._root)
@@ -96,34 +95,34 @@ class Wav(KaitaiStruct):
         @property
         def is_extensible(self):
             if hasattr(self, '_m_is_extensible'):
-                return self._m_is_extensible if hasattr(self, '_m_is_extensible') else None
+                return self._m_is_extensible
 
             self._m_is_extensible = self.w_format_tag == self._root.WFormatTagType.extensible
-            return self._m_is_extensible if hasattr(self, '_m_is_extensible') else None
+            return self._m_is_extensible
 
         @property
         def is_basic_pcm(self):
             if hasattr(self, '_m_is_basic_pcm'):
-                return self._m_is_basic_pcm if hasattr(self, '_m_is_basic_pcm') else None
+                return self._m_is_basic_pcm
 
             self._m_is_basic_pcm = self.w_format_tag == self._root.WFormatTagType.pcm
-            return self._m_is_basic_pcm if hasattr(self, '_m_is_basic_pcm') else None
+            return self._m_is_basic_pcm
 
         @property
         def is_basic_float(self):
             if hasattr(self, '_m_is_basic_float'):
-                return self._m_is_basic_float if hasattr(self, '_m_is_basic_float') else None
+                return self._m_is_basic_float
 
             self._m_is_basic_float = self.w_format_tag == self._root.WFormatTagType.ieee_float
-            return self._m_is_basic_float if hasattr(self, '_m_is_basic_float') else None
+            return self._m_is_basic_float
 
         @property
         def is_cb_size_meaningful(self):
             if hasattr(self, '_m_is_cb_size_meaningful'):
-                return self._m_is_cb_size_meaningful if hasattr(self, '_m_is_cb_size_meaningful') else None
+                return self._m_is_cb_size_meaningful
 
             self._m_is_cb_size_meaningful =  ((not (self.is_basic_pcm)) and (self.cb_size != 0)) 
-            return self._m_is_cb_size_meaningful if hasattr(self, '_m_is_cb_size_meaningful') else None
+            return self._m_is_cb_size_meaningful
 
 
     class GuidType(KaitaiStruct):
@@ -312,9 +311,9 @@ class Wav(KaitaiStruct):
     @property
     def format_chunk(self):
         if hasattr(self, '_m_format_chunk'):
-            return self._m_format_chunk if hasattr(self, '_m_format_chunk') else None
+            return self._m_format_chunk
 
         self._m_format_chunk = self.chunks.chunk[0].data
-        return self._m_format_chunk if hasattr(self, '_m_format_chunk') else None
+        return self._m_format_chunk
 
 

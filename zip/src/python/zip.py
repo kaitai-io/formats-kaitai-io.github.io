@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -237,13 +236,13 @@ class Zip(KaitaiStruct):
         @property
         def local_header(self):
             if hasattr(self, '_m_local_header'):
-                return self._m_local_header if hasattr(self, '_m_local_header') else None
+                return self._m_local_header
 
             _pos = self._io.pos()
             self._io.seek(self.local_header_offset)
             self._m_local_header = self._root.PkSection(self._io, self, self._root)
             self._io.seek(_pos)
-            return self._m_local_header if hasattr(self, '_m_local_header') else None
+            return self._m_local_header
 
 
     class PkSection(KaitaiStruct):
@@ -254,7 +253,7 @@ class Zip(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack('2b', 80, 75))
+            self.magic = self._io.ensure_fixed_contents(b"\x50\x4B")
             self.section_type = self._io.read_u2le()
             _on = self.section_type
             if _on == 513:

@@ -3,7 +3,6 @@
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
-import struct
 
 
 if parse_version(ks_version) < parse_version('0.7'):
@@ -149,7 +148,7 @@ class Pcap(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic_number = self._io.ensure_fixed_contents(struct.pack('4b', -44, -61, -78, -95))
+            self.magic_number = self._io.ensure_fixed_contents(b"\xD4\xC3\xB2\xA1")
             self.version_major = self._io.read_u2le()
             self.version_minor = self._io.read_u2le()
             self.thiszone = self._io.read_s4le()

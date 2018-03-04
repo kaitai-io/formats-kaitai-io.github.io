@@ -158,12 +158,13 @@ public class Elf extends KaitaiStruct {
         GNU_EH_FRAME(1685382480),
         GNU_STACK(1685382481),
         GNU_RELRO(1685382482),
+        PAX_FLAGS(1694766464),
         HIOS(1879048191);
 
         private final long id;
         PhType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, PhType> byId = new HashMap<Long, PhType>(12);
+        private static final Map<Long, PhType> byId = new HashMap<Long, PhType>(13);
         static {
             for (PhType e : PhType.values())
                 byId.put(e.id(), e);

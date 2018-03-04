@@ -2,7 +2,6 @@
 
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-import struct
 from enum import Enum
 
 
@@ -75,20 +74,20 @@ class StandardMidiFile(KaitaiStruct):
         @property
         def event_type(self):
             if hasattr(self, '_m_event_type'):
-                return self._m_event_type if hasattr(self, '_m_event_type') else None
+                return self._m_event_type
 
             self._m_event_type = (self.event_header & 240)
-            return self._m_event_type if hasattr(self, '_m_event_type') else None
+            return self._m_event_type
 
         @property
         def channel(self):
             if hasattr(self, '_m_channel'):
-                return self._m_channel if hasattr(self, '_m_channel') else None
+                return self._m_channel
 
             if self.event_type != 240:
                 self._m_channel = (self.event_header & 15)
 
-            return self._m_channel if hasattr(self, '_m_channel') else None
+            return self._m_channel
 
 
     class PitchBendEvent(KaitaiStruct):
@@ -105,18 +104,18 @@ class StandardMidiFile(KaitaiStruct):
         @property
         def bend_value(self):
             if hasattr(self, '_m_bend_value'):
-                return self._m_bend_value if hasattr(self, '_m_bend_value') else None
+                return self._m_bend_value
 
             self._m_bend_value = (((self.b2 << 7) + self.b1) - 16384)
-            return self._m_bend_value if hasattr(self, '_m_bend_value') else None
+            return self._m_bend_value
 
         @property
         def adj_bend_value(self):
             if hasattr(self, '_m_adj_bend_value'):
-                return self._m_adj_bend_value if hasattr(self, '_m_adj_bend_value') else None
+                return self._m_adj_bend_value
 
             self._m_adj_bend_value = (self.bend_value - 16384)
-            return self._m_adj_bend_value if hasattr(self, '_m_adj_bend_value') else None
+            return self._m_adj_bend_value
 
 
     class ProgramChangeEvent(KaitaiStruct):
@@ -162,7 +161,7 @@ class StandardMidiFile(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack('4b', 77, 84, 114, 107))
+            self.magic = self._io.ensure_fixed_contents(b"\x4D\x54\x72\x6B")
             self.track_length = self._io.read_u4be()
             self._raw_events = self._io.read_bytes(self.track_length)
             io = KaitaiStream(BytesIO(self._raw_events))
@@ -219,7 +218,7 @@ class StandardMidiFile(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.ensure_fixed_contents(struct.pack('4b', 77, 84, 104, 100))
+            self.magic = self._io.ensure_fixed_contents(b"\x4D\x54\x68\x64")
             self.header_length = self._io.read_u4be()
             self.format = self._io.read_u2be()
             self.qty_tracks = self._io.read_u2be()

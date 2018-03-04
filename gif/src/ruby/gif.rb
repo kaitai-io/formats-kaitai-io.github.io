@@ -55,10 +55,11 @@ class Gif < Kaitai::Struct::Struct
     end
     @blocks = []
     i = 0
-    while not @_io.eof?
-      @blocks << Block.new(@_io, self, @_root)
+    begin
+      _ = Block.new(@_io, self, @_root)
+      @blocks << _
       i += 1
-    end
+    end until  ((_io.eof?) || (_.block_type == :block_type_end_of_file)) 
     self
   end
 

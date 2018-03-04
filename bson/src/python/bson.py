@@ -2,7 +2,6 @@
 
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-import struct
 from enum import Enum
 
 
@@ -26,7 +25,7 @@ class Bson(KaitaiStruct):
         self._raw_fields = self._io.read_bytes((self.len - 5))
         io = KaitaiStream(BytesIO(self._raw_fields))
         self.fields = self._root.ElementsList(io, self, self._root)
-        self.terminator = self._io.ensure_fixed_contents(struct.pack('1b', 0))
+        self.terminator = self._io.ensure_fixed_contents(b"\x00")
 
     class Timestamp(KaitaiStruct):
         """Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp."""
@@ -120,7 +119,7 @@ class Bson(KaitaiStruct):
         def _read(self):
             self.len = self._io.read_s4le()
             self.str = (self._io.read_bytes((self.len - 1))).decode(u"UTF-8")
-            self.terminator = self._io.ensure_fixed_contents(struct.pack('1b', 0))
+            self.terminator = self._io.ensure_fixed_contents(b"\x00")
 
 
     class Element(KaitaiStruct):
@@ -223,10 +222,10 @@ class Bson(KaitaiStruct):
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value if hasattr(self, '_m_value') else None
+                return self._m_value
 
             self._m_value = ((self.b1 | (self.b2 << 8)) | (self.b3 << 16))
-            return self._m_value if hasattr(self, '_m_value') else None
+            return self._m_value
 
 
     class CodeWithScope(KaitaiStruct):

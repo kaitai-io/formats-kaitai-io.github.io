@@ -2,7 +2,6 @@
 
 from pkg_resources import parse_version
 from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-import struct
 from enum import Enum
 
 
@@ -27,11 +26,11 @@ class MicrosoftCfb(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.signature = self._io.ensure_fixed_contents(struct.pack('8b', -48, -49, 17, -32, -95, -79, 26, -31))
-            self.clsid = self._io.ensure_fixed_contents(struct.pack('16b', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+            self.signature = self._io.ensure_fixed_contents(b"\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1")
+            self.clsid = self._io.ensure_fixed_contents(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")
             self.version_minor = self._io.read_u2le()
             self.version_major = self._io.read_u2le()
-            self.byte_order = self._io.ensure_fixed_contents(struct.pack('2b', -2, -1))
+            self.byte_order = self._io.ensure_fixed_contents(b"\xFE\xFF")
             self.sector_shift = self._io.read_u2le()
             self.mini_sector_shift = self._io.read_u2le()
             self.reserved1 = self._io.read_bytes(6)
@@ -101,7 +100,7 @@ class MicrosoftCfb(KaitaiStruct):
         @property
         def mini_stream(self):
             if hasattr(self, '_m_mini_stream'):
-                return self._m_mini_stream if hasattr(self, '_m_mini_stream') else None
+                return self._m_mini_stream
 
             if self.object_type == self._root.DirEntry.ObjType.root_storage:
                 io = self._root._io
@@ -110,12 +109,12 @@ class MicrosoftCfb(KaitaiStruct):
                 self._m_mini_stream = io.read_bytes(self.size)
                 io.seek(_pos)
 
-            return self._m_mini_stream if hasattr(self, '_m_mini_stream') else None
+            return self._m_mini_stream
 
         @property
         def child(self):
             if hasattr(self, '_m_child'):
-                return self._m_child if hasattr(self, '_m_child') else None
+                return self._m_child
 
             if self.child_id != -1:
                 io = self._root._io
@@ -124,12 +123,12 @@ class MicrosoftCfb(KaitaiStruct):
                 self._m_child = self._root.DirEntry(io, self, self._root)
                 io.seek(_pos)
 
-            return self._m_child if hasattr(self, '_m_child') else None
+            return self._m_child
 
         @property
         def left_sibling(self):
             if hasattr(self, '_m_left_sibling'):
-                return self._m_left_sibling if hasattr(self, '_m_left_sibling') else None
+                return self._m_left_sibling
 
             if self.left_sibling_id != -1:
                 io = self._root._io
@@ -138,12 +137,12 @@ class MicrosoftCfb(KaitaiStruct):
                 self._m_left_sibling = self._root.DirEntry(io, self, self._root)
                 io.seek(_pos)
 
-            return self._m_left_sibling if hasattr(self, '_m_left_sibling') else None
+            return self._m_left_sibling
 
         @property
         def right_sibling(self):
             if hasattr(self, '_m_right_sibling'):
-                return self._m_right_sibling if hasattr(self, '_m_right_sibling') else None
+                return self._m_right_sibling
 
             if self.right_sibling_id != -1:
                 io = self._root._io
@@ -152,21 +151,21 @@ class MicrosoftCfb(KaitaiStruct):
                 self._m_right_sibling = self._root.DirEntry(io, self, self._root)
                 io.seek(_pos)
 
-            return self._m_right_sibling if hasattr(self, '_m_right_sibling') else None
+            return self._m_right_sibling
 
 
     @property
     def sector_size(self):
         if hasattr(self, '_m_sector_size'):
-            return self._m_sector_size if hasattr(self, '_m_sector_size') else None
+            return self._m_sector_size
 
         self._m_sector_size = (1 << self.header.sector_shift)
-        return self._m_sector_size if hasattr(self, '_m_sector_size') else None
+        return self._m_sector_size
 
     @property
     def fat(self):
         if hasattr(self, '_m_fat'):
-            return self._m_fat if hasattr(self, '_m_fat') else None
+            return self._m_fat
 
         _pos = self._io.pos()
         self._io.seek(self.sector_size)
@@ -174,17 +173,17 @@ class MicrosoftCfb(KaitaiStruct):
         io = KaitaiStream(BytesIO(self._raw__m_fat))
         self._m_fat = self._root.FatEntries(io, self, self._root)
         self._io.seek(_pos)
-        return self._m_fat if hasattr(self, '_m_fat') else None
+        return self._m_fat
 
     @property
     def dir(self):
         if hasattr(self, '_m_dir'):
-            return self._m_dir if hasattr(self, '_m_dir') else None
+            return self._m_dir
 
         _pos = self._io.pos()
         self._io.seek(((self.header.ofs_dir + 1) * self.sector_size))
         self._m_dir = self._root.DirEntry(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_dir if hasattr(self, '_m_dir') else None
+        return self._m_dir
 
 

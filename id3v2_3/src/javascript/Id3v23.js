@@ -153,7 +153,7 @@ var Id3v23 = (function() {
       get: function() {
         if (this._m_isInvalid !== undefined)
           return this._m_isInvalid;
-        this._m_isInvalid = this.id == "\000\000\000\000";
+        this._m_isInvalid = this.id == "\x00\x00\x00\x00";
         return this._m_isInvalid;
       }
     });

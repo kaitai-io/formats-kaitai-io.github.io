@@ -235,12 +235,15 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
         <div class="row">
             <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-if (typeof require === &#39;function&#39;)
-  var WindowsSystemtime = require(&#39;./WindowsSystemtime.js&#39;);
-
-if (typeof require === &#39;function&#39;)
-  var EthernetFrame = require(&#39;./EthernetFrame.js&#39;);
-
+(function (root, factory) {
+  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+    define([&#39;kaitai-struct/KaitaiStream&#39;, &#39;./WindowsSystemtime&#39;, &#39;./EthernetFrame&#39;], factory);
+  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;), require(&#39;./WindowsSystemtime&#39;), require(&#39;./EthernetFrame&#39;));
+  } else {
+    root.MicrosoftNetworkMonitorV2 = factory(root.KaitaiStream, root.WindowsSystemtime, root.EthernetFrame);
+  }
+}(this, function (KaitaiStream, WindowsSystemtime, EthernetFrame) {
 /**
  * Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft&#39;s
  * network packet sniffing and analysis tool. It can save captured
@@ -638,18 +641,8 @@ var MicrosoftNetworkMonitorV2 = (function() {
 
   return MicrosoftNetworkMonitorV2;
 })();
-
-// Export for amd environments
-if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-  define(&#39;MicrosoftNetworkMonitorV2&#39;, [], function() {
-    return MicrosoftNetworkMonitorV2;
-  });
-}
-
-// Export for CommonJS
-if (typeof module === &#39;object&#39; &amp;&amp; module &amp;&amp; module.exports) {
-  module.exports = MicrosoftNetworkMonitorV2;
-}
+return MicrosoftNetworkMonitorV2;
+}));
 </code></pre>
             
         </div>
