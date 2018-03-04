@@ -86,18 +86,18 @@ class Ext2(KaitaiStruct):
         @property
         def block_size(self):
             if hasattr(self, '_m_block_size'):
-                return self._m_block_size
+                return self._m_block_size if hasattr(self, '_m_block_size') else None
 
             self._m_block_size = (1024 << self.log_block_size)
-            return self._m_block_size
+            return self._m_block_size if hasattr(self, '_m_block_size') else None
 
         @property
         def block_group_count(self):
             if hasattr(self, '_m_block_group_count'):
-                return self._m_block_group_count
+                return self._m_block_group_count if hasattr(self, '_m_block_group_count') else None
 
             self._m_block_group_count = self.blocks_count // self.blocks_per_group
-            return self._m_block_group_count
+            return self._m_block_group_count if hasattr(self, '_m_block_group_count') else None
 
 
     class DirEntry(KaitaiStruct):
@@ -128,10 +128,10 @@ class Ext2(KaitaiStruct):
         @property
         def inode(self):
             if hasattr(self, '_m_inode'):
-                return self._m_inode
+                return self._m_inode if hasattr(self, '_m_inode') else None
 
             self._m_inode = self._root.bg1.block_groups[(self.inode_ptr - 1) // self._root.bg1.super_block.inodes_per_group].inodes[((self.inode_ptr - 1) % self._root.bg1.super_block.inodes_per_group)]
-            return self._m_inode
+            return self._m_inode if hasattr(self, '_m_inode') else None
 
 
     class Inode(KaitaiStruct):
@@ -167,14 +167,14 @@ class Ext2(KaitaiStruct):
         @property
         def as_dir(self):
             if hasattr(self, '_m_as_dir'):
-                return self._m_as_dir
+                return self._m_as_dir if hasattr(self, '_m_as_dir') else None
 
             io = self.block[0].body._io
             _pos = io.pos()
             io.seek(0)
             self._m_as_dir = self._root.Dir(io, self, self._root)
             io.seek(_pos)
-            return self._m_as_dir
+            return self._m_as_dir if hasattr(self, '_m_as_dir') else None
 
 
     class BlockPtr(KaitaiStruct):
@@ -190,7 +190,7 @@ class Ext2(KaitaiStruct):
         @property
         def body(self):
             if hasattr(self, '_m_body'):
-                return self._m_body
+                return self._m_body if hasattr(self, '_m_body') else None
 
             _pos = self._io.pos()
             self._io.seek((self.ptr * self._root.bg1.super_block.block_size))
@@ -198,7 +198,7 @@ class Ext2(KaitaiStruct):
             io = KaitaiStream(BytesIO(self._raw__m_body))
             self._m_body = self._root.RawBlock(io, self, self._root)
             self._io.seek(_pos)
-            return self._m_body
+            return self._m_body if hasattr(self, '_m_body') else None
 
 
     class Dir(KaitaiStruct):
@@ -253,29 +253,29 @@ class Ext2(KaitaiStruct):
         @property
         def block_bitmap(self):
             if hasattr(self, '_m_block_bitmap'):
-                return self._m_block_bitmap
+                return self._m_block_bitmap if hasattr(self, '_m_block_bitmap') else None
 
             _pos = self._io.pos()
             self._io.seek((self.block_bitmap_block * self._root.bg1.super_block.block_size))
             self._m_block_bitmap = self._io.read_bytes(1024)
             self._io.seek(_pos)
-            return self._m_block_bitmap
+            return self._m_block_bitmap if hasattr(self, '_m_block_bitmap') else None
 
         @property
         def inode_bitmap(self):
             if hasattr(self, '_m_inode_bitmap'):
-                return self._m_inode_bitmap
+                return self._m_inode_bitmap if hasattr(self, '_m_inode_bitmap') else None
 
             _pos = self._io.pos()
             self._io.seek((self.inode_bitmap_block * self._root.bg1.super_block.block_size))
             self._m_inode_bitmap = self._io.read_bytes(1024)
             self._io.seek(_pos)
-            return self._m_inode_bitmap
+            return self._m_inode_bitmap if hasattr(self, '_m_inode_bitmap') else None
 
         @property
         def inodes(self):
             if hasattr(self, '_m_inodes'):
-                return self._m_inodes
+                return self._m_inodes if hasattr(self, '_m_inodes') else None
 
             _pos = self._io.pos()
             self._io.seek((self.inode_table_block * self._root.bg1.super_block.block_size))
@@ -284,7 +284,7 @@ class Ext2(KaitaiStruct):
                 self._m_inodes[i] = self._root.Inode(self._io, self, self._root)
 
             self._io.seek(_pos)
-            return self._m_inodes
+            return self._m_inodes if hasattr(self, '_m_inodes') else None
 
 
     class RawBlock(KaitaiStruct):
@@ -301,20 +301,20 @@ class Ext2(KaitaiStruct):
     @property
     def bg1(self):
         if hasattr(self, '_m_bg1'):
-            return self._m_bg1
+            return self._m_bg1 if hasattr(self, '_m_bg1') else None
 
         _pos = self._io.pos()
         self._io.seek(1024)
         self._m_bg1 = self._root.BlockGroup(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_bg1
+        return self._m_bg1 if hasattr(self, '_m_bg1') else None
 
     @property
     def root_dir(self):
         if hasattr(self, '_m_root_dir'):
-            return self._m_root_dir
+            return self._m_root_dir if hasattr(self, '_m_root_dir') else None
 
         self._m_root_dir = self.bg1.block_groups[0].inodes[1].as_dir
-        return self._m_root_dir
+        return self._m_root_dir if hasattr(self, '_m_root_dir') else None
 
 

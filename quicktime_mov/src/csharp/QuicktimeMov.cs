@@ -230,7 +230,7 @@ namespace Kaitai
 
             /// <summary>
             /// A time value that indicates the time scale for this
-            /// movie—that is, the number of time units that pass per second
+            /// movie???that is, the number of time units that pass per second
             /// in its time coordinate system. A time coordinate system that
             /// measures time in sixtieths of a second, for example, has a
             /// time scale of 60.
@@ -240,7 +240,7 @@ namespace Kaitai
             /// <summary>
             /// A time value that indicates the duration of the movie in
             /// time scale units. Note that this property is derived from
-            /// the movie’s tracks. The value of this field corresponds to
+            /// the movie???s tracks. The value of this field corresponds to
             /// the duration of the longest track in the movie.
             /// </summary>
             public uint Duration { get { return _duration; } }
@@ -251,7 +251,7 @@ namespace Kaitai
             public Fixed32 PreferredRate { get { return _preferredRate; } }
 
             /// <summary>
-            /// How loud to play this movie’s sound. A value of 1.0 indicates full volume.
+            /// How loud to play this movie???s sound. A value of 1.0 indicates full volume.
             /// </summary>
             public Fixed16 PreferredVolume { get { return _preferredVolume; } }
             public byte[] Reserved1 { get { return _reserved1; } }

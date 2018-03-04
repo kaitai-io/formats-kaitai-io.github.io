@@ -121,7 +121,7 @@ class Lvm2(KaitaiStruct):
                     @property
                     def data(self):
                         if hasattr(self, '_m_data'):
-                            return self._m_data
+                            return self._m_data if hasattr(self, '_m_data') else None
 
                         if self.size != 0:
                             _pos = self._io.pos()
@@ -129,7 +129,7 @@ class Lvm2(KaitaiStruct):
                             self._m_data = (self._io.read_bytes(self.size)).decode(u"ascii")
                             self._io.seek(_pos)
 
-                        return self._m_data
+                        return self._m_data if hasattr(self, '_m_data') else None
 
 
                 class MetadataAreaDescriptor(KaitaiStruct):
@@ -146,7 +146,7 @@ class Lvm2(KaitaiStruct):
                     @property
                     def data(self):
                         if hasattr(self, '_m_data'):
-                            return self._m_data
+                            return self._m_data if hasattr(self, '_m_data') else None
 
                         if self.size != 0:
                             _pos = self._io.pos()
@@ -156,7 +156,7 @@ class Lvm2(KaitaiStruct):
                             self._m_data = self._root.PhysicalVolume.Label.VolumeHeader.MetadataArea(io, self, self._root)
                             self._io.seek(_pos)
 
-                        return self._m_data
+                        return self._m_data if hasattr(self, '_m_data') else None
 
 
                 class MetadataArea(KaitaiStruct):
@@ -213,13 +213,13 @@ class Lvm2(KaitaiStruct):
                         @property
                         def metadata(self):
                             if hasattr(self, '_m_metadata'):
-                                return self._m_metadata
+                                return self._m_metadata if hasattr(self, '_m_metadata') else None
 
                             _pos = self._io.pos()
                             self._io.seek(self.metadata_area_offset)
                             self._m_metadata = self._io.read_bytes(self.metadata_area_size)
                             self._io.seek(_pos)
-                            return self._m_metadata
+                            return self._m_metadata if hasattr(self, '_m_metadata') else None
 
 
 
@@ -229,9 +229,9 @@ class Lvm2(KaitaiStruct):
     @property
     def sector_size(self):
         if hasattr(self, '_m_sector_size'):
-            return self._m_sector_size
+            return self._m_sector_size if hasattr(self, '_m_sector_size') else None
 
         self._m_sector_size = 512
-        return self._m_sector_size
+        return self._m_sector_size if hasattr(self, '_m_sector_size') else None
 
 

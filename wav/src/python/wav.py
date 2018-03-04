@@ -95,34 +95,34 @@ class Wav(KaitaiStruct):
         @property
         def is_extensible(self):
             if hasattr(self, '_m_is_extensible'):
-                return self._m_is_extensible
+                return self._m_is_extensible if hasattr(self, '_m_is_extensible') else None
 
             self._m_is_extensible = self.w_format_tag == self._root.WFormatTagType.extensible
-            return self._m_is_extensible
+            return self._m_is_extensible if hasattr(self, '_m_is_extensible') else None
 
         @property
         def is_basic_pcm(self):
             if hasattr(self, '_m_is_basic_pcm'):
-                return self._m_is_basic_pcm
+                return self._m_is_basic_pcm if hasattr(self, '_m_is_basic_pcm') else None
 
             self._m_is_basic_pcm = self.w_format_tag == self._root.WFormatTagType.pcm
-            return self._m_is_basic_pcm
+            return self._m_is_basic_pcm if hasattr(self, '_m_is_basic_pcm') else None
 
         @property
         def is_basic_float(self):
             if hasattr(self, '_m_is_basic_float'):
-                return self._m_is_basic_float
+                return self._m_is_basic_float if hasattr(self, '_m_is_basic_float') else None
 
             self._m_is_basic_float = self.w_format_tag == self._root.WFormatTagType.ieee_float
-            return self._m_is_basic_float
+            return self._m_is_basic_float if hasattr(self, '_m_is_basic_float') else None
 
         @property
         def is_cb_size_meaningful(self):
             if hasattr(self, '_m_is_cb_size_meaningful'):
-                return self._m_is_cb_size_meaningful
+                return self._m_is_cb_size_meaningful if hasattr(self, '_m_is_cb_size_meaningful') else None
 
             self._m_is_cb_size_meaningful =  ((not (self.is_basic_pcm)) and (self.cb_size != 0)) 
-            return self._m_is_cb_size_meaningful
+            return self._m_is_cb_size_meaningful if hasattr(self, '_m_is_cb_size_meaningful') else None
 
 
     class GuidType(KaitaiStruct):
@@ -311,9 +311,9 @@ class Wav(KaitaiStruct):
     @property
     def format_chunk(self):
         if hasattr(self, '_m_format_chunk'):
-            return self._m_format_chunk
+            return self._m_format_chunk if hasattr(self, '_m_format_chunk') else None
 
         self._m_format_chunk = self.chunks.chunk[0].data
-        return self._m_format_chunk
+        return self._m_format_chunk if hasattr(self, '_m_format_chunk') else None
 
 

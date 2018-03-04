@@ -513,16 +513,16 @@ class NtMdt(KaitaiStruct):
                 @property
                 def count(self):
                     if hasattr(self, '_m_count'):
-                        return self._m_count
+                        return self._m_count if hasattr(self, '_m_count') else None
 
                     self._m_count = ((self.max_index - self.min_index) + 1)
-                    return self._m_count
+                    return self._m_count if hasattr(self, '_m_count') else None
 
 
             @property
             def image(self):
                 if hasattr(self, '_m_image'):
-                    return self._m_image
+                    return self._m_image if hasattr(self, '_m_image') else None
 
                 _pos = self._io.pos()
                 self._io.seek(self.data_offset)
@@ -530,7 +530,7 @@ class NtMdt(KaitaiStruct):
                 io = KaitaiStream(BytesIO(self._raw__m_image))
                 self._m_image = self._root.Frame.FdMetaData.Image(io, self, self._root)
                 self._io.seek(_pos)
-                return self._m_image
+                return self._m_image if hasattr(self, '_m_image') else None
 
 
         class FdSpectroscopy(KaitaiStruct):

@@ -172,66 +172,66 @@ class Vox(KaitaiStruct):
         @property
         def has_is_total_power(self):
             if hasattr(self, '_m_has_is_total_power'):
-                return self._m_has_is_total_power
+                return self._m_has_is_total_power if hasattr(self, '_m_has_is_total_power') else None
 
             self._m_has_is_total_power = (self.property_bits & 128) != 0
-            return self._m_has_is_total_power
+            return self._m_has_is_total_power if hasattr(self, '_m_has_is_total_power') else None
 
         @property
         def has_plastic(self):
             if hasattr(self, '_m_has_plastic'):
-                return self._m_has_plastic
+                return self._m_has_plastic if hasattr(self, '_m_has_plastic') else None
 
             self._m_has_plastic = (self.property_bits & 1) != 0
-            return self._m_has_plastic
+            return self._m_has_plastic if hasattr(self, '_m_has_plastic') else None
 
         @property
         def has_attenuation(self):
             if hasattr(self, '_m_has_attenuation'):
-                return self._m_has_attenuation
+                return self._m_has_attenuation if hasattr(self, '_m_has_attenuation') else None
 
             self._m_has_attenuation = (self.property_bits & 16) != 0
-            return self._m_has_attenuation
+            return self._m_has_attenuation if hasattr(self, '_m_has_attenuation') else None
 
         @property
         def has_power(self):
             if hasattr(self, '_m_has_power'):
-                return self._m_has_power
+                return self._m_has_power if hasattr(self, '_m_has_power') else None
 
             self._m_has_power = (self.property_bits & 32) != 0
-            return self._m_has_power
+            return self._m_has_power if hasattr(self, '_m_has_power') else None
 
         @property
         def has_roughness(self):
             if hasattr(self, '_m_has_roughness'):
-                return self._m_has_roughness
+                return self._m_has_roughness if hasattr(self, '_m_has_roughness') else None
 
             self._m_has_roughness = (self.property_bits & 2) != 0
-            return self._m_has_roughness
+            return self._m_has_roughness if hasattr(self, '_m_has_roughness') else None
 
         @property
         def has_specular(self):
             if hasattr(self, '_m_has_specular'):
-                return self._m_has_specular
+                return self._m_has_specular if hasattr(self, '_m_has_specular') else None
 
             self._m_has_specular = (self.property_bits & 4) != 0
-            return self._m_has_specular
+            return self._m_has_specular if hasattr(self, '_m_has_specular') else None
 
         @property
         def has_ior(self):
             if hasattr(self, '_m_has_ior'):
-                return self._m_has_ior
+                return self._m_has_ior if hasattr(self, '_m_has_ior') else None
 
             self._m_has_ior = (self.property_bits & 8) != 0
-            return self._m_has_ior
+            return self._m_has_ior if hasattr(self, '_m_has_ior') else None
 
         @property
         def has_glow(self):
             if hasattr(self, '_m_has_glow'):
-                return self._m_has_glow
+                return self._m_has_glow if hasattr(self, '_m_has_glow') else None
 
             self._m_has_glow = (self.property_bits & 64) != 0
-            return self._m_has_glow
+            return self._m_has_glow if hasattr(self, '_m_has_glow') else None
 
 
     class Xyzi(KaitaiStruct):

@@ -181,18 +181,18 @@ class Jpeg(KaitaiStruct):
             @property
             def sampling_x(self):
                 if hasattr(self, '_m_sampling_x'):
-                    return self._m_sampling_x
+                    return self._m_sampling_x if hasattr(self, '_m_sampling_x') else None
 
                 self._m_sampling_x = ((self.sampling_factors & 240) >> 4)
-                return self._m_sampling_x
+                return self._m_sampling_x if hasattr(self, '_m_sampling_x') else None
 
             @property
             def sampling_y(self):
                 if hasattr(self, '_m_sampling_y'):
-                    return self._m_sampling_y
+                    return self._m_sampling_y if hasattr(self, '_m_sampling_y') else None
 
                 self._m_sampling_y = (self.sampling_factors & 15)
-                return self._m_sampling_y
+                return self._m_sampling_y if hasattr(self, '_m_sampling_y') else None
 
 
 

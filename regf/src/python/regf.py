@@ -309,18 +309,18 @@ class Regf(KaitaiStruct):
         @property
         def cell_size(self):
             if hasattr(self, '_m_cell_size'):
-                return self._m_cell_size
+                return self._m_cell_size if hasattr(self, '_m_cell_size') else None
 
             self._m_cell_size = ((-1 if self.cell_size_raw < 0 else 1) * self.cell_size_raw)
-            return self._m_cell_size
+            return self._m_cell_size if hasattr(self, '_m_cell_size') else None
 
         @property
         def is_allocated(self):
             if hasattr(self, '_m_is_allocated'):
-                return self._m_is_allocated
+                return self._m_is_allocated if hasattr(self, '_m_is_allocated') else None
 
             self._m_is_allocated = self.cell_size_raw < 0
-            return self._m_is_allocated
+            return self._m_is_allocated if hasattr(self, '_m_is_allocated') else None
 
 
     class FileHeader(KaitaiStruct):

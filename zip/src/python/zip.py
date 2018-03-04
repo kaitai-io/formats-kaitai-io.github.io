@@ -236,13 +236,13 @@ class Zip(KaitaiStruct):
         @property
         def local_header(self):
             if hasattr(self, '_m_local_header'):
-                return self._m_local_header
+                return self._m_local_header if hasattr(self, '_m_local_header') else None
 
             _pos = self._io.pos()
             self._io.seek(self.local_header_offset)
             self._m_local_header = self._root.PkSection(self._io, self, self._root)
             self._io.seek(_pos)
-            return self._m_local_header
+            return self._m_local_header if hasattr(self, '_m_local_header') else None
 
 
     class PkSection(KaitaiStruct):

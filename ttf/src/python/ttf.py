@@ -153,26 +153,26 @@ class Ttf(KaitaiStruct):
             @property
             def ascii_value(self):
                 if hasattr(self, '_m_ascii_value'):
-                    return self._m_ascii_value
+                    return self._m_ascii_value if hasattr(self, '_m_ascii_value') else None
 
                 io = self._parent._io
                 _pos = io.pos()
                 io.seek((self._parent.ofs_strings + self.ofs_str))
                 self._m_ascii_value = (io.read_bytes(self.len_str)).decode(u"ascii")
                 io.seek(_pos)
-                return self._m_ascii_value
+                return self._m_ascii_value if hasattr(self, '_m_ascii_value') else None
 
             @property
             def unicode_value(self):
                 if hasattr(self, '_m_unicode_value'):
-                    return self._m_unicode_value
+                    return self._m_unicode_value if hasattr(self, '_m_unicode_value') else None
 
                 io = self._parent._io
                 _pos = io.pos()
                 io.seek((self._parent.ofs_strings + self.ofs_str))
                 self._m_unicode_value = (io.read_bytes(self.len_str)).decode(u"utf-16be")
                 io.seek(_pos)
-                return self._m_unicode_value
+                return self._m_unicode_value if hasattr(self, '_m_unicode_value') else None
 
 
 
@@ -345,7 +345,7 @@ class Ttf(KaitaiStruct):
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value
+                return self._m_value if hasattr(self, '_m_value') else None
 
             io = self._root._io
             _pos = io.pos()
@@ -402,7 +402,7 @@ class Ttf(KaitaiStruct):
             else:
                 self._m_value = io.read_bytes(self.length)
             io.seek(_pos)
-            return self._m_value
+            return self._m_value if hasattr(self, '_m_value') else None
 
 
     class Os2(KaitaiStruct):
@@ -833,10 +833,10 @@ class Ttf(KaitaiStruct):
             @property
             def point_count(self):
                 if hasattr(self, '_m_point_count'):
-                    return self._m_point_count
+                    return self._m_point_count if hasattr(self, '_m_point_count') else None
 
                 self._m_point_count = (max(self.end_pts_of_contours) + 1)
-                return self._m_point_count
+                return self._m_point_count if hasattr(self, '_m_point_count') else None
 
 
 
@@ -930,14 +930,14 @@ class Ttf(KaitaiStruct):
             @property
             def table(self):
                 if hasattr(self, '_m_table'):
-                    return self._m_table
+                    return self._m_table if hasattr(self, '_m_table') else None
 
                 io = self._parent._io
                 _pos = io.pos()
                 io.seek(self.subtable_offset)
                 self._m_table = self._root.Cmap.Subtable(io, self, self._root)
                 io.seek(_pos)
-                return self._m_table
+                return self._m_table if hasattr(self, '_m_table') else None
 
 
         class Subtable(KaitaiStruct):
@@ -1041,10 +1041,10 @@ class Ttf(KaitaiStruct):
                 @property
                 def seg_count(self):
                     if hasattr(self, '_m_seg_count'):
-                        return self._m_seg_count
+                        return self._m_seg_count if hasattr(self, '_m_seg_count') else None
 
                     self._m_seg_count = self.seg_count_x2 // 2
-                    return self._m_seg_count
+                    return self._m_seg_count if hasattr(self, '_m_seg_count') else None
 
 
             class TrimmedTableMapping(KaitaiStruct):

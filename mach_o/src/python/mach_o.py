@@ -198,10 +198,10 @@ class MachO(KaitaiStruct):
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value
+                return self._m_value if hasattr(self, '_m_value') else None
 
             self._m_value = (((self.b1 % 128) << 0) + (0 if (self.b1 & 128) == 0 else (((self.b2 % 128) << 7) + (0 if (self.b2 & 128) == 0 else (((self.b3 % 128) << 14) + (0 if (self.b3 & 128) == 0 else (((self.b4 % 128) << 21) + (0 if (self.b4 & 128) == 0 else (((self.b5 % 128) << 28) + (0 if (self.b5 & 128) == 0 else (((self.b6 % 128) << 35) + (0 if (self.b6 & 128) == 0 else (((self.b7 % 128) << 42) + (0 if (self.b7 & 128) == 0 else (((self.b8 % 128) << 49) + (0 if (self.b8 & 128) == 0 else (((self.b9 % 128) << 56) + (0 if (self.b8 & 128) == 0 else ((self.b10 % 128) << 63)))))))))))))))))))
-            return self._m_value
+            return self._m_value if hasattr(self, '_m_value') else None
 
 
     class SourceVersionCommand(KaitaiStruct):
@@ -307,29 +307,29 @@ class MachO(KaitaiStruct):
             @property
             def ident(self):
                 if hasattr(self, '_m_ident'):
-                    return self._m_ident
+                    return self._m_ident if hasattr(self, '_m_ident') else None
 
                 _pos = self._io.pos()
                 self._io.seek((self.ident_offset - 8))
                 self._m_ident = (self._io.read_bytes_term(0, False, True, True)).decode(u"utf-8")
                 self._io.seek(_pos)
-                return self._m_ident
+                return self._m_ident if hasattr(self, '_m_ident') else None
 
             @property
             def team_id(self):
                 if hasattr(self, '_m_team_id'):
-                    return self._m_team_id
+                    return self._m_team_id if hasattr(self, '_m_team_id') else None
 
                 _pos = self._io.pos()
                 self._io.seek((self.team_id_offset - 8))
                 self._m_team_id = (self._io.read_bytes_term(0, False, True, True)).decode(u"utf-8")
                 self._io.seek(_pos)
-                return self._m_team_id
+                return self._m_team_id if hasattr(self, '_m_team_id') else None
 
             @property
             def hashes(self):
                 if hasattr(self, '_m_hashes'):
-                    return self._m_hashes
+                    return self._m_hashes if hasattr(self, '_m_hashes') else None
 
                 _pos = self._io.pos()
                 self._io.seek(((self.hash_offset - 8) - (self.hash_size * self.n_special_slots)))
@@ -338,7 +338,7 @@ class MachO(KaitaiStruct):
                     self._m_hashes[i] = self._io.read_bytes(self.hash_size)
 
                 self._io.seek(_pos)
-                return self._m_hashes
+                return self._m_hashes if hasattr(self, '_m_hashes') else None
 
 
         class EntitlementsBlobIndex(KaitaiStruct):
@@ -361,13 +361,13 @@ class MachO(KaitaiStruct):
             @property
             def value(self):
                 if hasattr(self, '_m_value'):
-                    return self._m_value
+                    return self._m_value if hasattr(self, '_m_value') else None
 
                 _pos = self._io.pos()
                 self._io.seek((self.offset - 8))
                 self._m_value = self._root.CsBlob(self._io, self, self._root)
                 self._io.seek(_pos)
-                return self._m_value
+                return self._m_value if hasattr(self, '_m_value') else None
 
 
         class Data(KaitaiStruct):
@@ -543,10 +543,10 @@ class MachO(KaitaiStruct):
                 @property
                 def value(self):
                     if hasattr(self, '_m_value'):
-                        return self._m_value
+                        return self._m_value if hasattr(self, '_m_value') else None
 
                     self._m_value = u"anchor apple generic"
-                    return self._m_value
+                    return self._m_value if hasattr(self, '_m_value') else None
 
 
             class EntitlementFieldExpr(KaitaiStruct):
@@ -610,7 +610,7 @@ class MachO(KaitaiStruct):
             @property
             def blob(self):
                 if hasattr(self, '_m_blob'):
-                    return self._m_blob
+                    return self._m_blob if hasattr(self, '_m_blob') else None
 
                 io = self._parent._io
                 _pos = io.pos()
@@ -619,7 +619,7 @@ class MachO(KaitaiStruct):
                 io = KaitaiStream(BytesIO(self._raw__m_blob))
                 self._m_blob = self._root.CsBlob(io, self, self._root)
                 io.seek(_pos)
-                return self._m_blob
+                return self._m_blob if hasattr(self, '_m_blob') else None
 
 
         class Match(KaitaiStruct):
@@ -921,7 +921,7 @@ class MachO(KaitaiStruct):
             @property
             def data(self):
                 if hasattr(self, '_m_data'):
-                    return self._m_data
+                    return self._m_data if hasattr(self, '_m_data') else None
 
                 io = self._root._io
                 _pos = io.pos()
@@ -998,7 +998,7 @@ class MachO(KaitaiStruct):
                 else:
                     self._m_data = io.read_bytes(self.size)
                 io.seek(_pos)
-                return self._m_data
+                return self._m_data if hasattr(self, '_m_data') else None
 
 
 
@@ -1051,7 +1051,7 @@ class MachO(KaitaiStruct):
         @property
         def indirect_symbols(self):
             if hasattr(self, '_m_indirect_symbols'):
-                return self._m_indirect_symbols
+                return self._m_indirect_symbols if hasattr(self, '_m_indirect_symbols') else None
 
             io = self._root._io
             _pos = io.pos()
@@ -1061,7 +1061,7 @@ class MachO(KaitaiStruct):
                 self._m_indirect_symbols[i] = io.read_u4le()
 
             io.seek(_pos)
-            return self._m_indirect_symbols
+            return self._m_indirect_symbols if hasattr(self, '_m_indirect_symbols') else None
 
 
     class MachHeader(KaitaiStruct):
@@ -1162,7 +1162,7 @@ class MachO(KaitaiStruct):
         @property
         def code_signature(self):
             if hasattr(self, '_m_code_signature'):
-                return self._m_code_signature
+                return self._m_code_signature if hasattr(self, '_m_code_signature') else None
 
             io = self._root._io
             _pos = io.pos()
@@ -1171,7 +1171,7 @@ class MachO(KaitaiStruct):
             io = KaitaiStream(BytesIO(self._raw__m_code_signature))
             self._m_code_signature = self._root.CsBlob(io, self, self._root)
             io.seek(_pos)
-            return self._m_code_signature
+            return self._m_code_signature if hasattr(self, '_m_code_signature') else None
 
 
     class DyldInfoCommand(KaitaiStruct):
@@ -1230,18 +1230,18 @@ class MachO(KaitaiStruct):
             @property
             def opcode(self):
                 if hasattr(self, '_m_opcode'):
-                    return self._m_opcode
+                    return self._m_opcode if hasattr(self, '_m_opcode') else None
 
                 self._m_opcode = self._root.DyldInfoCommand.BindOpcode((self.opcode_and_immediate & 240))
-                return self._m_opcode
+                return self._m_opcode if hasattr(self, '_m_opcode') else None
 
             @property
             def immediate(self):
                 if hasattr(self, '_m_immediate'):
-                    return self._m_immediate
+                    return self._m_immediate if hasattr(self, '_m_immediate') else None
 
                 self._m_immediate = (self.opcode_and_immediate & 15)
-                return self._m_immediate
+                return self._m_immediate if hasattr(self, '_m_immediate') else None
 
 
         class RebaseData(KaitaiStruct):
@@ -1291,18 +1291,18 @@ class MachO(KaitaiStruct):
                 @property
                 def opcode(self):
                     if hasattr(self, '_m_opcode'):
-                        return self._m_opcode
+                        return self._m_opcode if hasattr(self, '_m_opcode') else None
 
                     self._m_opcode = self._root.DyldInfoCommand.RebaseData.Opcode((self.opcode_and_immediate & 240))
-                    return self._m_opcode
+                    return self._m_opcode if hasattr(self, '_m_opcode') else None
 
                 @property
                 def immediate(self):
                     if hasattr(self, '_m_immediate'):
-                        return self._m_immediate
+                        return self._m_immediate if hasattr(self, '_m_immediate') else None
 
                     self._m_immediate = (self.opcode_and_immediate & 15)
-                    return self._m_immediate
+                    return self._m_immediate if hasattr(self, '_m_immediate') else None
 
 
 
@@ -1336,13 +1336,13 @@ class MachO(KaitaiStruct):
                 @property
                 def value(self):
                     if hasattr(self, '_m_value'):
-                        return self._m_value
+                        return self._m_value if hasattr(self, '_m_value') else None
 
                     _pos = self._io.pos()
                     self._io.seek(self.node_offset.value)
                     self._m_value = self._root.DyldInfoCommand.ExportNode(self._io, self, self._root)
                     self._io.seek(_pos)
-                    return self._m_value
+                    return self._m_value if hasattr(self, '_m_value') else None
 
 
 
@@ -1383,7 +1383,7 @@ class MachO(KaitaiStruct):
         @property
         def rebase(self):
             if hasattr(self, '_m_rebase'):
-                return self._m_rebase
+                return self._m_rebase if hasattr(self, '_m_rebase') else None
 
             io = self._root._io
             _pos = io.pos()
@@ -1392,12 +1392,12 @@ class MachO(KaitaiStruct):
             io = KaitaiStream(BytesIO(self._raw__m_rebase))
             self._m_rebase = self._root.DyldInfoCommand.RebaseData(io, self, self._root)
             io.seek(_pos)
-            return self._m_rebase
+            return self._m_rebase if hasattr(self, '_m_rebase') else None
 
         @property
         def bind(self):
             if hasattr(self, '_m_bind'):
-                return self._m_bind
+                return self._m_bind if hasattr(self, '_m_bind') else None
 
             io = self._root._io
             _pos = io.pos()
@@ -1406,12 +1406,12 @@ class MachO(KaitaiStruct):
             io = KaitaiStream(BytesIO(self._raw__m_bind))
             self._m_bind = self._root.DyldInfoCommand.BindData(io, self, self._root)
             io.seek(_pos)
-            return self._m_bind
+            return self._m_bind if hasattr(self, '_m_bind') else None
 
         @property
         def lazy_bind(self):
             if hasattr(self, '_m_lazy_bind'):
-                return self._m_lazy_bind
+                return self._m_lazy_bind if hasattr(self, '_m_lazy_bind') else None
 
             io = self._root._io
             _pos = io.pos()
@@ -1420,12 +1420,12 @@ class MachO(KaitaiStruct):
             io = KaitaiStream(BytesIO(self._raw__m_lazy_bind))
             self._m_lazy_bind = self._root.DyldInfoCommand.LazyBindData(io, self, self._root)
             io.seek(_pos)
-            return self._m_lazy_bind
+            return self._m_lazy_bind if hasattr(self, '_m_lazy_bind') else None
 
         @property
         def exports(self):
             if hasattr(self, '_m_exports'):
-                return self._m_exports
+                return self._m_exports if hasattr(self, '_m_exports') else None
 
             io = self._root._io
             _pos = io.pos()
@@ -1434,7 +1434,7 @@ class MachO(KaitaiStruct):
             io = KaitaiStream(BytesIO(self._raw__m_exports))
             self._m_exports = self._root.DyldInfoCommand.ExportNode(io, self, self._root)
             io.seek(_pos)
-            return self._m_exports
+            return self._m_exports if hasattr(self, '_m_exports') else None
 
 
     class DylinkerCommand(KaitaiStruct):
@@ -1703,7 +1703,7 @@ class MachO(KaitaiStruct):
         @property
         def symbols(self):
             if hasattr(self, '_m_symbols'):
-                return self._m_symbols
+                return self._m_symbols if hasattr(self, '_m_symbols') else None
 
             io = self._root._io
             _pos = io.pos()
@@ -1713,12 +1713,12 @@ class MachO(KaitaiStruct):
                 self._m_symbols[i] = self._root.SymtabCommand.Nlist64(io, self, self._root)
 
             io.seek(_pos)
-            return self._m_symbols
+            return self._m_symbols if hasattr(self, '_m_symbols') else None
 
         @property
         def strs(self):
             if hasattr(self, '_m_strs'):
-                return self._m_strs
+                return self._m_strs if hasattr(self, '_m_strs') else None
 
             io = self._root._io
             _pos = io.pos()
@@ -1727,7 +1727,7 @@ class MachO(KaitaiStruct):
             io = KaitaiStream(BytesIO(self._raw__m_strs))
             self._m_strs = self._root.SymtabCommand.StrTable(io, self, self._root)
             io.seek(_pos)
-            return self._m_strs
+            return self._m_strs if hasattr(self, '_m_strs') else None
 
 
     class VersionMinCommand(KaitaiStruct):

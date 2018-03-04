@@ -154,24 +154,24 @@ class WindowsEvtLog(KaitaiStruct):
         @property
         def user_sid(self):
             if hasattr(self, '_m_user_sid'):
-                return self._m_user_sid
+                return self._m_user_sid if hasattr(self, '_m_user_sid') else None
 
             _pos = self._io.pos()
             self._io.seek((self.ofs_user_sid - 8))
             self._m_user_sid = self._io.read_bytes(self.len_user_sid)
             self._io.seek(_pos)
-            return self._m_user_sid
+            return self._m_user_sid if hasattr(self, '_m_user_sid') else None
 
         @property
         def data(self):
             if hasattr(self, '_m_data'):
-                return self._m_data
+                return self._m_data if hasattr(self, '_m_data') else None
 
             _pos = self._io.pos()
             self._io.seek((self.ofs_data - 8))
             self._m_data = self._io.read_bytes(self.len_data)
             self._io.seek(_pos)
-            return self._m_data
+            return self._m_data if hasattr(self, '_m_data') else None
 
 
     class CursorRecordBody(KaitaiStruct):

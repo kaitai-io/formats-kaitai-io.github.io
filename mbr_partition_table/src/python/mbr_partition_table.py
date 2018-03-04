@@ -63,18 +63,18 @@ class MbrPartitionTable(KaitaiStruct):
         @property
         def sector(self):
             if hasattr(self, '_m_sector'):
-                return self._m_sector
+                return self._m_sector if hasattr(self, '_m_sector') else None
 
             self._m_sector = (self.b2 & 63)
-            return self._m_sector
+            return self._m_sector if hasattr(self, '_m_sector') else None
 
         @property
         def cylinder(self):
             if hasattr(self, '_m_cylinder'):
-                return self._m_cylinder
+                return self._m_cylinder if hasattr(self, '_m_cylinder') else None
 
             self._m_cylinder = (self.b3 + ((self.b2 & 192) << 2))
-            return self._m_cylinder
+            return self._m_cylinder if hasattr(self, '_m_cylinder') else None
 
 
 

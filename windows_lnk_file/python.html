@@ -376,15 +376,15 @@ class WindowsLnkFile(KaitaiStruct):
             @property
             def is_unicode(self):
                 if hasattr(self, &#39;_m_is_unicode&#39;):
-                    return self._m_is_unicode
+                    return self._m_is_unicode if hasattr(self, &#39;_m_is_unicode&#39;) else None
 
                 self._m_is_unicode = self.ofs_volume_label == 20
-                return self._m_is_unicode
+                return self._m_is_unicode if hasattr(self, &#39;_m_is_unicode&#39;) else None
 
             @property
             def volume_label_ansi(self):
                 if hasattr(self, &#39;_m_volume_label_ansi&#39;):
-                    return self._m_volume_label_ansi
+                    return self._m_volume_label_ansi if hasattr(self, &#39;_m_volume_label_ansi&#39;) else None
 
                 if not (self.is_unicode):
                     _pos = self._io.pos()
@@ -392,7 +392,7 @@ class WindowsLnkFile(KaitaiStruct):
                     self._m_volume_label_ansi = (self._io.read_bytes_term(0, False, True, True)).decode(u&quot;cp437&quot;)
                     self._io.seek(_pos)
 
-                return self._m_volume_label_ansi
+                return self._m_volume_label_ansi if hasattr(self, &#39;_m_volume_label_ansi&#39;) else None
 
 
         class All(KaitaiStruct):
@@ -415,7 +415,7 @@ class WindowsLnkFile(KaitaiStruct):
             @property
             def volume_id(self):
                 if hasattr(self, &#39;_m_volume_id&#39;):
-                    return self._m_volume_id
+                    return self._m_volume_id if hasattr(self, &#39;_m_volume_id&#39;) else None
 
                 if self.header.flags.has_volume_id_and_local_base_path:
                     _pos = self._io.pos()
@@ -423,12 +423,12 @@ class WindowsLnkFile(KaitaiStruct):
                     self._m_volume_id = self._root.LinkInfo.VolumeIdSpec(self._io, self, self._root)
                     self._io.seek(_pos)
 
-                return self._m_volume_id
+                return self._m_volume_id if hasattr(self, &#39;_m_volume_id&#39;) else None
 
             @property
             def local_base_path(self):
                 if hasattr(self, &#39;_m_local_base_path&#39;):
-                    return self._m_local_base_path
+                    return self._m_local_base_path if hasattr(self, &#39;_m_local_base_path&#39;) else None
 
                 if self.header.flags.has_volume_id_and_local_base_path:
                     _pos = self._io.pos()
@@ -436,7 +436,7 @@ class WindowsLnkFile(KaitaiStruct):
                     self._m_local_base_path = self._io.read_bytes_term(0, False, True, True)
                     self._io.seek(_pos)
 
-                return self._m_local_base_path
+                return self._m_local_base_path if hasattr(self, &#39;_m_local_base_path&#39;) else None
 
 
         class VolumeIdSpec(KaitaiStruct):

@@ -48,17 +48,17 @@ class PsxTim(KaitaiStruct):
     @property
     def has_clut(self):
         if hasattr(self, '_m_has_clut'):
-            return self._m_has_clut
+            return self._m_has_clut if hasattr(self, '_m_has_clut') else None
 
         self._m_has_clut = (self.flags & 8) != 0
-        return self._m_has_clut
+        return self._m_has_clut if hasattr(self, '_m_has_clut') else None
 
     @property
     def bpp(self):
         if hasattr(self, '_m_bpp'):
-            return self._m_bpp
+            return self._m_bpp if hasattr(self, '_m_bpp') else None
 
         self._m_bpp = (self.flags & 3)
-        return self._m_bpp
+        return self._m_bpp if hasattr(self, '_m_bpp') else None
 
 

@@ -365,26 +365,26 @@ class Rar(KaitaiStruct):
         def has_add(self):
             &quot;&quot;&quot;True if block has additional content attached to it.&quot;&quot;&quot;
             if hasattr(self, &#39;_m_has_add&#39;):
-                return self._m_has_add
+                return self._m_has_add if hasattr(self, &#39;_m_has_add&#39;) else None
 
             self._m_has_add = (self.flags &amp; 32768) != 0
-            return self._m_has_add
+            return self._m_has_add if hasattr(self, &#39;_m_has_add&#39;) else None
 
         @property
         def header_size(self):
             if hasattr(self, &#39;_m_header_size&#39;):
-                return self._m_header_size
+                return self._m_header_size if hasattr(self, &#39;_m_header_size&#39;) else None
 
             self._m_header_size = (11 if self.has_add else 7)
-            return self._m_header_size
+            return self._m_header_size if hasattr(self, &#39;_m_header_size&#39;) else None
 
         @property
         def body_size(self):
             if hasattr(self, &#39;_m_body_size&#39;):
-                return self._m_body_size
+                return self._m_body_size if hasattr(self, &#39;_m_body_size&#39;) else None
 
             self._m_body_size = (self.block_size - self.header_size)
-            return self._m_body_size
+            return self._m_body_size if hasattr(self, &#39;_m_body_size&#39;) else None
 
 
     class BlockFileHeader(KaitaiStruct):
@@ -449,50 +449,50 @@ class Rar(KaitaiStruct):
         @property
         def month(self):
             if hasattr(self, &#39;_m_month&#39;):
-                return self._m_month
+                return self._m_month if hasattr(self, &#39;_m_month&#39;) else None
 
             self._m_month = ((self.date &amp; 480) &gt;&gt; 5)
-            return self._m_month
+            return self._m_month if hasattr(self, &#39;_m_month&#39;) else None
 
         @property
         def seconds(self):
             if hasattr(self, &#39;_m_seconds&#39;):
-                return self._m_seconds
+                return self._m_seconds if hasattr(self, &#39;_m_seconds&#39;) else None
 
             self._m_seconds = ((self.time &amp; 31) * 2)
-            return self._m_seconds
+            return self._m_seconds if hasattr(self, &#39;_m_seconds&#39;) else None
 
         @property
         def year(self):
             if hasattr(self, &#39;_m_year&#39;):
-                return self._m_year
+                return self._m_year if hasattr(self, &#39;_m_year&#39;) else None
 
             self._m_year = (((self.date &amp; 65024) &gt;&gt; 9) + 1980)
-            return self._m_year
+            return self._m_year if hasattr(self, &#39;_m_year&#39;) else None
 
         @property
         def minutes(self):
             if hasattr(self, &#39;_m_minutes&#39;):
-                return self._m_minutes
+                return self._m_minutes if hasattr(self, &#39;_m_minutes&#39;) else None
 
             self._m_minutes = ((self.time &amp; 2016) &gt;&gt; 5)
-            return self._m_minutes
+            return self._m_minutes if hasattr(self, &#39;_m_minutes&#39;) else None
 
         @property
         def day(self):
             if hasattr(self, &#39;_m_day&#39;):
-                return self._m_day
+                return self._m_day if hasattr(self, &#39;_m_day&#39;) else None
 
             self._m_day = (self.date &amp; 31)
-            return self._m_day
+            return self._m_day if hasattr(self, &#39;_m_day&#39;) else None
 
         @property
         def hours(self):
             if hasattr(self, &#39;_m_hours&#39;):
-                return self._m_hours
+                return self._m_hours if hasattr(self, &#39;_m_hours&#39;) else None
 
             self._m_hours = ((self.time &amp; 63488) &gt;&gt; 11)
-            return self._m_hours
+            return self._m_hours if hasattr(self, &#39;_m_hours&#39;) else None
 
 
 

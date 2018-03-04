@@ -61,18 +61,18 @@ class Swf(KaitaiStruct):
         @property
         def num_bits(self):
             if hasattr(self, '_m_num_bits'):
-                return self._m_num_bits
+                return self._m_num_bits if hasattr(self, '_m_num_bits') else None
 
             self._m_num_bits = (self.b1 >> 3)
-            return self._m_num_bits
+            return self._m_num_bits if hasattr(self, '_m_num_bits') else None
 
         @property
         def num_bytes(self):
             if hasattr(self, '_m_num_bytes'):
-                return self._m_num_bytes
+                return self._m_num_bytes if hasattr(self, '_m_num_bytes') else None
 
             self._m_num_bytes = (((self.num_bits * 4) - 3) + 7) // 8
-            return self._m_num_bytes
+            return self._m_num_bytes if hasattr(self, '_m_num_bytes') else None
 
 
     class Tag(KaitaiStruct):
@@ -122,26 +122,26 @@ class Swf(KaitaiStruct):
         @property
         def tag_type(self):
             if hasattr(self, '_m_tag_type'):
-                return self._m_tag_type
+                return self._m_tag_type if hasattr(self, '_m_tag_type') else None
 
             self._m_tag_type = self._root.TagType((self.tag_code_and_length >> 6))
-            return self._m_tag_type
+            return self._m_tag_type if hasattr(self, '_m_tag_type') else None
 
         @property
         def small_len(self):
             if hasattr(self, '_m_small_len'):
-                return self._m_small_len
+                return self._m_small_len if hasattr(self, '_m_small_len') else None
 
             self._m_small_len = (self.tag_code_and_length & 63)
-            return self._m_small_len
+            return self._m_small_len if hasattr(self, '_m_small_len') else None
 
         @property
         def len(self):
             if hasattr(self, '_m_len'):
-                return self._m_len
+                return self._m_len if hasattr(self, '_m_len') else None
 
             self._m_len = (self.big_len if self.small_len == 63 else self.small_len)
-            return self._m_len
+            return self._m_len if hasattr(self, '_m_len') else None
 
 
 

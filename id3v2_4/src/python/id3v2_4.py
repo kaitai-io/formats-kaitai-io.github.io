@@ -43,10 +43,10 @@ class Id3v24(KaitaiStruct):
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value
+                return self._m_value if hasattr(self, '_m_value') else None
 
             self._m_value = ((self.byte0.value << 7) | self.byte1.value)
-            return self._m_value
+            return self._m_value if hasattr(self, '_m_value') else None
 
 
     class Tag(KaitaiStruct):
@@ -91,10 +91,10 @@ class Id3v24(KaitaiStruct):
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value
+                return self._m_value if hasattr(self, '_m_value') else None
 
             self._m_value = ((self.short0.value << 14) | self.short1.value)
-            return self._m_value
+            return self._m_value if hasattr(self, '_m_value') else None
 
 
     class Frame(KaitaiStruct):
@@ -146,10 +146,10 @@ class Id3v24(KaitaiStruct):
         @property
         def is_invalid(self):
             if hasattr(self, '_m_is_invalid'):
-                return self._m_is_invalid
+                return self._m_is_invalid if hasattr(self, '_m_is_invalid') else None
 
             self._m_is_invalid = self.id == u"\000\000\000\000"
-            return self._m_is_invalid
+            return self._m_is_invalid if hasattr(self, '_m_is_invalid') else None
 
 
     class HeaderEx(KaitaiStruct):

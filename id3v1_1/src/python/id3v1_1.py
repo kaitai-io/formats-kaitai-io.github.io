@@ -186,12 +186,12 @@ class Id3v11(KaitaiStruct):
     @property
     def id3v1_tag(self):
         if hasattr(self, '_m_id3v1_tag'):
-            return self._m_id3v1_tag
+            return self._m_id3v1_tag if hasattr(self, '_m_id3v1_tag') else None
 
         _pos = self._io.pos()
         self._io.seek((self._io.size() - 128))
         self._m_id3v1_tag = self._root.Id3V11Tag(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_id3v1_tag
+        return self._m_id3v1_tag if hasattr(self, '_m_id3v1_tag') else None
 
 

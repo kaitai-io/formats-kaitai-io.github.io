@@ -95,14 +95,14 @@ class WindowsMinidump(KaitaiStruct):
         @property
         def data(self):
             if hasattr(self, '_m_data'):
-                return self._m_data
+                return self._m_data if hasattr(self, '_m_data') else None
 
             io = self._root._io
             _pos = io.pos()
             io.seek(self.ofs_data)
             self._m_data = io.read_bytes(self.len_data)
             io.seek(_pos)
-            return self._m_data
+            return self._m_data if hasattr(self, '_m_data') else None
 
 
     class MinidumpString(KaitaiStruct):
@@ -160,7 +160,7 @@ class WindowsMinidump(KaitaiStruct):
         @property
         def service_pack(self):
             if hasattr(self, '_m_service_pack'):
-                return self._m_service_pack
+                return self._m_service_pack if hasattr(self, '_m_service_pack') else None
 
             if self.ofs_service_pack > 0:
                 io = self._root._io
@@ -169,7 +169,7 @@ class WindowsMinidump(KaitaiStruct):
                 self._m_service_pack = self._root.MinidumpString(io, self, self._root)
                 io.seek(_pos)
 
-            return self._m_service_pack
+            return self._m_service_pack if hasattr(self, '_m_service_pack') else None
 
 
     class ExceptionRecord(KaitaiStruct):
@@ -240,7 +240,7 @@ class WindowsMinidump(KaitaiStruct):
         @property
         def data(self):
             if hasattr(self, '_m_data'):
-                return self._m_data
+                return self._m_data if hasattr(self, '_m_data') else None
 
             _pos = self._io.pos()
             self._io.seek(self.ofs_data)
@@ -268,7 +268,7 @@ class WindowsMinidump(KaitaiStruct):
             else:
                 self._m_data = self._io.read_bytes(self.len_data)
             self._io.seek(_pos)
-            return self._m_data
+            return self._m_data if hasattr(self, '_m_data') else None
 
 
     class Thread(KaitaiStruct):
@@ -348,7 +348,7 @@ class WindowsMinidump(KaitaiStruct):
     @property
     def streams(self):
         if hasattr(self, '_m_streams'):
-            return self._m_streams
+            return self._m_streams if hasattr(self, '_m_streams') else None
 
         _pos = self._io.pos()
         self._io.seek(self.ofs_streams)
@@ -357,6 +357,6 @@ class WindowsMinidump(KaitaiStruct):
             self._m_streams[i] = self._root.Dir(self._io, self, self._root)
 
         self._io.seek(_pos)
-        return self._m_streams
+        return self._m_streams if hasattr(self, '_m_streams') else None
 
 

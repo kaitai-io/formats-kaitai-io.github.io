@@ -96,7 +96,7 @@ class Pcx(KaitaiStruct):
            - "VGA 256 Color Palette Information" - http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt
         """
         if hasattr(self, '_m_palette_256'):
-            return self._m_palette_256
+            return self._m_palette_256 if hasattr(self, '_m_palette_256') else None
 
         if  ((self.hdr.version == self._root.Versions.v3_0) and (self.hdr.bits_per_pixel == 8) and (self.hdr.num_planes == 1)) :
             _pos = self._io.pos()
@@ -104,6 +104,6 @@ class Pcx(KaitaiStruct):
             self._m_palette_256 = self._root.TPalette256(self._io, self, self._root)
             self._io.seek(_pos)
 
-        return self._m_palette_256
+        return self._m_palette_256 if hasattr(self, '_m_palette_256') else None
 
 

@@ -69,15 +69,15 @@ class Tga(KaitaiStruct):
         @property
         def is_valid(self):
             if hasattr(self, '_m_is_valid'):
-                return self._m_is_valid
+                return self._m_is_valid if hasattr(self, '_m_is_valid') else None
 
             self._m_is_valid = self.version_magic == b"\x54\x52\x55\x45\x56\x49\x53\x49\x4F\x4E\x2D\x58\x46\x49\x4C\x45\x2E\x00"
-            return self._m_is_valid
+            return self._m_is_valid if hasattr(self, '_m_is_valid') else None
 
         @property
         def ext_area(self):
             if hasattr(self, '_m_ext_area'):
-                return self._m_ext_area
+                return self._m_ext_area if hasattr(self, '_m_ext_area') else None
 
             if self.is_valid:
                 _pos = self._io.pos()
@@ -85,7 +85,7 @@ class Tga(KaitaiStruct):
                 self._m_ext_area = self._root.TgaExtArea(self._io, self, self._root)
                 self._io.seek(_pos)
 
-            return self._m_ext_area
+            return self._m_ext_area if hasattr(self, '_m_ext_area') else None
 
 
     class TgaExtArea(KaitaiStruct):
@@ -119,12 +119,12 @@ class Tga(KaitaiStruct):
     @property
     def footer(self):
         if hasattr(self, '_m_footer'):
-            return self._m_footer
+            return self._m_footer if hasattr(self, '_m_footer') else None
 
         _pos = self._io.pos()
         self._io.seek((self._io.size() - 26))
         self._m_footer = self._root.TgaFooter(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_footer
+        return self._m_footer if hasattr(self, '_m_footer') else None
 
 

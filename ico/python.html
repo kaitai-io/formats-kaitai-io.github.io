@@ -299,13 +299,13 @@ class Ico(KaitaiStruct):
             relevant parser, if needed to parse image data further.
             &quot;&quot;&quot;
             if hasattr(self, &#39;_m_img&#39;):
-                return self._m_img
+                return self._m_img if hasattr(self, &#39;_m_img&#39;) else None
 
             _pos = self._io.pos()
             self._io.seek(self.ofs_img)
             self._m_img = self._io.read_bytes(self.len_img)
             self._io.seek(_pos)
-            return self._m_img
+            return self._m_img if hasattr(self, &#39;_m_img&#39;) else None
 
         @property
         def png_header(self):
@@ -313,22 +313,22 @@ class Ico(KaitaiStruct):
             embedded PNG file.
             &quot;&quot;&quot;
             if hasattr(self, &#39;_m_png_header&#39;):
-                return self._m_png_header
+                return self._m_png_header if hasattr(self, &#39;_m_png_header&#39;) else None
 
             _pos = self._io.pos()
             self._io.seek(self.ofs_img)
             self._m_png_header = self._io.read_bytes(8)
             self._io.seek(_pos)
-            return self._m_png_header
+            return self._m_png_header if hasattr(self, &#39;_m_png_header&#39;) else None
 
         @property
         def is_png(self):
             &quot;&quot;&quot;True if this image is in PNG format.&quot;&quot;&quot;
             if hasattr(self, &#39;_m_is_png&#39;):
-                return self._m_is_png
+                return self._m_is_png if hasattr(self, &#39;_m_is_png&#39;) else None
 
             self._m_is_png = self.png_header == b&quot;\x89\x50\x4E\x47\x0D\x0A\x1A\x0A&quot;
-            return self._m_is_png
+            return self._m_is_png if hasattr(self, &#39;_m_is_png&#39;) else None
 
 
 

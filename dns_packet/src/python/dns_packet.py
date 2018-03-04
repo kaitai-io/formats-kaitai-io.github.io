@@ -70,14 +70,14 @@ class DnsPacket(KaitaiStruct):
         @property
         def contents(self):
             if hasattr(self, '_m_contents'):
-                return self._m_contents
+                return self._m_contents if hasattr(self, '_m_contents') else None
 
             io = self._root._io
             _pos = io.pos()
             io.seek(self.value)
             self._m_contents = self._root.DomainName(io, self, self._root)
             io.seek(_pos)
-            return self._m_contents
+            return self._m_contents if hasattr(self, '_m_contents') else None
 
 
     class Label(KaitaiStruct):
@@ -99,10 +99,10 @@ class DnsPacket(KaitaiStruct):
         @property
         def is_pointer(self):
             if hasattr(self, '_m_is_pointer'):
-                return self._m_is_pointer
+                return self._m_is_pointer if hasattr(self, '_m_is_pointer') else None
 
             self._m_is_pointer = self.length == 192
-            return self._m_is_pointer
+            return self._m_is_pointer if hasattr(self, '_m_is_pointer') else None
 
 
     class Query(KaitaiStruct):
@@ -184,82 +184,82 @@ class DnsPacket(KaitaiStruct):
         @property
         def qr(self):
             if hasattr(self, '_m_qr'):
-                return self._m_qr
+                return self._m_qr if hasattr(self, '_m_qr') else None
 
             self._m_qr = ((self.flag & 32768) >> 15)
-            return self._m_qr
+            return self._m_qr if hasattr(self, '_m_qr') else None
 
         @property
         def ra(self):
             if hasattr(self, '_m_ra'):
-                return self._m_ra
+                return self._m_ra if hasattr(self, '_m_ra') else None
 
             self._m_ra = ((self.flag & 128) >> 7)
-            return self._m_ra
+            return self._m_ra if hasattr(self, '_m_ra') else None
 
         @property
         def tc(self):
             if hasattr(self, '_m_tc'):
-                return self._m_tc
+                return self._m_tc if hasattr(self, '_m_tc') else None
 
             self._m_tc = ((self.flag & 512) >> 9)
-            return self._m_tc
+            return self._m_tc if hasattr(self, '_m_tc') else None
 
         @property
         def rcode(self):
             if hasattr(self, '_m_rcode'):
-                return self._m_rcode
+                return self._m_rcode if hasattr(self, '_m_rcode') else None
 
             self._m_rcode = ((self.flag & 15) >> 0)
-            return self._m_rcode
+            return self._m_rcode if hasattr(self, '_m_rcode') else None
 
         @property
         def opcode(self):
             if hasattr(self, '_m_opcode'):
-                return self._m_opcode
+                return self._m_opcode if hasattr(self, '_m_opcode') else None
 
             self._m_opcode = ((self.flag & 30720) >> 11)
-            return self._m_opcode
+            return self._m_opcode if hasattr(self, '_m_opcode') else None
 
         @property
         def aa(self):
             if hasattr(self, '_m_aa'):
-                return self._m_aa
+                return self._m_aa if hasattr(self, '_m_aa') else None
 
             self._m_aa = ((self.flag & 1024) >> 10)
-            return self._m_aa
+            return self._m_aa if hasattr(self, '_m_aa') else None
 
         @property
         def z(self):
             if hasattr(self, '_m_z'):
-                return self._m_z
+                return self._m_z if hasattr(self, '_m_z') else None
 
             self._m_z = ((self.flag & 64) >> 6)
-            return self._m_z
+            return self._m_z if hasattr(self, '_m_z') else None
 
         @property
         def rd(self):
             if hasattr(self, '_m_rd'):
-                return self._m_rd
+                return self._m_rd if hasattr(self, '_m_rd') else None
 
             self._m_rd = ((self.flag & 256) >> 8)
-            return self._m_rd
+            return self._m_rd if hasattr(self, '_m_rd') else None
 
         @property
         def cd(self):
             if hasattr(self, '_m_cd'):
-                return self._m_cd
+                return self._m_cd if hasattr(self, '_m_cd') else None
 
             self._m_cd = ((self.flag & 16) >> 4)
-            return self._m_cd
+            return self._m_cd if hasattr(self, '_m_cd') else None
 
         @property
         def ad(self):
             if hasattr(self, '_m_ad'):
-                return self._m_ad
+                return self._m_ad if hasattr(self, '_m_ad') else None
 
             self._m_ad = ((self.flag & 32) >> 5)
-            return self._m_ad
+            return self._m_ad if hasattr(self, '_m_ad') else None
 
 
 

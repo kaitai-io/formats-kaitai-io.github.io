@@ -93,21 +93,21 @@ class Tsm(KaitaiStruct):
                 @property
                 def block(self):
                     if hasattr(self, '_m_block'):
-                        return self._m_block
+                        return self._m_block if hasattr(self, '_m_block') else None
 
                     io = self._root._io
                     _pos = io.pos()
                     io.seek(self.block_offset)
                     self._m_block = self._root.Index.IndexHeader.IndexEntry.BlockEntry(io, self, self._root)
                     io.seek(_pos)
-                    return self._m_block
+                    return self._m_block if hasattr(self, '_m_block') else None
 
 
 
         @property
         def entries(self):
             if hasattr(self, '_m_entries'):
-                return self._m_entries
+                return self._m_entries if hasattr(self, '_m_entries') else None
 
             _pos = self._io.pos()
             self._io.seek(self.offset)
@@ -120,18 +120,18 @@ class Tsm(KaitaiStruct):
                     break
                 i += 1
             self._io.seek(_pos)
-            return self._m_entries
+            return self._m_entries if hasattr(self, '_m_entries') else None
 
 
     @property
     def index(self):
         if hasattr(self, '_m_index'):
-            return self._m_index
+            return self._m_index if hasattr(self, '_m_index') else None
 
         _pos = self._io.pos()
         self._io.seek((self._io.size() - 8))
         self._m_index = self._root.Index(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_index
+        return self._m_index if hasattr(self, '_m_index') else None
 
 

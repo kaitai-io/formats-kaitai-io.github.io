@@ -80,10 +80,10 @@ class CpioOldLe(KaitaiStruct):
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value
+                return self._m_value if hasattr(self, '_m_value') else None
 
             self._m_value = (self.least_significant_bits + (self.most_significant_bits << 16))
-            return self._m_value
+            return self._m_value if hasattr(self, '_m_value') else None
 
 
 

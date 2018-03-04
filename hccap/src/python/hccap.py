@@ -52,14 +52,14 @@ class Hccap(KaitaiStruct):
         @property
         def eapol(self):
             if hasattr(self, '_m_eapol'):
-                return self._m_eapol
+                return self._m_eapol if hasattr(self, '_m_eapol') else None
 
             io = self.eapol_buffer._io
             _pos = io.pos()
             io.seek(0)
             self._m_eapol = io.read_bytes(self.len_eapol)
             io.seek(_pos)
-            return self._m_eapol
+            return self._m_eapol if hasattr(self, '_m_eapol') else None
 
 
     class EapolDummy(KaitaiStruct):

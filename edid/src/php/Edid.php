@@ -101,7 +101,7 @@ class Edid extends \Kaitai\Struct\Struct {
     public function mfgWeek() { return $this->_m_mfgWeek; }
 
     /**
-     * Year of manufacture, less 1990. (1990–2245). If week=255, it is the model year instead.
+     * Year of manufacture, less 1990. (1990???2245). If week=255, it is the model year instead.
      */
     public function mfgYearMod() { return $this->_m_mfgYearMod; }
 
@@ -127,7 +127,7 @@ class Edid extends \Kaitai\Struct\Struct {
     public function screenSizeV() { return $this->_m_screenSizeV; }
 
     /**
-     * Display gamma, datavalue = (gamma*100)-100 (range 1.00–3.54)
+     * Display gamma, datavalue = (gamma*100)-100 (range 1.00???3.54)
      */
     public function gammaMod() { return $this->_m_gammaMod; }
     public function featuresFlags() { return $this->_m_featuresFlags; }

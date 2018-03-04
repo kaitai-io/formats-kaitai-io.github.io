@@ -163,10 +163,10 @@ class S3m(KaitaiStruct):
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value
+                return self._m_value if hasattr(self, '_m_value') else None
 
             self._m_value = (self.lo | (self.hi << 16))
-            return self._m_value
+            return self._m_value if hasattr(self, '_m_value') else None
 
 
     class Pattern(KaitaiStruct):
@@ -196,13 +196,13 @@ class S3m(KaitaiStruct):
         @property
         def body(self):
             if hasattr(self, '_m_body'):
-                return self._m_body
+                return self._m_body if hasattr(self, '_m_body') else None
 
             _pos = self._io.pos()
             self._io.seek((self.paraptr * 16))
             self._m_body = self._root.Pattern(self._io, self, self._root)
             self._io.seek(_pos)
-            return self._m_body
+            return self._m_body if hasattr(self, '_m_body') else None
 
 
     class InstrumentPtr(KaitaiStruct):
@@ -218,13 +218,13 @@ class S3m(KaitaiStruct):
         @property
         def body(self):
             if hasattr(self, '_m_body'):
-                return self._m_body
+                return self._m_body if hasattr(self, '_m_body') else None
 
             _pos = self._io.pos()
             self._io.seek((self.paraptr * 16))
             self._m_body = self._root.Instrument(self._io, self, self._root)
             self._io.seek(_pos)
-            return self._m_body
+            return self._m_body if hasattr(self, '_m_body') else None
 
 
     class Instrument(KaitaiStruct):
@@ -276,13 +276,13 @@ class S3m(KaitaiStruct):
             @property
             def sample(self):
                 if hasattr(self, '_m_sample'):
-                    return self._m_sample
+                    return self._m_sample if hasattr(self, '_m_sample') else None
 
                 _pos = self._io.pos()
                 self._io.seek((self.paraptr_sample.value * 16))
                 self._m_sample = self._io.read_bytes(self.len_sample)
                 self._io.seek(_pos)
-                return self._m_sample
+                return self._m_sample if hasattr(self, '_m_sample') else None
 
 
         class Adlib(KaitaiStruct):

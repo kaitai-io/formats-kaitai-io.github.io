@@ -299,10 +299,10 @@ class QuicktimeMov(KaitaiStruct):
         @property
         def len(self):
             if hasattr(self, '_m_len'):
-                return self._m_len
+                return self._m_len if hasattr(self, '_m_len') else None
 
             self._m_len = ((self._io.size() - 8) if self.len32 == 0 else ((self.len64 - 16) if self.len32 == 1 else (self.len32 - 8)))
-            return self._m_len
+            return self._m_len if hasattr(self, '_m_len') else None
 
 
     class TkhdBody(KaitaiStruct):

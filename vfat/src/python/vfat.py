@@ -67,18 +67,18 @@ class Vfat(KaitaiStruct):
         def pos_fats(self):
             """Offset of FATs in bytes from start of filesystem."""
             if hasattr(self, '_m_pos_fats'):
-                return self._m_pos_fats
+                return self._m_pos_fats if hasattr(self, '_m_pos_fats') else None
 
             self._m_pos_fats = (self.bpb.bytes_per_ls * self.bpb.num_reserved_ls)
-            return self._m_pos_fats
+            return self._m_pos_fats if hasattr(self, '_m_pos_fats') else None
 
         @property
         def ls_per_fat(self):
             if hasattr(self, '_m_ls_per_fat'):
-                return self._m_ls_per_fat
+                return self._m_ls_per_fat if hasattr(self, '_m_ls_per_fat') else None
 
             self._m_ls_per_fat = (self.ebpb_fat32.ls_per_fat if self.is_fat32 else self.bpb.ls_per_fat)
-            return self._m_ls_per_fat
+            return self._m_ls_per_fat if hasattr(self, '_m_ls_per_fat') else None
 
         @property
         def ls_per_root_dir(self):
@@ -88,10 +88,10 @@ class Vfat(KaitaiStruct):
                FAT: General Overview of On-Disk Format, section "FAT Data Structure"
             """
             if hasattr(self, '_m_ls_per_root_dir'):
-                return self._m_ls_per_root_dir
+                return self._m_ls_per_root_dir if hasattr(self, '_m_ls_per_root_dir') else None
 
             self._m_ls_per_root_dir = (((self.bpb.max_root_dir_rec * 32) + self.bpb.bytes_per_ls) - 1) // self.bpb.bytes_per_ls
-            return self._m_ls_per_root_dir
+            return self._m_ls_per_root_dir if hasattr(self, '_m_ls_per_root_dir') else None
 
         @property
         def is_fat32(self):
@@ -101,37 +101,37 @@ class Vfat(KaitaiStruct):
             `ext_bios_param_block_fat16` or `ext_bios_param_block_fat32`.
             """
             if hasattr(self, '_m_is_fat32'):
-                return self._m_is_fat32
+                return self._m_is_fat32 if hasattr(self, '_m_is_fat32') else None
 
             self._m_is_fat32 = self.bpb.max_root_dir_rec == 0
-            return self._m_is_fat32
+            return self._m_is_fat32 if hasattr(self, '_m_is_fat32') else None
 
         @property
         def size_fat(self):
             """Size of one FAT in bytes."""
             if hasattr(self, '_m_size_fat'):
-                return self._m_size_fat
+                return self._m_size_fat if hasattr(self, '_m_size_fat') else None
 
             self._m_size_fat = (self.bpb.bytes_per_ls * self.ls_per_fat)
-            return self._m_size_fat
+            return self._m_size_fat if hasattr(self, '_m_size_fat') else None
 
         @property
         def pos_root_dir(self):
             """Offset of root directory in bytes from start of filesystem."""
             if hasattr(self, '_m_pos_root_dir'):
-                return self._m_pos_root_dir
+                return self._m_pos_root_dir if hasattr(self, '_m_pos_root_dir') else None
 
             self._m_pos_root_dir = (self.bpb.bytes_per_ls * (self.bpb.num_reserved_ls + (self.ls_per_fat * self.bpb.num_fats)))
-            return self._m_pos_root_dir
+            return self._m_pos_root_dir if hasattr(self, '_m_pos_root_dir') else None
 
         @property
         def size_root_dir(self):
             """Size of root directory in bytes."""
             if hasattr(self, '_m_size_root_dir'):
-                return self._m_size_root_dir
+                return self._m_size_root_dir if hasattr(self, '_m_size_root_dir') else None
 
             self._m_size_root_dir = (self.ls_per_root_dir * self.bpb.bytes_per_ls)
-            return self._m_size_root_dir
+            return self._m_size_root_dir if hasattr(self, '_m_size_root_dir') else None
 
 
     class BiosParamBlock(KaitaiStruct):
@@ -209,7 +209,7 @@ class Vfat(KaitaiStruct):
     @property
     def fats(self):
         if hasattr(self, '_m_fats'):
-            return self._m_fats
+            return self._m_fats if hasattr(self, '_m_fats') else None
 
         _pos = self._io.pos()
         self._io.seek(self.boot_sector.pos_fats)
@@ -218,12 +218,12 @@ class Vfat(KaitaiStruct):
             self._m_fats[i] = self._io.read_bytes(self.boot_sector.size_fat)
 
         self._io.seek(_pos)
-        return self._m_fats
+        return self._m_fats if hasattr(self, '_m_fats') else None
 
     @property
     def root_dir(self):
         if hasattr(self, '_m_root_dir'):
-            return self._m_root_dir
+            return self._m_root_dir if hasattr(self, '_m_root_dir') else None
 
         _pos = self._io.pos()
         self._io.seek(self.boot_sector.pos_root_dir)
@@ -231,6 +231,6 @@ class Vfat(KaitaiStruct):
         io = KaitaiStream(BytesIO(self._raw__m_root_dir))
         self._m_root_dir = self._root.RootDirectory(io, self, self._root)
         self._io.seek(_pos)
-        return self._m_root_dir
+        return self._m_root_dir if hasattr(self, '_m_root_dir') else None
 
 

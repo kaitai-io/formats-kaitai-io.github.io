@@ -323,7 +323,7 @@ class Iso9660(KaitaiStruct):
         @property
         def path_table(self):
             if hasattr(self, &#39;_m_path_table&#39;):
-                return self._m_path_table
+                return self._m_path_table if hasattr(self, &#39;_m_path_table&#39;) else None
 
             _pos = self._io.pos()
             self._io.seek((self.lba_path_table_le * self._root.sector_size))
@@ -331,7 +331,7 @@ class Iso9660(KaitaiStruct):
             io = KaitaiStream(BytesIO(self._raw__m_path_table))
             self._m_path_table = self._root.PathTableLe(io, self, self._root)
             self._io.seek(_pos)
-            return self._m_path_table
+            return self._m_path_table if hasattr(self, &#39;_m_path_table&#39;) else None
 
 
     class VolDescBootRecord(KaitaiStruct):
@@ -526,7 +526,7 @@ class Iso9660(KaitaiStruct):
         @property
         def extent_as_dir(self):
             if hasattr(self, &#39;_m_extent_as_dir&#39;):
-                return self._m_extent_as_dir
+                return self._m_extent_as_dir if hasattr(self, &#39;_m_extent_as_dir&#39;) else None
 
             if (self.file_flags &amp; 2) != 0:
                 io = self._root._io
@@ -537,12 +537,12 @@ class Iso9660(KaitaiStruct):
                 self._m_extent_as_dir = self._root.DirEntries(io, self, self._root)
                 io.seek(_pos)
 
-            return self._m_extent_as_dir
+            return self._m_extent_as_dir if hasattr(self, &#39;_m_extent_as_dir&#39;) else None
 
         @property
         def extent_as_file(self):
             if hasattr(self, &#39;_m_extent_as_file&#39;):
-                return self._m_extent_as_file
+                return self._m_extent_as_file if hasattr(self, &#39;_m_extent_as_file&#39;) else None
 
             if (self.file_flags &amp; 2) == 0:
                 io = self._root._io
@@ -551,27 +551,27 @@ class Iso9660(KaitaiStruct):
                 self._m_extent_as_file = io.read_bytes(self.size_extent.le)
                 io.seek(_pos)
 
-            return self._m_extent_as_file
+            return self._m_extent_as_file if hasattr(self, &#39;_m_extent_as_file&#39;) else None
 
 
     @property
     def sector_size(self):
         if hasattr(self, &#39;_m_sector_size&#39;):
-            return self._m_sector_size
+            return self._m_sector_size if hasattr(self, &#39;_m_sector_size&#39;) else None
 
         self._m_sector_size = 2048
-        return self._m_sector_size
+        return self._m_sector_size if hasattr(self, &#39;_m_sector_size&#39;) else None
 
     @property
     def primary_vol_desc(self):
         if hasattr(self, &#39;_m_primary_vol_desc&#39;):
-            return self._m_primary_vol_desc
+            return self._m_primary_vol_desc if hasattr(self, &#39;_m_primary_vol_desc&#39;) else None
 
         _pos = self._io.pos()
         self._io.seek((16 * self.sector_size))
         self._m_primary_vol_desc = self._root.VolDesc(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_primary_vol_desc
+        return self._m_primary_vol_desc if hasattr(self, &#39;_m_primary_vol_desc&#39;) else None
 
 
 </code></pre>

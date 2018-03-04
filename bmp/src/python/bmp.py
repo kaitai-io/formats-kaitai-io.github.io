@@ -113,12 +113,12 @@ class Bmp(KaitaiStruct):
     @property
     def image(self):
         if hasattr(self, '_m_image'):
-            return self._m_image
+            return self._m_image if hasattr(self, '_m_image') else None
 
         _pos = self._io.pos()
         self._io.seek(self.file_hdr.ofs_bitmap)
         self._m_image = self._io.read_bytes_full()
         self._io.seek(_pos)
-        return self._m_image
+        return self._m_image if hasattr(self, '_m_image') else None
 
 

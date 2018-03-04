@@ -297,10 +297,10 @@ class BlenderBlend(KaitaiStruct):
         def psize(self):
             &quot;&quot;&quot;Number of bytes that a pointer occupies.&quot;&quot;&quot;
             if hasattr(self, &#39;_m_psize&#39;):
-                return self._m_psize
+                return self._m_psize if hasattr(self, &#39;_m_psize&#39;) else None
 
             self._m_psize = (8 if self.ptr_size_id == self._root.PtrSize.bits_64 else 4)
-            return self._m_psize
+            return self._m_psize if hasattr(self, &#39;_m_psize&#39;) else None
 
 
     class FileBlock(KaitaiStruct):

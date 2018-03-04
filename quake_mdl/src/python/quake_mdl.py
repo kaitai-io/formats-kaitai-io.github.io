@@ -88,18 +88,18 @@ class QuakeMdl(KaitaiStruct):
         @property
         def version(self):
             if hasattr(self, '_m_version'):
-                return self._m_version
+                return self._m_version if hasattr(self, '_m_version') else None
 
             self._m_version = 6
-            return self._m_version
+            return self._m_version if hasattr(self, '_m_version') else None
 
         @property
         def skin_size(self):
             if hasattr(self, '_m_skin_size'):
-                return self._m_skin_size
+                return self._m_skin_size if hasattr(self, '_m_skin_size') else None
 
             self._m_skin_size = (self.skin_width * self.skin_height)
-            return self._m_skin_size
+            return self._m_skin_size if hasattr(self, '_m_skin_size') else None
 
 
     class MdlSkin(KaitaiStruct):
@@ -160,10 +160,10 @@ class QuakeMdl(KaitaiStruct):
         @property
         def num_simple_frames(self):
             if hasattr(self, '_m_num_simple_frames'):
-                return self._m_num_simple_frames
+                return self._m_num_simple_frames if hasattr(self, '_m_num_simple_frames') else None
 
             self._m_num_simple_frames = (1 if self.type == 0 else self.type)
-            return self._m_num_simple_frames
+            return self._m_num_simple_frames if hasattr(self, '_m_num_simple_frames') else None
 
 
     class MdlSimpleFrame(KaitaiStruct):

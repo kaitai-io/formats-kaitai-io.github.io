@@ -84,13 +84,13 @@ class DoomWad(KaitaiStruct):
             @property
             def body(self):
                 if hasattr(self, '_m_body'):
-                    return self._m_body
+                    return self._m_body if hasattr(self, '_m_body') else None
 
                 _pos = self._io.pos()
                 self._io.seek(self.offset)
                 self._m_body = self._root.Texture12.TextureBody(self._io, self, self._root)
                 self._io.seek(_pos)
-                return self._m_body
+                return self._m_body if hasattr(self, '_m_body') else None
 
 
         class TextureBody(KaitaiStruct):
@@ -302,7 +302,7 @@ class DoomWad(KaitaiStruct):
         @property
         def contents(self):
             if hasattr(self, '_m_contents'):
-                return self._m_contents
+                return self._m_contents if hasattr(self, '_m_contents') else None
 
             io = self._root._io
             _pos = io.pos()
@@ -347,7 +347,7 @@ class DoomWad(KaitaiStruct):
             else:
                 self._m_contents = io.read_bytes(self.size)
             io.seek(_pos)
-            return self._m_contents
+            return self._m_contents if hasattr(self, '_m_contents') else None
 
 
     class Sidedefs(KaitaiStruct):
@@ -397,7 +397,7 @@ class DoomWad(KaitaiStruct):
             def linedefs(self):
                 """List of linedefs found in this block."""
                 if hasattr(self, '_m_linedefs'):
-                    return self._m_linedefs
+                    return self._m_linedefs if hasattr(self, '_m_linedefs') else None
 
                 _pos = self._io.pos()
                 self._io.seek((self.offset * 2))
@@ -410,14 +410,14 @@ class DoomWad(KaitaiStruct):
                         break
                     i += 1
                 self._io.seek(_pos)
-                return self._m_linedefs
+                return self._m_linedefs if hasattr(self, '_m_linedefs') else None
 
 
 
     @property
     def index(self):
         if hasattr(self, '_m_index'):
-            return self._m_index
+            return self._m_index if hasattr(self, '_m_index') else None
 
         _pos = self._io.pos()
         self._io.seek(self.index_offset)
@@ -426,6 +426,6 @@ class DoomWad(KaitaiStruct):
             self._m_index[i] = self._root.IndexEntry(self._io, self, self._root)
 
         self._io.seek(_pos)
-        return self._m_index
+        return self._m_index if hasattr(self, '_m_index') else None
 
 

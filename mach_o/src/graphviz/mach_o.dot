@@ -7,7 +7,7 @@ digraph {
 
 		mach_o__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>u4be→MagicType</TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>u4be?MagicType</TD><TD PORT="magic_type">magic</TD></TR>
 			<TR><TD PORT="header_pos">4</TD><TD PORT="header_size">28</TD><TD>MachHeader</TD><TD PORT="header_type">header</TD></TR>
 			<TR><TD PORT="load_commands_pos">32</TD><TD PORT="load_commands_size">...</TD><TD>LoadCommand</TD><TD PORT="load_commands_type">load_commands</TD></TR>
 			<TR><TD COLSPAN="4" PORT="load_commands__repeat">repeat header.ncmds times</TD></TR>
@@ -59,7 +59,7 @@ digraph {
 
 			cs_blob__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>u4be→CsMagic</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>u4be?CsMagic</TD><TD PORT="magic_type">magic</TD></TR>
 				<TR><TD PORT="length_pos">4</TD><TD PORT="length_size">4</TD><TD>u4be</TD><TD PORT="length_type">length</TD></TR>
 				<TR><TD PORT="body_pos">8</TD><TD PORT="body_size">...</TD><TD>switch (magic)</TD><TD PORT="body_type">body</TD></TR>
 			</TABLE>>];
@@ -79,7 +79,7 @@ cs_blob__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0
 
 				entitlement__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+					<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">?</TD><TD></TD><TD PORT="data_type">data</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__code_directory {
@@ -123,7 +123,7 @@ cs_blob__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0
 
 				entitlements_blob_index__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4be→RequirementType</TD><TD PORT="type_type">type</TD></TR>
+					<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4be?RequirementType</TD><TD PORT="type_type">type</TD></TR>
 					<TR><TD PORT="offset_pos">4</TD><TD PORT="offset_size">4</TD><TD>u4be</TD><TD PORT="offset_type">offset</TD></TR>
 				</TABLE>>];
 				entitlements_blob_index__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
@@ -159,7 +159,7 @@ cs_blob__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0
 
 				expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="op_pos">0</TD><TD PORT="op_size">4</TD><TD>u4be→OpEnum</TD><TD PORT="op_type">op</TD></TR>
+					<TR><TD PORT="op_pos">0</TD><TD PORT="op_size">4</TD><TD>u4be?OpEnum</TD><TD PORT="op_type">op</TD></TR>
 					<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">...</TD><TD>switch (op)</TD><TD PORT="data_type">data</TD></TR>
 				</TABLE>>];
 expr__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
@@ -194,7 +194,7 @@ expr__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 
 					cert_slot_expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-						<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">4</TD><TD>u4be→CertSlot</TD><TD PORT="value_type">value</TD></TR>
+						<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">4</TD><TD>u4be?CertSlot</TD><TD PORT="value_type">value</TD></TR>
 					</TABLE>>];
 				}
 				subgraph cluster__cert_generic_expr {
@@ -203,7 +203,7 @@ expr__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 
 					cert_generic_expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-						<TR><TD PORT="cert_slot_pos">0</TD><TD PORT="cert_slot_size">4</TD><TD>u4be→CertSlot</TD><TD PORT="cert_slot_type">cert_slot</TD></TR>
+						<TR><TD PORT="cert_slot_pos">0</TD><TD PORT="cert_slot_size">4</TD><TD>u4be?CertSlot</TD><TD PORT="cert_slot_type">cert_slot</TD></TR>
 						<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">...</TD><TD>Data</TD><TD PORT="data_type">data</TD></TR>
 						<TR><TD PORT="match_pos">...</TD><TD PORT="match_size">...</TD><TD>Match</TD><TD PORT="match_type">match</TD></TR>
 					</TABLE>>];
@@ -223,7 +223,7 @@ expr__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 
 					cert_field_expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-						<TR><TD PORT="cert_slot_pos">0</TD><TD PORT="cert_slot_size">4</TD><TD>u4be→CertSlot</TD><TD PORT="cert_slot_type">cert_slot</TD></TR>
+						<TR><TD PORT="cert_slot_pos">0</TD><TD PORT="cert_slot_size">4</TD><TD>u4be?CertSlot</TD><TD PORT="cert_slot_type">cert_slot</TD></TR>
 						<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">...</TD><TD>Data</TD><TD PORT="data_type">data</TD></TR>
 						<TR><TD PORT="match_pos">...</TD><TD PORT="match_size">...</TD><TD>Match</TD><TD PORT="match_type">match</TD></TR>
 					</TABLE>>];
@@ -234,7 +234,7 @@ expr__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 
 					anchor_hash_expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-						<TR><TD PORT="cert_slot_pos">0</TD><TD PORT="cert_slot_size">4</TD><TD>u4be→CertSlot</TD><TD PORT="cert_slot_type">cert_slot</TD></TR>
+						<TR><TD PORT="cert_slot_pos">0</TD><TD PORT="cert_slot_size">4</TD><TD>u4be?CertSlot</TD><TD PORT="cert_slot_type">cert_slot</TD></TR>
 						<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">...</TD><TD>Data</TD><TD PORT="data_type">data</TD></TR>
 					</TABLE>>];
 				}
@@ -287,12 +287,12 @@ expr__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 
 				blob_index__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4be→CsslotType</TD><TD PORT="type_type">type</TD></TR>
+					<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4be?CsslotType</TD><TD PORT="type_type">type</TD></TR>
 					<TR><TD PORT="offset_pos">4</TD><TD PORT="offset_size">4</TD><TD>u4be</TD><TD PORT="offset_type">offset</TD></TR>
 				</TABLE>>];
 				blob_index__inst__blob [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="blob_pos">(offset - 8)</TD><TD PORT="blob_size">⇲</TD><TD>CsBlob</TD><TD PORT="blob_type">blob</TD></TR>
+					<TR><TD PORT="blob_pos">(offset - 8)</TD><TD PORT="blob_size">?</TD><TD>CsBlob</TD><TD PORT="blob_type">blob</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__match {
@@ -301,7 +301,7 @@ expr__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 
 				match__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="match_op_pos">0</TD><TD PORT="match_op_size">4</TD><TD>u4be→Op</TD><TD PORT="match_op_type">match_op</TD></TR>
+					<TR><TD PORT="match_op_pos">0</TD><TD PORT="match_op_size">4</TD><TD>u4be?Op</TD><TD PORT="match_op_type">match_op</TD></TR>
 					<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">...</TD><TD>Data</TD><TD PORT="data_type">data</TD></TR>
 				</TABLE>>];
 			}
@@ -321,7 +321,7 @@ expr__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 
 				blob_wrapper__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+					<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">?</TD><TD></TD><TD PORT="data_type">data</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__entitlements {
@@ -588,9 +588,9 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 
 			mach_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="cputype_pos">0</TD><TD PORT="cputype_size">4</TD><TD>u4le→CpuType</TD><TD PORT="cputype_type">cputype</TD></TR>
+				<TR><TD PORT="cputype_pos">0</TD><TD PORT="cputype_size">4</TD><TD>u4le?CpuType</TD><TD PORT="cputype_type">cputype</TD></TR>
 				<TR><TD PORT="cpusubtype_pos">4</TD><TD PORT="cpusubtype_size">4</TD><TD>u4le</TD><TD PORT="cpusubtype_type">cpusubtype</TD></TR>
-				<TR><TD PORT="filetype_pos">8</TD><TD PORT="filetype_size">4</TD><TD>u4le→FileType</TD><TD PORT="filetype_type">filetype</TD></TR>
+				<TR><TD PORT="filetype_pos">8</TD><TD PORT="filetype_size">4</TD><TD>u4le?FileType</TD><TD PORT="filetype_type">filetype</TD></TR>
 				<TR><TD PORT="ncmds_pos">12</TD><TD PORT="ncmds_size">4</TD><TD>u4le</TD><TD PORT="ncmds_type">ncmds</TD></TR>
 				<TR><TD PORT="sizeofcmds_pos">16</TD><TD PORT="sizeofcmds_size">4</TD><TD>u4le</TD><TD PORT="sizeofcmds_type">sizeofcmds</TD></TR>
 				<TR><TD PORT="flags_pos">20</TD><TD PORT="flags_size">4</TD><TD>u4le</TD><TD PORT="flags_type">flags</TD></TR>
@@ -832,7 +832,7 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 
 			load_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4le→LoadCommandType</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4le?LoadCommandType</TD><TD PORT="type_type">type</TD></TR>
 				<TR><TD PORT="size_pos">4</TD><TD PORT="size_size">4</TD><TD>u4le</TD><TD PORT="size_type">size</TD></TR>
 				<TR><TD PORT="body_pos">8</TD><TD PORT="body_size">...</TD><TD>switch (type)</TD><TD PORT="body_type">body</TD></TR>
 			</TABLE>>];

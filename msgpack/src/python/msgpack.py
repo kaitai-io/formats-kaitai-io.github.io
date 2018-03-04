@@ -101,30 +101,30 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array
         """
         if hasattr(self, '_m_is_array_32'):
-            return self._m_is_array_32
+            return self._m_is_array_32 if hasattr(self, '_m_is_array_32') else None
 
         self._m_is_array_32 = self.b1 == 221
-        return self._m_is_array_32
+        return self._m_is_array_32 if hasattr(self, '_m_is_array_32') else None
 
     @property
     def int_value(self):
         if hasattr(self, '_m_int_value'):
-            return self._m_int_value
+            return self._m_int_value if hasattr(self, '_m_int_value') else None
 
         if self.is_int:
             self._m_int_value = (self.pos_int7_value if self.is_pos_int7 else (self.neg_int5_value if self.is_neg_int5 else 4919))
 
-        return self._m_int_value
+        return self._m_int_value if hasattr(self, '_m_int_value') else None
 
     @property
     def str_len(self):
         if hasattr(self, '_m_str_len'):
-            return self._m_str_len
+            return self._m_str_len if hasattr(self, '_m_str_len') else None
 
         if self.is_str:
             self._m_str_len = ((self.b1 & 31) if self.is_fix_str else (self.str_len_8 if self.is_str_8 else (self.str_len_16 if self.is_str_16 else self.str_len_32)))
 
-        return self._m_str_len
+        return self._m_str_len if hasattr(self, '_m_str_len') else None
 
     @property
     def is_fix_array(self):
@@ -133,10 +133,10 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array
         """
         if hasattr(self, '_m_is_fix_array'):
-            return self._m_is_fix_array
+            return self._m_is_fix_array if hasattr(self, '_m_is_fix_array') else None
 
         self._m_is_fix_array = (self.b1 & 240) == 144
-        return self._m_is_fix_array
+        return self._m_is_fix_array if hasattr(self, '_m_is_fix_array') else None
 
     @property
     def is_map(self):
@@ -145,10 +145,10 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map
         """
         if hasattr(self, '_m_is_map'):
-            return self._m_is_map
+            return self._m_is_map if hasattr(self, '_m_is_map') else None
 
         self._m_is_map =  ((self.is_fix_map) or (self.is_map_16) or (self.is_map_32)) 
-        return self._m_is_map
+        return self._m_is_map if hasattr(self, '_m_is_map') else None
 
     @property
     def is_array(self):
@@ -157,18 +157,18 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array
         """
         if hasattr(self, '_m_is_array'):
-            return self._m_is_array
+            return self._m_is_array if hasattr(self, '_m_is_array') else None
 
         self._m_is_array =  ((self.is_fix_array) or (self.is_array_16) or (self.is_array_32)) 
-        return self._m_is_array
+        return self._m_is_array if hasattr(self, '_m_is_array') else None
 
     @property
     def is_float(self):
         if hasattr(self, '_m_is_float'):
-            return self._m_is_float
+            return self._m_is_float if hasattr(self, '_m_is_float') else None
 
         self._m_is_float =  ((self.is_float_32) or (self.is_float_64)) 
-        return self._m_is_float
+        return self._m_is_float if hasattr(self, '_m_is_float') else None
 
     @property
     def is_str_8(self):
@@ -177,10 +177,10 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str
         """
         if hasattr(self, '_m_is_str_8'):
-            return self._m_is_str_8
+            return self._m_is_str_8 if hasattr(self, '_m_is_str_8') else None
 
         self._m_is_str_8 = self.b1 == 217
-        return self._m_is_str_8
+        return self._m_is_str_8 if hasattr(self, '_m_is_str_8') else None
 
     @property
     def is_fix_map(self):
@@ -189,26 +189,26 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map
         """
         if hasattr(self, '_m_is_fix_map'):
-            return self._m_is_fix_map
+            return self._m_is_fix_map if hasattr(self, '_m_is_fix_map') else None
 
         self._m_is_fix_map = (self.b1 & 240) == 128
-        return self._m_is_fix_map
+        return self._m_is_fix_map if hasattr(self, '_m_is_fix_map') else None
 
     @property
     def is_int(self):
         if hasattr(self, '_m_is_int'):
-            return self._m_is_int
+            return self._m_is_int if hasattr(self, '_m_is_int') else None
 
         self._m_is_int =  ((self.is_pos_int7) or (self.is_neg_int5)) 
-        return self._m_is_int
+        return self._m_is_int if hasattr(self, '_m_is_int') else None
 
     @property
     def is_bool(self):
         if hasattr(self, '_m_is_bool'):
-            return self._m_is_bool
+            return self._m_is_bool if hasattr(self, '_m_is_bool') else None
 
         self._m_is_bool =  ((self.b1 == 194) or (self.b1 == 195)) 
-        return self._m_is_bool
+        return self._m_is_bool if hasattr(self, '_m_is_bool') else None
 
     @property
     def is_str_16(self):
@@ -217,10 +217,10 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str
         """
         if hasattr(self, '_m_is_str_16'):
-            return self._m_is_str_16
+            return self._m_is_str_16 if hasattr(self, '_m_is_str_16') else None
 
         self._m_is_str_16 = self.b1 == 218
-        return self._m_is_str_16
+        return self._m_is_str_16 if hasattr(self, '_m_is_str_16') else None
 
     @property
     def is_float_64(self):
@@ -229,10 +229,10 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-float
         """
         if hasattr(self, '_m_is_float_64'):
-            return self._m_is_float_64
+            return self._m_is_float_64 if hasattr(self, '_m_is_float_64') else None
 
         self._m_is_float_64 = self.b1 == 203
-        return self._m_is_float_64
+        return self._m_is_float_64 if hasattr(self, '_m_is_float_64') else None
 
     @property
     def is_map_16(self):
@@ -241,28 +241,28 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map
         """
         if hasattr(self, '_m_is_map_16'):
-            return self._m_is_map_16
+            return self._m_is_map_16 if hasattr(self, '_m_is_map_16') else None
 
         self._m_is_map_16 = self.b1 == 222
-        return self._m_is_map_16
+        return self._m_is_map_16 if hasattr(self, '_m_is_map_16') else None
 
     @property
     def is_neg_int5(self):
         if hasattr(self, '_m_is_neg_int5'):
-            return self._m_is_neg_int5
+            return self._m_is_neg_int5 if hasattr(self, '_m_is_neg_int5') else None
 
         self._m_is_neg_int5 = (self.b1 & 224) == 224
-        return self._m_is_neg_int5
+        return self._m_is_neg_int5 if hasattr(self, '_m_is_neg_int5') else None
 
     @property
     def pos_int7_value(self):
         if hasattr(self, '_m_pos_int7_value'):
-            return self._m_pos_int7_value
+            return self._m_pos_int7_value if hasattr(self, '_m_pos_int7_value') else None
 
         if self.is_pos_int7:
             self._m_pos_int7_value = self.b1
 
-        return self._m_pos_int7_value
+        return self._m_pos_int7_value if hasattr(self, '_m_pos_int7_value') else None
 
     @property
     def is_nil(self):
@@ -271,20 +271,20 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-nil
         """
         if hasattr(self, '_m_is_nil'):
-            return self._m_is_nil
+            return self._m_is_nil if hasattr(self, '_m_is_nil') else None
 
         self._m_is_nil = self.b1 == 192
-        return self._m_is_nil
+        return self._m_is_nil if hasattr(self, '_m_is_nil') else None
 
     @property
     def float_value(self):
         if hasattr(self, '_m_float_value'):
-            return self._m_float_value
+            return self._m_float_value if hasattr(self, '_m_float_value') else None
 
         if self.is_float:
             self._m_float_value = (self.float_32_value if self.is_float_32 else self.float_64_value)
 
-        return self._m_float_value
+        return self._m_float_value if hasattr(self, '_m_float_value') else None
 
     @property
     def num_array_elements(self):
@@ -293,22 +293,22 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array
         """
         if hasattr(self, '_m_num_array_elements'):
-            return self._m_num_array_elements
+            return self._m_num_array_elements if hasattr(self, '_m_num_array_elements') else None
 
         if self.is_array:
             self._m_num_array_elements = ((self.b1 & 15) if self.is_fix_array else (self.num_array_elements_16 if self.is_array_16 else self.num_array_elements_32))
 
-        return self._m_num_array_elements
+        return self._m_num_array_elements if hasattr(self, '_m_num_array_elements') else None
 
     @property
     def neg_int5_value(self):
         if hasattr(self, '_m_neg_int5_value'):
-            return self._m_neg_int5_value
+            return self._m_neg_int5_value if hasattr(self, '_m_neg_int5_value') else None
 
         if self.is_neg_int5:
             self._m_neg_int5_value = -((self.b1 & 31))
 
-        return self._m_neg_int5_value
+        return self._m_neg_int5_value if hasattr(self, '_m_neg_int5_value') else None
 
     @property
     def bool_value(self):
@@ -317,20 +317,20 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-bool
         """
         if hasattr(self, '_m_bool_value'):
-            return self._m_bool_value
+            return self._m_bool_value if hasattr(self, '_m_bool_value') else None
 
         if self.is_bool:
             self._m_bool_value = self.b1 == 194
 
-        return self._m_bool_value
+        return self._m_bool_value if hasattr(self, '_m_bool_value') else None
 
     @property
     def is_pos_int7(self):
         if hasattr(self, '_m_is_pos_int7'):
-            return self._m_is_pos_int7
+            return self._m_is_pos_int7 if hasattr(self, '_m_is_pos_int7') else None
 
         self._m_is_pos_int7 = (self.b1 & 128) == 0
-        return self._m_is_pos_int7
+        return self._m_is_pos_int7 if hasattr(self, '_m_is_pos_int7') else None
 
     @property
     def is_array_16(self):
@@ -339,18 +339,18 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array
         """
         if hasattr(self, '_m_is_array_16'):
-            return self._m_is_array_16
+            return self._m_is_array_16 if hasattr(self, '_m_is_array_16') else None
 
         self._m_is_array_16 = self.b1 == 220
-        return self._m_is_array_16
+        return self._m_is_array_16 if hasattr(self, '_m_is_array_16') else None
 
     @property
     def is_str(self):
         if hasattr(self, '_m_is_str'):
-            return self._m_is_str
+            return self._m_is_str if hasattr(self, '_m_is_str') else None
 
         self._m_is_str =  ((self.is_fix_str) or (self.is_str_8) or (self.is_str_16) or (self.is_str_32)) 
-        return self._m_is_str
+        return self._m_is_str if hasattr(self, '_m_is_str') else None
 
     @property
     def is_fix_str(self):
@@ -359,10 +359,10 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str
         """
         if hasattr(self, '_m_is_fix_str'):
-            return self._m_is_fix_str
+            return self._m_is_fix_str if hasattr(self, '_m_is_fix_str') else None
 
         self._m_is_fix_str = (self.b1 & 224) == 160
-        return self._m_is_fix_str
+        return self._m_is_fix_str if hasattr(self, '_m_is_fix_str') else None
 
     @property
     def is_str_32(self):
@@ -371,10 +371,10 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str
         """
         if hasattr(self, '_m_is_str_32'):
-            return self._m_is_str_32
+            return self._m_is_str_32 if hasattr(self, '_m_is_str_32') else None
 
         self._m_is_str_32 = self.b1 == 219
-        return self._m_is_str_32
+        return self._m_is_str_32 if hasattr(self, '_m_is_str_32') else None
 
     @property
     def num_map_elements(self):
@@ -383,12 +383,12 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map
         """
         if hasattr(self, '_m_num_map_elements'):
-            return self._m_num_map_elements
+            return self._m_num_map_elements if hasattr(self, '_m_num_map_elements') else None
 
         if self.is_map:
             self._m_num_map_elements = ((self.b1 & 15) if self.is_fix_map else (self.num_map_elements_16 if self.is_map_16 else self.num_map_elements_32))
 
-        return self._m_num_map_elements
+        return self._m_num_map_elements if hasattr(self, '_m_num_map_elements') else None
 
     @property
     def is_float_32(self):
@@ -397,10 +397,10 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-float
         """
         if hasattr(self, '_m_is_float_32'):
-            return self._m_is_float_32
+            return self._m_is_float_32 if hasattr(self, '_m_is_float_32') else None
 
         self._m_is_float_32 = self.b1 == 202
-        return self._m_is_float_32
+        return self._m_is_float_32 if hasattr(self, '_m_is_float_32') else None
 
     @property
     def is_map_32(self):
@@ -409,9 +409,9 @@ class Msgpack(KaitaiStruct):
            Source - https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map
         """
         if hasattr(self, '_m_is_map_32'):
-            return self._m_is_map_32
+            return self._m_is_map_32 if hasattr(self, '_m_is_map_32') else None
 
         self._m_is_map_32 = self.b1 == 223
-        return self._m_is_map_32
+        return self._m_is_map_32 if hasattr(self, '_m_is_map_32') else None
 
 

@@ -79,10 +79,10 @@ class Asn1Der(KaitaiStruct):
         @property
         def result(self):
             if hasattr(self, '_m_result'):
-                return self._m_result
+                return self._m_result if hasattr(self, '_m_result') else None
 
             self._m_result = (self.b1 if (self.b1 & 128) == 0 else self.int2)
-            return self._m_result
+            return self._m_result if hasattr(self, '_m_result') else None
 
 
     class BodySequence(KaitaiStruct):

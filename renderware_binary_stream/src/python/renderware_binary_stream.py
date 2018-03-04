@@ -271,34 +271,34 @@ class RenderwareBinaryStream(KaitaiStruct):
         @property
         def is_textured(self):
             if hasattr(self, '_m_is_textured'):
-                return self._m_is_textured
+                return self._m_is_textured if hasattr(self, '_m_is_textured') else None
 
             self._m_is_textured = (self.format & 4) != 0
-            return self._m_is_textured
+            return self._m_is_textured if hasattr(self, '_m_is_textured') else None
 
         @property
         def is_prelit(self):
             if hasattr(self, '_m_is_prelit'):
-                return self._m_is_prelit
+                return self._m_is_prelit if hasattr(self, '_m_is_prelit') else None
 
             self._m_is_prelit = (self.format & 8) != 0
-            return self._m_is_prelit
+            return self._m_is_prelit if hasattr(self, '_m_is_prelit') else None
 
         @property
         def is_textured2(self):
             if hasattr(self, '_m_is_textured2'):
-                return self._m_is_textured2
+                return self._m_is_textured2 if hasattr(self, '_m_is_textured2') else None
 
             self._m_is_textured2 = (self.format & 128) != 0
-            return self._m_is_textured2
+            return self._m_is_textured2 if hasattr(self, '_m_is_textured2') else None
 
         @property
         def is_native(self):
             if hasattr(self, '_m_is_native'):
-                return self._m_is_native
+                return self._m_is_native if hasattr(self, '_m_is_native') else None
 
             self._m_is_native = (self.format & 16777216) != 0
-            return self._m_is_native
+            return self._m_is_native if hasattr(self, '_m_is_native') else None
 
 
     class GeometryNonNative(KaitaiStruct):

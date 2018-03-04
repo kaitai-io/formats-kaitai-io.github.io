@@ -1401,13 +1401,13 @@ class Icc4(KaitaiStruct):
                     @property
                     def string_data(self):
                         if hasattr(self, '_m_string_data'):
-                            return self._m_string_data
+                            return self._m_string_data if hasattr(self, '_m_string_data') else None
 
                         _pos = self._io.pos()
                         self._io.seek(self.string_offset)
                         self._m_string_data = (self._io.read_bytes(self.string_length)).decode(u"UTF-16BE")
                         self._io.seek(_pos)
-                        return self._m_string_data
+                        return self._m_string_data if hasattr(self, '_m_string_data') else None
 
 
 
@@ -1801,7 +1801,7 @@ class Icc4(KaitaiStruct):
             @property
             def tag_data_element(self):
                 if hasattr(self, '_m_tag_data_element'):
-                    return self._m_tag_data_element
+                    return self._m_tag_data_element if hasattr(self, '_m_tag_data_element') else None
 
                 _pos = self._io.pos()
                 self._io.seek(self.offset_to_data_element)
@@ -2005,7 +2005,7 @@ class Icc4(KaitaiStruct):
                 else:
                     self._m_tag_data_element = self._io.read_bytes(self.size_of_data_element)
                 self._io.seek(_pos)
-                return self._m_tag_data_element
+                return self._m_tag_data_element if hasattr(self, '_m_tag_data_element') else None
 
 
 

@@ -136,18 +136,18 @@ class Png(KaitaiStruct):
         @property
         def x(self):
             if hasattr(self, '_m_x'):
-                return self._m_x
+                return self._m_x if hasattr(self, '_m_x') else None
 
             self._m_x = (self.x_int / 100000.0)
-            return self._m_x
+            return self._m_x if hasattr(self, '_m_x') else None
 
         @property
         def y(self):
             if hasattr(self, '_m_y'):
-                return self._m_y
+                return self._m_y if hasattr(self, '_m_y') else None
 
             self._m_y = (self.y_int / 100000.0)
-            return self._m_y
+            return self._m_y if hasattr(self, '_m_y') else None
 
 
     class BkgdGreyscale(KaitaiStruct):
@@ -265,10 +265,10 @@ class Png(KaitaiStruct):
         @property
         def gamma_ratio(self):
             if hasattr(self, '_m_gamma_ratio'):
-                return self._m_gamma_ratio
+                return self._m_gamma_ratio if hasattr(self, '_m_gamma_ratio') else None
 
             self._m_gamma_ratio = (100000.0 / self.gamma_int)
-            return self._m_gamma_ratio
+            return self._m_gamma_ratio if hasattr(self, '_m_gamma_ratio') else None
 
 
     class BkgdChunk(KaitaiStruct):

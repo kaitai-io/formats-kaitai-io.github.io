@@ -60,36 +60,36 @@ class VlqBase128Le(KaitaiStruct):
         def has_next(self):
             """If true, then we have more bytes to read."""
             if hasattr(self, '_m_has_next'):
-                return self._m_has_next
+                return self._m_has_next if hasattr(self, '_m_has_next') else None
 
             self._m_has_next = (self.b & 128) != 0
-            return self._m_has_next
+            return self._m_has_next if hasattr(self, '_m_has_next') else None
 
         @property
         def value(self):
             """The 7-bit (base128) numeric value chunk of this group."""
             if hasattr(self, '_m_value'):
-                return self._m_value
+                return self._m_value if hasattr(self, '_m_value') else None
 
             self._m_value = (self.b & 127)
-            return self._m_value
+            return self._m_value if hasattr(self, '_m_value') else None
 
 
     @property
     def len(self):
         if hasattr(self, '_m_len'):
-            return self._m_len
+            return self._m_len if hasattr(self, '_m_len') else None
 
         self._m_len = len(self.groups)
-        return self._m_len
+        return self._m_len if hasattr(self, '_m_len') else None
 
     @property
     def value(self):
         """Resulting value as normal integer."""
         if hasattr(self, '_m_value'):
-            return self._m_value
+            return self._m_value if hasattr(self, '_m_value') else None
 
         self._m_value = (((((((self.groups[0].value + ((self.groups[1].value << 7) if self.len >= 2 else 0)) + ((self.groups[2].value << 14) if self.len >= 3 else 0)) + ((self.groups[3].value << 21) if self.len >= 4 else 0)) + ((self.groups[4].value << 28) if self.len >= 5 else 0)) + ((self.groups[5].value << 35) if self.len >= 6 else 0)) + ((self.groups[6].value << 42) if self.len >= 7 else 0)) + ((self.groups[7].value << 49) if self.len >= 8 else 0))
-        return self._m_value
+        return self._m_value if hasattr(self, '_m_value') else None
 
 

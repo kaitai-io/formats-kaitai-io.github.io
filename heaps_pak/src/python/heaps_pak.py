@@ -87,14 +87,14 @@ class HeapsPak(KaitaiStruct):
             @property
             def data(self):
                 if hasattr(self, '_m_data'):
-                    return self._m_data
+                    return self._m_data if hasattr(self, '_m_data') else None
 
                 io = self._root._io
                 _pos = io.pos()
                 io.seek((self._root.header.len_header + self.ofs_data))
                 self._m_data = io.read_bytes(self.len_data)
                 io.seek(_pos)
-                return self._m_data
+                return self._m_data if hasattr(self, '_m_data') else None
 
 
         class Dir(KaitaiStruct):

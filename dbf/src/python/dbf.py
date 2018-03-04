@@ -83,10 +83,10 @@ class Dbf(KaitaiStruct):
         @property
         def dbase_level(self):
             if hasattr(self, '_m_dbase_level'):
-                return self._m_dbase_level
+                return self._m_dbase_level if hasattr(self, '_m_dbase_level') else None
 
             self._m_dbase_level = (self.version & 7)
-            return self._m_dbase_level
+            return self._m_dbase_level if hasattr(self, '_m_dbase_level') else None
 
 
     class HeaderDbase3(KaitaiStruct):

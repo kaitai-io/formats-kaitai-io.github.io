@@ -63,7 +63,7 @@ class GptPartitionTable(KaitaiStruct):
         @property
         def entries(self):
             if hasattr(self, '_m_entries'):
-                return self._m_entries
+                return self._m_entries if hasattr(self, '_m_entries') else None
 
             io = self._root._io
             _pos = io.pos()
@@ -76,39 +76,39 @@ class GptPartitionTable(KaitaiStruct):
                 self._m_entries[i] = self._root.PartitionEntry(io, self, self._root)
 
             io.seek(_pos)
-            return self._m_entries
+            return self._m_entries if hasattr(self, '_m_entries') else None
 
 
     @property
     def sector_size(self):
         if hasattr(self, '_m_sector_size'):
-            return self._m_sector_size
+            return self._m_sector_size if hasattr(self, '_m_sector_size') else None
 
         self._m_sector_size = 512
-        return self._m_sector_size
+        return self._m_sector_size if hasattr(self, '_m_sector_size') else None
 
     @property
     def primary(self):
         if hasattr(self, '_m_primary'):
-            return self._m_primary
+            return self._m_primary if hasattr(self, '_m_primary') else None
 
         io = self._root._io
         _pos = io.pos()
         io.seek(self._root.sector_size)
         self._m_primary = self._root.PartitionHeader(io, self, self._root)
         io.seek(_pos)
-        return self._m_primary
+        return self._m_primary if hasattr(self, '_m_primary') else None
 
     @property
     def backup(self):
         if hasattr(self, '_m_backup'):
-            return self._m_backup
+            return self._m_backup if hasattr(self, '_m_backup') else None
 
         io = self._root._io
         _pos = io.pos()
         io.seek((self._io.size() - self._root.sector_size))
         self._m_backup = self._root.PartitionHeader(io, self, self._root)
         io.seek(_pos)
-        return self._m_backup
+        return self._m_backup if hasattr(self, '_m_backup') else None
 
 

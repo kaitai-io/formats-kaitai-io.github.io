@@ -80,14 +80,14 @@ class FalloutDat(KaitaiStruct):
         @property
         def contents(self):
             if hasattr(self, '_m_contents'):
-                return self._m_contents
+                return self._m_contents if hasattr(self, '_m_contents') else None
 
             io = self._root._io
             _pos = io.pos()
             io.seek(self.offset)
             self._m_contents = io.read_bytes((self.size_unpacked if self.flags == self._root.Compression.none else self.size_packed))
             io.seek(_pos)
-            return self._m_contents
+            return self._m_contents if hasattr(self, '_m_contents') else None
 
 
 

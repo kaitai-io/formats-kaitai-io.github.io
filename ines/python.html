@@ -395,10 +395,10 @@ class Ines(KaitaiStruct):
                Source - https://wiki.nesdev.com/w/index.php/Mapper
             &quot;&quot;&quot;
             if hasattr(self, &#39;_m_mapper&#39;):
-                return self._m_mapper
+                return self._m_mapper if hasattr(self, &#39;_m_mapper&#39;) else None
 
             self._m_mapper = (self.f6.lower_mapper | (self.f7.upper_mapper &lt;&lt; 4))
-            return self._m_mapper
+            return self._m_mapper if hasattr(self, &#39;_m_mapper&#39;) else None
 
 
     class Playchoice10(KaitaiStruct):

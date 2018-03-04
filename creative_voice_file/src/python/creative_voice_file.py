@@ -96,19 +96,19 @@ class CreativeVoiceFile(KaitaiStruct):
         @property
         def sample_rate(self):
             if hasattr(self, '_m_sample_rate'):
-                return self._m_sample_rate
+                return self._m_sample_rate if hasattr(self, '_m_sample_rate') else None
 
             self._m_sample_rate = (1000000.0 / (256 - self.freq_div))
-            return self._m_sample_rate
+            return self._m_sample_rate if hasattr(self, '_m_sample_rate') else None
 
         @property
         def duration_sec(self):
             """Duration of silence, in seconds."""
             if hasattr(self, '_m_duration_sec'):
-                return self._m_duration_sec
+                return self._m_duration_sec if hasattr(self, '_m_duration_sec') else None
 
             self._m_duration_sec = (self.duration_samples / self.sample_rate)
-            return self._m_duration_sec
+            return self._m_duration_sec if hasattr(self, '_m_duration_sec') else None
 
 
     class BlockSoundDataNew(KaitaiStruct):
@@ -183,12 +183,12 @@ class CreativeVoiceFile(KaitaiStruct):
             (body_size1 and body_size2).
             """
             if hasattr(self, '_m_body_size'):
-                return self._m_body_size
+                return self._m_body_size if hasattr(self, '_m_body_size') else None
 
             if self.block_type != self._root.BlockTypes.terminator:
                 self._m_body_size = (self.body_size1 + (self.body_size2 << 16))
 
-            return self._m_body_size
+            return self._m_body_size if hasattr(self, '_m_body_size') else None
 
 
     class BlockRepeatStart(KaitaiStruct):
@@ -225,10 +225,10 @@ class CreativeVoiceFile(KaitaiStruct):
         @property
         def sample_rate(self):
             if hasattr(self, '_m_sample_rate'):
-                return self._m_sample_rate
+                return self._m_sample_rate if hasattr(self, '_m_sample_rate') else None
 
             self._m_sample_rate = (1000000.0 / (256 - self.freq_div))
-            return self._m_sample_rate
+            return self._m_sample_rate if hasattr(self, '_m_sample_rate') else None
 
 
     class BlockExtraInfo(KaitaiStruct):
@@ -251,18 +251,18 @@ class CreativeVoiceFile(KaitaiStruct):
         def num_channels(self):
             """Number of channels (1 = mono, 2 = stereo)."""
             if hasattr(self, '_m_num_channels'):
-                return self._m_num_channels
+                return self._m_num_channels if hasattr(self, '_m_num_channels') else None
 
             self._m_num_channels = (self.num_channels_1 + 1)
-            return self._m_num_channels
+            return self._m_num_channels if hasattr(self, '_m_num_channels') else None
 
         @property
         def sample_rate(self):
             if hasattr(self, '_m_sample_rate'):
-                return self._m_sample_rate
+                return self._m_sample_rate if hasattr(self, '_m_sample_rate') else None
 
             self._m_sample_rate = (256000000.0 / (self.num_channels * (65536 - self.freq_div)))
-            return self._m_sample_rate
+            return self._m_sample_rate if hasattr(self, '_m_sample_rate') else None
 
 
 

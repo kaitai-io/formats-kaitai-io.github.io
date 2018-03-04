@@ -58,33 +58,33 @@ class Bcd(KaitaiStruct):
     @property
     def as_int(self):
         if hasattr(self, '_m_as_int'):
-            return self._m_as_int
+            return self._m_as_int if hasattr(self, '_m_as_int') else None
 
         self._m_as_int = (self.as_int_le if self.is_le else self.as_int_be)
-        return self._m_as_int
+        return self._m_as_int if hasattr(self, '_m_as_int') else None
 
     @property
     def as_int_le(self):
         if hasattr(self, '_m_as_int_le'):
-            return self._m_as_int_le
+            return self._m_as_int_le if hasattr(self, '_m_as_int_le') else None
 
         self._m_as_int_le = (self.digits[0] + (0 if self.num_digits < 2 else ((self.digits[1] * 10) + (0 if self.num_digits < 3 else ((self.digits[2] * 100) + (0 if self.num_digits < 4 else ((self.digits[3] * 1000) + (0 if self.num_digits < 5 else ((self.digits[4] * 10000) + (0 if self.num_digits < 6 else ((self.digits[5] * 100000) + (0 if self.num_digits < 7 else ((self.digits[6] * 1000000) + (0 if self.num_digits < 8 else (self.digits[7] * 10000000)))))))))))))))
-        return self._m_as_int_le
+        return self._m_as_int_le if hasattr(self, '_m_as_int_le') else None
 
     @property
     def last_idx(self):
         if hasattr(self, '_m_last_idx'):
-            return self._m_last_idx
+            return self._m_last_idx if hasattr(self, '_m_last_idx') else None
 
         self._m_last_idx = (self.num_digits - 1)
-        return self._m_last_idx
+        return self._m_last_idx if hasattr(self, '_m_last_idx') else None
 
     @property
     def as_int_be(self):
         if hasattr(self, '_m_as_int_be'):
-            return self._m_as_int_be
+            return self._m_as_int_be if hasattr(self, '_m_as_int_be') else None
 
         self._m_as_int_be = (self.digits[self.last_idx] + (0 if self.num_digits < 2 else ((self.digits[(self.last_idx - 1)] * 10) + (0 if self.num_digits < 3 else ((self.digits[(self.last_idx - 2)] * 100) + (0 if self.num_digits < 4 else ((self.digits[(self.last_idx - 3)] * 1000) + (0 if self.num_digits < 5 else ((self.digits[(self.last_idx - 4)] * 10000) + (0 if self.num_digits < 6 else ((self.digits[(self.last_idx - 5)] * 100000) + (0 if self.num_digits < 7 else ((self.digits[(self.last_idx - 6)] * 1000000) + (0 if self.num_digits < 8 else (self.digits[(self.last_idx - 7)] * 10000000)))))))))))))))
-        return self._m_as_int_be
+        return self._m_as_int_be if hasattr(self, '_m_as_int_be') else None
 
 

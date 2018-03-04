@@ -154,10 +154,10 @@ class Ines(KaitaiStruct):
                Source - https://wiki.nesdev.com/w/index.php/Mapper
             """
             if hasattr(self, '_m_mapper'):
-                return self._m_mapper
+                return self._m_mapper if hasattr(self, '_m_mapper') else None
 
             self._m_mapper = (self.f6.lower_mapper | (self.f7.upper_mapper << 4))
-            return self._m_mapper
+            return self._m_mapper if hasattr(self, '_m_mapper') else None
 
 
     class Playchoice10(KaitaiStruct):

@@ -303,37 +303,37 @@ class VlqBase128Be(KaitaiStruct):
         def has_next(self):
             &quot;&quot;&quot;If true, then we have more bytes to read.&quot;&quot;&quot;
             if hasattr(self, &#39;_m_has_next&#39;):
-                return self._m_has_next
+                return self._m_has_next if hasattr(self, &#39;_m_has_next&#39;) else None
 
             self._m_has_next = (self.b &amp; 128) != 0
-            return self._m_has_next
+            return self._m_has_next if hasattr(self, &#39;_m_has_next&#39;) else None
 
         @property
         def value(self):
             &quot;&quot;&quot;The 7-bit (base128) numeric value chunk of this group.&quot;&quot;&quot;
             if hasattr(self, &#39;_m_value&#39;):
-                return self._m_value
+                return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
 
             self._m_value = (self.b &amp; 127)
-            return self._m_value
+            return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
 
 
     @property
     def last(self):
         if hasattr(self, &#39;_m_last&#39;):
-            return self._m_last
+            return self._m_last if hasattr(self, &#39;_m_last&#39;) else None
 
         self._m_last = (len(self.groups) - 1)
-        return self._m_last
+        return self._m_last if hasattr(self, &#39;_m_last&#39;) else None
 
     @property
     def value(self):
         &quot;&quot;&quot;Resulting value as normal integer.&quot;&quot;&quot;
         if hasattr(self, &#39;_m_value&#39;):
-            return self._m_value
+            return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
 
         self._m_value = (((((((self.groups[self.last].value + ((self.groups[(self.last - 1)].value &lt;&lt; 7) if self.last &gt;= 1 else 0)) + ((self.groups[(self.last - 2)].value &lt;&lt; 14) if self.last &gt;= 2 else 0)) + ((self.groups[(self.last - 3)].value &lt;&lt; 21) if self.last &gt;= 3 else 0)) + ((self.groups[(self.last - 4)].value &lt;&lt; 28) if self.last &gt;= 4 else 0)) + ((self.groups[(self.last - 5)].value &lt;&lt; 35) if self.last &gt;= 5 else 0)) + ((self.groups[(self.last - 6)].value &lt;&lt; 42) if self.last &gt;= 6 else 0)) + ((self.groups[(self.last - 7)].value &lt;&lt; 49) if self.last &gt;= 7 else 0))
-        return self._m_value
+        return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
 
 
 </code></pre>

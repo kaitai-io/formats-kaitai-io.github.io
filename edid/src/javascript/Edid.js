@@ -524,7 +524,7 @@ var Edid = (function() {
    */
 
   /**
-   * Year of manufacture, less 1990. (1990–2245). If week=255, it is the model year instead.
+   * Year of manufacture, less 1990. (1990???2245). If week=255, it is the model year instead.
    */
 
   /**
@@ -544,7 +544,7 @@ var Edid = (function() {
    */
 
   /**
-   * Display gamma, datavalue = (gamma*100)-100 (range 1.00–3.54)
+   * Display gamma, datavalue = (gamma*100)-100 (range 1.00???3.54)
    */
 
   /**

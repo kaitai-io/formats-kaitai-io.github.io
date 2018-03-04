@@ -69,25 +69,25 @@ class Luks(KaitaiStruct):
             @property
             def key_material(self):
                 if hasattr(self, '_m_key_material'):
-                    return self._m_key_material
+                    return self._m_key_material if hasattr(self, '_m_key_material') else None
 
                 _pos = self._io.pos()
                 self._io.seek((self.start_sector_of_key_material * 512))
                 self._m_key_material = self._io.read_bytes((self._parent.number_of_key_bytes * self.number_of_anti_forensic_stripes))
                 self._io.seek(_pos)
-                return self._m_key_material
+                return self._m_key_material if hasattr(self, '_m_key_material') else None
 
 
 
     @property
     def payload(self):
         if hasattr(self, '_m_payload'):
-            return self._m_payload
+            return self._m_payload if hasattr(self, '_m_payload') else None
 
         _pos = self._io.pos()
         self._io.seek((self.partition_header.payload_offset * 512))
         self._m_payload = self._io.read_bytes_full()
         self._io.seek(_pos)
-        return self._m_payload
+        return self._m_payload if hasattr(self, '_m_payload') else None
 
 
