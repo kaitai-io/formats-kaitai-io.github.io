@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>vfat: PHP parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">vfat</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>vfat:
+            
+            PHP parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of vfat
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="vfat parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="vfat parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="vfat parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="vfat parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="vfat parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="vfat parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="vfat parsing Perl library">Perl</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="php.html" title="vfat parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="vfat parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="vfat parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            PHP source code to parse vfat
+            
+        </h2>
+
+        
+
+        <h3>Vfat.php</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/php/Vfat.php" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="php">&lt;?php
+// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+class Vfat extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Vfat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_bootSector = new \Vfat\BootSector($this-&gt;_io, $this, $this-&gt;_root);
+    }
+    protected $_m_fats;
+    public function fats() {
+        if ($this-&gt;_m_fats !== null)
+            return $this-&gt;_m_fats;
+        $_pos = $this-&gt;_io-&gt;pos();
+        $this-&gt;_io-&gt;seek($this-&gt;bootSector()-&gt;posFats());
+        $this-&gt;_m_fats = [];
+        $n = $this-&gt;bootSector()-&gt;bpb()-&gt;numFats();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_fats[] = $this-&gt;_io-&gt;readBytes($this-&gt;bootSector()-&gt;sizeFat());
+        }
+        $this-&gt;_io-&gt;seek($_pos);
+        return $this-&gt;_m_fats;
+    }
+    protected $_m_rootDir;
+    public function rootDir() {
+        if ($this-&gt;_m_rootDir !== null)
+            return $this-&gt;_m_rootDir;
+        $_pos = $this-&gt;_io-&gt;pos();
+        $this-&gt;_io-&gt;seek($this-&gt;bootSector()-&gt;posRootDir());
+        $this-&gt;_m__raw_rootDir = $this-&gt;_io-&gt;readBytes($this-&gt;bootSector()-&gt;sizeRootDir());
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_rootDir);
+        $this-&gt;_m_rootDir = new \Vfat\RootDirectory($io, $this, $this-&gt;_root);
+        $this-&gt;_io-&gt;seek($_pos);
+        return $this-&gt;_m_rootDir;
+    }
+    protected $_m_bootSector;
+    protected $_m__raw_rootDir;
+    public function bootSector() { return $this-&gt;_m_bootSector; }
+    public function _raw_rootDir() { return $this-&gt;_m__raw_rootDir; }
+}
+
+/**
+ * Extended BIOS Parameter Block for FAT32
+ */
+
+namespace \Vfat;
+
+class ExtBiosParamBlockFat32 extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Vfat\BootSector $_parent = null, \Vfat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_lsPerFat = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_hasActiveFat = $this-&gt;_io-&gt;readBitsInt(1) != 0;
+        $this-&gt;_m_reserved1 = $this-&gt;_io-&gt;readBitsInt(3);
+        $this-&gt;_m_activeFatId = $this-&gt;_io-&gt;readBitsInt(4);
+        $this-&gt;_io-&gt;alignToByte();
+        $this-&gt;_m_reserved2 = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00&quot;);
+        $this-&gt;_m_fatVersion = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_rootDirStartClus = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_lsFsInfo = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_bootSectorsCopyStartLs = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_reserved3 = $this-&gt;_io-&gt;readBytes(12);
+        $this-&gt;_m_physDriveNum = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_reserved4 = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_extBootSign = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_volumeId = $this-&gt;_io-&gt;readBytes(4);
+        $this-&gt;_m_partitionVolumeLabel = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesStripRight($this-&gt;_io-&gt;readBytes(11), 32), &quot;ASCII&quot;);
+        $this-&gt;_m_fsTypeStr = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesStripRight($this-&gt;_io-&gt;readBytes(8), 32), &quot;ASCII&quot;);
+    }
+    protected $_m_lsPerFat;
+    protected $_m_hasActiveFat;
+    protected $_m_reserved1;
+    protected $_m_activeFatId;
+    protected $_m_reserved2;
+    protected $_m_fatVersion;
+    protected $_m_rootDirStartClus;
+    protected $_m_lsFsInfo;
+    protected $_m_bootSectorsCopyStartLs;
+    protected $_m_reserved3;
+    protected $_m_physDriveNum;
+    protected $_m_reserved4;
+    protected $_m_extBootSign;
+    protected $_m_volumeId;
+    protected $_m_partitionVolumeLabel;
+    protected $_m_fsTypeStr;
+
+    /**
+     * Logical sectors per file allocation table (corresponds with
+     * the old entry `ls_per_fat` in the DOS 2.0 BPB).
+     */
+    public function lsPerFat() { return $this-&gt;_m_lsPerFat; }
+
+    /**
+     * If true, then there is &quot;active&quot; FAT, which is designated in
+     * `active_fat` attribute. If false, all FATs are mirrored as
+     * usual.
+     */
+    public function hasActiveFat() { return $this-&gt;_m_hasActiveFat; }
+    public function reserved1() { return $this-&gt;_m_reserved1; }
+
+    /**
+     * Zero-based number of active FAT, if `has_active_fat`
+     * attribute is true.
+     */
+    public function activeFatId() { return $this-&gt;_m_activeFatId; }
+    public function reserved2() { return $this-&gt;_m_reserved2; }
+    public function fatVersion() { return $this-&gt;_m_fatVersion; }
+
+    /**
+     * Cluster number of root directory start, typically 2 if it
+     * contains no bad sector. (Microsoft&#39;s FAT32 implementation
+     * imposes an artificial limit of 65,535 entries per directory,
+     * whilst many third-party implementations do not.)
+     */
+    public function rootDirStartClus() { return $this-&gt;_m_rootDirStartClus; }
+
+    /**
+     * Logical sector number of FS Information Sector, typically 1,
+     * i.e., the second of the three FAT32 boot sectors. Values
+     * like 0 and 0xFFFF are used by some FAT32 implementations to
+     * designate abscence of FS Information Sector.
+     */
+    public function lsFsInfo() { return $this-&gt;_m_lsFsInfo; }
+
+    /**
+     * First logical sector number of a copy of the three FAT32
+     * boot sectors, typically 6.
+     */
+    public function bootSectorsCopyStartLs() { return $this-&gt;_m_bootSectorsCopyStartLs; }
+    public function reserved3() { return $this-&gt;_m_reserved3; }
+
+    /**
+     * Physical drive number (0x00 for (first) removable media,
+     * 0x80 for (first) fixed disk as per INT 13h).
+     */
+    public function physDriveNum() { return $this-&gt;_m_physDriveNum; }
+    public function reserved4() { return $this-&gt;_m_reserved4; }
+
+    /**
+     * Should be 0x29 to indicate that an EBPB with the following 3
+     * entries exists.
+     */
+    public function extBootSign() { return $this-&gt;_m_extBootSign; }
+
+    /**
+     * Volume ID (serial number).
+     * 
+     * Typically the serial number &quot;xxxx-xxxx&quot; is created by a
+     * 16-bit addition of both DX values returned by INT 21h/AH=2Ah
+     * (get system date) and INT 21h/AH=2Ch (get system time) for
+     * the high word and another 16-bit addition of both CX values
+     * for the low word of the serial number. Alternatively, some
+     * DR-DOS disk utilities provide a /# option to generate a
+     * human-readable time stamp &quot;mmdd-hhmm&quot; build from BCD-encoded
+     * 8-bit values for the month, day, hour and minute instead of
+     * a serial number.
+     */
+    public function volumeId() { return $this-&gt;_m_volumeId; }
+    public function partitionVolumeLabel() { return $this-&gt;_m_partitionVolumeLabel; }
+    public function fsTypeStr() { return $this-&gt;_m_fsTypeStr; }
+}
+
+namespace \Vfat;
+
+class BootSector extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Vfat $_parent = null, \Vfat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_jmpInstruction = $this-&gt;_io-&gt;readBytes(3);
+        $this-&gt;_m_oemName = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesStripRight($this-&gt;_io-&gt;readBytes(8), 32), &quot;ASCII&quot;);
+        $this-&gt;_m_bpb = new \Vfat\BiosParamBlock($this-&gt;_io, $this, $this-&gt;_root);
+        if (!($this-&gt;isFat32())) {
+            $this-&gt;_m_ebpbFat16 = new \Vfat\ExtBiosParamBlockFat16($this-&gt;_io, $this, $this-&gt;_root);
+        }
+        if ($this-&gt;isFat32()) {
+            $this-&gt;_m_ebpbFat32 = new \Vfat\ExtBiosParamBlockFat32($this-&gt;_io, $this, $this-&gt;_root);
+        }
+    }
+    protected $_m_posFats;
+
+    /**
+     * Offset of FATs in bytes from start of filesystem
+     */
+    public function posFats() {
+        if ($this-&gt;_m_posFats !== null)
+            return $this-&gt;_m_posFats;
+        $this-&gt;_m_posFats = ($this-&gt;bpb()-&gt;bytesPerLs() * $this-&gt;bpb()-&gt;numReservedLs());
+        return $this-&gt;_m_posFats;
+    }
+    protected $_m_lsPerFat;
+    public function lsPerFat() {
+        if ($this-&gt;_m_lsPerFat !== null)
+            return $this-&gt;_m_lsPerFat;
+        $this-&gt;_m_lsPerFat = ($this-&gt;isFat32() ? $this-&gt;ebpbFat32()-&gt;lsPerFat() : $this-&gt;bpb()-&gt;lsPerFat());
+        return $this-&gt;_m_lsPerFat;
+    }
+    protected $_m_lsPerRootDir;
+
+    /**
+     * Size of root directory in logical sectors
+     */
+    public function lsPerRootDir() {
+        if ($this-&gt;_m_lsPerRootDir !== null)
+            return $this-&gt;_m_lsPerRootDir;
+        $this-&gt;_m_lsPerRootDir = intval(((($this-&gt;bpb()-&gt;maxRootDirRec() * 32) + $this-&gt;bpb()-&gt;bytesPerLs()) - 1) / $this-&gt;bpb()-&gt;bytesPerLs());
+        return $this-&gt;_m_lsPerRootDir;
+    }
+    protected $_m_isFat32;
+
+    /**
+     * Determines if filesystem is FAT32 (true) or FAT12/16 (false)
+     * by analyzing some preliminary conditions in BPB. Used to
+     * determine whether we should parse post-BPB data as
+     * `ext_bios_param_block_fat16` or `ext_bios_param_block_fat32`.
+     */
+    public function isFat32() {
+        if ($this-&gt;_m_isFat32 !== null)
+            return $this-&gt;_m_isFat32;
+        $this-&gt;_m_isFat32 = $this-&gt;bpb()-&gt;maxRootDirRec() == 0;
+        return $this-&gt;_m_isFat32;
+    }
+    protected $_m_sizeFat;
+
+    /**
+     * Size of one FAT in bytes
+     */
+    public function sizeFat() {
+        if ($this-&gt;_m_sizeFat !== null)
+            return $this-&gt;_m_sizeFat;
+        $this-&gt;_m_sizeFat = ($this-&gt;bpb()-&gt;bytesPerLs() * $this-&gt;lsPerFat());
+        return $this-&gt;_m_sizeFat;
+    }
+    protected $_m_posRootDir;
+
+    /**
+     * Offset of root directory in bytes from start of filesystem
+     */
+    public function posRootDir() {
+        if ($this-&gt;_m_posRootDir !== null)
+            return $this-&gt;_m_posRootDir;
+        $this-&gt;_m_posRootDir = ($this-&gt;bpb()-&gt;bytesPerLs() * ($this-&gt;bpb()-&gt;numReservedLs() + ($this-&gt;lsPerFat() * $this-&gt;bpb()-&gt;numFats())));
+        return $this-&gt;_m_posRootDir;
+    }
+    protected $_m_sizeRootDir;
+
+    /**
+     * Size of root directory in bytes
+     */
+    public function sizeRootDir() {
+        if ($this-&gt;_m_sizeRootDir !== null)
+            return $this-&gt;_m_sizeRootDir;
+        $this-&gt;_m_sizeRootDir = ($this-&gt;lsPerRootDir() * $this-&gt;bpb()-&gt;bytesPerLs());
+        return $this-&gt;_m_sizeRootDir;
+    }
+    protected $_m_jmpInstruction;
+    protected $_m_oemName;
+    protected $_m_bpb;
+    protected $_m_ebpbFat16;
+    protected $_m_ebpbFat32;
+    public function jmpInstruction() { return $this-&gt;_m_jmpInstruction; }
+    public function oemName() { return $this-&gt;_m_oemName; }
+
+    /**
+     * Basic BIOS parameter block, present in all versions of FAT
+     */
+    public function bpb() { return $this-&gt;_m_bpb; }
+
+    /**
+     * FAT12/16-specific extended BIOS parameter block
+     */
+    public function ebpbFat16() { return $this-&gt;_m_ebpbFat16; }
+
+    /**
+     * FAT32-specific extended BIOS parameter block
+     */
+    public function ebpbFat32() { return $this-&gt;_m_ebpbFat32; }
+}
+
+namespace \Vfat;
+
+class BiosParamBlock extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Vfat\BootSector $_parent = null, \Vfat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_bytesPerLs = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_lsPerClus = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_numReservedLs = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_numFats = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_maxRootDirRec = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_totalLs2 = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_mediaCode = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_lsPerFat = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_psPerTrack = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_numHeads = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_numHiddenSectors = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_totalLs4 = $this-&gt;_io-&gt;readU4le();
+    }
+    protected $_m_bytesPerLs;
+    protected $_m_lsPerClus;
+    protected $_m_numReservedLs;
+    protected $_m_numFats;
+    protected $_m_maxRootDirRec;
+    protected $_m_totalLs2;
+    protected $_m_mediaCode;
+    protected $_m_lsPerFat;
+    protected $_m_psPerTrack;
+    protected $_m_numHeads;
+    protected $_m_numHiddenSectors;
+    protected $_m_totalLs4;
+
+    /**
+     * Bytes per logical sector
+     */
+    public function bytesPerLs() { return $this-&gt;_m_bytesPerLs; }
+
+    /**
+     * Logical sectors per cluster
+     */
+    public function lsPerClus() { return $this-&gt;_m_lsPerClus; }
+
+    /**
+     * Count of reserved logical sectors. The number of logical
+     * sectors before the first FAT in the file system image.
+     */
+    public function numReservedLs() { return $this-&gt;_m_numReservedLs; }
+
+    /**
+     * Number of File Allocation Tables
+     */
+    public function numFats() { return $this-&gt;_m_numFats; }
+
+    /**
+     * Maximum number of FAT12 or FAT16 root directory entries. 0
+     * for FAT32, where the root directory is stored in ordinary
+     * data clusters.
+     */
+    public function maxRootDirRec() { return $this-&gt;_m_maxRootDirRec; }
+
+    /**
+     * Total logical sectors (if zero, use total_ls_4)
+     */
+    public function totalLs2() { return $this-&gt;_m_totalLs2; }
+
+    /**
+     * Media descriptor
+     */
+    public function mediaCode() { return $this-&gt;_m_mediaCode; }
+
+    /**
+     * Logical sectors per File Allocation Table for
+     * FAT12/FAT16. FAT32 sets this to 0 and uses the 32-bit value
+     * at offset 0x024 instead.
+     */
+    public function lsPerFat() { return $this-&gt;_m_lsPerFat; }
+
+    /**
+     * Physical sectors per track for disks with INT 13h CHS
+     * geometry, e.g., 15 for a ???1.20 MB??? (1200 KB) floppy. A zero
+     * entry indicates that this entry is reserved, but not used.
+     */
+    public function psPerTrack() { return $this-&gt;_m_psPerTrack; }
+
+    /**
+     * Number of heads for disks with INT 13h CHS geometry,[9]
+     * e.g., 2 for a double sided floppy.
+     */
+    public function numHeads() { return $this-&gt;_m_numHeads; }
+
+    /**
+     * Number of hidden sectors preceding the partition that
+     * contains this FAT volume. This field should always be zero
+     * on media that are not partitioned. This DOS 3.0 entry is
+     * incompatible with a similar entry at offset 0x01C in BPBs
+     * since DOS 3.31.  It must not be used if the logical sectors
+     * entry at offset 0x013 is zero.
+     */
+    public function numHiddenSectors() { return $this-&gt;_m_numHiddenSectors; }
+
+    /**
+     * Total logical sectors including hidden sectors. This DOS 3.2
+     * entry is incompatible with a similar entry at offset 0x020
+     * in BPBs since DOS 3.31. It must not be used if the logical
+     * sectors entry at offset 0x013 is zero.
+     */
+    public function totalLs4() { return $this-&gt;_m_totalLs4; }
+}
+
+namespace \Vfat;
+
+class RootDirectoryRec extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Vfat\RootDirectory $_parent = null, \Vfat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_fileName = $this-&gt;_io-&gt;readBytes(11);
+        $this-&gt;_m_attribute = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_reserved = $this-&gt;_io-&gt;readBytes(10);
+        $this-&gt;_m_time = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_date = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_startClus = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_fileSize = $this-&gt;_io-&gt;readU4le();
+    }
+    protected $_m_fileName;
+    protected $_m_attribute;
+    protected $_m_reserved;
+    protected $_m_time;
+    protected $_m_date;
+    protected $_m_startClus;
+    protected $_m_fileSize;
+    public function fileName() { return $this-&gt;_m_fileName; }
+    public function attribute() { return $this-&gt;_m_attribute; }
+    public function reserved() { return $this-&gt;_m_reserved; }
+    public function time() { return $this-&gt;_m_time; }
+    public function date() { return $this-&gt;_m_date; }
+    public function startClus() { return $this-&gt;_m_startClus; }
+    public function fileSize() { return $this-&gt;_m_fileSize; }
+}
+
+namespace \Vfat;
+
+class RootDirectory extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Vfat $_parent = null, \Vfat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_records = [];
+        $n = $this-&gt;_root()-&gt;bootSector()-&gt;bpb()-&gt;maxRootDirRec();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_records[] = new \Vfat\RootDirectoryRec($this-&gt;_io, $this, $this-&gt;_root);
+        }
+    }
+    protected $_m_records;
+    public function records() { return $this-&gt;_m_records; }
+}
+
+/**
+ * Extended BIOS Parameter Block (DOS 4.0+, OS/2 1.0+). Used only
+ * for FAT12 and FAT16.
+ */
+
+namespace \Vfat;
+
+class ExtBiosParamBlockFat16 extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Vfat\BootSector $_parent = null, \Vfat $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_physDriveNum = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_reserved1 = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_extBootSign = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_volumeId = $this-&gt;_io-&gt;readBytes(4);
+        $this-&gt;_m_partitionVolumeLabel = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesStripRight($this-&gt;_io-&gt;readBytes(11), 32), &quot;ASCII&quot;);
+        $this-&gt;_m_fsTypeStr = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesStripRight($this-&gt;_io-&gt;readBytes(8), 32), &quot;ASCII&quot;);
+    }
+    protected $_m_physDriveNum;
+    protected $_m_reserved1;
+    protected $_m_extBootSign;
+    protected $_m_volumeId;
+    protected $_m_partitionVolumeLabel;
+    protected $_m_fsTypeStr;
+
+    /**
+     * Physical drive number (0x00 for (first) removable media,
+     * 0x80 for (first) fixed disk as per INT 13h).
+     */
+    public function physDriveNum() { return $this-&gt;_m_physDriveNum; }
+    public function reserved1() { return $this-&gt;_m_reserved1; }
+
+    /**
+     * Should be 0x29 to indicate that an EBPB with the following 3
+     * entries exists.
+     */
+    public function extBootSign() { return $this-&gt;_m_extBootSign; }
+
+    /**
+     * Volume ID (serial number).
+     * 
+     * Typically the serial number &quot;xxxx-xxxx&quot; is created by a
+     * 16-bit addition of both DX values returned by INT 21h/AH=2Ah
+     * (get system date) and INT 21h/AH=2Ch (get system time) for
+     * the high word and another 16-bit addition of both CX values
+     * for the low word of the serial number. Alternatively, some
+     * DR-DOS disk utilities provide a /# option to generate a
+     * human-readable time stamp &quot;mmdd-hhmm&quot; build from BCD-encoded
+     * 8-bit values for the month, day, hour and minute instead of
+     * a serial number.
+     */
+    public function volumeId() { return $this-&gt;_m_volumeId; }
+    public function partitionVolumeLabel() { return $this-&gt;_m_partitionVolumeLabel; }
+    public function fsTypeStr() { return $this-&gt;_m_fsTypeStr; }
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

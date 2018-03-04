@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>code_6502: Ruby parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>CPU / Machine Code Disassembly</li>
+        <li class="active">code_6502</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>code_6502:
+            
+            Ruby parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>This spec can be used to disassemble raw stream of 6502 CPU machine
+code into individual operations. Each operation includes an opcode
+and, optionally, an argument. Register arguments are part of the
+<code>opcode</code> enum.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of code_6502
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="code_6502 parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="code_6502 parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="code_6502 parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="code_6502 parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="code_6502 parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="code_6502 parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="code_6502 parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="code_6502 parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="code_6502 parsing Python library">Python</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="ruby.html" title="code_6502 parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="ruby">data = Code6502.from_file("path/to/local/file.code_6502")</code></pre>
+
+<p>Or parse structure from a string of bytes:</p>
+
+<pre><code class="ruby">bytes = "\x00\x01\x02..."
+data = Code6502.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="ruby">data.operations # => get operations</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Ruby source code to parse code_6502
+            
+        </h2>
+
+        
+
+        <h3>code_6502.rb</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/ruby/code_6502.rb" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+require &#39;kaitai/struct/struct&#39;
+
+unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
+  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
+end
+
+
+##
+# This spec can be used to disassemble raw stream of 6502 CPU machine
+# code into individual operations. Each operation includes an opcode
+# and, optionally, an argument. Register arguments are part of the
+# `opcode` enum.
+class Code6502 &lt; Kaitai::Struct::Struct
+
+  OPCODE = {
+    0 =&gt; :opcode_brk_impl,
+    1 =&gt; :opcode_ora_x_ind,
+    5 =&gt; :opcode_ora_zpg,
+    6 =&gt; :opcode_asl_zpg,
+    8 =&gt; :opcode_php_impl,
+    9 =&gt; :opcode_ora_imm,
+    10 =&gt; :opcode_asl_a,
+    13 =&gt; :opcode_ora_abs,
+    14 =&gt; :opcode_asl_abs,
+    16 =&gt; :opcode_bpl_rel,
+    17 =&gt; :opcode_ora_ind_y,
+    21 =&gt; :opcode_ora_zpg_x,
+    22 =&gt; :opcode_asl_zpg_x,
+    24 =&gt; :opcode_clc_impl,
+    25 =&gt; :opcode_ora_abs_y,
+    29 =&gt; :opcode_ora_abs_x,
+    30 =&gt; :opcode_asl_abs_x,
+    32 =&gt; :opcode_jsr_abs,
+    33 =&gt; :opcode_and_x_ind,
+    36 =&gt; :opcode_bit_zpg,
+    37 =&gt; :opcode_and_zpg,
+    38 =&gt; :opcode_rol_zpg,
+    40 =&gt; :opcode_plp_impl,
+    41 =&gt; :opcode_and_imm,
+    42 =&gt; :opcode_rol_a,
+    44 =&gt; :opcode_bit_abs,
+    45 =&gt; :opcode_and_abs,
+    46 =&gt; :opcode_rol_abs,
+    48 =&gt; :opcode_bmi_rel,
+    49 =&gt; :opcode_and_ind_y,
+    53 =&gt; :opcode_and_zpg_x,
+    54 =&gt; :opcode_rol_zpg_x,
+    56 =&gt; :opcode_sec_impl,
+    57 =&gt; :opcode_and_abs_y,
+    61 =&gt; :opcode_and_abs_x,
+    62 =&gt; :opcode_rol_abs_x,
+    64 =&gt; :opcode_rti_impl,
+    65 =&gt; :opcode_eor_x_ind,
+    69 =&gt; :opcode_eor_zpg,
+    70 =&gt; :opcode_lsr_zpg,
+    72 =&gt; :opcode_pha_impl,
+    73 =&gt; :opcode_eor_imm,
+    74 =&gt; :opcode_lsr_a,
+    76 =&gt; :opcode_jmp_abs,
+    77 =&gt; :opcode_eor_abs,
+    78 =&gt; :opcode_lsr_abs,
+    80 =&gt; :opcode_bvc_rel,
+    81 =&gt; :opcode_eor_ind_y,
+    85 =&gt; :opcode_eor_zpg_x,
+    86 =&gt; :opcode_lsr_zpg_x,
+    88 =&gt; :opcode_cli_impl,
+    89 =&gt; :opcode_eor_abs_y,
+    93 =&gt; :opcode_eor_abs_x,
+    94 =&gt; :opcode_lsr_abs_x,
+    96 =&gt; :opcode_rts_impl,
+    97 =&gt; :opcode_adc_x_ind,
+    101 =&gt; :opcode_adc_zpg,
+    102 =&gt; :opcode_ror_zpg,
+    104 =&gt; :opcode_pla_impl,
+    105 =&gt; :opcode_adc_imm,
+    106 =&gt; :opcode_ror_a,
+    108 =&gt; :opcode_jmp_ind,
+    109 =&gt; :opcode_adc_abs,
+    110 =&gt; :opcode_ror_abs,
+    112 =&gt; :opcode_bvs_rel,
+    113 =&gt; :opcode_adc_ind_y,
+    117 =&gt; :opcode_adc_zpg_x,
+    118 =&gt; :opcode_ror_zpg_x,
+    120 =&gt; :opcode_sei_impl,
+    121 =&gt; :opcode_adc_abs_y,
+    125 =&gt; :opcode_adc_abs_x,
+    126 =&gt; :opcode_ror_abs_x,
+    129 =&gt; :opcode_sta_x_ind,
+    132 =&gt; :opcode_sty_zpg,
+    133 =&gt; :opcode_sta_zpg,
+    134 =&gt; :opcode_stx_zpg,
+    136 =&gt; :opcode_dey_impl,
+    138 =&gt; :opcode_txa_impl,
+    140 =&gt; :opcode_sty_abs,
+    141 =&gt; :opcode_sta_abs,
+    142 =&gt; :opcode_stx_abs,
+    144 =&gt; :opcode_bcc_rel,
+    145 =&gt; :opcode_sta_ind_y,
+    148 =&gt; :opcode_sty_zpg_x,
+    149 =&gt; :opcode_sta_zpg_x,
+    150 =&gt; :opcode_stx_zpg_y,
+    152 =&gt; :opcode_tya_impl,
+    153 =&gt; :opcode_sta_abs_y,
+    154 =&gt; :opcode_txs_impl,
+    157 =&gt; :opcode_sta_abs_x,
+    160 =&gt; :opcode_ldy_imm,
+    161 =&gt; :opcode_lda_x_ind,
+    162 =&gt; :opcode_ldx_imm,
+    164 =&gt; :opcode_ldy_zpg,
+    165 =&gt; :opcode_lda_zpg,
+    166 =&gt; :opcode_ldx_zpg,
+    168 =&gt; :opcode_tay_impl,
+    169 =&gt; :opcode_lda_imm,
+    170 =&gt; :opcode_tax_impl,
+    172 =&gt; :opcode_ldy_abs,
+    173 =&gt; :opcode_lda_abs,
+    174 =&gt; :opcode_ldx_abs,
+    176 =&gt; :opcode_bcs_rel,
+    177 =&gt; :opcode_lda_ind_y,
+    180 =&gt; :opcode_ldy_zpg_x,
+    181 =&gt; :opcode_lda_zpg_x,
+    182 =&gt; :opcode_ldx_zpg_y,
+    184 =&gt; :opcode_clv_impl,
+    185 =&gt; :opcode_lda_abs_y,
+    186 =&gt; :opcode_tsx_impl,
+    188 =&gt; :opcode_ldy_abs_x,
+    189 =&gt; :opcode_lda_abs_x,
+    190 =&gt; :opcode_ldx_abs_y,
+    192 =&gt; :opcode_cpy_imm,
+    193 =&gt; :opcode_cmp_x_ind,
+    196 =&gt; :opcode_cpy_zpg,
+    197 =&gt; :opcode_cmp_zpg,
+    198 =&gt; :opcode_dec_zpg,
+    200 =&gt; :opcode_iny_impl,
+    201 =&gt; :opcode_cmp_imm,
+    202 =&gt; :opcode_dex_impl,
+    204 =&gt; :opcode_cpy_abs,
+    205 =&gt; :opcode_cmp_abs,
+    206 =&gt; :opcode_dec_abs,
+    208 =&gt; :opcode_bne_rel,
+    209 =&gt; :opcode_cmp_ind_y,
+    213 =&gt; :opcode_cmp_zpg_x,
+    214 =&gt; :opcode_dec_zpg_x,
+    216 =&gt; :opcode_cld_impl,
+    217 =&gt; :opcode_cmp_abs_y,
+    221 =&gt; :opcode_cmp_abs_x,
+    222 =&gt; :opcode_dec_abs_x,
+    224 =&gt; :opcode_cpx_imm,
+    225 =&gt; :opcode_sbc_x_ind,
+    228 =&gt; :opcode_cpx_zpg,
+    229 =&gt; :opcode_sbc_zpg,
+    230 =&gt; :opcode_inc_zpg,
+    232 =&gt; :opcode_inx_impl,
+    233 =&gt; :opcode_sbc_imm,
+    234 =&gt; :opcode_nop_impl,
+    236 =&gt; :opcode_cpx_abs,
+    237 =&gt; :opcode_sbc_abs,
+    238 =&gt; :opcode_inc_abs,
+    240 =&gt; :opcode_beq_rel,
+    241 =&gt; :opcode_sbc_ind_y,
+    245 =&gt; :opcode_sbc_zpg_x,
+    246 =&gt; :opcode_inc_zpg_x,
+    248 =&gt; :opcode_sed_impl,
+    249 =&gt; :opcode_sbc_abs_y,
+    253 =&gt; :opcode_sbc_abs_x,
+    254 =&gt; :opcode_inc_abs_x,
+  }
+  I__OPCODE = OPCODE.invert
+  def initialize(_io, _parent = nil, _root = self)
+    super(_io, _parent, _root)
+    _read
+  end
+
+  def _read
+    @operations = []
+    i = 0
+    while not @_io.eof?
+      @operations &lt;&lt; Operation.new(@_io, self, @_root)
+      i += 1
+    end
+    self
+  end
+  class Operation &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @code = Kaitai::Struct::Stream::resolve_enum(OPCODE, @_io.read_u1)
+      case code
+      when :opcode_lsr_abs_x
+        @args = @_io.read_u2le
+      when :opcode_and_abs
+        @args = @_io.read_u2le
+      when :opcode_bit_zpg
+        @args = @_io.read_u1
+      when :opcode_asl_zpg
+        @args = @_io.read_u1
+      when :opcode_ror_abs_x
+        @args = @_io.read_u2le
+      when :opcode_sty_abs
+        @args = @_io.read_u2le
+      when :opcode_ora_zpg
+        @args = @_io.read_u1
+      when :opcode_eor_zpg_x
+        @args = @_io.read_u1
+      when :opcode_eor_abs
+        @args = @_io.read_u2le
+      when :opcode_eor_zpg
+        @args = @_io.read_u1
+      when :opcode_ora_abs_x
+        @args = @_io.read_u2le
+      when :opcode_adc_abs_y
+        @args = @_io.read_u2le
+      when :opcode_sty_zpg
+        @args = @_io.read_u1
+      when :opcode_eor_ind_y
+        @args = @_io.read_u1
+      when :opcode_rol_abs
+        @args = @_io.read_u2le
+      when :opcode_eor_imm
+        @args = @_io.read_u1
+      when :opcode_bmi_rel
+        @args = @_io.read_s1
+      when :opcode_inc_abs_x
+        @args = @_io.read_u2le
+      when :opcode_cpy_zpg
+        @args = @_io.read_u1
+      when :opcode_jsr_abs
+        @args = @_io.read_u2le
+      when :opcode_and_abs_y
+        @args = @_io.read_u2le
+      when :opcode_cmp_zpg
+        @args = @_io.read_u1
+      when :opcode_sbc_ind_y
+        @args = @_io.read_u1
+      when :opcode_and_x_ind
+        @args = @_io.read_u1
+      when :opcode_bvc_rel
+        @args = @_io.read_s1
+      when :opcode_ora_x_ind
+        @args = @_io.read_u1
+      when :opcode_ora_abs_y
+        @args = @_io.read_u2le
+      when :opcode_lsr_abs
+        @args = @_io.read_u2le
+      when :opcode_ldx_zpg_y
+        @args = @_io.read_u1
+      when :opcode_rol_abs_x
+        @args = @_io.read_u2le
+      when :opcode_adc_abs
+        @args = @_io.read_u2le
+      when :opcode_sty_zpg_x
+        @args = @_io.read_u1
+      when :opcode_ora_zpg_x
+        @args = @_io.read_u1
+      when :opcode_ldy_abs_x
+        @args = @_io.read_u2le
+      when :opcode_adc_imm
+        @args = @_io.read_u1
+      when :opcode_sbc_zpg
+        @args = @_io.read_u1
+      when :opcode_ldx_imm
+        @args = @_io.read_u1
+      when :opcode_beq_rel
+        @args = @_io.read_s1
+      when :opcode_sbc_abs_x
+        @args = @_io.read_u2le
+      when :opcode_ldx_abs_y
+        @args = @_io.read_u2le
+      when :opcode_ora_imm
+        @args = @_io.read_u1
+      when :opcode_bcs_rel
+        @args = @_io.read_s1
+      when :opcode_sbc_zpg_x
+        @args = @_io.read_u1
+      when :opcode_sta_zpg
+        @args = @_io.read_u1
+      when :opcode_bcc_rel
+        @args = @_io.read_s1
+      when :opcode_and_imm
+        @args = @_io.read_u1
+      when :opcode_ldy_zpg
+        @args = @_io.read_u1
+      when :opcode_adc_zpg
+        @args = @_io.read_u1
+      when :opcode_bne_rel
+        @args = @_io.read_s1
+      when :opcode_eor_abs_y
+        @args = @_io.read_u2le
+      when :opcode_cpy_abs
+        @args = @_io.read_u2le
+      when :opcode_stx_abs
+        @args = @_io.read_u2le
+      when :opcode_ldy_imm
+        @args = @_io.read_u1
+      when :opcode_lda_zpg_x
+        @args = @_io.read_u1
+      when :opcode_cmp_abs_y
+        @args = @_io.read_u2le
+      when :opcode_lsr_zpg_x
+        @args = @_io.read_u1
+      when :opcode_eor_abs_x
+        @args = @_io.read_u2le
+      when :opcode_cmp_abs_x
+        @args = @_io.read_u2le
+      when :opcode_inc_abs
+        @args = @_io.read_u2le
+      when :opcode_sta_zpg_x
+        @args = @_io.read_u1
+      when :opcode_sta_x_ind
+        @args = @_io.read_u1
+      when :opcode_cmp_imm
+        @args = @_io.read_u1
+      when :opcode_eor_x_ind
+        @args = @_io.read_u1
+      when :opcode_cmp_ind_y
+        @args = @_io.read_u1
+      when :opcode_cmp_x_ind
+        @args = @_io.read_u1
+      when :opcode_asl_abs_x
+        @args = @_io.read_u2le
+      when :opcode_dec_zpg_x
+        @args = @_io.read_u1
+      when :opcode_sbc_abs_y
+        @args = @_io.read_u2le
+      when :opcode_stx_zpg
+        @args = @_io.read_u1
+      when :opcode_lda_abs_x
+        @args = @_io.read_u2le
+      when :opcode_and_zpg
+        @args = @_io.read_u1
+      when :opcode_sbc_x_ind
+        @args = @_io.read_u1
+      when :opcode_lda_zpg
+        @args = @_io.read_u1
+      when :opcode_jmp_ind
+        @args = @_io.read_u2le
+      when :opcode_sta_abs_y
+        @args = @_io.read_u2le
+      when :opcode_asl_abs
+        @args = @_io.read_u2le
+      when :opcode_cmp_zpg_x
+        @args = @_io.read_u1
+      when :opcode_ldx_abs
+        @args = @_io.read_u2le
+      when :opcode_adc_zpg_x
+        @args = @_io.read_u1
+      when :opcode_ror_zpg_x
+        @args = @_io.read_u1
+      when :opcode_and_abs_x
+        @args = @_io.read_u2le
+      when :opcode_sta_abs
+        @args = @_io.read_u2le
+      when :opcode_adc_abs_x
+        @args = @_io.read_u2le
+      when :opcode_bit_abs
+        @args = @_io.read_u2le
+      when :opcode_dec_abs_x
+        @args = @_io.read_u2le
+      when :opcode_stx_zpg_y
+        @args = @_io.read_u1
+      when :opcode_lda_abs_y
+        @args = @_io.read_u2le
+      when :opcode_lda_x_ind
+        @args = @_io.read_u1
+      when :opcode_cpy_imm
+        @args = @_io.read_u1
+      when :opcode_ora_ind_y
+        @args = @_io.read_u1
+      when :opcode_asl_zpg_x
+        @args = @_io.read_u1
+      when :opcode_and_ind_y
+        @args = @_io.read_u1
+      when :opcode_sta_ind_y
+        @args = @_io.read_u1
+      when :opcode_ror_abs
+        @args = @_io.read_u2le
+      when :opcode_ldx_zpg
+        @args = @_io.read_u1
+      when :opcode_and_zpg_x
+        @args = @_io.read_u1
+      when :opcode_cpx_imm
+        @args = @_io.read_u1
+      when :opcode_bvs_rel
+        @args = @_io.read_s1
+      when :opcode_ldy_abs
+        @args = @_io.read_u2le
+      when :opcode_inc_zpg
+        @args = @_io.read_u1
+      when :opcode_sbc_abs
+        @args = @_io.read_u2le
+      when :opcode_rol_zpg_x
+        @args = @_io.read_u1
+      when :opcode_sbc_imm
+        @args = @_io.read_u1
+      when :opcode_adc_x_ind
+        @args = @_io.read_u1
+      when :opcode_sta_abs_x
+        @args = @_io.read_u2le
+      when :opcode_cpx_abs
+        @args = @_io.read_u2le
+      when :opcode_cmp_abs
+        @args = @_io.read_u2le
+      when :opcode_lda_abs
+        @args = @_io.read_u2le
+      when :opcode_rol_zpg
+        @args = @_io.read_u1
+      when :opcode_inc_zpg_x
+        @args = @_io.read_u1
+      when :opcode_lda_imm
+        @args = @_io.read_u1
+      when :opcode_dec_zpg
+        @args = @_io.read_u1
+      when :opcode_adc_ind_y
+        @args = @_io.read_u1
+      when :opcode_lda_ind_y
+        @args = @_io.read_u1
+      when :opcode_bpl_rel
+        @args = @_io.read_s1
+      when :opcode_lsr_zpg
+        @args = @_io.read_u1
+      when :opcode_jmp_abs
+        @args = @_io.read_u2le
+      when :opcode_dec_abs
+        @args = @_io.read_u2le
+      when :opcode_ora_abs
+        @args = @_io.read_u2le
+      when :opcode_ror_zpg
+        @args = @_io.read_u1
+      when :opcode_ldy_zpg_x
+        @args = @_io.read_u1
+      when :opcode_cpx_zpg
+        @args = @_io.read_u1
+      end
+      self
+    end
+    attr_reader :code
+    attr_reader :args
+  end
+  attr_reader :operations
+end
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

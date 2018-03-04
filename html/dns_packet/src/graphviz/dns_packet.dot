@@ -1,0 +1,172 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__dns_packet {
+		label="DnsPacket";
+		graph[style=dotted];
+
+		dns_packet__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="transaction_id_pos">0</TD><TD PORT="transaction_id_size">2</TD><TD>u2be</TD><TD PORT="transaction_id_type">transaction_id</TD></TR>
+			<TR><TD PORT="flags_pos">2</TD><TD PORT="flags_size">2</TD><TD>PacketFlags</TD><TD PORT="flags_type">flags</TD></TR>
+			<TR><TD PORT="qdcount_pos">4</TD><TD PORT="qdcount_size">2</TD><TD>u2be</TD><TD PORT="qdcount_type">qdcount</TD></TR>
+			<TR><TD PORT="ancount_pos">6</TD><TD PORT="ancount_size">2</TD><TD>u2be</TD><TD PORT="ancount_type">ancount</TD></TR>
+			<TR><TD PORT="nscount_pos">8</TD><TD PORT="nscount_size">2</TD><TD>u2be</TD><TD PORT="nscount_type">nscount</TD></TR>
+			<TR><TD PORT="arcount_pos">10</TD><TD PORT="arcount_size">2</TD><TD>u2be</TD><TD PORT="arcount_type">arcount</TD></TR>
+			<TR><TD PORT="queries_pos">12</TD><TD PORT="queries_size">...</TD><TD>Query</TD><TD PORT="queries_type">queries</TD></TR>
+			<TR><TD COLSPAN="4" PORT="queries__repeat">repeat qdcount times</TD></TR>
+			<TR><TD PORT="answers_pos">...</TD><TD PORT="answers_size">...</TD><TD>Answer</TD><TD PORT="answers_type">answers</TD></TR>
+			<TR><TD COLSPAN="4" PORT="answers__repeat">repeat ancount times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__pointer_struct {
+			label="DnsPacket::PointerStruct";
+			graph[style=dotted];
+
+			pointer_struct__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">1</TD><TD>u1</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+			pointer_struct__inst__contents [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="contents_pos">value</TD><TD PORT="contents_size">...</TD><TD>DomainName</TD><TD PORT="contents_type">contents</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__label {
+			label="DnsPacket::Label";
+			graph[style=dotted];
+
+			label__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">1</TD><TD>u1</TD><TD PORT="length_type">length</TD></TR>
+				<TR><TD PORT="pointer_pos">1</TD><TD PORT="pointer_size">1</TD><TD>PointerStruct</TD><TD PORT="pointer_type">pointer</TD></TR>
+				<TR><TD PORT="name_pos">2</TD><TD PORT="name_size">length</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
+			</TABLE>>];
+			label__inst__is_pointer [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_pointer</TD><TD>length == 192</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__query {
+			label="DnsPacket::Query";
+			graph[style=dotted];
+
+			query__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">...</TD><TD>DomainName</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="type_pos">...</TD><TD PORT="type_size">2</TD><TD>u2be?TypeType</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="query_class_pos">...</TD><TD PORT="query_class_size">2</TD><TD>u2be?ClassType</TD><TD PORT="query_class_type">query_class</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__domain_name {
+			label="DnsPacket::DomainName";
+			graph[style=dotted];
+
+			domain_name__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">...</TD><TD>Label</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD COLSPAN="4" PORT="name__repeat">repeat until  ((_.length == 0) || (_.length == 192)) </TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__address {
+			label="DnsPacket::Address";
+			graph[style=dotted];
+
+			address__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ip_pos">0</TD><TD PORT="ip_size">1</TD><TD>u1</TD><TD PORT="ip_type">ip</TD></TR>
+				<TR><TD COLSPAN="4" PORT="ip__repeat">repeat 4 times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__answer {
+			label="DnsPacket::Answer";
+			graph[style=dotted];
+
+			answer__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">...</TD><TD>DomainName</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="type_pos">...</TD><TD PORT="type_size">2</TD><TD>u2be?TypeType</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="answer_class_pos">...</TD><TD PORT="answer_class_size">2</TD><TD>u2be?ClassType</TD><TD PORT="answer_class_type">answer_class</TD></TR>
+				<TR><TD PORT="ttl_pos">...</TD><TD PORT="ttl_size">4</TD><TD>s4be</TD><TD PORT="ttl_type">ttl</TD></TR>
+				<TR><TD PORT="rdlength_pos">...</TD><TD PORT="rdlength_size">2</TD><TD>u2be</TD><TD PORT="rdlength_type">rdlength</TD></TR>
+				<TR><TD PORT="ptrdname_pos">...</TD><TD PORT="ptrdname_size">...</TD><TD>DomainName</TD><TD PORT="ptrdname_type">ptrdname</TD></TR>
+				<TR><TD PORT="address_pos">...</TD><TD PORT="address_size">4</TD><TD>Address</TD><TD PORT="address_type">address</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__packet_flags {
+			label="DnsPacket::PacketFlags";
+			graph[style=dotted];
+
+			packet_flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="flag_pos">0</TD><TD PORT="flag_size">2</TD><TD>u2be</TD><TD PORT="flag_type">flag</TD></TR>
+			</TABLE>>];
+			packet_flags__inst__qr [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>qr</TD><TD>((flag &amp; 32768) &gt;&gt; 15)</TD></TR>
+			</TABLE>>];
+			packet_flags__inst__ra [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>ra</TD><TD>((flag &amp; 128) &gt;&gt; 7)</TD></TR>
+			</TABLE>>];
+			packet_flags__inst__tc [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>tc</TD><TD>((flag &amp; 512) &gt;&gt; 9)</TD></TR>
+			</TABLE>>];
+			packet_flags__inst__rcode [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>rcode</TD><TD>((flag &amp; 15) &gt;&gt; 0)</TD></TR>
+			</TABLE>>];
+			packet_flags__inst__opcode [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>opcode</TD><TD>((flag &amp; 30720) &gt;&gt; 11)</TD></TR>
+			</TABLE>>];
+			packet_flags__inst__aa [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>aa</TD><TD>((flag &amp; 1024) &gt;&gt; 10)</TD></TR>
+			</TABLE>>];
+			packet_flags__inst__z [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>z</TD><TD>((flag &amp; 64) &gt;&gt; 6)</TD></TR>
+			</TABLE>>];
+			packet_flags__inst__rd [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>rd</TD><TD>((flag &amp; 256) &gt;&gt; 8)</TD></TR>
+			</TABLE>>];
+			packet_flags__inst__cd [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>cd</TD><TD>((flag &amp; 16) &gt;&gt; 4)</TD></TR>
+			</TABLE>>];
+			packet_flags__inst__ad [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>ad</TD><TD>((flag &amp; 32) &gt;&gt; 5)</TD></TR>
+			</TABLE>>];
+		}
+	}
+	dns_packet__seq:flags_type -> packet_flags__seq [style=bold];
+	dns_packet__seq:queries_type -> query__seq [style=bold];
+	dns_packet__seq:qdcount_type -> dns_packet__seq:queries__repeat [color="#404040"];
+	dns_packet__seq:answers_type -> answer__seq [style=bold];
+	dns_packet__seq:ancount_type -> dns_packet__seq:answers__repeat [color="#404040"];
+	pointer_struct__seq:value_type -> pointer_struct__inst__contents:contents_pos [color="#404040"];
+	pointer_struct__inst__contents:contents_type -> domain_name__seq [style=bold];
+	label__seq:pointer_type -> pointer_struct__seq [style=bold];
+	label__seq:length_type -> label__seq:name_size [color="#404040"];
+	label__seq:length_type -> label__inst__is_pointer [color="#404040"];
+	query__seq:name_type -> domain_name__seq [style=bold];
+	domain_name__seq:name_type -> label__seq [style=bold];
+	label__seq:length_type -> domain_name__seq:name__repeat [color="#404040"];
+	label__seq:length_type -> domain_name__seq:name__repeat [color="#404040"];
+	answer__seq:name_type -> domain_name__seq [style=bold];
+	answer__seq:ptrdname_type -> domain_name__seq [style=bold];
+	answer__seq:address_type -> address__seq [style=bold];
+	packet_flags__seq:flag_type -> packet_flags__inst__qr [color="#404040"];
+	packet_flags__seq:flag_type -> packet_flags__inst__ra [color="#404040"];
+	packet_flags__seq:flag_type -> packet_flags__inst__tc [color="#404040"];
+	packet_flags__seq:flag_type -> packet_flags__inst__rcode [color="#404040"];
+	packet_flags__seq:flag_type -> packet_flags__inst__opcode [color="#404040"];
+	packet_flags__seq:flag_type -> packet_flags__inst__aa [color="#404040"];
+	packet_flags__seq:flag_type -> packet_flags__inst__z [color="#404040"];
+	packet_flags__seq:flag_type -> packet_flags__inst__rd [color="#404040"];
+	packet_flags__seq:flag_type -> packet_flags__inst__cd [color="#404040"];
+	packet_flags__seq:flag_type -> packet_flags__inst__ad [color="#404040"];
+}

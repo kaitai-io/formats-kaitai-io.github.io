@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Windows MiniDump: Perl parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Windows-specific</li>
+        <li class="active">Windows MiniDump</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Windows MiniDump:
+            
+            Perl parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Windows MiniDump (MDMP) file provides a concise way to store process
+core dumps, which is useful for debugging. Given its small size,
+modularity, some cross-platform features and native support in some
+debuggers, it is particularly useful for crash reporting, and is
+used for that purpose in Windows and Google Chrome projects.</p>
+<p>The file itself is a container, which contains a number of typed
+&quot;streams&quot;, which contain some data according to its type attribute.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Windows MiniDump
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Windows MiniDump parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="Windows MiniDump parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Windows MiniDump parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Windows MiniDump parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Windows MiniDump parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Windows MiniDump parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="perl.html" title="Windows MiniDump parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Windows MiniDump parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Windows MiniDump parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Windows MiniDump parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Perl source code to parse Windows MiniDump
+            
+        </h2>
+
+        
+
+        <h3>WindowsMinidump.pm</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/perl/WindowsMinidump.pm" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="perl"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+use strict;
+use warnings;
+use IO::KaitaiStruct 0.007_000;
+use Encode;
+
+########################################################################
+package WindowsMinidump;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $STREAM_TYPES_UNUSED = 0;
+our $STREAM_TYPES_RESERVED_0 = 1;
+our $STREAM_TYPES_RESERVED_1 = 2;
+our $STREAM_TYPES_THREAD_LIST = 3;
+our $STREAM_TYPES_MODULE_LIST = 4;
+our $STREAM_TYPES_MEMORY_LIST = 5;
+our $STREAM_TYPES_EXCEPTION = 6;
+our $STREAM_TYPES_SYSTEM_INFO = 7;
+our $STREAM_TYPES_THREAD_EX_LIST = 8;
+our $STREAM_TYPES_MEMORY_64_LIST = 9;
+our $STREAM_TYPES_COMMENT_A = 10;
+our $STREAM_TYPES_COMMENT_W = 11;
+our $STREAM_TYPES_HANDLE_DATA = 12;
+our $STREAM_TYPES_FUNCTION_TABLE = 13;
+our $STREAM_TYPES_UNLOADED_MODULE_LIST = 14;
+our $STREAM_TYPES_MISC_INFO = 15;
+our $STREAM_TYPES_MEMORY_INFO_LIST = 16;
+our $STREAM_TYPES_THREAD_INFO_LIST = 17;
+our $STREAM_TYPES_HANDLE_OPERATION_LIST = 18;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{magic1} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (77, 68, 77, 80)));
+    $self-&gt;{magic2} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (147, 167)));
+    $self-&gt;{version} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{num_streams} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{ofs_streams} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{checksum} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{timestamp} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{flags} = $self-&gt;{_io}-&gt;read_u8le();
+}
+
+sub streams {
+    my ($self) = @_;
+    return $self-&gt;{streams} if ($self-&gt;{streams});
+    my $_pos = $self-&gt;{_io}-&gt;pos();
+    $self-&gt;{_io}-&gt;seek($self-&gt;ofs_streams());
+    $self-&gt;{streams} = ();
+    my $n_streams = $self-&gt;num_streams();
+    for (my $i = 0; $i &lt; $n_streams; $i++) {
+        $self-&gt;{streams}[$i] = WindowsMinidump::Dir-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    $self-&gt;{_io}-&gt;seek($_pos);
+    return $self-&gt;{streams};
+}
+
+sub magic1 {
+    my ($self) = @_;
+    return $self-&gt;{magic1};
+}
+
+sub magic2 {
+    my ($self) = @_;
+    return $self-&gt;{magic2};
+}
+
+sub version {
+    my ($self) = @_;
+    return $self-&gt;{version};
+}
+
+sub num_streams {
+    my ($self) = @_;
+    return $self-&gt;{num_streams};
+}
+
+sub ofs_streams {
+    my ($self) = @_;
+    return $self-&gt;{ofs_streams};
+}
+
+sub checksum {
+    my ($self) = @_;
+    return $self-&gt;{checksum};
+}
+
+sub timestamp {
+    my ($self) = @_;
+    return $self-&gt;{timestamp};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self-&gt;{flags};
+}
+
+########################################################################
+package WindowsMinidump::ThreadList;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{num_threads} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{threads} = ();
+    my $n_threads = $self-&gt;num_threads();
+    for (my $i = 0; $i &lt; $n_threads; $i++) {
+        $self-&gt;{threads}[$i] = WindowsMinidump::Thread-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub num_threads {
+    my ($self) = @_;
+    return $self-&gt;{num_threads};
+}
+
+sub threads {
+    my ($self) = @_;
+    return $self-&gt;{threads};
+}
+
+########################################################################
+package WindowsMinidump::LocationDescriptor;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len_data} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{ofs_data} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data} if ($self-&gt;{data});
+    my $io = $self-&gt;_root()-&gt;_io();
+    my $_pos = $io-&gt;pos();
+    $io-&gt;seek($self-&gt;ofs_data());
+    $self-&gt;{data} = $io-&gt;read_bytes($self-&gt;len_data());
+    $io-&gt;seek($_pos);
+    return $self-&gt;{data};
+}
+
+sub len_data {
+    my ($self) = @_;
+    return $self-&gt;{len_data};
+}
+
+sub ofs_data {
+    my ($self) = @_;
+    return $self-&gt;{ofs_data};
+}
+
+########################################################################
+package WindowsMinidump::MinidumpString;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len_str} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{str} = Encode::decode(&quot;UTF-16LE&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_str()));
+}
+
+sub len_str {
+    my ($self) = @_;
+    return $self-&gt;{len_str};
+}
+
+sub str {
+    my ($self) = @_;
+    return $self-&gt;{str};
+}
+
+########################################################################
+package WindowsMinidump::SystemInfo;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $CPU_ARCHS_INTEL = 0;
+our $CPU_ARCHS_ARM = 5;
+our $CPU_ARCHS_IA64 = 6;
+our $CPU_ARCHS_AMD64 = 9;
+our $CPU_ARCHS_UNKNOWN = 65535;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{cpu_arch} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{cpu_level} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{cpu_revision} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{num_cpus} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{os_type} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{os_ver_major} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{os_ver_minor} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{os_build} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{os_platform} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{ofs_service_pack} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{os_suite_mask} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{reserved2} = $self-&gt;{_io}-&gt;read_u2le();
+}
+
+sub service_pack {
+    my ($self) = @_;
+    return $self-&gt;{service_pack} if ($self-&gt;{service_pack});
+    if ($self-&gt;ofs_service_pack() &gt; 0) {
+        my $io = $self-&gt;_root()-&gt;_io();
+        my $_pos = $io-&gt;pos();
+        $io-&gt;seek($self-&gt;ofs_service_pack());
+        $self-&gt;{service_pack} = WindowsMinidump::MinidumpString-&gt;new($io, $self, $self-&gt;{_root});
+        $io-&gt;seek($_pos);
+    }
+    return $self-&gt;{service_pack};
+}
+
+sub cpu_arch {
+    my ($self) = @_;
+    return $self-&gt;{cpu_arch};
+}
+
+sub cpu_level {
+    my ($self) = @_;
+    return $self-&gt;{cpu_level};
+}
+
+sub cpu_revision {
+    my ($self) = @_;
+    return $self-&gt;{cpu_revision};
+}
+
+sub num_cpus {
+    my ($self) = @_;
+    return $self-&gt;{num_cpus};
+}
+
+sub os_type {
+    my ($self) = @_;
+    return $self-&gt;{os_type};
+}
+
+sub os_ver_major {
+    my ($self) = @_;
+    return $self-&gt;{os_ver_major};
+}
+
+sub os_ver_minor {
+    my ($self) = @_;
+    return $self-&gt;{os_ver_minor};
+}
+
+sub os_build {
+    my ($self) = @_;
+    return $self-&gt;{os_build};
+}
+
+sub os_platform {
+    my ($self) = @_;
+    return $self-&gt;{os_platform};
+}
+
+sub ofs_service_pack {
+    my ($self) = @_;
+    return $self-&gt;{ofs_service_pack};
+}
+
+sub os_suite_mask {
+    my ($self) = @_;
+    return $self-&gt;{os_suite_mask};
+}
+
+sub reserved2 {
+    my ($self) = @_;
+    return $self-&gt;{reserved2};
+}
+
+########################################################################
+package WindowsMinidump::ExceptionRecord;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{code} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{flags} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{inner_exception} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{addr} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{num_params} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{reserved} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{params} = ();
+    my $n_params = 15;
+    for (my $i = 0; $i &lt; $n_params; $i++) {
+        $self-&gt;{params}[$i] = $self-&gt;{_io}-&gt;read_u8le();
+    }
+}
+
+sub code {
+    my ($self) = @_;
+    return $self-&gt;{code};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self-&gt;{flags};
+}
+
+sub inner_exception {
+    my ($self) = @_;
+    return $self-&gt;{inner_exception};
+}
+
+sub addr {
+    my ($self) = @_;
+    return $self-&gt;{addr};
+}
+
+sub num_params {
+    my ($self) = @_;
+    return $self-&gt;{num_params};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self-&gt;{reserved};
+}
+
+sub params {
+    my ($self) = @_;
+    return $self-&gt;{params};
+}
+
+########################################################################
+package WindowsMinidump::MiscInfo;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len_info} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{flags1} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{process_id} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{process_create_time} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{process_user_time} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{process_kernel_time} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{cpu_max_mhz} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{cpu_cur_mhz} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{cpu_limit_mhz} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{cpu_max_idle_state} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{cpu_cur_idle_state} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub len_info {
+    my ($self) = @_;
+    return $self-&gt;{len_info};
+}
+
+sub flags1 {
+    my ($self) = @_;
+    return $self-&gt;{flags1};
+}
+
+sub process_id {
+    my ($self) = @_;
+    return $self-&gt;{process_id};
+}
+
+sub process_create_time {
+    my ($self) = @_;
+    return $self-&gt;{process_create_time};
+}
+
+sub process_user_time {
+    my ($self) = @_;
+    return $self-&gt;{process_user_time};
+}
+
+sub process_kernel_time {
+    my ($self) = @_;
+    return $self-&gt;{process_kernel_time};
+}
+
+sub cpu_max_mhz {
+    my ($self) = @_;
+    return $self-&gt;{cpu_max_mhz};
+}
+
+sub cpu_cur_mhz {
+    my ($self) = @_;
+    return $self-&gt;{cpu_cur_mhz};
+}
+
+sub cpu_limit_mhz {
+    my ($self) = @_;
+    return $self-&gt;{cpu_limit_mhz};
+}
+
+sub cpu_max_idle_state {
+    my ($self) = @_;
+    return $self-&gt;{cpu_max_idle_state};
+}
+
+sub cpu_cur_idle_state {
+    my ($self) = @_;
+    return $self-&gt;{cpu_cur_idle_state};
+}
+
+########################################################################
+package WindowsMinidump::Dir;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{stream_type} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{len_data} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{ofs_data} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data} if ($self-&gt;{data});
+    my $_pos = $self-&gt;{_io}-&gt;pos();
+    $self-&gt;{_io}-&gt;seek($self-&gt;ofs_data());
+    my $_on = $self-&gt;stream_type();
+    if ($_on == $STREAM_TYPES_MISC_INFO) {
+        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = WindowsMinidump::MiscInfo-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $STREAM_TYPES_EXCEPTION) {
+        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = WindowsMinidump::ExceptionStream-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $STREAM_TYPES_MEMORY_LIST) {
+        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = WindowsMinidump::MemoryList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $STREAM_TYPES_SYSTEM_INFO) {
+        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = WindowsMinidump::SystemInfo-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $STREAM_TYPES_THREAD_LIST) {
+        $self-&gt;{_raw_data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = WindowsMinidump::ThreadList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    else {
+        $self-&gt;{data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_data());
+    }
+    $self-&gt;{_io}-&gt;seek($_pos);
+    return $self-&gt;{data};
+}
+
+sub stream_type {
+    my ($self) = @_;
+    return $self-&gt;{stream_type};
+}
+
+sub len_data {
+    my ($self) = @_;
+    return $self-&gt;{len_data};
+}
+
+sub ofs_data {
+    my ($self) = @_;
+    return $self-&gt;{ofs_data};
+}
+
+sub _raw_data {
+    my ($self) = @_;
+    return $self-&gt;{_raw_data};
+}
+
+########################################################################
+package WindowsMinidump::Thread;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{thread_id} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{suspend_count} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{priority_class} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{priority} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{teb} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{stack} = WindowsMinidump::MemoryDescriptor-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{thread_context} = WindowsMinidump::LocationDescriptor-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub thread_id {
+    my ($self) = @_;
+    return $self-&gt;{thread_id};
+}
+
+sub suspend_count {
+    my ($self) = @_;
+    return $self-&gt;{suspend_count};
+}
+
+sub priority_class {
+    my ($self) = @_;
+    return $self-&gt;{priority_class};
+}
+
+sub priority {
+    my ($self) = @_;
+    return $self-&gt;{priority};
+}
+
+sub teb {
+    my ($self) = @_;
+    return $self-&gt;{teb};
+}
+
+sub stack {
+    my ($self) = @_;
+    return $self-&gt;{stack};
+}
+
+sub thread_context {
+    my ($self) = @_;
+    return $self-&gt;{thread_context};
+}
+
+########################################################################
+package WindowsMinidump::MemoryList;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{num_mem_ranges} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{mem_ranges} = ();
+    my $n_mem_ranges = $self-&gt;num_mem_ranges();
+    for (my $i = 0; $i &lt; $n_mem_ranges; $i++) {
+        $self-&gt;{mem_ranges}[$i] = WindowsMinidump::MemoryDescriptor-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub num_mem_ranges {
+    my ($self) = @_;
+    return $self-&gt;{num_mem_ranges};
+}
+
+sub mem_ranges {
+    my ($self) = @_;
+    return $self-&gt;{mem_ranges};
+}
+
+########################################################################
+package WindowsMinidump::MemoryDescriptor;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{addr_memory_range} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{memory} = WindowsMinidump::LocationDescriptor-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub addr_memory_range {
+    my ($self) = @_;
+    return $self-&gt;{addr_memory_range};
+}
+
+sub memory {
+    my ($self) = @_;
+    return $self-&gt;{memory};
+}
+
+########################################################################
+package WindowsMinidump::ExceptionStream;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{thread_id} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{reserved} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{exception_rec} = WindowsMinidump::ExceptionRecord-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{thread_context} = WindowsMinidump::LocationDescriptor-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub thread_id {
+    my ($self) = @_;
+    return $self-&gt;{thread_id};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self-&gt;{reserved};
+}
+
+sub exception_rec {
+    my ($self) = @_;
+    return $self-&gt;{exception_rec};
+}
+
+sub thread_context {
+    my ($self) = @_;
+    return $self-&gt;{thread_context};
+}
+
+1;
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

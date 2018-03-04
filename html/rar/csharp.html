@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>RAR (Roshall ARchiver) archive files: C# parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Archive Files</li>
+        <li class="active">RAR (Roshall ARchiver) archive files</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>RAR (Roshall ARchiver) archive files:
+            
+            C# parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>RAR is a archive format used by popular proprietary RAR archiver,
+created by Eugene Roshal. There are two major versions of format
+(v1.5-4.0 and RAR v5+).</p>
+<p>File format essentially consists of a linear sequence of
+blocks. Each block has fixed header and custom body (that depends on
+block type), so it's possible to skip block even if one doesn't know
+how to process a certain block type.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        RAR archiver
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        rar
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.7
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of RAR (Roshall ARchiver) archive files
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="RAR (Roshall ARchiver) archive files parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="RAR (Roshall ARchiver) archive files parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="csharp.html" title="RAR (Roshall ARchiver) archive files parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="RAR (Roshall ARchiver) archive files parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="RAR (Roshall ARchiver) archive files parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="RAR (Roshall ARchiver) archive files parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="RAR (Roshall ARchiver) archive files parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="RAR (Roshall ARchiver) archive files parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="RAR (Roshall ARchiver) archive files parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="RAR (Roshall ARchiver) archive files parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="csharp">var data = Rar.FromFile("path/to/local/file.rar");</code></pre>
+
+<p>Or parse structure from a byte array:</p>
+
+<pre><code class="csharp">byte[] someArray = new byte[] { ... };
+var data = new Rar(new KaitaiStream(someArray));</code></pre>
+
+<p>After that, one can get various attributes from the structure by accessing properties like:</p>
+
+<pre><code class="csharp">data.Magic // => File format signature to validate that it is indeed a RAR archive</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C# source code to parse RAR (Roshall ARchiver) archive files
+            
+        </h2>
+
+        
+
+        <h3>Rar.cs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/csharp/Rar.cs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+using System.Collections.Generic;
+
+namespace Kaitai
+{
+
+    /// &lt;summary&gt;
+    /// RAR is a archive format used by popular proprietary RAR archiver,
+    /// created by Eugene Roshal. There are two major versions of format
+    /// (v1.5-4.0 and RAR v5+).
+    /// 
+    /// File format essentially consists of a linear sequence of
+    /// blocks. Each block has fixed header and custom body (that depends on
+    /// block type), so it&#39;s possible to skip block even if one doesn&#39;t know
+    /// how to process a certain block type.
+    /// &lt;/summary&gt;
+    public partial class Rar : KaitaiStruct
+    {
+        public static Rar FromFile(string fileName)
+        {
+            return new Rar(new KaitaiStream(fileName));
+        }
+
+
+        public enum BlockTypes
+        {
+            Marker = 114,
+            ArchiveHeader = 115,
+            FileHeader = 116,
+            OldStyleCommentHeader = 117,
+            OldStyleAuthenticityInfo76 = 118,
+            OldStyleSubblock = 119,
+            OldStyleRecoveryRecord = 120,
+            OldStyleAuthenticityInfo79 = 121,
+            Subblock = 122,
+            Terminator = 123,
+        }
+
+        public enum Oses
+        {
+            MsDos = 0,
+            Os2 = 1,
+            Windows = 2,
+            Unix = 3,
+            MacOs = 4,
+            Beos = 5,
+        }
+
+        public enum Methods
+        {
+            Store = 48,
+            Fastest = 49,
+            Fast = 50,
+            Normal = 51,
+            Good = 52,
+            Best = 53,
+        }
+        public Rar(KaitaiStream p__io, KaitaiStruct p__parent = null, Rar p__root = null) : base(p__io)
+        {
+            m_parent = p__parent;
+            m_root = p__root ?? this;
+            _read();
+        }
+        private void _read()
+        {
+            _magic = new MagicSignature(m_io, this, m_root);
+            _blocks = new List&lt;KaitaiStruct&gt;();
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    switch (Magic.Version) {
+                    case 0: {
+                        _blocks.Add(new Block(m_io, this, m_root));
+                        break;
+                    }
+                    case 1: {
+                        _blocks.Add(new BlockV5(m_io, this, m_root));
+                        break;
+                    }
+                    }
+                    i++;
+                }
+            }
+        }
+        public partial class BlockV5 : KaitaiStruct
+        {
+            public static BlockV5 FromFile(string fileName)
+            {
+                return new BlockV5(new KaitaiStream(fileName));
+            }
+
+            public BlockV5(KaitaiStream p__io, Rar p__parent = null, Rar p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+            }
+            private Rar m_root;
+            private Rar m_parent;
+            public Rar M_Root { get { return m_root; } }
+            public Rar M_Parent { get { return m_parent; } }
+        }
+
+        /// &lt;summary&gt;
+        /// Basic block that RAR files consist of. There are several block
+        /// types (see `block_type`), which have different `body` and
+        /// `add_body`.
+        /// &lt;/summary&gt;
+        public partial class Block : KaitaiStruct
+        {
+            public static Block FromFile(string fileName)
+            {
+                return new Block(new KaitaiStream(fileName));
+            }
+
+            public Block(KaitaiStream p__io, Rar p__parent = null, Rar p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_hasAdd = false;
+                f_headerSize = false;
+                f_bodySize = false;
+                _read();
+            }
+            private void _read()
+            {
+                _crc16 = m_io.ReadU2le();
+                _blockType = ((Rar.BlockTypes) m_io.ReadU1());
+                _flags = m_io.ReadU2le();
+                _blockSize = m_io.ReadU2le();
+                if (HasAdd) {
+                    _addSize = m_io.ReadU4le();
+                }
+                switch (BlockType) {
+                case Rar.BlockTypes.FileHeader: {
+                    __raw_body = m_io.ReadBytes(BodySize);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new BlockFileHeader(io___raw_body, this, m_root);
+                    break;
+                }
+                default: {
+                    _body = m_io.ReadBytes(BodySize);
+                    break;
+                }
+                }
+                if (HasAdd) {
+                    _addBody = m_io.ReadBytes(AddSize);
+                }
+            }
+            private bool f_hasAdd;
+            private bool _hasAdd;
+
+            /// &lt;summary&gt;
+            /// True if block has additional content attached to it
+            /// &lt;/summary&gt;
+            public bool HasAdd
+            {
+                get
+                {
+                    if (f_hasAdd)
+                        return _hasAdd;
+                    _hasAdd = (bool) ((Flags &amp; 32768) != 0);
+                    f_hasAdd = true;
+                    return _hasAdd;
+                }
+            }
+            private bool f_headerSize;
+            private sbyte _headerSize;
+            public sbyte HeaderSize
+            {
+                get
+                {
+                    if (f_headerSize)
+                        return _headerSize;
+                    _headerSize = (sbyte) ((HasAdd ? 11 : 7));
+                    f_headerSize = true;
+                    return _headerSize;
+                }
+            }
+            private bool f_bodySize;
+            private int _bodySize;
+            public int BodySize
+            {
+                get
+                {
+                    if (f_bodySize)
+                        return _bodySize;
+                    _bodySize = (int) ((BlockSize - HeaderSize));
+                    f_bodySize = true;
+                    return _bodySize;
+                }
+            }
+            private ushort _crc16;
+            private BlockTypes _blockType;
+            private ushort _flags;
+            private ushort _blockSize;
+            private uint? _addSize;
+            private object _body;
+            private byte[] _addBody;
+            private Rar m_root;
+            private Rar m_parent;
+            private byte[] __raw_body;
+
+            /// &lt;summary&gt;
+            /// CRC16 of whole block or some part of it (depends on block type)
+            /// &lt;/summary&gt;
+            public ushort Crc16 { get { return _crc16; } }
+            public BlockTypes BlockType { get { return _blockType; } }
+            public ushort Flags { get { return _flags; } }
+
+            /// &lt;summary&gt;
+            /// Size of block (header + body, but without additional content)
+            /// &lt;/summary&gt;
+            public ushort BlockSize { get { return _blockSize; } }
+
+            /// &lt;summary&gt;
+            /// Size of additional content in this block
+            /// &lt;/summary&gt;
+            public uint? AddSize { get { return _addSize; } }
+            public object Body { get { return _body; } }
+
+            /// &lt;summary&gt;
+            /// Additional content in this block
+            /// &lt;/summary&gt;
+            public byte[] AddBody { get { return _addBody; } }
+            public Rar M_Root { get { return m_root; } }
+            public Rar M_Parent { get { return m_parent; } }
+            public byte[] M_RawBody { get { return __raw_body; } }
+        }
+        public partial class BlockFileHeader : KaitaiStruct
+        {
+            public static BlockFileHeader FromFile(string fileName)
+            {
+                return new BlockFileHeader(new KaitaiStream(fileName));
+            }
+
+            public BlockFileHeader(KaitaiStream p__io, Rar.Block p__parent = null, Rar p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _lowUnpSize = m_io.ReadU4le();
+                _hostOs = ((Rar.Oses) m_io.ReadU1());
+                _fileCrc32 = m_io.ReadU4le();
+                _fileTime = new DosTime(m_io, this, m_root);
+                _rarVersion = m_io.ReadU1();
+                _method = ((Rar.Methods) m_io.ReadU1());
+                _nameSize = m_io.ReadU2le();
+                _attr = m_io.ReadU4le();
+                if ((M_Parent.Flags &amp; 256) != 0) {
+                    _highPackSize = m_io.ReadU4le();
+                }
+                _fileName = m_io.ReadBytes(NameSize);
+                if ((M_Parent.Flags &amp; 1024) != 0) {
+                    _salt = m_io.ReadU8le();
+                }
+            }
+            private uint _lowUnpSize;
+            private Oses _hostOs;
+            private uint _fileCrc32;
+            private DosTime _fileTime;
+            private byte _rarVersion;
+            private Methods _method;
+            private ushort _nameSize;
+            private uint _attr;
+            private uint? _highPackSize;
+            private byte[] _fileName;
+            private ulong? _salt;
+            private Rar m_root;
+            private Rar.Block m_parent;
+
+            /// &lt;summary&gt;
+            /// Uncompressed file size (lower 32 bits, if 64-bit header flag is present)
+            /// &lt;/summary&gt;
+            public uint LowUnpSize { get { return _lowUnpSize; } }
+
+            /// &lt;summary&gt;
+            /// Operating system used for archiving
+            /// &lt;/summary&gt;
+            public Oses HostOs { get { return _hostOs; } }
+            public uint FileCrc32 { get { return _fileCrc32; } }
+
+            /// &lt;summary&gt;
+            /// Date and time in standard MS DOS format
+            /// &lt;/summary&gt;
+            public DosTime FileTime { get { return _fileTime; } }
+
+            /// &lt;summary&gt;
+            /// RAR version needed to extract file (Version number is encoded as 10 * Major version + minor version.)
+            /// &lt;/summary&gt;
+            public byte RarVersion { get { return _rarVersion; } }
+
+            /// &lt;summary&gt;
+            /// Compression method
+            /// &lt;/summary&gt;
+            public Methods Method { get { return _method; } }
+
+            /// &lt;summary&gt;
+            /// File name size
+            /// &lt;/summary&gt;
+            public ushort NameSize { get { return _nameSize; } }
+
+            /// &lt;summary&gt;
+            /// File attributes
+            /// &lt;/summary&gt;
+            public uint Attr { get { return _attr; } }
+
+            /// &lt;summary&gt;
+            /// Compressed file size, high 32 bits, only if 64-bit header flag is present
+            /// &lt;/summary&gt;
+            public uint? HighPackSize { get { return _highPackSize; } }
+            public byte[] FileName { get { return _fileName; } }
+            public ulong? Salt { get { return _salt; } }
+            public Rar M_Root { get { return m_root; } }
+            public Rar.Block M_Parent { get { return m_parent; } }
+        }
+
+        /// &lt;summary&gt;
+        /// RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+        /// 8-byte magic (and pretty different block format) for v5+. This
+        /// type would parse and validate both versions of signature. Note
+        /// that actually this signature is a valid RAR &amp;quot;block&amp;quot;: in theory,
+        /// one can omit signature reading at all, and read this normally,
+        /// as a block, if exact RAR version is known (and thus it&#39;s
+        /// possible to choose correct block format).
+        /// &lt;/summary&gt;
+        public partial class MagicSignature : KaitaiStruct
+        {
+            public static MagicSignature FromFile(string fileName)
+            {
+                return new MagicSignature(new KaitaiStream(fileName));
+            }
+
+            public MagicSignature(KaitaiStream p__io, Rar p__parent = null, Rar p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _magic1 = m_io.EnsureFixedContents(new byte[] { 82, 97, 114, 33, 26, 7 });
+                _version = m_io.ReadU1();
+                if (Version == 1) {
+                    _magic3 = m_io.EnsureFixedContents(new byte[] { 0 });
+                }
+            }
+            private byte[] _magic1;
+            private byte _version;
+            private byte[] _magic3;
+            private Rar m_root;
+            private Rar m_parent;
+
+            /// &lt;summary&gt;
+            /// Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version
+            /// &lt;/summary&gt;
+            public byte[] Magic1 { get { return _magic1; } }
+
+            /// &lt;summary&gt;
+            /// Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+            /// format, 1 means new (RAR 5+) format
+            /// &lt;/summary&gt;
+            public byte Version { get { return _version; } }
+
+            /// &lt;summary&gt;
+            /// New format (RAR 5+) magic contains extra byte
+            /// &lt;/summary&gt;
+            public byte[] Magic3 { get { return _magic3; } }
+            public Rar M_Root { get { return m_root; } }
+            public Rar M_Parent { get { return m_parent; } }
+        }
+        public partial class DosTime : KaitaiStruct
+        {
+            public static DosTime FromFile(string fileName)
+            {
+                return new DosTime(new KaitaiStream(fileName));
+            }
+
+            public DosTime(KaitaiStream p__io, Rar.BlockFileHeader p__parent = null, Rar p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_month = false;
+                f_seconds = false;
+                f_year = false;
+                f_minutes = false;
+                f_day = false;
+                f_hours = false;
+                _read();
+            }
+            private void _read()
+            {
+                _time = m_io.ReadU2le();
+                _date = m_io.ReadU2le();
+            }
+            private bool f_month;
+            private int _month;
+            public int Month
+            {
+                get
+                {
+                    if (f_month)
+                        return _month;
+                    _month = (int) (((Date &amp; 480) &gt;&gt; 5));
+                    f_month = true;
+                    return _month;
+                }
+            }
+            private bool f_seconds;
+            private int _seconds;
+            public int Seconds
+            {
+                get
+                {
+                    if (f_seconds)
+                        return _seconds;
+                    _seconds = (int) (((Time &amp; 31) * 2));
+                    f_seconds = true;
+                    return _seconds;
+                }
+            }
+            private bool f_year;
+            private int _year;
+            public int Year
+            {
+                get
+                {
+                    if (f_year)
+                        return _year;
+                    _year = (int) ((((Date &amp; 65024) &gt;&gt; 9) + 1980));
+                    f_year = true;
+                    return _year;
+                }
+            }
+            private bool f_minutes;
+            private int _minutes;
+            public int Minutes
+            {
+                get
+                {
+                    if (f_minutes)
+                        return _minutes;
+                    _minutes = (int) (((Time &amp; 2016) &gt;&gt; 5));
+                    f_minutes = true;
+                    return _minutes;
+                }
+            }
+            private bool f_day;
+            private int _day;
+            public int Day
+            {
+                get
+                {
+                    if (f_day)
+                        return _day;
+                    _day = (int) ((Date &amp; 31));
+                    f_day = true;
+                    return _day;
+                }
+            }
+            private bool f_hours;
+            private int _hours;
+            public int Hours
+            {
+                get
+                {
+                    if (f_hours)
+                        return _hours;
+                    _hours = (int) (((Time &amp; 63488) &gt;&gt; 11));
+                    f_hours = true;
+                    return _hours;
+                }
+            }
+            private ushort _time;
+            private ushort _date;
+            private Rar m_root;
+            private Rar.BlockFileHeader m_parent;
+            public ushort Time { get { return _time; } }
+            public ushort Date { get { return _date; } }
+            public Rar M_Root { get { return m_root; } }
+            public Rar.BlockFileHeader M_Parent { get { return m_parent; } }
+        }
+        private MagicSignature _magic;
+        private List&lt;KaitaiStruct&gt; _blocks;
+        private Rar m_root;
+        private KaitaiStruct m_parent;
+
+        /// &lt;summary&gt;
+        /// File format signature to validate that it is indeed a RAR archive
+        /// &lt;/summary&gt;
+        public MagicSignature Magic { get { return _magic; } }
+
+        /// &lt;summary&gt;
+        /// Sequence of blocks that constitute the RAR file
+        /// &lt;/summary&gt;
+        public List&lt;KaitaiStruct&gt; Blocks { get { return _blocks; } }
+        public Rar M_Root { get { return m_root; } }
+        public KaitaiStruct M_Parent { get { return m_parent; } }
+    }
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

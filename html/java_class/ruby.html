@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.class file format: Ruby parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Executables and Byte-code</li>
+        <li class="active">.class file format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.class file format:
+            
+            Ruby parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        class
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .class file format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".class file format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title=".class file format parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".class file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".class file format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title=".class file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".class file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".class file format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".class file format parsing Python library">Python</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="ruby.html" title=".class file format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="ruby">data = JavaClass.from_file("path/to/local/file.class")</code></pre>
+
+<p>Or parse structure from a string of bytes:</p>
+
+<pre><code class="ruby">bytes = "\x00\x01\x02..."
+data = JavaClass.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="ruby">data.magic # => get magic</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Ruby source code to parse .class file format
+            
+        </h2>
+
+        
+
+        <h3>java_class.rb</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/ruby/java_class.rb" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+require &#39;kaitai/struct/struct&#39;
+
+unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
+  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
+end
+
+
+##
+# @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1 Source
+class JavaClass &lt; Kaitai::Struct::Struct
+  def initialize(_io, _parent = nil, _root = self)
+    super(_io, _parent, _root)
+    _read
+  end
+
+  def _read
+    @magic = @_io.ensure_fixed_contents([202, 254, 186, 190].pack(&#39;C*&#39;))
+    @version_minor = @_io.read_u2be
+    @version_major = @_io.read_u2be
+    @constant_pool_count = @_io.read_u2be
+    @constant_pool = Array.new((constant_pool_count - 1))
+    ((constant_pool_count - 1)).times { |i|
+      @constant_pool[i] = ConstantPoolEntry.new(@_io, self, @_root)
+    }
+    @access_flags = @_io.read_u2be
+    @this_class = @_io.read_u2be
+    @super_class = @_io.read_u2be
+    @interfaces_count = @_io.read_u2be
+    @interfaces = Array.new(interfaces_count)
+    (interfaces_count).times { |i|
+      @interfaces[i] = @_io.read_u2be
+    }
+    @fields_count = @_io.read_u2be
+    @fields = Array.new(fields_count)
+    (fields_count).times { |i|
+      @fields[i] = FieldInfo.new(@_io, self, @_root)
+    }
+    @methods_count = @_io.read_u2be
+    @methods = Array.new(methods_count)
+    (methods_count).times { |i|
+      @methods[i] = MethodInfo.new(@_io, self, @_root)
+    }
+    @attributes_count = @_io.read_u2be
+    @attributes = Array.new(attributes_count)
+    (attributes_count).times { |i|
+      @attributes[i] = AttributeInfo.new(@_io, self, @_root)
+    }
+    self
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5 Source
+  class FloatCpInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @value = @_io.read_f4be
+      self
+    end
+    attr_reader :value
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7 Source
+  class AttributeInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @name_index = @_io.read_u2be
+      @attribute_length = @_io.read_u4be
+      case name_as_str
+      when &quot;SourceFile&quot;
+        @_raw_info = @_io.read_bytes(attribute_length)
+        io = Kaitai::Struct::Stream.new(@_raw_info)
+        @info = AttrBodySourceFile.new(io, self, @_root)
+      when &quot;LineNumberTable&quot;
+        @_raw_info = @_io.read_bytes(attribute_length)
+        io = Kaitai::Struct::Stream.new(@_raw_info)
+        @info = AttrBodyLineNumberTable.new(io, self, @_root)
+      when &quot;Exceptions&quot;
+        @_raw_info = @_io.read_bytes(attribute_length)
+        io = Kaitai::Struct::Stream.new(@_raw_info)
+        @info = AttrBodyExceptions.new(io, self, @_root)
+      when &quot;Code&quot;
+        @_raw_info = @_io.read_bytes(attribute_length)
+        io = Kaitai::Struct::Stream.new(@_raw_info)
+        @info = AttrBodyCode.new(io, self, @_root)
+      else
+        @info = @_io.read_bytes(attribute_length)
+      end
+      self
+    end
+
+    ##
+    # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3 Source
+    class AttrBodyCode &lt; Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @max_stack = @_io.read_u2be
+        @max_locals = @_io.read_u2be
+        @code_length = @_io.read_u4be
+        @code = @_io.read_bytes(code_length)
+        @exception_table_length = @_io.read_u2be
+        @exception_table = Array.new(exception_table_length)
+        (exception_table_length).times { |i|
+          @exception_table[i] = ExceptionEntry.new(@_io, self, @_root)
+        }
+        @attributes_count = @_io.read_u2be
+        @attributes = Array.new(attributes_count)
+        (attributes_count).times { |i|
+          @attributes[i] = AttributeInfo.new(@_io, self, @_root)
+        }
+        self
+      end
+
+      ##
+      # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3 Source
+      class ExceptionEntry &lt; Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = self)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @start_pc = @_io.read_u2be
+          @end_pc = @_io.read_u2be
+          @handler_pc = @_io.read_u2be
+          @catch_type = @_io.read_u2be
+          self
+        end
+        def catch_exception
+          return @catch_exception unless @catch_exception.nil?
+          if catch_type != 0
+            @catch_exception = _root.constant_pool[(catch_type - 1)]
+          end
+          @catch_exception
+        end
+
+        ##
+        # Start of a code region where exception handler is being
+        # active, index in code array (inclusive)
+        attr_reader :start_pc
+
+        ##
+        # End of a code region where exception handler is being
+        # active, index in code array (exclusive)
+        attr_reader :end_pc
+
+        ##
+        # Start of exception handler code, index in code array
+        attr_reader :handler_pc
+
+        ##
+        # Exception class that this handler catches, index in constant
+        # pool, or 0 (catch all exceptions handler, used to implement
+        # `finally`).
+        attr_reader :catch_type
+      end
+      attr_reader :max_stack
+      attr_reader :max_locals
+      attr_reader :code_length
+      attr_reader :code
+      attr_reader :exception_table_length
+      attr_reader :exception_table
+      attr_reader :attributes_count
+      attr_reader :attributes
+    end
+
+    ##
+    # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.5 Source
+    class AttrBodyExceptions &lt; Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @number_of_exceptions = @_io.read_u2be
+        @exceptions = Array.new(number_of_exceptions)
+        (number_of_exceptions).times { |i|
+          @exceptions[i] = ExceptionTableEntry.new(@_io, self, @_root)
+        }
+        self
+      end
+      class ExceptionTableEntry &lt; Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = self)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @index = @_io.read_u2be
+          self
+        end
+        def as_info
+          return @as_info unless @as_info.nil?
+          @as_info = _root.constant_pool[(index - 1)].cp_info
+          @as_info
+        end
+        def name_as_str
+          return @name_as_str unless @name_as_str.nil?
+          @name_as_str = as_info.name_as_str
+          @name_as_str
+        end
+        attr_reader :index
+      end
+      attr_reader :number_of_exceptions
+      attr_reader :exceptions
+    end
+
+    ##
+    # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.10 Source
+    class AttrBodySourceFile &lt; Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @sourcefile_index = @_io.read_u2be
+        self
+      end
+      def sourcefile_as_str
+        return @sourcefile_as_str unless @sourcefile_as_str.nil?
+        @sourcefile_as_str = _root.constant_pool[(sourcefile_index - 1)].cp_info.value
+        @sourcefile_as_str
+      end
+      attr_reader :sourcefile_index
+    end
+
+    ##
+    # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.12 Source
+    class AttrBodyLineNumberTable &lt; Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @line_number_table_length = @_io.read_u2be
+        @line_number_table = Array.new(line_number_table_length)
+        (line_number_table_length).times { |i|
+          @line_number_table[i] = LineNumberTableEntry.new(@_io, self, @_root)
+        }
+        self
+      end
+      class LineNumberTableEntry &lt; Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = self)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @start_pc = @_io.read_u2be
+          @line_number = @_io.read_u2be
+          self
+        end
+        attr_reader :start_pc
+        attr_reader :line_number
+      end
+      attr_reader :line_number_table_length
+      attr_reader :line_number_table
+    end
+    def name_as_str
+      return @name_as_str unless @name_as_str.nil?
+      @name_as_str = _root.constant_pool[(name_index - 1)].cp_info.value
+      @name_as_str
+    end
+    attr_reader :name_index
+    attr_reader :attribute_length
+    attr_reader :info
+    attr_reader :_raw_info
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.2 Source
+  class MethodRefCpInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @class_index = @_io.read_u2be
+      @name_and_type_index = @_io.read_u2be
+      self
+    end
+    def class_as_info
+      return @class_as_info unless @class_as_info.nil?
+      @class_as_info = _root.constant_pool[(class_index - 1)].cp_info
+      @class_as_info
+    end
+    def name_and_type_as_info
+      return @name_and_type_as_info unless @name_and_type_as_info.nil?
+      @name_and_type_as_info = _root.constant_pool[(name_and_type_index - 1)].cp_info
+      @name_and_type_as_info
+    end
+    attr_reader :class_index
+    attr_reader :name_and_type_index
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.5 Source
+  class FieldInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @access_flags = @_io.read_u2be
+      @name_index = @_io.read_u2be
+      @descriptor_index = @_io.read_u2be
+      @attributes_count = @_io.read_u2be
+      @attributes = Array.new(attributes_count)
+      (attributes_count).times { |i|
+        @attributes[i] = AttributeInfo.new(@_io, self, @_root)
+      }
+      self
+    end
+    def name_as_str
+      return @name_as_str unless @name_as_str.nil?
+      @name_as_str = _root.constant_pool[(name_index - 1)].cp_info.value
+      @name_as_str
+    end
+    attr_reader :access_flags
+    attr_reader :name_index
+    attr_reader :descriptor_index
+    attr_reader :attributes_count
+    attr_reader :attributes
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.6 Source
+  class DoubleCpInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @value = @_io.read_f8be
+      self
+    end
+    attr_reader :value
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5 Source
+  class LongCpInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @value = @_io.read_u8be
+      self
+    end
+    attr_reader :value
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.10 Source
+  class InvokeDynamicCpInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @bootstrap_method_attr_index = @_io.read_u2be
+      @name_and_type_index = @_io.read_u2be
+      self
+    end
+    attr_reader :bootstrap_method_attr_index
+    attr_reader :name_and_type_index
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.8 Source
+  class MethodHandleCpInfo &lt; Kaitai::Struct::Struct
+
+    REFERENCE_KIND_ENUM = {
+      1 =&gt; :reference_kind_enum_get_field,
+      2 =&gt; :reference_kind_enum_get_static,
+      3 =&gt; :reference_kind_enum_put_field,
+      4 =&gt; :reference_kind_enum_put_static,
+      5 =&gt; :reference_kind_enum_invoke_virtual,
+      6 =&gt; :reference_kind_enum_invoke_static,
+      7 =&gt; :reference_kind_enum_invoke_special,
+      8 =&gt; :reference_kind_enum_new_invoke_special,
+      9 =&gt; :reference_kind_enum_invoke_interface,
+    }
+    I__REFERENCE_KIND_ENUM = REFERENCE_KIND_ENUM.invert
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @reference_kind = Kaitai::Struct::Stream::resolve_enum(REFERENCE_KIND_ENUM, @_io.read_u1)
+      @reference_index = @_io.read_u2be
+      self
+    end
+    attr_reader :reference_kind
+    attr_reader :reference_index
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.6 Source
+  class NameAndTypeCpInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @name_index = @_io.read_u2be
+      @descriptor_index = @_io.read_u2be
+      self
+    end
+    def name_as_info
+      return @name_as_info unless @name_as_info.nil?
+      @name_as_info = _root.constant_pool[(name_index - 1)].cp_info
+      @name_as_info
+    end
+    def name_as_str
+      return @name_as_str unless @name_as_str.nil?
+      @name_as_str = name_as_info.value
+      @name_as_str
+    end
+    def descriptor_as_info
+      return @descriptor_as_info unless @descriptor_as_info.nil?
+      @descriptor_as_info = _root.constant_pool[(descriptor_index - 1)].cp_info
+      @descriptor_as_info
+    end
+    def descriptor_as_str
+      return @descriptor_as_str unless @descriptor_as_str.nil?
+      @descriptor_as_str = descriptor_as_info.value
+      @descriptor_as_str
+    end
+    attr_reader :name_index
+    attr_reader :descriptor_index
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.7 Source
+  class Utf8CpInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @str_len = @_io.read_u2be
+      @value = (@_io.read_bytes(str_len)).force_encoding(&quot;UTF-8&quot;)
+      self
+    end
+    attr_reader :str_len
+    attr_reader :value
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.3 Source
+  class StringCpInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @string_index = @_io.read_u2be
+      self
+    end
+    attr_reader :string_index
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.9 Source
+  class MethodTypeCpInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @descriptor_index = @_io.read_u2be
+      self
+    end
+    attr_reader :descriptor_index
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.2 Source
+  class InterfaceMethodRefCpInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @class_index = @_io.read_u2be
+      @name_and_type_index = @_io.read_u2be
+      self
+    end
+    def class_as_info
+      return @class_as_info unless @class_as_info.nil?
+      @class_as_info = _root.constant_pool[(class_index - 1)].cp_info
+      @class_as_info
+    end
+    def name_and_type_as_info
+      return @name_and_type_as_info unless @name_and_type_as_info.nil?
+      @name_and_type_as_info = _root.constant_pool[(name_and_type_index - 1)].cp_info
+      @name_and_type_as_info
+    end
+    attr_reader :class_index
+    attr_reader :name_and_type_index
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.1 Source
+  class ClassCpInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @name_index = @_io.read_u2be
+      self
+    end
+    def name_as_info
+      return @name_as_info unless @name_as_info.nil?
+      @name_as_info = _root.constant_pool[(name_index - 1)].cp_info
+      @name_as_info
+    end
+    def name_as_str
+      return @name_as_str unless @name_as_str.nil?
+      @name_as_str = name_as_info.value
+      @name_as_str
+    end
+    attr_reader :name_index
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4 Source
+  class ConstantPoolEntry &lt; Kaitai::Struct::Struct
+
+    TAG_ENUM = {
+      1 =&gt; :tag_enum_utf8,
+      3 =&gt; :tag_enum_integer,
+      4 =&gt; :tag_enum_float,
+      5 =&gt; :tag_enum_long,
+      6 =&gt; :tag_enum_double,
+      7 =&gt; :tag_enum_class_type,
+      8 =&gt; :tag_enum_string,
+      9 =&gt; :tag_enum_field_ref,
+      10 =&gt; :tag_enum_method_ref,
+      11 =&gt; :tag_enum_interface_method_ref,
+      12 =&gt; :tag_enum_name_and_type,
+      15 =&gt; :tag_enum_method_handle,
+      16 =&gt; :tag_enum_method_type,
+      18 =&gt; :tag_enum_invoke_dynamic,
+    }
+    I__TAG_ENUM = TAG_ENUM.invert
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @tag = Kaitai::Struct::Stream::resolve_enum(TAG_ENUM, @_io.read_u1)
+      case tag
+      when :tag_enum_string
+        @cp_info = StringCpInfo.new(@_io, self, @_root)
+      when :tag_enum_double
+        @cp_info = DoubleCpInfo.new(@_io, self, @_root)
+      when :tag_enum_invoke_dynamic
+        @cp_info = InvokeDynamicCpInfo.new(@_io, self, @_root)
+      when :tag_enum_method_handle
+        @cp_info = MethodHandleCpInfo.new(@_io, self, @_root)
+      when :tag_enum_class_type
+        @cp_info = ClassCpInfo.new(@_io, self, @_root)
+      when :tag_enum_method_ref
+        @cp_info = MethodRefCpInfo.new(@_io, self, @_root)
+      when :tag_enum_long
+        @cp_info = LongCpInfo.new(@_io, self, @_root)
+      when :tag_enum_name_and_type
+        @cp_info = NameAndTypeCpInfo.new(@_io, self, @_root)
+      when :tag_enum_float
+        @cp_info = FloatCpInfo.new(@_io, self, @_root)
+      when :tag_enum_interface_method_ref
+        @cp_info = InterfaceMethodRefCpInfo.new(@_io, self, @_root)
+      when :tag_enum_integer
+        @cp_info = IntegerCpInfo.new(@_io, self, @_root)
+      when :tag_enum_utf8
+        @cp_info = Utf8CpInfo.new(@_io, self, @_root)
+      when :tag_enum_field_ref
+        @cp_info = FieldRefCpInfo.new(@_io, self, @_root)
+      when :tag_enum_method_type
+        @cp_info = MethodTypeCpInfo.new(@_io, self, @_root)
+      end
+      self
+    end
+    attr_reader :tag
+    attr_reader :cp_info
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.6 Source
+  class MethodInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @access_flags = @_io.read_u2be
+      @name_index = @_io.read_u2be
+      @descriptor_index = @_io.read_u2be
+      @attributes_count = @_io.read_u2be
+      @attributes = Array.new(attributes_count)
+      (attributes_count).times { |i|
+        @attributes[i] = AttributeInfo.new(@_io, self, @_root)
+      }
+      self
+    end
+    def name_as_str
+      return @name_as_str unless @name_as_str.nil?
+      @name_as_str = _root.constant_pool[(name_index - 1)].cp_info.value
+      @name_as_str
+    end
+    attr_reader :access_flags
+    attr_reader :name_index
+    attr_reader :descriptor_index
+    attr_reader :attributes_count
+    attr_reader :attributes
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.4 Source
+  class IntegerCpInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @value = @_io.read_u4be
+      self
+    end
+    attr_reader :value
+  end
+
+  ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.2 Source
+  class FieldRefCpInfo &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @class_index = @_io.read_u2be
+      @name_and_type_index = @_io.read_u2be
+      self
+    end
+    def class_as_info
+      return @class_as_info unless @class_as_info.nil?
+      @class_as_info = _root.constant_pool[(class_index - 1)].cp_info
+      @class_as_info
+    end
+    def name_and_type_as_info
+      return @name_and_type_as_info unless @name_and_type_as_info.nil?
+      @name_and_type_as_info = _root.constant_pool[(name_and_type_index - 1)].cp_info
+      @name_and_type_as_info
+    end
+    attr_reader :class_index
+    attr_reader :name_and_type_index
+  end
+  attr_reader :magic
+  attr_reader :version_minor
+  attr_reader :version_major
+  attr_reader :constant_pool_count
+  attr_reader :constant_pool
+  attr_reader :access_flags
+  attr_reader :this_class
+  attr_reader :super_class
+  attr_reader :interfaces_count
+  attr_reader :interfaces
+  attr_reader :fields_count
+  attr_reader :fields
+  attr_reader :methods_count
+  attr_reader :methods
+  attr_reader :attributes_count
+  attr_reader :attributes
+end
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

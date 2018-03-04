@@ -1,0 +1,53 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__dos_mz {
+		label="DosMz";
+		graph[style=dotted];
+
+		dos_mz__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="hdr_pos">0</TD><TD PORT="hdr_size">28</TD><TD>MzHeader</TD><TD PORT="hdr_type">hdr</TD></TR>
+			<TR><TD PORT="mz_header2_pos">28</TD><TD PORT="mz_header2_size">(hdr.relocations_ofs - 28)</TD><TD></TD><TD PORT="mz_header2_type">mz_header2</TD></TR>
+			<TR><TD PORT="relocations_pos">...</TD><TD PORT="relocations_size">4</TD><TD>Relocation</TD><TD PORT="relocations_type">relocations</TD></TR>
+			<TR><TD COLSPAN="4" PORT="relocations__repeat">repeat hdr.qty_relocations times</TD></TR>
+			<TR><TD PORT="body_pos">...</TD><TD PORT="body_size">?</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+		</TABLE>>];
+		subgraph cluster__mz_header {
+			label="DosMz::MzHeader";
+			graph[style=dotted];
+
+			mz_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">2</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="last_page_extra_bytes_pos">2</TD><TD PORT="last_page_extra_bytes_size">2</TD><TD>u2le</TD><TD PORT="last_page_extra_bytes_type">last_page_extra_bytes</TD></TR>
+				<TR><TD PORT="qty_pages_pos">4</TD><TD PORT="qty_pages_size">2</TD><TD>u2le</TD><TD PORT="qty_pages_type">qty_pages</TD></TR>
+				<TR><TD PORT="qty_relocations_pos">6</TD><TD PORT="qty_relocations_size">2</TD><TD>u2le</TD><TD PORT="qty_relocations_type">qty_relocations</TD></TR>
+				<TR><TD PORT="header_size_pos">8</TD><TD PORT="header_size_size">2</TD><TD>u2le</TD><TD PORT="header_size_type">header_size</TD></TR>
+				<TR><TD PORT="min_allocation_pos">10</TD><TD PORT="min_allocation_size">2</TD><TD>u2le</TD><TD PORT="min_allocation_type">min_allocation</TD></TR>
+				<TR><TD PORT="max_allocation_pos">12</TD><TD PORT="max_allocation_size">2</TD><TD>u2le</TD><TD PORT="max_allocation_type">max_allocation</TD></TR>
+				<TR><TD PORT="initial_ss_pos">14</TD><TD PORT="initial_ss_size">2</TD><TD>u2le</TD><TD PORT="initial_ss_type">initial_ss</TD></TR>
+				<TR><TD PORT="initial_sp_pos">16</TD><TD PORT="initial_sp_size">2</TD><TD>u2le</TD><TD PORT="initial_sp_type">initial_sp</TD></TR>
+				<TR><TD PORT="checksum_pos">18</TD><TD PORT="checksum_size">2</TD><TD>u2le</TD><TD PORT="checksum_type">checksum</TD></TR>
+				<TR><TD PORT="initial_ip_pos">20</TD><TD PORT="initial_ip_size">2</TD><TD>u2le</TD><TD PORT="initial_ip_type">initial_ip</TD></TR>
+				<TR><TD PORT="initial_cs_pos">22</TD><TD PORT="initial_cs_size">2</TD><TD>u2le</TD><TD PORT="initial_cs_type">initial_cs</TD></TR>
+				<TR><TD PORT="relocations_ofs_pos">24</TD><TD PORT="relocations_ofs_size">2</TD><TD>u2le</TD><TD PORT="relocations_ofs_type">relocations_ofs</TD></TR>
+				<TR><TD PORT="overlay_id_pos">26</TD><TD PORT="overlay_id_size">2</TD><TD>u2le</TD><TD PORT="overlay_id_type">overlay_id</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__relocation {
+			label="DosMz::Relocation";
+			graph[style=dotted];
+
+			relocation__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ofs_pos">0</TD><TD PORT="ofs_size">2</TD><TD>u2le</TD><TD PORT="ofs_type">ofs</TD></TR>
+				<TR><TD PORT="seg_pos">2</TD><TD PORT="seg_size">2</TD><TD>u2le</TD><TD PORT="seg_type">seg</TD></TR>
+			</TABLE>>];
+		}
+	}
+	dos_mz__seq:hdr_type -> mz_header__seq [style=bold];
+	mz_header__seq:relocations_ofs_type -> dos_mz__seq:mz_header2_size [color="#404040"];
+	dos_mz__seq:relocations_type -> relocation__seq [style=bold];
+	mz_header__seq:qty_relocations_type -> dos_mz__seq:relocations__repeat [color="#404040"];
+}

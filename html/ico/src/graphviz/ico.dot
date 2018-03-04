@@ -1,0 +1,50 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__ico {
+		label="Ico";
+		graph[style=dotted];
+
+		ico__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>00 00 01 00</TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="num_images_pos">4</TD><TD PORT="num_images_size">2</TD><TD>u2le</TD><TD PORT="num_images_type">num_images</TD></TR>
+			<TR><TD PORT="images_pos">6</TD><TD PORT="images_size">16</TD><TD>IconDirEntry</TD><TD PORT="images_type">images</TD></TR>
+			<TR><TD COLSPAN="4" PORT="images__repeat">repeat num_images times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__icon_dir_entry {
+			label="Ico::IconDirEntry";
+			graph[style=dotted];
+
+			icon_dir_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="width_pos">0</TD><TD PORT="width_size">1</TD><TD>u1</TD><TD PORT="width_type">width</TD></TR>
+				<TR><TD PORT="height_pos">1</TD><TD PORT="height_size">1</TD><TD>u1</TD><TD PORT="height_type">height</TD></TR>
+				<TR><TD PORT="num_colors_pos">2</TD><TD PORT="num_colors_size">1</TD><TD>u1</TD><TD PORT="num_colors_type">num_colors</TD></TR>
+				<TR><TD PORT="reserved_pos">3</TD><TD PORT="reserved_size">1</TD><TD>00</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="num_planes_pos">4</TD><TD PORT="num_planes_size">2</TD><TD>u2le</TD><TD PORT="num_planes_type">num_planes</TD></TR>
+				<TR><TD PORT="bpp_pos">6</TD><TD PORT="bpp_size">2</TD><TD>u2le</TD><TD PORT="bpp_type">bpp</TD></TR>
+				<TR><TD PORT="len_img_pos">8</TD><TD PORT="len_img_size">4</TD><TD>u4le</TD><TD PORT="len_img_type">len_img</TD></TR>
+				<TR><TD PORT="ofs_img_pos">12</TD><TD PORT="ofs_img_size">4</TD><TD>u4le</TD><TD PORT="ofs_img_type">ofs_img</TD></TR>
+			</TABLE>>];
+			icon_dir_entry__inst__img [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="img_pos">ofs_img</TD><TD PORT="img_size">len_img</TD><TD></TD><TD PORT="img_type">img</TD></TR>
+			</TABLE>>];
+			icon_dir_entry__inst__png_header [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="png_header_pos">ofs_img</TD><TD PORT="png_header_size">8</TD><TD></TD><TD PORT="png_header_type">png_header</TD></TR>
+			</TABLE>>];
+			icon_dir_entry__inst__is_png [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_png</TD><TD>png_header == [137, 80, 78, 71, 13, 10, 26, 10].pack('C*')</TD></TR>
+			</TABLE>>];
+		}
+	}
+	ico__seq:images_type -> icon_dir_entry__seq [style=bold];
+	ico__seq:num_images_type -> ico__seq:images__repeat [color="#404040"];
+	icon_dir_entry__seq:ofs_img_type -> icon_dir_entry__inst__img:img_pos [color="#404040"];
+	icon_dir_entry__seq:len_img_type -> icon_dir_entry__inst__img:img_size [color="#404040"];
+	icon_dir_entry__seq:ofs_img_type -> icon_dir_entry__inst__png_header:png_header_pos [color="#404040"];
+	icon_dir_entry__inst__png_header:png_header_type -> icon_dir_entry__inst__is_png [color="#404040"];
+}

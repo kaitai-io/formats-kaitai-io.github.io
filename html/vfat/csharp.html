@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>vfat: C# parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">vfat</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>vfat:
+            
+            C# parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of vfat
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="vfat parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="vfat parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="csharp.html" title="vfat parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="vfat parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="vfat parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="vfat parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="vfat parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="vfat parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="vfat parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="vfat parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="csharp">var data = Vfat.FromFile("path/to/local/file.vfat");</code></pre>
+
+<p>Or parse structure from a byte array:</p>
+
+<pre><code class="csharp">byte[] someArray = new byte[] { ... };
+var data = new Vfat(new KaitaiStream(someArray));</code></pre>
+
+<p>After that, one can get various attributes from the structure by accessing properties like:</p>
+
+<pre><code class="csharp">data.BootSector // => get boot sector</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C# source code to parse vfat
+            
+        </h2>
+
+        
+
+        <h3>Vfat.cs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/csharp/Vfat.cs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+using System.Collections.Generic;
+
+namespace Kaitai
+{
+    public partial class Vfat : KaitaiStruct
+    {
+        public static Vfat FromFile(string fileName)
+        {
+            return new Vfat(new KaitaiStream(fileName));
+        }
+
+        public Vfat(KaitaiStream p__io, KaitaiStruct p__parent = null, Vfat p__root = null) : base(p__io)
+        {
+            m_parent = p__parent;
+            m_root = p__root ?? this;
+            f_fats = false;
+            f_rootDir = false;
+            _read();
+        }
+        private void _read()
+        {
+            _bootSector = new BootSector(m_io, this, m_root);
+        }
+
+        /// &lt;summary&gt;
+        /// Extended BIOS Parameter Block for FAT32
+        /// &lt;/summary&gt;
+        public partial class ExtBiosParamBlockFat32 : KaitaiStruct
+        {
+            public static ExtBiosParamBlockFat32 FromFile(string fileName)
+            {
+                return new ExtBiosParamBlockFat32(new KaitaiStream(fileName));
+            }
+
+            public ExtBiosParamBlockFat32(KaitaiStream p__io, Vfat.BootSector p__parent = null, Vfat p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _lsPerFat = m_io.ReadU4le();
+                _hasActiveFat = m_io.ReadBitsInt(1) != 0;
+                _reserved1 = m_io.ReadBitsInt(3);
+                _activeFatId = m_io.ReadBitsInt(4);
+                m_io.AlignToByte();
+                _reserved2 = m_io.EnsureFixedContents(new byte[] { 0 });
+                _fatVersion = m_io.ReadU2le();
+                _rootDirStartClus = m_io.ReadU4le();
+                _lsFsInfo = m_io.ReadU2le();
+                _bootSectorsCopyStartLs = m_io.ReadU2le();
+                _reserved3 = m_io.ReadBytes(12);
+                _physDriveNum = m_io.ReadU1();
+                _reserved4 = m_io.ReadU1();
+                _extBootSign = m_io.ReadU1();
+                _volumeId = m_io.ReadBytes(4);
+                _partitionVolumeLabel = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(11), 32));
+                _fsTypeStr = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 32));
+            }
+            private uint _lsPerFat;
+            private bool _hasActiveFat;
+            private ulong _reserved1;
+            private ulong _activeFatId;
+            private byte[] _reserved2;
+            private ushort _fatVersion;
+            private uint _rootDirStartClus;
+            private ushort _lsFsInfo;
+            private ushort _bootSectorsCopyStartLs;
+            private byte[] _reserved3;
+            private byte _physDriveNum;
+            private byte _reserved4;
+            private byte _extBootSign;
+            private byte[] _volumeId;
+            private string _partitionVolumeLabel;
+            private string _fsTypeStr;
+            private Vfat m_root;
+            private Vfat.BootSector m_parent;
+
+            /// &lt;summary&gt;
+            /// Logical sectors per file allocation table (corresponds with
+            /// the old entry `ls_per_fat` in the DOS 2.0 BPB).
+            /// &lt;/summary&gt;
+            public uint LsPerFat { get { return _lsPerFat; } }
+
+            /// &lt;summary&gt;
+            /// If true, then there is &amp;quot;active&amp;quot; FAT, which is designated in
+            /// `active_fat` attribute. If false, all FATs are mirrored as
+            /// usual.
+            /// &lt;/summary&gt;
+            public bool HasActiveFat { get { return _hasActiveFat; } }
+            public ulong Reserved1 { get { return _reserved1; } }
+
+            /// &lt;summary&gt;
+            /// Zero-based number of active FAT, if `has_active_fat`
+            /// attribute is true.
+            /// &lt;/summary&gt;
+            public ulong ActiveFatId { get { return _activeFatId; } }
+            public byte[] Reserved2 { get { return _reserved2; } }
+            public ushort FatVersion { get { return _fatVersion; } }
+
+            /// &lt;summary&gt;
+            /// Cluster number of root directory start, typically 2 if it
+            /// contains no bad sector. (Microsoft&#39;s FAT32 implementation
+            /// imposes an artificial limit of 65,535 entries per directory,
+            /// whilst many third-party implementations do not.)
+            /// &lt;/summary&gt;
+            public uint RootDirStartClus { get { return _rootDirStartClus; } }
+
+            /// &lt;summary&gt;
+            /// Logical sector number of FS Information Sector, typically 1,
+            /// i.e., the second of the three FAT32 boot sectors. Values
+            /// like 0 and 0xFFFF are used by some FAT32 implementations to
+            /// designate abscence of FS Information Sector.
+            /// &lt;/summary&gt;
+            public ushort LsFsInfo { get { return _lsFsInfo; } }
+
+            /// &lt;summary&gt;
+            /// First logical sector number of a copy of the three FAT32
+            /// boot sectors, typically 6.
+            /// &lt;/summary&gt;
+            public ushort BootSectorsCopyStartLs { get { return _bootSectorsCopyStartLs; } }
+            public byte[] Reserved3 { get { return _reserved3; } }
+
+            /// &lt;summary&gt;
+            /// Physical drive number (0x00 for (first) removable media,
+            /// 0x80 for (first) fixed disk as per INT 13h).
+            /// &lt;/summary&gt;
+            public byte PhysDriveNum { get { return _physDriveNum; } }
+            public byte Reserved4 { get { return _reserved4; } }
+
+            /// &lt;summary&gt;
+            /// Should be 0x29 to indicate that an EBPB with the following 3
+            /// entries exists.
+            /// &lt;/summary&gt;
+            public byte ExtBootSign { get { return _extBootSign; } }
+
+            /// &lt;summary&gt;
+            /// Volume ID (serial number).
+            /// 
+            /// Typically the serial number &amp;quot;xxxx-xxxx&amp;quot; is created by a
+            /// 16-bit addition of both DX values returned by INT 21h/AH=2Ah
+            /// (get system date) and INT 21h/AH=2Ch (get system time) for
+            /// the high word and another 16-bit addition of both CX values
+            /// for the low word of the serial number. Alternatively, some
+            /// DR-DOS disk utilities provide a /# option to generate a
+            /// human-readable time stamp &amp;quot;mmdd-hhmm&amp;quot; build from BCD-encoded
+            /// 8-bit values for the month, day, hour and minute instead of
+            /// a serial number.
+            /// &lt;/summary&gt;
+            public byte[] VolumeId { get { return _volumeId; } }
+            public string PartitionVolumeLabel { get { return _partitionVolumeLabel; } }
+            public string FsTypeStr { get { return _fsTypeStr; } }
+            public Vfat M_Root { get { return m_root; } }
+            public Vfat.BootSector M_Parent { get { return m_parent; } }
+        }
+        public partial class BootSector : KaitaiStruct
+        {
+            public static BootSector FromFile(string fileName)
+            {
+                return new BootSector(new KaitaiStream(fileName));
+            }
+
+            public BootSector(KaitaiStream p__io, Vfat p__parent = null, Vfat p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_posFats = false;
+                f_lsPerFat = false;
+                f_lsPerRootDir = false;
+                f_isFat32 = false;
+                f_sizeFat = false;
+                f_posRootDir = false;
+                f_sizeRootDir = false;
+                _read();
+            }
+            private void _read()
+            {
+                _jmpInstruction = m_io.ReadBytes(3);
+                _oemName = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 32));
+                _bpb = new BiosParamBlock(m_io, this, m_root);
+                if (!(IsFat32)) {
+                    _ebpbFat16 = new ExtBiosParamBlockFat16(m_io, this, m_root);
+                }
+                if (IsFat32) {
+                    _ebpbFat32 = new ExtBiosParamBlockFat32(m_io, this, m_root);
+                }
+            }
+            private bool f_posFats;
+            private int _posFats;
+
+            /// &lt;summary&gt;
+            /// Offset of FATs in bytes from start of filesystem
+            /// &lt;/summary&gt;
+            public int PosFats
+            {
+                get
+                {
+                    if (f_posFats)
+                        return _posFats;
+                    _posFats = (int) ((Bpb.BytesPerLs * Bpb.NumReservedLs));
+                    f_posFats = true;
+                    return _posFats;
+                }
+            }
+            private bool f_lsPerFat;
+            private uint _lsPerFat;
+            public uint LsPerFat
+            {
+                get
+                {
+                    if (f_lsPerFat)
+                        return _lsPerFat;
+                    _lsPerFat = (uint) ((IsFat32 ? EbpbFat32.LsPerFat : Bpb.LsPerFat));
+                    f_lsPerFat = true;
+                    return _lsPerFat;
+                }
+            }
+            private bool f_lsPerRootDir;
+            private int _lsPerRootDir;
+
+            /// &lt;summary&gt;
+            /// Size of root directory in logical sectors
+            /// &lt;/summary&gt;
+            /// &lt;remarks&gt;
+            /// Reference: FAT: General Overview of On-Disk Format, section &amp;quot;FAT Data Structure&amp;quot;
+            /// &lt;/remarks&gt;
+            public int LsPerRootDir
+            {
+                get
+                {
+                    if (f_lsPerRootDir)
+                        return _lsPerRootDir;
+                    _lsPerRootDir = (int) (((((Bpb.MaxRootDirRec * 32) + Bpb.BytesPerLs) - 1) / Bpb.BytesPerLs));
+                    f_lsPerRootDir = true;
+                    return _lsPerRootDir;
+                }
+            }
+            private bool f_isFat32;
+            private bool _isFat32;
+
+            /// &lt;summary&gt;
+            /// Determines if filesystem is FAT32 (true) or FAT12/16 (false)
+            /// by analyzing some preliminary conditions in BPB. Used to
+            /// determine whether we should parse post-BPB data as
+            /// `ext_bios_param_block_fat16` or `ext_bios_param_block_fat32`.
+            /// &lt;/summary&gt;
+            public bool IsFat32
+            {
+                get
+                {
+                    if (f_isFat32)
+                        return _isFat32;
+                    _isFat32 = (bool) (Bpb.MaxRootDirRec == 0);
+                    f_isFat32 = true;
+                    return _isFat32;
+                }
+            }
+            private bool f_sizeFat;
+            private int _sizeFat;
+
+            /// &lt;summary&gt;
+            /// Size of one FAT in bytes
+            /// &lt;/summary&gt;
+            public int SizeFat
+            {
+                get
+                {
+                    if (f_sizeFat)
+                        return _sizeFat;
+                    _sizeFat = (int) ((Bpb.BytesPerLs * LsPerFat));
+                    f_sizeFat = true;
+                    return _sizeFat;
+                }
+            }
+            private bool f_posRootDir;
+            private int _posRootDir;
+
+            /// &lt;summary&gt;
+            /// Offset of root directory in bytes from start of filesystem
+            /// &lt;/summary&gt;
+            public int PosRootDir
+            {
+                get
+                {
+                    if (f_posRootDir)
+                        return _posRootDir;
+                    _posRootDir = (int) ((Bpb.BytesPerLs * (Bpb.NumReservedLs + (LsPerFat * Bpb.NumFats))));
+                    f_posRootDir = true;
+                    return _posRootDir;
+                }
+            }
+            private bool f_sizeRootDir;
+            private int _sizeRootDir;
+
+            /// &lt;summary&gt;
+            /// Size of root directory in bytes
+            /// &lt;/summary&gt;
+            public int SizeRootDir
+            {
+                get
+                {
+                    if (f_sizeRootDir)
+                        return _sizeRootDir;
+                    _sizeRootDir = (int) ((LsPerRootDir * Bpb.BytesPerLs));
+                    f_sizeRootDir = true;
+                    return _sizeRootDir;
+                }
+            }
+            private byte[] _jmpInstruction;
+            private string _oemName;
+            private BiosParamBlock _bpb;
+            private ExtBiosParamBlockFat16 _ebpbFat16;
+            private ExtBiosParamBlockFat32 _ebpbFat32;
+            private Vfat m_root;
+            private Vfat m_parent;
+            public byte[] JmpInstruction { get { return _jmpInstruction; } }
+            public string OemName { get { return _oemName; } }
+
+            /// &lt;summary&gt;
+            /// Basic BIOS parameter block, present in all versions of FAT
+            /// &lt;/summary&gt;
+            public BiosParamBlock Bpb { get { return _bpb; } }
+
+            /// &lt;summary&gt;
+            /// FAT12/16-specific extended BIOS parameter block
+            /// &lt;/summary&gt;
+            public ExtBiosParamBlockFat16 EbpbFat16 { get { return _ebpbFat16; } }
+
+            /// &lt;summary&gt;
+            /// FAT32-specific extended BIOS parameter block
+            /// &lt;/summary&gt;
+            public ExtBiosParamBlockFat32 EbpbFat32 { get { return _ebpbFat32; } }
+            public Vfat M_Root { get { return m_root; } }
+            public Vfat M_Parent { get { return m_parent; } }
+        }
+        public partial class BiosParamBlock : KaitaiStruct
+        {
+            public static BiosParamBlock FromFile(string fileName)
+            {
+                return new BiosParamBlock(new KaitaiStream(fileName));
+            }
+
+            public BiosParamBlock(KaitaiStream p__io, Vfat.BootSector p__parent = null, Vfat p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _bytesPerLs = m_io.ReadU2le();
+                _lsPerClus = m_io.ReadU1();
+                _numReservedLs = m_io.ReadU2le();
+                _numFats = m_io.ReadU1();
+                _maxRootDirRec = m_io.ReadU2le();
+                _totalLs2 = m_io.ReadU2le();
+                _mediaCode = m_io.ReadU1();
+                _lsPerFat = m_io.ReadU2le();
+                _psPerTrack = m_io.ReadU2le();
+                _numHeads = m_io.ReadU2le();
+                _numHiddenSectors = m_io.ReadU4le();
+                _totalLs4 = m_io.ReadU4le();
+            }
+            private ushort _bytesPerLs;
+            private byte _lsPerClus;
+            private ushort _numReservedLs;
+            private byte _numFats;
+            private ushort _maxRootDirRec;
+            private ushort _totalLs2;
+            private byte _mediaCode;
+            private ushort _lsPerFat;
+            private ushort _psPerTrack;
+            private ushort _numHeads;
+            private uint _numHiddenSectors;
+            private uint _totalLs4;
+            private Vfat m_root;
+            private Vfat.BootSector m_parent;
+
+            /// &lt;summary&gt;
+            /// Bytes per logical sector
+            /// &lt;/summary&gt;
+            public ushort BytesPerLs { get { return _bytesPerLs; } }
+
+            /// &lt;summary&gt;
+            /// Logical sectors per cluster
+            /// &lt;/summary&gt;
+            public byte LsPerClus { get { return _lsPerClus; } }
+
+            /// &lt;summary&gt;
+            /// Count of reserved logical sectors. The number of logical
+            /// sectors before the first FAT in the file system image.
+            /// &lt;/summary&gt;
+            public ushort NumReservedLs { get { return _numReservedLs; } }
+
+            /// &lt;summary&gt;
+            /// Number of File Allocation Tables
+            /// &lt;/summary&gt;
+            public byte NumFats { get { return _numFats; } }
+
+            /// &lt;summary&gt;
+            /// Maximum number of FAT12 or FAT16 root directory entries. 0
+            /// for FAT32, where the root directory is stored in ordinary
+            /// data clusters.
+            /// &lt;/summary&gt;
+            public ushort MaxRootDirRec { get { return _maxRootDirRec; } }
+
+            /// &lt;summary&gt;
+            /// Total logical sectors (if zero, use total_ls_4)
+            /// &lt;/summary&gt;
+            public ushort TotalLs2 { get { return _totalLs2; } }
+
+            /// &lt;summary&gt;
+            /// Media descriptor
+            /// &lt;/summary&gt;
+            public byte MediaCode { get { return _mediaCode; } }
+
+            /// &lt;summary&gt;
+            /// Logical sectors per File Allocation Table for
+            /// FAT12/FAT16. FAT32 sets this to 0 and uses the 32-bit value
+            /// at offset 0x024 instead.
+            /// &lt;/summary&gt;
+            public ushort LsPerFat { get { return _lsPerFat; } }
+
+            /// &lt;summary&gt;
+            /// Physical sectors per track for disks with INT 13h CHS
+            /// geometry, e.g., 15 for a ???1.20 MB??? (1200 KB) floppy. A zero
+            /// entry indicates that this entry is reserved, but not used.
+            /// &lt;/summary&gt;
+            public ushort PsPerTrack { get { return _psPerTrack; } }
+
+            /// &lt;summary&gt;
+            /// Number of heads for disks with INT 13h CHS geometry,[9]
+            /// e.g., 2 for a double sided floppy.
+            /// &lt;/summary&gt;
+            public ushort NumHeads { get { return _numHeads; } }
+
+            /// &lt;summary&gt;
+            /// Number of hidden sectors preceding the partition that
+            /// contains this FAT volume. This field should always be zero
+            /// on media that are not partitioned. This DOS 3.0 entry is
+            /// incompatible with a similar entry at offset 0x01C in BPBs
+            /// since DOS 3.31.  It must not be used if the logical sectors
+            /// entry at offset 0x013 is zero.
+            /// &lt;/summary&gt;
+            public uint NumHiddenSectors { get { return _numHiddenSectors; } }
+
+            /// &lt;summary&gt;
+            /// Total logical sectors including hidden sectors. This DOS 3.2
+            /// entry is incompatible with a similar entry at offset 0x020
+            /// in BPBs since DOS 3.31. It must not be used if the logical
+            /// sectors entry at offset 0x013 is zero.
+            /// &lt;/summary&gt;
+            public uint TotalLs4 { get { return _totalLs4; } }
+            public Vfat M_Root { get { return m_root; } }
+            public Vfat.BootSector M_Parent { get { return m_parent; } }
+        }
+        public partial class RootDirectoryRec : KaitaiStruct
+        {
+            public static RootDirectoryRec FromFile(string fileName)
+            {
+                return new RootDirectoryRec(new KaitaiStream(fileName));
+            }
+
+            public RootDirectoryRec(KaitaiStream p__io, Vfat.RootDirectory p__parent = null, Vfat p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _fileName = m_io.ReadBytes(11);
+                _attribute = m_io.ReadU1();
+                _reserved = m_io.ReadBytes(10);
+                _time = m_io.ReadU2le();
+                _date = m_io.ReadU2le();
+                _startClus = m_io.ReadU2le();
+                _fileSize = m_io.ReadU4le();
+            }
+            private byte[] _fileName;
+            private byte _attribute;
+            private byte[] _reserved;
+            private ushort _time;
+            private ushort _date;
+            private ushort _startClus;
+            private uint _fileSize;
+            private Vfat m_root;
+            private Vfat.RootDirectory m_parent;
+            public byte[] FileName { get { return _fileName; } }
+            public byte Attribute { get { return _attribute; } }
+            public byte[] Reserved { get { return _reserved; } }
+            public ushort Time { get { return _time; } }
+            public ushort Date { get { return _date; } }
+            public ushort StartClus { get { return _startClus; } }
+            public uint FileSize { get { return _fileSize; } }
+            public Vfat M_Root { get { return m_root; } }
+            public Vfat.RootDirectory M_Parent { get { return m_parent; } }
+        }
+        public partial class RootDirectory : KaitaiStruct
+        {
+            public static RootDirectory FromFile(string fileName)
+            {
+                return new RootDirectory(new KaitaiStream(fileName));
+            }
+
+            public RootDirectory(KaitaiStream p__io, Vfat p__parent = null, Vfat p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _records = new List&lt;RootDirectoryRec&gt;((int) (M_Root.BootSector.Bpb.MaxRootDirRec));
+                for (var i = 0; i &lt; M_Root.BootSector.Bpb.MaxRootDirRec; i++)
+                {
+                    _records.Add(new RootDirectoryRec(m_io, this, m_root));
+                }
+            }
+            private List&lt;RootDirectoryRec&gt; _records;
+            private Vfat m_root;
+            private Vfat m_parent;
+            public List&lt;RootDirectoryRec&gt; Records { get { return _records; } }
+            public Vfat M_Root { get { return m_root; } }
+            public Vfat M_Parent { get { return m_parent; } }
+        }
+
+        /// &lt;summary&gt;
+        /// Extended BIOS Parameter Block (DOS 4.0+, OS/2 1.0+). Used only
+        /// for FAT12 and FAT16.
+        /// &lt;/summary&gt;
+        public partial class ExtBiosParamBlockFat16 : KaitaiStruct
+        {
+            public static ExtBiosParamBlockFat16 FromFile(string fileName)
+            {
+                return new ExtBiosParamBlockFat16(new KaitaiStream(fileName));
+            }
+
+            public ExtBiosParamBlockFat16(KaitaiStream p__io, Vfat.BootSector p__parent = null, Vfat p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _physDriveNum = m_io.ReadU1();
+                _reserved1 = m_io.ReadU1();
+                _extBootSign = m_io.ReadU1();
+                _volumeId = m_io.ReadBytes(4);
+                _partitionVolumeLabel = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(11), 32));
+                _fsTypeStr = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 32));
+            }
+            private byte _physDriveNum;
+            private byte _reserved1;
+            private byte _extBootSign;
+            private byte[] _volumeId;
+            private string _partitionVolumeLabel;
+            private string _fsTypeStr;
+            private Vfat m_root;
+            private Vfat.BootSector m_parent;
+
+            /// &lt;summary&gt;
+            /// Physical drive number (0x00 for (first) removable media,
+            /// 0x80 for (first) fixed disk as per INT 13h).
+            /// &lt;/summary&gt;
+            public byte PhysDriveNum { get { return _physDriveNum; } }
+            public byte Reserved1 { get { return _reserved1; } }
+
+            /// &lt;summary&gt;
+            /// Should be 0x29 to indicate that an EBPB with the following 3
+            /// entries exists.
+            /// &lt;/summary&gt;
+            public byte ExtBootSign { get { return _extBootSign; } }
+
+            /// &lt;summary&gt;
+            /// Volume ID (serial number).
+            /// 
+            /// Typically the serial number &amp;quot;xxxx-xxxx&amp;quot; is created by a
+            /// 16-bit addition of both DX values returned by INT 21h/AH=2Ah
+            /// (get system date) and INT 21h/AH=2Ch (get system time) for
+            /// the high word and another 16-bit addition of both CX values
+            /// for the low word of the serial number. Alternatively, some
+            /// DR-DOS disk utilities provide a /# option to generate a
+            /// human-readable time stamp &amp;quot;mmdd-hhmm&amp;quot; build from BCD-encoded
+            /// 8-bit values for the month, day, hour and minute instead of
+            /// a serial number.
+            /// &lt;/summary&gt;
+            public byte[] VolumeId { get { return _volumeId; } }
+            public string PartitionVolumeLabel { get { return _partitionVolumeLabel; } }
+            public string FsTypeStr { get { return _fsTypeStr; } }
+            public Vfat M_Root { get { return m_root; } }
+            public Vfat.BootSector M_Parent { get { return m_parent; } }
+        }
+        private bool f_fats;
+        private List&lt;byte[]&gt; _fats;
+        public List&lt;byte[]&gt; Fats
+        {
+            get
+            {
+                if (f_fats)
+                    return _fats;
+                long _pos = m_io.Pos;
+                m_io.Seek(BootSector.PosFats);
+                _fats = new List&lt;byte[]&gt;((int) (BootSector.Bpb.NumFats));
+                for (var i = 0; i &lt; BootSector.Bpb.NumFats; i++)
+                {
+                    _fats.Add(m_io.ReadBytes(BootSector.SizeFat));
+                }
+                m_io.Seek(_pos);
+                f_fats = true;
+                return _fats;
+            }
+        }
+        private bool f_rootDir;
+        private RootDirectory _rootDir;
+        public RootDirectory RootDir
+        {
+            get
+            {
+                if (f_rootDir)
+                    return _rootDir;
+                long _pos = m_io.Pos;
+                m_io.Seek(BootSector.PosRootDir);
+                __raw_rootDir = m_io.ReadBytes(BootSector.SizeRootDir);
+                var io___raw_rootDir = new KaitaiStream(__raw_rootDir);
+                _rootDir = new RootDirectory(io___raw_rootDir, this, m_root);
+                m_io.Seek(_pos);
+                f_rootDir = true;
+                return _rootDir;
+            }
+        }
+        private BootSector _bootSector;
+        private Vfat m_root;
+        private KaitaiStruct m_parent;
+        private byte[] __raw_rootDir;
+        public BootSector BootSector { get { return _bootSector; } }
+        public Vfat M_Root { get { return m_root; } }
+        public KaitaiStruct M_Parent { get { return m_parent; } }
+        public byte[] M_RawRootDir { get { return __raw_rootDir; } }
+    }
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

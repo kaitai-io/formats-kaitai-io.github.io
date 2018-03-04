@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Logical Volume Manager version 2: C++/STL parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">Logical Volume Manager version 2</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Logical Volume Manager version 2:
+            
+            C++/STL parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><h3>Building a test file</h3>
+<pre><code>dd if=/dev/zero of=image.img bs=512 count=$(( 4 * 1024 * 2 ))
+sudo losetup /dev/loop1 image.img
+sudo pvcreate /dev/loop1
+sudo vgcreate vg_test /dev/loop1
+sudo lvcreate --name lv_test1 vg_test
+sudo losetup -d /dev/loop1
+</code></pre>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["linux", "grub2", "lvm tools", "libvslvm"]
+                    </div>
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/GFDL-1.3+.html">GFDL-1.3+</a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Logical Volume Manager version 2
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Logical Volume Manager version 2 parsing Overview library">Overview</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="cpp_stl.html" title="Logical Volume Manager version 2 parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Logical Volume Manager version 2 parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Logical Volume Manager version 2 parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Logical Volume Manager version 2 parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Logical Volume Manager version 2 parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Logical Volume Manager version 2 parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Logical Volume Manager version 2 parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Logical Volume Manager version 2 parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Logical Volume Manager version 2 parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+
+<p>Using Kaitai Struct in C++/STL usually consists of 3 steps.</p>
+
+<ol>
+    <li>We need to create an STL input stream (<code>std::istream</code>).
+        <ul>
+            <li>One can open a stream for reading from a local file:
+
+<pre><code class="cpp">#include &lt;fstream&gt;
+
+std::ifstream is("path/to/local/file.lvm2", std::ifstream::binary);</code></pre></li>
+
+            <li>Or one can prepare a stream for reading from existing <code>std::string str</code>:
+
+<pre><code class="cpp">#include &lt;sstream&gt;
+
+std::istringstream is(str);</code></pre></li>
+
+            <li>Or one can parse arbitrary <code>char*</code> buffer in memory, given that we know its size:
+
+<pre><code class="cpp">#include &lt;sstream&gt;
+
+const char buf[] = { ... };
+std::string str(buf, sizeof buf);
+std::istringstream is(str);</code></pre></li>
+
+    </ul></li>
+
+    <li>We need to wrap our input stream into Kaitai stream:
+
+<pre><code class="cpp">#include &lt;kaitai/kaitaistream.h&gt;
+
+kaitai::kstream ks(&amp;is);</code></pre></li>
+
+    <li>And finally, we can invoke the parsing:
+
+<pre><code class="cpp">lvm2_t data(&amp;ks);</code></pre></li>
+</ol>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="cpp">data.pv() // => Physical volume</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C++/STL source code to parse Logical Volume Manager version 2
+            
+        </h2>
+
+        
+
+        <h3>lvm2.h</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl/lvm2.h" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="cpp_stl">#ifndef LVM2_H_
+#define LVM2_H_
+
+// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include &quot;kaitai/kaitaistruct.h&quot;
+
+#include &lt;stdint.h&gt;
+#include &lt;vector&gt;
+
+#if KAITAI_STRUCT_VERSION &lt; 7000L
+#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
+#endif
+
+/**
+ * ### Building a test file
+ * 
+ * ```
+ * dd if=/dev/zero of=image.img bs=512 count=$(( 4 * 1024 * 2 ))
+ * sudo losetup /dev/loop1 image.img
+ * sudo pvcreate /dev/loop1
+ * sudo vgcreate vg_test /dev/loop1
+ * sudo lvcreate --name lv_test1 vg_test
+ * sudo losetup -d /dev/loop1
+ * ```
+ * \sa Source
+ */
+
+class lvm2_t : public kaitai::kstruct {
+
+public:
+    class physical_volume_t;
+
+    lvm2_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, lvm2_t* p__root = 0);
+
+private:
+    void _read();
+
+public:
+    ~lvm2_t();
+
+    class physical_volume_t : public kaitai::kstruct {
+
+    public:
+        class label_t;
+
+        physical_volume_t(kaitai::kstream* p__io, lvm2_t* p__parent = 0, lvm2_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~physical_volume_t();
+
+        class label_t : public kaitai::kstruct {
+
+        public:
+            class label_header_t;
+            class volume_header_t;
+
+            label_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t* p__parent = 0, lvm2_t* p__root = 0);
+
+        private:
+            void _read();
+
+        public:
+            ~label_t();
+
+            class label_header_t : public kaitai::kstruct {
+
+            public:
+                class label_header__t;
+
+                label_header_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t* p__parent = 0, lvm2_t* p__root = 0);
+
+            private:
+                void _read();
+
+            public:
+                ~label_header_t();
+
+                class label_header__t : public kaitai::kstruct {
+
+                public:
+
+                    label_header__t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::label_header_t* p__parent = 0, lvm2_t* p__root = 0);
+
+                private:
+                    void _read();
+
+                public:
+                    ~label_header__t();
+
+                private:
+                    uint32_t m_data_offset;
+                    std::string m_type_indicator;
+                    lvm2_t* m__root;
+                    lvm2_t::physical_volume_t::label_t::label_header_t* m__parent;
+
+                public:
+
+                    /**
+                     * The offset, in bytes, relative from the start of the physical volume label header where data is stored
+                     */
+                    uint32_t data_offset() const { return m_data_offset; }
+                    std::string type_indicator() const { return m_type_indicator; }
+                    lvm2_t* _root() const { return m__root; }
+                    lvm2_t::physical_volume_t::label_t::label_header_t* _parent() const { return m__parent; }
+                };
+
+            private:
+                std::string m_signature;
+                uint64_t m_sector_number;
+                uint32_t m_checksum;
+                label_header__t* m_label_header_;
+                lvm2_t* m__root;
+                lvm2_t::physical_volume_t::label_t* m__parent;
+
+            public:
+                std::string signature() const { return m_signature; }
+
+                /**
+                 * The sector number of the physical volume label header
+                 */
+                uint64_t sector_number() const { return m_sector_number; }
+
+                /**
+                 * CRC-32 for offset 20 to end of the physical volume label sector
+                 */
+                uint32_t checksum() const { return m_checksum; }
+                label_header__t* label_header_() const { return m_label_header_; }
+                lvm2_t* _root() const { return m__root; }
+                lvm2_t::physical_volume_t::label_t* _parent() const { return m__parent; }
+            };
+
+            class volume_header_t : public kaitai::kstruct {
+
+            public:
+                class data_area_descriptor_t;
+                class metadata_area_descriptor_t;
+                class metadata_area_t;
+
+                volume_header_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t* p__parent = 0, lvm2_t* p__root = 0);
+
+            private:
+                void _read();
+
+            public:
+                ~volume_header_t();
+
+                class data_area_descriptor_t : public kaitai::kstruct {
+
+                public:
+
+                    data_area_descriptor_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::volume_header_t* p__parent = 0, lvm2_t* p__root = 0);
+
+                private:
+                    void _read();
+
+                public:
+                    ~data_area_descriptor_t();
+
+                private:
+                    bool f_data;
+                    std::string m_data;
+                    bool n_data;
+
+                public:
+                    bool _is_null_data() { data(); return n_data; };
+
+                private:
+
+                public:
+                    std::string data();
+
+                private:
+                    uint64_t m_offset;
+                    uint64_t m_size;
+                    lvm2_t* m__root;
+                    lvm2_t::physical_volume_t::label_t::volume_header_t* m__parent;
+
+                public:
+
+                    /**
+                     * The offset, in bytes, relative from the start of the physical volume
+                     */
+                    uint64_t offset() const { return m_offset; }
+
+                    /**
+                     * Value in bytes. Can be 0. [yellow-background]*Does this represent all remaining available space?*
+                     */
+                    uint64_t size() const { return m_size; }
+                    lvm2_t* _root() const { return m__root; }
+                    lvm2_t::physical_volume_t::label_t::volume_header_t* _parent() const { return m__parent; }
+                };
+
+                class metadata_area_descriptor_t : public kaitai::kstruct {
+
+                public:
+
+                    metadata_area_descriptor_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::volume_header_t* p__parent = 0, lvm2_t* p__root = 0);
+
+                private:
+                    void _read();
+
+                public:
+                    ~metadata_area_descriptor_t();
+
+                private:
+                    bool f_data;
+                    metadata_area_t* m_data;
+                    bool n_data;
+
+                public:
+                    bool _is_null_data() { data(); return n_data; };
+
+                private:
+
+                public:
+                    metadata_area_t* data();
+
+                private:
+                    uint64_t m_offset;
+                    uint64_t m_size;
+                    lvm2_t* m__root;
+                    lvm2_t::physical_volume_t::label_t::volume_header_t* m__parent;
+                    std::string m__raw_data;
+                    kaitai::kstream* m__io__raw_data;
+
+                public:
+
+                    /**
+                     * The offset, in bytes, relative from the start of the physical volume
+                     */
+                    uint64_t offset() const { return m_offset; }
+
+                    /**
+                     * Value in bytes
+                     */
+                    uint64_t size() const { return m_size; }
+                    lvm2_t* _root() const { return m__root; }
+                    lvm2_t::physical_volume_t::label_t::volume_header_t* _parent() const { return m__parent; }
+                    std::string _raw_data() const { return m__raw_data; }
+                    kaitai::kstream* _io__raw_data() const { return m__io__raw_data; }
+                };
+
+                /**
+                 * According to `[REDHAT]` the metadata area is a circular buffer. New metadata is appended to the old metadata and then the pointer to the start of it is updated. The metadata area, therefore, can contain copies of older versions of the metadata.
+                 */
+
+                class metadata_area_t : public kaitai::kstruct {
+
+                public:
+                    class metadata_area_header_t;
+
+                    metadata_area_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t* p__parent = 0, lvm2_t* p__root = 0);
+
+                private:
+                    void _read();
+
+                public:
+                    ~metadata_area_t();
+
+                    class metadata_area_header_t : public kaitai::kstruct {
+
+                    public:
+                        class raw_location_descriptor_t;
+
+                        metadata_area_header_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, lvm2_t* p__root = 0);
+
+                    private:
+                        void _read();
+
+                    public:
+                        ~metadata_area_header_t();
+
+                        /**
+                         * The data area size can be 0. It is assumed it represents the remaining  available data.
+                         */
+
+                        class raw_location_descriptor_t : public kaitai::kstruct {
+
+                        public:
+
+                            enum raw_location_descriptor_flags_t {
+                                RAW_LOCATION_DESCRIPTOR_FLAGS_RAW_LOCATION_IGNORED = 1
+                            };
+
+                            raw_location_descriptor_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t* p__parent = 0, lvm2_t* p__root = 0);
+
+                        private:
+                            void _read();
+
+                        public:
+                            ~raw_location_descriptor_t();
+
+                        private:
+                            uint64_t m_offset;
+                            uint64_t m_size;
+                            uint32_t m_checksum;
+                            raw_location_descriptor_flags_t m_flags;
+                            lvm2_t* m__root;
+                            lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t* m__parent;
+
+                        public:
+
+                            /**
+                             * The data area offset, in bytes, relative from the start of the metadata area
+                             */
+                            uint64_t offset() const { return m_offset; }
+
+                            /**
+                             * data area size in bytes
+                             */
+                            uint64_t size() const { return m_size; }
+
+                            /**
+                             * CRC-32 of *TODO (metadata?)*
+                             */
+                            uint32_t checksum() const { return m_checksum; }
+                            raw_location_descriptor_flags_t flags() const { return m_flags; }
+                            lvm2_t* _root() const { return m__root; }
+                            lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t* _parent() const { return m__parent; }
+                        };
+
+                    private:
+                        bool f_metadata;
+                        std::string m_metadata;
+
+                    public:
+                        std::string metadata();
+
+                    private:
+                        metadata_area_header_t* m_checksum;
+                        std::string m_signature;
+                        uint32_t m_version;
+                        uint64_t m_metadata_area_offset;
+                        uint64_t m_metadata_area_size;
+                        std::vector&lt;raw_location_descriptor_t*&gt;* m_raw_location_descriptors;
+                        lvm2_t* m__root;
+                        kaitai::kstruct* m__parent;
+
+                    public:
+
+                        /**
+                         * CRC-32 for offset 4 to end of the metadata area header
+                         */
+                        metadata_area_header_t* checksum() const { return m_checksum; }
+                        std::string signature() const { return m_signature; }
+                        uint32_t version() const { return m_version; }
+
+                        /**
+                         * The offset, in bytes, of the metadata area relative from the start of the physical volume
+                         */
+                        uint64_t metadata_area_offset() const { return m_metadata_area_offset; }
+                        uint64_t metadata_area_size() const { return m_metadata_area_size; }
+
+                        /**
+                         * The last descriptor in the list is terminator and consists of 0-byte values.
+                         */
+                        std::vector&lt;raw_location_descriptor_t*&gt;* raw_location_descriptors() const { return m_raw_location_descriptors; }
+                        lvm2_t* _root() const { return m__root; }
+                        kaitai::kstruct* _parent() const { return m__parent; }
+                    };
+
+                private:
+                    metadata_area_header_t* m_header;
+                    lvm2_t* m__root;
+                    lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t* m__parent;
+
+                public:
+                    metadata_area_header_t* header() const { return m_header; }
+                    lvm2_t* _root() const { return m__root; }
+                    lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t* _parent() const { return m__parent; }
+                };
+
+            private:
+                std::string m_id;
+                uint64_t m_size;
+                std::vector&lt;data_area_descriptor_t*&gt;* m_data_area_descriptors;
+                std::vector&lt;metadata_area_descriptor_t*&gt;* m_metadata_area_descriptors;
+                lvm2_t* m__root;
+                lvm2_t::physical_volume_t::label_t* m__parent;
+
+            public:
+
+                /**
+                 * Contains a UUID stored as an ASCII string. The physical volume identifier can be used to uniquely identify a physical volume. The physical volume identifier is stored as: 9LBcEB7PQTGIlLI0KxrtzrynjuSL983W but is equivalent to its formatted variant: 9LBcEB-7PQT-GIlL-I0Kx-rtzr-ynju-SL983W, which is used in the metadata.
+                 */
+                std::string id() const { return m_id; }
+
+                /**
+                 * Physical Volume size. Value in bytes
+                 */
+                uint64_t size() const { return m_size; }
+
+                /**
+                 * The last descriptor in the list is terminator and consists of 0-byte values.
+                 */
+                std::vector&lt;data_area_descriptor_t*&gt;* data_area_descriptors() const { return m_data_area_descriptors; }
+                std::vector&lt;metadata_area_descriptor_t*&gt;* metadata_area_descriptors() const { return m_metadata_area_descriptors; }
+                lvm2_t* _root() const { return m__root; }
+                lvm2_t::physical_volume_t::label_t* _parent() const { return m__parent; }
+            };
+
+        private:
+            label_header_t* m_label_header;
+            volume_header_t* m_volume_header;
+            lvm2_t* m__root;
+            lvm2_t::physical_volume_t* m__parent;
+
+        public:
+            label_header_t* label_header() const { return m_label_header; }
+            volume_header_t* volume_header() const { return m_volume_header; }
+            lvm2_t* _root() const { return m__root; }
+            lvm2_t::physical_volume_t* _parent() const { return m__parent; }
+        };
+
+    private:
+        std::string m_empty_sector;
+        label_t* m_label;
+        lvm2_t* m__root;
+        lvm2_t* m__parent;
+
+    public:
+        std::string empty_sector() const { return m_empty_sector; }
+        label_t* label() const { return m_label; }
+        lvm2_t* _root() const { return m__root; }
+        lvm2_t* _parent() const { return m__parent; }
+    };
+
+private:
+    bool f_sector_size;
+    int32_t m_sector_size;
+
+public:
+    int32_t sector_size();
+
+private:
+    physical_volume_t* m_pv;
+    lvm2_t* m__root;
+    kaitai::kstruct* m__parent;
+
+public:
+
+    /**
+     * Physical volume
+     */
+    physical_volume_t* pv() const { return m_pv; }
+    lvm2_t* _root() const { return m__root; }
+    kaitai::kstruct* _parent() const { return m__parent; }
+};
+
+#endif  // LVM2_H_
+</code></pre>
+            
+        </div>
+        
+
+        <h3>lvm2.cpp</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl/lvm2.cpp" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include &quot;lvm2.h&quot;
+
+
+
+lvm2_t::lvm2_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = this;
+    f_sector_size = false;
+    _read();
+}
+
+void lvm2_t::_read() {
+    m_pv = new physical_volume_t(m__io, this, m__root);
+}
+
+lvm2_t::~lvm2_t() {
+    delete m_pv;
+}
+
+lvm2_t::physical_volume_t::physical_volume_t(kaitai::kstream* p__io, lvm2_t* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void lvm2_t::physical_volume_t::_read() {
+    m_empty_sector = m__io-&gt;read_bytes(_root()-&gt;sector_size());
+    m_label = new label_t(m__io, this, m__root);
+}
+
+lvm2_t::physical_volume_t::~physical_volume_t() {
+    delete m_label;
+}
+
+lvm2_t::physical_volume_t::label_t::label_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void lvm2_t::physical_volume_t::label_t::_read() {
+    m_label_header = new label_header_t(m__io, this, m__root);
+    m_volume_header = new volume_header_t(m__io, this, m__root);
+}
+
+lvm2_t::physical_volume_t::label_t::~label_t() {
+    delete m_label_header;
+    delete m_volume_header;
+}
+
+lvm2_t::physical_volume_t::label_t::label_header_t::label_header_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void lvm2_t::physical_volume_t::label_t::label_header_t::_read() {
+    m_signature = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x4C\x41\x42\x45\x4C\x4F\x4E\x45&quot;, 8));
+    m_sector_number = m__io-&gt;read_u8le();
+    m_checksum = m__io-&gt;read_u4le();
+    m_label_header_ = new label_header__t(m__io, this, m__root);
+}
+
+lvm2_t::physical_volume_t::label_t::label_header_t::~label_header_t() {
+    delete m_label_header_;
+}
+
+lvm2_t::physical_volume_t::label_t::label_header_t::label_header__t::label_header__t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::label_header_t* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void lvm2_t::physical_volume_t::label_t::label_header_t::label_header__t::_read() {
+    m_data_offset = m__io-&gt;read_u4le();
+    m_type_indicator = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x4C\x56\x4D\x32\x20\x30\x30\x31&quot;, 8));
+}
+
+lvm2_t::physical_volume_t::label_t::label_header_t::label_header__t::~label_header__t() {
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::volume_header_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void lvm2_t::physical_volume_t::label_t::volume_header_t::_read() {
+    m_id = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(32), std::string(&quot;ascii&quot;));
+    m_size = m__io-&gt;read_u8le();
+    m_data_area_descriptors = new std::vector&lt;data_area_descriptor_t*&gt;();
+    {
+        int i = 0;
+        data_area_descriptor_t* _;
+        do {
+            _ = new data_area_descriptor_t(m__io, this, m__root);
+            m_data_area_descriptors-&gt;push_back(_);
+            i++;
+        } while (!( ((_-&gt;size() != 0) &amp;&amp; (_-&gt;offset() != 0)) ));
+    }
+    m_metadata_area_descriptors = new std::vector&lt;metadata_area_descriptor_t*&gt;();
+    {
+        int i = 0;
+        metadata_area_descriptor_t* _;
+        do {
+            _ = new metadata_area_descriptor_t(m__io, this, m__root);
+            m_metadata_area_descriptors-&gt;push_back(_);
+            i++;
+        } while (!( ((_-&gt;size() != 0) &amp;&amp; (_-&gt;offset() != 0)) ));
+    }
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::~volume_header_t() {
+    for (std::vector&lt;data_area_descriptor_t*&gt;::iterator it = m_data_area_descriptors-&gt;begin(); it != m_data_area_descriptors-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_data_area_descriptors;
+    for (std::vector&lt;metadata_area_descriptor_t*&gt;::iterator it = m_metadata_area_descriptors-&gt;begin(); it != m_metadata_area_descriptors-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_metadata_area_descriptors;
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::data_area_descriptor_t::data_area_descriptor_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::volume_header_t* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_data = false;
+    _read();
+}
+
+void lvm2_t::physical_volume_t::label_t::volume_header_t::data_area_descriptor_t::_read() {
+    m_offset = m__io-&gt;read_u8le();
+    m_size = m__io-&gt;read_u8le();
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::data_area_descriptor_t::~data_area_descriptor_t() {
+    if (f_data &amp;&amp; !n_data) {
+    }
+}
+
+std::string lvm2_t::physical_volume_t::label_t::volume_header_t::data_area_descriptor_t::data() {
+    if (f_data)
+        return m_data;
+    n_data = true;
+    if (size() != 0) {
+        n_data = false;
+        std::streampos _pos = m__io-&gt;pos();
+        m__io-&gt;seek(offset());
+        m_data = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(size()), std::string(&quot;ascii&quot;));
+        m__io-&gt;seek(_pos);
+    }
+    f_data = true;
+    return m_data;
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t::metadata_area_descriptor_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::volume_header_t* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_data = false;
+    _read();
+}
+
+void lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t::_read() {
+    m_offset = m__io-&gt;read_u8le();
+    m_size = m__io-&gt;read_u8le();
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t::~metadata_area_descriptor_t() {
+    if (f_data &amp;&amp; !n_data) {
+        delete m__io__raw_data;
+        delete m_data;
+    }
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t* lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t::data() {
+    if (f_data)
+        return m_data;
+    n_data = true;
+    if (size() != 0) {
+        n_data = false;
+        std::streampos _pos = m__io-&gt;pos();
+        m__io-&gt;seek(offset());
+        m__raw_data = m__io-&gt;read_bytes(size());
+        m__io__raw_data = new kaitai::kstream(m__raw_data);
+        m_data = new metadata_area_t(m__io__raw_data, this, m__root);
+        m__io-&gt;seek(_pos);
+    }
+    f_data = true;
+    return m_data;
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::_read() {
+    m_header = new metadata_area_header_t(m__io, this, m__root);
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::~metadata_area_t() {
+    delete m_header;
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::metadata_area_header_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_metadata = false;
+    _read();
+}
+
+void lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::_read() {
+    m_checksum = new metadata_area_header_t(m__io, this, m__root);
+    m_signature = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x20\x4C\x56\x4D\x32\x20\x78\x5B\x35\x41\x25\x72\x30\x4E\x2A\x3E&quot;, 16));
+    m_version = m__io-&gt;read_u4le();
+    m_metadata_area_offset = m__io-&gt;read_u8le();
+    m_metadata_area_size = m__io-&gt;read_u8le();
+    m_raw_location_descriptors = new std::vector&lt;raw_location_descriptor_t*&gt;();
+    {
+        int i = 0;
+        raw_location_descriptor_t* _;
+        do {
+            _ = new raw_location_descriptor_t(m__io, this, m__root);
+            m_raw_location_descriptors-&gt;push_back(_);
+            i++;
+        } while (!( ((_-&gt;offset() != 0) &amp;&amp; (_-&gt;size() != 0) &amp;&amp; (_-&gt;checksum() != 0)) ));
+    }
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::~metadata_area_header_t() {
+    delete m_checksum;
+    for (std::vector&lt;raw_location_descriptor_t*&gt;::iterator it = m_raw_location_descriptors-&gt;begin(); it != m_raw_location_descriptors-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_raw_location_descriptors;
+    if (f_metadata) {
+    }
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::raw_location_descriptor_t::raw_location_descriptor_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::raw_location_descriptor_t::_read() {
+    m_offset = m__io-&gt;read_u8le();
+    m_size = m__io-&gt;read_u8le();
+    m_checksum = m__io-&gt;read_u4le();
+    m_flags = static_cast&lt;lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::raw_location_descriptor_t::raw_location_descriptor_flags_t&gt;(m__io-&gt;read_u4le());
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::raw_location_descriptor_t::~raw_location_descriptor_t() {
+}
+
+std::string lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::metadata() {
+    if (f_metadata)
+        return m_metadata;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(metadata_area_offset());
+    m_metadata = m__io-&gt;read_bytes(metadata_area_size());
+    m__io-&gt;seek(_pos);
+    f_metadata = true;
+    return m_metadata;
+}
+
+int32_t lvm2_t::sector_size() {
+    if (f_sector_size)
+        return m_sector_size;
+    m_sector_size = 512;
+    f_sector_size = true;
+    return m_sector_size;
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

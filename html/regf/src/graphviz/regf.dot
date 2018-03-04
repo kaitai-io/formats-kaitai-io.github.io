@@ -1,0 +1,247 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__regf {
+		label="Regf";
+		graph[style=dotted];
+
+		regf__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">4096</TD><TD>FileHeader</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="hive_bins_pos">4096</TD><TD PORT="hive_bins_size">4096</TD><TD>HiveBin</TD><TD PORT="hive_bins_type">hive_bins</TD></TR>
+			<TR><TD COLSPAN="4" PORT="hive_bins__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__filetime {
+			label="Regf::Filetime";
+			graph[style=dotted];
+
+			filetime__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">8</TD><TD>u8le</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__hive_bin {
+			label="Regf::HiveBin";
+			graph[style=dotted];
+
+			hive_bin__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">32</TD><TD>HiveBinHeader</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="cells_pos">32</TD><TD PORT="cells_size">...</TD><TD>HiveBinCell</TD><TD PORT="cells_type">cells</TD></TR>
+				<TR><TD COLSPAN="4" PORT="cells__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__hive_bin_header {
+			label="Regf::HiveBinHeader";
+			graph[style=dotted];
+
+			hive_bin_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="signature_pos">0</TD><TD PORT="signature_size">4</TD><TD>68 62 69 6E</TD><TD PORT="signature_type">signature</TD></TR>
+				<TR><TD PORT="offset_pos">4</TD><TD PORT="offset_size">4</TD><TD>u4le</TD><TD PORT="offset_type">offset</TD></TR>
+				<TR><TD PORT="size_pos">8</TD><TD PORT="size_size">4</TD><TD>u4le</TD><TD PORT="size_type">size</TD></TR>
+				<TR><TD PORT="unknown1_pos">12</TD><TD PORT="unknown1_size">4</TD><TD>u4le</TD><TD PORT="unknown1_type">unknown1</TD></TR>
+				<TR><TD PORT="unknown2_pos">16</TD><TD PORT="unknown2_size">4</TD><TD>u4le</TD><TD PORT="unknown2_type">unknown2</TD></TR>
+				<TR><TD PORT="timestamp_pos">20</TD><TD PORT="timestamp_size">8</TD><TD>Filetime</TD><TD PORT="timestamp_type">timestamp</TD></TR>
+				<TR><TD PORT="unknown4_pos">28</TD><TD PORT="unknown4_size">4</TD><TD>u4le</TD><TD PORT="unknown4_type">unknown4</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__hive_bin_cell {
+			label="Regf::HiveBinCell";
+			graph[style=dotted];
+
+			hive_bin_cell__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="cell_size_raw_pos">0</TD><TD PORT="cell_size_raw_size">4</TD><TD>s4le</TD><TD PORT="cell_size_raw_type">cell_size_raw</TD></TR>
+				<TR><TD PORT="identifier_pos">4</TD><TD PORT="identifier_size">2</TD><TD>str(ascii)</TD><TD PORT="identifier_type">identifier</TD></TR>
+				<TR><TD PORT="data_pos">6</TD><TD PORT="data_size">...</TD><TD>switch (identifier)</TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+			hive_bin_cell__inst__cell_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>cell_size</TD><TD>((cell_size_raw &lt; 0 ? -1 : 1) * cell_size_raw)</TD></TR>
+			</TABLE>>];
+			hive_bin_cell__inst__is_allocated [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_allocated</TD><TD>cell_size_raw &lt; 0</TD></TR>
+			</TABLE>>];
+hive_bin_cell__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>&quot;li&quot;</TD><TD PORT="case0">SubKeyListLi</TD></TR>
+	<TR><TD>&quot;vk&quot;</TD><TD PORT="case1">SubKeyListVk</TD></TR>
+	<TR><TD>&quot;lf&quot;</TD><TD PORT="case2">SubKeyListLhLf</TD></TR>
+	<TR><TD>&quot;ri&quot;</TD><TD PORT="case3">SubKeyListRi</TD></TR>
+	<TR><TD>&quot;lh&quot;</TD><TD PORT="case4">SubKeyListLhLf</TD></TR>
+	<TR><TD>&quot;nk&quot;</TD><TD PORT="case5">NamedKey</TD></TR>
+	<TR><TD>&quot;sk&quot;</TD><TD PORT="case6">SubKeyListSk</TD></TR>
+</TABLE>>];
+			subgraph cluster__sub_key_list_vk {
+				label="Regf::HiveBinCell::SubKeyListVk";
+				graph[style=dotted];
+
+				sub_key_list_vk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_name_size_pos">0</TD><TD PORT="value_name_size_size">2</TD><TD>u2le</TD><TD PORT="value_name_size_type">value_name_size</TD></TR>
+					<TR><TD PORT="data_size_pos">2</TD><TD PORT="data_size_size">4</TD><TD>u4le</TD><TD PORT="data_size_type">data_size</TD></TR>
+					<TR><TD PORT="data_offset_pos">6</TD><TD PORT="data_offset_size">4</TD><TD>u4le</TD><TD PORT="data_offset_type">data_offset</TD></TR>
+					<TR><TD PORT="data_type_pos">10</TD><TD PORT="data_type_size">4</TD><TD>u4le?DataTypeEnum</TD><TD PORT="data_type_type">data_type</TD></TR>
+					<TR><TD PORT="flags_pos">14</TD><TD PORT="flags_size">2</TD><TD>u2le?VkFlags</TD><TD PORT="flags_type">flags</TD></TR>
+					<TR><TD PORT="padding_pos">16</TD><TD PORT="padding_size">2</TD><TD>u2le</TD><TD PORT="padding_type">padding</TD></TR>
+					<TR><TD PORT="value_name_pos">18</TD><TD PORT="value_name_size">value_name_size</TD><TD>str(ascii)</TD><TD PORT="value_name_type">value_name</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__sub_key_list_lh_lf {
+				label="Regf::HiveBinCell::SubKeyListLhLf";
+				graph[style=dotted];
+
+				sub_key_list_lh_lf__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="count_pos">0</TD><TD PORT="count_size">2</TD><TD>u2le</TD><TD PORT="count_type">count</TD></TR>
+					<TR><TD PORT="items_pos">2</TD><TD PORT="items_size">8</TD><TD>Item</TD><TD PORT="items_type">items</TD></TR>
+					<TR><TD COLSPAN="4" PORT="items__repeat">repeat count times</TD></TR>
+				</TABLE>>];
+				subgraph cluster__item {
+					label="Regf::HiveBinCell::SubKeyListLhLf::Item";
+					graph[style=dotted];
+
+					item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="named_key_offset_pos">0</TD><TD PORT="named_key_offset_size">4</TD><TD>u4le</TD><TD PORT="named_key_offset_type">named_key_offset</TD></TR>
+						<TR><TD PORT="hash_value_pos">4</TD><TD PORT="hash_value_size">4</TD><TD>u4le</TD><TD PORT="hash_value_type">hash_value</TD></TR>
+					</TABLE>>];
+				}
+			}
+			subgraph cluster__sub_key_list_sk {
+				label="Regf::HiveBinCell::SubKeyListSk";
+				graph[style=dotted];
+
+				sub_key_list_sk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="unknown1_pos">0</TD><TD PORT="unknown1_size">2</TD><TD>u2le</TD><TD PORT="unknown1_type">unknown1</TD></TR>
+					<TR><TD PORT="previous_security_key_offset_pos">2</TD><TD PORT="previous_security_key_offset_size">4</TD><TD>u4le</TD><TD PORT="previous_security_key_offset_type">previous_security_key_offset</TD></TR>
+					<TR><TD PORT="next_security_key_offset_pos">6</TD><TD PORT="next_security_key_offset_size">4</TD><TD>u4le</TD><TD PORT="next_security_key_offset_type">next_security_key_offset</TD></TR>
+					<TR><TD PORT="reference_count_pos">10</TD><TD PORT="reference_count_size">4</TD><TD>u4le</TD><TD PORT="reference_count_type">reference_count</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__sub_key_list_li {
+				label="Regf::HiveBinCell::SubKeyListLi";
+				graph[style=dotted];
+
+				sub_key_list_li__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="count_pos">0</TD><TD PORT="count_size">2</TD><TD>u2le</TD><TD PORT="count_type">count</TD></TR>
+					<TR><TD PORT="items_pos">2</TD><TD PORT="items_size">4</TD><TD>Item</TD><TD PORT="items_type">items</TD></TR>
+					<TR><TD COLSPAN="4" PORT="items__repeat">repeat count times</TD></TR>
+				</TABLE>>];
+				subgraph cluster__item {
+					label="Regf::HiveBinCell::SubKeyListLi::Item";
+					graph[style=dotted];
+
+					item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="named_key_offset_pos">0</TD><TD PORT="named_key_offset_size">4</TD><TD>u4le</TD><TD PORT="named_key_offset_type">named_key_offset</TD></TR>
+					</TABLE>>];
+				}
+			}
+			subgraph cluster__named_key {
+				label="Regf::HiveBinCell::NamedKey";
+				graph[style=dotted];
+
+				named_key__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="flags_pos">0</TD><TD PORT="flags_size">2</TD><TD>u2le?NkFlags</TD><TD PORT="flags_type">flags</TD></TR>
+					<TR><TD PORT="last_key_written_date_and_time_pos">2</TD><TD PORT="last_key_written_date_and_time_size">8</TD><TD>Filetime</TD><TD PORT="last_key_written_date_and_time_type">last_key_written_date_and_time</TD></TR>
+					<TR><TD PORT="unknown1_pos">10</TD><TD PORT="unknown1_size">4</TD><TD>u4le</TD><TD PORT="unknown1_type">unknown1</TD></TR>
+					<TR><TD PORT="parent_key_offset_pos">14</TD><TD PORT="parent_key_offset_size">4</TD><TD>u4le</TD><TD PORT="parent_key_offset_type">parent_key_offset</TD></TR>
+					<TR><TD PORT="number_of_sub_keys_pos">18</TD><TD PORT="number_of_sub_keys_size">4</TD><TD>u4le</TD><TD PORT="number_of_sub_keys_type">number_of_sub_keys</TD></TR>
+					<TR><TD PORT="number_of_volatile_sub_keys_pos">22</TD><TD PORT="number_of_volatile_sub_keys_size">4</TD><TD>u4le</TD><TD PORT="number_of_volatile_sub_keys_type">number_of_volatile_sub_keys</TD></TR>
+					<TR><TD PORT="sub_keys_list_offset_pos">26</TD><TD PORT="sub_keys_list_offset_size">4</TD><TD>u4le</TD><TD PORT="sub_keys_list_offset_type">sub_keys_list_offset</TD></TR>
+					<TR><TD PORT="number_of_values_pos">30</TD><TD PORT="number_of_values_size">4</TD><TD>u4le</TD><TD PORT="number_of_values_type">number_of_values</TD></TR>
+					<TR><TD PORT="values_list_offset_pos">34</TD><TD PORT="values_list_offset_size">4</TD><TD>u4le</TD><TD PORT="values_list_offset_type">values_list_offset</TD></TR>
+					<TR><TD PORT="security_key_offset_pos">38</TD><TD PORT="security_key_offset_size">4</TD><TD>u4le</TD><TD PORT="security_key_offset_type">security_key_offset</TD></TR>
+					<TR><TD PORT="class_name_offset_pos">42</TD><TD PORT="class_name_offset_size">4</TD><TD>u4le</TD><TD PORT="class_name_offset_type">class_name_offset</TD></TR>
+					<TR><TD PORT="largest_sub_key_name_size_pos">46</TD><TD PORT="largest_sub_key_name_size_size">4</TD><TD>u4le</TD><TD PORT="largest_sub_key_name_size_type">largest_sub_key_name_size</TD></TR>
+					<TR><TD PORT="largest_sub_key_class_name_size_pos">50</TD><TD PORT="largest_sub_key_class_name_size_size">4</TD><TD>u4le</TD><TD PORT="largest_sub_key_class_name_size_type">largest_sub_key_class_name_size</TD></TR>
+					<TR><TD PORT="largest_value_name_size_pos">54</TD><TD PORT="largest_value_name_size_size">4</TD><TD>u4le</TD><TD PORT="largest_value_name_size_type">largest_value_name_size</TD></TR>
+					<TR><TD PORT="largest_value_data_size_pos">58</TD><TD PORT="largest_value_data_size_size">4</TD><TD>u4le</TD><TD PORT="largest_value_data_size_type">largest_value_data_size</TD></TR>
+					<TR><TD PORT="unknown2_pos">62</TD><TD PORT="unknown2_size">4</TD><TD>u4le</TD><TD PORT="unknown2_type">unknown2</TD></TR>
+					<TR><TD PORT="key_name_size_pos">66</TD><TD PORT="key_name_size_size">2</TD><TD>u2le</TD><TD PORT="key_name_size_type">key_name_size</TD></TR>
+					<TR><TD PORT="class_name_size_pos">68</TD><TD PORT="class_name_size_size">2</TD><TD>u2le</TD><TD PORT="class_name_size_type">class_name_size</TD></TR>
+					<TR><TD PORT="unknown_string_size_pos">70</TD><TD PORT="unknown_string_size_size">4</TD><TD>u4le</TD><TD PORT="unknown_string_size_type">unknown_string_size</TD></TR>
+					<TR><TD PORT="unknown_string_pos">74</TD><TD PORT="unknown_string_size">unknown_string_size</TD><TD>str(ascii)</TD><TD PORT="unknown_string_type">unknown_string</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__sub_key_list_ri {
+				label="Regf::HiveBinCell::SubKeyListRi";
+				graph[style=dotted];
+
+				sub_key_list_ri__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="count_pos">0</TD><TD PORT="count_size">2</TD><TD>u2le</TD><TD PORT="count_type">count</TD></TR>
+					<TR><TD PORT="items_pos">2</TD><TD PORT="items_size">4</TD><TD>Item</TD><TD PORT="items_type">items</TD></TR>
+					<TR><TD COLSPAN="4" PORT="items__repeat">repeat count times</TD></TR>
+				</TABLE>>];
+				subgraph cluster__item {
+					label="Regf::HiveBinCell::SubKeyListRi::Item";
+					graph[style=dotted];
+
+					item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="sub_key_list_offset_pos">0</TD><TD PORT="sub_key_list_offset_size">4</TD><TD>u4le</TD><TD PORT="sub_key_list_offset_type">sub_key_list_offset</TD></TR>
+					</TABLE>>];
+				}
+			}
+		}
+		subgraph cluster__file_header {
+			label="Regf::FileHeader";
+			graph[style=dotted];
+
+			file_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="signature_pos">0</TD><TD PORT="signature_size">4</TD><TD>72 65 67 66</TD><TD PORT="signature_type">signature</TD></TR>
+				<TR><TD PORT="primary_sequence_number_pos">4</TD><TD PORT="primary_sequence_number_size">4</TD><TD>u4le</TD><TD PORT="primary_sequence_number_type">primary_sequence_number</TD></TR>
+				<TR><TD PORT="secondary_sequence_number_pos">8</TD><TD PORT="secondary_sequence_number_size">4</TD><TD>u4le</TD><TD PORT="secondary_sequence_number_type">secondary_sequence_number</TD></TR>
+				<TR><TD PORT="last_modification_date_and_time_pos">12</TD><TD PORT="last_modification_date_and_time_size">8</TD><TD>Filetime</TD><TD PORT="last_modification_date_and_time_type">last_modification_date_and_time</TD></TR>
+				<TR><TD PORT="major_version_pos">20</TD><TD PORT="major_version_size">4</TD><TD>u4le</TD><TD PORT="major_version_type">major_version</TD></TR>
+				<TR><TD PORT="minor_version_pos">24</TD><TD PORT="minor_version_size">4</TD><TD>u4le</TD><TD PORT="minor_version_type">minor_version</TD></TR>
+				<TR><TD PORT="type_pos">28</TD><TD PORT="type_size">4</TD><TD>u4le?FileType</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="format_pos">32</TD><TD PORT="format_size">4</TD><TD>u4le?FileFormat</TD><TD PORT="format_type">format</TD></TR>
+				<TR><TD PORT="root_key_offset_pos">36</TD><TD PORT="root_key_offset_size">4</TD><TD>u4le</TD><TD PORT="root_key_offset_type">root_key_offset</TD></TR>
+				<TR><TD PORT="hive_bins_data_size_pos">40</TD><TD PORT="hive_bins_data_size_size">4</TD><TD>u4le</TD><TD PORT="hive_bins_data_size_type">hive_bins_data_size</TD></TR>
+				<TR><TD PORT="clustering_factor_pos">44</TD><TD PORT="clustering_factor_size">4</TD><TD>u4le</TD><TD PORT="clustering_factor_type">clustering_factor</TD></TR>
+				<TR><TD PORT="unknown1_pos">48</TD><TD PORT="unknown1_size">64</TD><TD></TD><TD PORT="unknown1_type">unknown1</TD></TR>
+				<TR><TD PORT="unknown2_pos">112</TD><TD PORT="unknown2_size">396</TD><TD></TD><TD PORT="unknown2_type">unknown2</TD></TR>
+				<TR><TD PORT="checksum_pos">508</TD><TD PORT="checksum_size">4</TD><TD>u4le</TD><TD PORT="checksum_type">checksum</TD></TR>
+				<TR><TD PORT="reserved_pos">512</TD><TD PORT="reserved_size">3576</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="boot_type_pos">4088</TD><TD PORT="boot_type_size">4</TD><TD>u4le</TD><TD PORT="boot_type_type">boot_type</TD></TR>
+				<TR><TD PORT="boot_recover_pos">4092</TD><TD PORT="boot_recover_size">4</TD><TD>u4le</TD><TD PORT="boot_recover_type">boot_recover</TD></TR>
+			</TABLE>>];
+		}
+	}
+	regf__seq:header_type -> file_header__seq [style=bold];
+	regf__seq:hive_bins_type -> hive_bin__seq [style=bold];
+	hive_bin__seq:header_type -> hive_bin_header__seq [style=bold];
+	hive_bin__seq:cells_type -> hive_bin_cell__seq [style=bold];
+	hive_bin_header__seq:timestamp_type -> filetime__seq [style=bold];
+	hive_bin_cell__seq:data_type -> hive_bin_cell__seq_data_switch [style=bold];
+	hive_bin_cell__seq_data_switch:case0 -> sub_key_list_li__seq [style=bold];
+	hive_bin_cell__seq_data_switch:case1 -> sub_key_list_vk__seq [style=bold];
+	hive_bin_cell__seq_data_switch:case2 -> sub_key_list_lh_lf__seq [style=bold];
+	hive_bin_cell__seq_data_switch:case3 -> sub_key_list_ri__seq [style=bold];
+	hive_bin_cell__seq_data_switch:case4 -> sub_key_list_lh_lf__seq [style=bold];
+	hive_bin_cell__seq_data_switch:case5 -> named_key__seq [style=bold];
+	hive_bin_cell__seq_data_switch:case6 -> sub_key_list_sk__seq [style=bold];
+	hive_bin_cell__seq:identifier_type -> hive_bin_cell__seq:data_type [color="#404040"];
+	hive_bin_cell__seq:cell_size_raw_type -> hive_bin_cell__inst__cell_size [color="#404040"];
+	hive_bin_cell__seq:cell_size_raw_type -> hive_bin_cell__inst__cell_size [color="#404040"];
+	hive_bin_cell__seq:cell_size_raw_type -> hive_bin_cell__inst__is_allocated [color="#404040"];
+	sub_key_list_vk__seq:value_name_size_type -> sub_key_list_vk__seq:value_name_size [color="#404040"];
+	sub_key_list_lh_lf__seq:items_type -> item__seq [style=bold];
+	sub_key_list_lh_lf__seq:count_type -> sub_key_list_lh_lf__seq:items__repeat [color="#404040"];
+	sub_key_list_li__seq:items_type -> item__seq [style=bold];
+	sub_key_list_li__seq:count_type -> sub_key_list_li__seq:items__repeat [color="#404040"];
+	named_key__seq:last_key_written_date_and_time_type -> filetime__seq [style=bold];
+	named_key__seq:unknown_string_size_type -> named_key__seq:unknown_string_size [color="#404040"];
+	sub_key_list_ri__seq:items_type -> item__seq [style=bold];
+	sub_key_list_ri__seq:count_type -> sub_key_list_ri__seq:items__repeat [color="#404040"];
+	file_header__seq:last_modification_date_and_time_type -> filetime__seq [style=bold];
+}

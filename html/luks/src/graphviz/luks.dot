@@ -1,0 +1,61 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__luks {
+		label="Luks";
+		graph[style=dotted];
+
+		luks__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="partition_header_pos">0</TD><TD PORT="partition_header_size">592</TD><TD>PartitionHeader</TD><TD PORT="partition_header_type">partition_header</TD></TR>
+		</TABLE>>];
+		luks__inst__payload [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="payload_pos">(partition_header.payload_offset * 512)</TD><TD PORT="payload_size">?</TD><TD></TD><TD PORT="payload_type">payload</TD></TR>
+		</TABLE>>];
+		subgraph cluster__partition_header {
+			label="Luks::PartitionHeader";
+			graph[style=dotted];
+
+			partition_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">6</TD><TD>4C 55 4B 53 BA BE</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="version_pos">6</TD><TD PORT="version_size">2</TD><TD>00 01</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="cipher_name_specification_pos">8</TD><TD PORT="cipher_name_specification_size">32</TD><TD>str(ASCII)</TD><TD PORT="cipher_name_specification_type">cipher_name_specification</TD></TR>
+				<TR><TD PORT="cipher_mode_specification_pos">40</TD><TD PORT="cipher_mode_specification_size">32</TD><TD>str(ASCII)</TD><TD PORT="cipher_mode_specification_type">cipher_mode_specification</TD></TR>
+				<TR><TD PORT="hash_specification_pos">72</TD><TD PORT="hash_specification_size">32</TD><TD>str(ASCII)</TD><TD PORT="hash_specification_type">hash_specification</TD></TR>
+				<TR><TD PORT="payload_offset_pos">104</TD><TD PORT="payload_offset_size">4</TD><TD>u4be</TD><TD PORT="payload_offset_type">payload_offset</TD></TR>
+				<TR><TD PORT="number_of_key_bytes_pos">108</TD><TD PORT="number_of_key_bytes_size">4</TD><TD>u4be</TD><TD PORT="number_of_key_bytes_type">number_of_key_bytes</TD></TR>
+				<TR><TD PORT="master_key_checksum_pos">112</TD><TD PORT="master_key_checksum_size">20</TD><TD></TD><TD PORT="master_key_checksum_type">master_key_checksum</TD></TR>
+				<TR><TD PORT="master_key_salt_parameter_pos">132</TD><TD PORT="master_key_salt_parameter_size">32</TD><TD></TD><TD PORT="master_key_salt_parameter_type">master_key_salt_parameter</TD></TR>
+				<TR><TD PORT="master_key_iterations_parameter_pos">164</TD><TD PORT="master_key_iterations_parameter_size">4</TD><TD>u4be</TD><TD PORT="master_key_iterations_parameter_type">master_key_iterations_parameter</TD></TR>
+				<TR><TD PORT="uuid_pos">168</TD><TD PORT="uuid_size">40</TD><TD>str(ASCII)</TD><TD PORT="uuid_type">uuid</TD></TR>
+				<TR><TD PORT="key_slots_pos">208</TD><TD PORT="key_slots_size">48</TD><TD>KeySlot</TD><TD PORT="key_slots_type">key_slots</TD></TR>
+				<TR><TD COLSPAN="4" PORT="key_slots__repeat">repeat 8 times</TD></TR>
+			</TABLE>>];
+			subgraph cluster__key_slot {
+				label="Luks::PartitionHeader::KeySlot";
+				graph[style=dotted];
+
+				key_slot__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="state_of_key_slot_pos">0</TD><TD PORT="state_of_key_slot_size">4</TD><TD>u4be?KeySlotStates</TD><TD PORT="state_of_key_slot_type">state_of_key_slot</TD></TR>
+					<TR><TD PORT="iteration_parameter_pos">4</TD><TD PORT="iteration_parameter_size">4</TD><TD>u4be</TD><TD PORT="iteration_parameter_type">iteration_parameter</TD></TR>
+					<TR><TD PORT="salt_parameter_pos">8</TD><TD PORT="salt_parameter_size">32</TD><TD></TD><TD PORT="salt_parameter_type">salt_parameter</TD></TR>
+					<TR><TD PORT="start_sector_of_key_material_pos">40</TD><TD PORT="start_sector_of_key_material_size">4</TD><TD>u4be</TD><TD PORT="start_sector_of_key_material_type">start_sector_of_key_material</TD></TR>
+					<TR><TD PORT="number_of_anti_forensic_stripes_pos">44</TD><TD PORT="number_of_anti_forensic_stripes_size">4</TD><TD>u4be</TD><TD PORT="number_of_anti_forensic_stripes_type">number_of_anti_forensic_stripes</TD></TR>
+				</TABLE>>];
+				key_slot__inst__key_material [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="key_material_pos">(start_sector_of_key_material * 512)</TD><TD PORT="key_material_size">(_parent.number_of_key_bytes * number_of_anti_forensic_stripes)</TD><TD></TD><TD PORT="key_material_type">key_material</TD></TR>
+				</TABLE>>];
+			}
+		}
+	}
+	luks__seq:partition_header_type -> partition_header__seq [style=bold];
+	partition_header__seq:payload_offset_type -> luks__inst__payload:payload_pos [color="#404040"];
+	partition_header__seq:key_slots_type -> key_slot__seq [style=bold];
+	key_slot__seq:start_sector_of_key_material_type -> key_slot__inst__key_material:key_material_pos [color="#404040"];
+	partition_header__seq:number_of_key_bytes_type -> key_slot__inst__key_material:key_material_size [color="#404040"];
+	key_slot__seq:number_of_anti_forensic_stripes_type -> key_slot__inst__key_material:key_material_size [color="#404040"];
+}

@@ -1,0 +1,406 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__shapefile_main {
+		label="ShapefileMain";
+		graph[style=dotted];
+
+		shapefile_main__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">100</TD><TD>FileHeader</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="records_pos">100</TD><TD PORT="records_size">...</TD><TD>Record</TD><TD PORT="records_type">records</TD></TR>
+			<TR><TD COLSPAN="4" PORT="records__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__multi_point_m {
+			label="ShapefileMain::MultiPointM";
+			graph[style=dotted];
+
+			multi_point_m__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bounding_box_pos">0</TD><TD PORT="bounding_box_size">32</TD><TD>BoundingBoxXY</TD><TD PORT="bounding_box_type">bounding_box</TD></TR>
+				<TR><TD PORT="number_of_points_pos">32</TD><TD PORT="number_of_points_size">4</TD><TD>s4le</TD><TD PORT="number_of_points_type">number_of_points</TD></TR>
+				<TR><TD PORT="points_pos">36</TD><TD PORT="points_size">16</TD><TD>Point</TD><TD PORT="points_type">points</TD></TR>
+				<TR><TD COLSPAN="4" PORT="points__repeat">repeat number_of_points times</TD></TR>
+				<TR><TD PORT="m_range_pos">...</TD><TD PORT="m_range_size">16</TD><TD>BoundsMinMax</TD><TD PORT="m_range_type">m_range</TD></TR>
+				<TR><TD PORT="m_values_pos">...</TD><TD PORT="m_values_size">8</TD><TD>f8le</TD><TD PORT="m_values_type">m_values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="m_values__repeat">repeat number_of_points times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bounding_box_x_y_z_m {
+			label="ShapefileMain::BoundingBoxXYZM";
+			graph[style=dotted];
+
+			bounding_box_x_y_z_m__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="x_pos">0</TD><TD PORT="x_size">16</TD><TD>BoundsMinMax</TD><TD PORT="x_type">x</TD></TR>
+				<TR><TD PORT="y_pos">16</TD><TD PORT="y_size">16</TD><TD>BoundsMinMax</TD><TD PORT="y_type">y</TD></TR>
+				<TR><TD PORT="z_pos">32</TD><TD PORT="z_size">16</TD><TD>BoundsMinMax</TD><TD PORT="z_type">z</TD></TR>
+				<TR><TD PORT="m_pos">48</TD><TD PORT="m_size">16</TD><TD>BoundsMinMax</TD><TD PORT="m_type">m</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__point {
+			label="ShapefileMain::Point";
+			graph[style=dotted];
+
+			point__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="x_pos">0</TD><TD PORT="x_size">8</TD><TD>f8le</TD><TD PORT="x_type">x</TD></TR>
+				<TR><TD PORT="y_pos">8</TD><TD PORT="y_size">8</TD><TD>f8le</TD><TD PORT="y_type">y</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__polygon {
+			label="ShapefileMain::Polygon";
+			graph[style=dotted];
+
+			polygon__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bounding_box_pos">0</TD><TD PORT="bounding_box_size">32</TD><TD>BoundingBoxXY</TD><TD PORT="bounding_box_type">bounding_box</TD></TR>
+				<TR><TD PORT="number_of_parts_pos">32</TD><TD PORT="number_of_parts_size">4</TD><TD>s4le</TD><TD PORT="number_of_parts_type">number_of_parts</TD></TR>
+				<TR><TD PORT="number_of_points_pos">36</TD><TD PORT="number_of_points_size">4</TD><TD>s4le</TD><TD PORT="number_of_points_type">number_of_points</TD></TR>
+				<TR><TD PORT="parts_pos">40</TD><TD PORT="parts_size">4</TD><TD>s4le</TD><TD PORT="parts_type">parts</TD></TR>
+				<TR><TD COLSPAN="4" PORT="parts__repeat">repeat number_of_parts times</TD></TR>
+				<TR><TD PORT="points_pos">...</TD><TD PORT="points_size">16</TD><TD>Point</TD><TD PORT="points_type">points</TD></TR>
+				<TR><TD COLSPAN="4" PORT="points__repeat">repeat number_of_points times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bounds_min_max {
+			label="ShapefileMain::BoundsMinMax";
+			graph[style=dotted];
+
+			bounds_min_max__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="min_pos">0</TD><TD PORT="min_size">8</TD><TD>f8le</TD><TD PORT="min_type">min</TD></TR>
+				<TR><TD PORT="max_pos">8</TD><TD PORT="max_size">8</TD><TD>f8le</TD><TD PORT="max_type">max</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__poly_line {
+			label="ShapefileMain::PolyLine";
+			graph[style=dotted];
+
+			poly_line__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bounding_box_pos">0</TD><TD PORT="bounding_box_size">32</TD><TD>BoundingBoxXY</TD><TD PORT="bounding_box_type">bounding_box</TD></TR>
+				<TR><TD PORT="number_of_parts_pos">32</TD><TD PORT="number_of_parts_size">4</TD><TD>s4le</TD><TD PORT="number_of_parts_type">number_of_parts</TD></TR>
+				<TR><TD PORT="number_of_points_pos">36</TD><TD PORT="number_of_points_size">4</TD><TD>s4le</TD><TD PORT="number_of_points_type">number_of_points</TD></TR>
+				<TR><TD PORT="parts_pos">40</TD><TD PORT="parts_size">4</TD><TD>s4le</TD><TD PORT="parts_type">parts</TD></TR>
+				<TR><TD COLSPAN="4" PORT="parts__repeat">repeat number_of_parts times</TD></TR>
+				<TR><TD PORT="points_pos">...</TD><TD PORT="points_size">16</TD><TD>Point</TD><TD PORT="points_type">points</TD></TR>
+				<TR><TD COLSPAN="4" PORT="points__repeat">repeat number_of_points times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__multi_point_z {
+			label="ShapefileMain::MultiPointZ";
+			graph[style=dotted];
+
+			multi_point_z__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bounding_box_pos">0</TD><TD PORT="bounding_box_size">32</TD><TD>BoundingBoxXY</TD><TD PORT="bounding_box_type">bounding_box</TD></TR>
+				<TR><TD PORT="number_of_points_pos">32</TD><TD PORT="number_of_points_size">4</TD><TD>s4le</TD><TD PORT="number_of_points_type">number_of_points</TD></TR>
+				<TR><TD PORT="points_pos">36</TD><TD PORT="points_size">16</TD><TD>Point</TD><TD PORT="points_type">points</TD></TR>
+				<TR><TD COLSPAN="4" PORT="points__repeat">repeat number_of_points times</TD></TR>
+				<TR><TD PORT="z_range_pos">...</TD><TD PORT="z_range_size">16</TD><TD>BoundsMinMax</TD><TD PORT="z_range_type">z_range</TD></TR>
+				<TR><TD PORT="z_values_pos">...</TD><TD PORT="z_values_size">8</TD><TD>f8le</TD><TD PORT="z_values_type">z_values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="z_values__repeat">repeat number_of_points times</TD></TR>
+				<TR><TD PORT="m_range_pos">...</TD><TD PORT="m_range_size">16</TD><TD>BoundsMinMax</TD><TD PORT="m_range_type">m_range</TD></TR>
+				<TR><TD PORT="m_values_pos">...</TD><TD PORT="m_values_size">8</TD><TD>f8le</TD><TD PORT="m_values_type">m_values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="m_values__repeat">repeat number_of_points times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__poly_line_z {
+			label="ShapefileMain::PolyLineZ";
+			graph[style=dotted];
+
+			poly_line_z__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bounding_box_pos">0</TD><TD PORT="bounding_box_size">32</TD><TD>BoundingBoxXY</TD><TD PORT="bounding_box_type">bounding_box</TD></TR>
+				<TR><TD PORT="number_of_parts_pos">32</TD><TD PORT="number_of_parts_size">4</TD><TD>s4le</TD><TD PORT="number_of_parts_type">number_of_parts</TD></TR>
+				<TR><TD PORT="number_of_points_pos">36</TD><TD PORT="number_of_points_size">4</TD><TD>s4le</TD><TD PORT="number_of_points_type">number_of_points</TD></TR>
+				<TR><TD PORT="parts_pos">40</TD><TD PORT="parts_size">4</TD><TD>s4le</TD><TD PORT="parts_type">parts</TD></TR>
+				<TR><TD COLSPAN="4" PORT="parts__repeat">repeat number_of_parts times</TD></TR>
+				<TR><TD PORT="points_pos">...</TD><TD PORT="points_size">16</TD><TD>Point</TD><TD PORT="points_type">points</TD></TR>
+				<TR><TD COLSPAN="4" PORT="points__repeat">repeat number_of_points times</TD></TR>
+				<TR><TD PORT="z_range_pos">...</TD><TD PORT="z_range_size">16</TD><TD>BoundsMinMax</TD><TD PORT="z_range_type">z_range</TD></TR>
+				<TR><TD PORT="z_values_pos">...</TD><TD PORT="z_values_size">8</TD><TD>f8le</TD><TD PORT="z_values_type">z_values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="z_values__repeat">repeat number_of_points times</TD></TR>
+				<TR><TD PORT="m_range_pos">...</TD><TD PORT="m_range_size">16</TD><TD>BoundsMinMax</TD><TD PORT="m_range_type">m_range</TD></TR>
+				<TR><TD PORT="m_values_pos">...</TD><TD PORT="m_values_size">8</TD><TD>f8le</TD><TD PORT="m_values_type">m_values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="m_values__repeat">repeat number_of_points times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__polygon_z {
+			label="ShapefileMain::PolygonZ";
+			graph[style=dotted];
+
+			polygon_z__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bounding_box_pos">0</TD><TD PORT="bounding_box_size">32</TD><TD>BoundingBoxXY</TD><TD PORT="bounding_box_type">bounding_box</TD></TR>
+				<TR><TD PORT="number_of_parts_pos">32</TD><TD PORT="number_of_parts_size">4</TD><TD>s4le</TD><TD PORT="number_of_parts_type">number_of_parts</TD></TR>
+				<TR><TD PORT="number_of_points_pos">36</TD><TD PORT="number_of_points_size">4</TD><TD>s4le</TD><TD PORT="number_of_points_type">number_of_points</TD></TR>
+				<TR><TD PORT="parts_pos">40</TD><TD PORT="parts_size">4</TD><TD>s4le</TD><TD PORT="parts_type">parts</TD></TR>
+				<TR><TD COLSPAN="4" PORT="parts__repeat">repeat number_of_parts times</TD></TR>
+				<TR><TD PORT="points_pos">...</TD><TD PORT="points_size">16</TD><TD>Point</TD><TD PORT="points_type">points</TD></TR>
+				<TR><TD COLSPAN="4" PORT="points__repeat">repeat number_of_points times</TD></TR>
+				<TR><TD PORT="z_range_pos">...</TD><TD PORT="z_range_size">16</TD><TD>BoundsMinMax</TD><TD PORT="z_range_type">z_range</TD></TR>
+				<TR><TD PORT="z_values_pos">...</TD><TD PORT="z_values_size">8</TD><TD>f8le</TD><TD PORT="z_values_type">z_values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="z_values__repeat">repeat number_of_points times</TD></TR>
+				<TR><TD PORT="m_range_pos">...</TD><TD PORT="m_range_size">16</TD><TD>BoundsMinMax</TD><TD PORT="m_range_type">m_range</TD></TR>
+				<TR><TD PORT="m_values_pos">...</TD><TD PORT="m_values_size">8</TD><TD>f8le</TD><TD PORT="m_values_type">m_values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="m_values__repeat">repeat number_of_points times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bounding_box_x_y {
+			label="ShapefileMain::BoundingBoxXY";
+			graph[style=dotted];
+
+			bounding_box_x_y__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="x_pos">0</TD><TD PORT="x_size">16</TD><TD>BoundsMinMax</TD><TD PORT="x_type">x</TD></TR>
+				<TR><TD PORT="y_pos">16</TD><TD PORT="y_size">16</TD><TD>BoundsMinMax</TD><TD PORT="y_type">y</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__point_m {
+			label="ShapefileMain::PointM";
+			graph[style=dotted];
+
+			point_m__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="x_pos">0</TD><TD PORT="x_size">8</TD><TD>f8le</TD><TD PORT="x_type">x</TD></TR>
+				<TR><TD PORT="y_pos">8</TD><TD PORT="y_size">8</TD><TD>f8le</TD><TD PORT="y_type">y</TD></TR>
+				<TR><TD PORT="m_pos">16</TD><TD PORT="m_size">8</TD><TD>f8le</TD><TD PORT="m_type">m</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__polygon_m {
+			label="ShapefileMain::PolygonM";
+			graph[style=dotted];
+
+			polygon_m__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bounding_box_pos">0</TD><TD PORT="bounding_box_size">32</TD><TD>BoundingBoxXY</TD><TD PORT="bounding_box_type">bounding_box</TD></TR>
+				<TR><TD PORT="number_of_parts_pos">32</TD><TD PORT="number_of_parts_size">4</TD><TD>s4le</TD><TD PORT="number_of_parts_type">number_of_parts</TD></TR>
+				<TR><TD PORT="number_of_points_pos">36</TD><TD PORT="number_of_points_size">4</TD><TD>s4le</TD><TD PORT="number_of_points_type">number_of_points</TD></TR>
+				<TR><TD PORT="parts_pos">40</TD><TD PORT="parts_size">4</TD><TD>s4le</TD><TD PORT="parts_type">parts</TD></TR>
+				<TR><TD COLSPAN="4" PORT="parts__repeat">repeat number_of_parts times</TD></TR>
+				<TR><TD PORT="points_pos">...</TD><TD PORT="points_size">16</TD><TD>Point</TD><TD PORT="points_type">points</TD></TR>
+				<TR><TD COLSPAN="4" PORT="points__repeat">repeat number_of_points times</TD></TR>
+				<TR><TD PORT="m_range_pos">...</TD><TD PORT="m_range_size">16</TD><TD>BoundsMinMax</TD><TD PORT="m_range_type">m_range</TD></TR>
+				<TR><TD PORT="m_values_pos">...</TD><TD PORT="m_values_size">8</TD><TD>f8le</TD><TD PORT="m_values_type">m_values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="m_values__repeat">repeat number_of_points times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__record_header {
+			label="ShapefileMain::RecordHeader";
+			graph[style=dotted];
+
+			record_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="record_number_pos">0</TD><TD PORT="record_number_size">4</TD><TD>s4be</TD><TD PORT="record_number_type">record_number</TD></TR>
+				<TR><TD PORT="content_length_pos">4</TD><TD PORT="content_length_size">4</TD><TD>s4be</TD><TD PORT="content_length_type">content_length</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__multi_point {
+			label="ShapefileMain::MultiPoint";
+			graph[style=dotted];
+
+			multi_point__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bounding_box_pos">0</TD><TD PORT="bounding_box_size">32</TD><TD>BoundingBoxXY</TD><TD PORT="bounding_box_type">bounding_box</TD></TR>
+				<TR><TD PORT="number_of_points_pos">32</TD><TD PORT="number_of_points_size">4</TD><TD>s4le</TD><TD PORT="number_of_points_type">number_of_points</TD></TR>
+				<TR><TD PORT="points_pos">36</TD><TD PORT="points_size">16</TD><TD>Point</TD><TD PORT="points_type">points</TD></TR>
+				<TR><TD COLSPAN="4" PORT="points__repeat">repeat number_of_points times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__file_header {
+			label="ShapefileMain::FileHeader";
+			graph[style=dotted];
+
+			file_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="file_code_pos">0</TD><TD PORT="file_code_size">4</TD><TD>00 00 27 0A</TD><TD PORT="file_code_type">file_code</TD></TR>
+				<TR><TD PORT="unused_field_1_pos">4</TD><TD PORT="unused_field_1_size">4</TD><TD>00 00 00 00</TD><TD PORT="unused_field_1_type">unused_field_1</TD></TR>
+				<TR><TD PORT="unused_field_2_pos">8</TD><TD PORT="unused_field_2_size">4</TD><TD>00 00 00 00</TD><TD PORT="unused_field_2_type">unused_field_2</TD></TR>
+				<TR><TD PORT="unused_field_3_pos">12</TD><TD PORT="unused_field_3_size">4</TD><TD>00 00 00 00</TD><TD PORT="unused_field_3_type">unused_field_3</TD></TR>
+				<TR><TD PORT="unused_field_4_pos">16</TD><TD PORT="unused_field_4_size">4</TD><TD>00 00 00 00</TD><TD PORT="unused_field_4_type">unused_field_4</TD></TR>
+				<TR><TD PORT="unused_field_5_pos">20</TD><TD PORT="unused_field_5_size">4</TD><TD>00 00 00 00</TD><TD PORT="unused_field_5_type">unused_field_5</TD></TR>
+				<TR><TD PORT="file_length_pos">24</TD><TD PORT="file_length_size">4</TD><TD>s4be</TD><TD PORT="file_length_type">file_length</TD></TR>
+				<TR><TD PORT="version_pos">28</TD><TD PORT="version_size">4</TD><TD>E8 03 00 00</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="shape_type_pos">32</TD><TD PORT="shape_type_size">4</TD><TD>s4le?ShapeType</TD><TD PORT="shape_type_type">shape_type</TD></TR>
+				<TR><TD PORT="bounding_box_pos">36</TD><TD PORT="bounding_box_size">64</TD><TD>BoundingBoxXYZM</TD><TD PORT="bounding_box_type">bounding_box</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__point_z {
+			label="ShapefileMain::PointZ";
+			graph[style=dotted];
+
+			point_z__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="x_pos">0</TD><TD PORT="x_size">8</TD><TD>f8le</TD><TD PORT="x_type">x</TD></TR>
+				<TR><TD PORT="y_pos">8</TD><TD PORT="y_size">8</TD><TD>f8le</TD><TD PORT="y_type">y</TD></TR>
+				<TR><TD PORT="z_pos">16</TD><TD PORT="z_size">8</TD><TD>f8le</TD><TD PORT="z_type">z</TD></TR>
+				<TR><TD PORT="m_pos">24</TD><TD PORT="m_size">8</TD><TD>f8le</TD><TD PORT="m_type">m</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__record {
+			label="ShapefileMain::Record";
+			graph[style=dotted];
+
+			record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">8</TD><TD>RecordHeader</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="contents_pos">8</TD><TD PORT="contents_size">...</TD><TD>RecordContents</TD><TD PORT="contents_type">contents</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__record_contents {
+			label="ShapefileMain::RecordContents";
+			graph[style=dotted];
+
+			record_contents__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="shape_type_pos">0</TD><TD PORT="shape_type_size">4</TD><TD>s4le?ShapeType</TD><TD PORT="shape_type_type">shape_type</TD></TR>
+				<TR><TD PORT="shape_parameters_pos">4</TD><TD PORT="shape_parameters_size">...</TD><TD>switch (shape_type)</TD><TD PORT="shape_parameters_type">shape_parameters</TD></TR>
+			</TABLE>>];
+record_contents__seq_shape_parameters_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:shape_type_point_m</TD><TD PORT="case0">PointM</TD></TR>
+	<TR><TD>:shape_type_polygon_z</TD><TD PORT="case1">PolygonZ</TD></TR>
+	<TR><TD>:shape_type_multi_point_m</TD><TD PORT="case2">MultiPointM</TD></TR>
+	<TR><TD>:shape_type_poly_line_z</TD><TD PORT="case3">PolyLineZ</TD></TR>
+	<TR><TD>:shape_type_multi_point_z</TD><TD PORT="case4">MultiPointZ</TD></TR>
+	<TR><TD>:shape_type_multi_point</TD><TD PORT="case5">MultiPoint</TD></TR>
+	<TR><TD>:shape_type_polygon_m</TD><TD PORT="case6">PolygonM</TD></TR>
+	<TR><TD>:shape_type_polygon</TD><TD PORT="case7">Polygon</TD></TR>
+	<TR><TD>:shape_type_point</TD><TD PORT="case8">Point</TD></TR>
+	<TR><TD>:shape_type_poly_line_m</TD><TD PORT="case9">PolyLineM</TD></TR>
+	<TR><TD>:shape_type_poly_line</TD><TD PORT="case10">PolyLine</TD></TR>
+	<TR><TD>:shape_type_point_z</TD><TD PORT="case11">PointZ</TD></TR>
+	<TR><TD>:shape_type_multi_patch</TD><TD PORT="case12">MultiPatch</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__multi_patch {
+			label="ShapefileMain::MultiPatch";
+			graph[style=dotted];
+
+			multi_patch__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bounding_box_pos">0</TD><TD PORT="bounding_box_size">32</TD><TD>BoundingBoxXY</TD><TD PORT="bounding_box_type">bounding_box</TD></TR>
+				<TR><TD PORT="number_of_parts_pos">32</TD><TD PORT="number_of_parts_size">4</TD><TD>s4le</TD><TD PORT="number_of_parts_type">number_of_parts</TD></TR>
+				<TR><TD PORT="number_of_points_pos">36</TD><TD PORT="number_of_points_size">4</TD><TD>s4le</TD><TD PORT="number_of_points_type">number_of_points</TD></TR>
+				<TR><TD PORT="parts_pos">40</TD><TD PORT="parts_size">4</TD><TD>s4le</TD><TD PORT="parts_type">parts</TD></TR>
+				<TR><TD COLSPAN="4" PORT="parts__repeat">repeat number_of_parts times</TD></TR>
+				<TR><TD PORT="part_types_pos">...</TD><TD PORT="part_types_size">4</TD><TD>s4le?PartType</TD><TD PORT="part_types_type">part_types</TD></TR>
+				<TR><TD COLSPAN="4" PORT="part_types__repeat">repeat number_of_parts times</TD></TR>
+				<TR><TD PORT="points_pos">...</TD><TD PORT="points_size">16</TD><TD>Point</TD><TD PORT="points_type">points</TD></TR>
+				<TR><TD COLSPAN="4" PORT="points__repeat">repeat number_of_points times</TD></TR>
+				<TR><TD PORT="z_range_pos">...</TD><TD PORT="z_range_size">16</TD><TD>BoundsMinMax</TD><TD PORT="z_range_type">z_range</TD></TR>
+				<TR><TD PORT="z_values_pos">...</TD><TD PORT="z_values_size">8</TD><TD>f8le</TD><TD PORT="z_values_type">z_values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="z_values__repeat">repeat number_of_points times</TD></TR>
+				<TR><TD PORT="m_range_pos">...</TD><TD PORT="m_range_size">16</TD><TD>BoundsMinMax</TD><TD PORT="m_range_type">m_range</TD></TR>
+				<TR><TD PORT="m_values_pos">...</TD><TD PORT="m_values_size">8</TD><TD>f8le</TD><TD PORT="m_values_type">m_values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="m_values__repeat">repeat number_of_points times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__poly_line_m {
+			label="ShapefileMain::PolyLineM";
+			graph[style=dotted];
+
+			poly_line_m__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bounding_box_pos">0</TD><TD PORT="bounding_box_size">32</TD><TD>BoundingBoxXY</TD><TD PORT="bounding_box_type">bounding_box</TD></TR>
+				<TR><TD PORT="number_of_parts_pos">32</TD><TD PORT="number_of_parts_size">4</TD><TD>s4le</TD><TD PORT="number_of_parts_type">number_of_parts</TD></TR>
+				<TR><TD PORT="number_of_points_pos">36</TD><TD PORT="number_of_points_size">4</TD><TD>s4le</TD><TD PORT="number_of_points_type">number_of_points</TD></TR>
+				<TR><TD PORT="parts_pos">40</TD><TD PORT="parts_size">4</TD><TD>s4le</TD><TD PORT="parts_type">parts</TD></TR>
+				<TR><TD COLSPAN="4" PORT="parts__repeat">repeat number_of_parts times</TD></TR>
+				<TR><TD PORT="points_pos">...</TD><TD PORT="points_size">16</TD><TD>Point</TD><TD PORT="points_type">points</TD></TR>
+				<TR><TD COLSPAN="4" PORT="points__repeat">repeat number_of_points times</TD></TR>
+				<TR><TD PORT="m_range_pos">...</TD><TD PORT="m_range_size">16</TD><TD>BoundsMinMax</TD><TD PORT="m_range_type">m_range</TD></TR>
+				<TR><TD PORT="m_values_pos">...</TD><TD PORT="m_values_size">8</TD><TD>f8le</TD><TD PORT="m_values_type">m_values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="m_values__repeat">repeat number_of_points times</TD></TR>
+			</TABLE>>];
+		}
+	}
+	shapefile_main__seq:header_type -> file_header__seq [style=bold];
+	shapefile_main__seq:records_type -> record__seq [style=bold];
+	multi_point_m__seq:bounding_box_type -> bounding_box_x_y__seq [style=bold];
+	multi_point_m__seq:points_type -> point__seq [style=bold];
+	multi_point_m__seq:number_of_points_type -> multi_point_m__seq:points__repeat [color="#404040"];
+	multi_point_m__seq:m_range_type -> bounds_min_max__seq [style=bold];
+	multi_point_m__seq:number_of_points_type -> multi_point_m__seq:m_values__repeat [color="#404040"];
+	bounding_box_x_y_z_m__seq:x_type -> bounds_min_max__seq [style=bold];
+	bounding_box_x_y_z_m__seq:y_type -> bounds_min_max__seq [style=bold];
+	bounding_box_x_y_z_m__seq:z_type -> bounds_min_max__seq [style=bold];
+	bounding_box_x_y_z_m__seq:m_type -> bounds_min_max__seq [style=bold];
+	polygon__seq:bounding_box_type -> bounding_box_x_y__seq [style=bold];
+	polygon__seq:number_of_parts_type -> polygon__seq:parts__repeat [color="#404040"];
+	polygon__seq:points_type -> point__seq [style=bold];
+	polygon__seq:number_of_points_type -> polygon__seq:points__repeat [color="#404040"];
+	poly_line__seq:bounding_box_type -> bounding_box_x_y__seq [style=bold];
+	poly_line__seq:number_of_parts_type -> poly_line__seq:parts__repeat [color="#404040"];
+	poly_line__seq:points_type -> point__seq [style=bold];
+	poly_line__seq:number_of_points_type -> poly_line__seq:points__repeat [color="#404040"];
+	multi_point_z__seq:bounding_box_type -> bounding_box_x_y__seq [style=bold];
+	multi_point_z__seq:points_type -> point__seq [style=bold];
+	multi_point_z__seq:number_of_points_type -> multi_point_z__seq:points__repeat [color="#404040"];
+	multi_point_z__seq:z_range_type -> bounds_min_max__seq [style=bold];
+	multi_point_z__seq:number_of_points_type -> multi_point_z__seq:z_values__repeat [color="#404040"];
+	multi_point_z__seq:m_range_type -> bounds_min_max__seq [style=bold];
+	multi_point_z__seq:number_of_points_type -> multi_point_z__seq:m_values__repeat [color="#404040"];
+	poly_line_z__seq:bounding_box_type -> bounding_box_x_y__seq [style=bold];
+	poly_line_z__seq:number_of_parts_type -> poly_line_z__seq:parts__repeat [color="#404040"];
+	poly_line_z__seq:points_type -> point__seq [style=bold];
+	poly_line_z__seq:number_of_points_type -> poly_line_z__seq:points__repeat [color="#404040"];
+	poly_line_z__seq:z_range_type -> bounds_min_max__seq [style=bold];
+	poly_line_z__seq:number_of_points_type -> poly_line_z__seq:z_values__repeat [color="#404040"];
+	poly_line_z__seq:m_range_type -> bounds_min_max__seq [style=bold];
+	poly_line_z__seq:number_of_points_type -> poly_line_z__seq:m_values__repeat [color="#404040"];
+	polygon_z__seq:bounding_box_type -> bounding_box_x_y__seq [style=bold];
+	polygon_z__seq:number_of_parts_type -> polygon_z__seq:parts__repeat [color="#404040"];
+	polygon_z__seq:points_type -> point__seq [style=bold];
+	polygon_z__seq:number_of_points_type -> polygon_z__seq:points__repeat [color="#404040"];
+	polygon_z__seq:z_range_type -> bounds_min_max__seq [style=bold];
+	polygon_z__seq:number_of_points_type -> polygon_z__seq:z_values__repeat [color="#404040"];
+	polygon_z__seq:m_range_type -> bounds_min_max__seq [style=bold];
+	polygon_z__seq:number_of_points_type -> polygon_z__seq:m_values__repeat [color="#404040"];
+	bounding_box_x_y__seq:x_type -> bounds_min_max__seq [style=bold];
+	bounding_box_x_y__seq:y_type -> bounds_min_max__seq [style=bold];
+	polygon_m__seq:bounding_box_type -> bounding_box_x_y__seq [style=bold];
+	polygon_m__seq:number_of_parts_type -> polygon_m__seq:parts__repeat [color="#404040"];
+	polygon_m__seq:points_type -> point__seq [style=bold];
+	polygon_m__seq:number_of_points_type -> polygon_m__seq:points__repeat [color="#404040"];
+	polygon_m__seq:m_range_type -> bounds_min_max__seq [style=bold];
+	polygon_m__seq:number_of_points_type -> polygon_m__seq:m_values__repeat [color="#404040"];
+	multi_point__seq:bounding_box_type -> bounding_box_x_y__seq [style=bold];
+	multi_point__seq:points_type -> point__seq [style=bold];
+	multi_point__seq:number_of_points_type -> multi_point__seq:points__repeat [color="#404040"];
+	file_header__seq:bounding_box_type -> bounding_box_x_y_z_m__seq [style=bold];
+	record__seq:header_type -> record_header__seq [style=bold];
+	record__seq:contents_type -> record_contents__seq [style=bold];
+	record_contents__seq:shape_parameters_type -> record_contents__seq_shape_parameters_switch [style=bold];
+	record_contents__seq_shape_parameters_switch:case0 -> point_m__seq [style=bold];
+	record_contents__seq_shape_parameters_switch:case1 -> polygon_z__seq [style=bold];
+	record_contents__seq_shape_parameters_switch:case2 -> multi_point_m__seq [style=bold];
+	record_contents__seq_shape_parameters_switch:case3 -> poly_line_z__seq [style=bold];
+	record_contents__seq_shape_parameters_switch:case4 -> multi_point_z__seq [style=bold];
+	record_contents__seq_shape_parameters_switch:case5 -> multi_point__seq [style=bold];
+	record_contents__seq_shape_parameters_switch:case6 -> polygon_m__seq [style=bold];
+	record_contents__seq_shape_parameters_switch:case7 -> polygon__seq [style=bold];
+	record_contents__seq_shape_parameters_switch:case8 -> point__seq [style=bold];
+	record_contents__seq_shape_parameters_switch:case9 -> poly_line_m__seq [style=bold];
+	record_contents__seq_shape_parameters_switch:case10 -> poly_line__seq [style=bold];
+	record_contents__seq_shape_parameters_switch:case11 -> point_z__seq [style=bold];
+	record_contents__seq_shape_parameters_switch:case12 -> multi_patch__seq [style=bold];
+	record_contents__seq:shape_type_type -> record_contents__seq:shape_parameters_type [color="#404040"];
+	multi_patch__seq:bounding_box_type -> bounding_box_x_y__seq [style=bold];
+	multi_patch__seq:number_of_parts_type -> multi_patch__seq:parts__repeat [color="#404040"];
+	multi_patch__seq:number_of_parts_type -> multi_patch__seq:part_types__repeat [color="#404040"];
+	multi_patch__seq:points_type -> point__seq [style=bold];
+	multi_patch__seq:number_of_points_type -> multi_patch__seq:points__repeat [color="#404040"];
+	multi_patch__seq:z_range_type -> bounds_min_max__seq [style=bold];
+	multi_patch__seq:number_of_points_type -> multi_patch__seq:z_values__repeat [color="#404040"];
+	multi_patch__seq:m_range_type -> bounds_min_max__seq [style=bold];
+	multi_patch__seq:number_of_points_type -> multi_patch__seq:m_values__repeat [color="#404040"];
+	poly_line_m__seq:bounding_box_type -> bounding_box_x_y__seq [style=bold];
+	poly_line_m__seq:number_of_parts_type -> poly_line_m__seq:parts__repeat [color="#404040"];
+	poly_line_m__seq:points_type -> point__seq [style=bold];
+	poly_line_m__seq:number_of_points_type -> poly_line_m__seq:points__repeat [color="#404040"];
+	poly_line_m__seq:m_range_type -> bounds_min_max__seq [style=bold];
+	poly_line_m__seq:number_of_points_type -> poly_line_m__seq:m_values__repeat [color="#404040"];
+}

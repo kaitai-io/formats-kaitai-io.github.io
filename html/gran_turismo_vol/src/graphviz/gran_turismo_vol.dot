@@ -1,0 +1,69 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__gran_turismo_vol {
+		label="GranTurismoVol";
+		graph[style=dotted];
+
+		gran_turismo_vol__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD>47 54 46 53 00 00 00 00</TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="num_files_pos">8</TD><TD PORT="num_files_size">2</TD><TD>u2le</TD><TD PORT="num_files_type">num_files</TD></TR>
+			<TR><TD PORT="num_entries_pos">10</TD><TD PORT="num_entries_size">2</TD><TD>u2le</TD><TD PORT="num_entries_type">num_entries</TD></TR>
+			<TR><TD PORT="reserved_pos">12</TD><TD PORT="reserved_size">4</TD><TD>00 00 00 00</TD><TD PORT="reserved_type">reserved</TD></TR>
+			<TR><TD PORT="offsets_pos">16</TD><TD PORT="offsets_size">4</TD><TD>u4le</TD><TD PORT="offsets_type">offsets</TD></TR>
+			<TR><TD COLSPAN="4" PORT="offsets__repeat">repeat num_files times</TD></TR>
+		</TABLE>>];
+		gran_turismo_vol__inst__ofs_dir [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>ofs_dir</TD><TD>offsets[1]</TD></TR>
+		</TABLE>>];
+		gran_turismo_vol__inst__files [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="files_pos">(ofs_dir &amp; 4294965248)</TD><TD PORT="files_size">32</TD><TD>FileInfo</TD><TD PORT="files_type">files</TD></TR>
+			<TR><TD COLSPAN="4" PORT="files__repeat">repeat _root.num_entries times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__file_info {
+			label="GranTurismoVol::FileInfo";
+			graph[style=dotted];
+
+			file_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="timestamp_pos">0</TD><TD PORT="timestamp_size">4</TD><TD>u4le</TD><TD PORT="timestamp_type">timestamp</TD></TR>
+				<TR><TD PORT="offset_idx_pos">4</TD><TD PORT="offset_idx_size">2</TD><TD>u2le</TD><TD PORT="offset_idx_type">offset_idx</TD></TR>
+				<TR><TD PORT="flags_pos">6</TD><TD PORT="flags_size">1</TD><TD>u1</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="name_pos">7</TD><TD PORT="name_size">25</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
+			</TABLE>>];
+			file_info__inst__size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>size</TD><TD>((_root.offsets[(offset_idx + 1)] &amp; 4294965248) - _root.offsets[offset_idx])</TD></TR>
+			</TABLE>>];
+			file_info__inst__body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="body_pos">(_root.offsets[offset_idx] &amp; 4294965248)</TD><TD PORT="body_size">size</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+			file_info__inst__is_dir [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_dir</TD><TD>(flags &amp; 1) != 0</TD></TR>
+			</TABLE>>];
+			file_info__inst__is_last_entry [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_last_entry</TD><TD>(flags &amp; 128) != 0</TD></TR>
+			</TABLE>>];
+		}
+	}
+	gran_turismo_vol__seq:num_files_type -> gran_turismo_vol__seq:offsets__repeat [color="#404040"];
+	gran_turismo_vol__seq:offsets_type -> gran_turismo_vol__inst__ofs_dir [color="#404040"];
+	gran_turismo_vol__inst__ofs_dir:ofs_dir_type -> gran_turismo_vol__inst__files:files_pos [color="#404040"];
+	gran_turismo_vol__inst__files:files_type -> file_info__seq [style=bold];
+	gran_turismo_vol__seq:num_entries_type -> gran_turismo_vol__inst__files:files__repeat [color="#404040"];
+	gran_turismo_vol__seq:offsets_type -> file_info__inst__size [color="#404040"];
+	file_info__seq:offset_idx_type -> file_info__inst__size [color="#404040"];
+	gran_turismo_vol__seq:offsets_type -> file_info__inst__size [color="#404040"];
+	file_info__seq:offset_idx_type -> file_info__inst__size [color="#404040"];
+	gran_turismo_vol__seq:offsets_type -> file_info__inst__body:body_pos [color="#404040"];
+	file_info__seq:offset_idx_type -> file_info__inst__body:body_pos [color="#404040"];
+	file_info__inst__size:size_type -> file_info__inst__body:body_size [color="#404040"];
+	file_info__seq:flags_type -> file_info__inst__is_dir [color="#404040"];
+	file_info__seq:flags_type -> file_info__inst__is_last_entry [color="#404040"];
+}

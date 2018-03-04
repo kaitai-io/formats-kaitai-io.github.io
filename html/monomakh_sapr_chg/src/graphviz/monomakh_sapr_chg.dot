@@ -1,0 +1,28 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__monomakh_sapr_chg {
+		label="MonomakhSaprChg";
+		graph[style=dotted];
+
+		monomakh_sapr_chg__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="title_pos">0</TD><TD PORT="title_size">10</TD><TD>str(ascii)</TD><TD PORT="title_type">title</TD></TR>
+			<TR><TD PORT="ent_pos">10</TD><TD PORT="ent_size">...</TD><TD>Block</TD><TD PORT="ent_type">ent</TD></TR>
+			<TR><TD COLSPAN="4" PORT="ent__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__block {
+			label="MonomakhSaprChg::Block";
+			graph[style=dotted];
+
+			block__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">13</TD><TD>str(ascii)</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="file_size_pos">13</TD><TD PORT="file_size_size">8</TD><TD>u8le</TD><TD PORT="file_size_type">file_size</TD></TR>
+				<TR><TD PORT="file_pos">21</TD><TD PORT="file_size">file_size</TD><TD></TD><TD PORT="file_type">file</TD></TR>
+			</TABLE>>];
+		}
+	}
+	monomakh_sapr_chg__seq:ent_type -> block__seq [style=bold];
+	block__seq:file_size_type -> block__seq:file_size [color="#404040"];
+}

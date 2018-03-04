@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Windows MiniDump: JavaScript parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Windows-specific</li>
+        <li class="active">Windows MiniDump</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Windows MiniDump:
+            
+            JavaScript parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Windows MiniDump (MDMP) file provides a concise way to store process
+core dumps, which is useful for debugging. Given its small size,
+modularity, some cross-platform features and native support in some
+debuggers, it is particularly useful for crash reporting, and is
+used for that purpose in Windows and Google Chrome projects.</p>
+<p>The file itself is a container, which contains a number of typed
+&quot;streams&quot;, which contain some data according to its type attribute.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Windows MiniDump
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Windows MiniDump parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="Windows MiniDump parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Windows MiniDump parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Windows MiniDump parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Windows MiniDump parsing Java library">Java</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="javascript.html" title="Windows MiniDump parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Windows MiniDump parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Windows MiniDump parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Windows MiniDump parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Windows MiniDump parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            JavaScript source code to parse Windows MiniDump
+            
+        </h2>
+
+        
+
+        <h3>WindowsMinidump.js</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/javascript/WindowsMinidump.js" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+(function (root, factory) {
+  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
+  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
+  } else {
+    root.WindowsMinidump = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
+/**
+ * Windows MiniDump (MDMP) file provides a concise way to store process
+ * core dumps, which is useful for debugging. Given its small size,
+ * modularity, some cross-platform features and native support in some
+ * debuggers, it is particularly useful for crash reporting, and is
+ * used for that purpose in Windows and Google Chrome projects.
+ * 
+ * The file itself is a container, which contains a number of typed
+ * &quot;streams&quot;, which contain some data according to its type attribute.
+ * @see {@link https://msdn.microsoft.com/en-us/library/ms680378(VS.85).aspx|Source}
+ */
+
+var WindowsMinidump = (function() {
+  WindowsMinidump.StreamTypes = Object.freeze({
+    UNUSED: 0,
+    RESERVED_0: 1,
+    RESERVED_1: 2,
+    THREAD_LIST: 3,
+    MODULE_LIST: 4,
+    MEMORY_LIST: 5,
+    EXCEPTION: 6,
+    SYSTEM_INFO: 7,
+    THREAD_EX_LIST: 8,
+    MEMORY_64_LIST: 9,
+    COMMENT_A: 10,
+    COMMENT_W: 11,
+    HANDLE_DATA: 12,
+    FUNCTION_TABLE: 13,
+    UNLOADED_MODULE_LIST: 14,
+    MISC_INFO: 15,
+    MEMORY_INFO_LIST: 16,
+    THREAD_INFO_LIST: 17,
+    HANDLE_OPERATION_LIST: 18,
+
+    0: &quot;UNUSED&quot;,
+    1: &quot;RESERVED_0&quot;,
+    2: &quot;RESERVED_1&quot;,
+    3: &quot;THREAD_LIST&quot;,
+    4: &quot;MODULE_LIST&quot;,
+    5: &quot;MEMORY_LIST&quot;,
+    6: &quot;EXCEPTION&quot;,
+    7: &quot;SYSTEM_INFO&quot;,
+    8: &quot;THREAD_EX_LIST&quot;,
+    9: &quot;MEMORY_64_LIST&quot;,
+    10: &quot;COMMENT_A&quot;,
+    11: &quot;COMMENT_W&quot;,
+    12: &quot;HANDLE_DATA&quot;,
+    13: &quot;FUNCTION_TABLE&quot;,
+    14: &quot;UNLOADED_MODULE_LIST&quot;,
+    15: &quot;MISC_INFO&quot;,
+    16: &quot;MEMORY_INFO_LIST&quot;,
+    17: &quot;THREAD_INFO_LIST&quot;,
+    18: &quot;HANDLE_OPERATION_LIST&quot;,
+  });
+
+  function WindowsMinidump(_io, _parent, _root) {
+    this._io = _io;
+    this._parent = _parent;
+    this._root = _root || this;
+
+    this._read();
+  }
+  WindowsMinidump.prototype._read = function() {
+    this.magic1 = this._io.ensureFixedContents([77, 68, 77, 80]);
+    this.magic2 = this._io.ensureFixedContents([147, 167]);
+    this.version = this._io.readU2le();
+    this.numStreams = this._io.readU4le();
+    this.ofsStreams = this._io.readU4le();
+    this.checksum = this._io.readU4le();
+    this.timestamp = this._io.readU4le();
+    this.flags = this._io.readU8le();
+  }
+
+  /**
+   * @see {@link https://msdn.microsoft.com/en-us/library/ms680515(v=vs.85).aspx|Source}
+   */
+
+  var ThreadList = WindowsMinidump.ThreadList = (function() {
+    function ThreadList(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    ThreadList.prototype._read = function() {
+      this.numThreads = this._io.readU4le();
+      this.threads = new Array(this.numThreads);
+      for (var i = 0; i &lt; this.numThreads; i++) {
+        this.threads[i] = new Thread(this._io, this, this._root);
+      }
+    }
+
+    return ThreadList;
+  })();
+
+  /**
+   * @see {@link https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx|Source}
+   */
+
+  var LocationDescriptor = WindowsMinidump.LocationDescriptor = (function() {
+    function LocationDescriptor(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    LocationDescriptor.prototype._read = function() {
+      this.lenData = this._io.readU4le();
+      this.ofsData = this._io.readU4le();
+    }
+    Object.defineProperty(LocationDescriptor.prototype, &#39;data&#39;, {
+      get: function() {
+        if (this._m_data !== undefined)
+          return this._m_data;
+        var io = this._root._io;
+        var _pos = io.pos;
+        io.seek(this.ofsData);
+        this._m_data = io.readBytes(this.lenData);
+        io.seek(_pos);
+        return this._m_data;
+      }
+    });
+
+    return LocationDescriptor;
+  })();
+
+  /**
+   * Specific string serialization scheme used in MiniDump format is
+   * actually a simple 32-bit length-prefixed UTF-16 string.
+   * @see {@link https://msdn.microsoft.com/en-us/library/ms680395(v=vs.85).aspx|Source}
+   */
+
+  var MinidumpString = WindowsMinidump.MinidumpString = (function() {
+    function MinidumpString(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    MinidumpString.prototype._read = function() {
+      this.lenStr = this._io.readU4le();
+      this.str = KaitaiStream.bytesToStr(this._io.readBytes(this.lenStr), &quot;UTF-16LE&quot;);
+    }
+
+    return MinidumpString;
+  })();
+
+  /**
+   * &quot;System info&quot; stream provides basic information about the
+   * hardware and operating system which produces this dump.
+   * @see {@link https://msdn.microsoft.com/en-us/library/ms680396(v=vs.85).aspx|Source}
+   */
+
+  var SystemInfo = WindowsMinidump.SystemInfo = (function() {
+    SystemInfo.CpuArchs = Object.freeze({
+      INTEL: 0,
+      ARM: 5,
+      IA64: 6,
+      AMD64: 9,
+      UNKNOWN: 65535,
+
+      0: &quot;INTEL&quot;,
+      5: &quot;ARM&quot;,
+      6: &quot;IA64&quot;,
+      9: &quot;AMD64&quot;,
+      65535: &quot;UNKNOWN&quot;,
+    });
+
+    function SystemInfo(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    SystemInfo.prototype._read = function() {
+      this.cpuArch = this._io.readU2le();
+      this.cpuLevel = this._io.readU2le();
+      this.cpuRevision = this._io.readU2le();
+      this.numCpus = this._io.readU1();
+      this.osType = this._io.readU1();
+      this.osVerMajor = this._io.readU4le();
+      this.osVerMinor = this._io.readU4le();
+      this.osBuild = this._io.readU4le();
+      this.osPlatform = this._io.readU4le();
+      this.ofsServicePack = this._io.readU4le();
+      this.osSuiteMask = this._io.readU2le();
+      this.reserved2 = this._io.readU2le();
+    }
+    Object.defineProperty(SystemInfo.prototype, &#39;servicePack&#39;, {
+      get: function() {
+        if (this._m_servicePack !== undefined)
+          return this._m_servicePack;
+        if (this.ofsServicePack &gt; 0) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek(this.ofsServicePack);
+          this._m_servicePack = new MinidumpString(io, this, this._root);
+          io.seek(_pos);
+        }
+        return this._m_servicePack;
+      }
+    });
+
+    return SystemInfo;
+  })();
+
+  /**
+   * @see {@link https://msdn.microsoft.com/en-us/library/ms680367(v=vs.85).aspx|Source}
+   */
+
+  var ExceptionRecord = WindowsMinidump.ExceptionRecord = (function() {
+    function ExceptionRecord(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    ExceptionRecord.prototype._read = function() {
+      this.code = this._io.readU4le();
+      this.flags = this._io.readU4le();
+      this.innerException = this._io.readU8le();
+      this.addr = this._io.readU8le();
+      this.numParams = this._io.readU4le();
+      this.reserved = this._io.readU4le();
+      this.params = new Array(15);
+      for (var i = 0; i &lt; 15; i++) {
+        this.params[i] = this._io.readU8le();
+      }
+    }
+
+    /**
+     * Memory address where exception has occurred
+     */
+
+    /**
+     * Additional parameters passed along with exception raise
+     * function (for WinAPI, that is `RaiseException`). Meaning is
+     * exception-specific. Given that this type is originally
+     * defined by a C structure, it is described there as array of
+     * fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =
+     * 15), but in reality only first `num_params` would be used.
+     */
+
+    return ExceptionRecord;
+  })();
+
+  /**
+   * @see {@link https://msdn.microsoft.com/en-us/library/ms680389(v=vs.85).aspx|Source}
+   */
+
+  var MiscInfo = WindowsMinidump.MiscInfo = (function() {
+    function MiscInfo(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    MiscInfo.prototype._read = function() {
+      this.lenInfo = this._io.readU4le();
+      this.flags1 = this._io.readU4le();
+      this.processId = this._io.readU4le();
+      this.processCreateTime = this._io.readU4le();
+      this.processUserTime = this._io.readU4le();
+      this.processKernelTime = this._io.readU4le();
+      this.cpuMaxMhz = this._io.readU4le();
+      this.cpuCurMhz = this._io.readU4le();
+      this.cpuLimitMhz = this._io.readU4le();
+      this.cpuMaxIdleState = this._io.readU4le();
+      this.cpuCurIdleState = this._io.readU4le();
+    }
+
+    return MiscInfo;
+  })();
+
+  /**
+   * @see {@link https://msdn.microsoft.com/en-us/library/ms680365(v=vs.85).aspx|Source}
+   */
+
+  var Dir = WindowsMinidump.Dir = (function() {
+    function Dir(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Dir.prototype._read = function() {
+      this.streamType = this._io.readU4le();
+      this.lenData = this._io.readU4le();
+      this.ofsData = this._io.readU4le();
+    }
+    Object.defineProperty(Dir.prototype, &#39;data&#39;, {
+      get: function() {
+        if (this._m_data !== undefined)
+          return this._m_data;
+        var _pos = this._io.pos;
+        this._io.seek(this.ofsData);
+        switch (this.streamType) {
+        case WindowsMinidump.StreamTypes.MISC_INFO:
+          this._raw__m_data = this._io.readBytes(this.lenData);
+          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
+          this._m_data = new MiscInfo(_io__raw__m_data, this, this._root);
+          break;
+        case WindowsMinidump.StreamTypes.EXCEPTION:
+          this._raw__m_data = this._io.readBytes(this.lenData);
+          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
+          this._m_data = new ExceptionStream(_io__raw__m_data, this, this._root);
+          break;
+        case WindowsMinidump.StreamTypes.MEMORY_LIST:
+          this._raw__m_data = this._io.readBytes(this.lenData);
+          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
+          this._m_data = new MemoryList(_io__raw__m_data, this, this._root);
+          break;
+        case WindowsMinidump.StreamTypes.SYSTEM_INFO:
+          this._raw__m_data = this._io.readBytes(this.lenData);
+          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
+          this._m_data = new SystemInfo(_io__raw__m_data, this, this._root);
+          break;
+        case WindowsMinidump.StreamTypes.THREAD_LIST:
+          this._raw__m_data = this._io.readBytes(this.lenData);
+          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
+          this._m_data = new ThreadList(_io__raw__m_data, this, this._root);
+          break;
+        default:
+          this._m_data = this._io.readBytes(this.lenData);
+          break;
+        }
+        this._io.seek(_pos);
+        return this._m_data;
+      }
+    });
+
+    /**
+     * @see {@link https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx|Source}
+     */
+
+    return Dir;
+  })();
+
+  /**
+   * @see {@link https://msdn.microsoft.com/en-us/library/ms680517(v=vs.85).aspx|Source}
+   */
+
+  var Thread = WindowsMinidump.Thread = (function() {
+    function Thread(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Thread.prototype._read = function() {
+      this.threadId = this._io.readU4le();
+      this.suspendCount = this._io.readU4le();
+      this.priorityClass = this._io.readU4le();
+      this.priority = this._io.readU4le();
+      this.teb = this._io.readU8le();
+      this.stack = new MemoryDescriptor(this._io, this, this._root);
+      this.threadContext = new LocationDescriptor(this._io, this, this._root);
+    }
+
+    /**
+     * Thread Environment Block
+     */
+
+    return Thread;
+  })();
+
+  /**
+   * @see {@link https://msdn.microsoft.com/en-us/library/ms680387(v=vs.85).aspx|Source}
+   */
+
+  var MemoryList = WindowsMinidump.MemoryList = (function() {
+    function MemoryList(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    MemoryList.prototype._read = function() {
+      this.numMemRanges = this._io.readU4le();
+      this.memRanges = new Array(this.numMemRanges);
+      for (var i = 0; i &lt; this.numMemRanges; i++) {
+        this.memRanges[i] = new MemoryDescriptor(this._io, this, this._root);
+      }
+    }
+
+    return MemoryList;
+  })();
+
+  /**
+   * @see {@link https://msdn.microsoft.com/en-us/library/ms680384(v=vs.85).aspx|Source}
+   */
+
+  var MemoryDescriptor = WindowsMinidump.MemoryDescriptor = (function() {
+    function MemoryDescriptor(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    MemoryDescriptor.prototype._read = function() {
+      this.addrMemoryRange = this._io.readU8le();
+      this.memory = new LocationDescriptor(this._io, this, this._root);
+    }
+
+    return MemoryDescriptor;
+  })();
+
+  /**
+   * @see {@link https://msdn.microsoft.com/en-us/library/ms680368(v=vs.85).aspx|Source}
+   */
+
+  var ExceptionStream = WindowsMinidump.ExceptionStream = (function() {
+    function ExceptionStream(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    ExceptionStream.prototype._read = function() {
+      this.threadId = this._io.readU4le();
+      this.reserved = this._io.readU4le();
+      this.exceptionRec = new ExceptionRecord(this._io, this, this._root);
+      this.threadContext = new LocationDescriptor(this._io, this, this._root);
+    }
+
+    return ExceptionStream;
+  })();
+  Object.defineProperty(WindowsMinidump.prototype, &#39;streams&#39;, {
+    get: function() {
+      if (this._m_streams !== undefined)
+        return this._m_streams;
+      var _pos = this._io.pos;
+      this._io.seek(this.ofsStreams);
+      this._m_streams = new Array(this.numStreams);
+      for (var i = 0; i &lt; this.numStreams; i++) {
+        this._m_streams[i] = new Dir(this._io, this, this._root);
+      }
+      this._io.seek(_pos);
+      return this._m_streams;
+    }
+  });
+
+  return WindowsMinidump;
+})();
+return WindowsMinidump;
+}));
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__apm_partition_table {
+		label="ApmPartitionTable";
+		graph[style=dotted];
+
+		apm_partition_table__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+		</TABLE>>];
+		apm_partition_table__inst__sector_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>sector_size</TD><TD>512</TD></TR>
+		</TABLE>>];
+		apm_partition_table__inst__partition_lookup [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="partition_lookup_pos">_root.sector_size</TD><TD PORT="partition_lookup_size">sector_size</TD><TD>PartitionEntry</TD><TD PORT="partition_lookup_type">partition_lookup</TD></TR>
+		</TABLE>>];
+		apm_partition_table__inst__partition_entries [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="partition_entries_pos">_root.sector_size</TD><TD PORT="partition_entries_size">sector_size</TD><TD>PartitionEntry</TD><TD PORT="partition_entries_type">partition_entries</TD></TR>
+			<TR><TD COLSPAN="4" PORT="partition_entries__repeat">repeat _root.partition_lookup.number_of_partitions times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__partition_entry {
+			label="ApmPartitionTable::PartitionEntry";
+			graph[style=dotted];
+
+			partition_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">2</TD><TD>50 4D</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="reserved_1_pos">2</TD><TD PORT="reserved_1_size">2</TD><TD></TD><TD PORT="reserved_1_type">reserved_1</TD></TR>
+				<TR><TD PORT="number_of_partitions_pos">4</TD><TD PORT="number_of_partitions_size">4</TD><TD>u4be</TD><TD PORT="number_of_partitions_type">number_of_partitions</TD></TR>
+				<TR><TD PORT="partition_start_pos">8</TD><TD PORT="partition_start_size">4</TD><TD>u4be</TD><TD PORT="partition_start_type">partition_start</TD></TR>
+				<TR><TD PORT="partition_size_pos">12</TD><TD PORT="partition_size_size">4</TD><TD>u4be</TD><TD PORT="partition_size_type">partition_size</TD></TR>
+				<TR><TD PORT="partition_name_pos">16</TD><TD PORT="partition_name_size">32</TD><TD>str(ascii)</TD><TD PORT="partition_name_type">partition_name</TD></TR>
+				<TR><TD PORT="partition_type_pos">48</TD><TD PORT="partition_type_size">32</TD><TD>str(ascii)</TD><TD PORT="partition_type_type">partition_type</TD></TR>
+				<TR><TD PORT="data_start_pos">80</TD><TD PORT="data_start_size">4</TD><TD>u4be</TD><TD PORT="data_start_type">data_start</TD></TR>
+				<TR><TD PORT="data_size_pos">84</TD><TD PORT="data_size_size">4</TD><TD>u4be</TD><TD PORT="data_size_type">data_size</TD></TR>
+				<TR><TD PORT="partition_status_pos">88</TD><TD PORT="partition_status_size">4</TD><TD>u4be</TD><TD PORT="partition_status_type">partition_status</TD></TR>
+				<TR><TD PORT="boot_code_start_pos">92</TD><TD PORT="boot_code_start_size">4</TD><TD>u4be</TD><TD PORT="boot_code_start_type">boot_code_start</TD></TR>
+				<TR><TD PORT="boot_code_size_pos">96</TD><TD PORT="boot_code_size_size">4</TD><TD>u4be</TD><TD PORT="boot_code_size_type">boot_code_size</TD></TR>
+				<TR><TD PORT="boot_loader_address_pos">100</TD><TD PORT="boot_loader_address_size">4</TD><TD>u4be</TD><TD PORT="boot_loader_address_type">boot_loader_address</TD></TR>
+				<TR><TD PORT="reserved_2_pos">104</TD><TD PORT="reserved_2_size">4</TD><TD></TD><TD PORT="reserved_2_type">reserved_2</TD></TR>
+				<TR><TD PORT="boot_code_entry_pos">108</TD><TD PORT="boot_code_entry_size">4</TD><TD>u4be</TD><TD PORT="boot_code_entry_type">boot_code_entry</TD></TR>
+				<TR><TD PORT="reserved_3_pos">112</TD><TD PORT="reserved_3_size">4</TD><TD></TD><TD PORT="reserved_3_type">reserved_3</TD></TR>
+				<TR><TD PORT="boot_code_cksum_pos">116</TD><TD PORT="boot_code_cksum_size">4</TD><TD>u4be</TD><TD PORT="boot_code_cksum_type">boot_code_cksum</TD></TR>
+				<TR><TD PORT="processor_type_pos">120</TD><TD PORT="processor_type_size">16</TD><TD>str(ascii)</TD><TD PORT="processor_type_type">processor_type</TD></TR>
+			</TABLE>>];
+			partition_entry__inst__partition [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="partition_pos">(partition_start * _root.sector_size)</TD><TD PORT="partition_size">(partition_size * _root.sector_size)</TD><TD></TD><TD PORT="partition_type">partition</TD></TR>
+			</TABLE>>];
+			partition_entry__inst__data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="data_pos">(data_start * _root.sector_size)</TD><TD PORT="data_size">(data_size * _root.sector_size)</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+			partition_entry__inst__boot_code [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="boot_code_pos">(boot_code_start * _root.sector_size)</TD><TD PORT="boot_code_size">boot_code_size</TD><TD></TD><TD PORT="boot_code_type">boot_code</TD></TR>
+			</TABLE>>];
+		}
+	}
+	apm_partition_table__inst__sector_size:sector_size_type -> apm_partition_table__inst__partition_lookup:partition_lookup_pos [color="#404040"];
+	apm_partition_table__inst__sector_size:sector_size_type -> apm_partition_table__inst__partition_lookup:partition_lookup_size [color="#404040"];
+	apm_partition_table__inst__partition_lookup:partition_lookup_type -> partition_entry__seq [style=bold];
+	apm_partition_table__inst__sector_size:sector_size_type -> apm_partition_table__inst__partition_entries:partition_entries_pos [color="#404040"];
+	apm_partition_table__inst__sector_size:sector_size_type -> apm_partition_table__inst__partition_entries:partition_entries_size [color="#404040"];
+	apm_partition_table__inst__partition_entries:partition_entries_type -> partition_entry__seq [style=bold];
+	partition_entry__seq:number_of_partitions_type -> apm_partition_table__inst__partition_entries:partition_entries__repeat [color="#404040"];
+	partition_entry__seq:partition_start_type -> partition_entry__inst__partition:partition_pos [color="#404040"];
+	apm_partition_table__inst__sector_size:sector_size_type -> partition_entry__inst__partition:partition_pos [color="#404040"];
+	partition_entry__seq:partition_size_type -> partition_entry__inst__partition:partition_size [color="#404040"];
+	apm_partition_table__inst__sector_size:sector_size_type -> partition_entry__inst__partition:partition_size [color="#404040"];
+	partition_entry__seq:data_start_type -> partition_entry__inst__data:data_pos [color="#404040"];
+	apm_partition_table__inst__sector_size:sector_size_type -> partition_entry__inst__data:data_pos [color="#404040"];
+	partition_entry__seq:data_size_type -> partition_entry__inst__data:data_size [color="#404040"];
+	apm_partition_table__inst__sector_size:sector_size_type -> partition_entry__inst__data:data_size [color="#404040"];
+	partition_entry__seq:boot_code_start_type -> partition_entry__inst__boot_code:boot_code_pos [color="#404040"];
+	apm_partition_table__inst__sector_size:sector_size_type -> partition_entry__inst__boot_code:boot_code_pos [color="#404040"];
+	partition_entry__seq:boot_code_size_type -> partition_entry__inst__boot_code:boot_code_size [color="#404040"];
+}

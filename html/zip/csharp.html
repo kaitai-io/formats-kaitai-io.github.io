@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.zip file format: C# parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Archive Files</li>
+        <li class="active">.zip file format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.zip file format:
+            
+            C# parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        zip
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .zip file format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".zip file format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title=".zip file format parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="csharp.html" title=".zip file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title=".zip file format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".zip file format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title=".zip file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".zip file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".zip file format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".zip file format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".zip file format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="csharp">var data = Zip.FromFile("path/to/local/file.zip");</code></pre>
+
+<p>Or parse structure from a byte array:</p>
+
+<pre><code class="csharp">byte[] someArray = new byte[] { ... };
+var data = new Zip(new KaitaiStream(someArray));</code></pre>
+
+<p>After that, one can get various attributes from the structure by accessing properties like:</p>
+
+<pre><code class="csharp">data.Sections // => get sections</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C# source code to parse .zip file format
+            
+        </h2>
+
+        
+
+        <h3>Zip.cs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/csharp/Zip.cs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+using System.Collections.Generic;
+
+namespace Kaitai
+{
+
+    /// &lt;remarks&gt;
+    /// Reference: &lt;a href=&quot;https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT&quot;&gt;Source&lt;/a&gt;
+    /// &lt;/remarks&gt;
+    public partial class Zip : KaitaiStruct
+    {
+        public static Zip FromFile(string fileName)
+        {
+            return new Zip(new KaitaiStream(fileName));
+        }
+
+
+        public enum Compression
+        {
+            None = 0,
+            Shrunk = 1,
+            Reduced1 = 2,
+            Reduced2 = 3,
+            Reduced3 = 4,
+            Reduced4 = 5,
+            Imploded = 6,
+            Deflated = 8,
+            EnhancedDeflated = 9,
+            PkwareDclImploded = 10,
+            Bzip2 = 12,
+            Lzma = 14,
+            IbmTerse = 18,
+            IbmLz77Z = 19,
+            Ppmd = 98,
+        }
+
+        public enum ExtraCodes
+        {
+            Zip64 = 1,
+            AvInfo = 7,
+            Os2 = 9,
+            Ntfs = 10,
+            Openvms = 12,
+            PkwareUnix = 13,
+            FileStreamAndForkDescriptors = 14,
+            PatchDescriptor = 15,
+            Pkcs7 = 20,
+            X509CertIdAndSignatureForFile = 21,
+            X509CertIdForCentralDir = 22,
+            StrongEncryptionHeader = 23,
+            RecordManagementControls = 24,
+            Pkcs7EncRecipCertList = 25,
+            IbmS390Uncomp = 101,
+            IbmS390Comp = 102,
+            Poszip4690 = 18064,
+            ExtendedTimestamp = 21589,
+            InfozipUnix = 30805,
+            InfozipUnixVarSize = 30837,
+        }
+        public Zip(KaitaiStream p__io, KaitaiStruct p__parent = null, Zip p__root = null) : base(p__io)
+        {
+            m_parent = p__parent;
+            m_root = p__root ?? this;
+            _read();
+        }
+        private void _read()
+        {
+            _sections = new List&lt;PkSection&gt;();
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _sections.Add(new PkSection(m_io, this, m_root));
+                    i++;
+                }
+            }
+        }
+        public partial class LocalFile : KaitaiStruct
+        {
+            public static LocalFile FromFile(string fileName)
+            {
+                return new LocalFile(new KaitaiStream(fileName));
+            }
+
+            public LocalFile(KaitaiStream p__io, Zip.PkSection p__parent = null, Zip p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _header = new LocalFileHeader(m_io, this, m_root);
+                _body = m_io.ReadBytes(Header.CompressedSize);
+            }
+            private LocalFileHeader _header;
+            private byte[] _body;
+            private Zip m_root;
+            private Zip.PkSection m_parent;
+            public LocalFileHeader Header { get { return _header; } }
+            public byte[] Body { get { return _body; } }
+            public Zip M_Root { get { return m_root; } }
+            public Zip.PkSection M_Parent { get { return m_parent; } }
+        }
+        public partial class ExtraField : KaitaiStruct
+        {
+            public static ExtraField FromFile(string fileName)
+            {
+                return new ExtraField(new KaitaiStream(fileName));
+            }
+
+            public ExtraField(KaitaiStream p__io, Zip.Extras p__parent = null, Zip p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _code = ((Zip.ExtraCodes) m_io.ReadU2le());
+                _size = m_io.ReadU2le();
+                switch (Code) {
+                case Zip.ExtraCodes.Ntfs: {
+                    __raw_body = m_io.ReadBytes(Size);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new Ntfs(io___raw_body, this, m_root);
+                    break;
+                }
+                case Zip.ExtraCodes.ExtendedTimestamp: {
+                    __raw_body = m_io.ReadBytes(Size);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new ExtendedTimestamp(io___raw_body, this, m_root);
+                    break;
+                }
+                case Zip.ExtraCodes.InfozipUnixVarSize: {
+                    __raw_body = m_io.ReadBytes(Size);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new InfozipUnixVarSize(io___raw_body, this, m_root);
+                    break;
+                }
+                default: {
+                    _body = m_io.ReadBytes(Size);
+                    break;
+                }
+                }
+            }
+
+            /// &lt;remarks&gt;
+            /// Reference: &lt;a href=&quot;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191&quot;&gt;Source&lt;/a&gt;
+            /// &lt;/remarks&gt;
+            public partial class Ntfs : KaitaiStruct
+            {
+                public static Ntfs FromFile(string fileName)
+                {
+                    return new Ntfs(new KaitaiStream(fileName));
+                }
+
+                public Ntfs(KaitaiStream p__io, Zip.ExtraField p__parent = null, Zip p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _reserved = m_io.ReadU4le();
+                    _attributes = new List&lt;Attribute&gt;();
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _attributes.Add(new Attribute(m_io, this, m_root));
+                            i++;
+                        }
+                    }
+                }
+                public partial class Attribute : KaitaiStruct
+                {
+                    public static Attribute FromFile(string fileName)
+                    {
+                        return new Attribute(new KaitaiStream(fileName));
+                    }
+
+                    public Attribute(KaitaiStream p__io, Zip.ExtraField.Ntfs p__parent = null, Zip p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _tag = m_io.ReadU2le();
+                        _size = m_io.ReadU2le();
+                        switch (Tag) {
+                        case 1: {
+                            __raw_body = m_io.ReadBytes(Size);
+                            var io___raw_body = new KaitaiStream(__raw_body);
+                            _body = new Attribute1(io___raw_body, this, m_root);
+                            break;
+                        }
+                        default: {
+                            _body = m_io.ReadBytes(Size);
+                            break;
+                        }
+                        }
+                    }
+                    private ushort _tag;
+                    private ushort _size;
+                    private object _body;
+                    private Zip m_root;
+                    private Zip.ExtraField.Ntfs m_parent;
+                    private byte[] __raw_body;
+                    public ushort Tag { get { return _tag; } }
+                    public ushort Size { get { return _size; } }
+                    public object Body { get { return _body; } }
+                    public Zip M_Root { get { return m_root; } }
+                    public Zip.ExtraField.Ntfs M_Parent { get { return m_parent; } }
+                    public byte[] M_RawBody { get { return __raw_body; } }
+                }
+                public partial class Attribute1 : KaitaiStruct
+                {
+                    public static Attribute1 FromFile(string fileName)
+                    {
+                        return new Attribute1(new KaitaiStream(fileName));
+                    }
+
+                    public Attribute1(KaitaiStream p__io, Zip.ExtraField.Ntfs.Attribute p__parent = null, Zip p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _lastModTime = m_io.ReadU8le();
+                        _lastAccessTime = m_io.ReadU8le();
+                        _creationTime = m_io.ReadU8le();
+                    }
+                    private ulong _lastModTime;
+                    private ulong _lastAccessTime;
+                    private ulong _creationTime;
+                    private Zip m_root;
+                    private Zip.ExtraField.Ntfs.Attribute m_parent;
+                    public ulong LastModTime { get { return _lastModTime; } }
+                    public ulong LastAccessTime { get { return _lastAccessTime; } }
+                    public ulong CreationTime { get { return _creationTime; } }
+                    public Zip M_Root { get { return m_root; } }
+                    public Zip.ExtraField.Ntfs.Attribute M_Parent { get { return m_parent; } }
+                }
+                private uint _reserved;
+                private List&lt;Attribute&gt; _attributes;
+                private Zip m_root;
+                private Zip.ExtraField m_parent;
+                public uint Reserved { get { return _reserved; } }
+                public List&lt;Attribute&gt; Attributes { get { return _attributes; } }
+                public Zip M_Root { get { return m_root; } }
+                public Zip.ExtraField M_Parent { get { return m_parent; } }
+            }
+
+            /// &lt;remarks&gt;
+            /// Reference: &lt;a href=&quot;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817&quot;&gt;Source&lt;/a&gt;
+            /// &lt;/remarks&gt;
+            public partial class ExtendedTimestamp : KaitaiStruct
+            {
+                public static ExtendedTimestamp FromFile(string fileName)
+                {
+                    return new ExtendedTimestamp(new KaitaiStream(fileName));
+                }
+
+                public ExtendedTimestamp(KaitaiStream p__io, Zip.ExtraField p__parent = null, Zip p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _flags = m_io.ReadU1();
+                    _modTime = m_io.ReadU4le();
+                    if (!(M_Io.IsEof)) {
+                        _accessTime = m_io.ReadU4le();
+                    }
+                    if (!(M_Io.IsEof)) {
+                        _createTime = m_io.ReadU4le();
+                    }
+                }
+                private byte _flags;
+                private uint _modTime;
+                private uint? _accessTime;
+                private uint? _createTime;
+                private Zip m_root;
+                private Zip.ExtraField m_parent;
+                public byte Flags { get { return _flags; } }
+                public uint ModTime { get { return _modTime; } }
+                public uint? AccessTime { get { return _accessTime; } }
+                public uint? CreateTime { get { return _createTime; } }
+                public Zip M_Root { get { return m_root; } }
+                public Zip.ExtraField M_Parent { get { return m_parent; } }
+            }
+
+            /// &lt;remarks&gt;
+            /// Reference: &lt;a href=&quot;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339&quot;&gt;Source&lt;/a&gt;
+            /// &lt;/remarks&gt;
+            public partial class InfozipUnixVarSize : KaitaiStruct
+            {
+                public static InfozipUnixVarSize FromFile(string fileName)
+                {
+                    return new InfozipUnixVarSize(new KaitaiStream(fileName));
+                }
+
+                public InfozipUnixVarSize(KaitaiStream p__io, Zip.ExtraField p__parent = null, Zip p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _version = m_io.ReadU1();
+                    _uidSize = m_io.ReadU1();
+                    _uid = m_io.ReadBytes(UidSize);
+                    _gidSize = m_io.ReadU1();
+                    _gid = m_io.ReadBytes(GidSize);
+                }
+                private byte _version;
+                private byte _uidSize;
+                private byte[] _uid;
+                private byte _gidSize;
+                private byte[] _gid;
+                private Zip m_root;
+                private Zip.ExtraField m_parent;
+
+                /// &lt;summary&gt;
+                /// Version of this extra field, currently 1
+                /// &lt;/summary&gt;
+                public byte Version { get { return _version; } }
+
+                /// &lt;summary&gt;
+                /// Size of UID field
+                /// &lt;/summary&gt;
+                public byte UidSize { get { return _uidSize; } }
+
+                /// &lt;summary&gt;
+                /// UID (User ID) for a file
+                /// &lt;/summary&gt;
+                public byte[] Uid { get { return _uid; } }
+
+                /// &lt;summary&gt;
+                /// Size of GID field
+                /// &lt;/summary&gt;
+                public byte GidSize { get { return _gidSize; } }
+
+                /// &lt;summary&gt;
+                /// GID (Group ID) for a file
+                /// &lt;/summary&gt;
+                public byte[] Gid { get { return _gid; } }
+                public Zip M_Root { get { return m_root; } }
+                public Zip.ExtraField M_Parent { get { return m_parent; } }
+            }
+            private ExtraCodes _code;
+            private ushort _size;
+            private object _body;
+            private Zip m_root;
+            private Zip.Extras m_parent;
+            private byte[] __raw_body;
+            public ExtraCodes Code { get { return _code; } }
+            public ushort Size { get { return _size; } }
+            public object Body { get { return _body; } }
+            public Zip M_Root { get { return m_root; } }
+            public Zip.Extras M_Parent { get { return m_parent; } }
+            public byte[] M_RawBody { get { return __raw_body; } }
+        }
+
+        /// &lt;remarks&gt;
+        /// Reference: &lt;a href=&quot;https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT&quot;&gt;- 4.3.12&lt;/a&gt;
+        /// &lt;/remarks&gt;
+        public partial class CentralDirEntry : KaitaiStruct
+        {
+            public static CentralDirEntry FromFile(string fileName)
+            {
+                return new CentralDirEntry(new KaitaiStream(fileName));
+            }
+
+            public CentralDirEntry(KaitaiStream p__io, Zip.PkSection p__parent = null, Zip p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_localHeader = false;
+                _read();
+            }
+            private void _read()
+            {
+                _versionMadeBy = m_io.ReadU2le();
+                _versionNeededToExtract = m_io.ReadU2le();
+                _flags = m_io.ReadU2le();
+                _compressionMethod = ((Zip.Compression) m_io.ReadU2le());
+                _lastModFileTime = m_io.ReadU2le();
+                _lastModFileDate = m_io.ReadU2le();
+                _crc32 = m_io.ReadU4le();
+                _compressedSize = m_io.ReadU4le();
+                _uncompressedSize = m_io.ReadU4le();
+                _fileNameLen = m_io.ReadU2le();
+                _extraLen = m_io.ReadU2le();
+                _commentLen = m_io.ReadU2le();
+                _diskNumberStart = m_io.ReadU2le();
+                _intFileAttr = m_io.ReadU2le();
+                _extFileAttr = m_io.ReadU4le();
+                _localHeaderOffset = m_io.ReadS4le();
+                _fileName = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(FileNameLen));
+                __raw_extra = m_io.ReadBytes(ExtraLen);
+                var io___raw_extra = new KaitaiStream(__raw_extra);
+                _extra = new Extras(io___raw_extra, this, m_root);
+                _comment = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(CommentLen));
+            }
+            private bool f_localHeader;
+            private PkSection _localHeader;
+            public PkSection LocalHeader
+            {
+                get
+                {
+                    if (f_localHeader)
+                        return _localHeader;
+                    long _pos = m_io.Pos;
+                    m_io.Seek(LocalHeaderOffset);
+                    _localHeader = new PkSection(m_io, this, m_root);
+                    m_io.Seek(_pos);
+                    f_localHeader = true;
+                    return _localHeader;
+                }
+            }
+            private ushort _versionMadeBy;
+            private ushort _versionNeededToExtract;
+            private ushort _flags;
+            private Compression _compressionMethod;
+            private ushort _lastModFileTime;
+            private ushort _lastModFileDate;
+            private uint _crc32;
+            private uint _compressedSize;
+            private uint _uncompressedSize;
+            private ushort _fileNameLen;
+            private ushort _extraLen;
+            private ushort _commentLen;
+            private ushort _diskNumberStart;
+            private ushort _intFileAttr;
+            private uint _extFileAttr;
+            private int _localHeaderOffset;
+            private string _fileName;
+            private Extras _extra;
+            private string _comment;
+            private Zip m_root;
+            private Zip.PkSection m_parent;
+            private byte[] __raw_extra;
+            public ushort VersionMadeBy { get { return _versionMadeBy; } }
+            public ushort VersionNeededToExtract { get { return _versionNeededToExtract; } }
+            public ushort Flags { get { return _flags; } }
+            public Compression CompressionMethod { get { return _compressionMethod; } }
+            public ushort LastModFileTime { get { return _lastModFileTime; } }
+            public ushort LastModFileDate { get { return _lastModFileDate; } }
+            public uint Crc32 { get { return _crc32; } }
+            public uint CompressedSize { get { return _compressedSize; } }
+            public uint UncompressedSize { get { return _uncompressedSize; } }
+            public ushort FileNameLen { get { return _fileNameLen; } }
+            public ushort ExtraLen { get { return _extraLen; } }
+            public ushort CommentLen { get { return _commentLen; } }
+            public ushort DiskNumberStart { get { return _diskNumberStart; } }
+            public ushort IntFileAttr { get { return _intFileAttr; } }
+            public uint ExtFileAttr { get { return _extFileAttr; } }
+            public int LocalHeaderOffset { get { return _localHeaderOffset; } }
+            public string FileName { get { return _fileName; } }
+            public Extras Extra { get { return _extra; } }
+            public string Comment { get { return _comment; } }
+            public Zip M_Root { get { return m_root; } }
+            public Zip.PkSection M_Parent { get { return m_parent; } }
+            public byte[] M_RawExtra { get { return __raw_extra; } }
+        }
+        public partial class PkSection : KaitaiStruct
+        {
+            public static PkSection FromFile(string fileName)
+            {
+                return new PkSection(new KaitaiStream(fileName));
+            }
+
+            public PkSection(KaitaiStream p__io, KaitaiStruct p__parent = null, Zip p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _magic = m_io.EnsureFixedContents(new byte[] { 80, 75 });
+                _sectionType = m_io.ReadU2le();
+                switch (SectionType) {
+                case 513: {
+                    _body = new CentralDirEntry(m_io, this, m_root);
+                    break;
+                }
+                case 1027: {
+                    _body = new LocalFile(m_io, this, m_root);
+                    break;
+                }
+                case 1541: {
+                    _body = new EndOfCentralDir(m_io, this, m_root);
+                    break;
+                }
+                }
+            }
+            private byte[] _magic;
+            private ushort _sectionType;
+            private KaitaiStruct _body;
+            private Zip m_root;
+            private KaitaiStruct m_parent;
+            public byte[] Magic { get { return _magic; } }
+            public ushort SectionType { get { return _sectionType; } }
+            public KaitaiStruct Body { get { return _body; } }
+            public Zip M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class Extras : KaitaiStruct
+        {
+            public static Extras FromFile(string fileName)
+            {
+                return new Extras(new KaitaiStream(fileName));
+            }
+
+            public Extras(KaitaiStream p__io, KaitaiStruct p__parent = null, Zip p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _entries = new List&lt;ExtraField&gt;();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new ExtraField(m_io, this, m_root));
+                        i++;
+                    }
+                }
+            }
+            private List&lt;ExtraField&gt; _entries;
+            private Zip m_root;
+            private KaitaiStruct m_parent;
+            public List&lt;ExtraField&gt; Entries { get { return _entries; } }
+            public Zip M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class LocalFileHeader : KaitaiStruct
+        {
+            public static LocalFileHeader FromFile(string fileName)
+            {
+                return new LocalFileHeader(new KaitaiStream(fileName));
+            }
+
+            public LocalFileHeader(KaitaiStream p__io, Zip.LocalFile p__parent = null, Zip p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _version = m_io.ReadU2le();
+                _flags = m_io.ReadU2le();
+                _compressionMethod = ((Zip.Compression) m_io.ReadU2le());
+                _fileModTime = m_io.ReadU2le();
+                _fileModDate = m_io.ReadU2le();
+                _crc32 = m_io.ReadU4le();
+                _compressedSize = m_io.ReadU4le();
+                _uncompressedSize = m_io.ReadU4le();
+                _fileNameLen = m_io.ReadU2le();
+                _extraLen = m_io.ReadU2le();
+                _fileName = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(FileNameLen));
+                __raw_extra = m_io.ReadBytes(ExtraLen);
+                var io___raw_extra = new KaitaiStream(__raw_extra);
+                _extra = new Extras(io___raw_extra, this, m_root);
+            }
+            private ushort _version;
+            private ushort _flags;
+            private Compression _compressionMethod;
+            private ushort _fileModTime;
+            private ushort _fileModDate;
+            private uint _crc32;
+            private uint _compressedSize;
+            private uint _uncompressedSize;
+            private ushort _fileNameLen;
+            private ushort _extraLen;
+            private string _fileName;
+            private Extras _extra;
+            private Zip m_root;
+            private Zip.LocalFile m_parent;
+            private byte[] __raw_extra;
+            public ushort Version { get { return _version; } }
+            public ushort Flags { get { return _flags; } }
+            public Compression CompressionMethod { get { return _compressionMethod; } }
+            public ushort FileModTime { get { return _fileModTime; } }
+            public ushort FileModDate { get { return _fileModDate; } }
+            public uint Crc32 { get { return _crc32; } }
+            public uint CompressedSize { get { return _compressedSize; } }
+            public uint UncompressedSize { get { return _uncompressedSize; } }
+            public ushort FileNameLen { get { return _fileNameLen; } }
+            public ushort ExtraLen { get { return _extraLen; } }
+            public string FileName { get { return _fileName; } }
+            public Extras Extra { get { return _extra; } }
+            public Zip M_Root { get { return m_root; } }
+            public Zip.LocalFile M_Parent { get { return m_parent; } }
+            public byte[] M_RawExtra { get { return __raw_extra; } }
+        }
+        public partial class EndOfCentralDir : KaitaiStruct
+        {
+            public static EndOfCentralDir FromFile(string fileName)
+            {
+                return new EndOfCentralDir(new KaitaiStream(fileName));
+            }
+
+            public EndOfCentralDir(KaitaiStream p__io, Zip.PkSection p__parent = null, Zip p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _diskOfEndOfCentralDir = m_io.ReadU2le();
+                _diskOfCentralDir = m_io.ReadU2le();
+                _qtyCentralDirEntriesOnDisk = m_io.ReadU2le();
+                _qtyCentralDirEntriesTotal = m_io.ReadU2le();
+                _centralDirSize = m_io.ReadU4le();
+                _centralDirOffset = m_io.ReadU4le();
+                _commentLen = m_io.ReadU2le();
+                _comment = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(CommentLen));
+            }
+            private ushort _diskOfEndOfCentralDir;
+            private ushort _diskOfCentralDir;
+            private ushort _qtyCentralDirEntriesOnDisk;
+            private ushort _qtyCentralDirEntriesTotal;
+            private uint _centralDirSize;
+            private uint _centralDirOffset;
+            private ushort _commentLen;
+            private string _comment;
+            private Zip m_root;
+            private Zip.PkSection m_parent;
+            public ushort DiskOfEndOfCentralDir { get { return _diskOfEndOfCentralDir; } }
+            public ushort DiskOfCentralDir { get { return _diskOfCentralDir; } }
+            public ushort QtyCentralDirEntriesOnDisk { get { return _qtyCentralDirEntriesOnDisk; } }
+            public ushort QtyCentralDirEntriesTotal { get { return _qtyCentralDirEntriesTotal; } }
+            public uint CentralDirSize { get { return _centralDirSize; } }
+            public uint CentralDirOffset { get { return _centralDirOffset; } }
+            public ushort CommentLen { get { return _commentLen; } }
+            public string Comment { get { return _comment; } }
+            public Zip M_Root { get { return m_root; } }
+            public Zip.PkSection M_Parent { get { return m_parent; } }
+        }
+        private List&lt;PkSection&gt; _sections;
+        private Zip m_root;
+        private KaitaiStruct m_parent;
+        public List&lt;PkSection&gt; Sections { get { return _sections; } }
+        public Zip M_Root { get { return m_root; } }
+        public KaitaiStruct M_Parent { get { return m_parent; } }
+    }
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

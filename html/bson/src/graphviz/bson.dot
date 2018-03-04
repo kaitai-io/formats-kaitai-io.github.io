@@ -1,0 +1,210 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__bson {
+		label="Bson";
+		graph[style=dotted];
+
+		bson__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">4</TD><TD>s4le</TD><TD PORT="len_type">len</TD></TR>
+			<TR><TD PORT="fields_pos">4</TD><TD PORT="fields_size">(len - 5)</TD><TD>ElementsList</TD><TD PORT="fields_type">fields</TD></TR>
+			<TR><TD PORT="terminator_pos">...</TD><TD PORT="terminator_size">1</TD><TD>00</TD><TD PORT="terminator_type">terminator</TD></TR>
+		</TABLE>>];
+		subgraph cluster__timestamp {
+			label="Bson::Timestamp";
+			graph[style=dotted];
+
+			timestamp__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="increment_pos">0</TD><TD PORT="increment_size">4</TD><TD>u4le</TD><TD PORT="increment_type">increment</TD></TR>
+				<TR><TD PORT="timestamp_pos">4</TD><TD PORT="timestamp_size">4</TD><TD>u4le</TD><TD PORT="timestamp_type">timestamp</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bin_data {
+			label="Bson::BinData";
+			graph[style=dotted];
+
+			bin_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">4</TD><TD>s4le</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="subtype_pos">4</TD><TD PORT="subtype_size">1</TD><TD>u1?Subtype</TD><TD PORT="subtype_type">subtype</TD></TR>
+				<TR><TD PORT="content_pos">5</TD><TD PORT="content_size">...</TD><TD>switch (subtype)</TD><TD PORT="content_type">content</TD></TR>
+			</TABLE>>];
+bin_data__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:subtype_byte_array_deprecated</TD><TD PORT="case0">ByteArrayDeprecated</TD></TR>
+</TABLE>>];
+			subgraph cluster__byte_array_deprecated {
+				label="Bson::BinData::ByteArrayDeprecated";
+				graph[style=dotted];
+
+				byte_array_deprecated__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">4</TD><TD>s4le</TD><TD PORT="len_type">len</TD></TR>
+					<TR><TD PORT="content_pos">4</TD><TD PORT="content_size">len</TD><TD></TD><TD PORT="content_type">content</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__elements_list {
+			label="Bson::ElementsList";
+			graph[style=dotted];
+
+			elements_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="elements_pos">0</TD><TD PORT="elements_size">...</TD><TD>Element</TD><TD PORT="elements_type">elements</TD></TR>
+				<TR><TD COLSPAN="4" PORT="elements__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__cstring {
+			label="Bson::Cstring";
+			graph[style=dotted];
+
+			cstring__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="str_pos">0</TD><TD PORT="str_size">...</TD><TD>str(UTF-8)</TD><TD PORT="str_type">str</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__string {
+			label="Bson::String";
+			graph[style=dotted];
+
+			string__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">4</TD><TD>s4le</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="str_pos">4</TD><TD PORT="str_size">(len - 1)</TD><TD>str(UTF-8)</TD><TD PORT="str_type">str</TD></TR>
+				<TR><TD PORT="terminator_pos">...</TD><TD PORT="terminator_size">1</TD><TD>00</TD><TD PORT="terminator_type">terminator</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__element {
+			label="Bson::Element";
+			graph[style=dotted];
+
+			element__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_byte_pos">0</TD><TD PORT="type_byte_size">1</TD><TD>u1?BsonType</TD><TD PORT="type_byte_type">type_byte</TD></TR>
+				<TR><TD PORT="name_pos">1</TD><TD PORT="name_size">...</TD><TD>Cstring</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="content_pos">...</TD><TD PORT="content_size">...</TD><TD>switch (type_byte)</TD><TD PORT="content_type">content</TD></TR>
+			</TABLE>>];
+element__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:bson_type_code_with_scope</TD><TD PORT="case0">CodeWithScope</TD></TR>
+	<TR><TD>:bson_type_object_id</TD><TD PORT="case1">ObjectId</TD></TR>
+	<TR><TD>:bson_type_string</TD><TD PORT="case2">String</TD></TR>
+	<TR><TD>:bson_type_reg_ex</TD><TD PORT="case3">RegEx</TD></TR>
+	<TR><TD>:bson_type_number_decimal</TD><TD PORT="case4">F16</TD></TR>
+	<TR><TD>:bson_type_timestamp</TD><TD PORT="case5">Timestamp</TD></TR>
+	<TR><TD>:bson_type_db_pointer</TD><TD PORT="case6">DbPointer</TD></TR>
+	<TR><TD>:bson_type_array</TD><TD PORT="case7">Bson</TD></TR>
+	<TR><TD>:bson_type_javascript</TD><TD PORT="case8">String</TD></TR>
+	<TR><TD>:bson_type_document</TD><TD PORT="case9">Bson</TD></TR>
+	<TR><TD>:bson_type_symbol</TD><TD PORT="case10">String</TD></TR>
+	<TR><TD>:bson_type_bin_data</TD><TD PORT="case11">BinData</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__db_pointer {
+			label="Bson::DbPointer";
+			graph[style=dotted];
+
+			db_pointer__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="namespace_pos">0</TD><TD PORT="namespace_size">...</TD><TD>String</TD><TD PORT="namespace_type">namespace</TD></TR>
+				<TR><TD PORT="id_pos">...</TD><TD PORT="id_size">12</TD><TD>ObjectId</TD><TD PORT="id_type">id</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__u3 {
+			label="Bson::U3";
+			graph[style=dotted];
+
+			u3__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="b1_pos">0</TD><TD PORT="b1_size">1</TD><TD>u1</TD><TD PORT="b1_type">b1</TD></TR>
+				<TR><TD PORT="b2_pos">1</TD><TD PORT="b2_size">1</TD><TD>u1</TD><TD PORT="b2_type">b2</TD></TR>
+				<TR><TD PORT="b3_pos">2</TD><TD PORT="b3_size">1</TD><TD>u1</TD><TD PORT="b3_type">b3</TD></TR>
+			</TABLE>>];
+			u3__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>value</TD><TD>((b1 | (b2 &lt;&lt; 8)) | (b3 &lt;&lt; 16))</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__code_with_scope {
+			label="Bson::CodeWithScope";
+			graph[style=dotted];
+
+			code_with_scope__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">4</TD><TD>s4le</TD><TD PORT="id_type">id</TD></TR>
+				<TR><TD PORT="source_pos">4</TD><TD PORT="source_size">...</TD><TD>String</TD><TD PORT="source_type">source</TD></TR>
+				<TR><TD PORT="scope_pos">...</TD><TD PORT="scope_size">...</TD><TD>Bson</TD><TD PORT="scope_type">scope</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__f16 {
+			label="Bson::F16";
+			graph[style=dotted];
+
+			f16__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="str_pos">0</TD><TD PORT="str_size">1b</TD><TD>BitsType1</TD><TD PORT="str_type">str</TD></TR>
+				<TR><TD PORT="exponent_pos">0:1</TD><TD PORT="exponent_size">15b</TD><TD>b15</TD><TD PORT="exponent_type">exponent</TD></TR>
+				<TR><TD PORT="significand_hi_pos">2</TD><TD PORT="significand_hi_size">49b</TD><TD>b49</TD><TD PORT="significand_hi_type">significand_hi</TD></TR>
+				<TR><TD PORT="significand_lo_pos">8:1</TD><TD PORT="significand_lo_size">8</TD><TD>u8le</TD><TD PORT="significand_lo_type">significand_lo</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__object_id {
+			label="Bson::ObjectId";
+			graph[style=dotted];
+
+			object_id__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="epoch_time_pos">0</TD><TD PORT="epoch_time_size">4</TD><TD>u4le</TD><TD PORT="epoch_time_type">epoch_time</TD></TR>
+				<TR><TD PORT="machine_id_pos">4</TD><TD PORT="machine_id_size">3</TD><TD>U3</TD><TD PORT="machine_id_type">machine_id</TD></TR>
+				<TR><TD PORT="process_id_pos">7</TD><TD PORT="process_id_size">2</TD><TD>u2le</TD><TD PORT="process_id_type">process_id</TD></TR>
+				<TR><TD PORT="counter_pos">9</TD><TD PORT="counter_size">3</TD><TD>U3</TD><TD PORT="counter_type">counter</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__reg_ex {
+			label="Bson::RegEx";
+			graph[style=dotted];
+
+			reg_ex__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="pattern_pos">0</TD><TD PORT="pattern_size">...</TD><TD>Cstring</TD><TD PORT="pattern_type">pattern</TD></TR>
+				<TR><TD PORT="options_pos">...</TD><TD PORT="options_size">...</TD><TD>Cstring</TD><TD PORT="options_type">options</TD></TR>
+			</TABLE>>];
+		}
+	}
+	bson__seq:len_type -> bson__seq:fields_size [color="#404040"];
+	bson__seq:fields_type -> elements_list__seq [style=bold];
+	bin_data__seq:content_type -> bin_data__seq_content_switch [style=bold];
+	bin_data__seq_content_switch:case0 -> byte_array_deprecated__seq [style=bold];
+	bin_data__seq:subtype_type -> bin_data__seq:content_type [color="#404040"];
+	byte_array_deprecated__seq:len_type -> byte_array_deprecated__seq:content_size [color="#404040"];
+	elements_list__seq:elements_type -> element__seq [style=bold];
+	string__seq:len_type -> string__seq:str_size [color="#404040"];
+	element__seq:name_type -> cstring__seq [style=bold];
+	element__seq:content_type -> element__seq_content_switch [style=bold];
+	element__seq_content_switch:case0 -> code_with_scope__seq [style=bold];
+	element__seq_content_switch:case1 -> object_id__seq [style=bold];
+	element__seq_content_switch:case2 -> string__seq [style=bold];
+	element__seq_content_switch:case3 -> reg_ex__seq [style=bold];
+	element__seq_content_switch:case4 -> f16__seq [style=bold];
+	element__seq_content_switch:case5 -> timestamp__seq [style=bold];
+	element__seq_content_switch:case6 -> db_pointer__seq [style=bold];
+	element__seq_content_switch:case7 -> bson__seq [style=bold];
+	element__seq_content_switch:case8 -> string__seq [style=bold];
+	element__seq_content_switch:case9 -> bson__seq [style=bold];
+	element__seq_content_switch:case10 -> string__seq [style=bold];
+	element__seq_content_switch:case11 -> bin_data__seq [style=bold];
+	element__seq:type_byte_type -> element__seq:content_type [color="#404040"];
+	db_pointer__seq:namespace_type -> string__seq [style=bold];
+	db_pointer__seq:id_type -> object_id__seq [style=bold];
+	u3__seq:b1_type -> u3__inst__value [color="#404040"];
+	u3__seq:b2_type -> u3__inst__value [color="#404040"];
+	u3__seq:b3_type -> u3__inst__value [color="#404040"];
+	code_with_scope__seq:source_type -> string__seq [style=bold];
+	code_with_scope__seq:scope_type -> bson__seq [style=bold];
+	object_id__seq:machine_id_type -> u3__seq [style=bold];
+	object_id__seq:counter_type -> u3__seq [style=bold];
+	reg_ex__seq:pattern_type -> cstring__seq [style=bold];
+	reg_ex__seq:options_type -> cstring__seq [style=bold];
+}

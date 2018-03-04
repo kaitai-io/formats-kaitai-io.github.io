@@ -1,0 +1,43 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__hccapx {
+		label="Hccapx";
+		graph[style=dotted];
+
+		hccapx__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="records_pos">0</TD><TD PORT="records_size">...</TD><TD>HccapxRecord</TD><TD PORT="records_type">records</TD></TR>
+			<TR><TD COLSPAN="4" PORT="records__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__hccapx_record {
+			label="Hccapx::HccapxRecord";
+			graph[style=dotted];
+
+			hccapx_record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>48 43 50 58</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="version_pos">4</TD><TD PORT="version_size">4</TD><TD>u4le</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="ignore_replay_counter_pos">8</TD><TD PORT="ignore_replay_counter_size">1b</TD><TD>BitsType1</TD><TD PORT="ignore_replay_counter_type">ignore_replay_counter</TD></TR>
+				<TR><TD PORT="message_pair_pos">8:1</TD><TD PORT="message_pair_size">7b</TD><TD>b7</TD><TD PORT="message_pair_type">message_pair</TD></TR>
+				<TR><TD PORT="len_essid_pos">9</TD><TD PORT="len_essid_size">1</TD><TD>u1</TD><TD PORT="len_essid_type">len_essid</TD></TR>
+				<TR><TD PORT="essid_pos">10</TD><TD PORT="essid_size">len_essid</TD><TD></TD><TD PORT="essid_type">essid</TD></TR>
+				<TR><TD PORT="padding1_pos">...</TD><TD PORT="padding1_size">(32 - len_essid)</TD><TD></TD><TD PORT="padding1_type">padding1</TD></TR>
+				<TR><TD PORT="keyver_pos">...</TD><TD PORT="keyver_size">1</TD><TD>u1</TD><TD PORT="keyver_type">keyver</TD></TR>
+				<TR><TD PORT="keymic_pos">...</TD><TD PORT="keymic_size">16</TD><TD></TD><TD PORT="keymic_type">keymic</TD></TR>
+				<TR><TD PORT="mac_ap_pos">...</TD><TD PORT="mac_ap_size">6</TD><TD></TD><TD PORT="mac_ap_type">mac_ap</TD></TR>
+				<TR><TD PORT="nonce_ap_pos">...</TD><TD PORT="nonce_ap_size">32</TD><TD></TD><TD PORT="nonce_ap_type">nonce_ap</TD></TR>
+				<TR><TD PORT="mac_station_pos">...</TD><TD PORT="mac_station_size">6</TD><TD></TD><TD PORT="mac_station_type">mac_station</TD></TR>
+				<TR><TD PORT="nonce_station_pos">...</TD><TD PORT="nonce_station_size">32</TD><TD></TD><TD PORT="nonce_station_type">nonce_station</TD></TR>
+				<TR><TD PORT="len_eapol_pos">...</TD><TD PORT="len_eapol_size">2</TD><TD>u2le</TD><TD PORT="len_eapol_type">len_eapol</TD></TR>
+				<TR><TD PORT="eapol_pos">...</TD><TD PORT="eapol_size">len_eapol</TD><TD></TD><TD PORT="eapol_type">eapol</TD></TR>
+				<TR><TD PORT="padding2_pos">...</TD><TD PORT="padding2_size">(256 - len_eapol)</TD><TD></TD><TD PORT="padding2_type">padding2</TD></TR>
+			</TABLE>>];
+		}
+	}
+	hccapx__seq:records_type -> hccapx_record__seq [style=bold];
+	hccapx_record__seq:len_essid_type -> hccapx_record__seq:essid_size [color="#404040"];
+	hccapx_record__seq:len_essid_type -> hccapx_record__seq:padding1_size [color="#404040"];
+	hccapx_record__seq:len_eapol_type -> hccapx_record__seq:eapol_size [color="#404040"];
+	hccapx_record__seq:len_eapol_type -> hccapx_record__seq:padding2_size [color="#404040"];
+}

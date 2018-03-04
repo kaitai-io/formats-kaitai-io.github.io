@@ -1,0 +1,151 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__jpeg {
+		label="Jpeg";
+		graph[style=dotted];
+
+		jpeg__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="segments_pos">0</TD><TD PORT="segments_size">...</TD><TD>Segment</TD><TD PORT="segments_type">segments</TD></TR>
+			<TR><TD COLSPAN="4" PORT="segments__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__segment {
+			label="Jpeg::Segment";
+			graph[style=dotted];
+
+			segment__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">1</TD><TD>FF</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="marker_pos">1</TD><TD PORT="marker_size">1</TD><TD>u1?MarkerEnum</TD><TD PORT="marker_type">marker</TD></TR>
+				<TR><TD PORT="length_pos">2</TD><TD PORT="length_size">2</TD><TD>u2be</TD><TD PORT="length_type">length</TD></TR>
+				<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">...</TD><TD>switch (marker)</TD><TD PORT="data_type">data</TD></TR>
+				<TR><TD PORT="image_data_pos">...</TD><TD PORT="image_data_size">?</TD><TD></TD><TD PORT="image_data_type">image_data</TD></TR>
+			</TABLE>>];
+segment__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:marker_enum_sos</TD><TD PORT="case0">SegmentSos</TD></TR>
+	<TR><TD>:marker_enum_app1</TD><TD PORT="case1">SegmentApp1</TD></TR>
+	<TR><TD>:marker_enum_sof0</TD><TD PORT="case2">SegmentSof0</TD></TR>
+	<TR><TD>:marker_enum_app0</TD><TD PORT="case3">SegmentApp0</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__segment_sos {
+			label="Jpeg::SegmentSos";
+			graph[style=dotted];
+
+			segment_sos__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_components_pos">0</TD><TD PORT="num_components_size">1</TD><TD>u1</TD><TD PORT="num_components_type">num_components</TD></TR>
+				<TR><TD PORT="components_pos">1</TD><TD PORT="components_size">2</TD><TD>Component</TD><TD PORT="components_type">components</TD></TR>
+				<TR><TD COLSPAN="4" PORT="components__repeat">repeat num_components times</TD></TR>
+				<TR><TD PORT="start_spectral_selection_pos">...</TD><TD PORT="start_spectral_selection_size">1</TD><TD>u1</TD><TD PORT="start_spectral_selection_type">start_spectral_selection</TD></TR>
+				<TR><TD PORT="end_spectral_pos">...</TD><TD PORT="end_spectral_size">1</TD><TD>u1</TD><TD PORT="end_spectral_type">end_spectral</TD></TR>
+				<TR><TD PORT="appr_bit_pos_pos">...</TD><TD PORT="appr_bit_pos_size">1</TD><TD>u1</TD><TD PORT="appr_bit_pos_type">appr_bit_pos</TD></TR>
+			</TABLE>>];
+			subgraph cluster__component {
+				label="Jpeg::SegmentSos::Component";
+				graph[style=dotted];
+
+				component__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">1</TD><TD>u1?ComponentId</TD><TD PORT="id_type">id</TD></TR>
+					<TR><TD PORT="huffman_table_pos">1</TD><TD PORT="huffman_table_size">1</TD><TD>u1</TD><TD PORT="huffman_table_type">huffman_table</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__segment_app1 {
+			label="Jpeg::SegmentApp1";
+			graph[style=dotted];
+
+			segment_app1__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">...</TD><TD>str(ASCII)</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="body_pos">...</TD><TD PORT="body_size">...</TD><TD>switch (magic)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+segment_app1__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>&quot;Exif&quot;</TD><TD PORT="case0">ExifInJpeg</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__segment_sof0 {
+			label="Jpeg::SegmentSof0";
+			graph[style=dotted];
+
+			segment_sof0__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bits_per_sample_pos">0</TD><TD PORT="bits_per_sample_size">1</TD><TD>u1</TD><TD PORT="bits_per_sample_type">bits_per_sample</TD></TR>
+				<TR><TD PORT="image_height_pos">1</TD><TD PORT="image_height_size">2</TD><TD>u2be</TD><TD PORT="image_height_type">image_height</TD></TR>
+				<TR><TD PORT="image_width_pos">3</TD><TD PORT="image_width_size">2</TD><TD>u2be</TD><TD PORT="image_width_type">image_width</TD></TR>
+				<TR><TD PORT="num_components_pos">5</TD><TD PORT="num_components_size">1</TD><TD>u1</TD><TD PORT="num_components_type">num_components</TD></TR>
+				<TR><TD PORT="components_pos">6</TD><TD PORT="components_size">3</TD><TD>Component</TD><TD PORT="components_type">components</TD></TR>
+				<TR><TD COLSPAN="4" PORT="components__repeat">repeat num_components times</TD></TR>
+			</TABLE>>];
+			subgraph cluster__component {
+				label="Jpeg::SegmentSof0::Component";
+				graph[style=dotted];
+
+				component__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">1</TD><TD>u1?ComponentId</TD><TD PORT="id_type">id</TD></TR>
+					<TR><TD PORT="sampling_factors_pos">1</TD><TD PORT="sampling_factors_size">1</TD><TD>u1</TD><TD PORT="sampling_factors_type">sampling_factors</TD></TR>
+					<TR><TD PORT="quantization_table_id_pos">2</TD><TD PORT="quantization_table_id_size">1</TD><TD>u1</TD><TD PORT="quantization_table_id_type">quantization_table_id</TD></TR>
+				</TABLE>>];
+				component__inst__sampling_x [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>sampling_x</TD><TD>((sampling_factors &amp; 240) &gt;&gt; 4)</TD></TR>
+				</TABLE>>];
+				component__inst__sampling_y [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>sampling_y</TD><TD>(sampling_factors &amp; 15)</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__exif_in_jpeg {
+			label="Jpeg::ExifInJpeg";
+			graph[style=dotted];
+
+			exif_in_jpeg__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="extra_zero_pos">0</TD><TD PORT="extra_zero_size">1</TD><TD>00</TD><TD PORT="extra_zero_type">extra_zero</TD></TR>
+				<TR><TD PORT="data_pos">1</TD><TD PORT="data_size">?</TD><TD>Exif</TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__segment_app0 {
+			label="Jpeg::SegmentApp0";
+			graph[style=dotted];
+
+			segment_app0__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">5</TD><TD>str(ASCII)</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="version_major_pos">5</TD><TD PORT="version_major_size">1</TD><TD>u1</TD><TD PORT="version_major_type">version_major</TD></TR>
+				<TR><TD PORT="version_minor_pos">6</TD><TD PORT="version_minor_size">1</TD><TD>u1</TD><TD PORT="version_minor_type">version_minor</TD></TR>
+				<TR><TD PORT="density_units_pos">7</TD><TD PORT="density_units_size">1</TD><TD>u1?DensityUnit</TD><TD PORT="density_units_type">density_units</TD></TR>
+				<TR><TD PORT="density_x_pos">8</TD><TD PORT="density_x_size">2</TD><TD>u2be</TD><TD PORT="density_x_type">density_x</TD></TR>
+				<TR><TD PORT="density_y_pos">10</TD><TD PORT="density_y_size">2</TD><TD>u2be</TD><TD PORT="density_y_type">density_y</TD></TR>
+				<TR><TD PORT="thumbnail_x_pos">12</TD><TD PORT="thumbnail_x_size">1</TD><TD>u1</TD><TD PORT="thumbnail_x_type">thumbnail_x</TD></TR>
+				<TR><TD PORT="thumbnail_y_pos">13</TD><TD PORT="thumbnail_y_size">1</TD><TD>u1</TD><TD PORT="thumbnail_y_type">thumbnail_y</TD></TR>
+				<TR><TD PORT="thumbnail_pos">14</TD><TD PORT="thumbnail_size">((thumbnail_x * thumbnail_y) * 3)</TD><TD></TD><TD PORT="thumbnail_type">thumbnail</TD></TR>
+			</TABLE>>];
+		}
+	}
+	jpeg__seq:segments_type -> segment__seq [style=bold];
+	segment__seq:data_type -> segment__seq_data_switch [style=bold];
+	segment__seq_data_switch:case0 -> segment_sos__seq [style=bold];
+	segment__seq_data_switch:case1 -> segment_app1__seq [style=bold];
+	segment__seq_data_switch:case2 -> segment_sof0__seq [style=bold];
+	segment__seq_data_switch:case3 -> segment_app0__seq [style=bold];
+	segment__seq:marker_type -> segment__seq:data_type [color="#404040"];
+	segment_sos__seq:components_type -> component__seq [style=bold];
+	segment_sos__seq:num_components_type -> segment_sos__seq:components__repeat [color="#404040"];
+	segment_app1__seq:body_type -> segment_app1__seq_body_switch [style=bold];
+	segment_app1__seq_body_switch:case0 -> exif_in_jpeg__seq [style=bold];
+	segment_app1__seq:magic_type -> segment_app1__seq:body_type [color="#404040"];
+	segment_sof0__seq:components_type -> component__seq [style=bold];
+	segment_sof0__seq:num_components_type -> segment_sof0__seq:components__repeat [color="#404040"];
+	component__seq:sampling_factors_type -> component__inst__sampling_x [color="#404040"];
+	component__seq:sampling_factors_type -> component__inst__sampling_y [color="#404040"];
+	exif_in_jpeg__seq:data_type -> exif__seq [style=bold];
+	segment_app0__seq:thumbnail_x_type -> segment_app0__seq:thumbnail_size [color="#404040"];
+	segment_app0__seq:thumbnail_y_type -> segment_app0__seq:thumbnail_size [color="#404040"];
+}

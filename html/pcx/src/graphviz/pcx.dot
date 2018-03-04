@@ -1,0 +1,67 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__pcx {
+		label="Pcx";
+		graph[style=dotted];
+
+		pcx__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="hdr_pos">0</TD><TD PORT="hdr_size">128</TD><TD>Header</TD><TD PORT="hdr_type">hdr</TD></TR>
+		</TABLE>>];
+		pcx__inst__palette_256 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="palette_256_pos">(_io.size - 769)</TD><TD PORT="palette_256_size">769</TD><TD>TPalette256</TD><TD PORT="palette_256_type">palette_256</TD></TR>
+		</TABLE>>];
+		subgraph cluster__header {
+			label="Pcx::Header";
+			graph[style=dotted];
+
+			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">1</TD><TD>0A</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="version_pos">1</TD><TD PORT="version_size">1</TD><TD>u1?Versions</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="encoding_pos">2</TD><TD PORT="encoding_size">1</TD><TD>u1?Encodings</TD><TD PORT="encoding_type">encoding</TD></TR>
+				<TR><TD PORT="bits_per_pixel_pos">3</TD><TD PORT="bits_per_pixel_size">1</TD><TD>u1</TD><TD PORT="bits_per_pixel_type">bits_per_pixel</TD></TR>
+				<TR><TD PORT="img_x_min_pos">4</TD><TD PORT="img_x_min_size">2</TD><TD>u2le</TD><TD PORT="img_x_min_type">img_x_min</TD></TR>
+				<TR><TD PORT="img_y_min_pos">6</TD><TD PORT="img_y_min_size">2</TD><TD>u2le</TD><TD PORT="img_y_min_type">img_y_min</TD></TR>
+				<TR><TD PORT="img_x_max_pos">8</TD><TD PORT="img_x_max_size">2</TD><TD>u2le</TD><TD PORT="img_x_max_type">img_x_max</TD></TR>
+				<TR><TD PORT="img_y_max_pos">10</TD><TD PORT="img_y_max_size">2</TD><TD>u2le</TD><TD PORT="img_y_max_type">img_y_max</TD></TR>
+				<TR><TD PORT="hdpi_pos">12</TD><TD PORT="hdpi_size">2</TD><TD>u2le</TD><TD PORT="hdpi_type">hdpi</TD></TR>
+				<TR><TD PORT="vdpi_pos">14</TD><TD PORT="vdpi_size">2</TD><TD>u2le</TD><TD PORT="vdpi_type">vdpi</TD></TR>
+				<TR><TD PORT="palette_16_pos">16</TD><TD PORT="palette_16_size">48</TD><TD></TD><TD PORT="palette_16_type">palette_16</TD></TR>
+				<TR><TD PORT="reserved_pos">64</TD><TD PORT="reserved_size">1</TD><TD>00</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="num_planes_pos">65</TD><TD PORT="num_planes_size">1</TD><TD>u1</TD><TD PORT="num_planes_type">num_planes</TD></TR>
+				<TR><TD PORT="bytes_per_line_pos">66</TD><TD PORT="bytes_per_line_size">2</TD><TD>u2le</TD><TD PORT="bytes_per_line_type">bytes_per_line</TD></TR>
+				<TR><TD PORT="palette_info_pos">68</TD><TD PORT="palette_info_size">2</TD><TD>u2le</TD><TD PORT="palette_info_type">palette_info</TD></TR>
+				<TR><TD PORT="h_screen_size_pos">70</TD><TD PORT="h_screen_size_size">2</TD><TD>u2le</TD><TD PORT="h_screen_size_type">h_screen_size</TD></TR>
+				<TR><TD PORT="v_screen_size_pos">72</TD><TD PORT="v_screen_size_size">2</TD><TD>u2le</TD><TD PORT="v_screen_size_type">v_screen_size</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__t_palette_256 {
+			label="Pcx::TPalette256";
+			graph[style=dotted];
+
+			t_palette_256__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">1</TD><TD>0C</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="colors_pos">1</TD><TD PORT="colors_size">3</TD><TD>Rgb</TD><TD PORT="colors_type">colors</TD></TR>
+				<TR><TD COLSPAN="4" PORT="colors__repeat">repeat 256 times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__rgb {
+			label="Pcx::Rgb";
+			graph[style=dotted];
+
+			rgb__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="r_pos">0</TD><TD PORT="r_size">1</TD><TD>u1</TD><TD PORT="r_type">r</TD></TR>
+				<TR><TD PORT="g_pos">1</TD><TD PORT="g_size">1</TD><TD>u1</TD><TD PORT="g_type">g</TD></TR>
+				<TR><TD PORT="b_pos">2</TD><TD PORT="b_size">1</TD><TD>u1</TD><TD PORT="b_type">b</TD></TR>
+			</TABLE>>];
+		}
+	}
+	pcx__seq:hdr_type -> header__seq [style=bold];
+	pcx__inst__palette_256:palette_256_type -> t_palette_256__seq [style=bold];
+	t_palette_256__seq:colors_type -> rgb__seq [style=bold];
+}

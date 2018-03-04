@@ -1,0 +1,165 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__id3v2_3 {
+		label="Id3v23";
+		graph[style=dotted];
+
+		id3v2_3__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="tag_pos">0</TD><TD PORT="tag_size">...</TD><TD>Tag</TD><TD PORT="tag_type">tag</TD></TR>
+		</TABLE>>];
+		subgraph cluster__u1be_synchsafe {
+			label="Id3v23::U1beSynchsafe";
+			graph[style=dotted];
+
+			u1be_synchsafe__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="padding_pos">0</TD><TD PORT="padding_size">1b</TD><TD>BitsType1</TD><TD PORT="padding_type">padding</TD></TR>
+				<TR><TD PORT="value_pos">0:1</TD><TD PORT="value_size">7b</TD><TD>b7</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__u2be_synchsafe {
+			label="Id3v23::U2beSynchsafe";
+			graph[style=dotted];
+
+			u2be_synchsafe__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="byte0_pos">0</TD><TD PORT="byte0_size">1</TD><TD>U1beSynchsafe</TD><TD PORT="byte0_type">byte0</TD></TR>
+				<TR><TD PORT="byte1_pos">1</TD><TD PORT="byte1_size">1</TD><TD>U1beSynchsafe</TD><TD PORT="byte1_type">byte1</TD></TR>
+			</TABLE>>];
+			u2be_synchsafe__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>value</TD><TD>((byte0.value &lt;&lt; 7) | byte1.value)</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__tag {
+			label="Id3v23::Tag";
+			graph[style=dotted];
+
+			tag__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">10</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="header_ex_pos">10</TD><TD PORT="header_ex_size">14</TD><TD>HeaderEx</TD><TD PORT="header_ex_type">header_ex</TD></TR>
+				<TR><TD PORT="frames_pos">24</TD><TD PORT="frames_size">...</TD><TD>Frame</TD><TD PORT="frames_type">frames</TD></TR>
+				<TR><TD COLSPAN="4" PORT="frames__repeat">repeat until  (((_io.pos + _.size) &gt; header.size.value) || (_.is_invalid)) </TD></TR>
+				<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">(header_ex.padding_size - _io.pos)</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__u4be_synchsafe {
+			label="Id3v23::U4beSynchsafe";
+			graph[style=dotted];
+
+			u4be_synchsafe__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="short0_pos">0</TD><TD PORT="short0_size">2</TD><TD>U2beSynchsafe</TD><TD PORT="short0_type">short0</TD></TR>
+				<TR><TD PORT="short1_pos">2</TD><TD PORT="short1_size">2</TD><TD>U2beSynchsafe</TD><TD PORT="short1_type">short1</TD></TR>
+			</TABLE>>];
+			u4be_synchsafe__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>value</TD><TD>((short0.value &lt;&lt; 14) | short1.value)</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__frame {
+			label="Id3v23::Frame";
+			graph[style=dotted];
+
+			frame__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">4</TD><TD>str(ASCII)</TD><TD PORT="id_type">id</TD></TR>
+				<TR><TD PORT="size_pos">4</TD><TD PORT="size_size">4</TD><TD>u4be</TD><TD PORT="size_type">size</TD></TR>
+				<TR><TD PORT="flags_pos">8</TD><TD PORT="flags_size">2</TD><TD>Flags</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="data_pos">10</TD><TD PORT="data_size">size</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+			frame__inst__is_invalid [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_invalid</TD><TD>id == &quot;\000\000\000\000&quot;</TD></TR>
+			</TABLE>>];
+			subgraph cluster__flags {
+				label="Id3v23::Frame::Flags";
+				graph[style=dotted];
+
+				flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="flag_discard_alter_tag_pos">0</TD><TD PORT="flag_discard_alter_tag_size">1b</TD><TD>BitsType1</TD><TD PORT="flag_discard_alter_tag_type">flag_discard_alter_tag</TD></TR>
+					<TR><TD PORT="flag_discard_alter_file_pos">0:1</TD><TD PORT="flag_discard_alter_file_size">1b</TD><TD>BitsType1</TD><TD PORT="flag_discard_alter_file_type">flag_discard_alter_file</TD></TR>
+					<TR><TD PORT="flag_read_only_pos">0:2</TD><TD PORT="flag_read_only_size">1b</TD><TD>BitsType1</TD><TD PORT="flag_read_only_type">flag_read_only</TD></TR>
+					<TR><TD PORT="reserved1_pos">0:3</TD><TD PORT="reserved1_size">5b</TD><TD>b5</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+					<TR><TD PORT="flag_compressed_pos">1</TD><TD PORT="flag_compressed_size">1b</TD><TD>BitsType1</TD><TD PORT="flag_compressed_type">flag_compressed</TD></TR>
+					<TR><TD PORT="flag_encrypted_pos">1:1</TD><TD PORT="flag_encrypted_size">1b</TD><TD>BitsType1</TD><TD PORT="flag_encrypted_type">flag_encrypted</TD></TR>
+					<TR><TD PORT="flag_grouping_pos">1:2</TD><TD PORT="flag_grouping_size">1b</TD><TD>BitsType1</TD><TD PORT="flag_grouping_type">flag_grouping</TD></TR>
+					<TR><TD PORT="reserved2_pos">1:3</TD><TD PORT="reserved2_size">5b</TD><TD>b5</TD><TD PORT="reserved2_type">reserved2</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__header_ex {
+			label="Id3v23::HeaderEx";
+			graph[style=dotted];
+
+			header_ex__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="size_pos">0</TD><TD PORT="size_size">4</TD><TD>u4be</TD><TD PORT="size_type">size</TD></TR>
+				<TR><TD PORT="flags_ex_pos">4</TD><TD PORT="flags_ex_size">2</TD><TD>FlagsEx</TD><TD PORT="flags_ex_type">flags_ex</TD></TR>
+				<TR><TD PORT="padding_size_pos">6</TD><TD PORT="padding_size_size">4</TD><TD>u4be</TD><TD PORT="padding_size_type">padding_size</TD></TR>
+				<TR><TD PORT="crc_pos">10</TD><TD PORT="crc_size">4</TD><TD>u4be</TD><TD PORT="crc_type">crc</TD></TR>
+			</TABLE>>];
+			subgraph cluster__flags_ex {
+				label="Id3v23::HeaderEx::FlagsEx";
+				graph[style=dotted];
+
+				flags_ex__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="flag_crc_pos">0</TD><TD PORT="flag_crc_size">1b</TD><TD>BitsType1</TD><TD PORT="flag_crc_type">flag_crc</TD></TR>
+					<TR><TD PORT="reserved_pos">0:1</TD><TD PORT="reserved_size">15b</TD><TD>b15</TD><TD PORT="reserved_type">reserved</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__header {
+			label="Id3v23::Header";
+			graph[style=dotted];
+
+			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">3</TD><TD>49 44 33</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="version_major_pos">3</TD><TD PORT="version_major_size">1</TD><TD>u1</TD><TD PORT="version_major_type">version_major</TD></TR>
+				<TR><TD PORT="version_revision_pos">4</TD><TD PORT="version_revision_size">1</TD><TD>u1</TD><TD PORT="version_revision_type">version_revision</TD></TR>
+				<TR><TD PORT="flags_pos">5</TD><TD PORT="flags_size">1</TD><TD>Flags</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="size_pos">6</TD><TD PORT="size_size">4</TD><TD>U4beSynchsafe</TD><TD PORT="size_type">size</TD></TR>
+			</TABLE>>];
+			subgraph cluster__flags {
+				label="Id3v23::Header::Flags";
+				graph[style=dotted];
+
+				flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="flag_unsynchronization_pos">0</TD><TD PORT="flag_unsynchronization_size">1b</TD><TD>BitsType1</TD><TD PORT="flag_unsynchronization_type">flag_unsynchronization</TD></TR>
+					<TR><TD PORT="flag_headerex_pos">0:1</TD><TD PORT="flag_headerex_size">1b</TD><TD>BitsType1</TD><TD PORT="flag_headerex_type">flag_headerex</TD></TR>
+					<TR><TD PORT="flag_experimental_pos">0:2</TD><TD PORT="flag_experimental_size">1b</TD><TD>BitsType1</TD><TD PORT="flag_experimental_type">flag_experimental</TD></TR>
+					<TR><TD PORT="reserved_pos">0:3</TD><TD PORT="reserved_size">5b</TD><TD>b5</TD><TD PORT="reserved_type">reserved</TD></TR>
+				</TABLE>>];
+			}
+		}
+	}
+	id3v2_3__seq:tag_type -> tag__seq [style=bold];
+	u2be_synchsafe__seq:byte0_type -> u1be_synchsafe__seq [style=bold];
+	u2be_synchsafe__seq:byte1_type -> u1be_synchsafe__seq [style=bold];
+	u1be_synchsafe__seq:value_type -> u2be_synchsafe__inst__value [color="#404040"];
+	u1be_synchsafe__seq:value_type -> u2be_synchsafe__inst__value [color="#404040"];
+	tag__seq:header_type -> header__seq [style=bold];
+	tag__seq:header_ex_type -> header_ex__seq [style=bold];
+	tag__seq:frames_type -> frame__seq [style=bold];
+	frame__seq:size_type -> tag__seq:frames__repeat [color="#404040"];
+	u4be_synchsafe__inst__value:value_type -> tag__seq:frames__repeat [color="#404040"];
+	frame__inst__is_invalid:is_invalid_type -> tag__seq:frames__repeat [color="#404040"];
+	header_ex__seq:padding_size_type -> tag__seq:padding_size [color="#404040"];
+	u4be_synchsafe__seq:short0_type -> u2be_synchsafe__seq [style=bold];
+	u4be_synchsafe__seq:short1_type -> u2be_synchsafe__seq [style=bold];
+	u2be_synchsafe__inst__value:value_type -> u4be_synchsafe__inst__value [color="#404040"];
+	u2be_synchsafe__inst__value:value_type -> u4be_synchsafe__inst__value [color="#404040"];
+	frame__seq:flags_type -> flags__seq [style=bold];
+	frame__seq:size_type -> frame__seq:data_size [color="#404040"];
+	frame__seq:id_type -> frame__inst__is_invalid [color="#404040"];
+	header_ex__seq:flags_ex_type -> flags_ex__seq [style=bold];
+	header__seq:flags_type -> flags__seq [style=bold];
+	header__seq:size_type -> u4be_synchsafe__seq [style=bold];
+}

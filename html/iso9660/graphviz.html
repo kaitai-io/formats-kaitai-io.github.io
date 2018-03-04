@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>ISO9660 CD filesystem: GraphViz block diagram (.dot) source: Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">ISO9660 CD filesystem</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>ISO9660 CD filesystem:
+            
+            GraphViz block diagram (.dot) source
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>ISO9660 is standard filesystem used on read-only optical discs
+(mostly CD-ROM). The standard was based on earlier High Sierra
+Format (HSF), proposed for CD-ROMs in 1985, and, after several
+revisions, it was accepted as ISO9960:1998.</p>
+<p>The format emphasizes portability (thus having pretty minimal
+features and very conservative file names standards) and sequential
+access (which favors disc devices with relatively slow rotation
+speed).</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        iso
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of ISO9660 CD filesystem
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="ISO9660 CD filesystem parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="ISO9660 CD filesystem parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="ISO9660 CD filesystem parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="graphviz.html" title="ISO9660 CD filesystem parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="ISO9660 CD filesystem parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="ISO9660 CD filesystem parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="ISO9660 CD filesystem parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="ISO9660 CD filesystem parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="ISO9660 CD filesystem parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="ISO9660 CD filesystem parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            GraphViz block diagram source
+            
+        </h2>
+
+        
+
+        <h3>iso9660.dot</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/graphviz/iso9660.dot" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="graphviz">digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__iso9660 {
+		label=&quot;Iso9660&quot;;
+		graph[style=dotted];
+
+		iso9660__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		iso9660__inst__sector_size [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD&gt;sector_size&lt;/TD&gt;&lt;TD&gt;2048&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		iso9660__inst__primary_vol_desc [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;primary_vol_desc_pos&quot;&gt;(16 * sector_size)&lt;/TD&gt;&lt;TD PORT=&quot;primary_vol_desc_size&quot;&gt;1459&lt;/TD&gt;&lt;TD&gt;VolDesc&lt;/TD&gt;&lt;TD PORT=&quot;primary_vol_desc_type&quot;&gt;primary_vol_desc&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		subgraph cluster__vol_desc_primary {
+			label=&quot;Iso9660::VolDescPrimary&quot;;
+			graph[style=dotted];
+
+			vol_desc_primary__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;unused1_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;unused1_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;00&lt;/TD&gt;&lt;TD PORT=&quot;unused1_type&quot;&gt;unused1&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;system_id_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;system_id_size&quot;&gt;32&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;system_id_type&quot;&gt;system_id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;volume_id_pos&quot;&gt;33&lt;/TD&gt;&lt;TD PORT=&quot;volume_id_size&quot;&gt;32&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;volume_id_type&quot;&gt;volume_id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;unused2_pos&quot;&gt;65&lt;/TD&gt;&lt;TD PORT=&quot;unused2_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;00 00 00 00 00 00 00 00&lt;/TD&gt;&lt;TD PORT=&quot;unused2_type&quot;&gt;unused2&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;vol_space_size_pos&quot;&gt;73&lt;/TD&gt;&lt;TD PORT=&quot;vol_space_size_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;U4bi&lt;/TD&gt;&lt;TD PORT=&quot;vol_space_size_type&quot;&gt;vol_space_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;unused3_pos&quot;&gt;81&lt;/TD&gt;&lt;TD PORT=&quot;unused3_size&quot;&gt;32&lt;/TD&gt;&lt;TD&gt;00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/TD&gt;&lt;TD PORT=&quot;unused3_type&quot;&gt;unused3&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;vol_set_size_pos&quot;&gt;113&lt;/TD&gt;&lt;TD PORT=&quot;vol_set_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;U2bi&lt;/TD&gt;&lt;TD PORT=&quot;vol_set_size_type&quot;&gt;vol_set_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;vol_seq_num_pos&quot;&gt;117&lt;/TD&gt;&lt;TD PORT=&quot;vol_seq_num_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;U2bi&lt;/TD&gt;&lt;TD PORT=&quot;vol_seq_num_type&quot;&gt;vol_seq_num&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;logical_block_size_pos&quot;&gt;121&lt;/TD&gt;&lt;TD PORT=&quot;logical_block_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;U2bi&lt;/TD&gt;&lt;TD PORT=&quot;logical_block_size_type&quot;&gt;logical_block_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;path_table_size_pos&quot;&gt;125&lt;/TD&gt;&lt;TD PORT=&quot;path_table_size_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;U4bi&lt;/TD&gt;&lt;TD PORT=&quot;path_table_size_type&quot;&gt;path_table_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;lba_path_table_le_pos&quot;&gt;133&lt;/TD&gt;&lt;TD PORT=&quot;lba_path_table_le_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;lba_path_table_le_type&quot;&gt;lba_path_table_le&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;lba_opt_path_table_le_pos&quot;&gt;137&lt;/TD&gt;&lt;TD PORT=&quot;lba_opt_path_table_le_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;lba_opt_path_table_le_type&quot;&gt;lba_opt_path_table_le&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;lba_path_table_be_pos&quot;&gt;141&lt;/TD&gt;&lt;TD PORT=&quot;lba_path_table_be_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;lba_path_table_be_type&quot;&gt;lba_path_table_be&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;lba_opt_path_table_be_pos&quot;&gt;145&lt;/TD&gt;&lt;TD PORT=&quot;lba_opt_path_table_be_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;lba_opt_path_table_be_type&quot;&gt;lba_opt_path_table_be&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;root_dir_pos&quot;&gt;149&lt;/TD&gt;&lt;TD PORT=&quot;root_dir_size&quot;&gt;34&lt;/TD&gt;&lt;TD&gt;DirEntry&lt;/TD&gt;&lt;TD PORT=&quot;root_dir_type&quot;&gt;root_dir&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;vol_set_id_pos&quot;&gt;183&lt;/TD&gt;&lt;TD PORT=&quot;vol_set_id_size&quot;&gt;128&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;vol_set_id_type&quot;&gt;vol_set_id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;publisher_id_pos&quot;&gt;311&lt;/TD&gt;&lt;TD PORT=&quot;publisher_id_size&quot;&gt;128&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;publisher_id_type&quot;&gt;publisher_id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;data_preparer_id_pos&quot;&gt;439&lt;/TD&gt;&lt;TD PORT=&quot;data_preparer_id_size&quot;&gt;128&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;data_preparer_id_type&quot;&gt;data_preparer_id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;application_id_pos&quot;&gt;567&lt;/TD&gt;&lt;TD PORT=&quot;application_id_size&quot;&gt;128&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;application_id_type&quot;&gt;application_id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;copyright_file_id_pos&quot;&gt;695&lt;/TD&gt;&lt;TD PORT=&quot;copyright_file_id_size&quot;&gt;38&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;copyright_file_id_type&quot;&gt;copyright_file_id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;abstract_file_id_pos&quot;&gt;733&lt;/TD&gt;&lt;TD PORT=&quot;abstract_file_id_size&quot;&gt;36&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;abstract_file_id_type&quot;&gt;abstract_file_id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;bibliographic_file_id_pos&quot;&gt;769&lt;/TD&gt;&lt;TD PORT=&quot;bibliographic_file_id_size&quot;&gt;37&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;bibliographic_file_id_type&quot;&gt;bibliographic_file_id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;vol_create_datetime_pos&quot;&gt;806&lt;/TD&gt;&lt;TD PORT=&quot;vol_create_datetime_size&quot;&gt;17&lt;/TD&gt;&lt;TD&gt;DecDatetime&lt;/TD&gt;&lt;TD PORT=&quot;vol_create_datetime_type&quot;&gt;vol_create_datetime&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;vol_mod_datetime_pos&quot;&gt;823&lt;/TD&gt;&lt;TD PORT=&quot;vol_mod_datetime_size&quot;&gt;17&lt;/TD&gt;&lt;TD&gt;DecDatetime&lt;/TD&gt;&lt;TD PORT=&quot;vol_mod_datetime_type&quot;&gt;vol_mod_datetime&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;vol_expire_datetime_pos&quot;&gt;840&lt;/TD&gt;&lt;TD PORT=&quot;vol_expire_datetime_size&quot;&gt;17&lt;/TD&gt;&lt;TD&gt;DecDatetime&lt;/TD&gt;&lt;TD PORT=&quot;vol_expire_datetime_type&quot;&gt;vol_expire_datetime&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;vol_effective_datetime_pos&quot;&gt;857&lt;/TD&gt;&lt;TD PORT=&quot;vol_effective_datetime_size&quot;&gt;17&lt;/TD&gt;&lt;TD&gt;DecDatetime&lt;/TD&gt;&lt;TD PORT=&quot;vol_effective_datetime_type&quot;&gt;vol_effective_datetime&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;file_structure_version_pos&quot;&gt;874&lt;/TD&gt;&lt;TD PORT=&quot;file_structure_version_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;file_structure_version_type&quot;&gt;file_structure_version&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;unused4_pos&quot;&gt;875&lt;/TD&gt;&lt;TD PORT=&quot;unused4_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;unused4_type&quot;&gt;unused4&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;application_area_pos&quot;&gt;876&lt;/TD&gt;&lt;TD PORT=&quot;application_area_size&quot;&gt;512&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;application_area_type&quot;&gt;application_area&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			vol_desc_primary__inst__path_table [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;path_table_pos&quot;&gt;(lba_path_table_le * _root.sector_size)&lt;/TD&gt;&lt;TD PORT=&quot;path_table_size&quot;&gt;path_table_size.le&lt;/TD&gt;&lt;TD&gt;PathTableLe&lt;/TD&gt;&lt;TD PORT=&quot;path_table_type&quot;&gt;path_table&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__vol_desc_boot_record {
+			label=&quot;Iso9660::VolDescBootRecord&quot;;
+			graph[style=dotted];
+
+			vol_desc_boot_record__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;boot_system_id_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;boot_system_id_size&quot;&gt;32&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;boot_system_id_type&quot;&gt;boot_system_id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;boot_id_pos&quot;&gt;32&lt;/TD&gt;&lt;TD PORT=&quot;boot_id_size&quot;&gt;32&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;boot_id_type&quot;&gt;boot_id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__datetime {
+			label=&quot;Iso9660::Datetime&quot;;
+			graph[style=dotted];
+
+			datetime__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;year_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;year_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;year_type&quot;&gt;year&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;month_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;month_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;month_type&quot;&gt;month&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;day_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;day_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;day_type&quot;&gt;day&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;hour_pos&quot;&gt;3&lt;/TD&gt;&lt;TD PORT=&quot;hour_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;hour_type&quot;&gt;hour&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;minute_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;minute_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;minute_type&quot;&gt;minute&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;sec_pos&quot;&gt;5&lt;/TD&gt;&lt;TD PORT=&quot;sec_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;sec_type&quot;&gt;sec&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;timezone_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;timezone_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;timezone_type&quot;&gt;timezone&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__dir_entry {
+			label=&quot;Iso9660::DirEntry&quot;;
+			graph[style=dotted];
+
+			dir_entry__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;len_type&quot;&gt;len&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;(len - 1)&lt;/TD&gt;&lt;TD&gt;DirEntryBody&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__vol_desc {
+			label=&quot;Iso9660::VolDesc&quot;;
+			graph[style=dotted];
+
+			vol_desc__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;type_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;type_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;type_type&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;magic_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;magic_size&quot;&gt;5&lt;/TD&gt;&lt;TD&gt;43 44 30 30 31&lt;/TD&gt;&lt;TD PORT=&quot;magic_type&quot;&gt;magic&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;version_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;version_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;version_type&quot;&gt;version&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;vol_desc_boot_record_pos&quot;&gt;7&lt;/TD&gt;&lt;TD PORT=&quot;vol_desc_boot_record_size&quot;&gt;64&lt;/TD&gt;&lt;TD&gt;VolDescBootRecord&lt;/TD&gt;&lt;TD PORT=&quot;vol_desc_boot_record_type&quot;&gt;vol_desc_boot_record&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;vol_desc_primary_pos&quot;&gt;71&lt;/TD&gt;&lt;TD PORT=&quot;vol_desc_primary_size&quot;&gt;1388&lt;/TD&gt;&lt;TD&gt;VolDescPrimary&lt;/TD&gt;&lt;TD PORT=&quot;vol_desc_primary_type&quot;&gt;vol_desc_primary&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__path_table_entry_le {
+			label=&quot;Iso9660::PathTableEntryLe&quot;;
+			graph[style=dotted];
+
+			path_table_entry_le__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_dir_name_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_dir_name_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;len_dir_name_type&quot;&gt;len_dir_name&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_ext_attr_rec_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;len_ext_attr_rec_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;len_ext_attr_rec_type&quot;&gt;len_ext_attr_rec&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;lba_extent_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;lba_extent_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;lba_extent_type&quot;&gt;lba_extent&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;parent_dir_idx_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;parent_dir_idx_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;parent_dir_idx_type&quot;&gt;parent_dir_idx&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;dir_name_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;dir_name_size&quot;&gt;len_dir_name&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;dir_name_type&quot;&gt;dir_name&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;padding_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;padding_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;padding_type&quot;&gt;padding&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__dir_entries {
+			label=&quot;Iso9660::DirEntries&quot;;
+			graph[style=dotted];
+
+			dir_entries__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;entries_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;entries_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;DirEntry&lt;/TD&gt;&lt;TD PORT=&quot;entries_type&quot;&gt;entries&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;entries__repeat&quot;&gt;repeat until _.len == 0&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__u4bi {
+			label=&quot;Iso9660::U4bi&quot;;
+			graph[style=dotted];
+
+			u4bi__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;le_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;le_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;le_type&quot;&gt;le&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;be_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;be_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;be_type&quot;&gt;be&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__u2bi {
+			label=&quot;Iso9660::U2bi&quot;;
+			graph[style=dotted];
+
+			u2bi__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;le_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;le_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;le_type&quot;&gt;le&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;be_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;be_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2be&lt;/TD&gt;&lt;TD PORT=&quot;be_type&quot;&gt;be&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__path_table_le {
+			label=&quot;Iso9660::PathTableLe&quot;;
+			graph[style=dotted];
+
+			path_table_le__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;entries_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;entries_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;PathTableEntryLe&lt;/TD&gt;&lt;TD PORT=&quot;entries_type&quot;&gt;entries&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;entries__repeat&quot;&gt;repeat to end of stream&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__dec_datetime {
+			label=&quot;Iso9660::DecDatetime&quot;;
+			graph[style=dotted];
+
+			dec_datetime__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;year_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;year_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;str(ASCII)&lt;/TD&gt;&lt;TD PORT=&quot;year_type&quot;&gt;year&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;month_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;month_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;str(ASCII)&lt;/TD&gt;&lt;TD PORT=&quot;month_type&quot;&gt;month&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;day_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;day_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;str(ASCII)&lt;/TD&gt;&lt;TD PORT=&quot;day_type&quot;&gt;day&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;hour_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;hour_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;str(ASCII)&lt;/TD&gt;&lt;TD PORT=&quot;hour_type&quot;&gt;hour&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;minute_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;minute_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;str(ASCII)&lt;/TD&gt;&lt;TD PORT=&quot;minute_type&quot;&gt;minute&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;sec_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;sec_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;str(ASCII)&lt;/TD&gt;&lt;TD PORT=&quot;sec_type&quot;&gt;sec&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;sec_hundreds_pos&quot;&gt;14&lt;/TD&gt;&lt;TD PORT=&quot;sec_hundreds_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;str(ASCII)&lt;/TD&gt;&lt;TD PORT=&quot;sec_hundreds_type&quot;&gt;sec_hundreds&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;timezone_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;timezone_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;timezone_type&quot;&gt;timezone&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__dir_entry_body {
+			label=&quot;Iso9660::DirEntryBody&quot;;
+			graph[style=dotted];
+
+			dir_entry_body__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_ext_attr_rec_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_ext_attr_rec_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;len_ext_attr_rec_type&quot;&gt;len_ext_attr_rec&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;lba_extent_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;lba_extent_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;U4bi&lt;/TD&gt;&lt;TD PORT=&quot;lba_extent_type&quot;&gt;lba_extent&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;size_extent_pos&quot;&gt;9&lt;/TD&gt;&lt;TD PORT=&quot;size_extent_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;U4bi&lt;/TD&gt;&lt;TD PORT=&quot;size_extent_type&quot;&gt;size_extent&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;datetime_pos&quot;&gt;17&lt;/TD&gt;&lt;TD PORT=&quot;datetime_size&quot;&gt;7&lt;/TD&gt;&lt;TD&gt;Datetime&lt;/TD&gt;&lt;TD PORT=&quot;datetime_type&quot;&gt;datetime&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;file_flags_pos&quot;&gt;24&lt;/TD&gt;&lt;TD PORT=&quot;file_flags_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;file_flags_type&quot;&gt;file_flags&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;file_unit_size_pos&quot;&gt;25&lt;/TD&gt;&lt;TD PORT=&quot;file_unit_size_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;file_unit_size_type&quot;&gt;file_unit_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;interleave_gap_size_pos&quot;&gt;26&lt;/TD&gt;&lt;TD PORT=&quot;interleave_gap_size_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;interleave_gap_size_type&quot;&gt;interleave_gap_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;vol_seq_num_pos&quot;&gt;27&lt;/TD&gt;&lt;TD PORT=&quot;vol_seq_num_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;U2bi&lt;/TD&gt;&lt;TD PORT=&quot;vol_seq_num_type&quot;&gt;vol_seq_num&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_file_name_pos&quot;&gt;31&lt;/TD&gt;&lt;TD PORT=&quot;len_file_name_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;len_file_name_type&quot;&gt;len_file_name&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;file_name_pos&quot;&gt;32&lt;/TD&gt;&lt;TD PORT=&quot;file_name_size&quot;&gt;len_file_name&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;file_name_type&quot;&gt;file_name&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;padding_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;padding_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;padding_type&quot;&gt;padding&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;rest_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;rest_size&quot;&gt;?&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;rest_type&quot;&gt;rest&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			dir_entry_body__inst__extent_as_dir [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;extent_as_dir_pos&quot;&gt;(lba_extent.le * _root.sector_size)&lt;/TD&gt;&lt;TD PORT=&quot;extent_as_dir_size&quot;&gt;size_extent.le&lt;/TD&gt;&lt;TD&gt;DirEntries&lt;/TD&gt;&lt;TD PORT=&quot;extent_as_dir_type&quot;&gt;extent_as_dir&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			dir_entry_body__inst__extent_as_file [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;extent_as_file_pos&quot;&gt;(lba_extent.le * _root.sector_size)&lt;/TD&gt;&lt;TD PORT=&quot;extent_as_file_size&quot;&gt;size_extent.le&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;extent_as_file_type&quot;&gt;extent_as_file&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+	}
+	iso9660__inst__sector_size:sector_size_type -&gt; iso9660__inst__primary_vol_desc:primary_vol_desc_pos [color=&quot;#404040&quot;];
+	iso9660__inst__primary_vol_desc:primary_vol_desc_type -&gt; vol_desc__seq [style=bold];
+	vol_desc_primary__seq:vol_space_size_type -&gt; u4bi__seq [style=bold];
+	vol_desc_primary__seq:vol_set_size_type -&gt; u2bi__seq [style=bold];
+	vol_desc_primary__seq:vol_seq_num_type -&gt; u2bi__seq [style=bold];
+	vol_desc_primary__seq:logical_block_size_type -&gt; u2bi__seq [style=bold];
+	vol_desc_primary__seq:path_table_size_type -&gt; u4bi__seq [style=bold];
+	vol_desc_primary__seq:root_dir_type -&gt; dir_entry__seq [style=bold];
+	vol_desc_primary__seq:vol_create_datetime_type -&gt; dec_datetime__seq [style=bold];
+	vol_desc_primary__seq:vol_mod_datetime_type -&gt; dec_datetime__seq [style=bold];
+	vol_desc_primary__seq:vol_expire_datetime_type -&gt; dec_datetime__seq [style=bold];
+	vol_desc_primary__seq:vol_effective_datetime_type -&gt; dec_datetime__seq [style=bold];
+	vol_desc_primary__seq:lba_path_table_le_type -&gt; vol_desc_primary__inst__path_table:path_table_pos [color=&quot;#404040&quot;];
+	iso9660__inst__sector_size:sector_size_type -&gt; vol_desc_primary__inst__path_table:path_table_pos [color=&quot;#404040&quot;];
+	u4bi__seq:le_type -&gt; vol_desc_primary__inst__path_table:path_table_size [color=&quot;#404040&quot;];
+	vol_desc_primary__inst__path_table:path_table_type -&gt; path_table_le__seq [style=bold];
+	dir_entry__seq:len_type -&gt; dir_entry__seq:body_size [color=&quot;#404040&quot;];
+	dir_entry__seq:body_type -&gt; dir_entry_body__seq [style=bold];
+	vol_desc__seq:vol_desc_boot_record_type -&gt; vol_desc_boot_record__seq [style=bold];
+	vol_desc__seq:vol_desc_primary_type -&gt; vol_desc_primary__seq [style=bold];
+	path_table_entry_le__seq:len_dir_name_type -&gt; path_table_entry_le__seq:dir_name_size [color=&quot;#404040&quot;];
+	dir_entries__seq:entries_type -&gt; dir_entry__seq [style=bold];
+	dir_entry__seq:len_type -&gt; dir_entries__seq:entries__repeat [color=&quot;#404040&quot;];
+	path_table_le__seq:entries_type -&gt; path_table_entry_le__seq [style=bold];
+	dir_entry_body__seq:lba_extent_type -&gt; u4bi__seq [style=bold];
+	dir_entry_body__seq:size_extent_type -&gt; u4bi__seq [style=bold];
+	dir_entry_body__seq:datetime_type -&gt; datetime__seq [style=bold];
+	dir_entry_body__seq:vol_seq_num_type -&gt; u2bi__seq [style=bold];
+	dir_entry_body__seq:len_file_name_type -&gt; dir_entry_body__seq:file_name_size [color=&quot;#404040&quot;];
+	u4bi__seq:le_type -&gt; dir_entry_body__inst__extent_as_dir:extent_as_dir_pos [color=&quot;#404040&quot;];
+	iso9660__inst__sector_size:sector_size_type -&gt; dir_entry_body__inst__extent_as_dir:extent_as_dir_pos [color=&quot;#404040&quot;];
+	u4bi__seq:le_type -&gt; dir_entry_body__inst__extent_as_dir:extent_as_dir_size [color=&quot;#404040&quot;];
+	dir_entry_body__inst__extent_as_dir:extent_as_dir_type -&gt; dir_entries__seq [style=bold];
+	u4bi__seq:le_type -&gt; dir_entry_body__inst__extent_as_file:extent_as_file_pos [color=&quot;#404040&quot;];
+	iso9660__inst__sector_size:sector_size_type -&gt; dir_entry_body__inst__extent_as_file:extent_as_file_pos [color=&quot;#404040&quot;];
+	u4bi__seq:le_type -&gt; dir_entry_body__inst__extent_as_file:extent_as_file_size [color=&quot;#404040&quot;];
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__ext2 {
+		label="Ext2";
+		graph[style=dotted];
+
+		ext2__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+		</TABLE>>];
+		ext2__inst__bg1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="bg1_pos">1024</TD><TD PORT="bg1_size">...</TD><TD>BlockGroup</TD><TD PORT="bg1_type">bg1</TD></TR>
+		</TABLE>>];
+		ext2__inst__root_dir [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>root_dir</TD><TD>bg1.block_groups[0].inodes[1].as_dir</TD></TR>
+		</TABLE>>];
+		subgraph cluster__super_block_struct {
+			label="Ext2::SuperBlockStruct";
+			graph[style=dotted];
+
+			super_block_struct__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="inodes_count_pos">0</TD><TD PORT="inodes_count_size">4</TD><TD>u4le</TD><TD PORT="inodes_count_type">inodes_count</TD></TR>
+				<TR><TD PORT="blocks_count_pos">4</TD><TD PORT="blocks_count_size">4</TD><TD>u4le</TD><TD PORT="blocks_count_type">blocks_count</TD></TR>
+				<TR><TD PORT="r_blocks_count_pos">8</TD><TD PORT="r_blocks_count_size">4</TD><TD>u4le</TD><TD PORT="r_blocks_count_type">r_blocks_count</TD></TR>
+				<TR><TD PORT="free_blocks_count_pos">12</TD><TD PORT="free_blocks_count_size">4</TD><TD>u4le</TD><TD PORT="free_blocks_count_type">free_blocks_count</TD></TR>
+				<TR><TD PORT="free_inodes_count_pos">16</TD><TD PORT="free_inodes_count_size">4</TD><TD>u4le</TD><TD PORT="free_inodes_count_type">free_inodes_count</TD></TR>
+				<TR><TD PORT="first_data_block_pos">20</TD><TD PORT="first_data_block_size">4</TD><TD>u4le</TD><TD PORT="first_data_block_type">first_data_block</TD></TR>
+				<TR><TD PORT="log_block_size_pos">24</TD><TD PORT="log_block_size_size">4</TD><TD>u4le</TD><TD PORT="log_block_size_type">log_block_size</TD></TR>
+				<TR><TD PORT="log_frag_size_pos">28</TD><TD PORT="log_frag_size_size">4</TD><TD>u4le</TD><TD PORT="log_frag_size_type">log_frag_size</TD></TR>
+				<TR><TD PORT="blocks_per_group_pos">32</TD><TD PORT="blocks_per_group_size">4</TD><TD>u4le</TD><TD PORT="blocks_per_group_type">blocks_per_group</TD></TR>
+				<TR><TD PORT="frags_per_group_pos">36</TD><TD PORT="frags_per_group_size">4</TD><TD>u4le</TD><TD PORT="frags_per_group_type">frags_per_group</TD></TR>
+				<TR><TD PORT="inodes_per_group_pos">40</TD><TD PORT="inodes_per_group_size">4</TD><TD>u4le</TD><TD PORT="inodes_per_group_type">inodes_per_group</TD></TR>
+				<TR><TD PORT="mtime_pos">44</TD><TD PORT="mtime_size">4</TD><TD>u4le</TD><TD PORT="mtime_type">mtime</TD></TR>
+				<TR><TD PORT="wtime_pos">48</TD><TD PORT="wtime_size">4</TD><TD>u4le</TD><TD PORT="wtime_type">wtime</TD></TR>
+				<TR><TD PORT="mnt_count_pos">52</TD><TD PORT="mnt_count_size">2</TD><TD>u2le</TD><TD PORT="mnt_count_type">mnt_count</TD></TR>
+				<TR><TD PORT="max_mnt_count_pos">54</TD><TD PORT="max_mnt_count_size">2</TD><TD>u2le</TD><TD PORT="max_mnt_count_type">max_mnt_count</TD></TR>
+				<TR><TD PORT="magic_pos">56</TD><TD PORT="magic_size">2</TD><TD>53 EF</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="state_pos">58</TD><TD PORT="state_size">2</TD><TD>u2le?StateEnum</TD><TD PORT="state_type">state</TD></TR>
+				<TR><TD PORT="errors_pos">60</TD><TD PORT="errors_size">2</TD><TD>u2le?ErrorsEnum</TD><TD PORT="errors_type">errors</TD></TR>
+				<TR><TD PORT="minor_rev_level_pos">62</TD><TD PORT="minor_rev_level_size">2</TD><TD>u2le</TD><TD PORT="minor_rev_level_type">minor_rev_level</TD></TR>
+				<TR><TD PORT="lastcheck_pos">64</TD><TD PORT="lastcheck_size">4</TD><TD>u4le</TD><TD PORT="lastcheck_type">lastcheck</TD></TR>
+				<TR><TD PORT="checkinterval_pos">68</TD><TD PORT="checkinterval_size">4</TD><TD>u4le</TD><TD PORT="checkinterval_type">checkinterval</TD></TR>
+				<TR><TD PORT="creator_os_pos">72</TD><TD PORT="creator_os_size">4</TD><TD>u4le</TD><TD PORT="creator_os_type">creator_os</TD></TR>
+				<TR><TD PORT="rev_level_pos">76</TD><TD PORT="rev_level_size">4</TD><TD>u4le</TD><TD PORT="rev_level_type">rev_level</TD></TR>
+				<TR><TD PORT="def_resuid_pos">80</TD><TD PORT="def_resuid_size">2</TD><TD>u2le</TD><TD PORT="def_resuid_type">def_resuid</TD></TR>
+				<TR><TD PORT="def_resgid_pos">82</TD><TD PORT="def_resgid_size">2</TD><TD>u2le</TD><TD PORT="def_resgid_type">def_resgid</TD></TR>
+				<TR><TD PORT="first_ino_pos">84</TD><TD PORT="first_ino_size">4</TD><TD>u4le</TD><TD PORT="first_ino_type">first_ino</TD></TR>
+				<TR><TD PORT="inode_size_pos">88</TD><TD PORT="inode_size_size">2</TD><TD>u2le</TD><TD PORT="inode_size_type">inode_size</TD></TR>
+				<TR><TD PORT="block_group_nr_pos">90</TD><TD PORT="block_group_nr_size">2</TD><TD>u2le</TD><TD PORT="block_group_nr_type">block_group_nr</TD></TR>
+				<TR><TD PORT="feature_compat_pos">92</TD><TD PORT="feature_compat_size">4</TD><TD>u4le</TD><TD PORT="feature_compat_type">feature_compat</TD></TR>
+				<TR><TD PORT="feature_incompat_pos">96</TD><TD PORT="feature_incompat_size">4</TD><TD>u4le</TD><TD PORT="feature_incompat_type">feature_incompat</TD></TR>
+				<TR><TD PORT="feature_ro_compat_pos">100</TD><TD PORT="feature_ro_compat_size">4</TD><TD>u4le</TD><TD PORT="feature_ro_compat_type">feature_ro_compat</TD></TR>
+				<TR><TD PORT="uuid_pos">104</TD><TD PORT="uuid_size">16</TD><TD></TD><TD PORT="uuid_type">uuid</TD></TR>
+				<TR><TD PORT="volume_name_pos">120</TD><TD PORT="volume_name_size">16</TD><TD></TD><TD PORT="volume_name_type">volume_name</TD></TR>
+				<TR><TD PORT="last_mounted_pos">136</TD><TD PORT="last_mounted_size">64</TD><TD></TD><TD PORT="last_mounted_type">last_mounted</TD></TR>
+				<TR><TD PORT="algo_bitmap_pos">200</TD><TD PORT="algo_bitmap_size">4</TD><TD>u4le</TD><TD PORT="algo_bitmap_type">algo_bitmap</TD></TR>
+				<TR><TD PORT="prealloc_blocks_pos">204</TD><TD PORT="prealloc_blocks_size">1</TD><TD>u1</TD><TD PORT="prealloc_blocks_type">prealloc_blocks</TD></TR>
+				<TR><TD PORT="prealloc_dir_blocks_pos">205</TD><TD PORT="prealloc_dir_blocks_size">1</TD><TD>u1</TD><TD PORT="prealloc_dir_blocks_type">prealloc_dir_blocks</TD></TR>
+				<TR><TD PORT="padding1_pos">206</TD><TD PORT="padding1_size">2</TD><TD></TD><TD PORT="padding1_type">padding1</TD></TR>
+				<TR><TD PORT="journal_uuid_pos">208</TD><TD PORT="journal_uuid_size">16</TD><TD></TD><TD PORT="journal_uuid_type">journal_uuid</TD></TR>
+				<TR><TD PORT="journal_inum_pos">224</TD><TD PORT="journal_inum_size">4</TD><TD>u4le</TD><TD PORT="journal_inum_type">journal_inum</TD></TR>
+				<TR><TD PORT="journal_dev_pos">228</TD><TD PORT="journal_dev_size">4</TD><TD>u4le</TD><TD PORT="journal_dev_type">journal_dev</TD></TR>
+				<TR><TD PORT="last_orphan_pos">232</TD><TD PORT="last_orphan_size">4</TD><TD>u4le</TD><TD PORT="last_orphan_type">last_orphan</TD></TR>
+				<TR><TD PORT="hash_seed_pos">236</TD><TD PORT="hash_seed_size">4</TD><TD>u4le</TD><TD PORT="hash_seed_type">hash_seed</TD></TR>
+				<TR><TD COLSPAN="4" PORT="hash_seed__repeat">repeat 4 times</TD></TR>
+				<TR><TD PORT="def_hash_version_pos">252</TD><TD PORT="def_hash_version_size">1</TD><TD>u1</TD><TD PORT="def_hash_version_type">def_hash_version</TD></TR>
+			</TABLE>>];
+			super_block_struct__inst__block_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>block_size</TD><TD>(1024 &lt;&lt; log_block_size)</TD></TR>
+			</TABLE>>];
+			super_block_struct__inst__block_group_count [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>block_group_count</TD><TD>(blocks_count / blocks_per_group)</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dir_entry {
+			label="Ext2::DirEntry";
+			graph[style=dotted];
+
+			dir_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="inode_ptr_pos">0</TD><TD PORT="inode_ptr_size">4</TD><TD>u4le</TD><TD PORT="inode_ptr_type">inode_ptr</TD></TR>
+				<TR><TD PORT="rec_len_pos">4</TD><TD PORT="rec_len_size">2</TD><TD>u2le</TD><TD PORT="rec_len_type">rec_len</TD></TR>
+				<TR><TD PORT="name_len_pos">6</TD><TD PORT="name_len_size">1</TD><TD>u1</TD><TD PORT="name_len_type">name_len</TD></TR>
+				<TR><TD PORT="file_type_pos">7</TD><TD PORT="file_type_size">1</TD><TD>u1?FileTypeEnum</TD><TD PORT="file_type_type">file_type</TD></TR>
+				<TR><TD PORT="name_pos">8</TD><TD PORT="name_size">name_len</TD><TD>str(UTF-8)</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">((rec_len - name_len) - 8)</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
+			</TABLE>>];
+			dir_entry__inst__inode [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>inode</TD><TD>_root.bg1.block_groups[((inode_ptr - 1) / _root.bg1.super_block.inodes_per_group)].inodes[((inode_ptr - 1) % _root.bg1.super_block.inodes_per_group)]</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__inode {
+			label="Ext2::Inode";
+			graph[style=dotted];
+
+			inode__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="mode_pos">0</TD><TD PORT="mode_size">2</TD><TD>u2le</TD><TD PORT="mode_type">mode</TD></TR>
+				<TR><TD PORT="uid_pos">2</TD><TD PORT="uid_size">2</TD><TD>u2le</TD><TD PORT="uid_type">uid</TD></TR>
+				<TR><TD PORT="size_pos">4</TD><TD PORT="size_size">4</TD><TD>u4le</TD><TD PORT="size_type">size</TD></TR>
+				<TR><TD PORT="atime_pos">8</TD><TD PORT="atime_size">4</TD><TD>u4le</TD><TD PORT="atime_type">atime</TD></TR>
+				<TR><TD PORT="ctime_pos">12</TD><TD PORT="ctime_size">4</TD><TD>u4le</TD><TD PORT="ctime_type">ctime</TD></TR>
+				<TR><TD PORT="mtime_pos">16</TD><TD PORT="mtime_size">4</TD><TD>u4le</TD><TD PORT="mtime_type">mtime</TD></TR>
+				<TR><TD PORT="dtime_pos">20</TD><TD PORT="dtime_size">4</TD><TD>u4le</TD><TD PORT="dtime_type">dtime</TD></TR>
+				<TR><TD PORT="gid_pos">24</TD><TD PORT="gid_size">2</TD><TD>u2le</TD><TD PORT="gid_type">gid</TD></TR>
+				<TR><TD PORT="links_count_pos">26</TD><TD PORT="links_count_size">2</TD><TD>u2le</TD><TD PORT="links_count_type">links_count</TD></TR>
+				<TR><TD PORT="blocks_pos">28</TD><TD PORT="blocks_size">4</TD><TD>u4le</TD><TD PORT="blocks_type">blocks</TD></TR>
+				<TR><TD PORT="flags_pos">32</TD><TD PORT="flags_size">4</TD><TD>u4le</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="osd1_pos">36</TD><TD PORT="osd1_size">4</TD><TD>u4le</TD><TD PORT="osd1_type">osd1</TD></TR>
+				<TR><TD PORT="block_pos">40</TD><TD PORT="block_size">4</TD><TD>BlockPtr</TD><TD PORT="block_type">block</TD></TR>
+				<TR><TD COLSPAN="4" PORT="block__repeat">repeat 15 times</TD></TR>
+				<TR><TD PORT="generation_pos">100</TD><TD PORT="generation_size">4</TD><TD>u4le</TD><TD PORT="generation_type">generation</TD></TR>
+				<TR><TD PORT="file_acl_pos">104</TD><TD PORT="file_acl_size">4</TD><TD>u4le</TD><TD PORT="file_acl_type">file_acl</TD></TR>
+				<TR><TD PORT="dir_acl_pos">108</TD><TD PORT="dir_acl_size">4</TD><TD>u4le</TD><TD PORT="dir_acl_type">dir_acl</TD></TR>
+				<TR><TD PORT="faddr_pos">112</TD><TD PORT="faddr_size">4</TD><TD>u4le</TD><TD PORT="faddr_type">faddr</TD></TR>
+				<TR><TD PORT="osd2_pos">116</TD><TD PORT="osd2_size">12</TD><TD></TD><TD PORT="osd2_type">osd2</TD></TR>
+			</TABLE>>];
+			inode__inst__as_dir [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="as_dir_pos">0</TD><TD PORT="as_dir_size">...</TD><TD>Dir</TD><TD PORT="as_dir_type">as_dir</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__block_ptr {
+			label="Ext2::BlockPtr";
+			graph[style=dotted];
+
+			block_ptr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ptr_pos">0</TD><TD PORT="ptr_size">4</TD><TD>u4le</TD><TD PORT="ptr_type">ptr</TD></TR>
+			</TABLE>>];
+			block_ptr__inst__body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="body_pos">(ptr * _root.bg1.super_block.block_size)</TD><TD PORT="body_size">_root.bg1.super_block.block_size</TD><TD>RawBlock</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dir {
+			label="Ext2::Dir";
+			graph[style=dotted];
+
+			dir__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>DirEntry</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__block_group {
+			label="Ext2::BlockGroup";
+			graph[style=dotted];
+
+			block_group__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="super_block_pos">0</TD><TD PORT="super_block_size">1024</TD><TD>SuperBlockStruct</TD><TD PORT="super_block_type">super_block</TD></TR>
+				<TR><TD PORT="block_groups_pos">1024</TD><TD PORT="block_groups_size">...</TD><TD>Bgd</TD><TD PORT="block_groups_type">block_groups</TD></TR>
+				<TR><TD COLSPAN="4" PORT="block_groups__repeat">repeat super_block.block_group_count times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bgd {
+			label="Ext2::Bgd";
+			graph[style=dotted];
+
+			bgd__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="block_bitmap_block_pos">0</TD><TD PORT="block_bitmap_block_size">4</TD><TD>u4le</TD><TD PORT="block_bitmap_block_type">block_bitmap_block</TD></TR>
+				<TR><TD PORT="inode_bitmap_block_pos">4</TD><TD PORT="inode_bitmap_block_size">4</TD><TD>u4le</TD><TD PORT="inode_bitmap_block_type">inode_bitmap_block</TD></TR>
+				<TR><TD PORT="inode_table_block_pos">8</TD><TD PORT="inode_table_block_size">4</TD><TD>u4le</TD><TD PORT="inode_table_block_type">inode_table_block</TD></TR>
+				<TR><TD PORT="free_blocks_count_pos">12</TD><TD PORT="free_blocks_count_size">2</TD><TD>u2le</TD><TD PORT="free_blocks_count_type">free_blocks_count</TD></TR>
+				<TR><TD PORT="free_inodes_count_pos">14</TD><TD PORT="free_inodes_count_size">2</TD><TD>u2le</TD><TD PORT="free_inodes_count_type">free_inodes_count</TD></TR>
+				<TR><TD PORT="used_dirs_count_pos">16</TD><TD PORT="used_dirs_count_size">2</TD><TD>u2le</TD><TD PORT="used_dirs_count_type">used_dirs_count</TD></TR>
+				<TR><TD PORT="pad_reserved_pos">18</TD><TD PORT="pad_reserved_size">(2 + 12)</TD><TD></TD><TD PORT="pad_reserved_type">pad_reserved</TD></TR>
+			</TABLE>>];
+			bgd__inst__block_bitmap [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="block_bitmap_pos">(block_bitmap_block * _root.bg1.super_block.block_size)</TD><TD PORT="block_bitmap_size">1024</TD><TD></TD><TD PORT="block_bitmap_type">block_bitmap</TD></TR>
+			</TABLE>>];
+			bgd__inst__inode_bitmap [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="inode_bitmap_pos">(inode_bitmap_block * _root.bg1.super_block.block_size)</TD><TD PORT="inode_bitmap_size">1024</TD><TD></TD><TD PORT="inode_bitmap_type">inode_bitmap</TD></TR>
+			</TABLE>>];
+			bgd__inst__inodes [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="inodes_pos">(inode_table_block * _root.bg1.super_block.block_size)</TD><TD PORT="inodes_size">128</TD><TD>Inode</TD><TD PORT="inodes_type">inodes</TD></TR>
+				<TR><TD COLSPAN="4" PORT="inodes__repeat">repeat _root.bg1.super_block.inodes_per_group times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__raw_block {
+			label="Ext2::RawBlock";
+			graph[style=dotted];
+
+			raw_block__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="body_pos">0</TD><TD PORT="body_size">_root.bg1.super_block.block_size</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+		}
+	}
+	ext2__inst__bg1:bg1_type -> block_group__seq [style=bold];
+	inode__inst__as_dir:as_dir_type -> ext2__inst__root_dir [color="#404040"];
+	super_block_struct__seq:log_block_size_type -> super_block_struct__inst__block_size [color="#404040"];
+	super_block_struct__seq:blocks_count_type -> super_block_struct__inst__block_group_count [color="#404040"];
+	super_block_struct__seq:blocks_per_group_type -> super_block_struct__inst__block_group_count [color="#404040"];
+	dir_entry__seq:name_len_type -> dir_entry__seq:name_size [color="#404040"];
+	dir_entry__seq:rec_len_type -> dir_entry__seq:padding_size [color="#404040"];
+	dir_entry__seq:name_len_type -> dir_entry__seq:padding_size [color="#404040"];
+	bgd__inst__inodes:inodes_type -> dir_entry__inst__inode [color="#404040"];
+	dir_entry__seq:inode_ptr_type -> dir_entry__inst__inode [color="#404040"];
+	super_block_struct__seq:inodes_per_group_type -> dir_entry__inst__inode [color="#404040"];
+	inode__seq:block_type -> block_ptr__seq [style=bold];
+	inode__inst__as_dir:as_dir_type -> dir__seq [style=bold];
+	block_ptr__seq:ptr_type -> block_ptr__inst__body:body_pos [color="#404040"];
+	super_block_struct__inst__block_size:block_size_type -> block_ptr__inst__body:body_pos [color="#404040"];
+	super_block_struct__inst__block_size:block_size_type -> block_ptr__inst__body:body_size [color="#404040"];
+	block_ptr__inst__body:body_type -> raw_block__seq [style=bold];
+	dir__seq:entries_type -> dir_entry__seq [style=bold];
+	block_group__seq:super_block_type -> super_block_struct__seq [style=bold];
+	block_group__seq:block_groups_type -> bgd__seq [style=bold];
+	super_block_struct__inst__block_group_count:block_group_count_type -> block_group__seq:block_groups__repeat [color="#404040"];
+	bgd__seq:block_bitmap_block_type -> bgd__inst__block_bitmap:block_bitmap_pos [color="#404040"];
+	super_block_struct__inst__block_size:block_size_type -> bgd__inst__block_bitmap:block_bitmap_pos [color="#404040"];
+	bgd__seq:inode_bitmap_block_type -> bgd__inst__inode_bitmap:inode_bitmap_pos [color="#404040"];
+	super_block_struct__inst__block_size:block_size_type -> bgd__inst__inode_bitmap:inode_bitmap_pos [color="#404040"];
+	bgd__seq:inode_table_block_type -> bgd__inst__inodes:inodes_pos [color="#404040"];
+	super_block_struct__inst__block_size:block_size_type -> bgd__inst__inodes:inodes_pos [color="#404040"];
+	bgd__inst__inodes:inodes_type -> inode__seq [style=bold];
+	super_block_struct__seq:inodes_per_group_type -> bgd__inst__inodes:inodes__repeat [color="#404040"];
+	super_block_struct__inst__block_size:block_size_type -> raw_block__seq:body_size [color="#404040"];
+}

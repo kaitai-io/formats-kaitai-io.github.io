@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>RAR (Roshall ARchiver) archive files: JavaScript parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Archive Files</li>
+        <li class="active">RAR (Roshall ARchiver) archive files</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>RAR (Roshall ARchiver) archive files:
+            
+            JavaScript parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>RAR is a archive format used by popular proprietary RAR archiver,
+created by Eugene Roshal. There are two major versions of format
+(v1.5-4.0 and RAR v5+).</p>
+<p>File format essentially consists of a linear sequence of
+blocks. Each block has fixed header and custom body (that depends on
+block type), so it's possible to skip block even if one doesn't know
+how to process a certain block type.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        RAR archiver
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        rar
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.7
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of RAR (Roshall ARchiver) archive files
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="RAR (Roshall ARchiver) archive files parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="RAR (Roshall ARchiver) archive files parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="RAR (Roshall ARchiver) archive files parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="RAR (Roshall ARchiver) archive files parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="RAR (Roshall ARchiver) archive files parsing Java library">Java</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="javascript.html" title="RAR (Roshall ARchiver) archive files parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="RAR (Roshall ARchiver) archive files parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="RAR (Roshall ARchiver) archive files parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="RAR (Roshall ARchiver) archive files parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="RAR (Roshall ARchiver) archive files parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            JavaScript source code to parse RAR (Roshall ARchiver) archive files
+            
+        </h2>
+
+        
+
+        <h3>Rar.js</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/javascript/Rar.js" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+(function (root, factory) {
+  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
+  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
+  } else {
+    root.Rar = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
+/**
+ * RAR is a archive format used by popular proprietary RAR archiver,
+ * created by Eugene Roshal. There are two major versions of format
+ * (v1.5-4.0 and RAR v5+).
+ * 
+ * File format essentially consists of a linear sequence of
+ * blocks. Each block has fixed header and custom body (that depends on
+ * block type), so it&#39;s possible to skip block even if one doesn&#39;t know
+ * how to process a certain block type.
+ */
+
+var Rar = (function() {
+  Rar.BlockTypes = Object.freeze({
+    MARKER: 114,
+    ARCHIVE_HEADER: 115,
+    FILE_HEADER: 116,
+    OLD_STYLE_COMMENT_HEADER: 117,
+    OLD_STYLE_AUTHENTICITY_INFO_76: 118,
+    OLD_STYLE_SUBBLOCK: 119,
+    OLD_STYLE_RECOVERY_RECORD: 120,
+    OLD_STYLE_AUTHENTICITY_INFO_79: 121,
+    SUBBLOCK: 122,
+    TERMINATOR: 123,
+
+    114: &quot;MARKER&quot;,
+    115: &quot;ARCHIVE_HEADER&quot;,
+    116: &quot;FILE_HEADER&quot;,
+    117: &quot;OLD_STYLE_COMMENT_HEADER&quot;,
+    118: &quot;OLD_STYLE_AUTHENTICITY_INFO_76&quot;,
+    119: &quot;OLD_STYLE_SUBBLOCK&quot;,
+    120: &quot;OLD_STYLE_RECOVERY_RECORD&quot;,
+    121: &quot;OLD_STYLE_AUTHENTICITY_INFO_79&quot;,
+    122: &quot;SUBBLOCK&quot;,
+    123: &quot;TERMINATOR&quot;,
+  });
+
+  Rar.Oses = Object.freeze({
+    MS_DOS: 0,
+    OS_2: 1,
+    WINDOWS: 2,
+    UNIX: 3,
+    MAC_OS: 4,
+    BEOS: 5,
+
+    0: &quot;MS_DOS&quot;,
+    1: &quot;OS_2&quot;,
+    2: &quot;WINDOWS&quot;,
+    3: &quot;UNIX&quot;,
+    4: &quot;MAC_OS&quot;,
+    5: &quot;BEOS&quot;,
+  });
+
+  Rar.Methods = Object.freeze({
+    STORE: 48,
+    FASTEST: 49,
+    FAST: 50,
+    NORMAL: 51,
+    GOOD: 52,
+    BEST: 53,
+
+    48: &quot;STORE&quot;,
+    49: &quot;FASTEST&quot;,
+    50: &quot;FAST&quot;,
+    51: &quot;NORMAL&quot;,
+    52: &quot;GOOD&quot;,
+    53: &quot;BEST&quot;,
+  });
+
+  function Rar(_io, _parent, _root) {
+    this._io = _io;
+    this._parent = _parent;
+    this._root = _root || this;
+
+    this._read();
+  }
+  Rar.prototype._read = function() {
+    this.magic = new MagicSignature(this._io, this, this._root);
+    this.blocks = [];
+    var i = 0;
+    while (!this._io.isEof()) {
+      switch (this.magic.version) {
+      case 0:
+        this.blocks.push(new Block(this._io, this, this._root));
+        break;
+      case 1:
+        this.blocks.push(new BlockV5(this._io, this, this._root));
+        break;
+      }
+      i++;
+    }
+  }
+
+  var BlockV5 = Rar.BlockV5 = (function() {
+    function BlockV5(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    BlockV5.prototype._read = function() {
+    }
+
+    return BlockV5;
+  })();
+
+  /**
+   * Basic block that RAR files consist of. There are several block
+   * types (see `block_type`), which have different `body` and
+   * `add_body`.
+   */
+
+  var Block = Rar.Block = (function() {
+    function Block(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Block.prototype._read = function() {
+      this.crc16 = this._io.readU2le();
+      this.blockType = this._io.readU1();
+      this.flags = this._io.readU2le();
+      this.blockSize = this._io.readU2le();
+      if (this.hasAdd) {
+        this.addSize = this._io.readU4le();
+      }
+      switch (this.blockType) {
+      case Rar.BlockTypes.FILE_HEADER:
+        this._raw_body = this._io.readBytes(this.bodySize);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new BlockFileHeader(_io__raw_body, this, this._root);
+        break;
+      default:
+        this.body = this._io.readBytes(this.bodySize);
+        break;
+      }
+      if (this.hasAdd) {
+        this.addBody = this._io.readBytes(this.addSize);
+      }
+    }
+
+    /**
+     * True if block has additional content attached to it
+     */
+    Object.defineProperty(Block.prototype, &#39;hasAdd&#39;, {
+      get: function() {
+        if (this._m_hasAdd !== undefined)
+          return this._m_hasAdd;
+        this._m_hasAdd = (this.flags &amp; 32768) != 0;
+        return this._m_hasAdd;
+      }
+    });
+    Object.defineProperty(Block.prototype, &#39;headerSize&#39;, {
+      get: function() {
+        if (this._m_headerSize !== undefined)
+          return this._m_headerSize;
+        this._m_headerSize = (this.hasAdd ? 11 : 7);
+        return this._m_headerSize;
+      }
+    });
+    Object.defineProperty(Block.prototype, &#39;bodySize&#39;, {
+      get: function() {
+        if (this._m_bodySize !== undefined)
+          return this._m_bodySize;
+        this._m_bodySize = (this.blockSize - this.headerSize);
+        return this._m_bodySize;
+      }
+    });
+
+    /**
+     * CRC16 of whole block or some part of it (depends on block type)
+     */
+
+    /**
+     * Size of block (header + body, but without additional content)
+     */
+
+    /**
+     * Size of additional content in this block
+     */
+
+    /**
+     * Additional content in this block
+     */
+
+    return Block;
+  })();
+
+  var BlockFileHeader = Rar.BlockFileHeader = (function() {
+    function BlockFileHeader(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    BlockFileHeader.prototype._read = function() {
+      this.lowUnpSize = this._io.readU4le();
+      this.hostOs = this._io.readU1();
+      this.fileCrc32 = this._io.readU4le();
+      this.fileTime = new DosTime(this._io, this, this._root);
+      this.rarVersion = this._io.readU1();
+      this.method = this._io.readU1();
+      this.nameSize = this._io.readU2le();
+      this.attr = this._io.readU4le();
+      if ((this._parent.flags &amp; 256) != 0) {
+        this.highPackSize = this._io.readU4le();
+      }
+      this.fileName = this._io.readBytes(this.nameSize);
+      if ((this._parent.flags &amp; 1024) != 0) {
+        this.salt = this._io.readU8le();
+      }
+    }
+
+    /**
+     * Uncompressed file size (lower 32 bits, if 64-bit header flag is present)
+     */
+
+    /**
+     * Operating system used for archiving
+     */
+
+    /**
+     * Date and time in standard MS DOS format
+     */
+
+    /**
+     * RAR version needed to extract file (Version number is encoded as 10 * Major version + minor version.)
+     */
+
+    /**
+     * Compression method
+     */
+
+    /**
+     * File name size
+     */
+
+    /**
+     * File attributes
+     */
+
+    /**
+     * Compressed file size, high 32 bits, only if 64-bit header flag is present
+     */
+
+    return BlockFileHeader;
+  })();
+
+  /**
+   * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+   * 8-byte magic (and pretty different block format) for v5+. This
+   * type would parse and validate both versions of signature. Note
+   * that actually this signature is a valid RAR &quot;block&quot;: in theory,
+   * one can omit signature reading at all, and read this normally,
+   * as a block, if exact RAR version is known (and thus it&#39;s
+   * possible to choose correct block format).
+   */
+
+  var MagicSignature = Rar.MagicSignature = (function() {
+    function MagicSignature(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    MagicSignature.prototype._read = function() {
+      this.magic1 = this._io.ensureFixedContents([82, 97, 114, 33, 26, 7]);
+      this.version = this._io.readU1();
+      if (this.version == 1) {
+        this.magic3 = this._io.ensureFixedContents([0]);
+      }
+    }
+
+    /**
+     * Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version
+     */
+
+    /**
+     * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+     * format, 1 means new (RAR 5+) format
+     */
+
+    /**
+     * New format (RAR 5+) magic contains extra byte
+     */
+
+    return MagicSignature;
+  })();
+
+  var DosTime = Rar.DosTime = (function() {
+    function DosTime(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    DosTime.prototype._read = function() {
+      this.time = this._io.readU2le();
+      this.date = this._io.readU2le();
+    }
+    Object.defineProperty(DosTime.prototype, &#39;month&#39;, {
+      get: function() {
+        if (this._m_month !== undefined)
+          return this._m_month;
+        this._m_month = ((this.date &amp; 480) &gt;&gt;&gt; 5);
+        return this._m_month;
+      }
+    });
+    Object.defineProperty(DosTime.prototype, &#39;seconds&#39;, {
+      get: function() {
+        if (this._m_seconds !== undefined)
+          return this._m_seconds;
+        this._m_seconds = ((this.time &amp; 31) * 2);
+        return this._m_seconds;
+      }
+    });
+    Object.defineProperty(DosTime.prototype, &#39;year&#39;, {
+      get: function() {
+        if (this._m_year !== undefined)
+          return this._m_year;
+        this._m_year = (((this.date &amp; 65024) &gt;&gt;&gt; 9) + 1980);
+        return this._m_year;
+      }
+    });
+    Object.defineProperty(DosTime.prototype, &#39;minutes&#39;, {
+      get: function() {
+        if (this._m_minutes !== undefined)
+          return this._m_minutes;
+        this._m_minutes = ((this.time &amp; 2016) &gt;&gt;&gt; 5);
+        return this._m_minutes;
+      }
+    });
+    Object.defineProperty(DosTime.prototype, &#39;day&#39;, {
+      get: function() {
+        if (this._m_day !== undefined)
+          return this._m_day;
+        this._m_day = (this.date &amp; 31);
+        return this._m_day;
+      }
+    });
+    Object.defineProperty(DosTime.prototype, &#39;hours&#39;, {
+      get: function() {
+        if (this._m_hours !== undefined)
+          return this._m_hours;
+        this._m_hours = ((this.time &amp; 63488) &gt;&gt;&gt; 11);
+        return this._m_hours;
+      }
+    });
+
+    return DosTime;
+  })();
+
+  /**
+   * File format signature to validate that it is indeed a RAR archive
+   */
+
+  /**
+   * Sequence of blocks that constitute the RAR file
+   */
+
+  return Rar;
+})();
+return Rar;
+}));
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

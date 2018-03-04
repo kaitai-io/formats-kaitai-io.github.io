@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>RAR (Roshall ARchiver) archive files: Perl parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Archive Files</li>
+        <li class="active">RAR (Roshall ARchiver) archive files</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>RAR (Roshall ARchiver) archive files:
+            
+            Perl parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>RAR is a archive format used by popular proprietary RAR archiver,
+created by Eugene Roshal. There are two major versions of format
+(v1.5-4.0 and RAR v5+).</p>
+<p>File format essentially consists of a linear sequence of
+blocks. Each block has fixed header and custom body (that depends on
+block type), so it's possible to skip block even if one doesn't know
+how to process a certain block type.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        RAR archiver
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        rar
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.7
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of RAR (Roshall ARchiver) archive files
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="RAR (Roshall ARchiver) archive files parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="RAR (Roshall ARchiver) archive files parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="RAR (Roshall ARchiver) archive files parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="RAR (Roshall ARchiver) archive files parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="RAR (Roshall ARchiver) archive files parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="RAR (Roshall ARchiver) archive files parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="perl.html" title="RAR (Roshall ARchiver) archive files parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="RAR (Roshall ARchiver) archive files parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="RAR (Roshall ARchiver) archive files parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="RAR (Roshall ARchiver) archive files parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Perl source code to parse RAR (Roshall ARchiver) archive files
+            
+        </h2>
+
+        
+
+        <h3>Rar.pm</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/perl/Rar.pm" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="perl"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+use strict;
+use warnings;
+use IO::KaitaiStruct 0.007_000;
+
+########################################################################
+package Rar;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $BLOCK_TYPES_MARKER = 114;
+our $BLOCK_TYPES_ARCHIVE_HEADER = 115;
+our $BLOCK_TYPES_FILE_HEADER = 116;
+our $BLOCK_TYPES_OLD_STYLE_COMMENT_HEADER = 117;
+our $BLOCK_TYPES_OLD_STYLE_AUTHENTICITY_INFO_76 = 118;
+our $BLOCK_TYPES_OLD_STYLE_SUBBLOCK = 119;
+our $BLOCK_TYPES_OLD_STYLE_RECOVERY_RECORD = 120;
+our $BLOCK_TYPES_OLD_STYLE_AUTHENTICITY_INFO_79 = 121;
+our $BLOCK_TYPES_SUBBLOCK = 122;
+our $BLOCK_TYPES_TERMINATOR = 123;
+
+our $OSES_MS_DOS = 0;
+our $OSES_OS_2 = 1;
+our $OSES_WINDOWS = 2;
+our $OSES_UNIX = 3;
+our $OSES_MAC_OS = 4;
+our $OSES_BEOS = 5;
+
+our $METHODS_STORE = 48;
+our $METHODS_FASTEST = 49;
+our $METHODS_FAST = 50;
+our $METHODS_NORMAL = 51;
+our $METHODS_GOOD = 52;
+our $METHODS_BEST = 53;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{magic} = Rar::MagicSignature-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{blocks} = ();
+    while (!$self-&gt;{_io}-&gt;is_eof()) {
+        my $_on = $self-&gt;magic()-&gt;version();
+        if ($_on == 0) {
+            push @{$self-&gt;{blocks}}, Rar::Block-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+        }
+        elsif ($_on == 1) {
+            push @{$self-&gt;{blocks}}, Rar::BlockV5-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+        }
+    }
+}
+
+sub magic {
+    my ($self) = @_;
+    return $self-&gt;{magic};
+}
+
+sub blocks {
+    my ($self) = @_;
+    return $self-&gt;{blocks};
+}
+
+########################################################################
+package Rar::BlockV5;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+}
+
+########################################################################
+package Rar::Block;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{crc16} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{block_type} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{flags} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{block_size} = $self-&gt;{_io}-&gt;read_u2le();
+    if ($self-&gt;has_add()) {
+        $self-&gt;{add_size} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+    my $_on = $self-&gt;block_type();
+    if ($_on == $BLOCK_TYPES_FILE_HEADER) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;body_size());
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = Rar::BlockFileHeader-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    else {
+        $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;body_size());
+    }
+    if ($self-&gt;has_add()) {
+        $self-&gt;{add_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;add_size());
+    }
+}
+
+sub has_add {
+    my ($self) = @_;
+    return $self-&gt;{has_add} if ($self-&gt;{has_add});
+    $self-&gt;{has_add} = ($self-&gt;flags() &amp; 32768) != 0;
+    return $self-&gt;{has_add};
+}
+
+sub header_size {
+    my ($self) = @_;
+    return $self-&gt;{header_size} if ($self-&gt;{header_size});
+    $self-&gt;{header_size} = ($self-&gt;has_add() ? 11 : 7);
+    return $self-&gt;{header_size};
+}
+
+sub body_size {
+    my ($self) = @_;
+    return $self-&gt;{body_size} if ($self-&gt;{body_size});
+    $self-&gt;{body_size} = ($self-&gt;block_size() - $self-&gt;header_size());
+    return $self-&gt;{body_size};
+}
+
+sub crc16 {
+    my ($self) = @_;
+    return $self-&gt;{crc16};
+}
+
+sub block_type {
+    my ($self) = @_;
+    return $self-&gt;{block_type};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self-&gt;{flags};
+}
+
+sub block_size {
+    my ($self) = @_;
+    return $self-&gt;{block_size};
+}
+
+sub add_size {
+    my ($self) = @_;
+    return $self-&gt;{add_size};
+}
+
+sub body {
+    my ($self) = @_;
+    return $self-&gt;{body};
+}
+
+sub add_body {
+    my ($self) = @_;
+    return $self-&gt;{add_body};
+}
+
+sub _raw_body {
+    my ($self) = @_;
+    return $self-&gt;{_raw_body};
+}
+
+########################################################################
+package Rar::BlockFileHeader;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{low_unp_size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{host_os} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{file_crc32} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{file_time} = Rar::DosTime-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{rar_version} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{method} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{name_size} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{attr} = $self-&gt;{_io}-&gt;read_u4le();
+    if (($self-&gt;_parent()-&gt;flags() &amp; 256) != 0) {
+        $self-&gt;{high_pack_size} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+    $self-&gt;{file_name} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;name_size());
+    if (($self-&gt;_parent()-&gt;flags() &amp; 1024) != 0) {
+        $self-&gt;{salt} = $self-&gt;{_io}-&gt;read_u8le();
+    }
+}
+
+sub low_unp_size {
+    my ($self) = @_;
+    return $self-&gt;{low_unp_size};
+}
+
+sub host_os {
+    my ($self) = @_;
+    return $self-&gt;{host_os};
+}
+
+sub file_crc32 {
+    my ($self) = @_;
+    return $self-&gt;{file_crc32};
+}
+
+sub file_time {
+    my ($self) = @_;
+    return $self-&gt;{file_time};
+}
+
+sub rar_version {
+    my ($self) = @_;
+    return $self-&gt;{rar_version};
+}
+
+sub method {
+    my ($self) = @_;
+    return $self-&gt;{method};
+}
+
+sub name_size {
+    my ($self) = @_;
+    return $self-&gt;{name_size};
+}
+
+sub attr {
+    my ($self) = @_;
+    return $self-&gt;{attr};
+}
+
+sub high_pack_size {
+    my ($self) = @_;
+    return $self-&gt;{high_pack_size};
+}
+
+sub file_name {
+    my ($self) = @_;
+    return $self-&gt;{file_name};
+}
+
+sub salt {
+    my ($self) = @_;
+    return $self-&gt;{salt};
+}
+
+########################################################################
+package Rar::MagicSignature;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{magic1} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (82, 97, 114, 33, 26, 7)));
+    $self-&gt;{version} = $self-&gt;{_io}-&gt;read_u1();
+    if ($self-&gt;version() == 1) {
+        $self-&gt;{magic3} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (0)));
+    }
+}
+
+sub magic1 {
+    my ($self) = @_;
+    return $self-&gt;{magic1};
+}
+
+sub version {
+    my ($self) = @_;
+    return $self-&gt;{version};
+}
+
+sub magic3 {
+    my ($self) = @_;
+    return $self-&gt;{magic3};
+}
+
+########################################################################
+package Rar::DosTime;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{time} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{date} = $self-&gt;{_io}-&gt;read_u2le();
+}
+
+sub month {
+    my ($self) = @_;
+    return $self-&gt;{month} if ($self-&gt;{month});
+    $self-&gt;{month} = (($self-&gt;date() &amp; 480) &gt;&gt; 5);
+    return $self-&gt;{month};
+}
+
+sub seconds {
+    my ($self) = @_;
+    return $self-&gt;{seconds} if ($self-&gt;{seconds});
+    $self-&gt;{seconds} = (($self-&gt;time() &amp; 31) * 2);
+    return $self-&gt;{seconds};
+}
+
+sub year {
+    my ($self) = @_;
+    return $self-&gt;{year} if ($self-&gt;{year});
+    $self-&gt;{year} = ((($self-&gt;date() &amp; 65024) &gt;&gt; 9) + 1980);
+    return $self-&gt;{year};
+}
+
+sub minutes {
+    my ($self) = @_;
+    return $self-&gt;{minutes} if ($self-&gt;{minutes});
+    $self-&gt;{minutes} = (($self-&gt;time() &amp; 2016) &gt;&gt; 5);
+    return $self-&gt;{minutes};
+}
+
+sub day {
+    my ($self) = @_;
+    return $self-&gt;{day} if ($self-&gt;{day});
+    $self-&gt;{day} = ($self-&gt;date() &amp; 31);
+    return $self-&gt;{day};
+}
+
+sub hours {
+    my ($self) = @_;
+    return $self-&gt;{hours} if ($self-&gt;{hours});
+    $self-&gt;{hours} = (($self-&gt;time() &amp; 63488) &gt;&gt; 11);
+    return $self-&gt;{hours};
+}
+
+sub time {
+    my ($self) = @_;
+    return $self-&gt;{time};
+}
+
+sub date {
+    my ($self) = @_;
+    return $self-&gt;{date};
+}
+
+1;
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

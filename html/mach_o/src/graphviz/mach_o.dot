@@ -1,0 +1,1159 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__mach_o {
+		label="MachO";
+		graph[style=dotted];
+
+		mach_o__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>u4be?MagicType</TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="header_pos">4</TD><TD PORT="header_size">28</TD><TD>MachHeader</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="load_commands_pos">32</TD><TD PORT="load_commands_size">...</TD><TD>LoadCommand</TD><TD PORT="load_commands_type">load_commands</TD></TR>
+			<TR><TD COLSPAN="4" PORT="load_commands__repeat">repeat header.ncmds times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__rpath_command {
+			label="MachO::RpathCommand";
+			graph[style=dotted];
+
+			rpath_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="path_offset_pos">0</TD><TD PORT="path_offset_size">4</TD><TD>u4le</TD><TD PORT="path_offset_type">path_offset</TD></TR>
+				<TR><TD PORT="path_pos">4</TD><TD PORT="path_size">...</TD><TD>str(utf-8)</TD><TD PORT="path_type">path</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__uleb128 {
+			label="MachO::Uleb128";
+			graph[style=dotted];
+
+			uleb128__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="b1_pos">0</TD><TD PORT="b1_size">1</TD><TD>u1</TD><TD PORT="b1_type">b1</TD></TR>
+				<TR><TD PORT="b2_pos">1</TD><TD PORT="b2_size">1</TD><TD>u1</TD><TD PORT="b2_type">b2</TD></TR>
+				<TR><TD PORT="b3_pos">2</TD><TD PORT="b3_size">1</TD><TD>u1</TD><TD PORT="b3_type">b3</TD></TR>
+				<TR><TD PORT="b4_pos">3</TD><TD PORT="b4_size">1</TD><TD>u1</TD><TD PORT="b4_type">b4</TD></TR>
+				<TR><TD PORT="b5_pos">4</TD><TD PORT="b5_size">1</TD><TD>u1</TD><TD PORT="b5_type">b5</TD></TR>
+				<TR><TD PORT="b6_pos">5</TD><TD PORT="b6_size">1</TD><TD>u1</TD><TD PORT="b6_type">b6</TD></TR>
+				<TR><TD PORT="b7_pos">6</TD><TD PORT="b7_size">1</TD><TD>u1</TD><TD PORT="b7_type">b7</TD></TR>
+				<TR><TD PORT="b8_pos">7</TD><TD PORT="b8_size">1</TD><TD>u1</TD><TD PORT="b8_type">b8</TD></TR>
+				<TR><TD PORT="b9_pos">8</TD><TD PORT="b9_size">1</TD><TD>u1</TD><TD PORT="b9_type">b9</TD></TR>
+				<TR><TD PORT="b10_pos">9</TD><TD PORT="b10_size">1</TD><TD>u1</TD><TD PORT="b10_type">b10</TD></TR>
+			</TABLE>>];
+			uleb128__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>value</TD><TD>(((b1 % 128) &lt;&lt; 0) + ((b1 &amp; 128) == 0 ? 0 : (((b2 % 128) &lt;&lt; 7) + ((b2 &amp; 128) == 0 ? 0 : (((b3 % 128) &lt;&lt; 14) + ((b3 &amp; 128) == 0 ? 0 : (((b4 % 128) &lt;&lt; 21) + ((b4 &amp; 128) == 0 ? 0 : (((b5 % 128) &lt;&lt; 28) + ((b5 &amp; 128) == 0 ? 0 : (((b6 % 128) &lt;&lt; 35) + ((b6 &amp; 128) == 0 ? 0 : (((b7 % 128) &lt;&lt; 42) + ((b7 &amp; 128) == 0 ? 0 : (((b8 % 128) &lt;&lt; 49) + ((b8 &amp; 128) == 0 ? 0 : (((b9 % 128) &lt;&lt; 56) + ((b8 &amp; 128) == 0 ? 0 : ((b10 % 128) &lt;&lt; 63)))))))))))))))))))</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__source_version_command {
+			label="MachO::SourceVersionCommand";
+			graph[style=dotted];
+
+			source_version_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">8</TD><TD>u8le</TD><TD PORT="version_type">version</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__cs_blob {
+			label="MachO::CsBlob";
+			graph[style=dotted];
+
+			cs_blob__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>u4be?CsMagic</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="length_pos">4</TD><TD PORT="length_size">4</TD><TD>u4be</TD><TD PORT="length_type">length</TD></TR>
+				<TR><TD PORT="body_pos">8</TD><TD PORT="body_size">...</TD><TD>switch (magic)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+cs_blob__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:cs_magic_detached_signature</TD><TD PORT="case0">SuperBlob</TD></TR>
+	<TR><TD>:cs_magic_embedded_signature</TD><TD PORT="case1">SuperBlob</TD></TR>
+	<TR><TD>:cs_magic_entitlement</TD><TD PORT="case2">Entitlement</TD></TR>
+	<TR><TD>:cs_magic_blob_wrapper</TD><TD PORT="case3">BlobWrapper</TD></TR>
+	<TR><TD>:cs_magic_requirement</TD><TD PORT="case4">Requirement</TD></TR>
+	<TR><TD>:cs_magic_code_directory</TD><TD PORT="case5">CodeDirectory</TD></TR>
+	<TR><TD>:cs_magic_requirements</TD><TD PORT="case6">Entitlements</TD></TR>
+</TABLE>>];
+			subgraph cluster__entitlement {
+				label="MachO::CsBlob::Entitlement";
+				graph[style=dotted];
+
+				entitlement__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">?</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__code_directory {
+				label="MachO::CsBlob::CodeDirectory";
+				graph[style=dotted];
+
+				code_directory__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">4</TD><TD>u4be</TD><TD PORT="version_type">version</TD></TR>
+					<TR><TD PORT="flags_pos">4</TD><TD PORT="flags_size">4</TD><TD>u4be</TD><TD PORT="flags_type">flags</TD></TR>
+					<TR><TD PORT="hash_offset_pos">8</TD><TD PORT="hash_offset_size">4</TD><TD>u4be</TD><TD PORT="hash_offset_type">hash_offset</TD></TR>
+					<TR><TD PORT="ident_offset_pos">12</TD><TD PORT="ident_offset_size">4</TD><TD>u4be</TD><TD PORT="ident_offset_type">ident_offset</TD></TR>
+					<TR><TD PORT="n_special_slots_pos">16</TD><TD PORT="n_special_slots_size">4</TD><TD>u4be</TD><TD PORT="n_special_slots_type">n_special_slots</TD></TR>
+					<TR><TD PORT="n_code_slots_pos">20</TD><TD PORT="n_code_slots_size">4</TD><TD>u4be</TD><TD PORT="n_code_slots_type">n_code_slots</TD></TR>
+					<TR><TD PORT="code_limit_pos">24</TD><TD PORT="code_limit_size">4</TD><TD>u4be</TD><TD PORT="code_limit_type">code_limit</TD></TR>
+					<TR><TD PORT="hash_size_pos">28</TD><TD PORT="hash_size_size">1</TD><TD>u1</TD><TD PORT="hash_size_type">hash_size</TD></TR>
+					<TR><TD PORT="hash_type_pos">29</TD><TD PORT="hash_type_size">1</TD><TD>u1</TD><TD PORT="hash_type_type">hash_type</TD></TR>
+					<TR><TD PORT="spare1_pos">30</TD><TD PORT="spare1_size">1</TD><TD>u1</TD><TD PORT="spare1_type">spare1</TD></TR>
+					<TR><TD PORT="page_size_pos">31</TD><TD PORT="page_size_size">1</TD><TD>u1</TD><TD PORT="page_size_type">page_size</TD></TR>
+					<TR><TD PORT="spare2_pos">32</TD><TD PORT="spare2_size">4</TD><TD>u4be</TD><TD PORT="spare2_type">spare2</TD></TR>
+					<TR><TD PORT="scatter_offset_pos">36</TD><TD PORT="scatter_offset_size">4</TD><TD>u4be</TD><TD PORT="scatter_offset_type">scatter_offset</TD></TR>
+					<TR><TD PORT="team_id_offset_pos">40</TD><TD PORT="team_id_offset_size">4</TD><TD>u4be</TD><TD PORT="team_id_offset_type">team_id_offset</TD></TR>
+				</TABLE>>];
+				code_directory__inst__ident [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="ident_pos">(ident_offset - 8)</TD><TD PORT="ident_size">...</TD><TD>str(utf-8)</TD><TD PORT="ident_type">ident</TD></TR>
+				</TABLE>>];
+				code_directory__inst__team_id [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="team_id_pos">(team_id_offset - 8)</TD><TD PORT="team_id_size">...</TD><TD>str(utf-8)</TD><TD PORT="team_id_type">team_id</TD></TR>
+				</TABLE>>];
+				code_directory__inst__hashes [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="hashes_pos">((hash_offset - 8) - (hash_size * n_special_slots))</TD><TD PORT="hashes_size">hash_size</TD><TD></TD><TD PORT="hashes_type">hashes</TD></TR>
+					<TR><TD COLSPAN="4" PORT="hashes__repeat">repeat (n_special_slots + n_code_slots) times</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__entitlements_blob_index {
+				label="MachO::CsBlob::EntitlementsBlobIndex";
+				graph[style=dotted];
+
+				entitlements_blob_index__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4be?RequirementType</TD><TD PORT="type_type">type</TD></TR>
+					<TR><TD PORT="offset_pos">4</TD><TD PORT="offset_size">4</TD><TD>u4be</TD><TD PORT="offset_type">offset</TD></TR>
+				</TABLE>>];
+				entitlements_blob_index__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_pos">(offset - 8)</TD><TD PORT="value_size">...</TD><TD>CsBlob</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__data {
+				label="MachO::CsBlob::Data";
+				graph[style=dotted];
+
+				data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">4</TD><TD>u4be</TD><TD PORT="length_type">length</TD></TR>
+					<TR><TD PORT="value_pos">4</TD><TD PORT="value_size">length</TD><TD></TD><TD PORT="value_type">value</TD></TR>
+					<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">(4 - (length &amp; 3))</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__super_blob {
+				label="MachO::CsBlob::SuperBlob";
+				graph[style=dotted];
+
+				super_blob__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="count_pos">0</TD><TD PORT="count_size">4</TD><TD>u4be</TD><TD PORT="count_type">count</TD></TR>
+					<TR><TD PORT="blobs_pos">4</TD><TD PORT="blobs_size">8</TD><TD>BlobIndex</TD><TD PORT="blobs_type">blobs</TD></TR>
+					<TR><TD COLSPAN="4" PORT="blobs__repeat">repeat count times</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__expr {
+				label="MachO::CsBlob::Expr";
+				graph[style=dotted];
+
+				expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="op_pos">0</TD><TD PORT="op_size">4</TD><TD>u4be?OpEnum</TD><TD PORT="op_type">op</TD></TR>
+					<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">...</TD><TD>switch (op)</TD><TD PORT="data_type">data</TD></TR>
+				</TABLE>>];
+expr__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:op_enum_cert_generic</TD><TD PORT="case0">CertGenericExpr</TD></TR>
+	<TR><TD>:op_enum_apple_generic_anchor</TD><TD PORT="case1">AppleGenericAnchorExpr</TD></TR>
+	<TR><TD>:op_enum_info_key_field</TD><TD PORT="case2">InfoKeyFieldExpr</TD></TR>
+	<TR><TD>:op_enum_and_op</TD><TD PORT="case3">AndExpr</TD></TR>
+	<TR><TD>:op_enum_anchor_hash</TD><TD PORT="case4">AnchorHashExpr</TD></TR>
+	<TR><TD>:op_enum_info_key_value</TD><TD PORT="case5">Data</TD></TR>
+	<TR><TD>:op_enum_or_op</TD><TD PORT="case6">OrExpr</TD></TR>
+	<TR><TD>:op_enum_trusted_cert</TD><TD PORT="case7">CertSlotExpr</TD></TR>
+	<TR><TD>:op_enum_not_op</TD><TD PORT="case8">Expr</TD></TR>
+	<TR><TD>:op_enum_ident</TD><TD PORT="case9">IdentExpr</TD></TR>
+	<TR><TD>:op_enum_cert_field</TD><TD PORT="case10">CertFieldExpr</TD></TR>
+	<TR><TD>:op_enum_entitlement_field</TD><TD PORT="case11">EntitlementFieldExpr</TD></TR>
+	<TR><TD>:op_enum_cd_hash</TD><TD PORT="case12">Data</TD></TR>
+</TABLE>>];
+				subgraph cluster__info_key_field_expr {
+					label="MachO::CsBlob::Expr::InfoKeyFieldExpr";
+					graph[style=dotted];
+
+					info_key_field_expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">...</TD><TD>Data</TD><TD PORT="data_type">data</TD></TR>
+						<TR><TD PORT="match_pos">...</TD><TD PORT="match_size">...</TD><TD>Match</TD><TD PORT="match_type">match</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__cert_slot_expr {
+					label="MachO::CsBlob::Expr::CertSlotExpr";
+					graph[style=dotted];
+
+					cert_slot_expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">4</TD><TD>u4be?CertSlot</TD><TD PORT="value_type">value</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__cert_generic_expr {
+					label="MachO::CsBlob::Expr::CertGenericExpr";
+					graph[style=dotted];
+
+					cert_generic_expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="cert_slot_pos">0</TD><TD PORT="cert_slot_size">4</TD><TD>u4be?CertSlot</TD><TD PORT="cert_slot_type">cert_slot</TD></TR>
+						<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">...</TD><TD>Data</TD><TD PORT="data_type">data</TD></TR>
+						<TR><TD PORT="match_pos">...</TD><TD PORT="match_size">...</TD><TD>Match</TD><TD PORT="match_type">match</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__ident_expr {
+					label="MachO::CsBlob::Expr::IdentExpr";
+					graph[style=dotted];
+
+					ident_expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="identifier_pos">0</TD><TD PORT="identifier_size">...</TD><TD>Data</TD><TD PORT="identifier_type">identifier</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__cert_field_expr {
+					label="MachO::CsBlob::Expr::CertFieldExpr";
+					graph[style=dotted];
+
+					cert_field_expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="cert_slot_pos">0</TD><TD PORT="cert_slot_size">4</TD><TD>u4be?CertSlot</TD><TD PORT="cert_slot_type">cert_slot</TD></TR>
+						<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">...</TD><TD>Data</TD><TD PORT="data_type">data</TD></TR>
+						<TR><TD PORT="match_pos">...</TD><TD PORT="match_size">...</TD><TD>Match</TD><TD PORT="match_type">match</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__anchor_hash_expr {
+					label="MachO::CsBlob::Expr::AnchorHashExpr";
+					graph[style=dotted];
+
+					anchor_hash_expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="cert_slot_pos">0</TD><TD PORT="cert_slot_size">4</TD><TD>u4be?CertSlot</TD><TD PORT="cert_slot_type">cert_slot</TD></TR>
+						<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">...</TD><TD>Data</TD><TD PORT="data_type">data</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__apple_generic_anchor_expr {
+					label="MachO::CsBlob::Expr::AppleGenericAnchorExpr";
+					graph[style=dotted];
+
+					apple_generic_anchor_expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					</TABLE>>];
+					apple_generic_anchor_expr__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>value</TD><TD>&quot;anchor apple generic&quot;</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__entitlement_field_expr {
+					label="MachO::CsBlob::Expr::EntitlementFieldExpr";
+					graph[style=dotted];
+
+					entitlement_field_expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">...</TD><TD>Data</TD><TD PORT="data_type">data</TD></TR>
+						<TR><TD PORT="match_pos">...</TD><TD PORT="match_size">...</TD><TD>Match</TD><TD PORT="match_type">match</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__and_expr {
+					label="MachO::CsBlob::Expr::AndExpr";
+					graph[style=dotted];
+
+					and_expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="left_pos">0</TD><TD PORT="left_size">...</TD><TD>Expr</TD><TD PORT="left_type">left</TD></TR>
+						<TR><TD PORT="right_pos">...</TD><TD PORT="right_size">...</TD><TD>Expr</TD><TD PORT="right_type">right</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__or_expr {
+					label="MachO::CsBlob::Expr::OrExpr";
+					graph[style=dotted];
+
+					or_expr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="left_pos">0</TD><TD PORT="left_size">...</TD><TD>Expr</TD><TD PORT="left_type">left</TD></TR>
+						<TR><TD PORT="right_pos">...</TD><TD PORT="right_size">...</TD><TD>Expr</TD><TD PORT="right_type">right</TD></TR>
+					</TABLE>>];
+				}
+			}
+			subgraph cluster__blob_index {
+				label="MachO::CsBlob::BlobIndex";
+				graph[style=dotted];
+
+				blob_index__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4be?CsslotType</TD><TD PORT="type_type">type</TD></TR>
+					<TR><TD PORT="offset_pos">4</TD><TD PORT="offset_size">4</TD><TD>u4be</TD><TD PORT="offset_type">offset</TD></TR>
+				</TABLE>>];
+				blob_index__inst__blob [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="blob_pos">(offset - 8)</TD><TD PORT="blob_size">?</TD><TD>CsBlob</TD><TD PORT="blob_type">blob</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__match {
+				label="MachO::CsBlob::Match";
+				graph[style=dotted];
+
+				match__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="match_op_pos">0</TD><TD PORT="match_op_size">4</TD><TD>u4be?Op</TD><TD PORT="match_op_type">match_op</TD></TR>
+					<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">...</TD><TD>Data</TD><TD PORT="data_type">data</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__requirement {
+				label="MachO::CsBlob::Requirement";
+				graph[style=dotted];
+
+				requirement__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="kind_pos">0</TD><TD PORT="kind_size">4</TD><TD>u4be</TD><TD PORT="kind_type">kind</TD></TR>
+					<TR><TD PORT="expr_pos">4</TD><TD PORT="expr_size">...</TD><TD>Expr</TD><TD PORT="expr_type">expr</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__blob_wrapper {
+				label="MachO::CsBlob::BlobWrapper";
+				graph[style=dotted];
+
+				blob_wrapper__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">?</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__entitlements {
+				label="MachO::CsBlob::Entitlements";
+				graph[style=dotted];
+
+				entitlements__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="count_pos">0</TD><TD PORT="count_size">4</TD><TD>u4be</TD><TD PORT="count_type">count</TD></TR>
+					<TR><TD PORT="items_pos">4</TD><TD PORT="items_size">8</TD><TD>EntitlementsBlobIndex</TD><TD PORT="items_type">items</TD></TR>
+					<TR><TD COLSPAN="4" PORT="items__repeat">repeat count times</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__routines_command {
+			label="MachO::RoutinesCommand";
+			graph[style=dotted];
+
+			routines_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="init_address_pos">0</TD><TD PORT="init_address_size">4</TD><TD>u4le</TD><TD PORT="init_address_type">init_address</TD></TR>
+				<TR><TD PORT="init_module_pos">4</TD><TD PORT="init_module_size">4</TD><TD>u4le</TD><TD PORT="init_module_type">init_module</TD></TR>
+				<TR><TD PORT="reserved_pos">8</TD><TD PORT="reserved_size">24</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__routines_command_64 {
+			label="MachO::RoutinesCommand64";
+			graph[style=dotted];
+
+			routines_command_64__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="init_address_pos">0</TD><TD PORT="init_address_size">8</TD><TD>u8le</TD><TD PORT="init_address_type">init_address</TD></TR>
+				<TR><TD PORT="init_module_pos">8</TD><TD PORT="init_module_size">8</TD><TD>u8le</TD><TD PORT="init_module_type">init_module</TD></TR>
+				<TR><TD PORT="reserved_pos">16</TD><TD PORT="reserved_size">48</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__linker_option_command {
+			label="MachO::LinkerOptionCommand";
+			graph[style=dotted];
+
+			linker_option_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_strings_pos">0</TD><TD PORT="num_strings_size">4</TD><TD>u4le</TD><TD PORT="num_strings_type">num_strings</TD></TR>
+				<TR><TD PORT="strings_pos">4</TD><TD PORT="strings_size">...</TD><TD>str(utf-8)</TD><TD PORT="strings_type">strings</TD></TR>
+				<TR><TD COLSPAN="4" PORT="strings__repeat">repeat num_strings times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__segment_command_64 {
+			label="MachO::SegmentCommand64";
+			graph[style=dotted];
+
+			segment_command_64__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="segname_pos">0</TD><TD PORT="segname_size">16</TD><TD>str(ascii)</TD><TD PORT="segname_type">segname</TD></TR>
+				<TR><TD PORT="vmaddr_pos">16</TD><TD PORT="vmaddr_size">8</TD><TD>u8le</TD><TD PORT="vmaddr_type">vmaddr</TD></TR>
+				<TR><TD PORT="vmsize_pos">24</TD><TD PORT="vmsize_size">8</TD><TD>u8le</TD><TD PORT="vmsize_type">vmsize</TD></TR>
+				<TR><TD PORT="fileoff_pos">32</TD><TD PORT="fileoff_size">8</TD><TD>u8le</TD><TD PORT="fileoff_type">fileoff</TD></TR>
+				<TR><TD PORT="filesize_pos">40</TD><TD PORT="filesize_size">8</TD><TD>u8le</TD><TD PORT="filesize_type">filesize</TD></TR>
+				<TR><TD PORT="maxprot_pos">48</TD><TD PORT="maxprot_size">4</TD><TD>VmProt</TD><TD PORT="maxprot_type">maxprot</TD></TR>
+				<TR><TD PORT="initprot_pos">52</TD><TD PORT="initprot_size">4</TD><TD>VmProt</TD><TD PORT="initprot_type">initprot</TD></TR>
+				<TR><TD PORT="nsects_pos">56</TD><TD PORT="nsects_size">4</TD><TD>u4le</TD><TD PORT="nsects_type">nsects</TD></TR>
+				<TR><TD PORT="flags_pos">60</TD><TD PORT="flags_size">4</TD><TD>u4le</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="sections_pos">64</TD><TD PORT="sections_size">80</TD><TD>Section64</TD><TD PORT="sections_type">sections</TD></TR>
+				<TR><TD COLSPAN="4" PORT="sections__repeat">repeat nsects times</TD></TR>
+			</TABLE>>];
+			subgraph cluster__section_64 {
+				label="MachO::SegmentCommand64::Section64";
+				graph[style=dotted];
+
+				section_64__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="sect_name_pos">0</TD><TD PORT="sect_name_size">16</TD><TD>str(ascii)</TD><TD PORT="sect_name_type">sect_name</TD></TR>
+					<TR><TD PORT="seg_name_pos">16</TD><TD PORT="seg_name_size">16</TD><TD>str(ascii)</TD><TD PORT="seg_name_type">seg_name</TD></TR>
+					<TR><TD PORT="addr_pos">32</TD><TD PORT="addr_size">8</TD><TD>u8le</TD><TD PORT="addr_type">addr</TD></TR>
+					<TR><TD PORT="size_pos">40</TD><TD PORT="size_size">8</TD><TD>u8le</TD><TD PORT="size_type">size</TD></TR>
+					<TR><TD PORT="offset_pos">48</TD><TD PORT="offset_size">4</TD><TD>u4le</TD><TD PORT="offset_type">offset</TD></TR>
+					<TR><TD PORT="align_pos">52</TD><TD PORT="align_size">4</TD><TD>u4le</TD><TD PORT="align_type">align</TD></TR>
+					<TR><TD PORT="reloff_pos">56</TD><TD PORT="reloff_size">4</TD><TD>u4le</TD><TD PORT="reloff_type">reloff</TD></TR>
+					<TR><TD PORT="nreloc_pos">60</TD><TD PORT="nreloc_size">4</TD><TD>u4le</TD><TD PORT="nreloc_type">nreloc</TD></TR>
+					<TR><TD PORT="flags_pos">64</TD><TD PORT="flags_size">4</TD><TD>u4le</TD><TD PORT="flags_type">flags</TD></TR>
+					<TR><TD PORT="reserved1_pos">68</TD><TD PORT="reserved1_size">4</TD><TD>u4le</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+					<TR><TD PORT="reserved2_pos">72</TD><TD PORT="reserved2_size">4</TD><TD>u4le</TD><TD PORT="reserved2_type">reserved2</TD></TR>
+					<TR><TD PORT="reserved3_pos">76</TD><TD PORT="reserved3_size">4</TD><TD>u4le</TD><TD PORT="reserved3_type">reserved3</TD></TR>
+				</TABLE>>];
+				section_64__inst__data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="data_pos">offset</TD><TD PORT="data_size">...</TD><TD>switch (sect_name)</TD><TD PORT="data_type">data</TD></TR>
+				</TABLE>>];
+section_64__inst__data_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>&quot;__objc_nlclslist&quot;</TD><TD PORT="case0">PointerList</TD></TR>
+	<TR><TD>&quot;__objc_methname&quot;</TD><TD PORT="case1">StringList</TD></TR>
+	<TR><TD>&quot;__nl_symbol_ptr&quot;</TD><TD PORT="case2">PointerList</TD></TR>
+	<TR><TD>&quot;__la_symbol_ptr&quot;</TD><TD PORT="case3">PointerList</TD></TR>
+	<TR><TD>&quot;__objc_selrefs&quot;</TD><TD PORT="case4">PointerList</TD></TR>
+	<TR><TD>&quot;__cstring&quot;</TD><TD PORT="case5">StringList</TD></TR>
+	<TR><TD>&quot;__objc_classlist&quot;</TD><TD PORT="case6">PointerList</TD></TR>
+	<TR><TD>&quot;__objc_protolist&quot;</TD><TD PORT="case7">PointerList</TD></TR>
+	<TR><TD>&quot;__objc_imageinfo&quot;</TD><TD PORT="case8">PointerList</TD></TR>
+	<TR><TD>&quot;__objc_methtype&quot;</TD><TD PORT="case9">StringList</TD></TR>
+	<TR><TD>&quot;__cfstring&quot;</TD><TD PORT="case10">CfStringList</TD></TR>
+	<TR><TD>&quot;__objc_classrefs&quot;</TD><TD PORT="case11">PointerList</TD></TR>
+	<TR><TD>&quot;__objc_protorefs&quot;</TD><TD PORT="case12">PointerList</TD></TR>
+	<TR><TD>&quot;__objc_classname&quot;</TD><TD PORT="case13">StringList</TD></TR>
+	<TR><TD>&quot;__got&quot;</TD><TD PORT="case14">PointerList</TD></TR>
+	<TR><TD>&quot;__eh_frame&quot;</TD><TD PORT="case15">EhFrame</TD></TR>
+	<TR><TD>&quot;__objc_superrefs&quot;</TD><TD PORT="case16">PointerList</TD></TR>
+</TABLE>>];
+				subgraph cluster__cf_string_list {
+					label="MachO::SegmentCommand64::Section64::CfStringList";
+					graph[style=dotted];
+
+					cf_string_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">32</TD><TD>CfString</TD><TD PORT="items_type">items</TD></TR>
+						<TR><TD COLSPAN="4" PORT="items__repeat">repeat to end of stream</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__cf_string {
+					label="MachO::SegmentCommand64::Section64::CfString";
+					graph[style=dotted];
+
+					cf_string__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="isa_pos">0</TD><TD PORT="isa_size">8</TD><TD>u8le</TD><TD PORT="isa_type">isa</TD></TR>
+						<TR><TD PORT="info_pos">8</TD><TD PORT="info_size">8</TD><TD>u8le</TD><TD PORT="info_type">info</TD></TR>
+						<TR><TD PORT="data_pos">16</TD><TD PORT="data_size">8</TD><TD>u8le</TD><TD PORT="data_type">data</TD></TR>
+						<TR><TD PORT="length_pos">24</TD><TD PORT="length_size">8</TD><TD>u8le</TD><TD PORT="length_type">length</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__eh_frame_item {
+					label="MachO::SegmentCommand64::Section64::EhFrameItem";
+					graph[style=dotted];
+
+					eh_frame_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">4</TD><TD>u4le</TD><TD PORT="length_type">length</TD></TR>
+						<TR><TD PORT="length64_pos">4</TD><TD PORT="length64_size">8</TD><TD>u8le</TD><TD PORT="length64_type">length64</TD></TR>
+						<TR><TD PORT="id_pos">12</TD><TD PORT="id_size">4</TD><TD>u4le</TD><TD PORT="id_type">id</TD></TR>
+						<TR><TD PORT="body_pos">16</TD><TD PORT="body_size">...</TD><TD>switch (id)</TD><TD PORT="body_type">body</TD></TR>
+					</TABLE>>];
+eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>0</TD><TD PORT="case0">Cie</TD></TR>
+</TABLE>>];
+					subgraph cluster__char_chain {
+						label="MachO::SegmentCommand64::Section64::EhFrameItem::CharChain";
+						graph[style=dotted];
+
+						char_chain__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+							<TR><TD PORT="chr_pos">0</TD><TD PORT="chr_size">1</TD><TD>u1</TD><TD PORT="chr_type">chr</TD></TR>
+							<TR><TD PORT="next_pos">1</TD><TD PORT="next_size">...</TD><TD>CharChain</TD><TD PORT="next_type">next</TD></TR>
+						</TABLE>>];
+					}
+					subgraph cluster__cie {
+						label="MachO::SegmentCommand64::Section64::EhFrameItem::Cie";
+						graph[style=dotted];
+
+						cie__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+							<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">1</TD><TD>u1</TD><TD PORT="version_type">version</TD></TR>
+							<TR><TD PORT="aug_str_pos">1</TD><TD PORT="aug_str_size">...</TD><TD>CharChain</TD><TD PORT="aug_str_type">aug_str</TD></TR>
+							<TR><TD PORT="code_alignment_factor_pos">...</TD><TD PORT="code_alignment_factor_size">10</TD><TD>Uleb128</TD><TD PORT="code_alignment_factor_type">code_alignment_factor</TD></TR>
+							<TR><TD PORT="data_alignment_factor_pos">...</TD><TD PORT="data_alignment_factor_size">10</TD><TD>Uleb128</TD><TD PORT="data_alignment_factor_type">data_alignment_factor</TD></TR>
+							<TR><TD PORT="return_address_register_pos">...</TD><TD PORT="return_address_register_size">1</TD><TD>u1</TD><TD PORT="return_address_register_type">return_address_register</TD></TR>
+							<TR><TD PORT="augmentation_pos">...</TD><TD PORT="augmentation_size">11</TD><TD>AugmentationEntry</TD><TD PORT="augmentation_type">augmentation</TD></TR>
+						</TABLE>>];
+					}
+					subgraph cluster__augmentation_entry {
+						label="MachO::SegmentCommand64::Section64::EhFrameItem::AugmentationEntry";
+						graph[style=dotted];
+
+						augmentation_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+							<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">10</TD><TD>Uleb128</TD><TD PORT="length_type">length</TD></TR>
+							<TR><TD PORT="fde_pointer_encoding_pos">10</TD><TD PORT="fde_pointer_encoding_size">1</TD><TD>u1</TD><TD PORT="fde_pointer_encoding_type">fde_pointer_encoding</TD></TR>
+						</TABLE>>];
+					}
+				}
+				subgraph cluster__eh_frame {
+					label="MachO::SegmentCommand64::Section64::EhFrame";
+					graph[style=dotted];
+
+					eh_frame__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">...</TD><TD>EhFrameItem</TD><TD PORT="items_type">items</TD></TR>
+						<TR><TD COLSPAN="4" PORT="items__repeat">repeat to end of stream</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__pointer_list {
+					label="MachO::SegmentCommand64::Section64::PointerList";
+					graph[style=dotted];
+
+					pointer_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">8</TD><TD>u8le</TD><TD PORT="items_type">items</TD></TR>
+						<TR><TD COLSPAN="4" PORT="items__repeat">repeat to end of stream</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__string_list {
+					label="MachO::SegmentCommand64::Section64::StringList";
+					graph[style=dotted];
+
+					string_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="strings_pos">0</TD><TD PORT="strings_size">...</TD><TD>str(ascii)</TD><TD PORT="strings_type">strings</TD></TR>
+						<TR><TD COLSPAN="4" PORT="strings__repeat">repeat to end of stream</TD></TR>
+					</TABLE>>];
+				}
+			}
+		}
+		subgraph cluster__vm_prot {
+			label="MachO::VmProt";
+			graph[style=dotted];
+
+			vm_prot__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="strip_read_pos">0</TD><TD PORT="strip_read_size">1b</TD><TD>BitsType1</TD><TD PORT="strip_read_type">strip_read</TD></TR>
+				<TR><TD PORT="is_mask_pos">0:1</TD><TD PORT="is_mask_size">1b</TD><TD>BitsType1</TD><TD PORT="is_mask_type">is_mask</TD></TR>
+				<TR><TD PORT="reserved0_pos">0:2</TD><TD PORT="reserved0_size">1b</TD><TD>BitsType1</TD><TD PORT="reserved0_type">reserved0</TD></TR>
+				<TR><TD PORT="copy_pos">0:3</TD><TD PORT="copy_size">1b</TD><TD>BitsType1</TD><TD PORT="copy_type">copy</TD></TR>
+				<TR><TD PORT="no_change_pos">0:4</TD><TD PORT="no_change_size">1b</TD><TD>BitsType1</TD><TD PORT="no_change_type">no_change</TD></TR>
+				<TR><TD PORT="execute_pos">0:5</TD><TD PORT="execute_size">1b</TD><TD>BitsType1</TD><TD PORT="execute_type">execute</TD></TR>
+				<TR><TD PORT="write_pos">0:6</TD><TD PORT="write_size">1b</TD><TD>BitsType1</TD><TD PORT="write_type">write</TD></TR>
+				<TR><TD PORT="read_pos">0:7</TD><TD PORT="read_size">1b</TD><TD>BitsType1</TD><TD PORT="read_type">read</TD></TR>
+				<TR><TD PORT="reserved1_pos">1</TD><TD PORT="reserved1_size">3</TD><TD>b24</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dysymtab_command {
+			label="MachO::DysymtabCommand";
+			graph[style=dotted];
+
+			dysymtab_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="i_local_sym_pos">0</TD><TD PORT="i_local_sym_size">4</TD><TD>u4le</TD><TD PORT="i_local_sym_type">i_local_sym</TD></TR>
+				<TR><TD PORT="n_local_sym_pos">4</TD><TD PORT="n_local_sym_size">4</TD><TD>u4le</TD><TD PORT="n_local_sym_type">n_local_sym</TD></TR>
+				<TR><TD PORT="i_ext_def_sym_pos">8</TD><TD PORT="i_ext_def_sym_size">4</TD><TD>u4le</TD><TD PORT="i_ext_def_sym_type">i_ext_def_sym</TD></TR>
+				<TR><TD PORT="n_ext_def_sym_pos">12</TD><TD PORT="n_ext_def_sym_size">4</TD><TD>u4le</TD><TD PORT="n_ext_def_sym_type">n_ext_def_sym</TD></TR>
+				<TR><TD PORT="i_undef_sym_pos">16</TD><TD PORT="i_undef_sym_size">4</TD><TD>u4le</TD><TD PORT="i_undef_sym_type">i_undef_sym</TD></TR>
+				<TR><TD PORT="n_undef_sym_pos">20</TD><TD PORT="n_undef_sym_size">4</TD><TD>u4le</TD><TD PORT="n_undef_sym_type">n_undef_sym</TD></TR>
+				<TR><TD PORT="toc_off_pos">24</TD><TD PORT="toc_off_size">4</TD><TD>u4le</TD><TD PORT="toc_off_type">toc_off</TD></TR>
+				<TR><TD PORT="n_toc_pos">28</TD><TD PORT="n_toc_size">4</TD><TD>u4le</TD><TD PORT="n_toc_type">n_toc</TD></TR>
+				<TR><TD PORT="mod_tab_off_pos">32</TD><TD PORT="mod_tab_off_size">4</TD><TD>u4le</TD><TD PORT="mod_tab_off_type">mod_tab_off</TD></TR>
+				<TR><TD PORT="n_mod_tab_pos">36</TD><TD PORT="n_mod_tab_size">4</TD><TD>u4le</TD><TD PORT="n_mod_tab_type">n_mod_tab</TD></TR>
+				<TR><TD PORT="ext_ref_sym_off_pos">40</TD><TD PORT="ext_ref_sym_off_size">4</TD><TD>u4le</TD><TD PORT="ext_ref_sym_off_type">ext_ref_sym_off</TD></TR>
+				<TR><TD PORT="n_ext_ref_syms_pos">44</TD><TD PORT="n_ext_ref_syms_size">4</TD><TD>u4le</TD><TD PORT="n_ext_ref_syms_type">n_ext_ref_syms</TD></TR>
+				<TR><TD PORT="indirect_sym_off_pos">48</TD><TD PORT="indirect_sym_off_size">4</TD><TD>u4le</TD><TD PORT="indirect_sym_off_type">indirect_sym_off</TD></TR>
+				<TR><TD PORT="n_indirect_syms_pos">52</TD><TD PORT="n_indirect_syms_size">4</TD><TD>u4le</TD><TD PORT="n_indirect_syms_type">n_indirect_syms</TD></TR>
+				<TR><TD PORT="ext_rel_off_pos">56</TD><TD PORT="ext_rel_off_size">4</TD><TD>u4le</TD><TD PORT="ext_rel_off_type">ext_rel_off</TD></TR>
+				<TR><TD PORT="n_ext_rel_pos">60</TD><TD PORT="n_ext_rel_size">4</TD><TD>u4le</TD><TD PORT="n_ext_rel_type">n_ext_rel</TD></TR>
+				<TR><TD PORT="loc_rel_off_pos">64</TD><TD PORT="loc_rel_off_size">4</TD><TD>u4le</TD><TD PORT="loc_rel_off_type">loc_rel_off</TD></TR>
+				<TR><TD PORT="n_loc_rel_pos">68</TD><TD PORT="n_loc_rel_size">4</TD><TD>u4le</TD><TD PORT="n_loc_rel_type">n_loc_rel</TD></TR>
+			</TABLE>>];
+			dysymtab_command__inst__indirect_symbols [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="indirect_symbols_pos">indirect_sym_off</TD><TD PORT="indirect_symbols_size">4</TD><TD>u4le</TD><TD PORT="indirect_symbols_type">indirect_symbols</TD></TR>
+				<TR><TD COLSPAN="4" PORT="indirect_symbols__repeat">repeat n_indirect_syms times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__mach_header {
+			label="MachO::MachHeader";
+			graph[style=dotted];
+
+			mach_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="cputype_pos">0</TD><TD PORT="cputype_size">4</TD><TD>u4le?CpuType</TD><TD PORT="cputype_type">cputype</TD></TR>
+				<TR><TD PORT="cpusubtype_pos">4</TD><TD PORT="cpusubtype_size">4</TD><TD>u4le</TD><TD PORT="cpusubtype_type">cpusubtype</TD></TR>
+				<TR><TD PORT="filetype_pos">8</TD><TD PORT="filetype_size">4</TD><TD>u4le?FileType</TD><TD PORT="filetype_type">filetype</TD></TR>
+				<TR><TD PORT="ncmds_pos">12</TD><TD PORT="ncmds_size">4</TD><TD>u4le</TD><TD PORT="ncmds_type">ncmds</TD></TR>
+				<TR><TD PORT="sizeofcmds_pos">16</TD><TD PORT="sizeofcmds_size">4</TD><TD>u4le</TD><TD PORT="sizeofcmds_type">sizeofcmds</TD></TR>
+				<TR><TD PORT="flags_pos">20</TD><TD PORT="flags_size">4</TD><TD>u4le</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="reserved_pos">24</TD><TD PORT="reserved_size">4</TD><TD>u4le</TD><TD PORT="reserved_type">reserved</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__linkedit_data_command {
+			label="MachO::LinkeditDataCommand";
+			graph[style=dotted];
+
+			linkedit_data_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="data_off_pos">0</TD><TD PORT="data_off_size">4</TD><TD>u4le</TD><TD PORT="data_off_type">data_off</TD></TR>
+				<TR><TD PORT="data_size_pos">4</TD><TD PORT="data_size_size">4</TD><TD>u4le</TD><TD PORT="data_size_type">data_size</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__sub_command {
+			label="MachO::SubCommand";
+			graph[style=dotted];
+
+			sub_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">...</TD><TD>LcStr</TD><TD PORT="name_type">name</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__twolevel_hints_command {
+			label="MachO::TwolevelHintsCommand";
+			graph[style=dotted];
+
+			twolevel_hints_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="offset_pos">0</TD><TD PORT="offset_size">4</TD><TD>u4le</TD><TD PORT="offset_type">offset</TD></TR>
+				<TR><TD PORT="num_hints_pos">4</TD><TD PORT="num_hints_size">4</TD><TD>u4le</TD><TD PORT="num_hints_type">num_hints</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__version {
+			label="MachO::Version";
+			graph[style=dotted];
+
+			version__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="p1_pos">0</TD><TD PORT="p1_size">1</TD><TD>u1</TD><TD PORT="p1_type">p1</TD></TR>
+				<TR><TD PORT="minor_pos">1</TD><TD PORT="minor_size">1</TD><TD>u1</TD><TD PORT="minor_type">minor</TD></TR>
+				<TR><TD PORT="major_pos">2</TD><TD PORT="major_size">1</TD><TD>u1</TD><TD PORT="major_type">major</TD></TR>
+				<TR><TD PORT="release_pos">3</TD><TD PORT="release_size">1</TD><TD>u1</TD><TD PORT="release_type">release</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__encryption_info_command {
+			label="MachO::EncryptionInfoCommand";
+			graph[style=dotted];
+
+			encryption_info_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="cryptoff_pos">0</TD><TD PORT="cryptoff_size">4</TD><TD>u4le</TD><TD PORT="cryptoff_type">cryptoff</TD></TR>
+				<TR><TD PORT="cryptsize_pos">4</TD><TD PORT="cryptsize_size">4</TD><TD>u4le</TD><TD PORT="cryptsize_type">cryptsize</TD></TR>
+				<TR><TD PORT="cryptid_pos">8</TD><TD PORT="cryptid_size">4</TD><TD>u4le</TD><TD PORT="cryptid_type">cryptid</TD></TR>
+				<TR><TD PORT="pad_pos">12</TD><TD PORT="pad_size">4</TD><TD>u4le</TD><TD PORT="pad_type">pad</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__code_signature_command {
+			label="MachO::CodeSignatureCommand";
+			graph[style=dotted];
+
+			code_signature_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="data_off_pos">0</TD><TD PORT="data_off_size">4</TD><TD>u4le</TD><TD PORT="data_off_type">data_off</TD></TR>
+				<TR><TD PORT="data_size_pos">4</TD><TD PORT="data_size_size">4</TD><TD>u4le</TD><TD PORT="data_size_type">data_size</TD></TR>
+			</TABLE>>];
+			code_signature_command__inst__code_signature [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="code_signature_pos">data_off</TD><TD PORT="code_signature_size">data_size</TD><TD>CsBlob</TD><TD PORT="code_signature_type">code_signature</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dyld_info_command {
+			label="MachO::DyldInfoCommand";
+			graph[style=dotted];
+
+			dyld_info_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="rebase_off_pos">0</TD><TD PORT="rebase_off_size">4</TD><TD>u4le</TD><TD PORT="rebase_off_type">rebase_off</TD></TR>
+				<TR><TD PORT="rebase_size_pos">4</TD><TD PORT="rebase_size_size">4</TD><TD>u4le</TD><TD PORT="rebase_size_type">rebase_size</TD></TR>
+				<TR><TD PORT="bind_off_pos">8</TD><TD PORT="bind_off_size">4</TD><TD>u4le</TD><TD PORT="bind_off_type">bind_off</TD></TR>
+				<TR><TD PORT="bind_size_pos">12</TD><TD PORT="bind_size_size">4</TD><TD>u4le</TD><TD PORT="bind_size_type">bind_size</TD></TR>
+				<TR><TD PORT="weak_bind_off_pos">16</TD><TD PORT="weak_bind_off_size">4</TD><TD>u4le</TD><TD PORT="weak_bind_off_type">weak_bind_off</TD></TR>
+				<TR><TD PORT="weak_bind_size_pos">20</TD><TD PORT="weak_bind_size_size">4</TD><TD>u4le</TD><TD PORT="weak_bind_size_type">weak_bind_size</TD></TR>
+				<TR><TD PORT="lazy_bind_off_pos">24</TD><TD PORT="lazy_bind_off_size">4</TD><TD>u4le</TD><TD PORT="lazy_bind_off_type">lazy_bind_off</TD></TR>
+				<TR><TD PORT="lazy_bind_size_pos">28</TD><TD PORT="lazy_bind_size_size">4</TD><TD>u4le</TD><TD PORT="lazy_bind_size_type">lazy_bind_size</TD></TR>
+				<TR><TD PORT="export_off_pos">32</TD><TD PORT="export_off_size">4</TD><TD>u4le</TD><TD PORT="export_off_type">export_off</TD></TR>
+				<TR><TD PORT="export_size_pos">36</TD><TD PORT="export_size_size">4</TD><TD>u4le</TD><TD PORT="export_size_type">export_size</TD></TR>
+			</TABLE>>];
+			dyld_info_command__inst__rebase [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="rebase_pos">rebase_off</TD><TD PORT="rebase_size">rebase_size</TD><TD>RebaseData</TD><TD PORT="rebase_type">rebase</TD></TR>
+			</TABLE>>];
+			dyld_info_command__inst__bind [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bind_pos">bind_off</TD><TD PORT="bind_size">bind_size</TD><TD>BindData</TD><TD PORT="bind_type">bind</TD></TR>
+			</TABLE>>];
+			dyld_info_command__inst__lazy_bind [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="lazy_bind_pos">lazy_bind_off</TD><TD PORT="lazy_bind_size">lazy_bind_size</TD><TD>LazyBindData</TD><TD PORT="lazy_bind_type">lazy_bind</TD></TR>
+			</TABLE>>];
+			dyld_info_command__inst__exports [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="exports_pos">export_off</TD><TD PORT="exports_size">export_size</TD><TD>ExportNode</TD><TD PORT="exports_type">exports</TD></TR>
+			</TABLE>>];
+			subgraph cluster__bind_item {
+				label="MachO::DyldInfoCommand::BindItem";
+				graph[style=dotted];
+
+				bind_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="opcode_and_immediate_pos">0</TD><TD PORT="opcode_and_immediate_size">1</TD><TD>u1</TD><TD PORT="opcode_and_immediate_type">opcode_and_immediate</TD></TR>
+					<TR><TD PORT="uleb_pos">1</TD><TD PORT="uleb_size">10</TD><TD>Uleb128</TD><TD PORT="uleb_type">uleb</TD></TR>
+					<TR><TD PORT="skip_pos">11</TD><TD PORT="skip_size">10</TD><TD>Uleb128</TD><TD PORT="skip_type">skip</TD></TR>
+					<TR><TD PORT="symbol_pos">21</TD><TD PORT="symbol_size">...</TD><TD>str(ascii)</TD><TD PORT="symbol_type">symbol</TD></TR>
+				</TABLE>>];
+				bind_item__inst__opcode [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>opcode</TD><TD>Kaitai::Struct::Stream::resolve_enum(BIND_OPCODE, (opcode_and_immediate &amp; 240))</TD></TR>
+				</TABLE>>];
+				bind_item__inst__immediate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>immediate</TD><TD>(opcode_and_immediate &amp; 15)</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__rebase_data {
+				label="MachO::DyldInfoCommand::RebaseData";
+				graph[style=dotted];
+
+				rebase_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">21</TD><TD>RebaseItem</TD><TD PORT="items_type">items</TD></TR>
+					<TR><TD COLSPAN="4" PORT="items__repeat">repeat until _.opcode == :opcode_done</TD></TR>
+				</TABLE>>];
+				subgraph cluster__rebase_item {
+					label="MachO::DyldInfoCommand::RebaseData::RebaseItem";
+					graph[style=dotted];
+
+					rebase_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="opcode_and_immediate_pos">0</TD><TD PORT="opcode_and_immediate_size">1</TD><TD>u1</TD><TD PORT="opcode_and_immediate_type">opcode_and_immediate</TD></TR>
+						<TR><TD PORT="uleb_pos">1</TD><TD PORT="uleb_size">10</TD><TD>Uleb128</TD><TD PORT="uleb_type">uleb</TD></TR>
+						<TR><TD PORT="skip_pos">11</TD><TD PORT="skip_size">10</TD><TD>Uleb128</TD><TD PORT="skip_type">skip</TD></TR>
+					</TABLE>>];
+					rebase_item__inst__opcode [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>opcode</TD><TD>Kaitai::Struct::Stream::resolve_enum(OPCODE, (opcode_and_immediate &amp; 240))</TD></TR>
+					</TABLE>>];
+					rebase_item__inst__immediate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>immediate</TD><TD>(opcode_and_immediate &amp; 15)</TD></TR>
+					</TABLE>>];
+				}
+			}
+			subgraph cluster__export_node {
+				label="MachO::DyldInfoCommand::ExportNode";
+				graph[style=dotted];
+
+				export_node__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="terminal_size_pos">0</TD><TD PORT="terminal_size_size">10</TD><TD>Uleb128</TD><TD PORT="terminal_size_type">terminal_size</TD></TR>
+					<TR><TD PORT="children_count_pos">10</TD><TD PORT="children_count_size">1</TD><TD>u1</TD><TD PORT="children_count_type">children_count</TD></TR>
+					<TR><TD PORT="children_pos">11</TD><TD PORT="children_size">...</TD><TD>Child</TD><TD PORT="children_type">children</TD></TR>
+					<TR><TD COLSPAN="4" PORT="children__repeat">repeat children_count times</TD></TR>
+					<TR><TD PORT="terminal_pos">...</TD><TD PORT="terminal_size">terminal_size.value</TD><TD></TD><TD PORT="terminal_type">terminal</TD></TR>
+				</TABLE>>];
+				subgraph cluster__child {
+					label="MachO::DyldInfoCommand::ExportNode::Child";
+					graph[style=dotted];
+
+					child__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">...</TD><TD>str(ascii)</TD><TD PORT="name_type">name</TD></TR>
+						<TR><TD PORT="node_offset_pos">...</TD><TD PORT="node_offset_size">10</TD><TD>Uleb128</TD><TD PORT="node_offset_type">node_offset</TD></TR>
+					</TABLE>>];
+					child__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="value_pos">node_offset.value</TD><TD PORT="value_size">...</TD><TD>ExportNode</TD><TD PORT="value_type">value</TD></TR>
+					</TABLE>>];
+				}
+			}
+			subgraph cluster__bind_data {
+				label="MachO::DyldInfoCommand::BindData";
+				graph[style=dotted];
+
+				bind_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">...</TD><TD>BindItem</TD><TD PORT="items_type">items</TD></TR>
+					<TR><TD COLSPAN="4" PORT="items__repeat">repeat until _.opcode == :bind_opcode_done</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__lazy_bind_data {
+				label="MachO::DyldInfoCommand::LazyBindData";
+				graph[style=dotted];
+
+				lazy_bind_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">...</TD><TD>BindItem</TD><TD PORT="items_type">items</TD></TR>
+					<TR><TD COLSPAN="4" PORT="items__repeat">repeat to end of stream</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__dylinker_command {
+			label="MachO::DylinkerCommand";
+			graph[style=dotted];
+
+			dylinker_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">...</TD><TD>LcStr</TD><TD PORT="name_type">name</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dylib_command {
+			label="MachO::DylibCommand";
+			graph[style=dotted];
+
+			dylib_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_offset_pos">0</TD><TD PORT="name_offset_size">4</TD><TD>u4le</TD><TD PORT="name_offset_type">name_offset</TD></TR>
+				<TR><TD PORT="timestamp_pos">4</TD><TD PORT="timestamp_size">4</TD><TD>u4le</TD><TD PORT="timestamp_type">timestamp</TD></TR>
+				<TR><TD PORT="current_version_pos">8</TD><TD PORT="current_version_size">4</TD><TD>u4le</TD><TD PORT="current_version_type">current_version</TD></TR>
+				<TR><TD PORT="compatibility_version_pos">12</TD><TD PORT="compatibility_version_size">4</TD><TD>u4le</TD><TD PORT="compatibility_version_type">compatibility_version</TD></TR>
+				<TR><TD PORT="name_pos">16</TD><TD PORT="name_size">...</TD><TD>str(utf-8)</TD><TD PORT="name_type">name</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__lc_str {
+			label="MachO::LcStr";
+			graph[style=dotted];
+
+			lc_str__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">4</TD><TD>u4le</TD><TD PORT="length_type">length</TD></TR>
+				<TR><TD PORT="value_pos">4</TD><TD PORT="value_size">...</TD><TD>str(UTF-8)</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__load_command {
+			label="MachO::LoadCommand";
+			graph[style=dotted];
+
+			load_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4le?LoadCommandType</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="size_pos">4</TD><TD PORT="size_size">4</TD><TD>u4le</TD><TD PORT="size_type">size</TD></TR>
+				<TR><TD PORT="body_pos">8</TD><TD PORT="body_size">...</TD><TD>switch (type)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+load_command__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:load_command_type_sub_library</TD><TD PORT="case0">SubCommand</TD></TR>
+	<TR><TD>:load_command_type_segment_split_info</TD><TD PORT="case1">LinkeditDataCommand</TD></TR>
+	<TR><TD>:load_command_type_rpath</TD><TD PORT="case2">RpathCommand</TD></TR>
+	<TR><TD>:load_command_type_source_version</TD><TD PORT="case3">SourceVersionCommand</TD></TR>
+	<TR><TD>:load_command_type_encryption_info_64</TD><TD PORT="case4">EncryptionInfoCommand</TD></TR>
+	<TR><TD>:load_command_type_version_min_tvos</TD><TD PORT="case5">VersionMinCommand</TD></TR>
+	<TR><TD>:load_command_type_load_dylinker</TD><TD PORT="case6">DylinkerCommand</TD></TR>
+	<TR><TD>:load_command_type_sub_framework</TD><TD PORT="case7">SubCommand</TD></TR>
+	<TR><TD>:load_command_type_load_weak_dylib</TD><TD PORT="case8">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_version_min_iphoneos</TD><TD PORT="case9">VersionMinCommand</TD></TR>
+	<TR><TD>:load_command_type_linker_optimization_hint</TD><TD PORT="case10">LinkeditDataCommand</TD></TR>
+	<TR><TD>:load_command_type_dyld_environment</TD><TD PORT="case11">DylinkerCommand</TD></TR>
+	<TR><TD>:load_command_type_load_upward_dylib</TD><TD PORT="case12">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_dylib_code_sign_drs</TD><TD PORT="case13">LinkeditDataCommand</TD></TR>
+	<TR><TD>:load_command_type_dyld_info</TD><TD PORT="case14">DyldInfoCommand</TD></TR>
+	<TR><TD>:load_command_type_reexport_dylib</TD><TD PORT="case15">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_symtab</TD><TD PORT="case16">SymtabCommand</TD></TR>
+	<TR><TD>:load_command_type_routines_64</TD><TD PORT="case17">RoutinesCommand64</TD></TR>
+	<TR><TD>:load_command_type_id_dylinker</TD><TD PORT="case18">DylinkerCommand</TD></TR>
+	<TR><TD>:load_command_type_main</TD><TD PORT="case19">EntryPointCommand</TD></TR>
+	<TR><TD>:load_command_type_function_starts</TD><TD PORT="case20">LinkeditDataCommand</TD></TR>
+	<TR><TD>:load_command_type_version_min_macosx</TD><TD PORT="case21">VersionMinCommand</TD></TR>
+	<TR><TD>:load_command_type_data_in_code</TD><TD PORT="case22">LinkeditDataCommand</TD></TR>
+	<TR><TD>:load_command_type_version_min_watchos</TD><TD PORT="case23">VersionMinCommand</TD></TR>
+	<TR><TD>:load_command_type_encryption_info</TD><TD PORT="case24">EncryptionInfoCommand</TD></TR>
+	<TR><TD>:load_command_type_sub_umbrella</TD><TD PORT="case25">SubCommand</TD></TR>
+	<TR><TD>:load_command_type_linker_option</TD><TD PORT="case26">LinkerOptionCommand</TD></TR>
+	<TR><TD>:load_command_type_twolevel_hints</TD><TD PORT="case27">TwolevelHintsCommand</TD></TR>
+	<TR><TD>:load_command_type_uuid</TD><TD PORT="case28">UuidCommand</TD></TR>
+	<TR><TD>:load_command_type_dyld_info_only</TD><TD PORT="case29">DyldInfoCommand</TD></TR>
+	<TR><TD>:load_command_type_lazy_load_dylib</TD><TD PORT="case30">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_sub_client</TD><TD PORT="case31">SubCommand</TD></TR>
+	<TR><TD>:load_command_type_routines</TD><TD PORT="case32">RoutinesCommand</TD></TR>
+	<TR><TD>:load_command_type_code_signature</TD><TD PORT="case33">CodeSignatureCommand</TD></TR>
+	<TR><TD>:load_command_type_dysymtab</TD><TD PORT="case34">DysymtabCommand</TD></TR>
+	<TR><TD>:load_command_type_load_dylib</TD><TD PORT="case35">DylibCommand</TD></TR>
+	<TR><TD>:load_command_type_segment_64</TD><TD PORT="case36">SegmentCommand64</TD></TR>
+	<TR><TD>:load_command_type_id_dylib</TD><TD PORT="case37">DylibCommand</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__uuid_command {
+			label="MachO::UuidCommand";
+			graph[style=dotted];
+
+			uuid_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="uuid_pos">0</TD><TD PORT="uuid_size">16</TD><TD></TD><TD PORT="uuid_type">uuid</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__symtab_command {
+			label="MachO::SymtabCommand";
+			graph[style=dotted];
+
+			symtab_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="sym_off_pos">0</TD><TD PORT="sym_off_size">4</TD><TD>u4le</TD><TD PORT="sym_off_type">sym_off</TD></TR>
+				<TR><TD PORT="n_syms_pos">4</TD><TD PORT="n_syms_size">4</TD><TD>u4le</TD><TD PORT="n_syms_type">n_syms</TD></TR>
+				<TR><TD PORT="str_off_pos">8</TD><TD PORT="str_off_size">4</TD><TD>u4le</TD><TD PORT="str_off_type">str_off</TD></TR>
+				<TR><TD PORT="str_size_pos">12</TD><TD PORT="str_size_size">4</TD><TD>u4le</TD><TD PORT="str_size_type">str_size</TD></TR>
+			</TABLE>>];
+			symtab_command__inst__symbols [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="symbols_pos">sym_off</TD><TD PORT="symbols_size">16</TD><TD>Nlist64</TD><TD PORT="symbols_type">symbols</TD></TR>
+				<TR><TD COLSPAN="4" PORT="symbols__repeat">repeat n_syms times</TD></TR>
+			</TABLE>>];
+			symtab_command__inst__strs [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="strs_pos">str_off</TD><TD PORT="strs_size">str_size</TD><TD>StrTable</TD><TD PORT="strs_type">strs</TD></TR>
+			</TABLE>>];
+			subgraph cluster__str_table {
+				label="MachO::SymtabCommand::StrTable";
+				graph[style=dotted];
+
+				str_table__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="unknown_pos">0</TD><TD PORT="unknown_size">4</TD><TD>u4le</TD><TD PORT="unknown_type">unknown</TD></TR>
+					<TR><TD PORT="items_pos">4</TD><TD PORT="items_size">...</TD><TD>str(ascii)</TD><TD PORT="items_type">items</TD></TR>
+					<TR><TD COLSPAN="4" PORT="items__repeat">repeat until _ == &quot;&quot;</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__nlist_64 {
+				label="MachO::SymtabCommand::Nlist64";
+				graph[style=dotted];
+
+				nlist_64__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="un_pos">0</TD><TD PORT="un_size">4</TD><TD>u4le</TD><TD PORT="un_type">un</TD></TR>
+					<TR><TD PORT="type_pos">4</TD><TD PORT="type_size">1</TD><TD>u1</TD><TD PORT="type_type">type</TD></TR>
+					<TR><TD PORT="sect_pos">5</TD><TD PORT="sect_size">1</TD><TD>u1</TD><TD PORT="sect_type">sect</TD></TR>
+					<TR><TD PORT="desc_pos">6</TD><TD PORT="desc_size">2</TD><TD>u2le</TD><TD PORT="desc_type">desc</TD></TR>
+					<TR><TD PORT="value_pos">8</TD><TD PORT="value_size">8</TD><TD>u8le</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__version_min_command {
+			label="MachO::VersionMinCommand";
+			graph[style=dotted];
+
+			version_min_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">4</TD><TD>Version</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="sdk_pos">4</TD><TD PORT="sdk_size">4</TD><TD>Version</TD><TD PORT="sdk_type">sdk</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__entry_point_command {
+			label="MachO::EntryPointCommand";
+			graph[style=dotted];
+
+			entry_point_command__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entry_off_pos">0</TD><TD PORT="entry_off_size">8</TD><TD>u8le</TD><TD PORT="entry_off_type">entry_off</TD></TR>
+				<TR><TD PORT="stack_size_pos">8</TD><TD PORT="stack_size_size">8</TD><TD>u8le</TD><TD PORT="stack_size_type">stack_size</TD></TR>
+			</TABLE>>];
+		}
+	}
+	mach_o__seq:header_type -> mach_header__seq [style=bold];
+	mach_o__seq:load_commands_type -> load_command__seq [style=bold];
+	mach_header__seq:ncmds_type -> mach_o__seq:load_commands__repeat [color="#404040"];
+	uleb128__seq:b1_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b1_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b2_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b2_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b3_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b3_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b4_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b4_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b5_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b5_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b6_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b6_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b7_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b7_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b8_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b8_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b9_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b8_type -> uleb128__inst__value [color="#404040"];
+	uleb128__seq:b10_type -> uleb128__inst__value [color="#404040"];
+	cs_blob__seq:body_type -> cs_blob__seq_body_switch [style=bold];
+	cs_blob__seq_body_switch:case0 -> super_blob__seq [style=bold];
+	cs_blob__seq_body_switch:case1 -> super_blob__seq [style=bold];
+	cs_blob__seq_body_switch:case2 -> entitlement__seq [style=bold];
+	cs_blob__seq_body_switch:case3 -> blob_wrapper__seq [style=bold];
+	cs_blob__seq_body_switch:case4 -> requirement__seq [style=bold];
+	cs_blob__seq_body_switch:case5 -> code_directory__seq [style=bold];
+	cs_blob__seq_body_switch:case6 -> entitlements__seq [style=bold];
+	cs_blob__seq:magic_type -> cs_blob__seq:body_type [color="#404040"];
+	code_directory__seq:ident_offset_type -> code_directory__inst__ident:ident_pos [color="#404040"];
+	code_directory__seq:team_id_offset_type -> code_directory__inst__team_id:team_id_pos [color="#404040"];
+	code_directory__seq:hash_offset_type -> code_directory__inst__hashes:hashes_pos [color="#404040"];
+	code_directory__seq:hash_size_type -> code_directory__inst__hashes:hashes_pos [color="#404040"];
+	code_directory__seq:n_special_slots_type -> code_directory__inst__hashes:hashes_pos [color="#404040"];
+	code_directory__seq:hash_size_type -> code_directory__inst__hashes:hashes_size [color="#404040"];
+	code_directory__seq:n_special_slots_type -> code_directory__inst__hashes:hashes__repeat [color="#404040"];
+	code_directory__seq:n_code_slots_type -> code_directory__inst__hashes:hashes__repeat [color="#404040"];
+	entitlements_blob_index__seq:offset_type -> entitlements_blob_index__inst__value:value_pos [color="#404040"];
+	entitlements_blob_index__inst__value:value_type -> cs_blob__seq [style=bold];
+	data__seq:length_type -> data__seq:value_size [color="#404040"];
+	data__seq:length_type -> data__seq:padding_size [color="#404040"];
+	super_blob__seq:blobs_type -> blob_index__seq [style=bold];
+	super_blob__seq:count_type -> super_blob__seq:blobs__repeat [color="#404040"];
+	expr__seq:data_type -> expr__seq_data_switch [style=bold];
+	expr__seq_data_switch:case0 -> cert_generic_expr__seq [style=bold];
+	expr__seq_data_switch:case1 -> apple_generic_anchor_expr__seq [style=bold];
+	expr__seq_data_switch:case2 -> info_key_field_expr__seq [style=bold];
+	expr__seq_data_switch:case3 -> and_expr__seq [style=bold];
+	expr__seq_data_switch:case4 -> anchor_hash_expr__seq [style=bold];
+	expr__seq_data_switch:case5 -> data__seq [style=bold];
+	expr__seq_data_switch:case6 -> or_expr__seq [style=bold];
+	expr__seq_data_switch:case7 -> cert_slot_expr__seq [style=bold];
+	expr__seq_data_switch:case8 -> expr__seq [style=bold];
+	expr__seq_data_switch:case9 -> ident_expr__seq [style=bold];
+	expr__seq_data_switch:case10 -> cert_field_expr__seq [style=bold];
+	expr__seq_data_switch:case11 -> entitlement_field_expr__seq [style=bold];
+	expr__seq_data_switch:case12 -> data__seq [style=bold];
+	expr__seq:op_type -> expr__seq:data_type [color="#404040"];
+	info_key_field_expr__seq:data_type -> data__seq [style=bold];
+	info_key_field_expr__seq:match_type -> match__seq [style=bold];
+	cert_generic_expr__seq:data_type -> data__seq [style=bold];
+	cert_generic_expr__seq:match_type -> match__seq [style=bold];
+	ident_expr__seq:identifier_type -> data__seq [style=bold];
+	cert_field_expr__seq:data_type -> data__seq [style=bold];
+	cert_field_expr__seq:match_type -> match__seq [style=bold];
+	anchor_hash_expr__seq:data_type -> data__seq [style=bold];
+	entitlement_field_expr__seq:data_type -> data__seq [style=bold];
+	entitlement_field_expr__seq:match_type -> match__seq [style=bold];
+	and_expr__seq:left_type -> expr__seq [style=bold];
+	and_expr__seq:right_type -> expr__seq [style=bold];
+	or_expr__seq:left_type -> expr__seq [style=bold];
+	or_expr__seq:right_type -> expr__seq [style=bold];
+	blob_index__seq:offset_type -> blob_index__inst__blob:blob_pos [color="#404040"];
+	blob_index__inst__blob:blob_type -> cs_blob__seq [style=bold];
+	match__seq:data_type -> data__seq [style=bold];
+	requirement__seq:expr_type -> expr__seq [style=bold];
+	entitlements__seq:items_type -> entitlements_blob_index__seq [style=bold];
+	entitlements__seq:count_type -> entitlements__seq:items__repeat [color="#404040"];
+	linker_option_command__seq:num_strings_type -> linker_option_command__seq:strings__repeat [color="#404040"];
+	segment_command_64__seq:maxprot_type -> vm_prot__seq [style=bold];
+	segment_command_64__seq:initprot_type -> vm_prot__seq [style=bold];
+	segment_command_64__seq:sections_type -> section_64__seq [style=bold];
+	segment_command_64__seq:nsects_type -> segment_command_64__seq:sections__repeat [color="#404040"];
+	section_64__seq:offset_type -> section_64__inst__data:data_pos [color="#404040"];
+	section_64__inst__data:data_type -> section_64__inst__data_data_switch [style=bold];
+	section_64__inst__data_data_switch:case0 -> pointer_list__seq [style=bold];
+	section_64__inst__data_data_switch:case1 -> string_list__seq [style=bold];
+	section_64__inst__data_data_switch:case2 -> pointer_list__seq [style=bold];
+	section_64__inst__data_data_switch:case3 -> pointer_list__seq [style=bold];
+	section_64__inst__data_data_switch:case4 -> pointer_list__seq [style=bold];
+	section_64__inst__data_data_switch:case5 -> string_list__seq [style=bold];
+	section_64__inst__data_data_switch:case6 -> pointer_list__seq [style=bold];
+	section_64__inst__data_data_switch:case7 -> pointer_list__seq [style=bold];
+	section_64__inst__data_data_switch:case8 -> pointer_list__seq [style=bold];
+	section_64__inst__data_data_switch:case9 -> string_list__seq [style=bold];
+	section_64__inst__data_data_switch:case10 -> cf_string_list__seq [style=bold];
+	section_64__inst__data_data_switch:case11 -> pointer_list__seq [style=bold];
+	section_64__inst__data_data_switch:case12 -> pointer_list__seq [style=bold];
+	section_64__inst__data_data_switch:case13 -> string_list__seq [style=bold];
+	section_64__inst__data_data_switch:case14 -> pointer_list__seq [style=bold];
+	section_64__inst__data_data_switch:case15 -> eh_frame__seq [style=bold];
+	section_64__inst__data_data_switch:case16 -> pointer_list__seq [style=bold];
+	section_64__seq:sect_name_type -> section_64__inst__data:data_type [color="#404040"];
+	cf_string_list__seq:items_type -> cf_string__seq [style=bold];
+	eh_frame_item__seq:body_type -> eh_frame_item__seq_body_switch [style=bold];
+	eh_frame_item__seq_body_switch:case0 -> cie__seq [style=bold];
+	eh_frame_item__seq:id_type -> eh_frame_item__seq:body_type [color="#404040"];
+	char_chain__seq:next_type -> char_chain__seq [style=bold];
+	cie__seq:aug_str_type -> char_chain__seq [style=bold];
+	cie__seq:code_alignment_factor_type -> uleb128__seq [style=bold];
+	cie__seq:data_alignment_factor_type -> uleb128__seq [style=bold];
+	cie__seq:augmentation_type -> augmentation_entry__seq [style=bold];
+	augmentation_entry__seq:length_type -> uleb128__seq [style=bold];
+	eh_frame__seq:items_type -> eh_frame_item__seq [style=bold];
+	dysymtab_command__seq:indirect_sym_off_type -> dysymtab_command__inst__indirect_symbols:indirect_symbols_pos [color="#404040"];
+	dysymtab_command__seq:n_indirect_syms_type -> dysymtab_command__inst__indirect_symbols:indirect_symbols__repeat [color="#404040"];
+	sub_command__seq:name_type -> lc_str__seq [style=bold];
+	code_signature_command__seq:data_off_type -> code_signature_command__inst__code_signature:code_signature_pos [color="#404040"];
+	code_signature_command__seq:data_size_type -> code_signature_command__inst__code_signature:code_signature_size [color="#404040"];
+	code_signature_command__inst__code_signature:code_signature_type -> cs_blob__seq [style=bold];
+	dyld_info_command__seq:rebase_off_type -> dyld_info_command__inst__rebase:rebase_pos [color="#404040"];
+	dyld_info_command__seq:rebase_size_type -> dyld_info_command__inst__rebase:rebase_size [color="#404040"];
+	dyld_info_command__inst__rebase:rebase_type -> rebase_data__seq [style=bold];
+	dyld_info_command__seq:bind_off_type -> dyld_info_command__inst__bind:bind_pos [color="#404040"];
+	dyld_info_command__seq:bind_size_type -> dyld_info_command__inst__bind:bind_size [color="#404040"];
+	dyld_info_command__inst__bind:bind_type -> bind_data__seq [style=bold];
+	dyld_info_command__seq:lazy_bind_off_type -> dyld_info_command__inst__lazy_bind:lazy_bind_pos [color="#404040"];
+	dyld_info_command__seq:lazy_bind_size_type -> dyld_info_command__inst__lazy_bind:lazy_bind_size [color="#404040"];
+	dyld_info_command__inst__lazy_bind:lazy_bind_type -> lazy_bind_data__seq [style=bold];
+	dyld_info_command__seq:export_off_type -> dyld_info_command__inst__exports:exports_pos [color="#404040"];
+	dyld_info_command__seq:export_size_type -> dyld_info_command__inst__exports:exports_size [color="#404040"];
+	dyld_info_command__inst__exports:exports_type -> export_node__seq [style=bold];
+	bind_item__seq:uleb_type -> uleb128__seq [style=bold];
+	bind_item__seq:skip_type -> uleb128__seq [style=bold];
+	bind_item__seq:opcode_and_immediate_type -> bind_item__inst__opcode [color="#404040"];
+	bind_item__seq:opcode_and_immediate_type -> bind_item__inst__immediate [color="#404040"];
+	rebase_data__seq:items_type -> rebase_item__seq [style=bold];
+	rebase_item__inst__opcode:opcode_type -> rebase_data__seq:items__repeat [color="#404040"];
+	rebase_item__seq:uleb_type -> uleb128__seq [style=bold];
+	rebase_item__seq:skip_type -> uleb128__seq [style=bold];
+	rebase_item__seq:opcode_and_immediate_type -> rebase_item__inst__opcode [color="#404040"];
+	rebase_item__seq:opcode_and_immediate_type -> rebase_item__inst__immediate [color="#404040"];
+	export_node__seq:terminal_size_type -> uleb128__seq [style=bold];
+	export_node__seq:children_type -> child__seq [style=bold];
+	export_node__seq:children_count_type -> export_node__seq:children__repeat [color="#404040"];
+	uleb128__inst__value:value_type -> export_node__seq:terminal_size [color="#404040"];
+	child__seq:node_offset_type -> uleb128__seq [style=bold];
+	uleb128__inst__value:value_type -> child__inst__value:value_pos [color="#404040"];
+	child__inst__value:value_type -> export_node__seq [style=bold];
+	bind_data__seq:items_type -> bind_item__seq [style=bold];
+	bind_item__inst__opcode:opcode_type -> bind_data__seq:items__repeat [color="#404040"];
+	lazy_bind_data__seq:items_type -> bind_item__seq [style=bold];
+	dylinker_command__seq:name_type -> lc_str__seq [style=bold];
+	load_command__seq:body_type -> load_command__seq_body_switch [style=bold];
+	load_command__seq_body_switch:case0 -> sub_command__seq [style=bold];
+	load_command__seq_body_switch:case1 -> linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case2 -> rpath_command__seq [style=bold];
+	load_command__seq_body_switch:case3 -> source_version_command__seq [style=bold];
+	load_command__seq_body_switch:case4 -> encryption_info_command__seq [style=bold];
+	load_command__seq_body_switch:case5 -> version_min_command__seq [style=bold];
+	load_command__seq_body_switch:case6 -> dylinker_command__seq [style=bold];
+	load_command__seq_body_switch:case7 -> sub_command__seq [style=bold];
+	load_command__seq_body_switch:case8 -> dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case9 -> version_min_command__seq [style=bold];
+	load_command__seq_body_switch:case10 -> linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case11 -> dylinker_command__seq [style=bold];
+	load_command__seq_body_switch:case12 -> dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case13 -> linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case14 -> dyld_info_command__seq [style=bold];
+	load_command__seq_body_switch:case15 -> dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case16 -> symtab_command__seq [style=bold];
+	load_command__seq_body_switch:case17 -> routines_command_64__seq [style=bold];
+	load_command__seq_body_switch:case18 -> dylinker_command__seq [style=bold];
+	load_command__seq_body_switch:case19 -> entry_point_command__seq [style=bold];
+	load_command__seq_body_switch:case20 -> linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case21 -> version_min_command__seq [style=bold];
+	load_command__seq_body_switch:case22 -> linkedit_data_command__seq [style=bold];
+	load_command__seq_body_switch:case23 -> version_min_command__seq [style=bold];
+	load_command__seq_body_switch:case24 -> encryption_info_command__seq [style=bold];
+	load_command__seq_body_switch:case25 -> sub_command__seq [style=bold];
+	load_command__seq_body_switch:case26 -> linker_option_command__seq [style=bold];
+	load_command__seq_body_switch:case27 -> twolevel_hints_command__seq [style=bold];
+	load_command__seq_body_switch:case28 -> uuid_command__seq [style=bold];
+	load_command__seq_body_switch:case29 -> dyld_info_command__seq [style=bold];
+	load_command__seq_body_switch:case30 -> dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case31 -> sub_command__seq [style=bold];
+	load_command__seq_body_switch:case32 -> routines_command__seq [style=bold];
+	load_command__seq_body_switch:case33 -> code_signature_command__seq [style=bold];
+	load_command__seq_body_switch:case34 -> dysymtab_command__seq [style=bold];
+	load_command__seq_body_switch:case35 -> dylib_command__seq [style=bold];
+	load_command__seq_body_switch:case36 -> segment_command_64__seq [style=bold];
+	load_command__seq_body_switch:case37 -> dylib_command__seq [style=bold];
+	load_command__seq:type_type -> load_command__seq:body_type [color="#404040"];
+	symtab_command__seq:sym_off_type -> symtab_command__inst__symbols:symbols_pos [color="#404040"];
+	symtab_command__inst__symbols:symbols_type -> nlist_64__seq [style=bold];
+	symtab_command__seq:n_syms_type -> symtab_command__inst__symbols:symbols__repeat [color="#404040"];
+	symtab_command__seq:str_off_type -> symtab_command__inst__strs:strs_pos [color="#404040"];
+	symtab_command__seq:str_size_type -> symtab_command__inst__strs:strs_size [color="#404040"];
+	symtab_command__inst__strs:strs_type -> str_table__seq [style=bold];
+	version_min_command__seq:version_type -> version__seq [style=bold];
+	version_min_command__seq:sdk_type -> version__seq [style=bold];
+}

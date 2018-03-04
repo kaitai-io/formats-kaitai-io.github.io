@@ -1,0 +1,4680 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>mach_o: Perl parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Executables and Byte-code</li>
+        <li class="active">mach_o</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>mach_o:
+            
+            Perl parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of mach_o
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="mach_o parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="mach_o parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="mach_o parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="mach_o parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="mach_o parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="mach_o parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="perl.html" title="mach_o parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="mach_o parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="mach_o parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="mach_o parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Perl source code to parse mach_o
+            
+        </h2>
+
+        
+
+        <h3>MachO.pm</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/perl/MachO.pm" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="perl"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+use strict;
+use warnings;
+use IO::KaitaiStruct 0.007_000;
+use Encode;
+
+########################################################################
+package MachO;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $LOAD_COMMAND_TYPE_SEGMENT = 1;
+our $LOAD_COMMAND_TYPE_SYMTAB = 2;
+our $LOAD_COMMAND_TYPE_SYMSEG = 3;
+our $LOAD_COMMAND_TYPE_THREAD = 4;
+our $LOAD_COMMAND_TYPE_UNIX_THREAD = 5;
+our $LOAD_COMMAND_TYPE_LOAD_FVM_LIB = 6;
+our $LOAD_COMMAND_TYPE_ID_FVM_LIB = 7;
+our $LOAD_COMMAND_TYPE_IDENT = 8;
+our $LOAD_COMMAND_TYPE_FVM_FILE = 9;
+our $LOAD_COMMAND_TYPE_PREPAGE = 10;
+our $LOAD_COMMAND_TYPE_DYSYMTAB = 11;
+our $LOAD_COMMAND_TYPE_LOAD_DYLIB = 12;
+our $LOAD_COMMAND_TYPE_ID_DYLIB = 13;
+our $LOAD_COMMAND_TYPE_LOAD_DYLINKER = 14;
+our $LOAD_COMMAND_TYPE_ID_DYLINKER = 15;
+our $LOAD_COMMAND_TYPE_PREBOUND_DYLIB = 16;
+our $LOAD_COMMAND_TYPE_ROUTINES = 17;
+our $LOAD_COMMAND_TYPE_SUB_FRAMEWORK = 18;
+our $LOAD_COMMAND_TYPE_SUB_UMBRELLA = 19;
+our $LOAD_COMMAND_TYPE_SUB_CLIENT = 20;
+our $LOAD_COMMAND_TYPE_SUB_LIBRARY = 21;
+our $LOAD_COMMAND_TYPE_TWOLEVEL_HINTS = 22;
+our $LOAD_COMMAND_TYPE_PREBIND_CKSUM = 23;
+our $LOAD_COMMAND_TYPE_SEGMENT_64 = 25;
+our $LOAD_COMMAND_TYPE_ROUTINES_64 = 26;
+our $LOAD_COMMAND_TYPE_UUID = 27;
+our $LOAD_COMMAND_TYPE_CODE_SIGNATURE = 29;
+our $LOAD_COMMAND_TYPE_SEGMENT_SPLIT_INFO = 30;
+our $LOAD_COMMAND_TYPE_LAZY_LOAD_DYLIB = 32;
+our $LOAD_COMMAND_TYPE_ENCRYPTION_INFO = 33;
+our $LOAD_COMMAND_TYPE_DYLD_INFO = 34;
+our $LOAD_COMMAND_TYPE_VERSION_MIN_MACOSX = 36;
+our $LOAD_COMMAND_TYPE_VERSION_MIN_IPHONEOS = 37;
+our $LOAD_COMMAND_TYPE_FUNCTION_STARTS = 38;
+our $LOAD_COMMAND_TYPE_DYLD_ENVIRONMENT = 39;
+our $LOAD_COMMAND_TYPE_DATA_IN_CODE = 41;
+our $LOAD_COMMAND_TYPE_SOURCE_VERSION = 42;
+our $LOAD_COMMAND_TYPE_DYLIB_CODE_SIGN_DRS = 43;
+our $LOAD_COMMAND_TYPE_ENCRYPTION_INFO_64 = 44;
+our $LOAD_COMMAND_TYPE_LINKER_OPTION = 45;
+our $LOAD_COMMAND_TYPE_LINKER_OPTIMIZATION_HINT = 46;
+our $LOAD_COMMAND_TYPE_VERSION_MIN_TVOS = 47;
+our $LOAD_COMMAND_TYPE_VERSION_MIN_WATCHOS = 48;
+our $LOAD_COMMAND_TYPE_REQ_DYLD = 2147483648;
+our $LOAD_COMMAND_TYPE_LOAD_WEAK_DYLIB = 2147483672;
+our $LOAD_COMMAND_TYPE_RPATH = 2147483676;
+our $LOAD_COMMAND_TYPE_REEXPORT_DYLIB = 2147483679;
+our $LOAD_COMMAND_TYPE_DYLD_INFO_ONLY = 2147483682;
+our $LOAD_COMMAND_TYPE_LOAD_UPWARD_DYLIB = 2147483683;
+our $LOAD_COMMAND_TYPE_MAIN = 2147483688;
+
+our $MACHO_FLAGS_NO_UNDEFS = 1;
+our $MACHO_FLAGS_INCR_LINK = 2;
+our $MACHO_FLAGS_DYLD_LINK = 4;
+our $MACHO_FLAGS_BIND_AT_LOAD = 8;
+our $MACHO_FLAGS_PREBOUND = 16;
+our $MACHO_FLAGS_SPLIT_SEGS = 32;
+our $MACHO_FLAGS_LAZY_INIT = 64;
+our $MACHO_FLAGS_TWO_LEVEL = 128;
+our $MACHO_FLAGS_FORCE_FLAT = 256;
+our $MACHO_FLAGS_NO_MULTI_DEFS = 512;
+our $MACHO_FLAGS_NO_FIX_PREBINDING = 1024;
+our $MACHO_FLAGS_PREBINDABLE = 2048;
+our $MACHO_FLAGS_ALL_MODS_BOUND = 4096;
+our $MACHO_FLAGS_SUBSECTIONS_VIA_SYMBOLS = 8192;
+our $MACHO_FLAGS_CANONICAL = 16384;
+our $MACHO_FLAGS_WEAK_DEFINES = 32768;
+our $MACHO_FLAGS_BINDS_TO_WEAK = 65536;
+our $MACHO_FLAGS_ALLOW_STACK_EXECUTION = 131072;
+our $MACHO_FLAGS_ROOT_SAFE = 262144;
+our $MACHO_FLAGS_SETUID_SAFE = 524288;
+our $MACHO_FLAGS_NO_REEXPORTED_DYLIBS = 1048576;
+our $MACHO_FLAGS_PIE = 2097152;
+our $MACHO_FLAGS_DEAD_STRIPPABLE_DYLIB = 4194304;
+our $MACHO_FLAGS_HAS_TLV_DESCRIPTORS = 8388608;
+our $MACHO_FLAGS_NO_HEAP_EXECUTION = 16777216;
+our $MACHO_FLAGS_APP_EXTENSION_SAFE = 33554432;
+
+our $MAGIC_TYPE_FAT_LE = 3199925962;
+our $MAGIC_TYPE_FAT_BE = 3405691582;
+our $MAGIC_TYPE_MACHO_LE_X86 = 3472551422;
+our $MAGIC_TYPE_MACHO_LE_X64 = 3489328638;
+our $MAGIC_TYPE_MACHO_BE_X86 = 4277009102;
+our $MAGIC_TYPE_MACHO_BE_X64 = 4277009103;
+
+our $FILE_TYPE_OBJECT = 1;
+our $FILE_TYPE_EXECUTE = 2;
+our $FILE_TYPE_FVMLIB = 3;
+our $FILE_TYPE_CORE = 4;
+our $FILE_TYPE_PRELOAD = 5;
+our $FILE_TYPE_DYLIB = 6;
+our $FILE_TYPE_DYLINKER = 7;
+our $FILE_TYPE_BUNDLE = 8;
+our $FILE_TYPE_DYLIB_STUB = 9;
+our $FILE_TYPE_DSYM = 10;
+our $FILE_TYPE_KEXT_BUNDLE = 11;
+
+our $CPU_TYPE_VAX = 1;
+our $CPU_TYPE_ROMP = 2;
+our $CPU_TYPE_NS32032 = 4;
+our $CPU_TYPE_NS32332 = 5;
+our $CPU_TYPE_I386 = 7;
+our $CPU_TYPE_MIPS = 8;
+our $CPU_TYPE_NS32532 = 9;
+our $CPU_TYPE_HPPA = 11;
+our $CPU_TYPE_ARM = 12;
+our $CPU_TYPE_MC88000 = 13;
+our $CPU_TYPE_SPARC = 14;
+our $CPU_TYPE_I860 = 15;
+our $CPU_TYPE_I860_LITTLE = 16;
+our $CPU_TYPE_RS6000 = 17;
+our $CPU_TYPE_POWERPC = 18;
+our $CPU_TYPE_ABI64 = 16777216;
+our $CPU_TYPE_X86_64 = 16777223;
+our $CPU_TYPE_ARM64 = 16777228;
+our $CPU_TYPE_POWERPC64 = 16777234;
+our $CPU_TYPE_ANY = 4294967295;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{magic} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{header} = MachO::MachHeader-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{load_commands} = ();
+    my $n_load_commands = $self-&gt;header()-&gt;ncmds();
+    for (my $i = 0; $i &lt; $n_load_commands; $i++) {
+        $self-&gt;{load_commands}[$i] = MachO::LoadCommand-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub magic {
+    my ($self) = @_;
+    return $self-&gt;{magic};
+}
+
+sub header {
+    my ($self) = @_;
+    return $self-&gt;{header};
+}
+
+sub load_commands {
+    my ($self) = @_;
+    return $self-&gt;{load_commands};
+}
+
+########################################################################
+package MachO::RpathCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{path_offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{path} = Encode::decode(&quot;utf-8&quot;, $self-&gt;{_io}-&gt;read_bytes_term(0, 0, 1, 1));
+}
+
+sub path_offset {
+    my ($self) = @_;
+    return $self-&gt;{path_offset};
+}
+
+sub path {
+    my ($self) = @_;
+    return $self-&gt;{path};
+}
+
+########################################################################
+package MachO::Uleb128;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{b1} = $self-&gt;{_io}-&gt;read_u1();
+    if (($self-&gt;b1() &amp; 128) != 0) {
+        $self-&gt;{b2} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    if (($self-&gt;b2() &amp; 128) != 0) {
+        $self-&gt;{b3} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    if (($self-&gt;b3() &amp; 128) != 0) {
+        $self-&gt;{b4} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    if (($self-&gt;b4() &amp; 128) != 0) {
+        $self-&gt;{b5} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    if (($self-&gt;b5() &amp; 128) != 0) {
+        $self-&gt;{b6} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    if (($self-&gt;b6() &amp; 128) != 0) {
+        $self-&gt;{b7} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    if (($self-&gt;b7() &amp; 128) != 0) {
+        $self-&gt;{b8} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    if (($self-&gt;b8() &amp; 128) != 0) {
+        $self-&gt;{b9} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    if (($self-&gt;b9() &amp; 128) != 0) {
+        $self-&gt;{b10} = $self-&gt;{_io}-&gt;read_u1();
+    }
+}
+
+sub value {
+    my ($self) = @_;
+    return $self-&gt;{value} if ($self-&gt;{value});
+    $self-&gt;{value} = ((($self-&gt;b1() % 128) &lt;&lt; 0) + (($self-&gt;b1() &amp; 128) == 0 ? 0 : ((($self-&gt;b2() % 128) &lt;&lt; 7) + (($self-&gt;b2() &amp; 128) == 0 ? 0 : ((($self-&gt;b3() % 128) &lt;&lt; 14) + (($self-&gt;b3() &amp; 128) == 0 ? 0 : ((($self-&gt;b4() % 128) &lt;&lt; 21) + (($self-&gt;b4() &amp; 128) == 0 ? 0 : ((($self-&gt;b5() % 128) &lt;&lt; 28) + (($self-&gt;b5() &amp; 128) == 0 ? 0 : ((($self-&gt;b6() % 128) &lt;&lt; 35) + (($self-&gt;b6() &amp; 128) == 0 ? 0 : ((($self-&gt;b7() % 128) &lt;&lt; 42) + (($self-&gt;b7() &amp; 128) == 0 ? 0 : ((($self-&gt;b8() % 128) &lt;&lt; 49) + (($self-&gt;b8() &amp; 128) == 0 ? 0 : ((($self-&gt;b9() % 128) &lt;&lt; 56) + (($self-&gt;b8() &amp; 128) == 0 ? 0 : (($self-&gt;b10() % 128) &lt;&lt; 63)))))))))))))))))));
+    return $self-&gt;{value};
+}
+
+sub b1 {
+    my ($self) = @_;
+    return $self-&gt;{b1};
+}
+
+sub b2 {
+    my ($self) = @_;
+    return $self-&gt;{b2};
+}
+
+sub b3 {
+    my ($self) = @_;
+    return $self-&gt;{b3};
+}
+
+sub b4 {
+    my ($self) = @_;
+    return $self-&gt;{b4};
+}
+
+sub b5 {
+    my ($self) = @_;
+    return $self-&gt;{b5};
+}
+
+sub b6 {
+    my ($self) = @_;
+    return $self-&gt;{b6};
+}
+
+sub b7 {
+    my ($self) = @_;
+    return $self-&gt;{b7};
+}
+
+sub b8 {
+    my ($self) = @_;
+    return $self-&gt;{b8};
+}
+
+sub b9 {
+    my ($self) = @_;
+    return $self-&gt;{b9};
+}
+
+sub b10 {
+    my ($self) = @_;
+    return $self-&gt;{b10};
+}
+
+########################################################################
+package MachO::SourceVersionCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{version} = $self-&gt;{_io}-&gt;read_u8le();
+}
+
+sub version {
+    my ($self) = @_;
+    return $self-&gt;{version};
+}
+
+########################################################################
+package MachO::CsBlob;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $CS_MAGIC_BLOB_WRAPPER = 4208855809;
+our $CS_MAGIC_REQUIREMENT = 4208856064;
+our $CS_MAGIC_REQUIREMENTS = 4208856065;
+our $CS_MAGIC_CODE_DIRECTORY = 4208856066;
+our $CS_MAGIC_EMBEDDED_SIGNATURE = 4208856256;
+our $CS_MAGIC_DETACHED_SIGNATURE = 4208856257;
+our $CS_MAGIC_ENTITLEMENT = 4208882033;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{magic} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{length} = $self-&gt;{_io}-&gt;read_u4be();
+    my $_on = $self-&gt;magic();
+    if ($_on == $CS_MAGIC_DETACHED_SIGNATURE) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::CsBlob::SuperBlob-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $CS_MAGIC_EMBEDDED_SIGNATURE) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::CsBlob::SuperBlob-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $CS_MAGIC_ENTITLEMENT) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::CsBlob::Entitlement-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $CS_MAGIC_BLOB_WRAPPER) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::CsBlob::BlobWrapper-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $CS_MAGIC_REQUIREMENT) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::CsBlob::Requirement-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $CS_MAGIC_CODE_DIRECTORY) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::CsBlob::CodeDirectory-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $CS_MAGIC_REQUIREMENTS) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::CsBlob::Entitlements-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    else {
+        $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 8));
+    }
+}
+
+sub magic {
+    my ($self) = @_;
+    return $self-&gt;{magic};
+}
+
+sub length {
+    my ($self) = @_;
+    return $self-&gt;{length};
+}
+
+sub body {
+    my ($self) = @_;
+    return $self-&gt;{body};
+}
+
+sub _raw_body {
+    my ($self) = @_;
+    return $self-&gt;{_raw_body};
+}
+
+########################################################################
+package MachO::CsBlob::Entitlement;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{data} = $self-&gt;{_io}-&gt;read_bytes_full();
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data};
+}
+
+########################################################################
+package MachO::CsBlob::CodeDirectory;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{version} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{flags} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{hash_offset} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{ident_offset} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{n_special_slots} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{n_code_slots} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{code_limit} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{hash_size} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{hash_type} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{spare1} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{page_size} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{spare2} = $self-&gt;{_io}-&gt;read_u4be();
+    if ($self-&gt;version() &gt;= 131328) {
+        $self-&gt;{scatter_offset} = $self-&gt;{_io}-&gt;read_u4be();
+    }
+    if ($self-&gt;version() &gt;= 131584) {
+        $self-&gt;{team_id_offset} = $self-&gt;{_io}-&gt;read_u4be();
+    }
+}
+
+sub ident {
+    my ($self) = @_;
+    return $self-&gt;{ident} if ($self-&gt;{ident});
+    my $_pos = $self-&gt;{_io}-&gt;pos();
+    $self-&gt;{_io}-&gt;seek(($self-&gt;ident_offset() - 8));
+    $self-&gt;{ident} = Encode::decode(&quot;utf-8&quot;, $self-&gt;{_io}-&gt;read_bytes_term(0, 0, 1, 1));
+    $self-&gt;{_io}-&gt;seek($_pos);
+    return $self-&gt;{ident};
+}
+
+sub team_id {
+    my ($self) = @_;
+    return $self-&gt;{team_id} if ($self-&gt;{team_id});
+    my $_pos = $self-&gt;{_io}-&gt;pos();
+    $self-&gt;{_io}-&gt;seek(($self-&gt;team_id_offset() - 8));
+    $self-&gt;{team_id} = Encode::decode(&quot;utf-8&quot;, $self-&gt;{_io}-&gt;read_bytes_term(0, 0, 1, 1));
+    $self-&gt;{_io}-&gt;seek($_pos);
+    return $self-&gt;{team_id};
+}
+
+sub hashes {
+    my ($self) = @_;
+    return $self-&gt;{hashes} if ($self-&gt;{hashes});
+    my $_pos = $self-&gt;{_io}-&gt;pos();
+    $self-&gt;{_io}-&gt;seek((($self-&gt;hash_offset() - 8) - ($self-&gt;hash_size() * $self-&gt;n_special_slots())));
+    $self-&gt;{hashes} = ();
+    my $n_hashes = ($self-&gt;n_special_slots() + $self-&gt;n_code_slots());
+    for (my $i = 0; $i &lt; $n_hashes; $i++) {
+        $self-&gt;{hashes}[$i] = $self-&gt;{_io}-&gt;read_bytes($self-&gt;hash_size());
+    }
+    $self-&gt;{_io}-&gt;seek($_pos);
+    return $self-&gt;{hashes};
+}
+
+sub version {
+    my ($self) = @_;
+    return $self-&gt;{version};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self-&gt;{flags};
+}
+
+sub hash_offset {
+    my ($self) = @_;
+    return $self-&gt;{hash_offset};
+}
+
+sub ident_offset {
+    my ($self) = @_;
+    return $self-&gt;{ident_offset};
+}
+
+sub n_special_slots {
+    my ($self) = @_;
+    return $self-&gt;{n_special_slots};
+}
+
+sub n_code_slots {
+    my ($self) = @_;
+    return $self-&gt;{n_code_slots};
+}
+
+sub code_limit {
+    my ($self) = @_;
+    return $self-&gt;{code_limit};
+}
+
+sub hash_size {
+    my ($self) = @_;
+    return $self-&gt;{hash_size};
+}
+
+sub hash_type {
+    my ($self) = @_;
+    return $self-&gt;{hash_type};
+}
+
+sub spare1 {
+    my ($self) = @_;
+    return $self-&gt;{spare1};
+}
+
+sub page_size {
+    my ($self) = @_;
+    return $self-&gt;{page_size};
+}
+
+sub spare2 {
+    my ($self) = @_;
+    return $self-&gt;{spare2};
+}
+
+sub scatter_offset {
+    my ($self) = @_;
+    return $self-&gt;{scatter_offset};
+}
+
+sub team_id_offset {
+    my ($self) = @_;
+    return $self-&gt;{team_id_offset};
+}
+
+########################################################################
+package MachO::CsBlob::EntitlementsBlobIndex;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $REQUIREMENT_TYPE_HOST = 1;
+our $REQUIREMENT_TYPE_GUEST = 2;
+our $REQUIREMENT_TYPE_DESIGNATED = 3;
+our $REQUIREMENT_TYPE_LIBRARY = 4;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{type} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{offset} = $self-&gt;{_io}-&gt;read_u4be();
+}
+
+sub value {
+    my ($self) = @_;
+    return $self-&gt;{value} if ($self-&gt;{value});
+    my $_pos = $self-&gt;{_io}-&gt;pos();
+    $self-&gt;{_io}-&gt;seek(($self-&gt;offset() - 8));
+    $self-&gt;{value} = MachO::CsBlob-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{_io}-&gt;seek($_pos);
+    return $self-&gt;{value};
+}
+
+sub type {
+    my ($self) = @_;
+    return $self-&gt;{type};
+}
+
+sub offset {
+    my ($self) = @_;
+    return $self-&gt;{offset};
+}
+
+########################################################################
+package MachO::CsBlob::Data;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{length} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{value} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;length());
+    $self-&gt;{padding} = $self-&gt;{_io}-&gt;read_bytes((4 - ($self-&gt;length() &amp; 3)));
+}
+
+sub length {
+    my ($self) = @_;
+    return $self-&gt;{length};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self-&gt;{value};
+}
+
+sub padding {
+    my ($self) = @_;
+    return $self-&gt;{padding};
+}
+
+########################################################################
+package MachO::CsBlob::SuperBlob;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{count} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{blobs} = ();
+    my $n_blobs = $self-&gt;count();
+    for (my $i = 0; $i &lt; $n_blobs; $i++) {
+        $self-&gt;{blobs}[$i] = MachO::CsBlob::BlobIndex-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub count {
+    my ($self) = @_;
+    return $self-&gt;{count};
+}
+
+sub blobs {
+    my ($self) = @_;
+    return $self-&gt;{blobs};
+}
+
+########################################################################
+package MachO::CsBlob::Expr;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $OP_ENUM_FALSE = 0;
+our $OP_ENUM_TRUE = 1;
+our $OP_ENUM_IDENT = 2;
+our $OP_ENUM_APPLE_ANCHOR = 3;
+our $OP_ENUM_ANCHOR_HASH = 4;
+our $OP_ENUM_INFO_KEY_VALUE = 5;
+our $OP_ENUM_AND_OP = 6;
+our $OP_ENUM_OR_OP = 7;
+our $OP_ENUM_CD_HASH = 8;
+our $OP_ENUM_NOT_OP = 9;
+our $OP_ENUM_INFO_KEY_FIELD = 10;
+our $OP_ENUM_CERT_FIELD = 11;
+our $OP_ENUM_TRUSTED_CERT = 12;
+our $OP_ENUM_TRUSTED_CERTS = 13;
+our $OP_ENUM_CERT_GENERIC = 14;
+our $OP_ENUM_APPLE_GENERIC_ANCHOR = 15;
+our $OP_ENUM_ENTITLEMENT_FIELD = 16;
+
+our $CERT_SLOT_LEFT_CERT = 0;
+our $CERT_SLOT_ANCHOR_CERT = 4294967295;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{op} = $self-&gt;{_io}-&gt;read_u4be();
+    my $_on = $self-&gt;op();
+    if ($_on == $OP_ENUM_CERT_GENERIC) {
+        $self-&gt;{data} = MachO::CsBlob::Expr::CertGenericExpr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OP_ENUM_APPLE_GENERIC_ANCHOR) {
+        $self-&gt;{data} = MachO::CsBlob::Expr::AppleGenericAnchorExpr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OP_ENUM_INFO_KEY_FIELD) {
+        $self-&gt;{data} = MachO::CsBlob::Expr::InfoKeyFieldExpr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OP_ENUM_AND_OP) {
+        $self-&gt;{data} = MachO::CsBlob::Expr::AndExpr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OP_ENUM_ANCHOR_HASH) {
+        $self-&gt;{data} = MachO::CsBlob::Expr::AnchorHashExpr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OP_ENUM_INFO_KEY_VALUE) {
+        $self-&gt;{data} = MachO::CsBlob::Data-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OP_ENUM_OR_OP) {
+        $self-&gt;{data} = MachO::CsBlob::Expr::OrExpr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OP_ENUM_TRUSTED_CERT) {
+        $self-&gt;{data} = MachO::CsBlob::Expr::CertSlotExpr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OP_ENUM_NOT_OP) {
+        $self-&gt;{data} = MachO::CsBlob::Expr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OP_ENUM_IDENT) {
+        $self-&gt;{data} = MachO::CsBlob::Expr::IdentExpr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OP_ENUM_CERT_FIELD) {
+        $self-&gt;{data} = MachO::CsBlob::Expr::CertFieldExpr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OP_ENUM_ENTITLEMENT_FIELD) {
+        $self-&gt;{data} = MachO::CsBlob::Expr::EntitlementFieldExpr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OP_ENUM_CD_HASH) {
+        $self-&gt;{data} = MachO::CsBlob::Data-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub op {
+    my ($self) = @_;
+    return $self-&gt;{op};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data};
+}
+
+########################################################################
+package MachO::CsBlob::Expr::InfoKeyFieldExpr;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{data} = MachO::CsBlob::Data-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{match} = MachO::CsBlob::Match-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data};
+}
+
+sub match {
+    my ($self) = @_;
+    return $self-&gt;{match};
+}
+
+########################################################################
+package MachO::CsBlob::Expr::CertSlotExpr;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u4be();
+}
+
+sub value {
+    my ($self) = @_;
+    return $self-&gt;{value};
+}
+
+########################################################################
+package MachO::CsBlob::Expr::CertGenericExpr;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{cert_slot} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{data} = MachO::CsBlob::Data-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{match} = MachO::CsBlob::Match-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub cert_slot {
+    my ($self) = @_;
+    return $self-&gt;{cert_slot};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data};
+}
+
+sub match {
+    my ($self) = @_;
+    return $self-&gt;{match};
+}
+
+########################################################################
+package MachO::CsBlob::Expr::IdentExpr;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{identifier} = MachO::CsBlob::Data-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub identifier {
+    my ($self) = @_;
+    return $self-&gt;{identifier};
+}
+
+########################################################################
+package MachO::CsBlob::Expr::CertFieldExpr;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{cert_slot} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{data} = MachO::CsBlob::Data-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{match} = MachO::CsBlob::Match-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub cert_slot {
+    my ($self) = @_;
+    return $self-&gt;{cert_slot};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data};
+}
+
+sub match {
+    my ($self) = @_;
+    return $self-&gt;{match};
+}
+
+########################################################################
+package MachO::CsBlob::Expr::AnchorHashExpr;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{cert_slot} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{data} = MachO::CsBlob::Data-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub cert_slot {
+    my ($self) = @_;
+    return $self-&gt;{cert_slot};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data};
+}
+
+########################################################################
+package MachO::CsBlob::Expr::AppleGenericAnchorExpr;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+}
+
+sub value {
+    my ($self) = @_;
+    return $self-&gt;{value} if ($self-&gt;{value});
+    $self-&gt;{value} = &quot;anchor apple generic&quot;;
+    return $self-&gt;{value};
+}
+
+########################################################################
+package MachO::CsBlob::Expr::EntitlementFieldExpr;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{data} = MachO::CsBlob::Data-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{match} = MachO::CsBlob::Match-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data};
+}
+
+sub match {
+    my ($self) = @_;
+    return $self-&gt;{match};
+}
+
+########################################################################
+package MachO::CsBlob::Expr::AndExpr;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{left} = MachO::CsBlob::Expr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{right} = MachO::CsBlob::Expr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub left {
+    my ($self) = @_;
+    return $self-&gt;{left};
+}
+
+sub right {
+    my ($self) = @_;
+    return $self-&gt;{right};
+}
+
+########################################################################
+package MachO::CsBlob::Expr::OrExpr;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{left} = MachO::CsBlob::Expr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{right} = MachO::CsBlob::Expr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub left {
+    my ($self) = @_;
+    return $self-&gt;{left};
+}
+
+sub right {
+    my ($self) = @_;
+    return $self-&gt;{right};
+}
+
+########################################################################
+package MachO::CsBlob::BlobIndex;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $CSSLOT_TYPE_CODE_DIRECTORY = 0;
+our $CSSLOT_TYPE_INFO_SLOT = 1;
+our $CSSLOT_TYPE_REQUIREMENTS = 2;
+our $CSSLOT_TYPE_RESOURCE_DIR = 3;
+our $CSSLOT_TYPE_APPLICATION = 4;
+our $CSSLOT_TYPE_ENTITLEMENTS = 5;
+our $CSSLOT_TYPE_ALTERNATE_CODE_DIRECTORIES = 4096;
+our $CSSLOT_TYPE_SIGNATURE_SLOT = 65536;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{type} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{offset} = $self-&gt;{_io}-&gt;read_u4be();
+}
+
+sub blob {
+    my ($self) = @_;
+    return $self-&gt;{blob} if ($self-&gt;{blob});
+    my $io = $self-&gt;_parent()-&gt;_io();
+    my $_pos = $io-&gt;pos();
+    $io-&gt;seek(($self-&gt;offset() - 8));
+    $self-&gt;{_raw_blob} = $io-&gt;read_bytes_full();
+    my $io__raw_blob = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_blob});
+    $self-&gt;{blob} = MachO::CsBlob-&gt;new($io__raw_blob, $self, $self-&gt;{_root});
+    $io-&gt;seek($_pos);
+    return $self-&gt;{blob};
+}
+
+sub type {
+    my ($self) = @_;
+    return $self-&gt;{type};
+}
+
+sub offset {
+    my ($self) = @_;
+    return $self-&gt;{offset};
+}
+
+sub _raw_blob {
+    my ($self) = @_;
+    return $self-&gt;{_raw_blob};
+}
+
+########################################################################
+package MachO::CsBlob::Match;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $OP_EXISTS = 0;
+our $OP_EQUAL = 1;
+our $OP_CONTAINS = 2;
+our $OP_BEGINS_WITH = 3;
+our $OP_ENDS_WITH = 4;
+our $OP_LESS_THAN = 5;
+our $OP_GREATER_THAN = 6;
+our $OP_LESS_EQUAL = 7;
+our $OP_GREATER_EQUAL = 8;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{match_op} = $self-&gt;{_io}-&gt;read_u4be();
+    if ($self-&gt;match_op() != $OP_EXISTS) {
+        $self-&gt;{data} = MachO::CsBlob::Data-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub match_op {
+    my ($self) = @_;
+    return $self-&gt;{match_op};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data};
+}
+
+########################################################################
+package MachO::CsBlob::Requirement;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{kind} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{expr} = MachO::CsBlob::Expr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub kind {
+    my ($self) = @_;
+    return $self-&gt;{kind};
+}
+
+sub expr {
+    my ($self) = @_;
+    return $self-&gt;{expr};
+}
+
+########################################################################
+package MachO::CsBlob::BlobWrapper;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{data} = $self-&gt;{_io}-&gt;read_bytes_full();
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data};
+}
+
+########################################################################
+package MachO::CsBlob::Entitlements;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{count} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{items} = ();
+    my $n_items = $self-&gt;count();
+    for (my $i = 0; $i &lt; $n_items; $i++) {
+        $self-&gt;{items}[$i] = MachO::CsBlob::EntitlementsBlobIndex-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub count {
+    my ($self) = @_;
+    return $self-&gt;{count};
+}
+
+sub items {
+    my ($self) = @_;
+    return $self-&gt;{items};
+}
+
+########################################################################
+package MachO::RoutinesCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{init_address} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{init_module} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{reserved} = $self-&gt;{_io}-&gt;read_bytes(24);
+}
+
+sub init_address {
+    my ($self) = @_;
+    return $self-&gt;{init_address};
+}
+
+sub init_module {
+    my ($self) = @_;
+    return $self-&gt;{init_module};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self-&gt;{reserved};
+}
+
+########################################################################
+package MachO::RoutinesCommand64;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{init_address} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{init_module} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{reserved} = $self-&gt;{_io}-&gt;read_bytes(48);
+}
+
+sub init_address {
+    my ($self) = @_;
+    return $self-&gt;{init_address};
+}
+
+sub init_module {
+    my ($self) = @_;
+    return $self-&gt;{init_module};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self-&gt;{reserved};
+}
+
+########################################################################
+package MachO::LinkerOptionCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{num_strings} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{strings} = ();
+    my $n_strings = $self-&gt;num_strings();
+    for (my $i = 0; $i &lt; $n_strings; $i++) {
+        $self-&gt;{strings}[$i] = Encode::decode(&quot;utf-8&quot;, $self-&gt;{_io}-&gt;read_bytes_term(0, 0, 1, 1));
+    }
+}
+
+sub num_strings {
+    my ($self) = @_;
+    return $self-&gt;{num_strings};
+}
+
+sub strings {
+    my ($self) = @_;
+    return $self-&gt;{strings};
+}
+
+########################################################################
+package MachO::SegmentCommand64;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{segname} = Encode::decode(&quot;ascii&quot;, IO::KaitaiStruct::Stream::bytes_strip_right($self-&gt;{_io}-&gt;read_bytes(16), 0));
+    $self-&gt;{vmaddr} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{vmsize} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{fileoff} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{filesize} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{maxprot} = MachO::VmProt-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{initprot} = MachO::VmProt-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{nsects} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{flags} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{sections} = ();
+    my $n_sections = $self-&gt;nsects();
+    for (my $i = 0; $i &lt; $n_sections; $i++) {
+        $self-&gt;{sections}[$i] = MachO::SegmentCommand64::Section64-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub segname {
+    my ($self) = @_;
+    return $self-&gt;{segname};
+}
+
+sub vmaddr {
+    my ($self) = @_;
+    return $self-&gt;{vmaddr};
+}
+
+sub vmsize {
+    my ($self) = @_;
+    return $self-&gt;{vmsize};
+}
+
+sub fileoff {
+    my ($self) = @_;
+    return $self-&gt;{fileoff};
+}
+
+sub filesize {
+    my ($self) = @_;
+    return $self-&gt;{filesize};
+}
+
+sub maxprot {
+    my ($self) = @_;
+    return $self-&gt;{maxprot};
+}
+
+sub initprot {
+    my ($self) = @_;
+    return $self-&gt;{initprot};
+}
+
+sub nsects {
+    my ($self) = @_;
+    return $self-&gt;{nsects};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self-&gt;{flags};
+}
+
+sub sections {
+    my ($self) = @_;
+    return $self-&gt;{sections};
+}
+
+########################################################################
+package MachO::SegmentCommand64::Section64;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{sect_name} = Encode::decode(&quot;ascii&quot;, IO::KaitaiStruct::Stream::bytes_strip_right($self-&gt;{_io}-&gt;read_bytes(16), 0));
+    $self-&gt;{seg_name} = Encode::decode(&quot;ascii&quot;, IO::KaitaiStruct::Stream::bytes_strip_right($self-&gt;{_io}-&gt;read_bytes(16), 0));
+    $self-&gt;{addr} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{size} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{align} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{reloff} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{nreloc} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{flags} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{reserved1} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{reserved2} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{reserved3} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data} if ($self-&gt;{data});
+    my $io = $self-&gt;_root()-&gt;_io();
+    my $_pos = $io-&gt;pos();
+    $io-&gt;seek($self-&gt;offset());
+    my $_on = $self-&gt;sect_name();
+    if ($_on eq &quot;__objc_nlclslist&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::PointerList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__objc_methname&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::StringList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__nl_symbol_ptr&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::PointerList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__la_symbol_ptr&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::PointerList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__objc_selrefs&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::PointerList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__cstring&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::StringList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__objc_classlist&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::PointerList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__objc_protolist&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::PointerList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__objc_imageinfo&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::PointerList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__objc_methtype&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::StringList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__cfstring&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::CfStringList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__objc_classrefs&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::PointerList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__objc_protorefs&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::PointerList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__objc_classname&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::StringList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__got&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::PointerList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__eh_frame&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::EhFrame-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    elsif ($_on eq &quot;__objc_superrefs&quot;) {
+        $self-&gt;{_raw_data} = $io-&gt;read_bytes($self-&gt;size());
+        my $io__raw_data = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_data});
+        $self-&gt;{data} = MachO::SegmentCommand64::Section64::PointerList-&gt;new($io__raw_data, $self, $self-&gt;{_root});
+    }
+    else {
+        $self-&gt;{data} = $io-&gt;read_bytes($self-&gt;size());
+    }
+    $io-&gt;seek($_pos);
+    return $self-&gt;{data};
+}
+
+sub sect_name {
+    my ($self) = @_;
+    return $self-&gt;{sect_name};
+}
+
+sub seg_name {
+    my ($self) = @_;
+    return $self-&gt;{seg_name};
+}
+
+sub addr {
+    my ($self) = @_;
+    return $self-&gt;{addr};
+}
+
+sub size {
+    my ($self) = @_;
+    return $self-&gt;{size};
+}
+
+sub offset {
+    my ($self) = @_;
+    return $self-&gt;{offset};
+}
+
+sub align {
+    my ($self) = @_;
+    return $self-&gt;{align};
+}
+
+sub reloff {
+    my ($self) = @_;
+    return $self-&gt;{reloff};
+}
+
+sub nreloc {
+    my ($self) = @_;
+    return $self-&gt;{nreloc};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self-&gt;{flags};
+}
+
+sub reserved1 {
+    my ($self) = @_;
+    return $self-&gt;{reserved1};
+}
+
+sub reserved2 {
+    my ($self) = @_;
+    return $self-&gt;{reserved2};
+}
+
+sub reserved3 {
+    my ($self) = @_;
+    return $self-&gt;{reserved3};
+}
+
+sub _raw_data {
+    my ($self) = @_;
+    return $self-&gt;{_raw_data};
+}
+
+########################################################################
+package MachO::SegmentCommand64::Section64::CfStringList;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{items} = ();
+    while (!$self-&gt;{_io}-&gt;is_eof()) {
+        push @{$self-&gt;{items}}, MachO::SegmentCommand64::Section64::CfString-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub items {
+    my ($self) = @_;
+    return $self-&gt;{items};
+}
+
+########################################################################
+package MachO::SegmentCommand64::Section64::CfString;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{isa} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{info} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{data} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{length} = $self-&gt;{_io}-&gt;read_u8le();
+}
+
+sub isa {
+    my ($self) = @_;
+    return $self-&gt;{isa};
+}
+
+sub info {
+    my ($self) = @_;
+    return $self-&gt;{info};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data};
+}
+
+sub length {
+    my ($self) = @_;
+    return $self-&gt;{length};
+}
+
+########################################################################
+package MachO::SegmentCommand64::Section64::EhFrameItem;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{length} = $self-&gt;{_io}-&gt;read_u4le();
+    if ($self-&gt;length() == 4294967295) {
+        $self-&gt;{length64} = $self-&gt;{_io}-&gt;read_u8le();
+    }
+    $self-&gt;{id} = $self-&gt;{_io}-&gt;read_u4le();
+    if ($self-&gt;length() &gt; 0) {
+        my $_on = $self-&gt;id();
+        if ($_on == 0) {
+            $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 4));
+            my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+            $self-&gt;{body} = MachO::SegmentCommand64::Section64::EhFrameItem::Cie-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+        }
+        else {
+            $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 4));
+        }
+    }
+}
+
+sub length {
+    my ($self) = @_;
+    return $self-&gt;{length};
+}
+
+sub length64 {
+    my ($self) = @_;
+    return $self-&gt;{length64};
+}
+
+sub id {
+    my ($self) = @_;
+    return $self-&gt;{id};
+}
+
+sub body {
+    my ($self) = @_;
+    return $self-&gt;{body};
+}
+
+sub _raw_body {
+    my ($self) = @_;
+    return $self-&gt;{_raw_body};
+}
+
+########################################################################
+package MachO::SegmentCommand64::Section64::EhFrameItem::CharChain;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{chr} = $self-&gt;{_io}-&gt;read_u1();
+    if ($self-&gt;chr() != 0) {
+        $self-&gt;{next} = MachO::SegmentCommand64::Section64::EhFrameItem::CharChain-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub chr {
+    my ($self) = @_;
+    return $self-&gt;{chr};
+}
+
+sub next {
+    my ($self) = @_;
+    return $self-&gt;{next};
+}
+
+########################################################################
+package MachO::SegmentCommand64::Section64::EhFrameItem::Cie;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{version} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{aug_str} = MachO::SegmentCommand64::Section64::EhFrameItem::CharChain-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{code_alignment_factor} = MachO::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{data_alignment_factor} = MachO::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{return_address_register} = $self-&gt;{_io}-&gt;read_u1();
+    if ($self-&gt;aug_str()-&gt;chr() == 122) {
+        $self-&gt;{augmentation} = MachO::SegmentCommand64::Section64::EhFrameItem::AugmentationEntry-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub version {
+    my ($self) = @_;
+    return $self-&gt;{version};
+}
+
+sub aug_str {
+    my ($self) = @_;
+    return $self-&gt;{aug_str};
+}
+
+sub code_alignment_factor {
+    my ($self) = @_;
+    return $self-&gt;{code_alignment_factor};
+}
+
+sub data_alignment_factor {
+    my ($self) = @_;
+    return $self-&gt;{data_alignment_factor};
+}
+
+sub return_address_register {
+    my ($self) = @_;
+    return $self-&gt;{return_address_register};
+}
+
+sub augmentation {
+    my ($self) = @_;
+    return $self-&gt;{augmentation};
+}
+
+########################################################################
+package MachO::SegmentCommand64::Section64::EhFrameItem::AugmentationEntry;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{length} = MachO::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    if ($self-&gt;_parent()-&gt;aug_str()-&gt;next()-&gt;chr() == 82) {
+        $self-&gt;{fde_pointer_encoding} = $self-&gt;{_io}-&gt;read_u1();
+    }
+}
+
+sub length {
+    my ($self) = @_;
+    return $self-&gt;{length};
+}
+
+sub fde_pointer_encoding {
+    my ($self) = @_;
+    return $self-&gt;{fde_pointer_encoding};
+}
+
+########################################################################
+package MachO::SegmentCommand64::Section64::EhFrame;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{items} = ();
+    while (!$self-&gt;{_io}-&gt;is_eof()) {
+        push @{$self-&gt;{items}}, MachO::SegmentCommand64::Section64::EhFrameItem-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub items {
+    my ($self) = @_;
+    return $self-&gt;{items};
+}
+
+########################################################################
+package MachO::SegmentCommand64::Section64::PointerList;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{items} = ();
+    while (!$self-&gt;{_io}-&gt;is_eof()) {
+        push @{$self-&gt;{items}}, $self-&gt;{_io}-&gt;read_u8le();
+    }
+}
+
+sub items {
+    my ($self) = @_;
+    return $self-&gt;{items};
+}
+
+########################################################################
+package MachO::SegmentCommand64::Section64::StringList;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{strings} = ();
+    while (!$self-&gt;{_io}-&gt;is_eof()) {
+        push @{$self-&gt;{strings}}, Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes_term(0, 0, 1, 1));
+    }
+}
+
+sub strings {
+    my ($self) = @_;
+    return $self-&gt;{strings};
+}
+
+########################################################################
+package MachO::VmProt;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{strip_read} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{is_mask} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{reserved0} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{copy} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{no_change} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{execute} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{write} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{read} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{reserved1} = $self-&gt;{_io}-&gt;read_bits_int(24);
+}
+
+sub strip_read {
+    my ($self) = @_;
+    return $self-&gt;{strip_read};
+}
+
+sub is_mask {
+    my ($self) = @_;
+    return $self-&gt;{is_mask};
+}
+
+sub reserved0 {
+    my ($self) = @_;
+    return $self-&gt;{reserved0};
+}
+
+sub copy {
+    my ($self) = @_;
+    return $self-&gt;{copy};
+}
+
+sub no_change {
+    my ($self) = @_;
+    return $self-&gt;{no_change};
+}
+
+sub execute {
+    my ($self) = @_;
+    return $self-&gt;{execute};
+}
+
+sub write {
+    my ($self) = @_;
+    return $self-&gt;{write};
+}
+
+sub read {
+    my ($self) = @_;
+    return $self-&gt;{read};
+}
+
+sub reserved1 {
+    my ($self) = @_;
+    return $self-&gt;{reserved1};
+}
+
+########################################################################
+package MachO::DysymtabCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{i_local_sym} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{n_local_sym} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{i_ext_def_sym} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{n_ext_def_sym} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{i_undef_sym} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{n_undef_sym} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{toc_off} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{n_toc} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{mod_tab_off} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{n_mod_tab} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{ext_ref_sym_off} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{n_ext_ref_syms} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{indirect_sym_off} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{n_indirect_syms} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{ext_rel_off} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{n_ext_rel} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{loc_rel_off} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{n_loc_rel} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub indirect_symbols {
+    my ($self) = @_;
+    return $self-&gt;{indirect_symbols} if ($self-&gt;{indirect_symbols});
+    my $io = $self-&gt;_root()-&gt;_io();
+    my $_pos = $io-&gt;pos();
+    $io-&gt;seek($self-&gt;indirect_sym_off());
+    $self-&gt;{indirect_symbols} = ();
+    my $n_indirect_symbols = $self-&gt;n_indirect_syms();
+    for (my $i = 0; $i &lt; $n_indirect_symbols; $i++) {
+        $self-&gt;{indirect_symbols}[$i] = $io-&gt;read_u4le();
+    }
+    $io-&gt;seek($_pos);
+    return $self-&gt;{indirect_symbols};
+}
+
+sub i_local_sym {
+    my ($self) = @_;
+    return $self-&gt;{i_local_sym};
+}
+
+sub n_local_sym {
+    my ($self) = @_;
+    return $self-&gt;{n_local_sym};
+}
+
+sub i_ext_def_sym {
+    my ($self) = @_;
+    return $self-&gt;{i_ext_def_sym};
+}
+
+sub n_ext_def_sym {
+    my ($self) = @_;
+    return $self-&gt;{n_ext_def_sym};
+}
+
+sub i_undef_sym {
+    my ($self) = @_;
+    return $self-&gt;{i_undef_sym};
+}
+
+sub n_undef_sym {
+    my ($self) = @_;
+    return $self-&gt;{n_undef_sym};
+}
+
+sub toc_off {
+    my ($self) = @_;
+    return $self-&gt;{toc_off};
+}
+
+sub n_toc {
+    my ($self) = @_;
+    return $self-&gt;{n_toc};
+}
+
+sub mod_tab_off {
+    my ($self) = @_;
+    return $self-&gt;{mod_tab_off};
+}
+
+sub n_mod_tab {
+    my ($self) = @_;
+    return $self-&gt;{n_mod_tab};
+}
+
+sub ext_ref_sym_off {
+    my ($self) = @_;
+    return $self-&gt;{ext_ref_sym_off};
+}
+
+sub n_ext_ref_syms {
+    my ($self) = @_;
+    return $self-&gt;{n_ext_ref_syms};
+}
+
+sub indirect_sym_off {
+    my ($self) = @_;
+    return $self-&gt;{indirect_sym_off};
+}
+
+sub n_indirect_syms {
+    my ($self) = @_;
+    return $self-&gt;{n_indirect_syms};
+}
+
+sub ext_rel_off {
+    my ($self) = @_;
+    return $self-&gt;{ext_rel_off};
+}
+
+sub n_ext_rel {
+    my ($self) = @_;
+    return $self-&gt;{n_ext_rel};
+}
+
+sub loc_rel_off {
+    my ($self) = @_;
+    return $self-&gt;{loc_rel_off};
+}
+
+sub n_loc_rel {
+    my ($self) = @_;
+    return $self-&gt;{n_loc_rel};
+}
+
+########################################################################
+package MachO::MachHeader;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{cputype} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{cpusubtype} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{filetype} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{ncmds} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{sizeofcmds} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{flags} = $self-&gt;{_io}-&gt;read_u4le();
+    if ( (($self-&gt;_root()-&gt;magic() == $MAGIC_TYPE_MACHO_BE_X64) || ($self-&gt;_root()-&gt;magic() == $MAGIC_TYPE_MACHO_LE_X64)) ) {
+        $self-&gt;{reserved} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+}
+
+sub cputype {
+    my ($self) = @_;
+    return $self-&gt;{cputype};
+}
+
+sub cpusubtype {
+    my ($self) = @_;
+    return $self-&gt;{cpusubtype};
+}
+
+sub filetype {
+    my ($self) = @_;
+    return $self-&gt;{filetype};
+}
+
+sub ncmds {
+    my ($self) = @_;
+    return $self-&gt;{ncmds};
+}
+
+sub sizeofcmds {
+    my ($self) = @_;
+    return $self-&gt;{sizeofcmds};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self-&gt;{flags};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self-&gt;{reserved};
+}
+
+########################################################################
+package MachO::LinkeditDataCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{data_off} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{data_size} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub data_off {
+    my ($self) = @_;
+    return $self-&gt;{data_off};
+}
+
+sub data_size {
+    my ($self) = @_;
+    return $self-&gt;{data_size};
+}
+
+########################################################################
+package MachO::SubCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{name} = MachO::LcStr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub name {
+    my ($self) = @_;
+    return $self-&gt;{name};
+}
+
+########################################################################
+package MachO::TwolevelHintsCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{num_hints} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub offset {
+    my ($self) = @_;
+    return $self-&gt;{offset};
+}
+
+sub num_hints {
+    my ($self) = @_;
+    return $self-&gt;{num_hints};
+}
+
+########################################################################
+package MachO::Version;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{p1} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{minor} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{major} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{release} = $self-&gt;{_io}-&gt;read_u1();
+}
+
+sub p1 {
+    my ($self) = @_;
+    return $self-&gt;{p1};
+}
+
+sub minor {
+    my ($self) = @_;
+    return $self-&gt;{minor};
+}
+
+sub major {
+    my ($self) = @_;
+    return $self-&gt;{major};
+}
+
+sub release {
+    my ($self) = @_;
+    return $self-&gt;{release};
+}
+
+########################################################################
+package MachO::EncryptionInfoCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{cryptoff} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{cryptsize} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{cryptid} = $self-&gt;{_io}-&gt;read_u4le();
+    if ( (($self-&gt;_root()-&gt;magic() == $MAGIC_TYPE_MACHO_BE_X64) || ($self-&gt;_root()-&gt;magic() == $MAGIC_TYPE_MACHO_LE_X64)) ) {
+        $self-&gt;{pad} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+}
+
+sub cryptoff {
+    my ($self) = @_;
+    return $self-&gt;{cryptoff};
+}
+
+sub cryptsize {
+    my ($self) = @_;
+    return $self-&gt;{cryptsize};
+}
+
+sub cryptid {
+    my ($self) = @_;
+    return $self-&gt;{cryptid};
+}
+
+sub pad {
+    my ($self) = @_;
+    return $self-&gt;{pad};
+}
+
+########################################################################
+package MachO::CodeSignatureCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{data_off} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{data_size} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub code_signature {
+    my ($self) = @_;
+    return $self-&gt;{code_signature} if ($self-&gt;{code_signature});
+    my $io = $self-&gt;_root()-&gt;_io();
+    my $_pos = $io-&gt;pos();
+    $io-&gt;seek($self-&gt;data_off());
+    $self-&gt;{_raw_code_signature} = $io-&gt;read_bytes($self-&gt;data_size());
+    my $io__raw_code_signature = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_code_signature});
+    $self-&gt;{code_signature} = MachO::CsBlob-&gt;new($io__raw_code_signature, $self, $self-&gt;{_root});
+    $io-&gt;seek($_pos);
+    return $self-&gt;{code_signature};
+}
+
+sub data_off {
+    my ($self) = @_;
+    return $self-&gt;{data_off};
+}
+
+sub data_size {
+    my ($self) = @_;
+    return $self-&gt;{data_size};
+}
+
+sub _raw_code_signature {
+    my ($self) = @_;
+    return $self-&gt;{_raw_code_signature};
+}
+
+########################################################################
+package MachO::DyldInfoCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $BIND_OPCODE_DONE = 0;
+our $BIND_OPCODE_SET_DYLIB_ORDINAL_IMMEDIATE = 16;
+our $BIND_OPCODE_SET_DYLIB_ORDINAL_ULEB = 32;
+our $BIND_OPCODE_SET_DYLIB_SPECIAL_IMMEDIATE = 48;
+our $BIND_OPCODE_SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE = 64;
+our $BIND_OPCODE_SET_TYPE_IMMEDIATE = 80;
+our $BIND_OPCODE_SET_APPEND_SLEB = 96;
+our $BIND_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB = 112;
+our $BIND_OPCODE_ADD_ADDRESS_ULEB = 128;
+our $BIND_OPCODE_DO_BIND = 144;
+our $BIND_OPCODE_DO_BIND_ADD_ADDRESS_ULEB = 160;
+our $BIND_OPCODE_DO_BIND_ADD_ADDRESS_IMMEDIATE_SCALED = 176;
+our $BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB = 192;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{rebase_off} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{rebase_size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{bind_off} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{bind_size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{weak_bind_off} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{weak_bind_size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{lazy_bind_off} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{lazy_bind_size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{export_off} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{export_size} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub rebase {
+    my ($self) = @_;
+    return $self-&gt;{rebase} if ($self-&gt;{rebase});
+    my $io = $self-&gt;_root()-&gt;_io();
+    my $_pos = $io-&gt;pos();
+    $io-&gt;seek($self-&gt;rebase_off());
+    $self-&gt;{_raw_rebase} = $io-&gt;read_bytes($self-&gt;rebase_size());
+    my $io__raw_rebase = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_rebase});
+    $self-&gt;{rebase} = MachO::DyldInfoCommand::RebaseData-&gt;new($io__raw_rebase, $self, $self-&gt;{_root});
+    $io-&gt;seek($_pos);
+    return $self-&gt;{rebase};
+}
+
+sub bind {
+    my ($self) = @_;
+    return $self-&gt;{bind} if ($self-&gt;{bind});
+    my $io = $self-&gt;_root()-&gt;_io();
+    my $_pos = $io-&gt;pos();
+    $io-&gt;seek($self-&gt;bind_off());
+    $self-&gt;{_raw_bind} = $io-&gt;read_bytes($self-&gt;bind_size());
+    my $io__raw_bind = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_bind});
+    $self-&gt;{bind} = MachO::DyldInfoCommand::BindData-&gt;new($io__raw_bind, $self, $self-&gt;{_root});
+    $io-&gt;seek($_pos);
+    return $self-&gt;{bind};
+}
+
+sub lazy_bind {
+    my ($self) = @_;
+    return $self-&gt;{lazy_bind} if ($self-&gt;{lazy_bind});
+    my $io = $self-&gt;_root()-&gt;_io();
+    my $_pos = $io-&gt;pos();
+    $io-&gt;seek($self-&gt;lazy_bind_off());
+    $self-&gt;{_raw_lazy_bind} = $io-&gt;read_bytes($self-&gt;lazy_bind_size());
+    my $io__raw_lazy_bind = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_lazy_bind});
+    $self-&gt;{lazy_bind} = MachO::DyldInfoCommand::LazyBindData-&gt;new($io__raw_lazy_bind, $self, $self-&gt;{_root});
+    $io-&gt;seek($_pos);
+    return $self-&gt;{lazy_bind};
+}
+
+sub exports {
+    my ($self) = @_;
+    return $self-&gt;{exports} if ($self-&gt;{exports});
+    my $io = $self-&gt;_root()-&gt;_io();
+    my $_pos = $io-&gt;pos();
+    $io-&gt;seek($self-&gt;export_off());
+    $self-&gt;{_raw_exports} = $io-&gt;read_bytes($self-&gt;export_size());
+    my $io__raw_exports = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_exports});
+    $self-&gt;{exports} = MachO::DyldInfoCommand::ExportNode-&gt;new($io__raw_exports, $self, $self-&gt;{_root});
+    $io-&gt;seek($_pos);
+    return $self-&gt;{exports};
+}
+
+sub rebase_off {
+    my ($self) = @_;
+    return $self-&gt;{rebase_off};
+}
+
+sub rebase_size {
+    my ($self) = @_;
+    return $self-&gt;{rebase_size};
+}
+
+sub bind_off {
+    my ($self) = @_;
+    return $self-&gt;{bind_off};
+}
+
+sub bind_size {
+    my ($self) = @_;
+    return $self-&gt;{bind_size};
+}
+
+sub weak_bind_off {
+    my ($self) = @_;
+    return $self-&gt;{weak_bind_off};
+}
+
+sub weak_bind_size {
+    my ($self) = @_;
+    return $self-&gt;{weak_bind_size};
+}
+
+sub lazy_bind_off {
+    my ($self) = @_;
+    return $self-&gt;{lazy_bind_off};
+}
+
+sub lazy_bind_size {
+    my ($self) = @_;
+    return $self-&gt;{lazy_bind_size};
+}
+
+sub export_off {
+    my ($self) = @_;
+    return $self-&gt;{export_off};
+}
+
+sub export_size {
+    my ($self) = @_;
+    return $self-&gt;{export_size};
+}
+
+sub _raw_rebase {
+    my ($self) = @_;
+    return $self-&gt;{_raw_rebase};
+}
+
+sub _raw_bind {
+    my ($self) = @_;
+    return $self-&gt;{_raw_bind};
+}
+
+sub _raw_lazy_bind {
+    my ($self) = @_;
+    return $self-&gt;{_raw_lazy_bind};
+}
+
+sub _raw_exports {
+    my ($self) = @_;
+    return $self-&gt;{_raw_exports};
+}
+
+########################################################################
+package MachO::DyldInfoCommand::BindItem;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{opcode_and_immediate} = $self-&gt;{_io}-&gt;read_u1();
+    if ( (($self-&gt;opcode() == $BIND_OPCODE_SET_DYLIB_ORDINAL_ULEB) || ($self-&gt;opcode() == $BIND_OPCODE_SET_APPEND_SLEB) || ($self-&gt;opcode() == $BIND_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB) || ($self-&gt;opcode() == $BIND_OPCODE_ADD_ADDRESS_ULEB) || ($self-&gt;opcode() == $BIND_OPCODE_DO_BIND_ADD_ADDRESS_ULEB) || ($self-&gt;opcode() == $BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB)) ) {
+        $self-&gt;{uleb} = MachO::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    if ($self-&gt;opcode() == $BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB) {
+        $self-&gt;{skip} = MachO::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    if ($self-&gt;opcode() == $BIND_OPCODE_SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE) {
+        $self-&gt;{symbol} = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes_term(0, 0, 1, 1));
+    }
+}
+
+sub opcode {
+    my ($self) = @_;
+    return $self-&gt;{opcode} if ($self-&gt;{opcode});
+    $self-&gt;{opcode} = ($self-&gt;opcode_and_immediate() &amp; 240);
+    return $self-&gt;{opcode};
+}
+
+sub immediate {
+    my ($self) = @_;
+    return $self-&gt;{immediate} if ($self-&gt;{immediate});
+    $self-&gt;{immediate} = ($self-&gt;opcode_and_immediate() &amp; 15);
+    return $self-&gt;{immediate};
+}
+
+sub opcode_and_immediate {
+    my ($self) = @_;
+    return $self-&gt;{opcode_and_immediate};
+}
+
+sub uleb {
+    my ($self) = @_;
+    return $self-&gt;{uleb};
+}
+
+sub skip {
+    my ($self) = @_;
+    return $self-&gt;{skip};
+}
+
+sub symbol {
+    my ($self) = @_;
+    return $self-&gt;{symbol};
+}
+
+########################################################################
+package MachO::DyldInfoCommand::RebaseData;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $OPCODE_DONE = 0;
+our $OPCODE_SET_TYPE_IMMEDIATE = 16;
+our $OPCODE_SET_SEGMENT_AND_OFFSET_ULEB = 32;
+our $OPCODE_ADD_ADDRESS_ULEB = 48;
+our $OPCODE_ADD_ADDRESS_IMMEDIATE_SCALED = 64;
+our $OPCODE_DO_REBASE_IMMEDIATE_TIMES = 80;
+our $OPCODE_DO_REBASE_ULEB_TIMES = 96;
+our $OPCODE_DO_REBASE_ADD_ADDRESS_ULEB = 112;
+our $OPCODE_DO_REBASE_ULEB_TIMES_SKIPPING_ULEB = 128;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{items} = ();
+    do {
+        $_ = MachO::DyldInfoCommand::RebaseData::RebaseItem-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+        push @{$self-&gt;{items}}, $_;
+    } until ($_-&gt;opcode() == $OPCODE_DONE);
+}
+
+sub items {
+    my ($self) = @_;
+    return $self-&gt;{items};
+}
+
+########################################################################
+package MachO::DyldInfoCommand::RebaseData::RebaseItem;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{opcode_and_immediate} = $self-&gt;{_io}-&gt;read_u1();
+    if ( (($self-&gt;opcode() == $OPCODE_SET_SEGMENT_AND_OFFSET_ULEB) || ($self-&gt;opcode() == $OPCODE_ADD_ADDRESS_ULEB) || ($self-&gt;opcode() == $OPCODE_DO_REBASE_ULEB_TIMES) || ($self-&gt;opcode() == $OPCODE_DO_REBASE_ADD_ADDRESS_ULEB) || ($self-&gt;opcode() == $OPCODE_DO_REBASE_ULEB_TIMES_SKIPPING_ULEB)) ) {
+        $self-&gt;{uleb} = MachO::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    if ($self-&gt;opcode() == $OPCODE_DO_REBASE_ULEB_TIMES_SKIPPING_ULEB) {
+        $self-&gt;{skip} = MachO::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub opcode {
+    my ($self) = @_;
+    return $self-&gt;{opcode} if ($self-&gt;{opcode});
+    $self-&gt;{opcode} = ($self-&gt;opcode_and_immediate() &amp; 240);
+    return $self-&gt;{opcode};
+}
+
+sub immediate {
+    my ($self) = @_;
+    return $self-&gt;{immediate} if ($self-&gt;{immediate});
+    $self-&gt;{immediate} = ($self-&gt;opcode_and_immediate() &amp; 15);
+    return $self-&gt;{immediate};
+}
+
+sub opcode_and_immediate {
+    my ($self) = @_;
+    return $self-&gt;{opcode_and_immediate};
+}
+
+sub uleb {
+    my ($self) = @_;
+    return $self-&gt;{uleb};
+}
+
+sub skip {
+    my ($self) = @_;
+    return $self-&gt;{skip};
+}
+
+########################################################################
+package MachO::DyldInfoCommand::ExportNode;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{terminal_size} = MachO::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{children_count} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{children} = ();
+    my $n_children = $self-&gt;children_count();
+    for (my $i = 0; $i &lt; $n_children; $i++) {
+        $self-&gt;{children}[$i] = MachO::DyldInfoCommand::ExportNode::Child-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    $self-&gt;{terminal} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;terminal_size()-&gt;value());
+}
+
+sub terminal_size {
+    my ($self) = @_;
+    return $self-&gt;{terminal_size};
+}
+
+sub children_count {
+    my ($self) = @_;
+    return $self-&gt;{children_count};
+}
+
+sub children {
+    my ($self) = @_;
+    return $self-&gt;{children};
+}
+
+sub terminal {
+    my ($self) = @_;
+    return $self-&gt;{terminal};
+}
+
+########################################################################
+package MachO::DyldInfoCommand::ExportNode::Child;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{name} = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes_term(0, 0, 1, 1));
+    $self-&gt;{node_offset} = MachO::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub value {
+    my ($self) = @_;
+    return $self-&gt;{value} if ($self-&gt;{value});
+    my $_pos = $self-&gt;{_io}-&gt;pos();
+    $self-&gt;{_io}-&gt;seek($self-&gt;node_offset()-&gt;value());
+    $self-&gt;{value} = MachO::DyldInfoCommand::ExportNode-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{_io}-&gt;seek($_pos);
+    return $self-&gt;{value};
+}
+
+sub name {
+    my ($self) = @_;
+    return $self-&gt;{name};
+}
+
+sub node_offset {
+    my ($self) = @_;
+    return $self-&gt;{node_offset};
+}
+
+########################################################################
+package MachO::DyldInfoCommand::BindData;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{items} = ();
+    do {
+        $_ = MachO::DyldInfoCommand::BindItem-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+        push @{$self-&gt;{items}}, $_;
+    } until ($_-&gt;opcode() == $BIND_OPCODE_DONE);
+}
+
+sub items {
+    my ($self) = @_;
+    return $self-&gt;{items};
+}
+
+########################################################################
+package MachO::DyldInfoCommand::LazyBindData;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{items} = ();
+    while (!$self-&gt;{_io}-&gt;is_eof()) {
+        push @{$self-&gt;{items}}, MachO::DyldInfoCommand::BindItem-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub items {
+    my ($self) = @_;
+    return $self-&gt;{items};
+}
+
+########################################################################
+package MachO::DylinkerCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{name} = MachO::LcStr-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub name {
+    my ($self) = @_;
+    return $self-&gt;{name};
+}
+
+########################################################################
+package MachO::DylibCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{name_offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{timestamp} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{current_version} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{compatibility_version} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{name} = Encode::decode(&quot;utf-8&quot;, $self-&gt;{_io}-&gt;read_bytes_term(0, 0, 1, 1));
+}
+
+sub name_offset {
+    my ($self) = @_;
+    return $self-&gt;{name_offset};
+}
+
+sub timestamp {
+    my ($self) = @_;
+    return $self-&gt;{timestamp};
+}
+
+sub current_version {
+    my ($self) = @_;
+    return $self-&gt;{current_version};
+}
+
+sub compatibility_version {
+    my ($self) = @_;
+    return $self-&gt;{compatibility_version};
+}
+
+sub name {
+    my ($self) = @_;
+    return $self-&gt;{name};
+}
+
+########################################################################
+package MachO::LcStr;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{length} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{value} = Encode::decode(&quot;UTF-8&quot;, $self-&gt;{_io}-&gt;read_bytes_term(0, 0, 1, 1));
+}
+
+sub length {
+    my ($self) = @_;
+    return $self-&gt;{length};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self-&gt;{value};
+}
+
+########################################################################
+package MachO::LoadCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{type} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{size} = $self-&gt;{_io}-&gt;read_u4le();
+    my $_on = $self-&gt;type();
+    if ($_on == $LOAD_COMMAND_TYPE_SUB_LIBRARY) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::SubCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_SEGMENT_SPLIT_INFO) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::LinkeditDataCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_RPATH) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::RpathCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_SOURCE_VERSION) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::SourceVersionCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_ENCRYPTION_INFO_64) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::EncryptionInfoCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_VERSION_MIN_TVOS) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::VersionMinCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_LOAD_DYLINKER) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::DylinkerCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_SUB_FRAMEWORK) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::SubCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_LOAD_WEAK_DYLIB) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::DylibCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_VERSION_MIN_IPHONEOS) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::VersionMinCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_LINKER_OPTIMIZATION_HINT) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::LinkeditDataCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_DYLD_ENVIRONMENT) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::DylinkerCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_LOAD_UPWARD_DYLIB) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::DylibCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_DYLIB_CODE_SIGN_DRS) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::LinkeditDataCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_DYLD_INFO) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::DyldInfoCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_REEXPORT_DYLIB) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::DylibCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_SYMTAB) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::SymtabCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_ROUTINES_64) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::RoutinesCommand64-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_ID_DYLINKER) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::DylinkerCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_MAIN) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::EntryPointCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_FUNCTION_STARTS) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::LinkeditDataCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_VERSION_MIN_MACOSX) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::VersionMinCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_DATA_IN_CODE) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::LinkeditDataCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_VERSION_MIN_WATCHOS) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::VersionMinCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_ENCRYPTION_INFO) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::EncryptionInfoCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_SUB_UMBRELLA) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::SubCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_LINKER_OPTION) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::LinkerOptionCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_TWOLEVEL_HINTS) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::TwolevelHintsCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_UUID) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::UuidCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_DYLD_INFO_ONLY) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::DyldInfoCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_LAZY_LOAD_DYLIB) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::DylibCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_SUB_CLIENT) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::SubCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_ROUTINES) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::RoutinesCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_CODE_SIGNATURE) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::CodeSignatureCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_DYSYMTAB) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::DysymtabCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_LOAD_DYLIB) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::DylibCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_SEGMENT_64) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::SegmentCommand64-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $LOAD_COMMAND_TYPE_ID_DYLIB) {
+        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+        $self-&gt;{body} = MachO::DylibCommand-&gt;new($io__raw_body, $self, $self-&gt;{_root});
+    }
+    else {
+        $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;size() - 8));
+    }
+}
+
+sub type {
+    my ($self) = @_;
+    return $self-&gt;{type};
+}
+
+sub size {
+    my ($self) = @_;
+    return $self-&gt;{size};
+}
+
+sub body {
+    my ($self) = @_;
+    return $self-&gt;{body};
+}
+
+sub _raw_body {
+    my ($self) = @_;
+    return $self-&gt;{_raw_body};
+}
+
+########################################################################
+package MachO::UuidCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{uuid} = $self-&gt;{_io}-&gt;read_bytes(16);
+}
+
+sub uuid {
+    my ($self) = @_;
+    return $self-&gt;{uuid};
+}
+
+########################################################################
+package MachO::SymtabCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{sym_off} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{n_syms} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{str_off} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{str_size} = $self-&gt;{_io}-&gt;read_u4le();
+}
+
+sub symbols {
+    my ($self) = @_;
+    return $self-&gt;{symbols} if ($self-&gt;{symbols});
+    my $io = $self-&gt;_root()-&gt;_io();
+    my $_pos = $io-&gt;pos();
+    $io-&gt;seek($self-&gt;sym_off());
+    $self-&gt;{symbols} = ();
+    my $n_symbols = $self-&gt;n_syms();
+    for (my $i = 0; $i &lt; $n_symbols; $i++) {
+        $self-&gt;{symbols}[$i] = MachO::SymtabCommand::Nlist64-&gt;new($io, $self, $self-&gt;{_root});
+    }
+    $io-&gt;seek($_pos);
+    return $self-&gt;{symbols};
+}
+
+sub strs {
+    my ($self) = @_;
+    return $self-&gt;{strs} if ($self-&gt;{strs});
+    my $io = $self-&gt;_root()-&gt;_io();
+    my $_pos = $io-&gt;pos();
+    $io-&gt;seek($self-&gt;str_off());
+    $self-&gt;{_raw_strs} = $io-&gt;read_bytes($self-&gt;str_size());
+    my $io__raw_strs = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_strs});
+    $self-&gt;{strs} = MachO::SymtabCommand::StrTable-&gt;new($io__raw_strs, $self, $self-&gt;{_root});
+    $io-&gt;seek($_pos);
+    return $self-&gt;{strs};
+}
+
+sub sym_off {
+    my ($self) = @_;
+    return $self-&gt;{sym_off};
+}
+
+sub n_syms {
+    my ($self) = @_;
+    return $self-&gt;{n_syms};
+}
+
+sub str_off {
+    my ($self) = @_;
+    return $self-&gt;{str_off};
+}
+
+sub str_size {
+    my ($self) = @_;
+    return $self-&gt;{str_size};
+}
+
+sub _raw_strs {
+    my ($self) = @_;
+    return $self-&gt;{_raw_strs};
+}
+
+########################################################################
+package MachO::SymtabCommand::StrTable;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{unknown} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{items} = ();
+    do {
+        $_ = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes_term(0, 0, 1, 1));
+        push @{$self-&gt;{items}}, $_;
+    } until ($_ eq &quot;&quot;);
+}
+
+sub unknown {
+    my ($self) = @_;
+    return $self-&gt;{unknown};
+}
+
+sub items {
+    my ($self) = @_;
+    return $self-&gt;{items};
+}
+
+########################################################################
+package MachO::SymtabCommand::Nlist64;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{un} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{type} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{sect} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{desc} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{value} = $self-&gt;{_io}-&gt;read_u8le();
+}
+
+sub un {
+    my ($self) = @_;
+    return $self-&gt;{un};
+}
+
+sub type {
+    my ($self) = @_;
+    return $self-&gt;{type};
+}
+
+sub sect {
+    my ($self) = @_;
+    return $self-&gt;{sect};
+}
+
+sub desc {
+    my ($self) = @_;
+    return $self-&gt;{desc};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self-&gt;{value};
+}
+
+########################################################################
+package MachO::VersionMinCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{version} = MachO::Version-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{sdk} = MachO::Version-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub version {
+    my ($self) = @_;
+    return $self-&gt;{version};
+}
+
+sub sdk {
+    my ($self) = @_;
+    return $self-&gt;{sdk};
+}
+
+########################################################################
+package MachO::EntryPointCommand;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{entry_off} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{stack_size} = $self-&gt;{_io}-&gt;read_u8le();
+}
+
+sub entry_off {
+    my ($self) = @_;
+    return $self-&gt;{entry_off};
+}
+
+sub stack_size {
+    my ($self) = @_;
+    return $self-&gt;{stack_size};
+}
+
+1;
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

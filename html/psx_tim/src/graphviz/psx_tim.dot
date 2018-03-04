@@ -1,0 +1,43 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__psx_tim {
+		label="PsxTim";
+		graph[style=dotted];
+
+		psx_tim__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>10 00 00 00</TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="flags_pos">4</TD><TD PORT="flags_size">4</TD><TD>u4le</TD><TD PORT="flags_type">flags</TD></TR>
+			<TR><TD PORT="clut_pos">8</TD><TD PORT="clut_size">...</TD><TD>Bitmap</TD><TD PORT="clut_type">clut</TD></TR>
+			<TR><TD PORT="img_pos">...</TD><TD PORT="img_size">...</TD><TD>Bitmap</TD><TD PORT="img_type">img</TD></TR>
+		</TABLE>>];
+		psx_tim__inst__has_clut [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>has_clut</TD><TD>(flags &amp; 8) != 0</TD></TR>
+		</TABLE>>];
+		psx_tim__inst__bpp [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>bpp</TD><TD>(flags &amp; 3)</TD></TR>
+		</TABLE>>];
+		subgraph cluster__bitmap {
+			label="PsxTim::Bitmap";
+			graph[style=dotted];
+
+			bitmap__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">4</TD><TD>u4le</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="origin_x_pos">4</TD><TD PORT="origin_x_size">2</TD><TD>u2le</TD><TD PORT="origin_x_type">origin_x</TD></TR>
+				<TR><TD PORT="origin_y_pos">6</TD><TD PORT="origin_y_size">2</TD><TD>u2le</TD><TD PORT="origin_y_type">origin_y</TD></TR>
+				<TR><TD PORT="width_pos">8</TD><TD PORT="width_size">2</TD><TD>u2le</TD><TD PORT="width_type">width</TD></TR>
+				<TR><TD PORT="height_pos">10</TD><TD PORT="height_size">2</TD><TD>u2le</TD><TD PORT="height_type">height</TD></TR>
+				<TR><TD PORT="body_pos">12</TD><TD PORT="body_size">(len - 12)</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+		}
+	}
+	psx_tim__seq:clut_type -> bitmap__seq [style=bold];
+	psx_tim__seq:img_type -> bitmap__seq [style=bold];
+	psx_tim__seq:flags_type -> psx_tim__inst__has_clut [color="#404040"];
+	psx_tim__seq:flags_type -> psx_tim__inst__bpp [color="#404040"];
+	bitmap__seq:len_type -> bitmap__seq:body_size [color="#404040"];
+}

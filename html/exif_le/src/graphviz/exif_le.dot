@@ -1,0 +1,75 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__exif_le {
+		label="ExifLe";
+		graph[style=dotted];
+
+		exif_le__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">2</TD><TD>u2le</TD><TD PORT="version_type">version</TD></TR>
+			<TR><TD PORT="ifd0_ofs_pos">2</TD><TD PORT="ifd0_ofs_size">4</TD><TD>u4le</TD><TD PORT="ifd0_ofs_type">ifd0_ofs</TD></TR>
+		</TABLE>>];
+		exif_le__inst__ifd0 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="ifd0_pos">ifd0_ofs</TD><TD PORT="ifd0_size">...</TD><TD>Ifd</TD><TD PORT="ifd0_type">ifd0</TD></TR>
+		</TABLE>>];
+		subgraph cluster__ifd {
+			label="ExifLe::Ifd";
+			graph[style=dotted];
+
+			ifd__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_fields_pos">0</TD><TD PORT="num_fields_size">2</TD><TD>u2le</TD><TD PORT="num_fields_type">num_fields</TD></TR>
+				<TR><TD PORT="fields_pos">2</TD><TD PORT="fields_size">12</TD><TD>IfdField</TD><TD PORT="fields_type">fields</TD></TR>
+				<TR><TD COLSPAN="4" PORT="fields__repeat">repeat num_fields times</TD></TR>
+				<TR><TD PORT="next_ifd_ofs_pos">...</TD><TD PORT="next_ifd_ofs_size">4</TD><TD>u4le</TD><TD PORT="next_ifd_ofs_type">next_ifd_ofs</TD></TR>
+			</TABLE>>];
+			ifd__inst__next_ifd [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="next_ifd_pos">next_ifd_ofs</TD><TD PORT="next_ifd_size">...</TD><TD>Ifd</TD><TD PORT="next_ifd_type">next_ifd</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__ifd_field {
+			label="ExifLe::IfdField";
+			graph[style=dotted];
+
+			ifd_field__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="tag_pos">0</TD><TD PORT="tag_size">2</TD><TD>u2le?TagEnum</TD><TD PORT="tag_type">tag</TD></TR>
+				<TR><TD PORT="field_type_pos">2</TD><TD PORT="field_type_size">2</TD><TD>u2le?FieldTypeEnum</TD><TD PORT="field_type_type">field_type</TD></TR>
+				<TR><TD PORT="length_pos">4</TD><TD PORT="length_size">4</TD><TD>u4le</TD><TD PORT="length_type">length</TD></TR>
+				<TR><TD PORT="ofs_or_data_pos">8</TD><TD PORT="ofs_or_data_size">4</TD><TD>u4le</TD><TD PORT="ofs_or_data_type">ofs_or_data</TD></TR>
+			</TABLE>>];
+			ifd_field__inst__type_byte_length [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>type_byte_length</TD><TD>(field_type == :field_type_enum_word ? 2 : (field_type == :field_type_enum_dword ? 4 : 1))</TD></TR>
+			</TABLE>>];
+			ifd_field__inst__byte_length [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>byte_length</TD><TD>(length * type_byte_length)</TD></TR>
+			</TABLE>>];
+			ifd_field__inst__is_immediate_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_immediate_data</TD><TD>byte_length &lt;= 4</TD></TR>
+			</TABLE>>];
+			ifd_field__inst__data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="data_pos">ofs_or_data</TD><TD PORT="data_size">byte_length</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+	}
+	exif_le__seq:ifd0_ofs_type -> exif_le__inst__ifd0:ifd0_pos [color="#404040"];
+	exif_le__inst__ifd0:ifd0_type -> ifd__seq [style=bold];
+	ifd__seq:fields_type -> ifd_field__seq [style=bold];
+	ifd__seq:num_fields_type -> ifd__seq:fields__repeat [color="#404040"];
+	ifd__seq:next_ifd_ofs_type -> ifd__inst__next_ifd:next_ifd_pos [color="#404040"];
+	ifd__inst__next_ifd:next_ifd_type -> ifd__seq [style=bold];
+	ifd_field__seq:field_type_type -> ifd_field__inst__type_byte_length [color="#404040"];
+	ifd_field__seq:field_type_type -> ifd_field__inst__type_byte_length [color="#404040"];
+	ifd_field__seq:length_type -> ifd_field__inst__byte_length [color="#404040"];
+	ifd_field__inst__type_byte_length:type_byte_length_type -> ifd_field__inst__byte_length [color="#404040"];
+	ifd_field__inst__byte_length:byte_length_type -> ifd_field__inst__is_immediate_data [color="#404040"];
+	ifd_field__seq:ofs_or_data_type -> ifd_field__inst__data:data_pos [color="#404040"];
+	ifd_field__inst__byte_length:byte_length_type -> ifd_field__inst__data:data_size [color="#404040"];
+}

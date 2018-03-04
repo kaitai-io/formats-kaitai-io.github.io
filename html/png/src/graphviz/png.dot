@@ -1,0 +1,268 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__png {
+		label="Png";
+		graph[style=dotted];
+
+		png__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD>89 50 4E 47 0D 0A 1A 0A</TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="ihdr_len_pos">8</TD><TD PORT="ihdr_len_size">4</TD><TD>00 00 00 0D</TD><TD PORT="ihdr_len_type">ihdr_len</TD></TR>
+			<TR><TD PORT="ihdr_type_pos">12</TD><TD PORT="ihdr_type_size">4</TD><TD>49 48 44 52</TD><TD PORT="ihdr_type_type">ihdr_type</TD></TR>
+			<TR><TD PORT="ihdr_pos">16</TD><TD PORT="ihdr_size">13</TD><TD>IhdrChunk</TD><TD PORT="ihdr_type">ihdr</TD></TR>
+			<TR><TD PORT="ihdr_crc_pos">29</TD><TD PORT="ihdr_crc_size">4</TD><TD></TD><TD PORT="ihdr_crc_type">ihdr_crc</TD></TR>
+			<TR><TD PORT="chunks_pos">33</TD><TD PORT="chunks_size">...</TD><TD>Chunk</TD><TD PORT="chunks_type">chunks</TD></TR>
+			<TR><TD COLSPAN="4" PORT="chunks__repeat">repeat until  ((_.type == &quot;IEND&quot;) || (_io.eof?)) </TD></TR>
+		</TABLE>>];
+		subgraph cluster__rgb {
+			label="Png::Rgb";
+			graph[style=dotted];
+
+			rgb__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="r_pos">0</TD><TD PORT="r_size">1</TD><TD>u1</TD><TD PORT="r_type">r</TD></TR>
+				<TR><TD PORT="g_pos">1</TD><TD PORT="g_size">1</TD><TD>u1</TD><TD PORT="g_type">g</TD></TR>
+				<TR><TD PORT="b_pos">2</TD><TD PORT="b_size">1</TD><TD>u1</TD><TD PORT="b_type">b</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__chunk {
+			label="Png::Chunk";
+			graph[style=dotted];
+
+			chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">4</TD><TD>u4be</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="type_pos">4</TD><TD PORT="type_size">4</TD><TD>str(UTF-8)</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="body_pos">8</TD><TD PORT="body_size">...</TD><TD>switch (type)</TD><TD PORT="body_type">body</TD></TR>
+				<TR><TD PORT="crc_pos">...</TD><TD PORT="crc_size">4</TD><TD></TD><TD PORT="crc_type">crc</TD></TR>
+			</TABLE>>];
+chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>&quot;iTXt&quot;</TD><TD PORT="case0">InternationalTextChunk</TD></TR>
+	<TR><TD>&quot;gAMA&quot;</TD><TD PORT="case1">GamaChunk</TD></TR>
+	<TR><TD>&quot;tIME&quot;</TD><TD PORT="case2">TimeChunk</TD></TR>
+	<TR><TD>&quot;PLTE&quot;</TD><TD PORT="case3">PlteChunk</TD></TR>
+	<TR><TD>&quot;bKGD&quot;</TD><TD PORT="case4">BkgdChunk</TD></TR>
+	<TR><TD>&quot;pHYs&quot;</TD><TD PORT="case5">PhysChunk</TD></TR>
+	<TR><TD>&quot;tEXt&quot;</TD><TD PORT="case6">TextChunk</TD></TR>
+	<TR><TD>&quot;cHRM&quot;</TD><TD PORT="case7">ChrmChunk</TD></TR>
+	<TR><TD>&quot;sRGB&quot;</TD><TD PORT="case8">SrgbChunk</TD></TR>
+	<TR><TD>&quot;zTXt&quot;</TD><TD PORT="case9">CompressedTextChunk</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__bkgd_indexed {
+			label="Png::BkgdIndexed";
+			graph[style=dotted];
+
+			bkgd_indexed__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="palette_index_pos">0</TD><TD PORT="palette_index_size">1</TD><TD>u1</TD><TD PORT="palette_index_type">palette_index</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__point {
+			label="Png::Point";
+			graph[style=dotted];
+
+			point__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="x_int_pos">0</TD><TD PORT="x_int_size">4</TD><TD>u4be</TD><TD PORT="x_int_type">x_int</TD></TR>
+				<TR><TD PORT="y_int_pos">4</TD><TD PORT="y_int_size">4</TD><TD>u4be</TD><TD PORT="y_int_type">y_int</TD></TR>
+			</TABLE>>];
+			point__inst__x [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>x</TD><TD>(x_int / 100000.0)</TD></TR>
+			</TABLE>>];
+			point__inst__y [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>y</TD><TD>(y_int / 100000.0)</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bkgd_greyscale {
+			label="Png::BkgdGreyscale";
+			graph[style=dotted];
+
+			bkgd_greyscale__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">2</TD><TD>u2be</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__chrm_chunk {
+			label="Png::ChrmChunk";
+			graph[style=dotted];
+
+			chrm_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="white_point_pos">0</TD><TD PORT="white_point_size">8</TD><TD>Point</TD><TD PORT="white_point_type">white_point</TD></TR>
+				<TR><TD PORT="red_pos">8</TD><TD PORT="red_size">8</TD><TD>Point</TD><TD PORT="red_type">red</TD></TR>
+				<TR><TD PORT="green_pos">16</TD><TD PORT="green_size">8</TD><TD>Point</TD><TD PORT="green_type">green</TD></TR>
+				<TR><TD PORT="blue_pos">24</TD><TD PORT="blue_size">8</TD><TD>Point</TD><TD PORT="blue_type">blue</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__ihdr_chunk {
+			label="Png::IhdrChunk";
+			graph[style=dotted];
+
+			ihdr_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="width_pos">0</TD><TD PORT="width_size">4</TD><TD>u4be</TD><TD PORT="width_type">width</TD></TR>
+				<TR><TD PORT="height_pos">4</TD><TD PORT="height_size">4</TD><TD>u4be</TD><TD PORT="height_type">height</TD></TR>
+				<TR><TD PORT="bit_depth_pos">8</TD><TD PORT="bit_depth_size">1</TD><TD>u1</TD><TD PORT="bit_depth_type">bit_depth</TD></TR>
+				<TR><TD PORT="color_type_pos">9</TD><TD PORT="color_type_size">1</TD><TD>u1?ColorType</TD><TD PORT="color_type_type">color_type</TD></TR>
+				<TR><TD PORT="compression_method_pos">10</TD><TD PORT="compression_method_size">1</TD><TD>u1</TD><TD PORT="compression_method_type">compression_method</TD></TR>
+				<TR><TD PORT="filter_method_pos">11</TD><TD PORT="filter_method_size">1</TD><TD>u1</TD><TD PORT="filter_method_type">filter_method</TD></TR>
+				<TR><TD PORT="interlace_method_pos">12</TD><TD PORT="interlace_method_size">1</TD><TD>u1</TD><TD PORT="interlace_method_type">interlace_method</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__plte_chunk {
+			label="Png::PlteChunk";
+			graph[style=dotted];
+
+			plte_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">3</TD><TD>Rgb</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__srgb_chunk {
+			label="Png::SrgbChunk";
+			graph[style=dotted];
+
+			srgb_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="render_intent_pos">0</TD><TD PORT="render_intent_size">1</TD><TD>u1?Intent</TD><TD PORT="render_intent_type">render_intent</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__compressed_text_chunk {
+			label="Png::CompressedTextChunk";
+			graph[style=dotted];
+
+			compressed_text_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="keyword_pos">0</TD><TD PORT="keyword_size">...</TD><TD>str(UTF-8)</TD><TD PORT="keyword_type">keyword</TD></TR>
+				<TR><TD PORT="compression_method_pos">...</TD><TD PORT="compression_method_size">1</TD><TD>u1</TD><TD PORT="compression_method_type">compression_method</TD></TR>
+				<TR><TD PORT="text_datastream_pos">...</TD><TD PORT="text_datastream_size">?</TD><TD></TD><TD PORT="text_datastream_type">text_datastream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bkgd_truecolor {
+			label="Png::BkgdTruecolor";
+			graph[style=dotted];
+
+			bkgd_truecolor__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="red_pos">0</TD><TD PORT="red_size">2</TD><TD>u2be</TD><TD PORT="red_type">red</TD></TR>
+				<TR><TD PORT="green_pos">2</TD><TD PORT="green_size">2</TD><TD>u2be</TD><TD PORT="green_type">green</TD></TR>
+				<TR><TD PORT="blue_pos">4</TD><TD PORT="blue_size">2</TD><TD>u2be</TD><TD PORT="blue_type">blue</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__gama_chunk {
+			label="Png::GamaChunk";
+			graph[style=dotted];
+
+			gama_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="gamma_int_pos">0</TD><TD PORT="gamma_int_size">4</TD><TD>u4be</TD><TD PORT="gamma_int_type">gamma_int</TD></TR>
+			</TABLE>>];
+			gama_chunk__inst__gamma_ratio [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>gamma_ratio</TD><TD>(100000.0 / gamma_int)</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bkgd_chunk {
+			label="Png::BkgdChunk";
+			graph[style=dotted];
+
+			bkgd_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bkgd_pos">0</TD><TD PORT="bkgd_size">...</TD><TD>switch (_root.ihdr.color_type)</TD><TD PORT="bkgd_type">bkgd</TD></TR>
+			</TABLE>>];
+bkgd_chunk__seq_bkgd_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:color_type_greyscale_alpha</TD><TD PORT="case0">BkgdGreyscale</TD></TR>
+	<TR><TD>:color_type_indexed</TD><TD PORT="case1">BkgdIndexed</TD></TR>
+	<TR><TD>:color_type_greyscale</TD><TD PORT="case2">BkgdGreyscale</TD></TR>
+	<TR><TD>:color_type_truecolor_alpha</TD><TD PORT="case3">BkgdTruecolor</TD></TR>
+	<TR><TD>:color_type_truecolor</TD><TD PORT="case4">BkgdTruecolor</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__phys_chunk {
+			label="Png::PhysChunk";
+			graph[style=dotted];
+
+			phys_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="pixels_per_unit_x_pos">0</TD><TD PORT="pixels_per_unit_x_size">4</TD><TD>u4be</TD><TD PORT="pixels_per_unit_x_type">pixels_per_unit_x</TD></TR>
+				<TR><TD PORT="pixels_per_unit_y_pos">4</TD><TD PORT="pixels_per_unit_y_size">4</TD><TD>u4be</TD><TD PORT="pixels_per_unit_y_type">pixels_per_unit_y</TD></TR>
+				<TR><TD PORT="unit_pos">8</TD><TD PORT="unit_size">1</TD><TD>u1?PhysUnit</TD><TD PORT="unit_type">unit</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__international_text_chunk {
+			label="Png::InternationalTextChunk";
+			graph[style=dotted];
+
+			international_text_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="keyword_pos">0</TD><TD PORT="keyword_size">...</TD><TD>str(UTF-8)</TD><TD PORT="keyword_type">keyword</TD></TR>
+				<TR><TD PORT="compression_flag_pos">...</TD><TD PORT="compression_flag_size">1</TD><TD>u1</TD><TD PORT="compression_flag_type">compression_flag</TD></TR>
+				<TR><TD PORT="compression_method_pos">...</TD><TD PORT="compression_method_size">1</TD><TD>u1</TD><TD PORT="compression_method_type">compression_method</TD></TR>
+				<TR><TD PORT="language_tag_pos">...</TD><TD PORT="language_tag_size">...</TD><TD>str(ASCII)</TD><TD PORT="language_tag_type">language_tag</TD></TR>
+				<TR><TD PORT="translated_keyword_pos">...</TD><TD PORT="translated_keyword_size">...</TD><TD>str(UTF-8)</TD><TD PORT="translated_keyword_type">translated_keyword</TD></TR>
+				<TR><TD PORT="text_pos">...</TD><TD PORT="text_size">?</TD><TD>str(UTF-8)</TD><TD PORT="text_type">text</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__text_chunk {
+			label="Png::TextChunk";
+			graph[style=dotted];
+
+			text_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="keyword_pos">0</TD><TD PORT="keyword_size">...</TD><TD>str(iso8859-1)</TD><TD PORT="keyword_type">keyword</TD></TR>
+				<TR><TD PORT="text_pos">...</TD><TD PORT="text_size">?</TD><TD>str(iso8859-1)</TD><TD PORT="text_type">text</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__time_chunk {
+			label="Png::TimeChunk";
+			graph[style=dotted];
+
+			time_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="year_pos">0</TD><TD PORT="year_size">2</TD><TD>u2be</TD><TD PORT="year_type">year</TD></TR>
+				<TR><TD PORT="month_pos">2</TD><TD PORT="month_size">1</TD><TD>u1</TD><TD PORT="month_type">month</TD></TR>
+				<TR><TD PORT="day_pos">3</TD><TD PORT="day_size">1</TD><TD>u1</TD><TD PORT="day_type">day</TD></TR>
+				<TR><TD PORT="hour_pos">4</TD><TD PORT="hour_size">1</TD><TD>u1</TD><TD PORT="hour_type">hour</TD></TR>
+				<TR><TD PORT="minute_pos">5</TD><TD PORT="minute_size">1</TD><TD>u1</TD><TD PORT="minute_type">minute</TD></TR>
+				<TR><TD PORT="second_pos">6</TD><TD PORT="second_size">1</TD><TD>u1</TD><TD PORT="second_type">second</TD></TR>
+			</TABLE>>];
+		}
+	}
+	png__seq:ihdr_type -> ihdr_chunk__seq [style=bold];
+	png__seq:chunks_type -> chunk__seq [style=bold];
+	chunk__seq:type_type -> png__seq:chunks__repeat [color="#404040"];
+	chunk__seq:body_type -> chunk__seq_body_switch [style=bold];
+	chunk__seq_body_switch:case0 -> international_text_chunk__seq [style=bold];
+	chunk__seq_body_switch:case1 -> gama_chunk__seq [style=bold];
+	chunk__seq_body_switch:case2 -> time_chunk__seq [style=bold];
+	chunk__seq_body_switch:case3 -> plte_chunk__seq [style=bold];
+	chunk__seq_body_switch:case4 -> bkgd_chunk__seq [style=bold];
+	chunk__seq_body_switch:case5 -> phys_chunk__seq [style=bold];
+	chunk__seq_body_switch:case6 -> text_chunk__seq [style=bold];
+	chunk__seq_body_switch:case7 -> chrm_chunk__seq [style=bold];
+	chunk__seq_body_switch:case8 -> srgb_chunk__seq [style=bold];
+	chunk__seq_body_switch:case9 -> compressed_text_chunk__seq [style=bold];
+	chunk__seq:type_type -> chunk__seq:body_type [color="#404040"];
+	point__seq:x_int_type -> point__inst__x [color="#404040"];
+	point__seq:y_int_type -> point__inst__y [color="#404040"];
+	chrm_chunk__seq:white_point_type -> point__seq [style=bold];
+	chrm_chunk__seq:red_type -> point__seq [style=bold];
+	chrm_chunk__seq:green_type -> point__seq [style=bold];
+	chrm_chunk__seq:blue_type -> point__seq [style=bold];
+	plte_chunk__seq:entries_type -> rgb__seq [style=bold];
+	gama_chunk__seq:gamma_int_type -> gama_chunk__inst__gamma_ratio [color="#404040"];
+	bkgd_chunk__seq:bkgd_type -> bkgd_chunk__seq_bkgd_switch [style=bold];
+	bkgd_chunk__seq_bkgd_switch:case0 -> bkgd_greyscale__seq [style=bold];
+	bkgd_chunk__seq_bkgd_switch:case1 -> bkgd_indexed__seq [style=bold];
+	bkgd_chunk__seq_bkgd_switch:case2 -> bkgd_greyscale__seq [style=bold];
+	bkgd_chunk__seq_bkgd_switch:case3 -> bkgd_truecolor__seq [style=bold];
+	bkgd_chunk__seq_bkgd_switch:case4 -> bkgd_truecolor__seq [style=bold];
+	ihdr_chunk__seq:color_type_type -> bkgd_chunk__seq:bkgd_type [color="#404040"];
+}

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>TGA (AKA Truevision TGA, AKA TARGA) raster image file format: Perl parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Image Files</li>
+        <li class="active">TGA (AKA Truevision TGA, AKA TARGA) raster image file format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>TGA (AKA Truevision TGA, AKA TARGA) raster image file format:
+            
+            Perl parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>TGA (AKA Truevision TGA, AKA TARGA), is a raster image file format created by Truevision. It supports up to 32 bits per pixel (three 8-bit RGB channels + 8-bit alpha channel), color mapping and optional lossless RLE compression.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["tga", "icb", "vda", "vst"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of TGA (AKA Truevision TGA, AKA TARGA) raster image file format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="TGA (AKA Truevision TGA, AKA TARGA) raster image file format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="TGA (AKA Truevision TGA, AKA TARGA) raster image file format parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="TGA (AKA Truevision TGA, AKA TARGA) raster image file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="TGA (AKA Truevision TGA, AKA TARGA) raster image file format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="TGA (AKA Truevision TGA, AKA TARGA) raster image file format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="TGA (AKA Truevision TGA, AKA TARGA) raster image file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="perl.html" title="TGA (AKA Truevision TGA, AKA TARGA) raster image file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="TGA (AKA Truevision TGA, AKA TARGA) raster image file format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="TGA (AKA Truevision TGA, AKA TARGA) raster image file format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="TGA (AKA Truevision TGA, AKA TARGA) raster image file format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Perl source code to parse TGA (AKA Truevision TGA, AKA TARGA) raster image file format
+            
+        </h2>
+
+        
+
+        <h3>Tga.pm</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/perl/Tga.pm" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="perl"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+use strict;
+use warnings;
+use IO::KaitaiStruct 0.007_000;
+use Encode;
+
+########################################################################
+package Tga;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $COLOR_MAP_ENUM_NO_COLOR_MAP = 0;
+our $COLOR_MAP_ENUM_HAS_COLOR_MAP = 1;
+
+our $IMAGE_TYPE_ENUM_NO_IMAGE_DATA = 0;
+our $IMAGE_TYPE_ENUM_UNCOMP_COLOR_MAPPED = 1;
+our $IMAGE_TYPE_ENUM_UNCOMP_TRUE_COLOR = 2;
+our $IMAGE_TYPE_ENUM_UNCOMP_BW = 3;
+our $IMAGE_TYPE_ENUM_RLE_COLOR_MAPPED = 9;
+our $IMAGE_TYPE_ENUM_RLE_TRUE_COLOR = 10;
+our $IMAGE_TYPE_ENUM_RLE_BW = 11;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{image_id_len} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{color_map_type} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{image_type} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{color_map_ofs} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{num_color_map} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{color_map_depth} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{x_offset} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{y_offset} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{width} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{height} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{image_depth} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{img_descriptor} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{image_id} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;image_id_len());
+    if ($self-&gt;color_map_type() == $COLOR_MAP_ENUM_HAS_COLOR_MAP) {
+        $self-&gt;{color_map} = ();
+        my $n_color_map = $self-&gt;num_color_map();
+        for (my $i = 0; $i &lt; $n_color_map; $i++) {
+            $self-&gt;{color_map}[$i] = $self-&gt;{_io}-&gt;read_bytes(int(($self-&gt;color_map_depth() + 7) / 8));
+        }
+    }
+}
+
+sub footer {
+    my ($self) = @_;
+    return $self-&gt;{footer} if ($self-&gt;{footer});
+    my $_pos = $self-&gt;{_io}-&gt;pos();
+    $self-&gt;{_io}-&gt;seek(($self-&gt;_io()-&gt;size() - 26));
+    $self-&gt;{footer} = Tga::TgaFooter-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{_io}-&gt;seek($_pos);
+    return $self-&gt;{footer};
+}
+
+sub image_id_len {
+    my ($self) = @_;
+    return $self-&gt;{image_id_len};
+}
+
+sub color_map_type {
+    my ($self) = @_;
+    return $self-&gt;{color_map_type};
+}
+
+sub image_type {
+    my ($self) = @_;
+    return $self-&gt;{image_type};
+}
+
+sub color_map_ofs {
+    my ($self) = @_;
+    return $self-&gt;{color_map_ofs};
+}
+
+sub num_color_map {
+    my ($self) = @_;
+    return $self-&gt;{num_color_map};
+}
+
+sub color_map_depth {
+    my ($self) = @_;
+    return $self-&gt;{color_map_depth};
+}
+
+sub x_offset {
+    my ($self) = @_;
+    return $self-&gt;{x_offset};
+}
+
+sub y_offset {
+    my ($self) = @_;
+    return $self-&gt;{y_offset};
+}
+
+sub width {
+    my ($self) = @_;
+    return $self-&gt;{width};
+}
+
+sub height {
+    my ($self) = @_;
+    return $self-&gt;{height};
+}
+
+sub image_depth {
+    my ($self) = @_;
+    return $self-&gt;{image_depth};
+}
+
+sub img_descriptor {
+    my ($self) = @_;
+    return $self-&gt;{img_descriptor};
+}
+
+sub image_id {
+    my ($self) = @_;
+    return $self-&gt;{image_id};
+}
+
+sub color_map {
+    my ($self) = @_;
+    return $self-&gt;{color_map};
+}
+
+########################################################################
+package Tga::TgaFooter;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{ext_area_ofs} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{dev_dir_ofs} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{version_magic} = $self-&gt;{_io}-&gt;read_bytes(18);
+}
+
+sub is_valid {
+    my ($self) = @_;
+    return $self-&gt;{is_valid} if ($self-&gt;{is_valid});
+    $self-&gt;{is_valid} = $self-&gt;version_magic() eq pack(&#39;C*&#39;, (84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0));
+    return $self-&gt;{is_valid};
+}
+
+sub ext_area {
+    my ($self) = @_;
+    return $self-&gt;{ext_area} if ($self-&gt;{ext_area});
+    if ($self-&gt;is_valid()) {
+        my $_pos = $self-&gt;{_io}-&gt;pos();
+        $self-&gt;{_io}-&gt;seek($self-&gt;ext_area_ofs());
+        $self-&gt;{ext_area} = Tga::TgaExtArea-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+        $self-&gt;{_io}-&gt;seek($_pos);
+    }
+    return $self-&gt;{ext_area};
+}
+
+sub ext_area_ofs {
+    my ($self) = @_;
+    return $self-&gt;{ext_area_ofs};
+}
+
+sub dev_dir_ofs {
+    my ($self) = @_;
+    return $self-&gt;{dev_dir_ofs};
+}
+
+sub version_magic {
+    my ($self) = @_;
+    return $self-&gt;{version_magic};
+}
+
+########################################################################
+package Tga::TgaExtArea;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{ext_area_size} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{author_name} = Encode::decode(&quot;ASCII&quot;, $self-&gt;{_io}-&gt;read_bytes(41));
+    $self-&gt;{comments} = ();
+    my $n_comments = 4;
+    for (my $i = 0; $i &lt; $n_comments; $i++) {
+        $self-&gt;{comments}[$i] = Encode::decode(&quot;ASCII&quot;, $self-&gt;{_io}-&gt;read_bytes(81));
+    }
+    $self-&gt;{timestamp} = $self-&gt;{_io}-&gt;read_bytes(12);
+    $self-&gt;{job_id} = Encode::decode(&quot;ASCII&quot;, $self-&gt;{_io}-&gt;read_bytes(41));
+    $self-&gt;{job_time} = Encode::decode(&quot;ASCII&quot;, $self-&gt;{_io}-&gt;read_bytes(6));
+    $self-&gt;{software_id} = Encode::decode(&quot;ASCII&quot;, $self-&gt;{_io}-&gt;read_bytes(41));
+    $self-&gt;{software_version} = $self-&gt;{_io}-&gt;read_bytes(3);
+    $self-&gt;{key_color} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{pixel_aspect_ratio} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{gamma_value} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{color_corr_ofs} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{postage_stamp_ofs} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{scan_line_ofs} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{attributes} = $self-&gt;{_io}-&gt;read_u1();
+}
+
+sub ext_area_size {
+    my ($self) = @_;
+    return $self-&gt;{ext_area_size};
+}
+
+sub author_name {
+    my ($self) = @_;
+    return $self-&gt;{author_name};
+}
+
+sub comments {
+    my ($self) = @_;
+    return $self-&gt;{comments};
+}
+
+sub timestamp {
+    my ($self) = @_;
+    return $self-&gt;{timestamp};
+}
+
+sub job_id {
+    my ($self) = @_;
+    return $self-&gt;{job_id};
+}
+
+sub job_time {
+    my ($self) = @_;
+    return $self-&gt;{job_time};
+}
+
+sub software_id {
+    my ($self) = @_;
+    return $self-&gt;{software_id};
+}
+
+sub software_version {
+    my ($self) = @_;
+    return $self-&gt;{software_version};
+}
+
+sub key_color {
+    my ($self) = @_;
+    return $self-&gt;{key_color};
+}
+
+sub pixel_aspect_ratio {
+    my ($self) = @_;
+    return $self-&gt;{pixel_aspect_ratio};
+}
+
+sub gamma_value {
+    my ($self) = @_;
+    return $self-&gt;{gamma_value};
+}
+
+sub color_corr_ofs {
+    my ($self) = @_;
+    return $self-&gt;{color_corr_ofs};
+}
+
+sub postage_stamp_ofs {
+    my ($self) = @_;
+    return $self-&gt;{postage_stamp_ofs};
+}
+
+sub scan_line_ofs {
+    my ($self) = @_;
+    return $self-&gt;{scan_line_ofs};
+}
+
+sub attributes {
+    my ($self) = @_;
+    return $self-&gt;{attributes};
+}
+
+1;
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

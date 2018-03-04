@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.dex file format: Python parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Executables and Byte-code</li>
+        <li class="active">.dex file format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.dex file format:
+            
+            Python parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        dex
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC-BY-SA-3.0.html">CC-BY-SA-3.0</a>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .dex file format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".dex file format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".dex file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title=".dex file format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".dex file format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title=".dex file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".dex file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".dex file format parsing PHP library">PHP</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="python.html" title=".dex file format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".dex file format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="python">data = Dex.from_file("path/to/local/file.dex")</code></pre>
+
+<p>Or parse structure from a bytes:</p>
+
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
+
+raw = b"\x00\x01\x02..."
+data = Dex(KaitaiStream(BytesIO(raw)))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="python">data.stringIds # => string identifiers list.
+These are identifiers for all the strings used by this file, either for  internal naming (e.g., type descriptors) or as constant objects referred to by code.
+This list must be sorted by string contents, using UTF-16 code point values (not in a locale-sensitive manner), and it must not contain any duplicate entries.    
+</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Python source code to parse .dex file format
+            
+        </h2>
+
+        
+
+        <h3>dex.py</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/python/dex.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+from pkg_resources import parse_version
+from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+from enum import Enum
+
+
+if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
+    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
+
+class Dex(KaitaiStruct):
+    &quot;&quot;&quot;
+    .. seealso::
+       Source - https://source.android.com/devices/tech/dalvik/dex-format
+    &quot;&quot;&quot;
+
+    class ClassAccessFlags(Enum):
+        public = 1
+        private = 2
+        protected = 4
+        static = 8
+        final = 16
+        interface = 512
+        abstract = 1024
+        synthetic = 4096
+        annotation = 8192
+        enum = 16384
+    def __init__(self, _io, _parent=None, _root=None):
+        self._io = _io
+        self._parent = _parent
+        self._root = _root if _root else self
+        self._read()
+
+    def _read(self):
+        self.header = self._root.HeaderItem(self._io, self, self._root)
+
+    class HeaderItem(KaitaiStruct):
+
+        class EndianConstant(Enum):
+            endian_constant = 305419896
+            reverse_endian_constant = 2018915346
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.magic = self._io.ensure_fixed_contents(b&quot;\x64\x65\x78\x0A&quot;)
+            self.version_str = (self._io.read_bytes(3)).decode(u&quot;ascii&quot;)
+            self.magic2 = self._io.ensure_fixed_contents(b&quot;\x00&quot;)
+            self.checksum = self._io.read_u4le()
+            self.signature = self._io.read_bytes(20)
+            self.file_size = self._io.read_u4le()
+            self.header_size = self._io.read_u4le()
+            self.endian_tag = self._root.HeaderItem.EndianConstant(self._io.read_u4le())
+            self.link_size = self._io.read_u4le()
+            self.link_off = self._io.read_u4le()
+            self.map_off = self._io.read_u4le()
+            self.string_ids_size = self._io.read_u4le()
+            self.string_ids_off = self._io.read_u4le()
+            self.type_ids_size = self._io.read_u4le()
+            self.type_ids_off = self._io.read_u4le()
+            self.proto_ids_size = self._io.read_u4le()
+            self.proto_ids_off = self._io.read_u4le()
+            self.field_ids_size = self._io.read_u4le()
+            self.field_ids_off = self._io.read_u4le()
+            self.method_ids_size = self._io.read_u4le()
+            self.method_ids_off = self._io.read_u4le()
+            self.class_defs_size = self._io.read_u4le()
+            self.class_defs_off = self._io.read_u4le()
+            self.data_size = self._io.read_u4le()
+            self.data_off = self._io.read_u4le()
+
+
+    class MapList(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.size = self._io.read_u4le()
+            self.list = [None] * (self.size)
+            for i in range(self.size):
+                self.list[i] = self._root.MapItem(self._io, self, self._root)
+
+
+
+    class EncodedValue(KaitaiStruct):
+
+        class ValueTypeEnum(Enum):
+            byte = 0
+            short = 2
+            char = 3
+            int = 4
+            long = 6
+            float = 16
+            double = 17
+            method_type = 21
+            method_handle = 22
+            string = 23
+            type = 24
+            field = 25
+            method = 26
+            enum = 27
+            array = 28
+            annotation = 29
+            null = 30
+            boolean = 31
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.value_arg = self._io.read_bits_int(3)
+            self.value_type = self._root.EncodedValue.ValueTypeEnum(self._io.read_bits_int(5))
+            self._io.align_to_byte()
+            _on = self.value_type
+            if _on == self._root.EncodedValue.ValueTypeEnum.double:
+                self.value = self._io.read_f8le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.annotation:
+                self.value = self._root.EncodedAnnotation(self._io, self, self._root)
+            elif _on == self._root.EncodedValue.ValueTypeEnum.type:
+                self.value = self._io.read_u4le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.char:
+                self.value = self._io.read_u2le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.method_handle:
+                self.value = self._io.read_u4le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.array:
+                self.value = self._root.EncodedArray(self._io, self, self._root)
+            elif _on == self._root.EncodedValue.ValueTypeEnum.byte:
+                self.value = self._io.read_s1()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.method:
+                self.value = self._io.read_u4le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.method_type:
+                self.value = self._io.read_u4le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.short:
+                self.value = self._io.read_s2le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.string:
+                self.value = self._io.read_u4le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.int:
+                self.value = self._io.read_s4le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.field:
+                self.value = self._io.read_u4le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.long:
+                self.value = self._io.read_s8le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.float:
+                self.value = self._io.read_f4le()
+            elif _on == self._root.EncodedValue.ValueTypeEnum.enum:
+                self.value = self._io.read_u4le()
+
+
+    class CallSiteIdItem(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.call_site_off = self._io.read_u4le()
+
+
+    class MethodIdItem(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.class_idx = self._io.read_u2le()
+            self.proto_idx = self._io.read_u2le()
+            self.name_idx = self._io.read_u4le()
+
+
+    class Uleb128(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.b1 = self._io.read_u1()
+            if (self.b1 &amp; 128) != 0:
+                self.b2 = self._io.read_u1()
+
+            if (self.b2 &amp; 128) != 0:
+                self.b3 = self._io.read_u1()
+
+            if (self.b3 &amp; 128) != 0:
+                self.b4 = self._io.read_u1()
+
+            if (self.b4 &amp; 128) != 0:
+                self.b5 = self._io.read_u1()
+
+            if (self.b5 &amp; 128) != 0:
+                self.b6 = self._io.read_u1()
+
+            if (self.b6 &amp; 128) != 0:
+                self.b7 = self._io.read_u1()
+
+            if (self.b7 &amp; 128) != 0:
+                self.b8 = self._io.read_u1()
+
+            if (self.b8 &amp; 128) != 0:
+                self.b9 = self._io.read_u1()
+
+            if (self.b9 &amp; 128) != 0:
+                self.b10 = self._io.read_u1()
+
+
+        @property
+        def value(self):
+            if hasattr(self, &#39;_m_value&#39;):
+                return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+
+            self._m_value = (((self.b1 % 128) &lt;&lt; 0) + (0 if (self.b1 &amp; 128) == 0 else (((self.b2 % 128) &lt;&lt; 7) + (0 if (self.b2 &amp; 128) == 0 else (((self.b3 % 128) &lt;&lt; 14) + (0 if (self.b3 &amp; 128) == 0 else (((self.b4 % 128) &lt;&lt; 21) + (0 if (self.b4 &amp; 128) == 0 else (((self.b5 % 128) &lt;&lt; 28) + (0 if (self.b5 &amp; 128) == 0 else (((self.b6 % 128) &lt;&lt; 35) + (0 if (self.b6 &amp; 128) == 0 else (((self.b7 % 128) &lt;&lt; 42) + (0 if (self.b7 &amp; 128) == 0 else (((self.b8 % 128) &lt;&lt; 49) + (0 if (self.b8 &amp; 128) == 0 else (((self.b9 % 128) &lt;&lt; 56) + (0 if (self.b8 &amp; 128) == 0 else ((self.b10 % 128) &lt;&lt; 63)))))))))))))))))))
+            return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+
+
+    class TypeIdItem(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.descriptor_idx = self._io.read_u4le()
+
+        @property
+        def type_name(self):
+            if hasattr(self, &#39;_m_type_name&#39;):
+                return self._m_type_name if hasattr(self, &#39;_m_type_name&#39;) else None
+
+            self._m_type_name = self._root.string_ids[self.descriptor_idx].value.data
+            return self._m_type_name if hasattr(self, &#39;_m_type_name&#39;) else None
+
+
+    class AnnotationElement(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.name_idx = self._root.Uleb128(self._io, self, self._root)
+            self.value = self._root.EncodedValue(self._io, self, self._root)
+
+
+    class EncodedField(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.field_idx_diff = self._root.Uleb128(self._io, self, self._root)
+            self.access_flags = self._root.Uleb128(self._io, self, self._root)
+
+
+    class EncodedArrayItem(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.value = self._root.EncodedArray(self._io, self, self._root)
+
+
+    class ClassDataItem(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.static_fields_size = self._root.Uleb128(self._io, self, self._root)
+            self.instance_fields_size = self._root.Uleb128(self._io, self, self._root)
+            self.direct_methods_size = self._root.Uleb128(self._io, self, self._root)
+            self.virtual_methods_size = self._root.Uleb128(self._io, self, self._root)
+            self.static_fields = [None] * (self.static_fields_size.value)
+            for i in range(self.static_fields_size.value):
+                self.static_fields[i] = self._root.EncodedField(self._io, self, self._root)
+
+            self.instance_fields = [None] * (self.instance_fields_size.value)
+            for i in range(self.instance_fields_size.value):
+                self.instance_fields[i] = self._root.EncodedField(self._io, self, self._root)
+
+            self.direct_methods = [None] * (self.direct_methods_size.value)
+            for i in range(self.direct_methods_size.value):
+                self.direct_methods[i] = self._root.EncodedMethod(self._io, self, self._root)
+
+            self.virtual_methods = [None] * (self.virtual_methods_size.value)
+            for i in range(self.virtual_methods_size.value):
+                self.virtual_methods[i] = self._root.EncodedMethod(self._io, self, self._root)
+
+
+
+    class FieldIdItem(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.class_idx = self._io.read_u2le()
+            self.type_idx = self._io.read_u2le()
+            self.name_idx = self._io.read_u4le()
+
+
+    class EncodedAnnotation(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.type_idx = self._root.Uleb128(self._io, self, self._root)
+            self.size = self._root.Uleb128(self._io, self, self._root)
+            self.elements = [None] * (self.size.value)
+            for i in range(self.size.value):
+                self.elements[i] = self._root.AnnotationElement(self._io, self, self._root)
+
+
+
+    class ClassDefItem(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.class_idx = self._io.read_u4le()
+            self.access_flags = self._root.ClassAccessFlags(self._io.read_u4le())
+            self.superclass_idx = self._io.read_u4le()
+            self.interfaces_off = self._io.read_u4le()
+            self.source_file_idx = self._io.read_u4le()
+            self.annotations_off = self._io.read_u4le()
+            self.class_data_off = self._io.read_u4le()
+            self.static_values_off = self._io.read_u4le()
+
+        @property
+        def type_name(self):
+            if hasattr(self, &#39;_m_type_name&#39;):
+                return self._m_type_name if hasattr(self, &#39;_m_type_name&#39;) else None
+
+            self._m_type_name = self._root.type_ids[self.class_idx].type_name
+            return self._m_type_name if hasattr(self, &#39;_m_type_name&#39;) else None
+
+        @property
+        def class_data(self):
+            if hasattr(self, &#39;_m_class_data&#39;):
+                return self._m_class_data if hasattr(self, &#39;_m_class_data&#39;) else None
+
+            if self.class_data_off != 0:
+                _pos = self._io.pos()
+                self._io.seek(self.class_data_off)
+                self._m_class_data = self._root.ClassDataItem(self._io, self, self._root)
+                self._io.seek(_pos)
+
+            return self._m_class_data if hasattr(self, &#39;_m_class_data&#39;) else None
+
+        @property
+        def static_values(self):
+            if hasattr(self, &#39;_m_static_values&#39;):
+                return self._m_static_values if hasattr(self, &#39;_m_static_values&#39;) else None
+
+            if self.static_values_off != 0:
+                _pos = self._io.pos()
+                self._io.seek(self.static_values_off)
+                self._m_static_values = self._root.EncodedArrayItem(self._io, self, self._root)
+                self._io.seek(_pos)
+
+            return self._m_static_values if hasattr(self, &#39;_m_static_values&#39;) else None
+
+
+    class StringIdItem(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.string_data_off = self._io.read_u4le()
+
+        class StringDataItem(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.utf16_size = self._root.Uleb128(self._io, self, self._root)
+                self.data = (self._io.read_bytes(self.utf16_size.value)).decode(u&quot;ascii&quot;)
+
+
+        @property
+        def value(self):
+            if hasattr(self, &#39;_m_value&#39;):
+                return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+
+            _pos = self._io.pos()
+            self._io.seek(self.string_data_off)
+            self._m_value = self._root.StringIdItem.StringDataItem(self._io, self, self._root)
+            self._io.seek(_pos)
+            return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+
+
+    class ProtoIdItem(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.shorty_idx = self._io.read_u4le()
+            self.return_type_idx = self._io.read_u4le()
+            self.parameters_off = self._io.read_u4le()
+
+
+    class EncodedMethod(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.method_idx_diff = self._root.Uleb128(self._io, self, self._root)
+            self.access_flags = self._root.Uleb128(self._io, self, self._root)
+            self.code_off = self._root.Uleb128(self._io, self, self._root)
+
+
+    class MapItem(KaitaiStruct):
+
+        class MapItemType(Enum):
+            header_item = 0
+            string_id_item = 1
+            type_id_item = 2
+            proto_id_item = 3
+            field_id_item = 4
+            method_id_item = 5
+            class_def_item = 6
+            call_site_id_item = 7
+            method_handle_item = 8
+            map_list = 4096
+            type_list = 4097
+            annotation_set_ref_list = 4098
+            annotation_set_item = 4099
+            class_data_item = 8192
+            code_item = 8193
+            string_data_item = 8194
+            debug_info_item = 8195
+            annotation_item = 8196
+            encoded_array_item = 8197
+            annotations_directory_item = 8198
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.type = self._root.MapItem.MapItemType(self._io.read_u2le())
+            self.unused = self._io.read_u2le()
+            self.size = self._io.read_u4le()
+            self.offset = self._io.read_u4le()
+
+
+    class EncodedArray(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.size = self._root.Uleb128(self._io, self, self._root)
+            self.values = [None] * (self.size.value)
+            for i in range(self.size.value):
+                self.values[i] = self._root.EncodedValue(self._io, self, self._root)
+
+
+
+    @property
+    def string_ids(self):
+        &quot;&quot;&quot;string identifiers list.
+        These are identifiers for all the strings used by this file, either for  internal naming (e.g., type descriptors) or as constant objects referred to by code.
+        This list must be sorted by string contents, using UTF-16 code point values (not in a locale-sensitive manner), and it must not contain any duplicate entries.    
+        &quot;&quot;&quot;
+        if hasattr(self, &#39;_m_string_ids&#39;):
+            return self._m_string_ids if hasattr(self, &#39;_m_string_ids&#39;) else None
+
+        _pos = self._io.pos()
+        self._io.seek(self.header.string_ids_off)
+        self._m_string_ids = [None] * (self.header.string_ids_size)
+        for i in range(self.header.string_ids_size):
+            self._m_string_ids[i] = self._root.StringIdItem(self._io, self, self._root)
+
+        self._io.seek(_pos)
+        return self._m_string_ids if hasattr(self, &#39;_m_string_ids&#39;) else None
+
+    @property
+    def method_ids(self):
+        &quot;&quot;&quot;method identifiers list.
+        These are identifiers for all methods referred to by this file, whether defined in the file or not.
+        This list must be sorted, where the defining type (by type_id index  is the major order, method name (by string_id index) is the intermediate order, and method prototype (by proto_id index) is the minor order.
+        The list must not contain any duplicate entries.
+        &quot;&quot;&quot;
+        if hasattr(self, &#39;_m_method_ids&#39;):
+            return self._m_method_ids if hasattr(self, &#39;_m_method_ids&#39;) else None
+
+        _pos = self._io.pos()
+        self._io.seek(self.header.method_ids_off)
+        self._m_method_ids = [None] * (self.header.method_ids_size)
+        for i in range(self.header.method_ids_size):
+            self._m_method_ids[i] = self._root.MethodIdItem(self._io, self, self._root)
+
+        self._io.seek(_pos)
+        return self._m_method_ids if hasattr(self, &#39;_m_method_ids&#39;) else None
+
+    @property
+    def link_data(self):
+        &quot;&quot;&quot;data used in statically linked files.
+        The format of the data in this section is left unspecified by this document.
+        This section is empty in unlinked files, and runtime implementations may use it as they see fit.
+        &quot;&quot;&quot;
+        if hasattr(self, &#39;_m_link_data&#39;):
+            return self._m_link_data if hasattr(self, &#39;_m_link_data&#39;) else None
+
+        _pos = self._io.pos()
+        self._io.seek(self.header.link_off)
+        self._m_link_data = self._io.read_bytes(self.header.link_size)
+        self._io.seek(_pos)
+        return self._m_link_data if hasattr(self, &#39;_m_link_data&#39;) else None
+
+    @property
+    def map(self):
+        if hasattr(self, &#39;_m_map&#39;):
+            return self._m_map if hasattr(self, &#39;_m_map&#39;) else None
+
+        _pos = self._io.pos()
+        self._io.seek(self.header.map_off)
+        self._m_map = self._root.MapList(self._io, self, self._root)
+        self._io.seek(_pos)
+        return self._m_map if hasattr(self, &#39;_m_map&#39;) else None
+
+    @property
+    def class_defs(self):
+        &quot;&quot;&quot;class definitions list.
+        The classes must be ordered such that a given class&#39;s superclass and implemented interfaces appear in the list earlier than the referring class.
+        Furthermore, it is invalid for a definition for the same-named class to appear more than once in the list.
+        &quot;&quot;&quot;
+        if hasattr(self, &#39;_m_class_defs&#39;):
+            return self._m_class_defs if hasattr(self, &#39;_m_class_defs&#39;) else None
+
+        _pos = self._io.pos()
+        self._io.seek(self.header.class_defs_off)
+        self._m_class_defs = [None] * (self.header.class_defs_size)
+        for i in range(self.header.class_defs_size):
+            self._m_class_defs[i] = self._root.ClassDefItem(self._io, self, self._root)
+
+        self._io.seek(_pos)
+        return self._m_class_defs if hasattr(self, &#39;_m_class_defs&#39;) else None
+
+    @property
+    def data(self):
+        &quot;&quot;&quot;data area, containing all the support data for the tables listed above.
+        Different items have different alignment requirements, and padding bytes are inserted before each item if necessary to achieve proper alignment.
+        &quot;&quot;&quot;
+        if hasattr(self, &#39;_m_data&#39;):
+            return self._m_data if hasattr(self, &#39;_m_data&#39;) else None
+
+        _pos = self._io.pos()
+        self._io.seek(self.header.data_off)
+        self._m_data = self._io.read_bytes(self.header.data_size)
+        self._io.seek(_pos)
+        return self._m_data if hasattr(self, &#39;_m_data&#39;) else None
+
+    @property
+    def type_ids(self):
+        &quot;&quot;&quot;type identifiers list. 
+        These are identifiers for all types (classes, arrays, or primitive types)  referred to by this file, whether defined in the file or not.
+        This list must be sorted by string_id index, and it must not contain any duplicate entries.
+        &quot;&quot;&quot;
+        if hasattr(self, &#39;_m_type_ids&#39;):
+            return self._m_type_ids if hasattr(self, &#39;_m_type_ids&#39;) else None
+
+        _pos = self._io.pos()
+        self._io.seek(self.header.type_ids_off)
+        self._m_type_ids = [None] * (self.header.type_ids_size)
+        for i in range(self.header.type_ids_size):
+            self._m_type_ids[i] = self._root.TypeIdItem(self._io, self, self._root)
+
+        self._io.seek(_pos)
+        return self._m_type_ids if hasattr(self, &#39;_m_type_ids&#39;) else None
+
+    @property
+    def proto_ids(self):
+        &quot;&quot;&quot;method prototype identifiers list.
+        These are identifiers for all prototypes referred to by this file.
+        This list must be sorted in return-type (by type_id index) major order, and then by argument list (lexicographic ordering, individual arguments ordered by type_id index). The list must not contain any duplicate entries.
+        &quot;&quot;&quot;
+        if hasattr(self, &#39;_m_proto_ids&#39;):
+            return self._m_proto_ids if hasattr(self, &#39;_m_proto_ids&#39;) else None
+
+        _pos = self._io.pos()
+        self._io.seek(self.header.proto_ids_off)
+        self._m_proto_ids = [None] * (self.header.proto_ids_size)
+        for i in range(self.header.proto_ids_size):
+            self._m_proto_ids[i] = self._root.ProtoIdItem(self._io, self, self._root)
+
+        self._io.seek(_pos)
+        return self._m_proto_ids if hasattr(self, &#39;_m_proto_ids&#39;) else None
+
+    @property
+    def field_ids(self):
+        &quot;&quot;&quot;field identifiers list.
+        These are identifiers for all fields referred to by this file, whether defined in the file or not. 
+        This list must be sorted, where the defining type (by type_id index)  is the major order, field name (by string_id index) is the intermediate  order, and type (by type_id index) is the minor order.
+        The list must not contain any duplicate entries.
+        &quot;&quot;&quot;
+        if hasattr(self, &#39;_m_field_ids&#39;):
+            return self._m_field_ids if hasattr(self, &#39;_m_field_ids&#39;) else None
+
+        _pos = self._io.pos()
+        self._io.seek(self.header.field_ids_off)
+        self._m_field_ids = [None] * (self.header.field_ids_size)
+        for i in range(self.header.field_ids_size):
+            self._m_field_ids[i] = self._root.FieldIdItem(self._io, self, self._root)
+
+        self._io.seek(_pos)
+        return self._m_field_ids if hasattr(self, &#39;_m_field_ids&#39;) else None
+
+
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

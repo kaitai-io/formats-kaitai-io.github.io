@@ -1,0 +1,71 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__lzh {
+		label="Lzh";
+		graph[style=dotted];
+
+		lzh__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>Record</TD><TD PORT="entries_type">entries</TD></TR>
+			<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__record {
+			label="Lzh::Record";
+			graph[style=dotted];
+
+			record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_len_pos">0</TD><TD PORT="header_len_size">1</TD><TD>u1</TD><TD PORT="header_len_type">header_len</TD></TR>
+				<TR><TD PORT="file_record_pos">1</TD><TD PORT="file_record_size">...</TD><TD>FileRecord</TD><TD PORT="file_record_type">file_record</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__file_record {
+			label="Lzh::FileRecord";
+			graph[style=dotted];
+
+			file_record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">(_parent.header_len - 1)</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="file_uncompr_crc16_pos">...</TD><TD PORT="file_uncompr_crc16_size">2</TD><TD>u2le</TD><TD PORT="file_uncompr_crc16_type">file_uncompr_crc16</TD></TR>
+				<TR><TD PORT="body_pos">...</TD><TD PORT="body_size">header.header1.file_size_compr</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__header {
+			label="Lzh::Header";
+			graph[style=dotted];
+
+			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header1_pos">0</TD><TD PORT="header1_size">20</TD><TD>Header1</TD><TD PORT="header1_type">header1</TD></TR>
+				<TR><TD PORT="filename_len_pos">20</TD><TD PORT="filename_len_size">1</TD><TD>u1</TD><TD PORT="filename_len_type">filename_len</TD></TR>
+				<TR><TD PORT="filename_pos">21</TD><TD PORT="filename_size">filename_len</TD><TD>str(ASCII)</TD><TD PORT="filename_type">filename</TD></TR>
+				<TR><TD PORT="file_uncompr_crc16_pos">...</TD><TD PORT="file_uncompr_crc16_size">2</TD><TD>u2le</TD><TD PORT="file_uncompr_crc16_type">file_uncompr_crc16</TD></TR>
+				<TR><TD PORT="os_pos">...</TD><TD PORT="os_size">1</TD><TD>u1</TD><TD PORT="os_type">os</TD></TR>
+				<TR><TD PORT="ext_header_size_pos">...</TD><TD PORT="ext_header_size_size">2</TD><TD>u2le</TD><TD PORT="ext_header_size_type">ext_header_size</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__header1 {
+			label="Lzh::Header1";
+			graph[style=dotted];
+
+			header1__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_checksum_pos">0</TD><TD PORT="header_checksum_size">1</TD><TD>u1</TD><TD PORT="header_checksum_type">header_checksum</TD></TR>
+				<TR><TD PORT="method_id_pos">1</TD><TD PORT="method_id_size">5</TD><TD>str(ASCII)</TD><TD PORT="method_id_type">method_id</TD></TR>
+				<TR><TD PORT="file_size_compr_pos">6</TD><TD PORT="file_size_compr_size">4</TD><TD>u4le</TD><TD PORT="file_size_compr_type">file_size_compr</TD></TR>
+				<TR><TD PORT="file_size_uncompr_pos">10</TD><TD PORT="file_size_uncompr_size">4</TD><TD>u4le</TD><TD PORT="file_size_uncompr_type">file_size_uncompr</TD></TR>
+				<TR><TD PORT="file_timestamp_pos">14</TD><TD PORT="file_timestamp_size">4</TD><TD>u4le</TD><TD PORT="file_timestamp_type">file_timestamp</TD></TR>
+				<TR><TD PORT="attr_pos">18</TD><TD PORT="attr_size">1</TD><TD>u1</TD><TD PORT="attr_type">attr</TD></TR>
+				<TR><TD PORT="lha_level_pos">19</TD><TD PORT="lha_level_size">1</TD><TD>u1</TD><TD PORT="lha_level_type">lha_level</TD></TR>
+			</TABLE>>];
+		}
+	}
+	lzh__seq:entries_type -> record__seq [style=bold];
+	record__seq:file_record_type -> file_record__seq [style=bold];
+	record__seq:header_len_type -> file_record__seq:header_size [color="#404040"];
+	file_record__seq:header_type -> header__seq [style=bold];
+	header1__seq:file_size_compr_type -> file_record__seq:body_size [color="#404040"];
+	header__seq:header1_type -> header1__seq [style=bold];
+	header__seq:filename_len_type -> header__seq:filename_size [color="#404040"];
+}

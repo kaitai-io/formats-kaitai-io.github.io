@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Serialization Protocols</li>
+        <li class="active">Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format:
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="microsoft_cfb.svg">
+            <img class="diagram-img" src="microsoft_cfb.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+        
+        <pre><code class="yaml">meta:
+  id: microsoft_cfb
+  title: Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format
+  endian: le
+seq:
+  - id: header
+    type: cfb_header
+instances:
+  sector_size:
+    value: '1 << header.sector_shift'
+  fat:
+    pos: sector_size
+    size: header.size_fat * sector_size
+    type: fat_entries
+  dir:
+    pos: (header.ofs_dir + 1) * sector_size
+    type: dir_entry
+types:
+  cfb_header:
+    seq:
+      - id: signature
+        contents: [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1]
+        doc: Magic bytes that confirm that this is a CFB file
+      - id: clsid
+        contents: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        doc: Reserved class ID field, must be all 0
+      - id: version_minor
+        type: u2
+      - id: version_major
+        type: u2
+      - id: byte_order
+        contents: [0xfe, 0xff]
+        doc: In theory, specifies a byte order. In practice, no other values besides FE FF (which imply little endian order) are used.
+      - id: sector_shift
+        type: u2
+        doc: For major version 3, must be 0x9 (sector size = 512 bytes). For major version 4, must be 0xc (sector size = 4096 bytes).
+      - id: mini_sector_shift
+        type: u2
+      - id: reserved1
+        size: 6
+      - id: size_dir
+        type: s4
+        doc: Number of directory sectors in this file. For major version 3, must be 0.
+      - id: size_fat
+        type: s4
+        doc: Number of FAT sectors in this file.
+      - id: ofs_dir
+        type: s4
+        doc: Starting sector number for directory stream.
+      - id: transaction_seq
+        type: s4
+        doc: A transaction sequence number, which is incremented each time the file is saved if transactions are implemented, 0 otherwise.
+      - id: mini_stream_cutoff_size
+        type: s4
+      - id: ofs_mini_fat
+        type: s4
+        doc: Starting sector number for mini FAT.
+      - id: size_mini_fat
+        type: s4
+        doc: Number of mini FAT sectors in this file.
+      - id: ofs_difat
+        type: s4
+        doc: Starting sector number for DIFAT.
+      - id: size_difat
+        type: s4
+        doc: Number of DIFAT sectors in this file.
+      - id: difat
+        repeat: expr
+        repeat-expr: 109
+        type: s4
+  fat_entries:
+    seq:
+      - id: entries
+        type: s4
+        repeat: eos
+  dir_entry:
+    seq:
+      - id: name
+        type: str
+        size: 64
+        encoding: UTF-16LE
+      - id: name_len
+        type: u2
+      - id: object_type
+        type: u1
+        enum: obj_type
+      - id: color_flag
+        type: u1
+        enum: rb_color
+      - id: left_sibling_id
+        type: s4
+      - id: right_sibling_id
+        type: s4
+      - id: child_id
+        type: s4
+      - id: clsid
+        size: 16
+      - id: state
+        type: u4
+        doc: User-defined flags for storage or root storage objects
+      - id: time_create
+        type: u8
+        doc: Creation time, in Windows FILETIME format (number of 100-nanosecond intervals since January 1, 1601, UTC)
+      - id: time_mod
+        type: u8
+        doc: Modification time, in Windows FILETIME format (number of 100-nanosecond intervals since January 1, 1601, UTC).
+      - id: ofs
+        type: s4
+        doc: For stream object, number of starting sector. For a root storage object, first sector of the mini stream, if the mini stream exists.
+      - id: size
+        type: u8
+        doc: For stream object, size of user-defined data in bytes. For a root storage object, size of the mini stream.
+    instances:
+      mini_stream:
+        io: _root._io
+        pos: (ofs + 1) * _root.sector_size
+        size: size
+        if: object_type == obj_type::root_storage
+      child:
+        io: _root._io
+        pos: (_root.header.ofs_dir + 1) * _root.sector_size + child_id * 0x80 # sizeof<dir_entry>
+        type: dir_entry
+        if: child_id != -1
+      left_sibling:
+        io: _root._io
+        pos: (_root.header.ofs_dir + 1) * _root.sector_size + left_sibling_id * 0x80 # sizeof<dir_entry>
+        type: dir_entry
+        if: left_sibling_id != -1
+      right_sibling:
+        io: _root._io
+        pos: (_root.header.ofs_dir + 1) * _root.sector_size + right_sibling_id * 0x80 # sizeof<dir_entry>
+        type: dir_entry
+        if: right_sibling_id != -1
+    enums:
+      obj_type:
+        0: unknown
+        1: storage
+        2: stream
+        5: root_storage
+      rb_color:
+        0: red
+        1: black
+</code></pre>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

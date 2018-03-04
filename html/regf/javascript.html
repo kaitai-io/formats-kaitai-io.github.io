@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Windows registry database: JavaScript parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Windows-specific</li>
+        <li class="active">Windows registry database</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Windows registry database:
+            
+            JavaScript parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>This spec allows to parse files used by Microsoft Windows family of
+operating systems to store parts of its &quot;registry&quot;. &quot;Registry&quot; is a
+hierarchical database that is used to store system settings (global
+configuration, per-user, per-application configuration, etc).</p>
+<p>Typically, registry files are stored in:</p>
+<ul>
+<li>System-wide: several files in <code>%SystemRoot%\System32\Config\</code></li>
+<li>User-wide:
+<ul>
+<li><code>%USERPROFILE%\Ntuser.dat</code></li>
+<li><code>%USERPROFILE%\Local Settings\Application Data\Microsoft\Windows\Usrclass.dat</code> (localized, Windows 2000, Server 2003 and Windows XP)</li>
+<li><code>%USERPROFILE%\AppData\Local\Microsoft\Windows\Usrclass.dat</code> (non-localized, Windows Vista and later)</li>
+</ul>
+</li>
+</ul>
+<p>Note that one typically can't access files directly on a mounted
+filesystem with a running Windows OS.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Windows NT and later
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Windows registry database
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Windows registry database parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="Windows registry database parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Windows registry database parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Windows registry database parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Windows registry database parsing Java library">Java</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="javascript.html" title="Windows registry database parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Windows registry database parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Windows registry database parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Windows registry database parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Windows registry database parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            JavaScript source code to parse Windows registry database
+            
+        </h2>
+
+        
+
+        <h3>Regf.js</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/javascript/Regf.js" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+(function (root, factory) {
+  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
+  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
+  } else {
+    root.Regf = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
+/**
+ * This spec allows to parse files used by Microsoft Windows family of
+ * operating systems to store parts of its &quot;registry&quot;. &quot;Registry&quot; is a
+ * hierarchical database that is used to store system settings (global
+ * configuration, per-user, per-application configuration, etc).
+ * 
+ * Typically, registry files are stored in:
+ * 
+ * * System-wide: several files in `%SystemRoot%\System32\Config\`
+ * * User-wide:
+ *   * `%USERPROFILE%\Ntuser.dat`
+ *   * `%USERPROFILE%\Local Settings\Application Data\Microsoft\Windows\Usrclass.dat` (localized, Windows 2000, Server 2003 and Windows XP)
+ *   * `%USERPROFILE%\AppData\Local\Microsoft\Windows\Usrclass.dat` (non-localized, Windows Vista and later)
+ * 
+ * Note that one typically can&#39;t access files directly on a mounted
+ * filesystem with a running Windows OS.
+ * @see {@link https://github.com/libyal/libregf/blob/master/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc|Source}
+ */
+
+var Regf = (function() {
+  function Regf(_io, _parent, _root) {
+    this._io = _io;
+    this._parent = _parent;
+    this._root = _root || this;
+
+    this._read();
+  }
+  Regf.prototype._read = function() {
+    this.header = new FileHeader(this._io, this, this._root);
+    this._raw_hiveBins = [];
+    this.hiveBins = [];
+    var i = 0;
+    while (!this._io.isEof()) {
+      this._raw_hiveBins.push(this._io.readBytes(4096));
+      var _io__raw_hiveBins = new KaitaiStream(this._raw_hiveBins[this._raw_hiveBins.length - 1]);
+      this.hiveBins.push(new HiveBin(_io__raw_hiveBins, this, this._root));
+      i++;
+    }
+  }
+
+  var Filetime = Regf.Filetime = (function() {
+    function Filetime(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Filetime.prototype._read = function() {
+      this.value = this._io.readU8le();
+    }
+
+    return Filetime;
+  })();
+
+  var HiveBin = Regf.HiveBin = (function() {
+    function HiveBin(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    HiveBin.prototype._read = function() {
+      this.header = new HiveBinHeader(this._io, this, this._root);
+      this.cells = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.cells.push(new HiveBinCell(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return HiveBin;
+  })();
+
+  var HiveBinHeader = Regf.HiveBinHeader = (function() {
+    function HiveBinHeader(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    HiveBinHeader.prototype._read = function() {
+      this.signature = this._io.ensureFixedContents([104, 98, 105, 110]);
+      this.offset = this._io.readU4le();
+      this.size = this._io.readU4le();
+      this.unknown1 = this._io.readU4le();
+      this.unknown2 = this._io.readU4le();
+      this.timestamp = new Filetime(this._io, this, this._root);
+      this.unknown4 = this._io.readU4le();
+    }
+
+    /**
+     * The offset of the hive bin, Value in bytes and relative from
+     * the start of the hive bin data
+     */
+
+    /**
+     * Size of the hive bin
+     */
+
+    /**
+     * 0 most of the time, can contain remnant data
+     */
+
+    /**
+     * 0 most of the time, can contain remnant data
+     */
+
+    /**
+     * Only the root (first) hive bin seems to contain a valid FILETIME
+     */
+
+    /**
+     * Contains number of bytes
+     */
+
+    return HiveBinHeader;
+  })();
+
+  var HiveBinCell = Regf.HiveBinCell = (function() {
+    function HiveBinCell(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    HiveBinCell.prototype._read = function() {
+      this.cellSizeRaw = this._io.readS4le();
+      this.identifier = KaitaiStream.bytesToStr(this._io.readBytes(2), &quot;ascii&quot;);
+      switch (this.identifier) {
+      case &quot;li&quot;:
+        this._raw_data = this._io.readBytes(((this.cellSize - 2) - 4));
+        var _io__raw_data = new KaitaiStream(this._raw_data);
+        this.data = new SubKeyListLi(_io__raw_data, this, this._root);
+        break;
+      case &quot;vk&quot;:
+        this._raw_data = this._io.readBytes(((this.cellSize - 2) - 4));
+        var _io__raw_data = new KaitaiStream(this._raw_data);
+        this.data = new SubKeyListVk(_io__raw_data, this, this._root);
+        break;
+      case &quot;lf&quot;:
+        this._raw_data = this._io.readBytes(((this.cellSize - 2) - 4));
+        var _io__raw_data = new KaitaiStream(this._raw_data);
+        this.data = new SubKeyListLhLf(_io__raw_data, this, this._root);
+        break;
+      case &quot;ri&quot;:
+        this._raw_data = this._io.readBytes(((this.cellSize - 2) - 4));
+        var _io__raw_data = new KaitaiStream(this._raw_data);
+        this.data = new SubKeyListRi(_io__raw_data, this, this._root);
+        break;
+      case &quot;lh&quot;:
+        this._raw_data = this._io.readBytes(((this.cellSize - 2) - 4));
+        var _io__raw_data = new KaitaiStream(this._raw_data);
+        this.data = new SubKeyListLhLf(_io__raw_data, this, this._root);
+        break;
+      case &quot;nk&quot;:
+        this._raw_data = this._io.readBytes(((this.cellSize - 2) - 4));
+        var _io__raw_data = new KaitaiStream(this._raw_data);
+        this.data = new NamedKey(_io__raw_data, this, this._root);
+        break;
+      case &quot;sk&quot;:
+        this._raw_data = this._io.readBytes(((this.cellSize - 2) - 4));
+        var _io__raw_data = new KaitaiStream(this._raw_data);
+        this.data = new SubKeyListSk(_io__raw_data, this, this._root);
+        break;
+      default:
+        this.data = this._io.readBytes(((this.cellSize - 2) - 4));
+        break;
+      }
+    }
+
+    var SubKeyListVk = HiveBinCell.SubKeyListVk = (function() {
+      SubKeyListVk.DataTypeEnum = Object.freeze({
+        REG_NONE: 0,
+        REG_SZ: 1,
+        REG_EXPAND_SZ: 2,
+        REG_BINARY: 3,
+        REG_DWORD: 4,
+        REG_DWORD_BIG_ENDIAN: 5,
+        REG_LINK: 6,
+        REG_MULTI_SZ: 7,
+        REG_RESOURCE_LIST: 8,
+        REG_FULL_RESOURCE_DESCRIPTOR: 9,
+        REG_RESOURCE_REQUIREMENTS_LIST: 10,
+        REG_QWORD: 11,
+
+        0: &quot;REG_NONE&quot;,
+        1: &quot;REG_SZ&quot;,
+        2: &quot;REG_EXPAND_SZ&quot;,
+        3: &quot;REG_BINARY&quot;,
+        4: &quot;REG_DWORD&quot;,
+        5: &quot;REG_DWORD_BIG_ENDIAN&quot;,
+        6: &quot;REG_LINK&quot;,
+        7: &quot;REG_MULTI_SZ&quot;,
+        8: &quot;REG_RESOURCE_LIST&quot;,
+        9: &quot;REG_FULL_RESOURCE_DESCRIPTOR&quot;,
+        10: &quot;REG_RESOURCE_REQUIREMENTS_LIST&quot;,
+        11: &quot;REG_QWORD&quot;,
+      });
+
+      SubKeyListVk.VkFlags = Object.freeze({
+        VALUE_COMP_NAME: 1,
+
+        1: &quot;VALUE_COMP_NAME&quot;,
+      });
+
+      function SubKeyListVk(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      SubKeyListVk.prototype._read = function() {
+        this.valueNameSize = this._io.readU2le();
+        this.dataSize = this._io.readU4le();
+        this.dataOffset = this._io.readU4le();
+        this.dataType = this._io.readU4le();
+        this.flags = this._io.readU2le();
+        this.padding = this._io.readU2le();
+        if (this.flags == Regf.HiveBinCell.SubKeyListVk.VkFlags.VALUE_COMP_NAME) {
+          this.valueName = KaitaiStream.bytesToStr(this._io.readBytes(this.valueNameSize), &quot;ascii&quot;);
+        }
+      }
+
+      return SubKeyListVk;
+    })();
+
+    var SubKeyListLhLf = HiveBinCell.SubKeyListLhLf = (function() {
+      function SubKeyListLhLf(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      SubKeyListLhLf.prototype._read = function() {
+        this.count = this._io.readU2le();
+        this.items = new Array(this.count);
+        for (var i = 0; i &lt; this.count; i++) {
+          this.items[i] = new Item(this._io, this, this._root);
+        }
+      }
+
+      var Item = SubKeyListLhLf.Item = (function() {
+        function Item(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root || this;
+
+          this._read();
+        }
+        Item.prototype._read = function() {
+          this.namedKeyOffset = this._io.readU4le();
+          this.hashValue = this._io.readU4le();
+        }
+
+        return Item;
+      })();
+
+      return SubKeyListLhLf;
+    })();
+
+    var SubKeyListSk = HiveBinCell.SubKeyListSk = (function() {
+      function SubKeyListSk(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      SubKeyListSk.prototype._read = function() {
+        this.unknown1 = this._io.readU2le();
+        this.previousSecurityKeyOffset = this._io.readU4le();
+        this.nextSecurityKeyOffset = this._io.readU4le();
+        this.referenceCount = this._io.readU4le();
+      }
+
+      return SubKeyListSk;
+    })();
+
+    var SubKeyListLi = HiveBinCell.SubKeyListLi = (function() {
+      function SubKeyListLi(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      SubKeyListLi.prototype._read = function() {
+        this.count = this._io.readU2le();
+        this.items = new Array(this.count);
+        for (var i = 0; i &lt; this.count; i++) {
+          this.items[i] = new Item(this._io, this, this._root);
+        }
+      }
+
+      var Item = SubKeyListLi.Item = (function() {
+        function Item(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root || this;
+
+          this._read();
+        }
+        Item.prototype._read = function() {
+          this.namedKeyOffset = this._io.readU4le();
+        }
+
+        return Item;
+      })();
+
+      return SubKeyListLi;
+    })();
+
+    var NamedKey = HiveBinCell.NamedKey = (function() {
+      NamedKey.NkFlags = Object.freeze({
+        KEY_IS_VOLATILE: 1,
+        KEY_HIVE_EXIT: 2,
+        KEY_HIVE_ENTRY: 4,
+        KEY_NO_DELETE: 8,
+        KEY_SYM_LINK: 16,
+        KEY_COMP_NAME: 32,
+        KEY_PREFEF_HANDLE: 64,
+        KEY_VIRT_MIRRORED: 128,
+        KEY_VIRT_TARGET: 256,
+        KEY_VIRTUAL_STORE: 512,
+        UNKNOWN1: 4096,
+        UNKNOWN2: 16384,
+
+        1: &quot;KEY_IS_VOLATILE&quot;,
+        2: &quot;KEY_HIVE_EXIT&quot;,
+        4: &quot;KEY_HIVE_ENTRY&quot;,
+        8: &quot;KEY_NO_DELETE&quot;,
+        16: &quot;KEY_SYM_LINK&quot;,
+        32: &quot;KEY_COMP_NAME&quot;,
+        64: &quot;KEY_PREFEF_HANDLE&quot;,
+        128: &quot;KEY_VIRT_MIRRORED&quot;,
+        256: &quot;KEY_VIRT_TARGET&quot;,
+        512: &quot;KEY_VIRTUAL_STORE&quot;,
+        4096: &quot;UNKNOWN1&quot;,
+        16384: &quot;UNKNOWN2&quot;,
+      });
+
+      function NamedKey(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      NamedKey.prototype._read = function() {
+        this.flags = this._io.readU2le();
+        this.lastKeyWrittenDateAndTime = new Filetime(this._io, this, this._root);
+        this.unknown1 = this._io.readU4le();
+        this.parentKeyOffset = this._io.readU4le();
+        this.numberOfSubKeys = this._io.readU4le();
+        this.numberOfVolatileSubKeys = this._io.readU4le();
+        this.subKeysListOffset = this._io.readU4le();
+        this.numberOfValues = this._io.readU4le();
+        this.valuesListOffset = this._io.readU4le();
+        this.securityKeyOffset = this._io.readU4le();
+        this.classNameOffset = this._io.readU4le();
+        this.largestSubKeyNameSize = this._io.readU4le();
+        this.largestSubKeyClassNameSize = this._io.readU4le();
+        this.largestValueNameSize = this._io.readU4le();
+        this.largestValueDataSize = this._io.readU4le();
+        this.unknown2 = this._io.readU4le();
+        this.keyNameSize = this._io.readU2le();
+        this.classNameSize = this._io.readU2le();
+        this.unknownStringSize = this._io.readU4le();
+        this.unknownString = KaitaiStream.bytesToStr(this._io.readBytes(this.unknownStringSize), &quot;ascii&quot;);
+      }
+
+      return NamedKey;
+    })();
+
+    var SubKeyListRi = HiveBinCell.SubKeyListRi = (function() {
+      function SubKeyListRi(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      SubKeyListRi.prototype._read = function() {
+        this.count = this._io.readU2le();
+        this.items = new Array(this.count);
+        for (var i = 0; i &lt; this.count; i++) {
+          this.items[i] = new Item(this._io, this, this._root);
+        }
+      }
+
+      var Item = SubKeyListRi.Item = (function() {
+        function Item(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root || this;
+
+          this._read();
+        }
+        Item.prototype._read = function() {
+          this.subKeyListOffset = this._io.readU4le();
+        }
+
+        return Item;
+      })();
+
+      return SubKeyListRi;
+    })();
+    Object.defineProperty(HiveBinCell.prototype, &#39;cellSize&#39;, {
+      get: function() {
+        if (this._m_cellSize !== undefined)
+          return this._m_cellSize;
+        this._m_cellSize = ((this.cellSizeRaw &lt; 0 ? -1 : 1) * this.cellSizeRaw);
+        return this._m_cellSize;
+      }
+    });
+    Object.defineProperty(HiveBinCell.prototype, &#39;isAllocated&#39;, {
+      get: function() {
+        if (this._m_isAllocated !== undefined)
+          return this._m_isAllocated;
+        this._m_isAllocated = this.cellSizeRaw &lt; 0;
+        return this._m_isAllocated;
+      }
+    });
+
+    return HiveBinCell;
+  })();
+
+  var FileHeader = Regf.FileHeader = (function() {
+    FileHeader.FileType = Object.freeze({
+      NORMAL: 0,
+      TRANSACTION_LOG: 1,
+
+      0: &quot;NORMAL&quot;,
+      1: &quot;TRANSACTION_LOG&quot;,
+    });
+
+    FileHeader.FileFormat = Object.freeze({
+      DIRECT_MEMORY_LOAD: 1,
+
+      1: &quot;DIRECT_MEMORY_LOAD&quot;,
+    });
+
+    function FileHeader(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    FileHeader.prototype._read = function() {
+      this.signature = this._io.ensureFixedContents([114, 101, 103, 102]);
+      this.primarySequenceNumber = this._io.readU4le();
+      this.secondarySequenceNumber = this._io.readU4le();
+      this.lastModificationDateAndTime = new Filetime(this._io, this, this._root);
+      this.majorVersion = this._io.readU4le();
+      this.minorVersion = this._io.readU4le();
+      this.type = this._io.readU4le();
+      this.format = this._io.readU4le();
+      this.rootKeyOffset = this._io.readU4le();
+      this.hiveBinsDataSize = this._io.readU4le();
+      this.clusteringFactor = this._io.readU4le();
+      this.unknown1 = this._io.readBytes(64);
+      this.unknown2 = this._io.readBytes(396);
+      this.checksum = this._io.readU4le();
+      this.reserved = this._io.readBytes(3576);
+      this.bootType = this._io.readU4le();
+      this.bootRecover = this._io.readU4le();
+    }
+
+    return FileHeader;
+  })();
+
+  return Regf;
+})();
+return Regf;
+}));
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

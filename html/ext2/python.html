@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>ext2: Python parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">ext2</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>ext2:
+            
+            Python parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of ext2
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="ext2 parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="ext2 parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="ext2 parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="ext2 parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="ext2 parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="ext2 parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="ext2 parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="ext2 parsing PHP library">PHP</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="python.html" title="ext2 parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="ext2 parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="python">data = Ext2.from_file("path/to/local/file.ext2")</code></pre>
+
+<p>Or parse structure from a bytes:</p>
+
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
+
+raw = b"\x00\x01\x02..."
+data = Ext2(KaitaiStream(BytesIO(raw)))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="python">data.bg1 # => get bg1</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Python source code to parse ext2
+            
+        </h2>
+
+        
+
+        <h3>ext2.py</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/python/ext2.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+from pkg_resources import parse_version
+from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+from enum import Enum
+
+
+if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
+    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
+
+class Ext2(KaitaiStruct):
+    def __init__(self, _io, _parent=None, _root=None):
+        self._io = _io
+        self._parent = _parent
+        self._root = _root if _root else self
+        self._read()
+
+    def _read(self):
+        pass
+
+    class SuperBlockStruct(KaitaiStruct):
+
+        class StateEnum(Enum):
+            valid_fs = 1
+            error_fs = 2
+
+        class ErrorsEnum(Enum):
+            act_continue = 1
+            act_ro = 2
+            act_panic = 3
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.inodes_count = self._io.read_u4le()
+            self.blocks_count = self._io.read_u4le()
+            self.r_blocks_count = self._io.read_u4le()
+            self.free_blocks_count = self._io.read_u4le()
+            self.free_inodes_count = self._io.read_u4le()
+            self.first_data_block = self._io.read_u4le()
+            self.log_block_size = self._io.read_u4le()
+            self.log_frag_size = self._io.read_u4le()
+            self.blocks_per_group = self._io.read_u4le()
+            self.frags_per_group = self._io.read_u4le()
+            self.inodes_per_group = self._io.read_u4le()
+            self.mtime = self._io.read_u4le()
+            self.wtime = self._io.read_u4le()
+            self.mnt_count = self._io.read_u2le()
+            self.max_mnt_count = self._io.read_u2le()
+            self.magic = self._io.ensure_fixed_contents(b&quot;\x53\xEF&quot;)
+            self.state = self._root.SuperBlockStruct.StateEnum(self._io.read_u2le())
+            self.errors = self._root.SuperBlockStruct.ErrorsEnum(self._io.read_u2le())
+            self.minor_rev_level = self._io.read_u2le()
+            self.lastcheck = self._io.read_u4le()
+            self.checkinterval = self._io.read_u4le()
+            self.creator_os = self._io.read_u4le()
+            self.rev_level = self._io.read_u4le()
+            self.def_resuid = self._io.read_u2le()
+            self.def_resgid = self._io.read_u2le()
+            self.first_ino = self._io.read_u4le()
+            self.inode_size = self._io.read_u2le()
+            self.block_group_nr = self._io.read_u2le()
+            self.feature_compat = self._io.read_u4le()
+            self.feature_incompat = self._io.read_u4le()
+            self.feature_ro_compat = self._io.read_u4le()
+            self.uuid = self._io.read_bytes(16)
+            self.volume_name = self._io.read_bytes(16)
+            self.last_mounted = self._io.read_bytes(64)
+            self.algo_bitmap = self._io.read_u4le()
+            self.prealloc_blocks = self._io.read_u1()
+            self.prealloc_dir_blocks = self._io.read_u1()
+            self.padding1 = self._io.read_bytes(2)
+            self.journal_uuid = self._io.read_bytes(16)
+            self.journal_inum = self._io.read_u4le()
+            self.journal_dev = self._io.read_u4le()
+            self.last_orphan = self._io.read_u4le()
+            self.hash_seed = [None] * (4)
+            for i in range(4):
+                self.hash_seed[i] = self._io.read_u4le()
+
+            self.def_hash_version = self._io.read_u1()
+
+        @property
+        def block_size(self):
+            if hasattr(self, &#39;_m_block_size&#39;):
+                return self._m_block_size if hasattr(self, &#39;_m_block_size&#39;) else None
+
+            self._m_block_size = (1024 &lt;&lt; self.log_block_size)
+            return self._m_block_size if hasattr(self, &#39;_m_block_size&#39;) else None
+
+        @property
+        def block_group_count(self):
+            if hasattr(self, &#39;_m_block_group_count&#39;):
+                return self._m_block_group_count if hasattr(self, &#39;_m_block_group_count&#39;) else None
+
+            self._m_block_group_count = self.blocks_count // self.blocks_per_group
+            return self._m_block_group_count if hasattr(self, &#39;_m_block_group_count&#39;) else None
+
+
+    class DirEntry(KaitaiStruct):
+
+        class FileTypeEnum(Enum):
+            unknown = 0
+            reg_file = 1
+            dir = 2
+            chrdev = 3
+            blkdev = 4
+            fifo = 5
+            sock = 6
+            symlink = 7
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.inode_ptr = self._io.read_u4le()
+            self.rec_len = self._io.read_u2le()
+            self.name_len = self._io.read_u1()
+            self.file_type = self._root.DirEntry.FileTypeEnum(self._io.read_u1())
+            self.name = (self._io.read_bytes(self.name_len)).decode(u&quot;UTF-8&quot;)
+            self.padding = self._io.read_bytes(((self.rec_len - self.name_len) - 8))
+
+        @property
+        def inode(self):
+            if hasattr(self, &#39;_m_inode&#39;):
+                return self._m_inode if hasattr(self, &#39;_m_inode&#39;) else None
+
+            self._m_inode = self._root.bg1.block_groups[(self.inode_ptr - 1) // self._root.bg1.super_block.inodes_per_group].inodes[((self.inode_ptr - 1) % self._root.bg1.super_block.inodes_per_group)]
+            return self._m_inode if hasattr(self, &#39;_m_inode&#39;) else None
+
+
+    class Inode(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.mode = self._io.read_u2le()
+            self.uid = self._io.read_u2le()
+            self.size = self._io.read_u4le()
+            self.atime = self._io.read_u4le()
+            self.ctime = self._io.read_u4le()
+            self.mtime = self._io.read_u4le()
+            self.dtime = self._io.read_u4le()
+            self.gid = self._io.read_u2le()
+            self.links_count = self._io.read_u2le()
+            self.blocks = self._io.read_u4le()
+            self.flags = self._io.read_u4le()
+            self.osd1 = self._io.read_u4le()
+            self.block = [None] * (15)
+            for i in range(15):
+                self.block[i] = self._root.BlockPtr(self._io, self, self._root)
+
+            self.generation = self._io.read_u4le()
+            self.file_acl = self._io.read_u4le()
+            self.dir_acl = self._io.read_u4le()
+            self.faddr = self._io.read_u4le()
+            self.osd2 = self._io.read_bytes(12)
+
+        @property
+        def as_dir(self):
+            if hasattr(self, &#39;_m_as_dir&#39;):
+                return self._m_as_dir if hasattr(self, &#39;_m_as_dir&#39;) else None
+
+            io = self.block[0].body._io
+            _pos = io.pos()
+            io.seek(0)
+            self._m_as_dir = self._root.Dir(io, self, self._root)
+            io.seek(_pos)
+            return self._m_as_dir if hasattr(self, &#39;_m_as_dir&#39;) else None
+
+
+    class BlockPtr(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.ptr = self._io.read_u4le()
+
+        @property
+        def body(self):
+            if hasattr(self, &#39;_m_body&#39;):
+                return self._m_body if hasattr(self, &#39;_m_body&#39;) else None
+
+            _pos = self._io.pos()
+            self._io.seek((self.ptr * self._root.bg1.super_block.block_size))
+            self._raw__m_body = self._io.read_bytes(self._root.bg1.super_block.block_size)
+            io = KaitaiStream(BytesIO(self._raw__m_body))
+            self._m_body = self._root.RawBlock(io, self, self._root)
+            self._io.seek(_pos)
+            return self._m_body if hasattr(self, &#39;_m_body&#39;) else None
+
+
+    class Dir(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.entries = []
+            i = 0
+            while not self._io.is_eof():
+                self.entries.append(self._root.DirEntry(self._io, self, self._root))
+                i += 1
+
+
+
+    class BlockGroup(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self._raw_super_block = self._io.read_bytes(1024)
+            io = KaitaiStream(BytesIO(self._raw_super_block))
+            self.super_block = self._root.SuperBlockStruct(io, self, self._root)
+            self.block_groups = [None] * (self.super_block.block_group_count)
+            for i in range(self.super_block.block_group_count):
+                self.block_groups[i] = self._root.Bgd(self._io, self, self._root)
+
+
+
+    class Bgd(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.block_bitmap_block = self._io.read_u4le()
+            self.inode_bitmap_block = self._io.read_u4le()
+            self.inode_table_block = self._io.read_u4le()
+            self.free_blocks_count = self._io.read_u2le()
+            self.free_inodes_count = self._io.read_u2le()
+            self.used_dirs_count = self._io.read_u2le()
+            self.pad_reserved = self._io.read_bytes((2 + 12))
+
+        @property
+        def block_bitmap(self):
+            if hasattr(self, &#39;_m_block_bitmap&#39;):
+                return self._m_block_bitmap if hasattr(self, &#39;_m_block_bitmap&#39;) else None
+
+            _pos = self._io.pos()
+            self._io.seek((self.block_bitmap_block * self._root.bg1.super_block.block_size))
+            self._m_block_bitmap = self._io.read_bytes(1024)
+            self._io.seek(_pos)
+            return self._m_block_bitmap if hasattr(self, &#39;_m_block_bitmap&#39;) else None
+
+        @property
+        def inode_bitmap(self):
+            if hasattr(self, &#39;_m_inode_bitmap&#39;):
+                return self._m_inode_bitmap if hasattr(self, &#39;_m_inode_bitmap&#39;) else None
+
+            _pos = self._io.pos()
+            self._io.seek((self.inode_bitmap_block * self._root.bg1.super_block.block_size))
+            self._m_inode_bitmap = self._io.read_bytes(1024)
+            self._io.seek(_pos)
+            return self._m_inode_bitmap if hasattr(self, &#39;_m_inode_bitmap&#39;) else None
+
+        @property
+        def inodes(self):
+            if hasattr(self, &#39;_m_inodes&#39;):
+                return self._m_inodes if hasattr(self, &#39;_m_inodes&#39;) else None
+
+            _pos = self._io.pos()
+            self._io.seek((self.inode_table_block * self._root.bg1.super_block.block_size))
+            self._m_inodes = [None] * (self._root.bg1.super_block.inodes_per_group)
+            for i in range(self._root.bg1.super_block.inodes_per_group):
+                self._m_inodes[i] = self._root.Inode(self._io, self, self._root)
+
+            self._io.seek(_pos)
+            return self._m_inodes if hasattr(self, &#39;_m_inodes&#39;) else None
+
+
+    class RawBlock(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.body = self._io.read_bytes(self._root.bg1.super_block.block_size)
+
+
+    @property
+    def bg1(self):
+        if hasattr(self, &#39;_m_bg1&#39;):
+            return self._m_bg1 if hasattr(self, &#39;_m_bg1&#39;) else None
+
+        _pos = self._io.pos()
+        self._io.seek(1024)
+        self._m_bg1 = self._root.BlockGroup(self._io, self, self._root)
+        self._io.seek(_pos)
+        return self._m_bg1 if hasattr(self, &#39;_m_bg1&#39;) else None
+
+    @property
+    def root_dir(self):
+        if hasattr(self, &#39;_m_root_dir&#39;):
+            return self._m_root_dir if hasattr(self, &#39;_m_root_dir&#39;) else None
+
+        self._m_root_dir = self.bg1.block_groups[0].inodes[1].as_dir
+        return self._m_root_dir if hasattr(self, &#39;_m_root_dir&#39;) else None
+
+
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2017 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

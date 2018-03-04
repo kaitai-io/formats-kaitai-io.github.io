@@ -1,0 +1,32 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__id3v1_1 {
+		label="Id3v11";
+		graph[style=dotted];
+
+		id3v1_1__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+		</TABLE>>];
+		id3v1_1__inst__id3v1_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="id3v1_tag_pos">(_io.size - 128)</TD><TD PORT="id3v1_tag_size">128</TD><TD>Id3V11Tag</TD><TD PORT="id3v1_tag_type">id3v1_tag</TD></TR>
+		</TABLE>>];
+		subgraph cluster__id3_v1_1_tag {
+			label="Id3v11::Id3V11Tag";
+			graph[style=dotted];
+
+			id3_v1_1_tag__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">3</TD><TD>54 41 47</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="title_pos">3</TD><TD PORT="title_size">30</TD><TD></TD><TD PORT="title_type">title</TD></TR>
+				<TR><TD PORT="artist_pos">33</TD><TD PORT="artist_size">30</TD><TD></TD><TD PORT="artist_type">artist</TD></TR>
+				<TR><TD PORT="album_pos">63</TD><TD PORT="album_size">30</TD><TD></TD><TD PORT="album_type">album</TD></TR>
+				<TR><TD PORT="year_pos">93</TD><TD PORT="year_size">4</TD><TD>str(ASCII)</TD><TD PORT="year_type">year</TD></TR>
+				<TR><TD PORT="comment_pos">97</TD><TD PORT="comment_size">30</TD><TD></TD><TD PORT="comment_type">comment</TD></TR>
+				<TR><TD PORT="genre_pos">127</TD><TD PORT="genre_size">1</TD><TD>u1?GenreEnum</TD><TD PORT="genre_type">genre</TD></TR>
+			</TABLE>>];
+		}
+	}
+	id3v1_1__inst__id3v1_tag:id3v1_tag_type -> id3_v1_1_tag__seq [style=bold];
+}
