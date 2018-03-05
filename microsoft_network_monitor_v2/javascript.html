@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.cap file format of Microsoft Network Monitor, v2.x: JavaScript parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Networking Protocols</li>
+        <li class="active">.cap file format of Microsoft Network Monitor, v2.x</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.cap file format of Microsoft Network Monitor, v2.x:
+            
+            JavaScript parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
+network packet sniffing and analysis tool. It can save captured
+traffic as .cap files, which usually contain the packets and may
+contain some additional info - enhanced network info, calculated
+statistics, etc.</p>
+<p>There are at least 2 different versions of the format: v1 and
+v2. Netmon v3 seems to use the same file format as v1.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Microsoft Network Monitor, v2.x
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        cap
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.7
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .cap file format of Microsoft Network Monitor, v2.x
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Java library">Java</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="javascript.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            JavaScript source code to parse .cap file format of Microsoft Network Monitor, v2.x
+            
+        </h2>
+
+        
+
+        <h3>MicrosoftNetworkMonitorV2.js</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/javascript/MicrosoftNetworkMonitorV2.js" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+(function (root, factory) {
+  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+    define([&#39;kaitai-struct/KaitaiStream&#39;, &#39;./WindowsSystemtime&#39;, &#39;./EthernetFrame&#39;], factory);
+  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;), require(&#39;./WindowsSystemtime&#39;), require(&#39;./EthernetFrame&#39;));
+  } else {
+    root.MicrosoftNetworkMonitorV2 = factory(root.KaitaiStream, root.WindowsSystemtime, root.EthernetFrame);
+  }
+}(this, function (KaitaiStream, WindowsSystemtime, EthernetFrame) {
+/**
+ * Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft&#39;s
+ * network packet sniffing and analysis tool. It can save captured
+ * traffic as .cap files, which usually contain the packets and may
+ * contain some additional info - enhanced network info, calculated
+ * statistics, etc.
+ * 
+ * There are at least 2 different versions of the format: v1 and
+ * v2. Netmon v3 seems to use the same file format as v1.
+ * @see {@link https://msdn.microsoft.com/en-us/library/windows/desktop/ee817717.aspx|Source}
+ */
+
+var MicrosoftNetworkMonitorV2 = (function() {
+  MicrosoftNetworkMonitorV2.Linktype = Object.freeze({
+    NULL_LINKTYPE: 0,
+    ETHERNET: 1,
+    AX25: 3,
+    IEEE802_5: 6,
+    ARCNET_BSD: 7,
+    SLIP: 8,
+    PPP: 9,
+    FDDI: 10,
+    PPP_HDLC: 50,
+    PPP_ETHER: 51,
+    ATM_RFC1483: 100,
+    RAW: 101,
+    C_HDLC: 104,
+    IEEE802_11: 105,
+    FRELAY: 107,
+    LOOP: 108,
+    LINUX_SLL: 113,
+    LTALK: 114,
+    PFLOG: 117,
+    IEEE802_11_PRISM: 119,
+    IP_OVER_FC: 122,
+    SUNATM: 123,
+    IEEE802_11_RADIOTAP: 127,
+    ARCNET_LINUX: 129,
+    APPLE_IP_OVER_IEEE1394: 138,
+    MTP2_WITH_PHDR: 139,
+    MTP2: 140,
+    MTP3: 141,
+    SCCP: 142,
+    DOCSIS: 143,
+    LINUX_IRDA: 144,
+    USER0: 147,
+    USER1: 148,
+    USER2: 149,
+    USER3: 150,
+    USER4: 151,
+    USER5: 152,
+    USER6: 153,
+    USER7: 154,
+    USER8: 155,
+    USER9: 156,
+    USER10: 157,
+    USER11: 158,
+    USER12: 159,
+    USER13: 160,
+    USER14: 161,
+    USER15: 162,
+    IEEE802_11_AVS: 163,
+    BACNET_MS_TP: 165,
+    PPP_PPPD: 166,
+    GPRS_LLC: 169,
+    GPF_T: 170,
+    GPF_F: 171,
+    LINUX_LAPD: 177,
+    BLUETOOTH_HCI_H4: 187,
+    USB_LINUX: 189,
+    PPI: 192,
+    IEEE802_15_4: 195,
+    SITA: 196,
+    ERF: 197,
+    BLUETOOTH_HCI_H4_WITH_PHDR: 201,
+    AX25_KISS: 202,
+    LAPD: 203,
+    PPP_WITH_DIR: 204,
+    C_HDLC_WITH_DIR: 205,
+    FRELAY_WITH_DIR: 206,
+    IPMB_LINUX: 209,
+    IEEE802_15_4_NONASK_PHY: 215,
+    USB_LINUX_MMAPPED: 220,
+    FC_2: 224,
+    FC_2_WITH_FRAME_DELIMS: 225,
+    IPNET: 226,
+    CAN_SOCKETCAN: 227,
+    IPV4: 228,
+    IPV6: 229,
+    IEEE802_15_4_NOFCS: 230,
+    DBUS: 231,
+    DVB_CI: 235,
+    MUX27010: 236,
+    STANAG_5066_D_PDU: 237,
+    NFLOG: 239,
+    NETANALYZER: 240,
+    NETANALYZER_TRANSPARENT: 241,
+    IPOIB: 242,
+    MPEG_2_TS: 243,
+    NG40: 244,
+    NFC_LLCP: 245,
+    INFINIBAND: 247,
+    SCTP: 248,
+    USBPCAP: 249,
+    RTAC_SERIAL: 250,
+    BLUETOOTH_LE_LL: 251,
+    NETLINK: 253,
+    BLUETOOTH_LINUX_MONITOR: 254,
+    BLUETOOTH_BREDR_BB: 255,
+    BLUETOOTH_LE_LL_WITH_PHDR: 256,
+    PROFIBUS_DL: 257,
+    PKTAP: 258,
+    EPON: 259,
+    IPMI_HPM_2: 260,
+    ZWAVE_R1_R2: 261,
+    ZWAVE_R3: 262,
+    WATTSTOPPER_DLM: 263,
+    ISO_14443: 264,
+
+    0: &quot;NULL_LINKTYPE&quot;,
+    1: &quot;ETHERNET&quot;,
+    3: &quot;AX25&quot;,
+    6: &quot;IEEE802_5&quot;,
+    7: &quot;ARCNET_BSD&quot;,
+    8: &quot;SLIP&quot;,
+    9: &quot;PPP&quot;,
+    10: &quot;FDDI&quot;,
+    50: &quot;PPP_HDLC&quot;,
+    51: &quot;PPP_ETHER&quot;,
+    100: &quot;ATM_RFC1483&quot;,
+    101: &quot;RAW&quot;,
+    104: &quot;C_HDLC&quot;,
+    105: &quot;IEEE802_11&quot;,
+    107: &quot;FRELAY&quot;,
+    108: &quot;LOOP&quot;,
+    113: &quot;LINUX_SLL&quot;,
+    114: &quot;LTALK&quot;,
+    117: &quot;PFLOG&quot;,
+    119: &quot;IEEE802_11_PRISM&quot;,
+    122: &quot;IP_OVER_FC&quot;,
+    123: &quot;SUNATM&quot;,
+    127: &quot;IEEE802_11_RADIOTAP&quot;,
+    129: &quot;ARCNET_LINUX&quot;,
+    138: &quot;APPLE_IP_OVER_IEEE1394&quot;,
+    139: &quot;MTP2_WITH_PHDR&quot;,
+    140: &quot;MTP2&quot;,
+    141: &quot;MTP3&quot;,
+    142: &quot;SCCP&quot;,
+    143: &quot;DOCSIS&quot;,
+    144: &quot;LINUX_IRDA&quot;,
+    147: &quot;USER0&quot;,
+    148: &quot;USER1&quot;,
+    149: &quot;USER2&quot;,
+    150: &quot;USER3&quot;,
+    151: &quot;USER4&quot;,
+    152: &quot;USER5&quot;,
+    153: &quot;USER6&quot;,
+    154: &quot;USER7&quot;,
+    155: &quot;USER8&quot;,
+    156: &quot;USER9&quot;,
+    157: &quot;USER10&quot;,
+    158: &quot;USER11&quot;,
+    159: &quot;USER12&quot;,
+    160: &quot;USER13&quot;,
+    161: &quot;USER14&quot;,
+    162: &quot;USER15&quot;,
+    163: &quot;IEEE802_11_AVS&quot;,
+    165: &quot;BACNET_MS_TP&quot;,
+    166: &quot;PPP_PPPD&quot;,
+    169: &quot;GPRS_LLC&quot;,
+    170: &quot;GPF_T&quot;,
+    171: &quot;GPF_F&quot;,
+    177: &quot;LINUX_LAPD&quot;,
+    187: &quot;BLUETOOTH_HCI_H4&quot;,
+    189: &quot;USB_LINUX&quot;,
+    192: &quot;PPI&quot;,
+    195: &quot;IEEE802_15_4&quot;,
+    196: &quot;SITA&quot;,
+    197: &quot;ERF&quot;,
+    201: &quot;BLUETOOTH_HCI_H4_WITH_PHDR&quot;,
+    202: &quot;AX25_KISS&quot;,
+    203: &quot;LAPD&quot;,
+    204: &quot;PPP_WITH_DIR&quot;,
+    205: &quot;C_HDLC_WITH_DIR&quot;,
+    206: &quot;FRELAY_WITH_DIR&quot;,
+    209: &quot;IPMB_LINUX&quot;,
+    215: &quot;IEEE802_15_4_NONASK_PHY&quot;,
+    220: &quot;USB_LINUX_MMAPPED&quot;,
+    224: &quot;FC_2&quot;,
+    225: &quot;FC_2_WITH_FRAME_DELIMS&quot;,
+    226: &quot;IPNET&quot;,
+    227: &quot;CAN_SOCKETCAN&quot;,
+    228: &quot;IPV4&quot;,
+    229: &quot;IPV6&quot;,
+    230: &quot;IEEE802_15_4_NOFCS&quot;,
+    231: &quot;DBUS&quot;,
+    235: &quot;DVB_CI&quot;,
+    236: &quot;MUX27010&quot;,
+    237: &quot;STANAG_5066_D_PDU&quot;,
+    239: &quot;NFLOG&quot;,
+    240: &quot;NETANALYZER&quot;,
+    241: &quot;NETANALYZER_TRANSPARENT&quot;,
+    242: &quot;IPOIB&quot;,
+    243: &quot;MPEG_2_TS&quot;,
+    244: &quot;NG40&quot;,
+    245: &quot;NFC_LLCP&quot;,
+    247: &quot;INFINIBAND&quot;,
+    248: &quot;SCTP&quot;,
+    249: &quot;USBPCAP&quot;,
+    250: &quot;RTAC_SERIAL&quot;,
+    251: &quot;BLUETOOTH_LE_LL&quot;,
+    253: &quot;NETLINK&quot;,
+    254: &quot;BLUETOOTH_LINUX_MONITOR&quot;,
+    255: &quot;BLUETOOTH_BREDR_BB&quot;,
+    256: &quot;BLUETOOTH_LE_LL_WITH_PHDR&quot;,
+    257: &quot;PROFIBUS_DL&quot;,
+    258: &quot;PKTAP&quot;,
+    259: &quot;EPON&quot;,
+    260: &quot;IPMI_HPM_2&quot;,
+    261: &quot;ZWAVE_R1_R2&quot;,
+    262: &quot;ZWAVE_R3&quot;,
+    263: &quot;WATTSTOPPER_DLM&quot;,
+    264: &quot;ISO_14443&quot;,
+  });
+
+  function MicrosoftNetworkMonitorV2(_io, _parent, _root) {
+    this._io = _io;
+    this._parent = _parent;
+    this._root = _root || this;
+
+    this._read();
+  }
+  MicrosoftNetworkMonitorV2.prototype._read = function() {
+    this.signature = this._io.ensureFixedContents([71, 77, 66, 85]);
+    this.versionMinor = this._io.readU1();
+    this.versionMajor = this._io.readU1();
+    this.macType = this._io.readU2le();
+    this.timeCaptureStart = new WindowsSystemtime(this._io, this, null);
+    this.frameTableOfs = this._io.readU4le();
+    this.frameTableLen = this._io.readU4le();
+    this.userDataOfs = this._io.readU4le();
+    this.userDataLen = this._io.readU4le();
+    this.commentOfs = this._io.readU4le();
+    this.commentLen = this._io.readU4le();
+    this.statisticsOfs = this._io.readU4le();
+    this.statisticsLen = this._io.readU4le();
+    this.networkInfoOfs = this._io.readU4le();
+    this.networkInfoLen = this._io.readU4le();
+    this.conversationStatsOfs = this._io.readU4le();
+    this.conversationStatsLen = this._io.readU4le();
+  }
+
+  var FrameIndex = MicrosoftNetworkMonitorV2.FrameIndex = (function() {
+    function FrameIndex(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    FrameIndex.prototype._read = function() {
+      this.entries = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.entries.push(new FrameIndexEntry(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return FrameIndex;
+  })();
+
+  /**
+   * Each index entry is just a pointer to where the frame data is
+   * stored in the file.
+   */
+
+  var FrameIndexEntry = MicrosoftNetworkMonitorV2.FrameIndexEntry = (function() {
+    function FrameIndexEntry(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    FrameIndexEntry.prototype._read = function() {
+      this.ofs = this._io.readU4le();
+    }
+
+    /**
+     * Frame body itself
+     */
+    Object.defineProperty(FrameIndexEntry.prototype, &#39;body&#39;, {
+      get: function() {
+        if (this._m_body !== undefined)
+          return this._m_body;
+        var io = this._root._io;
+        var _pos = io.pos;
+        io.seek(this.ofs);
+        this._m_body = new Frame(io, this, this._root);
+        io.seek(_pos);
+        return this._m_body;
+      }
+    });
+
+    /**
+     * Absolute pointer to frame data in the file
+     */
+
+    return FrameIndexEntry;
+  })();
+
+  /**
+   * A container for actually captured network data. Allow to
+   * timestamp individual frames and designates how much data from
+   * the original packet was actually written into the file.
+   * @see {@link https://msdn.microsoft.com/en-us/library/windows/desktop/ee831821.aspx|Source}
+   */
+
+  var Frame = MicrosoftNetworkMonitorV2.Frame = (function() {
+    function Frame(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Frame.prototype._read = function() {
+      this.tsDelta = this._io.readU8le();
+      this.origLen = this._io.readU4le();
+      this.incLen = this._io.readU4le();
+      switch (this._root.macType) {
+      case MicrosoftNetworkMonitorV2.Linktype.ETHERNET:
+        this._raw_body = this._io.readBytes(this.incLen);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new EthernetFrame(_io__raw_body, this, null);
+        break;
+      default:
+        this.body = this._io.readBytes(this.incLen);
+        break;
+      }
+    }
+
+    /**
+     * Time stamp - usecs since start of capture
+     */
+
+    /**
+     * Actual length of packet
+     */
+
+    /**
+     * Number of octets captured in file
+     */
+
+    /**
+     * Actual packet captured from the network
+     */
+
+    return Frame;
+  })();
+
+  /**
+   * Index that is used to access individual captured frames
+   */
+  Object.defineProperty(MicrosoftNetworkMonitorV2.prototype, &#39;frameTable&#39;, {
+    get: function() {
+      if (this._m_frameTable !== undefined)
+        return this._m_frameTable;
+      var _pos = this._io.pos;
+      this._io.seek(this.frameTableOfs);
+      this._raw__m_frameTable = this._io.readBytes(this.frameTableLen);
+      var _io__raw__m_frameTable = new KaitaiStream(this._raw__m_frameTable);
+      this._m_frameTable = new FrameIndex(_io__raw__m_frameTable, this, this._root);
+      this._io.seek(_pos);
+      return this._m_frameTable;
+    }
+  });
+
+  /**
+   * Format version (minor), BCD
+   */
+
+  /**
+   * Format version (major), BCD
+   */
+
+  /**
+   * Network topology type of captured data
+   */
+
+  /**
+   * Timestamp of capture start
+   */
+
+  return MicrosoftNetworkMonitorV2;
+})();
+return MicrosoftNetworkMonitorV2;
+}));
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2018 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

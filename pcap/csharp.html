@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.pcapdump file format: C# parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Networking Protocols</li>
+        <li class="active">.pcapdump file format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.pcapdump file format:
+            
+            C# parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        pcapdump
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.7
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .pcapdump file format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".pcapdump file format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title=".pcapdump file format parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="csharp.html" title=".pcapdump file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title=".pcapdump file format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".pcapdump file format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title=".pcapdump file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".pcapdump file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".pcapdump file format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".pcapdump file format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".pcapdump file format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="csharp">var data = Pcap.FromFile("path/to/local/file.pcapdump");</code></pre>
+
+<p>Or parse structure from a byte array:</p>
+
+<pre><code class="csharp">byte[] someArray = new byte[] { ... };
+var data = new Pcap(new KaitaiStream(someArray));</code></pre>
+
+<p>After that, one can get various attributes from the structure by accessing properties like:</p>
+
+<pre><code class="csharp">data.Hdr // => get hdr</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C# source code to parse .pcapdump file format
+            
+        </h2>
+
+        
+
+        <h3>Pcap.cs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/csharp/Pcap.cs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+using System.Collections.Generic;
+
+namespace Kaitai
+{
+
+    /// &lt;remarks&gt;
+    /// Reference: &lt;a href=&quot;http://wiki.wireshark.org/Development/LibpcapFileFormat&quot;&gt;Source&lt;/a&gt;
+    /// &lt;/remarks&gt;
+    public partial class Pcap : KaitaiStruct
+    {
+        public static Pcap FromFile(string fileName)
+        {
+            return new Pcap(new KaitaiStream(fileName));
+        }
+
+
+        public enum Linktype
+        {
+            NullLinktype = 0,
+            Ethernet = 1,
+            Ax25 = 3,
+            Ieee8025 = 6,
+            ArcnetBsd = 7,
+            Slip = 8,
+            Ppp = 9,
+            Fddi = 10,
+            PppHdlc = 50,
+            PppEther = 51,
+            AtmRfc1483 = 100,
+            Raw = 101,
+            CHdlc = 104,
+            Ieee80211 = 105,
+            Frelay = 107,
+            Loop = 108,
+            LinuxSll = 113,
+            Ltalk = 114,
+            Pflog = 117,
+            Ieee80211Prism = 119,
+            IpOverFc = 122,
+            Sunatm = 123,
+            Ieee80211Radiotap = 127,
+            ArcnetLinux = 129,
+            AppleIpOverIeee1394 = 138,
+            Mtp2WithPhdr = 139,
+            Mtp2 = 140,
+            Mtp3 = 141,
+            Sccp = 142,
+            Docsis = 143,
+            LinuxIrda = 144,
+            User0 = 147,
+            User1 = 148,
+            User2 = 149,
+            User3 = 150,
+            User4 = 151,
+            User5 = 152,
+            User6 = 153,
+            User7 = 154,
+            User8 = 155,
+            User9 = 156,
+            User10 = 157,
+            User11 = 158,
+            User12 = 159,
+            User13 = 160,
+            User14 = 161,
+            User15 = 162,
+            Ieee80211Avs = 163,
+            BacnetMsTp = 165,
+            PppPppd = 166,
+            GprsLlc = 169,
+            GpfT = 170,
+            GpfF = 171,
+            LinuxLapd = 177,
+            BluetoothHciH4 = 187,
+            UsbLinux = 189,
+            Ppi = 192,
+            Ieee802154 = 195,
+            Sita = 196,
+            Erf = 197,
+            BluetoothHciH4WithPhdr = 201,
+            Ax25Kiss = 202,
+            Lapd = 203,
+            PppWithDir = 204,
+            CHdlcWithDir = 205,
+            FrelayWithDir = 206,
+            IpmbLinux = 209,
+            Ieee802154NonaskPhy = 215,
+            UsbLinuxMmapped = 220,
+            Fc2 = 224,
+            Fc2WithFrameDelims = 225,
+            Ipnet = 226,
+            CanSocketcan = 227,
+            Ipv4 = 228,
+            Ipv6 = 229,
+            Ieee802154Nofcs = 230,
+            Dbus = 231,
+            DvbCi = 235,
+            Mux27010 = 236,
+            Stanag5066DPdu = 237,
+            Nflog = 239,
+            Netanalyzer = 240,
+            NetanalyzerTransparent = 241,
+            Ipoib = 242,
+            Mpeg2Ts = 243,
+            Ng40 = 244,
+            NfcLlcp = 245,
+            Infiniband = 247,
+            Sctp = 248,
+            Usbpcap = 249,
+            RtacSerial = 250,
+            BluetoothLeLl = 251,
+            Netlink = 253,
+            BluetoothLinuxMonitor = 254,
+            BluetoothBredrBb = 255,
+            BluetoothLeLlWithPhdr = 256,
+            ProfibusDl = 257,
+            Pktap = 258,
+            Epon = 259,
+            IpmiHpm2 = 260,
+            ZwaveR1R2 = 261,
+            ZwaveR3 = 262,
+            WattstopperDlm = 263,
+            Iso14443 = 264,
+        }
+        public Pcap(KaitaiStream p__io, KaitaiStruct p__parent = null, Pcap p__root = null) : base(p__io)
+        {
+            m_parent = p__parent;
+            m_root = p__root ?? this;
+            _read();
+        }
+        private void _read()
+        {
+            _hdr = new Header(m_io, this, m_root);
+            _packets = new List&lt;Packet&gt;();
+            {
+                var i = 0;
+                while (!m_io.IsEof) {
+                    _packets.Add(new Packet(m_io, this, m_root));
+                    i++;
+                }
+            }
+        }
+
+        /// &lt;remarks&gt;
+        /// Reference: &lt;a href=&quot;https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header&quot;&gt;Source&lt;/a&gt;
+        /// &lt;/remarks&gt;
+        public partial class Header : KaitaiStruct
+        {
+            public static Header FromFile(string fileName)
+            {
+                return new Header(new KaitaiStream(fileName));
+            }
+
+            public Header(KaitaiStream p__io, Pcap p__parent = null, Pcap p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _magicNumber = m_io.EnsureFixedContents(new byte[] { 212, 195, 178, 161 });
+                _versionMajor = m_io.ReadU2le();
+                _versionMinor = m_io.ReadU2le();
+                _thiszone = m_io.ReadS4le();
+                _sigfigs = m_io.ReadU4le();
+                _snaplen = m_io.ReadU4le();
+                _network = ((Pcap.Linktype) m_io.ReadU4le());
+            }
+            private byte[] _magicNumber;
+            private ushort _versionMajor;
+            private ushort _versionMinor;
+            private int _thiszone;
+            private uint _sigfigs;
+            private uint _snaplen;
+            private Linktype _network;
+            private Pcap m_root;
+            private Pcap m_parent;
+            public byte[] MagicNumber { get { return _magicNumber; } }
+            public ushort VersionMajor { get { return _versionMajor; } }
+            public ushort VersionMinor { get { return _versionMinor; } }
+
+            /// &lt;summary&gt;
+            /// Correction time in seconds between UTC and the local
+            /// timezone of the following packet header timestamps.
+            /// &lt;/summary&gt;
+            public int Thiszone { get { return _thiszone; } }
+
+            /// &lt;summary&gt;
+            /// In theory, the accuracy of time stamps in the capture; in
+            /// practice, all tools set it to 0.
+            /// &lt;/summary&gt;
+            public uint Sigfigs { get { return _sigfigs; } }
+
+            /// &lt;summary&gt;
+            /// The &amp;quot;snapshot length&amp;quot; for the capture (typically 65535 or
+            /// even more, but might be limited by the user), see: incl_len
+            /// vs. orig_len.
+            /// &lt;/summary&gt;
+            public uint Snaplen { get { return _snaplen; } }
+
+            /// &lt;summary&gt;
+            /// Link-layer header type, specifying the type of headers at
+            /// the beginning of the packet.
+            /// &lt;/summary&gt;
+            public Linktype Network { get { return _network; } }
+            public Pcap M_Root { get { return m_root; } }
+            public Pcap M_Parent { get { return m_parent; } }
+        }
+
+        /// &lt;remarks&gt;
+        /// Reference: &lt;a href=&quot;https://wiki.wireshark.org/Development/LibpcapFileFormat#Record_.28Packet.29_Header&quot;&gt;Source&lt;/a&gt;
+        /// &lt;/remarks&gt;
+        public partial class Packet : KaitaiStruct
+        {
+            public static Packet FromFile(string fileName)
+            {
+                return new Packet(new KaitaiStream(fileName));
+            }
+
+            public Packet(KaitaiStream p__io, Pcap p__parent = null, Pcap p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _tsSec = m_io.ReadU4le();
+                _tsUsec = m_io.ReadU4le();
+                _inclLen = m_io.ReadU4le();
+                _origLen = m_io.ReadU4le();
+                switch (M_Root.Hdr.Network) {
+                case Pcap.Linktype.Ppi: {
+                    __raw_body = m_io.ReadBytes(InclLen);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new PacketPpi(io___raw_body);
+                    break;
+                }
+                case Pcap.Linktype.Ethernet: {
+                    __raw_body = m_io.ReadBytes(InclLen);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new EthernetFrame(io___raw_body);
+                    break;
+                }
+                default: {
+                    _body = m_io.ReadBytes(InclLen);
+                    break;
+                }
+                }
+            }
+            private uint _tsSec;
+            private uint _tsUsec;
+            private uint _inclLen;
+            private uint _origLen;
+            private object _body;
+            private Pcap m_root;
+            private Pcap m_parent;
+            private byte[] __raw_body;
+            public uint TsSec { get { return _tsSec; } }
+            public uint TsUsec { get { return _tsUsec; } }
+
+            /// &lt;summary&gt;
+            /// Number of bytes of packet data actually captured and saved in the file.
+            /// &lt;/summary&gt;
+            public uint InclLen { get { return _inclLen; } }
+
+            /// &lt;summary&gt;
+            /// Length of the packet as it appeared on the network when it was captured.
+            /// &lt;/summary&gt;
+            public uint OrigLen { get { return _origLen; } }
+
+            /// &lt;remarks&gt;
+            /// Reference: &lt;a href=&quot;https://wiki.wireshark.org/Development/LibpcapFileFormat#Packet_Data&quot;&gt;Source&lt;/a&gt;
+            /// &lt;/remarks&gt;
+            public object Body { get { return _body; } }
+            public Pcap M_Root { get { return m_root; } }
+            public Pcap M_Parent { get { return m_parent; } }
+            public byte[] M_RawBody { get { return __raw_body; } }
+        }
+        private Header _hdr;
+        private List&lt;Packet&gt; _packets;
+        private Pcap m_root;
+        private KaitaiStruct m_parent;
+        public Header Hdr { get { return _hdr; } }
+        public List&lt;Packet&gt; Packets { get { return _packets; } }
+        public Pcap M_Root { get { return m_root; } }
+        public KaitaiStruct M_Parent { get { return m_parent; } }
+    }
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2018 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__google_protobuf {
+		label="GoogleProtobuf";
+		graph[style=dotted];
+
+		google_protobuf__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="pairs_pos">0</TD><TD PORT="pairs_size">...</TD><TD>Pair</TD><TD PORT="pairs_type">pairs</TD></TR>
+			<TR><TD COLSPAN="4" PORT="pairs__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__pair {
+			label="GoogleProtobuf::Pair";
+			graph[style=dotted];
+
+			pair__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="key_pos">0</TD><TD PORT="key_size">...</TD><TD>VlqBase128Le</TD><TD PORT="key_type">key</TD></TR>
+				<TR><TD PORT="value_pos">...</TD><TD PORT="value_size">...</TD><TD>switch (wire_type)</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+			pair__inst__wire_type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>wire_type</TD><TD>Kaitai::Struct::Stream::resolve_enum(WIRE_TYPES, (key.value &amp; 7))</TD></TR>
+			</TABLE>>];
+			pair__inst__field_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>field_tag</TD><TD>(key.value &gt;&gt; 3)</TD></TR>
+			</TABLE>>];
+pair__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:wire_types_varint</TD><TD PORT="case0">VlqBase128Le</TD></TR>
+	<TR><TD>:wire_types_len_delimited</TD><TD PORT="case1">DelimitedBytes</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__delimited_bytes {
+			label="GoogleProtobuf::DelimitedBytes";
+			graph[style=dotted];
+
+			delimited_bytes__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">...</TD><TD>VlqBase128Le</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="body_pos">...</TD><TD PORT="body_size">len.value</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+		}
+	}
+	google_protobuf__seq:pairs_type -> pair__seq [style=bold];
+	pair__seq:key_type -> vlq_base128_le__seq [style=bold];
+	pair__seq:value_type -> pair__seq_value_switch [style=bold];
+	pair__seq_value_switch:case0 -> vlq_base128_le__seq [style=bold];
+	pair__seq_value_switch:case1 -> delimited_bytes__seq [style=bold];
+	pair__inst__wire_type:wire_type_type -> pair__seq:value_type [color="#404040"];
+	vlq_base128_le__inst__value:value_type -> pair__inst__wire_type [color="#404040"];
+	vlq_base128_le__inst__value:value_type -> pair__inst__field_tag [color="#404040"];
+	delimited_bytes__seq:len_type -> vlq_base128_le__seq [style=bold];
+	vlq_base128_le__inst__value:value_type -> delimited_bytes__seq:body_size [color="#404040"];
+}
