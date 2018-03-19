@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
+    define(['kaitai-struct/KaitaiStream', './VlqBase128Le'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./VlqBase128Le'));
   } else {
-    root.Dex = factory(root.KaitaiStream);
+    root.Dex = factory(root.KaitaiStream, root.VlqBase128Le);
   }
-}(this, function (KaitaiStream) {
+}(this, function (KaitaiStream, VlqBase128Le) {
 /**
  * @see {@link https://source.android.com/devices/tech/dalvik/dex-format|Source}
  */
@@ -67,8 +67,7 @@ var Dex = (function() {
     }
     HeaderItem.prototype._read = function() {
       this.magic = this._io.ensureFixedContents([100, 101, 120, 10]);
-      this.versionStr = KaitaiStream.bytesToStr(this._io.readBytes(3), "ascii");
-      this.magic2 = this._io.ensureFixedContents([0]);
+      this.versionStr = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(4), 0, false), "ascii");
       this.checksum = this._io.readU4le();
       this.signature = this._io.readBytes(20);
       this.fileSize = this._io.readU4le();
@@ -341,6 +340,42 @@ var Dex = (function() {
     }
 
     /**
+     * the definer of this method
+     */
+    Object.defineProperty(MethodIdItem.prototype, 'className', {
+      get: function() {
+        if (this._m_className !== undefined)
+          return this._m_className;
+        this._m_className = this._root.typeIds[this.classIdx].typeName;
+        return this._m_className;
+      }
+    });
+
+    /**
+     * the short-form descriptor of the prototype of this method
+     */
+    Object.defineProperty(MethodIdItem.prototype, 'protoDesc', {
+      get: function() {
+        if (this._m_protoDesc !== undefined)
+          return this._m_protoDesc;
+        this._m_protoDesc = this._root.protoIds[this.protoIdx].shortyDesc;
+        return this._m_protoDesc;
+      }
+    });
+
+    /**
+     * the name of this method
+     */
+    Object.defineProperty(MethodIdItem.prototype, 'methodName', {
+      get: function() {
+        if (this._m_methodName !== undefined)
+          return this._m_methodName;
+        this._m_methodName = this._root.stringIds[this.nameIdx].value.data;
+        return this._m_methodName;
+      }
+    });
+
+    /**
      * index into the type_ids list for the definer of this method. This must be a class or array type, and not a primitive type.
      */
 
@@ -355,54 +390,27 @@ var Dex = (function() {
     return MethodIdItem;
   })();
 
-  var Uleb128 = Dex.Uleb128 = (function() {
-    function Uleb128(_io, _parent, _root) {
+  var TypeItem = Dex.TypeItem = (function() {
+    function TypeItem(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
       this._root = _root || this;
 
       this._read();
     }
-    Uleb128.prototype._read = function() {
-      this.b1 = this._io.readU1();
-      if ((this.b1 & 128) != 0) {
-        this.b2 = this._io.readU1();
-      }
-      if ((this.b2 & 128) != 0) {
-        this.b3 = this._io.readU1();
-      }
-      if ((this.b3 & 128) != 0) {
-        this.b4 = this._io.readU1();
-      }
-      if ((this.b4 & 128) != 0) {
-        this.b5 = this._io.readU1();
-      }
-      if ((this.b5 & 128) != 0) {
-        this.b6 = this._io.readU1();
-      }
-      if ((this.b6 & 128) != 0) {
-        this.b7 = this._io.readU1();
-      }
-      if ((this.b7 & 128) != 0) {
-        this.b8 = this._io.readU1();
-      }
-      if ((this.b8 & 128) != 0) {
-        this.b9 = this._io.readU1();
-      }
-      if ((this.b9 & 128) != 0) {
-        this.b10 = this._io.readU1();
-      }
+    TypeItem.prototype._read = function() {
+      this.typeIdx = this._io.readU2le();
     }
-    Object.defineProperty(Uleb128.prototype, 'value', {
+    Object.defineProperty(TypeItem.prototype, 'value', {
       get: function() {
         if (this._m_value !== undefined)
           return this._m_value;
-        this._m_value = ((KaitaiStream.mod(this.b1, 128) << 0) + ((this.b1 & 128) == 0 ? 0 : ((KaitaiStream.mod(this.b2, 128) << 7) + ((this.b2 & 128) == 0 ? 0 : ((KaitaiStream.mod(this.b3, 128) << 14) + ((this.b3 & 128) == 0 ? 0 : ((KaitaiStream.mod(this.b4, 128) << 21) + ((this.b4 & 128) == 0 ? 0 : ((KaitaiStream.mod(this.b5, 128) << 28) + ((this.b5 & 128) == 0 ? 0 : ((KaitaiStream.mod(this.b6, 128) << 35) + ((this.b6 & 128) == 0 ? 0 : ((KaitaiStream.mod(this.b7, 128) << 42) + ((this.b7 & 128) == 0 ? 0 : ((KaitaiStream.mod(this.b8, 128) << 49) + ((this.b8 & 128) == 0 ? 0 : ((KaitaiStream.mod(this.b9, 128) << 56) + ((this.b8 & 128) == 0 ? 0 : (KaitaiStream.mod(this.b10, 128) << 63)))))))))))))))))));
+        this._m_value = this._root.typeIds[this.typeIdx].typeName;
         return this._m_value;
       }
     });
 
-    return Uleb128;
+    return TypeItem;
   })();
 
   var TypeIdItem = Dex.TypeIdItem = (function() {
@@ -441,7 +449,7 @@ var Dex = (function() {
       this._read();
     }
     AnnotationElement.prototype._read = function() {
-      this.nameIdx = new Uleb128(this._io, this, this._root);
+      this.nameIdx = new VlqBase128Le(this._io, this, null);
       this.value = new EncodedValue(this._io, this, this._root);
     }
 
@@ -466,8 +474,8 @@ var Dex = (function() {
       this._read();
     }
     EncodedField.prototype._read = function() {
-      this.fieldIdxDiff = new Uleb128(this._io, this, this._root);
-      this.accessFlags = new Uleb128(this._io, this, this._root);
+      this.fieldIdxDiff = new VlqBase128Le(this._io, this, null);
+      this.accessFlags = new VlqBase128Le(this._io, this, null);
     }
 
     /**
@@ -507,10 +515,10 @@ var Dex = (function() {
       this._read();
     }
     ClassDataItem.prototype._read = function() {
-      this.staticFieldsSize = new Uleb128(this._io, this, this._root);
-      this.instanceFieldsSize = new Uleb128(this._io, this, this._root);
-      this.directMethodsSize = new Uleb128(this._io, this, this._root);
-      this.virtualMethodsSize = new Uleb128(this._io, this, this._root);
+      this.staticFieldsSize = new VlqBase128Le(this._io, this, null);
+      this.instanceFieldsSize = new VlqBase128Le(this._io, this, null);
+      this.directMethodsSize = new VlqBase128Le(this._io, this, null);
+      this.virtualMethodsSize = new VlqBase128Le(this._io, this, null);
       this.staticFields = new Array(this.staticFieldsSize.value);
       for (var i = 0; i < this.staticFieldsSize.value; i++) {
         this.staticFields[i] = new EncodedField(this._io, this, this._root);
@@ -585,6 +593,42 @@ var Dex = (function() {
     }
 
     /**
+     * the definer of this field
+     */
+    Object.defineProperty(FieldIdItem.prototype, 'className', {
+      get: function() {
+        if (this._m_className !== undefined)
+          return this._m_className;
+        this._m_className = this._root.typeIds[this.classIdx].typeName;
+        return this._m_className;
+      }
+    });
+
+    /**
+     * the type of this field
+     */
+    Object.defineProperty(FieldIdItem.prototype, 'typeName', {
+      get: function() {
+        if (this._m_typeName !== undefined)
+          return this._m_typeName;
+        this._m_typeName = this._root.typeIds[this.typeIdx].typeName;
+        return this._m_typeName;
+      }
+    });
+
+    /**
+     * the name of this field
+     */
+    Object.defineProperty(FieldIdItem.prototype, 'fieldName', {
+      get: function() {
+        if (this._m_fieldName !== undefined)
+          return this._m_fieldName;
+        this._m_fieldName = this._root.stringIds[this.nameIdx].value.data;
+        return this._m_fieldName;
+      }
+    });
+
+    /**
      * index into the type_ids list for the definer of this field. This must be a class type, and not an array or primitive type.
      */
 
@@ -608,8 +652,8 @@ var Dex = (function() {
       this._read();
     }
     EncodedAnnotation.prototype._read = function() {
-      this.typeIdx = new Uleb128(this._io, this, this._root);
-      this.size = new Uleb128(this._io, this, this._root);
+      this.typeIdx = new VlqBase128Le(this._io, this, null);
+      this.size = new VlqBase128Le(this._io, this, null);
       this.elements = new Array(this.size.value);
       for (var i = 0; i < this.size.value; i++) {
         this.elements[i] = new AnnotationElement(this._io, this, this._root);
@@ -733,6 +777,25 @@ var Dex = (function() {
     return ClassDefItem;
   })();
 
+  var TypeList = Dex.TypeList = (function() {
+    function TypeList(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    TypeList.prototype._read = function() {
+      this.size = this._io.readU4le();
+      this.list = new Array(this.size);
+      for (var i = 0; i < this.size; i++) {
+        this.list[i] = new TypeItem(this._io, this, this._root);
+      }
+    }
+
+    return TypeList;
+  })();
+
   var StringIdItem = Dex.StringIdItem = (function() {
     function StringIdItem(_io, _parent, _root) {
       this._io = _io;
@@ -754,7 +817,7 @@ var Dex = (function() {
         this._read();
       }
       StringDataItem.prototype._read = function() {
-        this.utf16Size = new Uleb128(this._io, this, this._root);
+        this.utf16Size = new VlqBase128Le(this._io, this, null);
         this.data = KaitaiStream.bytesToStr(this._io.readBytes(this.utf16Size.value), "ascii");
       }
 
@@ -794,6 +857,48 @@ var Dex = (function() {
     }
 
     /**
+     * short-form descriptor string of this prototype, as pointed to by shorty_idx
+     */
+    Object.defineProperty(ProtoIdItem.prototype, 'shortyDesc', {
+      get: function() {
+        if (this._m_shortyDesc !== undefined)
+          return this._m_shortyDesc;
+        this._m_shortyDesc = this._root.stringIds[this.shortyIdx].value.data;
+        return this._m_shortyDesc;
+      }
+    });
+
+    /**
+     * list of parameter types for this prototype
+     */
+    Object.defineProperty(ProtoIdItem.prototype, 'paramsTypes', {
+      get: function() {
+        if (this._m_paramsTypes !== undefined)
+          return this._m_paramsTypes;
+        if (this.parametersOff != 0) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek(this.parametersOff);
+          this._m_paramsTypes = new TypeList(io, this, this._root);
+          io.seek(_pos);
+        }
+        return this._m_paramsTypes;
+      }
+    });
+
+    /**
+     * return type of this prototype
+     */
+    Object.defineProperty(ProtoIdItem.prototype, 'returnType', {
+      get: function() {
+        if (this._m_returnType !== undefined)
+          return this._m_returnType;
+        this._m_returnType = this._root.typeIds[this.returnTypeIdx].typeName;
+        return this._m_returnType;
+      }
+    });
+
+    /**
      * index into the string_ids list for the short-form descriptor string of this prototype. The string must conform to the syntax for ShortyDescriptor, defined above,  and must correspond to the return type and parameters of this item.
      */
 
@@ -817,9 +922,9 @@ var Dex = (function() {
       this._read();
     }
     EncodedMethod.prototype._read = function() {
-      this.methodIdxDiff = new Uleb128(this._io, this, this._root);
-      this.accessFlags = new Uleb128(this._io, this, this._root);
-      this.codeOff = new Uleb128(this._io, this, this._root);
+      this.methodIdxDiff = new VlqBase128Le(this._io, this, null);
+      this.accessFlags = new VlqBase128Le(this._io, this, null);
+      this.codeOff = new VlqBase128Le(this._io, this, null);
     }
 
     /**
@@ -928,7 +1033,7 @@ var Dex = (function() {
       this._read();
     }
     EncodedArray.prototype._read = function() {
-      this.size = new Uleb128(this._io, this, this._root);
+      this.size = new VlqBase128Le(this._io, this, null);
       this.values = new Array(this.size.value);
       for (var i = 0; i < this.size.value; i++) {
         this.values[i] = new EncodedValue(this._io, this, this._root);

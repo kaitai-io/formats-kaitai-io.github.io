@@ -94,8 +94,7 @@ public class Dex extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.ensureFixedContents(new byte[] { 100, 101, 120, 10 });
-            this.versionStr = new String(this._io.readBytes(3), Charset.forName("ascii"));
-            this.magic2 = this._io.ensureFixedContents(new byte[] { 0 });
+            this.versionStr = new String(KaitaiStream.bytesTerminate(this._io.readBytes(4), (byte) 0, false), Charset.forName("ascii"));
             this.checksum = this._io.readU4le();
             this.signature = this._io.readBytes(20);
             this.fileSize = this._io.readU4le();
@@ -121,7 +120,6 @@ public class Dex extends KaitaiStruct {
         }
         private byte[] magic;
         private String versionStr;
-        private byte[] magic2;
         private long checksum;
         private byte[] signature;
         private long fileSize;
@@ -148,7 +146,6 @@ public class Dex extends KaitaiStruct {
         private Dex _parent;
         public byte[] magic() { return magic; }
         public String versionStr() { return versionStr; }
-        public byte[] magic2() { return magic2; }
 
         /**
          * adler32 checksum of the rest of the file (everything but magic and this field);  used to detect file corruption
@@ -483,6 +480,39 @@ public class Dex extends KaitaiStruct {
             this.protoIdx = this._io.readU2le();
             this.nameIdx = this._io.readU4le();
         }
+        private String className;
+
+        /**
+         * the definer of this method
+         */
+        public String className() {
+            if (this.className != null)
+                return this.className;
+            this.className = _root.typeIds().get((int) classIdx()).typeName();
+            return this.className;
+        }
+        private String protoDesc;
+
+        /**
+         * the short-form descriptor of the prototype of this method
+         */
+        public String protoDesc() {
+            if (this.protoDesc != null)
+                return this.protoDesc;
+            this.protoDesc = _root.protoIds().get((int) protoIdx()).shortyDesc();
+            return this.protoDesc;
+        }
+        private String methodName;
+
+        /**
+         * the name of this method
+         */
+        public String methodName() {
+            if (this.methodName != null)
+                return this.methodName;
+            this.methodName = _root.stringIds().get((int) nameIdx()).value().data();
+            return this.methodName;
+        }
         private int classIdx;
         private int protoIdx;
         private long nameIdx;
@@ -506,87 +536,41 @@ public class Dex extends KaitaiStruct {
         public Dex _root() { return _root; }
         public Dex _parent() { return _parent; }
     }
-    public static class Uleb128 extends KaitaiStruct {
-        public static Uleb128 fromFile(String fileName) throws IOException {
-            return new Uleb128(new ByteBufferKaitaiStream(fileName));
+    public static class TypeItem extends KaitaiStruct {
+        public static TypeItem fromFile(String fileName) throws IOException {
+            return new TypeItem(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Uleb128(KaitaiStream _io) {
+        public TypeItem(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Uleb128(KaitaiStream _io, KaitaiStruct _parent) {
+        public TypeItem(KaitaiStream _io, Dex.TypeList _parent) {
             this(_io, _parent, null);
         }
 
-        public Uleb128(KaitaiStream _io, KaitaiStruct _parent, Dex _root) {
+        public TypeItem(KaitaiStream _io, Dex.TypeList _parent, Dex _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.b1 = this._io.readU1();
-            if ((b1() & 128) != 0) {
-                this.b2 = this._io.readU1();
-            }
-            if ((b2() & 128) != 0) {
-                this.b3 = this._io.readU1();
-            }
-            if ((b3() & 128) != 0) {
-                this.b4 = this._io.readU1();
-            }
-            if ((b4() & 128) != 0) {
-                this.b5 = this._io.readU1();
-            }
-            if ((b5() & 128) != 0) {
-                this.b6 = this._io.readU1();
-            }
-            if ((b6() & 128) != 0) {
-                this.b7 = this._io.readU1();
-            }
-            if ((b7() & 128) != 0) {
-                this.b8 = this._io.readU1();
-            }
-            if ((b8() & 128) != 0) {
-                this.b9 = this._io.readU1();
-            }
-            if ((b9() & 128) != 0) {
-                this.b10 = this._io.readU1();
-            }
+            this.typeIdx = this._io.readU2le();
         }
-        private Integer value;
-        public Integer value() {
+        private String value;
+        public String value() {
             if (this.value != null)
                 return this.value;
-            int _tmp = (int) (((KaitaiStream.mod(b1(), 128) << 0) + ((b1() & 128) == 0 ? 0 : ((KaitaiStream.mod(b2(), 128) << 7) + ((b2() & 128) == 0 ? 0 : ((KaitaiStream.mod(b3(), 128) << 14) + ((b3() & 128) == 0 ? 0 : ((KaitaiStream.mod(b4(), 128) << 21) + ((b4() & 128) == 0 ? 0 : ((KaitaiStream.mod(b5(), 128) << 28) + ((b5() & 128) == 0 ? 0 : ((KaitaiStream.mod(b6(), 128) << 35) + ((b6() & 128) == 0 ? 0 : ((KaitaiStream.mod(b7(), 128) << 42) + ((b7() & 128) == 0 ? 0 : ((KaitaiStream.mod(b8(), 128) << 49) + ((b8() & 128) == 0 ? 0 : ((KaitaiStream.mod(b9(), 128) << 56) + ((b8() & 128) == 0 ? 0 : (KaitaiStream.mod(b10(), 128) << 63))))))))))))))))))));
-            this.value = _tmp;
+            this.value = _root.typeIds().get((int) typeIdx()).typeName();
             return this.value;
         }
-        private int b1;
-        private Integer b2;
-        private Integer b3;
-        private Integer b4;
-        private Integer b5;
-        private Integer b6;
-        private Integer b7;
-        private Integer b8;
-        private Integer b9;
-        private Integer b10;
+        private int typeIdx;
         private Dex _root;
-        private KaitaiStruct _parent;
-        public int b1() { return b1; }
-        public Integer b2() { return b2; }
-        public Integer b3() { return b3; }
-        public Integer b4() { return b4; }
-        public Integer b5() { return b5; }
-        public Integer b6() { return b6; }
-        public Integer b7() { return b7; }
-        public Integer b8() { return b8; }
-        public Integer b9() { return b9; }
-        public Integer b10() { return b10; }
+        private Dex.TypeList _parent;
+        public int typeIdx() { return typeIdx; }
         public Dex _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
+        public Dex.TypeList _parent() { return _parent; }
     }
     public static class TypeIdItem extends KaitaiStruct {
         public static TypeIdItem fromFile(String fileName) throws IOException {
@@ -648,10 +632,10 @@ public class Dex extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.nameIdx = new Uleb128(this._io, this, _root);
+            this.nameIdx = new VlqBase128Le(this._io);
             this.value = new EncodedValue(this._io, this, _root);
         }
-        private Uleb128 nameIdx;
+        private VlqBase128Le nameIdx;
         private EncodedValue value;
         private Dex _root;
         private Dex.EncodedAnnotation _parent;
@@ -660,7 +644,7 @@ public class Dex extends KaitaiStruct {
          * element name, represented as an index into the string_ids section.
          * The string must conform to the syntax for MemberName, defined above.
          */
-        public Uleb128 nameIdx() { return nameIdx; }
+        public VlqBase128Le nameIdx() { return nameIdx; }
 
         /**
          * element value
@@ -689,11 +673,11 @@ public class Dex extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.fieldIdxDiff = new Uleb128(this._io, this, _root);
-            this.accessFlags = new Uleb128(this._io, this, _root);
+            this.fieldIdxDiff = new VlqBase128Le(this._io);
+            this.accessFlags = new VlqBase128Le(this._io);
         }
-        private Uleb128 fieldIdxDiff;
-        private Uleb128 accessFlags;
+        private VlqBase128Le fieldIdxDiff;
+        private VlqBase128Le accessFlags;
         private Dex _root;
         private Dex.ClassDataItem _parent;
 
@@ -701,13 +685,13 @@ public class Dex extends KaitaiStruct {
          * index into the field_ids list for the identity of this field (includes the name and descriptor), represented as a difference from the index of previous element in the list.
          * The index of the first element in a list is represented directly.
          */
-        public Uleb128 fieldIdxDiff() { return fieldIdxDiff; }
+        public VlqBase128Le fieldIdxDiff() { return fieldIdxDiff; }
 
         /**
          * access flags for the field (public, final, etc.).
          * See "access_flags Definitions" for details.
          */
-        public Uleb128 accessFlags() { return accessFlags; }
+        public VlqBase128Le accessFlags() { return accessFlags; }
         public Dex _root() { return _root; }
         public Dex.ClassDataItem _parent() { return _parent; }
     }
@@ -760,10 +744,10 @@ public class Dex extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.staticFieldsSize = new Uleb128(this._io, this, _root);
-            this.instanceFieldsSize = new Uleb128(this._io, this, _root);
-            this.directMethodsSize = new Uleb128(this._io, this, _root);
-            this.virtualMethodsSize = new Uleb128(this._io, this, _root);
+            this.staticFieldsSize = new VlqBase128Le(this._io);
+            this.instanceFieldsSize = new VlqBase128Le(this._io);
+            this.directMethodsSize = new VlqBase128Le(this._io);
+            this.virtualMethodsSize = new VlqBase128Le(this._io);
             staticFields = new ArrayList<EncodedField>((int) (staticFieldsSize().value()));
             for (int i = 0; i < staticFieldsSize().value(); i++) {
                 this.staticFields.add(new EncodedField(this._io, this, _root));
@@ -781,10 +765,10 @@ public class Dex extends KaitaiStruct {
                 this.virtualMethods.add(new EncodedMethod(this._io, this, _root));
             }
         }
-        private Uleb128 staticFieldsSize;
-        private Uleb128 instanceFieldsSize;
-        private Uleb128 directMethodsSize;
-        private Uleb128 virtualMethodsSize;
+        private VlqBase128Le staticFieldsSize;
+        private VlqBase128Le instanceFieldsSize;
+        private VlqBase128Le directMethodsSize;
+        private VlqBase128Le virtualMethodsSize;
         private ArrayList<EncodedField> staticFields;
         private ArrayList<EncodedField> instanceFields;
         private ArrayList<EncodedMethod> directMethods;
@@ -795,22 +779,22 @@ public class Dex extends KaitaiStruct {
         /**
          * the number of static fields defined in this item
          */
-        public Uleb128 staticFieldsSize() { return staticFieldsSize; }
+        public VlqBase128Le staticFieldsSize() { return staticFieldsSize; }
 
         /**
          * the number of instance fields defined in this item
          */
-        public Uleb128 instanceFieldsSize() { return instanceFieldsSize; }
+        public VlqBase128Le instanceFieldsSize() { return instanceFieldsSize; }
 
         /**
          * the number of direct methods defined in this item
          */
-        public Uleb128 directMethodsSize() { return directMethodsSize; }
+        public VlqBase128Le directMethodsSize() { return directMethodsSize; }
 
         /**
          * the number of virtual methods defined in this item
          */
-        public Uleb128 virtualMethodsSize() { return virtualMethodsSize; }
+        public VlqBase128Le virtualMethodsSize() { return virtualMethodsSize; }
 
         /**
          * the defined static fields, represented as a sequence of encoded elements.
@@ -864,6 +848,39 @@ public class Dex extends KaitaiStruct {
             this.typeIdx = this._io.readU2le();
             this.nameIdx = this._io.readU4le();
         }
+        private String className;
+
+        /**
+         * the definer of this field
+         */
+        public String className() {
+            if (this.className != null)
+                return this.className;
+            this.className = _root.typeIds().get((int) classIdx()).typeName();
+            return this.className;
+        }
+        private String typeName;
+
+        /**
+         * the type of this field
+         */
+        public String typeName() {
+            if (this.typeName != null)
+                return this.typeName;
+            this.typeName = _root.typeIds().get((int) typeIdx()).typeName();
+            return this.typeName;
+        }
+        private String fieldName;
+
+        /**
+         * the name of this field
+         */
+        public String fieldName() {
+            if (this.fieldName != null)
+                return this.fieldName;
+            this.fieldName = _root.stringIds().get((int) nameIdx()).value().data();
+            return this.fieldName;
+        }
         private int classIdx;
         private int typeIdx;
         private long nameIdx;
@@ -907,15 +924,15 @@ public class Dex extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.typeIdx = new Uleb128(this._io, this, _root);
-            this.size = new Uleb128(this._io, this, _root);
+            this.typeIdx = new VlqBase128Le(this._io);
+            this.size = new VlqBase128Le(this._io);
             elements = new ArrayList<AnnotationElement>((int) (size().value()));
             for (int i = 0; i < size().value(); i++) {
                 this.elements.add(new AnnotationElement(this._io, this, _root));
             }
         }
-        private Uleb128 typeIdx;
-        private Uleb128 size;
+        private VlqBase128Le typeIdx;
+        private VlqBase128Le size;
         private ArrayList<AnnotationElement> elements;
         private Dex _root;
         private Dex.EncodedValue _parent;
@@ -924,12 +941,12 @@ public class Dex extends KaitaiStruct {
          * type of the annotation.
          * This must be a class (not array or primitive) type.
          */
-        public Uleb128 typeIdx() { return typeIdx; }
+        public VlqBase128Le typeIdx() { return typeIdx; }
 
         /**
          * number of name-value mappings in this annotation
          */
-        public Uleb128 size() { return size; }
+        public VlqBase128Le size() { return size; }
 
         /**
          * elements of the annotation, represented directly in-line (not as offsets).
@@ -1064,6 +1081,41 @@ public class Dex extends KaitaiStruct {
         public Dex _root() { return _root; }
         public Dex _parent() { return _parent; }
     }
+    public static class TypeList extends KaitaiStruct {
+        public static TypeList fromFile(String fileName) throws IOException {
+            return new TypeList(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public TypeList(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TypeList(KaitaiStream _io, Dex.ProtoIdItem _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TypeList(KaitaiStream _io, Dex.ProtoIdItem _parent, Dex _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.size = this._io.readU4le();
+            list = new ArrayList<TypeItem>((int) (size()));
+            for (int i = 0; i < size(); i++) {
+                this.list.add(new TypeItem(this._io, this, _root));
+            }
+        }
+        private long size;
+        private ArrayList<TypeItem> list;
+        private Dex _root;
+        private Dex.ProtoIdItem _parent;
+        public long size() { return size; }
+        public ArrayList<TypeItem> list() { return list; }
+        public Dex _root() { return _root; }
+        public Dex.ProtoIdItem _parent() { return _parent; }
+    }
     public static class StringIdItem extends KaitaiStruct {
         public static StringIdItem fromFile(String fileName) throws IOException {
             return new StringIdItem(new ByteBufferKaitaiStream(fileName));
@@ -1106,14 +1158,14 @@ public class Dex extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.utf16Size = new Uleb128(this._io, this, _root);
+                this.utf16Size = new VlqBase128Le(this._io);
                 this.data = new String(this._io.readBytes(utf16Size().value()), Charset.forName("ascii"));
             }
-            private Uleb128 utf16Size;
+            private VlqBase128Le utf16Size;
             private String data;
             private Dex _root;
             private Dex.StringIdItem _parent;
-            public Uleb128 utf16Size() { return utf16Size; }
+            public VlqBase128Le utf16Size() { return utf16Size; }
             public String data() { return data; }
             public Dex _root() { return _root; }
             public Dex.StringIdItem _parent() { return _parent; }
@@ -1163,6 +1215,45 @@ public class Dex extends KaitaiStruct {
             this.returnTypeIdx = this._io.readU4le();
             this.parametersOff = this._io.readU4le();
         }
+        private String shortyDesc;
+
+        /**
+         * short-form descriptor string of this prototype, as pointed to by shorty_idx
+         */
+        public String shortyDesc() {
+            if (this.shortyDesc != null)
+                return this.shortyDesc;
+            this.shortyDesc = _root.stringIds().get((int) shortyIdx()).value().data();
+            return this.shortyDesc;
+        }
+        private TypeList paramsTypes;
+
+        /**
+         * list of parameter types for this prototype
+         */
+        public TypeList paramsTypes() {
+            if (this.paramsTypes != null)
+                return this.paramsTypes;
+            if (parametersOff() != 0) {
+                KaitaiStream io = _root._io();
+                long _pos = io.pos();
+                io.seek(parametersOff());
+                this.paramsTypes = new TypeList(io, this, _root);
+                io.seek(_pos);
+            }
+            return this.paramsTypes;
+        }
+        private String returnType;
+
+        /**
+         * return type of this prototype
+         */
+        public String returnType() {
+            if (this.returnType != null)
+                return this.returnType;
+            this.returnType = _root.typeIds().get((int) returnTypeIdx()).typeName();
+            return this.returnType;
+        }
         private long shortyIdx;
         private long returnTypeIdx;
         private long parametersOff;
@@ -1206,13 +1297,13 @@ public class Dex extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.methodIdxDiff = new Uleb128(this._io, this, _root);
-            this.accessFlags = new Uleb128(this._io, this, _root);
-            this.codeOff = new Uleb128(this._io, this, _root);
+            this.methodIdxDiff = new VlqBase128Le(this._io);
+            this.accessFlags = new VlqBase128Le(this._io);
+            this.codeOff = new VlqBase128Le(this._io);
         }
-        private Uleb128 methodIdxDiff;
-        private Uleb128 accessFlags;
-        private Uleb128 codeOff;
+        private VlqBase128Le methodIdxDiff;
+        private VlqBase128Le accessFlags;
+        private VlqBase128Le codeOff;
         private Dex _root;
         private Dex.ClassDataItem _parent;
 
@@ -1220,20 +1311,20 @@ public class Dex extends KaitaiStruct {
          * index into the method_ids list for the identity of this method (includes the name and descriptor), represented as a difference from the index of previous element in the list.
          * The index of the first element in a list is represented directly.
          */
-        public Uleb128 methodIdxDiff() { return methodIdxDiff; }
+        public VlqBase128Le methodIdxDiff() { return methodIdxDiff; }
 
         /**
          * access flags for the field (public, final, etc.).
          * See "access_flags Definitions" for details.
          */
-        public Uleb128 accessFlags() { return accessFlags; }
+        public VlqBase128Le accessFlags() { return accessFlags; }
 
         /**
          * offset from the start of the file to the code structure for this method, or 0 if this method is either abstract or native.
          * The offset should be to a location in the data section.
          * The format of the data is specified by "code_item" below.
          */
-        public Uleb128 codeOff() { return codeOff; }
+        public VlqBase128Le codeOff() { return codeOff; }
         public Dex _root() { return _root; }
         public Dex.ClassDataItem _parent() { return _parent; }
     }
@@ -1344,17 +1435,17 @@ public class Dex extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.size = new Uleb128(this._io, this, _root);
+            this.size = new VlqBase128Le(this._io);
             values = new ArrayList<EncodedValue>((int) (size().value()));
             for (int i = 0; i < size().value(); i++) {
                 this.values.add(new EncodedValue(this._io, this, _root));
             }
         }
-        private Uleb128 size;
+        private VlqBase128Le size;
         private ArrayList<EncodedValue> values;
         private Dex _root;
         private KaitaiStruct _parent;
-        public Uleb128 size() { return size; }
+        public VlqBase128Le size() { return size; }
         public ArrayList<EncodedValue> values() { return values; }
         public Dex _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }

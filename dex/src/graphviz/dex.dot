@@ -58,8 +58,7 @@ digraph {
 			header_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>64 65 78 0A</TD><TD PORT="magic_type">magic</TD></TR>
-				<TR><TD PORT="version_str_pos">4</TD><TD PORT="version_str_size">3</TD><TD>str(ascii)</TD><TD PORT="version_str_type">version_str</TD></TR>
-				<TR><TD PORT="magic2_pos">7</TD><TD PORT="magic2_size">1</TD><TD>00</TD><TD PORT="magic2_type">magic2</TD></TR>
+				<TR><TD PORT="version_str_pos">4</TD><TD PORT="version_str_size">4</TD><TD>str(ascii)</TD><TD PORT="version_str_type">version_str</TD></TR>
 				<TR><TD PORT="checksum_pos">8</TD><TD PORT="checksum_size">4</TD><TD>u4le</TD><TD PORT="checksum_type">checksum</TD></TR>
 				<TR><TD PORT="signature_pos">12</TD><TD PORT="signature_size">20</TD><TD></TD><TD PORT="signature_type">signature</TD></TR>
 				<TR><TD PORT="file_size_pos">32</TD><TD PORT="file_size_size">4</TD><TD>u4le</TD><TD PORT="file_size_type">file_size</TD></TR>
@@ -130,27 +129,30 @@ encoded_value__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPA
 				<TR><TD PORT="proto_idx_pos">2</TD><TD PORT="proto_idx_size">2</TD><TD>u2le</TD><TD PORT="proto_idx_type">proto_idx</TD></TR>
 				<TR><TD PORT="name_idx_pos">4</TD><TD PORT="name_idx_size">4</TD><TD>u4le</TD><TD PORT="name_idx_type">name_idx</TD></TR>
 			</TABLE>>];
+			method_id_item__inst__class_name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>class_name</TD><TD>_root.type_ids[class_idx].type_name</TD></TR>
+			</TABLE>>];
+			method_id_item__inst__proto_desc [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>proto_desc</TD><TD>_root.proto_ids[proto_idx].shorty_desc</TD></TR>
+			</TABLE>>];
+			method_id_item__inst__method_name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>method_name</TD><TD>_root.string_ids[name_idx].value.data</TD></TR>
+			</TABLE>>];
 		}
-		subgraph cluster__uleb128 {
-			label="Dex::Uleb128";
+		subgraph cluster__type_item {
+			label="Dex::TypeItem";
 			graph[style=dotted];
 
-			uleb128__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			type_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="b1_pos">0</TD><TD PORT="b1_size">1</TD><TD>u1</TD><TD PORT="b1_type">b1</TD></TR>
-				<TR><TD PORT="b2_pos">1</TD><TD PORT="b2_size">1</TD><TD>u1</TD><TD PORT="b2_type">b2</TD></TR>
-				<TR><TD PORT="b3_pos">2</TD><TD PORT="b3_size">1</TD><TD>u1</TD><TD PORT="b3_type">b3</TD></TR>
-				<TR><TD PORT="b4_pos">3</TD><TD PORT="b4_size">1</TD><TD>u1</TD><TD PORT="b4_type">b4</TD></TR>
-				<TR><TD PORT="b5_pos">4</TD><TD PORT="b5_size">1</TD><TD>u1</TD><TD PORT="b5_type">b5</TD></TR>
-				<TR><TD PORT="b6_pos">5</TD><TD PORT="b6_size">1</TD><TD>u1</TD><TD PORT="b6_type">b6</TD></TR>
-				<TR><TD PORT="b7_pos">6</TD><TD PORT="b7_size">1</TD><TD>u1</TD><TD PORT="b7_type">b7</TD></TR>
-				<TR><TD PORT="b8_pos">7</TD><TD PORT="b8_size">1</TD><TD>u1</TD><TD PORT="b8_type">b8</TD></TR>
-				<TR><TD PORT="b9_pos">8</TD><TD PORT="b9_size">1</TD><TD>u1</TD><TD PORT="b9_type">b9</TD></TR>
-				<TR><TD PORT="b10_pos">9</TD><TD PORT="b10_size">1</TD><TD>u1</TD><TD PORT="b10_type">b10</TD></TR>
+				<TR><TD PORT="type_idx_pos">0</TD><TD PORT="type_idx_size">2</TD><TD>u2le</TD><TD PORT="type_idx_type">type_idx</TD></TR>
 			</TABLE>>];
-			uleb128__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			type_item__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>value</TD><TD>(((b1 % 128) &lt;&lt; 0) + ((b1 &amp; 128) == 0 ? 0 : (((b2 % 128) &lt;&lt; 7) + ((b2 &amp; 128) == 0 ? 0 : (((b3 % 128) &lt;&lt; 14) + ((b3 &amp; 128) == 0 ? 0 : (((b4 % 128) &lt;&lt; 21) + ((b4 &amp; 128) == 0 ? 0 : (((b5 % 128) &lt;&lt; 28) + ((b5 &amp; 128) == 0 ? 0 : (((b6 % 128) &lt;&lt; 35) + ((b6 &amp; 128) == 0 ? 0 : (((b7 % 128) &lt;&lt; 42) + ((b7 &amp; 128) == 0 ? 0 : (((b8 % 128) &lt;&lt; 49) + ((b8 &amp; 128) == 0 ? 0 : (((b9 % 128) &lt;&lt; 56) + ((b8 &amp; 128) == 0 ? 0 : ((b10 % 128) &lt;&lt; 63)))))))))))))))))))</TD></TR>
+				<TR><TD>value</TD><TD>_root.type_ids[type_idx].type_name</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__type_id_item {
@@ -172,8 +174,8 @@ encoded_value__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPA
 
 			annotation_element__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="name_idx_pos">0</TD><TD PORT="name_idx_size">10</TD><TD>Uleb128</TD><TD PORT="name_idx_type">name_idx</TD></TR>
-				<TR><TD PORT="value_pos">10</TD><TD PORT="value_size">...</TD><TD>EncodedValue</TD><TD PORT="value_type">value</TD></TR>
+				<TR><TD PORT="name_idx_pos">0</TD><TD PORT="name_idx_size">...</TD><TD>VlqBase128Le</TD><TD PORT="name_idx_type">name_idx</TD></TR>
+				<TR><TD PORT="value_pos">...</TD><TD PORT="value_size">...</TD><TD>EncodedValue</TD><TD PORT="value_type">value</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__encoded_field {
@@ -182,8 +184,8 @@ encoded_value__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPA
 
 			encoded_field__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="field_idx_diff_pos">0</TD><TD PORT="field_idx_diff_size">10</TD><TD>Uleb128</TD><TD PORT="field_idx_diff_type">field_idx_diff</TD></TR>
-				<TR><TD PORT="access_flags_pos">10</TD><TD PORT="access_flags_size">10</TD><TD>Uleb128</TD><TD PORT="access_flags_type">access_flags</TD></TR>
+				<TR><TD PORT="field_idx_diff_pos">0</TD><TD PORT="field_idx_diff_size">...</TD><TD>VlqBase128Le</TD><TD PORT="field_idx_diff_type">field_idx_diff</TD></TR>
+				<TR><TD PORT="access_flags_pos">...</TD><TD PORT="access_flags_size">...</TD><TD>VlqBase128Le</TD><TD PORT="access_flags_type">access_flags</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__encoded_array_item {
@@ -201,17 +203,17 @@ encoded_value__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPA
 
 			class_data_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="static_fields_size_pos">0</TD><TD PORT="static_fields_size_size">10</TD><TD>Uleb128</TD><TD PORT="static_fields_size_type">static_fields_size</TD></TR>
-				<TR><TD PORT="instance_fields_size_pos">10</TD><TD PORT="instance_fields_size_size">10</TD><TD>Uleb128</TD><TD PORT="instance_fields_size_type">instance_fields_size</TD></TR>
-				<TR><TD PORT="direct_methods_size_pos">20</TD><TD PORT="direct_methods_size_size">10</TD><TD>Uleb128</TD><TD PORT="direct_methods_size_type">direct_methods_size</TD></TR>
-				<TR><TD PORT="virtual_methods_size_pos">30</TD><TD PORT="virtual_methods_size_size">10</TD><TD>Uleb128</TD><TD PORT="virtual_methods_size_type">virtual_methods_size</TD></TR>
-				<TR><TD PORT="static_fields_pos">40</TD><TD PORT="static_fields_size">20</TD><TD>EncodedField</TD><TD PORT="static_fields_type">static_fields</TD></TR>
+				<TR><TD PORT="static_fields_size_pos">0</TD><TD PORT="static_fields_size_size">...</TD><TD>VlqBase128Le</TD><TD PORT="static_fields_size_type">static_fields_size</TD></TR>
+				<TR><TD PORT="instance_fields_size_pos">...</TD><TD PORT="instance_fields_size_size">...</TD><TD>VlqBase128Le</TD><TD PORT="instance_fields_size_type">instance_fields_size</TD></TR>
+				<TR><TD PORT="direct_methods_size_pos">...</TD><TD PORT="direct_methods_size_size">...</TD><TD>VlqBase128Le</TD><TD PORT="direct_methods_size_type">direct_methods_size</TD></TR>
+				<TR><TD PORT="virtual_methods_size_pos">...</TD><TD PORT="virtual_methods_size_size">...</TD><TD>VlqBase128Le</TD><TD PORT="virtual_methods_size_type">virtual_methods_size</TD></TR>
+				<TR><TD PORT="static_fields_pos">...</TD><TD PORT="static_fields_size">...</TD><TD>EncodedField</TD><TD PORT="static_fields_type">static_fields</TD></TR>
 				<TR><TD COLSPAN="4" PORT="static_fields__repeat">repeat static_fields_size.value times</TD></TR>
-				<TR><TD PORT="instance_fields_pos">...</TD><TD PORT="instance_fields_size">20</TD><TD>EncodedField</TD><TD PORT="instance_fields_type">instance_fields</TD></TR>
+				<TR><TD PORT="instance_fields_pos">...</TD><TD PORT="instance_fields_size">...</TD><TD>EncodedField</TD><TD PORT="instance_fields_type">instance_fields</TD></TR>
 				<TR><TD COLSPAN="4" PORT="instance_fields__repeat">repeat instance_fields_size.value times</TD></TR>
-				<TR><TD PORT="direct_methods_pos">...</TD><TD PORT="direct_methods_size">30</TD><TD>EncodedMethod</TD><TD PORT="direct_methods_type">direct_methods</TD></TR>
+				<TR><TD PORT="direct_methods_pos">...</TD><TD PORT="direct_methods_size">...</TD><TD>EncodedMethod</TD><TD PORT="direct_methods_type">direct_methods</TD></TR>
 				<TR><TD COLSPAN="4" PORT="direct_methods__repeat">repeat direct_methods_size.value times</TD></TR>
-				<TR><TD PORT="virtual_methods_pos">...</TD><TD PORT="virtual_methods_size">30</TD><TD>EncodedMethod</TD><TD PORT="virtual_methods_type">virtual_methods</TD></TR>
+				<TR><TD PORT="virtual_methods_pos">...</TD><TD PORT="virtual_methods_size">...</TD><TD>EncodedMethod</TD><TD PORT="virtual_methods_type">virtual_methods</TD></TR>
 				<TR><TD COLSPAN="4" PORT="virtual_methods__repeat">repeat virtual_methods_size.value times</TD></TR>
 			</TABLE>>];
 		}
@@ -225,6 +227,18 @@ encoded_value__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPA
 				<TR><TD PORT="type_idx_pos">2</TD><TD PORT="type_idx_size">2</TD><TD>u2le</TD><TD PORT="type_idx_type">type_idx</TD></TR>
 				<TR><TD PORT="name_idx_pos">4</TD><TD PORT="name_idx_size">4</TD><TD>u4le</TD><TD PORT="name_idx_type">name_idx</TD></TR>
 			</TABLE>>];
+			field_id_item__inst__class_name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>class_name</TD><TD>_root.type_ids[class_idx].type_name</TD></TR>
+			</TABLE>>];
+			field_id_item__inst__type_name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>type_name</TD><TD>_root.type_ids[type_idx].type_name</TD></TR>
+			</TABLE>>];
+			field_id_item__inst__field_name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>field_name</TD><TD>_root.string_ids[name_idx].value.data</TD></TR>
+			</TABLE>>];
 		}
 		subgraph cluster__encoded_annotation {
 			label="Dex::EncodedAnnotation";
@@ -232,9 +246,9 @@ encoded_value__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPA
 
 			encoded_annotation__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="type_idx_pos">0</TD><TD PORT="type_idx_size">10</TD><TD>Uleb128</TD><TD PORT="type_idx_type">type_idx</TD></TR>
-				<TR><TD PORT="size_pos">10</TD><TD PORT="size_size">10</TD><TD>Uleb128</TD><TD PORT="size_type">size</TD></TR>
-				<TR><TD PORT="elements_pos">20</TD><TD PORT="elements_size">...</TD><TD>AnnotationElement</TD><TD PORT="elements_type">elements</TD></TR>
+				<TR><TD PORT="type_idx_pos">0</TD><TD PORT="type_idx_size">...</TD><TD>VlqBase128Le</TD><TD PORT="type_idx_type">type_idx</TD></TR>
+				<TR><TD PORT="size_pos">...</TD><TD PORT="size_size">...</TD><TD>VlqBase128Le</TD><TD PORT="size_type">size</TD></TR>
+				<TR><TD PORT="elements_pos">...</TD><TD PORT="elements_size">...</TD><TD>AnnotationElement</TD><TD PORT="elements_type">elements</TD></TR>
 				<TR><TD COLSPAN="4" PORT="elements__repeat">repeat size.value times</TD></TR>
 			</TABLE>>];
 		}
@@ -266,6 +280,17 @@ encoded_value__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPA
 				<TR><TD PORT="static_values_pos">static_values_off</TD><TD PORT="static_values_size">...</TD><TD>EncodedArrayItem</TD><TD PORT="static_values_type">static_values</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__type_list {
+			label="Dex::TypeList";
+			graph[style=dotted];
+
+			type_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="size_pos">0</TD><TD PORT="size_size">4</TD><TD>u4le</TD><TD PORT="size_type">size</TD></TR>
+				<TR><TD PORT="list_pos">4</TD><TD PORT="list_size">2</TD><TD>TypeItem</TD><TD PORT="list_type">list</TD></TR>
+				<TR><TD COLSPAN="4" PORT="list__repeat">repeat size times</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__string_id_item {
 			label="Dex::StringIdItem";
 			graph[style=dotted];
@@ -284,8 +309,8 @@ encoded_value__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPA
 
 				string_data_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="utf16_size_pos">0</TD><TD PORT="utf16_size_size">10</TD><TD>Uleb128</TD><TD PORT="utf16_size_type">utf16_size</TD></TR>
-					<TR><TD PORT="data_pos">10</TD><TD PORT="data_size">utf16_size.value</TD><TD>str(ascii)</TD><TD PORT="data_type">data</TD></TR>
+					<TR><TD PORT="utf16_size_pos">0</TD><TD PORT="utf16_size_size">...</TD><TD>VlqBase128Le</TD><TD PORT="utf16_size_type">utf16_size</TD></TR>
+					<TR><TD PORT="data_pos">...</TD><TD PORT="data_size">utf16_size.value</TD><TD>str(ascii)</TD><TD PORT="data_type">data</TD></TR>
 				</TABLE>>];
 			}
 		}
@@ -299,6 +324,18 @@ encoded_value__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPA
 				<TR><TD PORT="return_type_idx_pos">4</TD><TD PORT="return_type_idx_size">4</TD><TD>u4le</TD><TD PORT="return_type_idx_type">return_type_idx</TD></TR>
 				<TR><TD PORT="parameters_off_pos">8</TD><TD PORT="parameters_off_size">4</TD><TD>u4le</TD><TD PORT="parameters_off_type">parameters_off</TD></TR>
 			</TABLE>>];
+			proto_id_item__inst__shorty_desc [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>shorty_desc</TD><TD>_root.string_ids[shorty_idx].value.data</TD></TR>
+			</TABLE>>];
+			proto_id_item__inst__params_types [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="params_types_pos">parameters_off</TD><TD PORT="params_types_size">...</TD><TD>TypeList</TD><TD PORT="params_types_type">params_types</TD></TR>
+			</TABLE>>];
+			proto_id_item__inst__return_type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>return_type</TD><TD>_root.type_ids[return_type_idx].type_name</TD></TR>
+			</TABLE>>];
 		}
 		subgraph cluster__encoded_method {
 			label="Dex::EncodedMethod";
@@ -306,9 +343,9 @@ encoded_value__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPA
 
 			encoded_method__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="method_idx_diff_pos">0</TD><TD PORT="method_idx_diff_size">10</TD><TD>Uleb128</TD><TD PORT="method_idx_diff_type">method_idx_diff</TD></TR>
-				<TR><TD PORT="access_flags_pos">10</TD><TD PORT="access_flags_size">10</TD><TD>Uleb128</TD><TD PORT="access_flags_type">access_flags</TD></TR>
-				<TR><TD PORT="code_off_pos">20</TD><TD PORT="code_off_size">10</TD><TD>Uleb128</TD><TD PORT="code_off_type">code_off</TD></TR>
+				<TR><TD PORT="method_idx_diff_pos">0</TD><TD PORT="method_idx_diff_size">...</TD><TD>VlqBase128Le</TD><TD PORT="method_idx_diff_type">method_idx_diff</TD></TR>
+				<TR><TD PORT="access_flags_pos">...</TD><TD PORT="access_flags_size">...</TD><TD>VlqBase128Le</TD><TD PORT="access_flags_type">access_flags</TD></TR>
+				<TR><TD PORT="code_off_pos">...</TD><TD PORT="code_off_size">...</TD><TD>VlqBase128Le</TD><TD PORT="code_off_type">code_off</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__map_item {
@@ -329,8 +366,8 @@ encoded_value__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPA
 
 			encoded_array__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="size_pos">0</TD><TD PORT="size_size">10</TD><TD>Uleb128</TD><TD PORT="size_type">size</TD></TR>
-				<TR><TD PORT="values_pos">10</TD><TD PORT="values_size">...</TD><TD>EncodedValue</TD><TD PORT="values_type">values</TD></TR>
+				<TR><TD PORT="size_pos">0</TD><TD PORT="size_size">...</TD><TD>VlqBase128Le</TD><TD PORT="size_type">size</TD></TR>
+				<TR><TD PORT="values_pos">...</TD><TD PORT="values_size">...</TD><TD>EncodedValue</TD><TD PORT="values_type">values</TD></TR>
 				<TR><TD COLSPAN="4" PORT="values__repeat">repeat size.value times</TD></TR>
 			</TABLE>>];
 		}
@@ -366,60 +403,54 @@ encoded_value__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPA
 	encoded_value__seq_value_switch:case0 -> encoded_annotation__seq [style=bold];
 	encoded_value__seq_value_switch:case1 -> encoded_array__seq [style=bold];
 	encoded_value__seq:value_type_type -> encoded_value__seq:value_type [color="#404040"];
-	uleb128__seq:b1_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b1_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b2_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b2_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b3_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b3_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b4_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b4_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b5_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b5_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b6_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b6_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b7_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b7_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b8_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b8_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b9_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b8_type -> uleb128__inst__value [color="#404040"];
-	uleb128__seq:b10_type -> uleb128__inst__value [color="#404040"];
+	type_id_item__inst__type_name:type_name_type -> method_id_item__inst__class_name [color="#404040"];
+	proto_id_item__inst__shorty_desc:shorty_desc_type -> method_id_item__inst__proto_desc [color="#404040"];
+	string_data_item__seq:data_type -> method_id_item__inst__method_name [color="#404040"];
+	type_id_item__inst__type_name:type_name_type -> type_item__inst__value [color="#404040"];
 	string_data_item__seq:data_type -> type_id_item__inst__type_name [color="#404040"];
-	annotation_element__seq:name_idx_type -> uleb128__seq [style=bold];
+	annotation_element__seq:name_idx_type -> vlq_base128_le__seq [style=bold];
 	annotation_element__seq:value_type -> encoded_value__seq [style=bold];
-	encoded_field__seq:field_idx_diff_type -> uleb128__seq [style=bold];
-	encoded_field__seq:access_flags_type -> uleb128__seq [style=bold];
+	encoded_field__seq:field_idx_diff_type -> vlq_base128_le__seq [style=bold];
+	encoded_field__seq:access_flags_type -> vlq_base128_le__seq [style=bold];
 	encoded_array_item__seq:value_type -> encoded_array__seq [style=bold];
-	class_data_item__seq:static_fields_size_type -> uleb128__seq [style=bold];
-	class_data_item__seq:instance_fields_size_type -> uleb128__seq [style=bold];
-	class_data_item__seq:direct_methods_size_type -> uleb128__seq [style=bold];
-	class_data_item__seq:virtual_methods_size_type -> uleb128__seq [style=bold];
+	class_data_item__seq:static_fields_size_type -> vlq_base128_le__seq [style=bold];
+	class_data_item__seq:instance_fields_size_type -> vlq_base128_le__seq [style=bold];
+	class_data_item__seq:direct_methods_size_type -> vlq_base128_le__seq [style=bold];
+	class_data_item__seq:virtual_methods_size_type -> vlq_base128_le__seq [style=bold];
 	class_data_item__seq:static_fields_type -> encoded_field__seq [style=bold];
-	uleb128__inst__value:value_type -> class_data_item__seq:static_fields__repeat [color="#404040"];
+	vlq_base128_le__inst__value:value_type -> class_data_item__seq:static_fields__repeat [color="#404040"];
 	class_data_item__seq:instance_fields_type -> encoded_field__seq [style=bold];
-	uleb128__inst__value:value_type -> class_data_item__seq:instance_fields__repeat [color="#404040"];
+	vlq_base128_le__inst__value:value_type -> class_data_item__seq:instance_fields__repeat [color="#404040"];
 	class_data_item__seq:direct_methods_type -> encoded_method__seq [style=bold];
-	uleb128__inst__value:value_type -> class_data_item__seq:direct_methods__repeat [color="#404040"];
+	vlq_base128_le__inst__value:value_type -> class_data_item__seq:direct_methods__repeat [color="#404040"];
 	class_data_item__seq:virtual_methods_type -> encoded_method__seq [style=bold];
-	uleb128__inst__value:value_type -> class_data_item__seq:virtual_methods__repeat [color="#404040"];
-	encoded_annotation__seq:type_idx_type -> uleb128__seq [style=bold];
-	encoded_annotation__seq:size_type -> uleb128__seq [style=bold];
+	vlq_base128_le__inst__value:value_type -> class_data_item__seq:virtual_methods__repeat [color="#404040"];
+	type_id_item__inst__type_name:type_name_type -> field_id_item__inst__class_name [color="#404040"];
+	type_id_item__inst__type_name:type_name_type -> field_id_item__inst__type_name [color="#404040"];
+	string_data_item__seq:data_type -> field_id_item__inst__field_name [color="#404040"];
+	encoded_annotation__seq:type_idx_type -> vlq_base128_le__seq [style=bold];
+	encoded_annotation__seq:size_type -> vlq_base128_le__seq [style=bold];
 	encoded_annotation__seq:elements_type -> annotation_element__seq [style=bold];
-	uleb128__inst__value:value_type -> encoded_annotation__seq:elements__repeat [color="#404040"];
+	vlq_base128_le__inst__value:value_type -> encoded_annotation__seq:elements__repeat [color="#404040"];
 	type_id_item__inst__type_name:type_name_type -> class_def_item__inst__type_name [color="#404040"];
 	class_def_item__seq:class_data_off_type -> class_def_item__inst__class_data:class_data_pos [color="#404040"];
 	class_def_item__inst__class_data:class_data_type -> class_data_item__seq [style=bold];
 	class_def_item__seq:static_values_off_type -> class_def_item__inst__static_values:static_values_pos [color="#404040"];
 	class_def_item__inst__static_values:static_values_type -> encoded_array_item__seq [style=bold];
+	type_list__seq:list_type -> type_item__seq [style=bold];
+	type_list__seq:size_type -> type_list__seq:list__repeat [color="#404040"];
 	string_id_item__seq:string_data_off_type -> string_id_item__inst__value:value_pos [color="#404040"];
 	string_id_item__inst__value:value_type -> string_data_item__seq [style=bold];
-	string_data_item__seq:utf16_size_type -> uleb128__seq [style=bold];
-	uleb128__inst__value:value_type -> string_data_item__seq:data_size [color="#404040"];
-	encoded_method__seq:method_idx_diff_type -> uleb128__seq [style=bold];
-	encoded_method__seq:access_flags_type -> uleb128__seq [style=bold];
-	encoded_method__seq:code_off_type -> uleb128__seq [style=bold];
-	encoded_array__seq:size_type -> uleb128__seq [style=bold];
+	string_data_item__seq:utf16_size_type -> vlq_base128_le__seq [style=bold];
+	vlq_base128_le__inst__value:value_type -> string_data_item__seq:data_size [color="#404040"];
+	string_data_item__seq:data_type -> proto_id_item__inst__shorty_desc [color="#404040"];
+	proto_id_item__seq:parameters_off_type -> proto_id_item__inst__params_types:params_types_pos [color="#404040"];
+	proto_id_item__inst__params_types:params_types_type -> type_list__seq [style=bold];
+	type_id_item__inst__type_name:type_name_type -> proto_id_item__inst__return_type [color="#404040"];
+	encoded_method__seq:method_idx_diff_type -> vlq_base128_le__seq [style=bold];
+	encoded_method__seq:access_flags_type -> vlq_base128_le__seq [style=bold];
+	encoded_method__seq:code_off_type -> vlq_base128_le__seq [style=bold];
+	encoded_array__seq:size_type -> vlq_base128_le__seq [style=bold];
 	encoded_array__seq:values_type -> encoded_value__seq [style=bold];
-	uleb128__inst__value:value_type -> encoded_array__seq:values__repeat [color="#404040"];
+	vlq_base128_le__inst__value:value_type -> encoded_array__seq:values__repeat [color="#404040"];
 }

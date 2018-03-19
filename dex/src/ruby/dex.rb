@@ -47,8 +47,7 @@ class Dex < Kaitai::Struct::Struct
 
     def _read
       @magic = @_io.ensure_fixed_contents([100, 101, 120, 10].pack('C*'))
-      @version_str = (@_io.read_bytes(3)).force_encoding("ascii")
-      @magic2 = @_io.ensure_fixed_contents([0].pack('C*'))
+      @version_str = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(4), 0, false)).force_encoding("ascii")
       @checksum = @_io.read_u4le
       @signature = @_io.read_bytes(20)
       @file_size = @_io.read_u4le
@@ -75,7 +74,6 @@ class Dex < Kaitai::Struct::Struct
     end
     attr_reader :magic
     attr_reader :version_str
-    attr_reader :magic2
 
     ##
     # adler32 checksum of the rest of the file (everything but magic and this field);  used to detect file corruption
@@ -281,6 +279,30 @@ class Dex < Kaitai::Struct::Struct
     end
 
     ##
+    # the definer of this method
+    def class_name
+      return @class_name unless @class_name.nil?
+      @class_name = _root.type_ids[class_idx].type_name
+      @class_name
+    end
+
+    ##
+    # the short-form descriptor of the prototype of this method
+    def proto_desc
+      return @proto_desc unless @proto_desc.nil?
+      @proto_desc = _root.proto_ids[proto_idx].shorty_desc
+      @proto_desc
+    end
+
+    ##
+    # the name of this method
+    def method_name
+      return @method_name unless @method_name.nil?
+      @method_name = _root.string_ids[name_idx].value.data
+      @method_name
+    end
+
+    ##
     # index into the type_ids list for the definer of this method. This must be a class or array type, and not a primitive type.
     attr_reader :class_idx
 
@@ -292,58 +314,22 @@ class Dex < Kaitai::Struct::Struct
     # index into the string_ids list for the name of this method. The string must conform to the syntax for MemberName, defined above.
     attr_reader :name_idx
   end
-  class Uleb128 < Kaitai::Struct::Struct
+  class TypeItem < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @b1 = @_io.read_u1
-      if (b1 & 128) != 0
-        @b2 = @_io.read_u1
-      end
-      if (b2 & 128) != 0
-        @b3 = @_io.read_u1
-      end
-      if (b3 & 128) != 0
-        @b4 = @_io.read_u1
-      end
-      if (b4 & 128) != 0
-        @b5 = @_io.read_u1
-      end
-      if (b5 & 128) != 0
-        @b6 = @_io.read_u1
-      end
-      if (b6 & 128) != 0
-        @b7 = @_io.read_u1
-      end
-      if (b7 & 128) != 0
-        @b8 = @_io.read_u1
-      end
-      if (b8 & 128) != 0
-        @b9 = @_io.read_u1
-      end
-      if (b9 & 128) != 0
-        @b10 = @_io.read_u1
-      end
+      @type_idx = @_io.read_u2le
       self
     end
     def value
       return @value unless @value.nil?
-      @value = (((b1 % 128) << 0) + ((b1 & 128) == 0 ? 0 : (((b2 % 128) << 7) + ((b2 & 128) == 0 ? 0 : (((b3 % 128) << 14) + ((b3 & 128) == 0 ? 0 : (((b4 % 128) << 21) + ((b4 & 128) == 0 ? 0 : (((b5 % 128) << 28) + ((b5 & 128) == 0 ? 0 : (((b6 % 128) << 35) + ((b6 & 128) == 0 ? 0 : (((b7 % 128) << 42) + ((b7 & 128) == 0 ? 0 : (((b8 % 128) << 49) + ((b8 & 128) == 0 ? 0 : (((b9 % 128) << 56) + ((b8 & 128) == 0 ? 0 : ((b10 % 128) << 63)))))))))))))))))))
+      @value = _root.type_ids[type_idx].type_name
       @value
     end
-    attr_reader :b1
-    attr_reader :b2
-    attr_reader :b3
-    attr_reader :b4
-    attr_reader :b5
-    attr_reader :b6
-    attr_reader :b7
-    attr_reader :b8
-    attr_reader :b9
-    attr_reader :b10
+    attr_reader :type_idx
   end
   class TypeIdItem < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -372,7 +358,7 @@ class Dex < Kaitai::Struct::Struct
     end
 
     def _read
-      @name_idx = Uleb128.new(@_io, self, @_root)
+      @name_idx = VlqBase128Le.new(@_io)
       @value = EncodedValue.new(@_io, self, @_root)
       self
     end
@@ -393,8 +379,8 @@ class Dex < Kaitai::Struct::Struct
     end
 
     def _read
-      @field_idx_diff = Uleb128.new(@_io, self, @_root)
-      @access_flags = Uleb128.new(@_io, self, @_root)
+      @field_idx_diff = VlqBase128Le.new(@_io)
+      @access_flags = VlqBase128Le.new(@_io)
       self
     end
 
@@ -427,10 +413,10 @@ class Dex < Kaitai::Struct::Struct
     end
 
     def _read
-      @static_fields_size = Uleb128.new(@_io, self, @_root)
-      @instance_fields_size = Uleb128.new(@_io, self, @_root)
-      @direct_methods_size = Uleb128.new(@_io, self, @_root)
-      @virtual_methods_size = Uleb128.new(@_io, self, @_root)
+      @static_fields_size = VlqBase128Le.new(@_io)
+      @instance_fields_size = VlqBase128Le.new(@_io)
+      @direct_methods_size = VlqBase128Le.new(@_io)
+      @virtual_methods_size = VlqBase128Le.new(@_io)
       @static_fields = Array.new(static_fields_size.value)
       (static_fields_size.value).times { |i|
         @static_fields[i] = EncodedField.new(@_io, self, @_root)
@@ -502,6 +488,30 @@ class Dex < Kaitai::Struct::Struct
     end
 
     ##
+    # the definer of this field
+    def class_name
+      return @class_name unless @class_name.nil?
+      @class_name = _root.type_ids[class_idx].type_name
+      @class_name
+    end
+
+    ##
+    # the type of this field
+    def type_name
+      return @type_name unless @type_name.nil?
+      @type_name = _root.type_ids[type_idx].type_name
+      @type_name
+    end
+
+    ##
+    # the name of this field
+    def field_name
+      return @field_name unless @field_name.nil?
+      @field_name = _root.string_ids[name_idx].value.data
+      @field_name
+    end
+
+    ##
     # index into the type_ids list for the definer of this field. This must be a class type, and not an array or primitive type.
     attr_reader :class_idx
 
@@ -520,8 +530,8 @@ class Dex < Kaitai::Struct::Struct
     end
 
     def _read
-      @type_idx = Uleb128.new(@_io, self, @_root)
-      @size = Uleb128.new(@_io, self, @_root)
+      @type_idx = VlqBase128Le.new(@_io)
+      @size = VlqBase128Le.new(@_io)
       @elements = Array.new(size.value)
       (size.value).times { |i|
         @elements[i] = AnnotationElement.new(@_io, self, @_root)
@@ -630,6 +640,23 @@ class Dex < Kaitai::Struct::Struct
     # If there are fewer elements in the array than there are static fields, then the leftover fields are initialized with a type-appropriate 0 or null.
     attr_reader :static_values_off
   end
+  class TypeList < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @size = @_io.read_u4le
+      @list = Array.new(size)
+      (size).times { |i|
+        @list[i] = TypeItem.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :size
+    attr_reader :list
+  end
   class StringIdItem < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -647,7 +674,7 @@ class Dex < Kaitai::Struct::Struct
       end
 
       def _read
-        @utf16_size = Uleb128.new(@_io, self, @_root)
+        @utf16_size = VlqBase128Le.new(@_io)
         @data = (@_io.read_bytes(utf16_size.value)).force_encoding("ascii")
         self
       end
@@ -681,6 +708,36 @@ class Dex < Kaitai::Struct::Struct
     end
 
     ##
+    # short-form descriptor string of this prototype, as pointed to by shorty_idx
+    def shorty_desc
+      return @shorty_desc unless @shorty_desc.nil?
+      @shorty_desc = _root.string_ids[shorty_idx].value.data
+      @shorty_desc
+    end
+
+    ##
+    # list of parameter types for this prototype
+    def params_types
+      return @params_types unless @params_types.nil?
+      if parameters_off != 0
+        io = _root._io
+        _pos = io.pos
+        io.seek(parameters_off)
+        @params_types = TypeList.new(io, self, @_root)
+        io.seek(_pos)
+      end
+      @params_types
+    end
+
+    ##
+    # return type of this prototype
+    def return_type
+      return @return_type unless @return_type.nil?
+      @return_type = _root.type_ids[return_type_idx].type_name
+      @return_type
+    end
+
+    ##
     # index into the string_ids list for the short-form descriptor string of this prototype. The string must conform to the syntax for ShortyDescriptor, defined above,  and must correspond to the return type and parameters of this item.
     attr_reader :shorty_idx
 
@@ -699,9 +756,9 @@ class Dex < Kaitai::Struct::Struct
     end
 
     def _read
-      @method_idx_diff = Uleb128.new(@_io, self, @_root)
-      @access_flags = Uleb128.new(@_io, self, @_root)
-      @code_off = Uleb128.new(@_io, self, @_root)
+      @method_idx_diff = VlqBase128Le.new(@_io)
+      @access_flags = VlqBase128Le.new(@_io)
+      @code_off = VlqBase128Le.new(@_io)
       self
     end
 
@@ -782,7 +839,7 @@ class Dex < Kaitai::Struct::Struct
     end
 
     def _read
-      @size = Uleb128.new(@_io, self, @_root)
+      @size = VlqBase128Le.new(@_io)
       @values = Array.new(size.value)
       (size.value).times { |i|
         @values[i] = EncodedValue.new(@_io, self, @_root)

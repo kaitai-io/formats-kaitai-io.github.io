@@ -70,8 +70,7 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.EnsureFixedContents(new byte[] { 100, 101, 120, 10 });
-                _versionStr = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(3));
-                _magic2 = m_io.EnsureFixedContents(new byte[] { 0 });
+                _versionStr = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(4), 0, false));
                 _checksum = m_io.ReadU4le();
                 _signature = m_io.ReadBytes(20);
                 _fileSize = m_io.ReadU4le();
@@ -97,7 +96,6 @@ namespace Kaitai
             }
             private byte[] _magic;
             private string _versionStr;
-            private byte[] _magic2;
             private uint _checksum;
             private byte[] _signature;
             private uint _fileSize;
@@ -124,7 +122,6 @@ namespace Kaitai
             private Dex m_parent;
             public byte[] Magic { get { return _magic; } }
             public string VersionStr { get { return _versionStr; } }
-            public byte[] Magic2 { get { return _magic2; } }
 
             /// <summary>
             /// adler32 checksum of the rest of the file (everything but magic and this field);  used to detect file corruption
@@ -423,6 +420,9 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_className = false;
+                f_protoDesc = false;
+                f_methodName = false;
                 _read();
             }
             private void _read()
@@ -430,6 +430,57 @@ namespace Kaitai
                 _classIdx = m_io.ReadU2le();
                 _protoIdx = m_io.ReadU2le();
                 _nameIdx = m_io.ReadU4le();
+            }
+            private bool f_className;
+            private string _className;
+
+            /// <summary>
+            /// the definer of this method
+            /// </summary>
+            public string ClassName
+            {
+                get
+                {
+                    if (f_className)
+                        return _className;
+                    _className = (string) (M_Root.TypeIds[ClassIdx].TypeName);
+                    f_className = true;
+                    return _className;
+                }
+            }
+            private bool f_protoDesc;
+            private string _protoDesc;
+
+            /// <summary>
+            /// the short-form descriptor of the prototype of this method
+            /// </summary>
+            public string ProtoDesc
+            {
+                get
+                {
+                    if (f_protoDesc)
+                        return _protoDesc;
+                    _protoDesc = (string) (M_Root.ProtoIds[ProtoIdx].ShortyDesc);
+                    f_protoDesc = true;
+                    return _protoDesc;
+                }
+            }
+            private bool f_methodName;
+            private string _methodName;
+
+            /// <summary>
+            /// the name of this method
+            /// </summary>
+            public string MethodName
+            {
+                get
+                {
+                    if (f_methodName)
+                        return _methodName;
+                    _methodName = (string) (M_Root.StringIds[NameIdx].Value.Data);
+                    f_methodName = true;
+                    return _methodName;
+                }
             }
             private ushort _classIdx;
             private ushort _protoIdx;
@@ -454,14 +505,14 @@ namespace Kaitai
             public Dex M_Root { get { return m_root; } }
             public Dex M_Parent { get { return m_parent; } }
         }
-        public partial class Uleb128 : KaitaiStruct
+        public partial class TypeItem : KaitaiStruct
         {
-            public static Uleb128 FromFile(string fileName)
+            public static TypeItem FromFile(string fileName)
             {
-                return new Uleb128(new KaitaiStream(fileName));
+                return new TypeItem(new KaitaiStream(fileName));
             }
 
-            public Uleb128(KaitaiStream p__io, KaitaiStruct p__parent = null, Dex p__root = null) : base(p__io)
+            public TypeItem(KaitaiStream p__io, Dex.TypeList p__parent = null, Dex p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -470,72 +521,27 @@ namespace Kaitai
             }
             private void _read()
             {
-                _b1 = m_io.ReadU1();
-                if ((B1 & 128) != 0) {
-                    _b2 = m_io.ReadU1();
-                }
-                if ((B2 & 128) != 0) {
-                    _b3 = m_io.ReadU1();
-                }
-                if ((B3 & 128) != 0) {
-                    _b4 = m_io.ReadU1();
-                }
-                if ((B4 & 128) != 0) {
-                    _b5 = m_io.ReadU1();
-                }
-                if ((B5 & 128) != 0) {
-                    _b6 = m_io.ReadU1();
-                }
-                if ((B6 & 128) != 0) {
-                    _b7 = m_io.ReadU1();
-                }
-                if ((B7 & 128) != 0) {
-                    _b8 = m_io.ReadU1();
-                }
-                if ((B8 & 128) != 0) {
-                    _b9 = m_io.ReadU1();
-                }
-                if ((B9 & 128) != 0) {
-                    _b10 = m_io.ReadU1();
-                }
+                _typeIdx = m_io.ReadU2le();
             }
             private bool f_value;
-            private int _value;
-            public int Value
+            private string _value;
+            public string Value
             {
                 get
                 {
                     if (f_value)
                         return _value;
-                    _value = (int) (((KaitaiStream.Mod(B1, 128) << 0) + ((B1 & 128) == 0 ? 0 : ((KaitaiStream.Mod(B2, 128) << 7) + ((B2 & 128) == 0 ? 0 : ((KaitaiStream.Mod(B3, 128) << 14) + ((B3 & 128) == 0 ? 0 : ((KaitaiStream.Mod(B4, 128) << 21) + ((B4 & 128) == 0 ? 0 : ((KaitaiStream.Mod(B5, 128) << 28) + ((B5 & 128) == 0 ? 0 : ((KaitaiStream.Mod(B6, 128) << 35) + ((B6 & 128) == 0 ? 0 : ((KaitaiStream.Mod(B7, 128) << 42) + ((B7 & 128) == 0 ? 0 : ((KaitaiStream.Mod(B8, 128) << 49) + ((B8 & 128) == 0 ? 0 : ((KaitaiStream.Mod(B9, 128) << 56) + ((B8 & 128) == 0 ? 0 : (KaitaiStream.Mod(B10, 128) << 63))))))))))))))))))));
+                    _value = (string) (M_Root.TypeIds[TypeIdx].TypeName);
                     f_value = true;
                     return _value;
                 }
             }
-            private byte _b1;
-            private byte? _b2;
-            private byte? _b3;
-            private byte? _b4;
-            private byte? _b5;
-            private byte? _b6;
-            private byte? _b7;
-            private byte? _b8;
-            private byte? _b9;
-            private byte? _b10;
+            private ushort _typeIdx;
             private Dex m_root;
-            private KaitaiStruct m_parent;
-            public byte B1 { get { return _b1; } }
-            public byte? B2 { get { return _b2; } }
-            public byte? B3 { get { return _b3; } }
-            public byte? B4 { get { return _b4; } }
-            public byte? B5 { get { return _b5; } }
-            public byte? B6 { get { return _b6; } }
-            public byte? B7 { get { return _b7; } }
-            public byte? B8 { get { return _b8; } }
-            public byte? B9 { get { return _b9; } }
-            public byte? B10 { get { return _b10; } }
+            private Dex.TypeList m_parent;
+            public ushort TypeIdx { get { return _typeIdx; } }
             public Dex M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
+            public Dex.TypeList M_Parent { get { return m_parent; } }
         }
         public partial class TypeIdItem : KaitaiStruct
         {
@@ -594,10 +600,10 @@ namespace Kaitai
             }
             private void _read()
             {
-                _nameIdx = new Uleb128(m_io, this, m_root);
+                _nameIdx = new VlqBase128Le(m_io);
                 _value = new EncodedValue(m_io, this, m_root);
             }
-            private Uleb128 _nameIdx;
+            private VlqBase128Le _nameIdx;
             private EncodedValue _value;
             private Dex m_root;
             private Dex.EncodedAnnotation m_parent;
@@ -606,7 +612,7 @@ namespace Kaitai
             /// element name, represented as an index into the string_ids section.
             /// The string must conform to the syntax for MemberName, defined above.
             /// </summary>
-            public Uleb128 NameIdx { get { return _nameIdx; } }
+            public VlqBase128Le NameIdx { get { return _nameIdx; } }
 
             /// <summary>
             /// element value
@@ -630,11 +636,11 @@ namespace Kaitai
             }
             private void _read()
             {
-                _fieldIdxDiff = new Uleb128(m_io, this, m_root);
-                _accessFlags = new Uleb128(m_io, this, m_root);
+                _fieldIdxDiff = new VlqBase128Le(m_io);
+                _accessFlags = new VlqBase128Le(m_io);
             }
-            private Uleb128 _fieldIdxDiff;
-            private Uleb128 _accessFlags;
+            private VlqBase128Le _fieldIdxDiff;
+            private VlqBase128Le _accessFlags;
             private Dex m_root;
             private Dex.ClassDataItem m_parent;
 
@@ -642,13 +648,13 @@ namespace Kaitai
             /// index into the field_ids list for the identity of this field (includes the name and descriptor), represented as a difference from the index of previous element in the list.
             /// The index of the first element in a list is represented directly.
             /// </summary>
-            public Uleb128 FieldIdxDiff { get { return _fieldIdxDiff; } }
+            public VlqBase128Le FieldIdxDiff { get { return _fieldIdxDiff; } }
 
             /// <summary>
             /// access flags for the field (public, final, etc.).
             /// See &quot;access_flags Definitions&quot; for details.
             /// </summary>
-            public Uleb128 AccessFlags { get { return _accessFlags; } }
+            public VlqBase128Le AccessFlags { get { return _accessFlags; } }
             public Dex M_Root { get { return m_root; } }
             public Dex.ClassDataItem M_Parent { get { return m_parent; } }
         }
@@ -691,10 +697,10 @@ namespace Kaitai
             }
             private void _read()
             {
-                _staticFieldsSize = new Uleb128(m_io, this, m_root);
-                _instanceFieldsSize = new Uleb128(m_io, this, m_root);
-                _directMethodsSize = new Uleb128(m_io, this, m_root);
-                _virtualMethodsSize = new Uleb128(m_io, this, m_root);
+                _staticFieldsSize = new VlqBase128Le(m_io);
+                _instanceFieldsSize = new VlqBase128Le(m_io);
+                _directMethodsSize = new VlqBase128Le(m_io);
+                _virtualMethodsSize = new VlqBase128Le(m_io);
                 _staticFields = new List<EncodedField>((int) (StaticFieldsSize.Value));
                 for (var i = 0; i < StaticFieldsSize.Value; i++)
                 {
@@ -716,10 +722,10 @@ namespace Kaitai
                     _virtualMethods.Add(new EncodedMethod(m_io, this, m_root));
                 }
             }
-            private Uleb128 _staticFieldsSize;
-            private Uleb128 _instanceFieldsSize;
-            private Uleb128 _directMethodsSize;
-            private Uleb128 _virtualMethodsSize;
+            private VlqBase128Le _staticFieldsSize;
+            private VlqBase128Le _instanceFieldsSize;
+            private VlqBase128Le _directMethodsSize;
+            private VlqBase128Le _virtualMethodsSize;
             private List<EncodedField> _staticFields;
             private List<EncodedField> _instanceFields;
             private List<EncodedMethod> _directMethods;
@@ -730,22 +736,22 @@ namespace Kaitai
             /// <summary>
             /// the number of static fields defined in this item
             /// </summary>
-            public Uleb128 StaticFieldsSize { get { return _staticFieldsSize; } }
+            public VlqBase128Le StaticFieldsSize { get { return _staticFieldsSize; } }
 
             /// <summary>
             /// the number of instance fields defined in this item
             /// </summary>
-            public Uleb128 InstanceFieldsSize { get { return _instanceFieldsSize; } }
+            public VlqBase128Le InstanceFieldsSize { get { return _instanceFieldsSize; } }
 
             /// <summary>
             /// the number of direct methods defined in this item
             /// </summary>
-            public Uleb128 DirectMethodsSize { get { return _directMethodsSize; } }
+            public VlqBase128Le DirectMethodsSize { get { return _directMethodsSize; } }
 
             /// <summary>
             /// the number of virtual methods defined in this item
             /// </summary>
-            public Uleb128 VirtualMethodsSize { get { return _virtualMethodsSize; } }
+            public VlqBase128Le VirtualMethodsSize { get { return _virtualMethodsSize; } }
 
             /// <summary>
             /// the defined static fields, represented as a sequence of encoded elements.
@@ -786,6 +792,9 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_className = false;
+                f_typeName = false;
+                f_fieldName = false;
                 _read();
             }
             private void _read()
@@ -793,6 +802,57 @@ namespace Kaitai
                 _classIdx = m_io.ReadU2le();
                 _typeIdx = m_io.ReadU2le();
                 _nameIdx = m_io.ReadU4le();
+            }
+            private bool f_className;
+            private string _className;
+
+            /// <summary>
+            /// the definer of this field
+            /// </summary>
+            public string ClassName
+            {
+                get
+                {
+                    if (f_className)
+                        return _className;
+                    _className = (string) (M_Root.TypeIds[ClassIdx].TypeName);
+                    f_className = true;
+                    return _className;
+                }
+            }
+            private bool f_typeName;
+            private string _typeName;
+
+            /// <summary>
+            /// the type of this field
+            /// </summary>
+            public string TypeName
+            {
+                get
+                {
+                    if (f_typeName)
+                        return _typeName;
+                    _typeName = (string) (M_Root.TypeIds[TypeIdx].TypeName);
+                    f_typeName = true;
+                    return _typeName;
+                }
+            }
+            private bool f_fieldName;
+            private string _fieldName;
+
+            /// <summary>
+            /// the name of this field
+            /// </summary>
+            public string FieldName
+            {
+                get
+                {
+                    if (f_fieldName)
+                        return _fieldName;
+                    _fieldName = (string) (M_Root.StringIds[NameIdx].Value.Data);
+                    f_fieldName = true;
+                    return _fieldName;
+                }
             }
             private ushort _classIdx;
             private ushort _typeIdx;
@@ -832,16 +892,16 @@ namespace Kaitai
             }
             private void _read()
             {
-                _typeIdx = new Uleb128(m_io, this, m_root);
-                _size = new Uleb128(m_io, this, m_root);
+                _typeIdx = new VlqBase128Le(m_io);
+                _size = new VlqBase128Le(m_io);
                 _elements = new List<AnnotationElement>((int) (Size.Value));
                 for (var i = 0; i < Size.Value; i++)
                 {
                     _elements.Add(new AnnotationElement(m_io, this, m_root));
                 }
             }
-            private Uleb128 _typeIdx;
-            private Uleb128 _size;
+            private VlqBase128Le _typeIdx;
+            private VlqBase128Le _size;
             private List<AnnotationElement> _elements;
             private Dex m_root;
             private Dex.EncodedValue m_parent;
@@ -850,12 +910,12 @@ namespace Kaitai
             /// type of the annotation.
             /// This must be a class (not array or primitive) type.
             /// </summary>
-            public Uleb128 TypeIdx { get { return _typeIdx; } }
+            public VlqBase128Le TypeIdx { get { return _typeIdx; } }
 
             /// <summary>
             /// number of name-value mappings in this annotation
             /// </summary>
-            public Uleb128 Size { get { return _size; } }
+            public VlqBase128Le Size { get { return _size; } }
 
             /// <summary>
             /// elements of the annotation, represented directly in-line (not as offsets).
@@ -1006,6 +1066,37 @@ namespace Kaitai
             public Dex M_Root { get { return m_root; } }
             public Dex M_Parent { get { return m_parent; } }
         }
+        public partial class TypeList : KaitaiStruct
+        {
+            public static TypeList FromFile(string fileName)
+            {
+                return new TypeList(new KaitaiStream(fileName));
+            }
+
+            public TypeList(KaitaiStream p__io, Dex.ProtoIdItem p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _size = m_io.ReadU4le();
+                _list = new List<TypeItem>((int) (Size));
+                for (var i = 0; i < Size; i++)
+                {
+                    _list.Add(new TypeItem(m_io, this, m_root));
+                }
+            }
+            private uint _size;
+            private List<TypeItem> _list;
+            private Dex m_root;
+            private Dex.ProtoIdItem m_parent;
+            public uint Size { get { return _size; } }
+            public List<TypeItem> List { get { return _list; } }
+            public Dex M_Root { get { return m_root; } }
+            public Dex.ProtoIdItem M_Parent { get { return m_parent; } }
+        }
         public partial class StringIdItem : KaitaiStruct
         {
             public static StringIdItem FromFile(string fileName)
@@ -1039,14 +1130,14 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _utf16Size = new Uleb128(m_io, this, m_root);
+                    _utf16Size = new VlqBase128Le(m_io);
                     _data = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(Utf16Size.Value));
                 }
-                private Uleb128 _utf16Size;
+                private VlqBase128Le _utf16Size;
                 private string _data;
                 private Dex m_root;
                 private Dex.StringIdItem m_parent;
-                public Uleb128 Utf16Size { get { return _utf16Size; } }
+                public VlqBase128Le Utf16Size { get { return _utf16Size; } }
                 public string Data { get { return _data; } }
                 public Dex M_Root { get { return m_root; } }
                 public Dex.StringIdItem M_Parent { get { return m_parent; } }
@@ -1089,6 +1180,9 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_shortyDesc = false;
+                f_paramsTypes = false;
+                f_returnType = false;
                 _read();
             }
             private void _read()
@@ -1096,6 +1190,63 @@ namespace Kaitai
                 _shortyIdx = m_io.ReadU4le();
                 _returnTypeIdx = m_io.ReadU4le();
                 _parametersOff = m_io.ReadU4le();
+            }
+            private bool f_shortyDesc;
+            private string _shortyDesc;
+
+            /// <summary>
+            /// short-form descriptor string of this prototype, as pointed to by shorty_idx
+            /// </summary>
+            public string ShortyDesc
+            {
+                get
+                {
+                    if (f_shortyDesc)
+                        return _shortyDesc;
+                    _shortyDesc = (string) (M_Root.StringIds[ShortyIdx].Value.Data);
+                    f_shortyDesc = true;
+                    return _shortyDesc;
+                }
+            }
+            private bool f_paramsTypes;
+            private TypeList _paramsTypes;
+
+            /// <summary>
+            /// list of parameter types for this prototype
+            /// </summary>
+            public TypeList ParamsTypes
+            {
+                get
+                {
+                    if (f_paramsTypes)
+                        return _paramsTypes;
+                    if (ParametersOff != 0) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(ParametersOff);
+                        _paramsTypes = new TypeList(io, this, m_root);
+                        io.Seek(_pos);
+                    }
+                    f_paramsTypes = true;
+                    return _paramsTypes;
+                }
+            }
+            private bool f_returnType;
+            private string _returnType;
+
+            /// <summary>
+            /// return type of this prototype
+            /// </summary>
+            public string ReturnType
+            {
+                get
+                {
+                    if (f_returnType)
+                        return _returnType;
+                    _returnType = (string) (M_Root.TypeIds[ReturnTypeIdx].TypeName);
+                    f_returnType = true;
+                    return _returnType;
+                }
             }
             private uint _shortyIdx;
             private uint _returnTypeIdx;
@@ -1135,13 +1286,13 @@ namespace Kaitai
             }
             private void _read()
             {
-                _methodIdxDiff = new Uleb128(m_io, this, m_root);
-                _accessFlags = new Uleb128(m_io, this, m_root);
-                _codeOff = new Uleb128(m_io, this, m_root);
+                _methodIdxDiff = new VlqBase128Le(m_io);
+                _accessFlags = new VlqBase128Le(m_io);
+                _codeOff = new VlqBase128Le(m_io);
             }
-            private Uleb128 _methodIdxDiff;
-            private Uleb128 _accessFlags;
-            private Uleb128 _codeOff;
+            private VlqBase128Le _methodIdxDiff;
+            private VlqBase128Le _accessFlags;
+            private VlqBase128Le _codeOff;
             private Dex m_root;
             private Dex.ClassDataItem m_parent;
 
@@ -1149,20 +1300,20 @@ namespace Kaitai
             /// index into the method_ids list for the identity of this method (includes the name and descriptor), represented as a difference from the index of previous element in the list.
             /// The index of the first element in a list is represented directly.
             /// </summary>
-            public Uleb128 MethodIdxDiff { get { return _methodIdxDiff; } }
+            public VlqBase128Le MethodIdxDiff { get { return _methodIdxDiff; } }
 
             /// <summary>
             /// access flags for the field (public, final, etc.).
             /// See &quot;access_flags Definitions&quot; for details.
             /// </summary>
-            public Uleb128 AccessFlags { get { return _accessFlags; } }
+            public VlqBase128Le AccessFlags { get { return _accessFlags; } }
 
             /// <summary>
             /// offset from the start of the file to the code structure for this method, or 0 if this method is either abstract or native.
             /// The offset should be to a location in the data section.
             /// The format of the data is specified by &quot;code_item&quot; below.
             /// </summary>
-            public Uleb128 CodeOff { get { return _codeOff; } }
+            public VlqBase128Le CodeOff { get { return _codeOff; } }
             public Dex M_Root { get { return m_root; } }
             public Dex.ClassDataItem M_Parent { get { return m_parent; } }
         }
@@ -1254,18 +1405,18 @@ namespace Kaitai
             }
             private void _read()
             {
-                _size = new Uleb128(m_io, this, m_root);
+                _size = new VlqBase128Le(m_io);
                 _values = new List<EncodedValue>((int) (Size.Value));
                 for (var i = 0; i < Size.Value; i++)
                 {
                     _values.Add(new EncodedValue(m_io, this, m_root));
                 }
             }
-            private Uleb128 _size;
+            private VlqBase128Le _size;
             private List<EncodedValue> _values;
             private Dex m_root;
             private KaitaiStruct m_parent;
-            public Uleb128 Size { get { return _size; } }
+            public VlqBase128Le Size { get { return _size; } }
             public List<EncodedValue> Values { get { return _values; } }
             public Dex M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }

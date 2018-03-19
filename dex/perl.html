@@ -221,6 +221,7 @@ use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
 use Encode;
+use VlqBase128Le;
 
 ########################################################################
 package Dex;
@@ -419,8 +420,7 @@ sub _read {
     my ($self) = @_;
 
     $self-&gt;{magic} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (100, 101, 120, 10)));
-    $self-&gt;{version_str} = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes(3));
-    $self-&gt;{magic2} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (0)));
+    $self-&gt;{version_str} = Encode::decode(&quot;ascii&quot;, IO::KaitaiStruct::Stream::bytes_terminate($self-&gt;{_io}-&gt;read_bytes(4), 0, 0));
     $self-&gt;{checksum} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{signature} = $self-&gt;{_io}-&gt;read_bytes(20);
     $self-&gt;{file_size} = $self-&gt;{_io}-&gt;read_u4le();
@@ -453,11 +453,6 @@ sub magic {
 sub version_str {
     my ($self) = @_;
     return $self-&gt;{version_str};
-}
-
-sub magic2 {
-    my ($self) = @_;
-    return $self-&gt;{magic2};
 }
 
 sub checksum {
@@ -809,6 +804,27 @@ sub _read {
     $self-&gt;{name_idx} = $self-&gt;{_io}-&gt;read_u4le();
 }
 
+sub class_name {
+    my ($self) = @_;
+    return $self-&gt;{class_name} if ($self-&gt;{class_name});
+    $self-&gt;{class_name} = @{$self-&gt;_root()-&gt;type_ids()}[$self-&gt;class_idx()]-&gt;type_name();
+    return $self-&gt;{class_name};
+}
+
+sub proto_desc {
+    my ($self) = @_;
+    return $self-&gt;{proto_desc} if ($self-&gt;{proto_desc});
+    $self-&gt;{proto_desc} = @{$self-&gt;_root()-&gt;proto_ids()}[$self-&gt;proto_idx()]-&gt;shorty_desc();
+    return $self-&gt;{proto_desc};
+}
+
+sub method_name {
+    my ($self) = @_;
+    return $self-&gt;{method_name} if ($self-&gt;{method_name});
+    $self-&gt;{method_name} = @{$self-&gt;_root()-&gt;string_ids()}[$self-&gt;name_idx()]-&gt;value()-&gt;data();
+    return $self-&gt;{method_name};
+}
+
 sub class_idx {
     my ($self) = @_;
     return $self-&gt;{class_idx};
@@ -825,7 +841,7 @@ sub name_idx {
 }
 
 ########################################################################
-package Dex::Uleb128;
+package Dex::TypeItem;
 
 our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
 
@@ -854,91 +870,19 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{b1} = $self-&gt;{_io}-&gt;read_u1();
-    if (($self-&gt;b1() &amp; 128) != 0) {
-        $self-&gt;{b2} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    if (($self-&gt;b2() &amp; 128) != 0) {
-        $self-&gt;{b3} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    if (($self-&gt;b3() &amp; 128) != 0) {
-        $self-&gt;{b4} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    if (($self-&gt;b4() &amp; 128) != 0) {
-        $self-&gt;{b5} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    if (($self-&gt;b5() &amp; 128) != 0) {
-        $self-&gt;{b6} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    if (($self-&gt;b6() &amp; 128) != 0) {
-        $self-&gt;{b7} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    if (($self-&gt;b7() &amp; 128) != 0) {
-        $self-&gt;{b8} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    if (($self-&gt;b8() &amp; 128) != 0) {
-        $self-&gt;{b9} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    if (($self-&gt;b9() &amp; 128) != 0) {
-        $self-&gt;{b10} = $self-&gt;{_io}-&gt;read_u1();
-    }
+    $self-&gt;{type_idx} = $self-&gt;{_io}-&gt;read_u2le();
 }
 
 sub value {
     my ($self) = @_;
     return $self-&gt;{value} if ($self-&gt;{value});
-    $self-&gt;{value} = ((($self-&gt;b1() % 128) &lt;&lt; 0) + (($self-&gt;b1() &amp; 128) == 0 ? 0 : ((($self-&gt;b2() % 128) &lt;&lt; 7) + (($self-&gt;b2() &amp; 128) == 0 ? 0 : ((($self-&gt;b3() % 128) &lt;&lt; 14) + (($self-&gt;b3() &amp; 128) == 0 ? 0 : ((($self-&gt;b4() % 128) &lt;&lt; 21) + (($self-&gt;b4() &amp; 128) == 0 ? 0 : ((($self-&gt;b5() % 128) &lt;&lt; 28) + (($self-&gt;b5() &amp; 128) == 0 ? 0 : ((($self-&gt;b6() % 128) &lt;&lt; 35) + (($self-&gt;b6() &amp; 128) == 0 ? 0 : ((($self-&gt;b7() % 128) &lt;&lt; 42) + (($self-&gt;b7() &amp; 128) == 0 ? 0 : ((($self-&gt;b8() % 128) &lt;&lt; 49) + (($self-&gt;b8() &amp; 128) == 0 ? 0 : ((($self-&gt;b9() % 128) &lt;&lt; 56) + (($self-&gt;b8() &amp; 128) == 0 ? 0 : (($self-&gt;b10() % 128) &lt;&lt; 63)))))))))))))))))));
+    $self-&gt;{value} = @{$self-&gt;_root()-&gt;type_ids()}[$self-&gt;type_idx()]-&gt;type_name();
     return $self-&gt;{value};
 }
 
-sub b1 {
+sub type_idx {
     my ($self) = @_;
-    return $self-&gt;{b1};
-}
-
-sub b2 {
-    my ($self) = @_;
-    return $self-&gt;{b2};
-}
-
-sub b3 {
-    my ($self) = @_;
-    return $self-&gt;{b3};
-}
-
-sub b4 {
-    my ($self) = @_;
-    return $self-&gt;{b4};
-}
-
-sub b5 {
-    my ($self) = @_;
-    return $self-&gt;{b5};
-}
-
-sub b6 {
-    my ($self) = @_;
-    return $self-&gt;{b6};
-}
-
-sub b7 {
-    my ($self) = @_;
-    return $self-&gt;{b7};
-}
-
-sub b8 {
-    my ($self) = @_;
-    return $self-&gt;{b8};
-}
-
-sub b9 {
-    my ($self) = @_;
-    return $self-&gt;{b9};
-}
-
-sub b10 {
-    my ($self) = @_;
-    return $self-&gt;{b10};
+    return $self-&gt;{type_idx};
 }
 
 ########################################################################
@@ -1016,7 +960,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{name_idx} = Dex::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{name_idx} = VlqBase128Le-&gt;new($self-&gt;{_io});
     $self-&gt;{value} = Dex::EncodedValue-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
 }
 
@@ -1060,8 +1004,8 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{field_idx_diff} = Dex::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{access_flags} = Dex::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{field_idx_diff} = VlqBase128Le-&gt;new($self-&gt;{_io});
+    $self-&gt;{access_flags} = VlqBase128Le-&gt;new($self-&gt;{_io});
 }
 
 sub field_idx_diff {
@@ -1142,10 +1086,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{static_fields_size} = Dex::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{instance_fields_size} = Dex::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{direct_methods_size} = Dex::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{virtual_methods_size} = Dex::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{static_fields_size} = VlqBase128Le-&gt;new($self-&gt;{_io});
+    $self-&gt;{instance_fields_size} = VlqBase128Le-&gt;new($self-&gt;{_io});
+    $self-&gt;{direct_methods_size} = VlqBase128Le-&gt;new($self-&gt;{_io});
+    $self-&gt;{virtual_methods_size} = VlqBase128Le-&gt;new($self-&gt;{_io});
     $self-&gt;{static_fields} = ();
     my $n_static_fields = $self-&gt;static_fields_size()-&gt;value();
     for (my $i = 0; $i &lt; $n_static_fields; $i++) {
@@ -1243,6 +1187,27 @@ sub _read {
     $self-&gt;{name_idx} = $self-&gt;{_io}-&gt;read_u4le();
 }
 
+sub class_name {
+    my ($self) = @_;
+    return $self-&gt;{class_name} if ($self-&gt;{class_name});
+    $self-&gt;{class_name} = @{$self-&gt;_root()-&gt;type_ids()}[$self-&gt;class_idx()]-&gt;type_name();
+    return $self-&gt;{class_name};
+}
+
+sub type_name {
+    my ($self) = @_;
+    return $self-&gt;{type_name} if ($self-&gt;{type_name});
+    $self-&gt;{type_name} = @{$self-&gt;_root()-&gt;type_ids()}[$self-&gt;type_idx()]-&gt;type_name();
+    return $self-&gt;{type_name};
+}
+
+sub field_name {
+    my ($self) = @_;
+    return $self-&gt;{field_name} if ($self-&gt;{field_name});
+    $self-&gt;{field_name} = @{$self-&gt;_root()-&gt;string_ids()}[$self-&gt;name_idx()]-&gt;value()-&gt;data();
+    return $self-&gt;{field_name};
+}
+
 sub class_idx {
     my ($self) = @_;
     return $self-&gt;{class_idx};
@@ -1288,8 +1253,8 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{type_idx} = Dex::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{size} = Dex::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{type_idx} = VlqBase128Le-&gt;new($self-&gt;{_io});
+    $self-&gt;{size} = VlqBase128Le-&gt;new($self-&gt;{_io});
     $self-&gt;{elements} = ();
     my $n_elements = $self-&gt;size()-&gt;value();
     for (my $i = 0; $i &lt; $n_elements; $i++) {
@@ -1424,6 +1389,54 @@ sub static_values_off {
 }
 
 ########################################################################
+package Dex::TypeList;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{size} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{list} = ();
+    my $n_list = $self-&gt;size();
+    for (my $i = 0; $i &lt; $n_list; $i++) {
+        $self-&gt;{list}[$i] = Dex::TypeItem-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub size {
+    my ($self) = @_;
+    return $self-&gt;{size};
+}
+
+sub list {
+    my ($self) = @_;
+    return $self-&gt;{list};
+}
+
+########################################################################
 package Dex::StringIdItem;
 
 our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
@@ -1501,7 +1514,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{utf16_size} = Dex::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{utf16_size} = VlqBase128Le-&gt;new($self-&gt;{_io});
     $self-&gt;{data} = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;utf16_size()-&gt;value()));
 }
 
@@ -1550,6 +1563,33 @@ sub _read {
     $self-&gt;{parameters_off} = $self-&gt;{_io}-&gt;read_u4le();
 }
 
+sub shorty_desc {
+    my ($self) = @_;
+    return $self-&gt;{shorty_desc} if ($self-&gt;{shorty_desc});
+    $self-&gt;{shorty_desc} = @{$self-&gt;_root()-&gt;string_ids()}[$self-&gt;shorty_idx()]-&gt;value()-&gt;data();
+    return $self-&gt;{shorty_desc};
+}
+
+sub params_types {
+    my ($self) = @_;
+    return $self-&gt;{params_types} if ($self-&gt;{params_types});
+    if ($self-&gt;parameters_off() != 0) {
+        my $io = $self-&gt;_root()-&gt;_io();
+        my $_pos = $io-&gt;pos();
+        $io-&gt;seek($self-&gt;parameters_off());
+        $self-&gt;{params_types} = Dex::TypeList-&gt;new($io, $self, $self-&gt;{_root});
+        $io-&gt;seek($_pos);
+    }
+    return $self-&gt;{params_types};
+}
+
+sub return_type {
+    my ($self) = @_;
+    return $self-&gt;{return_type} if ($self-&gt;{return_type});
+    $self-&gt;{return_type} = @{$self-&gt;_root()-&gt;type_ids()}[$self-&gt;return_type_idx()]-&gt;type_name();
+    return $self-&gt;{return_type};
+}
+
 sub shorty_idx {
     my ($self) = @_;
     return $self-&gt;{shorty_idx};
@@ -1595,9 +1635,9 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{method_idx_diff} = Dex::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{access_flags} = Dex::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{code_off} = Dex::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{method_idx_diff} = VlqBase128Le-&gt;new($self-&gt;{_io});
+    $self-&gt;{access_flags} = VlqBase128Le-&gt;new($self-&gt;{_io});
+    $self-&gt;{code_off} = VlqBase128Le-&gt;new($self-&gt;{_io});
 }
 
 sub method_idx_diff {
@@ -1722,7 +1762,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{size} = Dex::Uleb128-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{size} = VlqBase128Le-&gt;new($self-&gt;{_io});
     $self-&gt;{values} = ();
     my $n_values = $self-&gt;size()-&gt;value();
     for (my $i = 0; $i &lt; $n_values; $i++) {

@@ -404,8 +404,7 @@ class HeaderItem extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this-&gt;_m_magic = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x64\x65\x78\x0A&quot;);
-        $this-&gt;_m_versionStr = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(3), &quot;ascii&quot;);
-        $this-&gt;_m_magic2 = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00&quot;);
+        $this-&gt;_m_versionStr = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this-&gt;_io-&gt;readBytes(4), 0, false), &quot;ascii&quot;);
         $this-&gt;_m_checksum = $this-&gt;_io-&gt;readU4le();
         $this-&gt;_m_signature = $this-&gt;_io-&gt;readBytes(20);
         $this-&gt;_m_fileSize = $this-&gt;_io-&gt;readU4le();
@@ -431,7 +430,6 @@ class HeaderItem extends \Kaitai\Struct\Struct {
     }
     protected $_m_magic;
     protected $_m_versionStr;
-    protected $_m_magic2;
     protected $_m_checksum;
     protected $_m_signature;
     protected $_m_fileSize;
@@ -456,7 +454,6 @@ class HeaderItem extends \Kaitai\Struct\Struct {
     protected $_m_dataOff;
     public function magic() { return $this-&gt;_m_magic; }
     public function versionStr() { return $this-&gt;_m_versionStr; }
-    public function magic2() { return $this-&gt;_m_magic2; }
 
     /**
      * adler32 checksum of the rest of the file (everything but magic and this field);  used to detect file corruption
@@ -721,6 +718,39 @@ class MethodIdItem extends \Kaitai\Struct\Struct {
         $this-&gt;_m_protoIdx = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_nameIdx = $this-&gt;_io-&gt;readU4le();
     }
+    protected $_m_className;
+
+    /**
+     * the definer of this method
+     */
+    public function className() {
+        if ($this-&gt;_m_className !== null)
+            return $this-&gt;_m_className;
+        $this-&gt;_m_className = $this-&gt;_root()-&gt;typeIds()[$this-&gt;classIdx()]-&gt;typeName();
+        return $this-&gt;_m_className;
+    }
+    protected $_m_protoDesc;
+
+    /**
+     * the short-form descriptor of the prototype of this method
+     */
+    public function protoDesc() {
+        if ($this-&gt;_m_protoDesc !== null)
+            return $this-&gt;_m_protoDesc;
+        $this-&gt;_m_protoDesc = $this-&gt;_root()-&gt;protoIds()[$this-&gt;protoIdx()]-&gt;shortyDesc();
+        return $this-&gt;_m_protoDesc;
+    }
+    protected $_m_methodName;
+
+    /**
+     * the name of this method
+     */
+    public function methodName() {
+        if ($this-&gt;_m_methodName !== null)
+            return $this-&gt;_m_methodName;
+        $this-&gt;_m_methodName = $this-&gt;_root()-&gt;stringIds()[$this-&gt;nameIdx()]-&gt;value()-&gt;data();
+        return $this-&gt;_m_methodName;
+    }
     protected $_m_classIdx;
     protected $_m_protoIdx;
     protected $_m_nameIdx;
@@ -743,69 +773,24 @@ class MethodIdItem extends \Kaitai\Struct\Struct {
 
 namespace \Dex;
 
-class Uleb128 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Dex $_root = null) {
+class TypeItem extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Dex\TypeList $_parent = null, \Dex $_root = null) {
         parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
 
     private function _read() {
-        $this-&gt;_m_b1 = $this-&gt;_io-&gt;readU1();
-        if (($this-&gt;b1() &amp; 128) != 0) {
-            $this-&gt;_m_b2 = $this-&gt;_io-&gt;readU1();
-        }
-        if (($this-&gt;b2() &amp; 128) != 0) {
-            $this-&gt;_m_b3 = $this-&gt;_io-&gt;readU1();
-        }
-        if (($this-&gt;b3() &amp; 128) != 0) {
-            $this-&gt;_m_b4 = $this-&gt;_io-&gt;readU1();
-        }
-        if (($this-&gt;b4() &amp; 128) != 0) {
-            $this-&gt;_m_b5 = $this-&gt;_io-&gt;readU1();
-        }
-        if (($this-&gt;b5() &amp; 128) != 0) {
-            $this-&gt;_m_b6 = $this-&gt;_io-&gt;readU1();
-        }
-        if (($this-&gt;b6() &amp; 128) != 0) {
-            $this-&gt;_m_b7 = $this-&gt;_io-&gt;readU1();
-        }
-        if (($this-&gt;b7() &amp; 128) != 0) {
-            $this-&gt;_m_b8 = $this-&gt;_io-&gt;readU1();
-        }
-        if (($this-&gt;b8() &amp; 128) != 0) {
-            $this-&gt;_m_b9 = $this-&gt;_io-&gt;readU1();
-        }
-        if (($this-&gt;b9() &amp; 128) != 0) {
-            $this-&gt;_m_b10 = $this-&gt;_io-&gt;readU1();
-        }
+        $this-&gt;_m_typeIdx = $this-&gt;_io-&gt;readU2le();
     }
     protected $_m_value;
     public function value() {
         if ($this-&gt;_m_value !== null)
             return $this-&gt;_m_value;
-        $this-&gt;_m_value = ((\Kaitai\Struct\Stream::mod($this-&gt;b1(), 128) &lt;&lt; 0) + (($this-&gt;b1() &amp; 128) == 0 ? 0 : ((\Kaitai\Struct\Stream::mod($this-&gt;b2(), 128) &lt;&lt; 7) + (($this-&gt;b2() &amp; 128) == 0 ? 0 : ((\Kaitai\Struct\Stream::mod($this-&gt;b3(), 128) &lt;&lt; 14) + (($this-&gt;b3() &amp; 128) == 0 ? 0 : ((\Kaitai\Struct\Stream::mod($this-&gt;b4(), 128) &lt;&lt; 21) + (($this-&gt;b4() &amp; 128) == 0 ? 0 : ((\Kaitai\Struct\Stream::mod($this-&gt;b5(), 128) &lt;&lt; 28) + (($this-&gt;b5() &amp; 128) == 0 ? 0 : ((\Kaitai\Struct\Stream::mod($this-&gt;b6(), 128) &lt;&lt; 35) + (($this-&gt;b6() &amp; 128) == 0 ? 0 : ((\Kaitai\Struct\Stream::mod($this-&gt;b7(), 128) &lt;&lt; 42) + (($this-&gt;b7() &amp; 128) == 0 ? 0 : ((\Kaitai\Struct\Stream::mod($this-&gt;b8(), 128) &lt;&lt; 49) + (($this-&gt;b8() &amp; 128) == 0 ? 0 : ((\Kaitai\Struct\Stream::mod($this-&gt;b9(), 128) &lt;&lt; 56) + (($this-&gt;b8() &amp; 128) == 0 ? 0 : (\Kaitai\Struct\Stream::mod($this-&gt;b10(), 128) &lt;&lt; 63)))))))))))))))))));
+        $this-&gt;_m_value = $this-&gt;_root()-&gt;typeIds()[$this-&gt;typeIdx()]-&gt;typeName();
         return $this-&gt;_m_value;
     }
-    protected $_m_b1;
-    protected $_m_b2;
-    protected $_m_b3;
-    protected $_m_b4;
-    protected $_m_b5;
-    protected $_m_b6;
-    protected $_m_b7;
-    protected $_m_b8;
-    protected $_m_b9;
-    protected $_m_b10;
-    public function b1() { return $this-&gt;_m_b1; }
-    public function b2() { return $this-&gt;_m_b2; }
-    public function b3() { return $this-&gt;_m_b3; }
-    public function b4() { return $this-&gt;_m_b4; }
-    public function b5() { return $this-&gt;_m_b5; }
-    public function b6() { return $this-&gt;_m_b6; }
-    public function b7() { return $this-&gt;_m_b7; }
-    public function b8() { return $this-&gt;_m_b8; }
-    public function b9() { return $this-&gt;_m_b9; }
-    public function b10() { return $this-&gt;_m_b10; }
+    protected $_m_typeIdx;
+    public function typeIdx() { return $this-&gt;_m_typeIdx; }
 }
 
 namespace \Dex;
@@ -843,7 +828,7 @@ class AnnotationElement extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this-&gt;_m_nameIdx = new \Dex\Uleb128($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_nameIdx = new \VlqBase128Le($this-&gt;_io);
         $this-&gt;_m_value = new \Dex\EncodedValue($this-&gt;_io, $this, $this-&gt;_root);
     }
     protected $_m_nameIdx;
@@ -870,8 +855,8 @@ class EncodedField extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this-&gt;_m_fieldIdxDiff = new \Dex\Uleb128($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_accessFlags = new \Dex\Uleb128($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_fieldIdxDiff = new \VlqBase128Le($this-&gt;_io);
+        $this-&gt;_m_accessFlags = new \VlqBase128Le($this-&gt;_io);
     }
     protected $_m_fieldIdxDiff;
     protected $_m_accessFlags;
@@ -913,10 +898,10 @@ class ClassDataItem extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this-&gt;_m_staticFieldsSize = new \Dex\Uleb128($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_instanceFieldsSize = new \Dex\Uleb128($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_directMethodsSize = new \Dex\Uleb128($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_virtualMethodsSize = new \Dex\Uleb128($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_staticFieldsSize = new \VlqBase128Le($this-&gt;_io);
+        $this-&gt;_m_instanceFieldsSize = new \VlqBase128Le($this-&gt;_io);
+        $this-&gt;_m_directMethodsSize = new \VlqBase128Le($this-&gt;_io);
+        $this-&gt;_m_virtualMethodsSize = new \VlqBase128Le($this-&gt;_io);
         $this-&gt;_m_staticFields = [];
         $n = $this-&gt;staticFieldsSize()-&gt;value();
         for ($i = 0; $i &lt; $n; $i++) {
@@ -1007,6 +992,39 @@ class FieldIdItem extends \Kaitai\Struct\Struct {
         $this-&gt;_m_typeIdx = $this-&gt;_io-&gt;readU2le();
         $this-&gt;_m_nameIdx = $this-&gt;_io-&gt;readU4le();
     }
+    protected $_m_className;
+
+    /**
+     * the definer of this field
+     */
+    public function className() {
+        if ($this-&gt;_m_className !== null)
+            return $this-&gt;_m_className;
+        $this-&gt;_m_className = $this-&gt;_root()-&gt;typeIds()[$this-&gt;classIdx()]-&gt;typeName();
+        return $this-&gt;_m_className;
+    }
+    protected $_m_typeName;
+
+    /**
+     * the type of this field
+     */
+    public function typeName() {
+        if ($this-&gt;_m_typeName !== null)
+            return $this-&gt;_m_typeName;
+        $this-&gt;_m_typeName = $this-&gt;_root()-&gt;typeIds()[$this-&gt;typeIdx()]-&gt;typeName();
+        return $this-&gt;_m_typeName;
+    }
+    protected $_m_fieldName;
+
+    /**
+     * the name of this field
+     */
+    public function fieldName() {
+        if ($this-&gt;_m_fieldName !== null)
+            return $this-&gt;_m_fieldName;
+        $this-&gt;_m_fieldName = $this-&gt;_root()-&gt;stringIds()[$this-&gt;nameIdx()]-&gt;value()-&gt;data();
+        return $this-&gt;_m_fieldName;
+    }
     protected $_m_classIdx;
     protected $_m_typeIdx;
     protected $_m_nameIdx;
@@ -1036,8 +1054,8 @@ class EncodedAnnotation extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this-&gt;_m_typeIdx = new \Dex\Uleb128($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_size = new \Dex\Uleb128($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_typeIdx = new \VlqBase128Le($this-&gt;_io);
+        $this-&gt;_m_size = new \VlqBase128Le($this-&gt;_io);
         $this-&gt;_m_elements = [];
         $n = $this-&gt;size()-&gt;value();
         for ($i = 0; $i &lt; $n; $i++) {
@@ -1179,6 +1197,28 @@ class ClassDefItem extends \Kaitai\Struct\Struct {
 
 namespace \Dex;
 
+class TypeList extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Dex\ProtoIdItem $_parent = null, \Dex $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_size = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_list = [];
+        $n = $this-&gt;size();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_list[] = new \Dex\TypeItem($this-&gt;_io, $this, $this-&gt;_root);
+        }
+    }
+    protected $_m_size;
+    protected $_m_list;
+    public function size() { return $this-&gt;_m_size; }
+    public function list() { return $this-&gt;_m_list; }
+}
+
+namespace \Dex;
+
 class StringIdItem extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \Dex $_parent = null, \Dex $_root = null) {
         parent::__construct($_io, $_parent, $_root);
@@ -1215,7 +1255,7 @@ class StringDataItem extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this-&gt;_m_utf16Size = new \Dex\Uleb128($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_utf16Size = new \VlqBase128Le($this-&gt;_io);
         $this-&gt;_m_data = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;utf16Size()-&gt;value()), &quot;ascii&quot;);
     }
     protected $_m_utf16Size;
@@ -1236,6 +1276,45 @@ class ProtoIdItem extends \Kaitai\Struct\Struct {
         $this-&gt;_m_shortyIdx = $this-&gt;_io-&gt;readU4le();
         $this-&gt;_m_returnTypeIdx = $this-&gt;_io-&gt;readU4le();
         $this-&gt;_m_parametersOff = $this-&gt;_io-&gt;readU4le();
+    }
+    protected $_m_shortyDesc;
+
+    /**
+     * short-form descriptor string of this prototype, as pointed to by shorty_idx
+     */
+    public function shortyDesc() {
+        if ($this-&gt;_m_shortyDesc !== null)
+            return $this-&gt;_m_shortyDesc;
+        $this-&gt;_m_shortyDesc = $this-&gt;_root()-&gt;stringIds()[$this-&gt;shortyIdx()]-&gt;value()-&gt;data();
+        return $this-&gt;_m_shortyDesc;
+    }
+    protected $_m_paramsTypes;
+
+    /**
+     * list of parameter types for this prototype
+     */
+    public function paramsTypes() {
+        if ($this-&gt;_m_paramsTypes !== null)
+            return $this-&gt;_m_paramsTypes;
+        if ($this-&gt;parametersOff() != 0) {
+            $io = $this-&gt;_root()-&gt;_io();
+            $_pos = $io-&gt;pos();
+            $io-&gt;seek($this-&gt;parametersOff());
+            $this-&gt;_m_paramsTypes = new \Dex\TypeList($io, $this, $this-&gt;_root);
+            $io-&gt;seek($_pos);
+        }
+        return $this-&gt;_m_paramsTypes;
+    }
+    protected $_m_returnType;
+
+    /**
+     * return type of this prototype
+     */
+    public function returnType() {
+        if ($this-&gt;_m_returnType !== null)
+            return $this-&gt;_m_returnType;
+        $this-&gt;_m_returnType = $this-&gt;_root()-&gt;typeIds()[$this-&gt;returnTypeIdx()]-&gt;typeName();
+        return $this-&gt;_m_returnType;
     }
     protected $_m_shortyIdx;
     protected $_m_returnTypeIdx;
@@ -1266,9 +1345,9 @@ class EncodedMethod extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this-&gt;_m_methodIdxDiff = new \Dex\Uleb128($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_accessFlags = new \Dex\Uleb128($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_codeOff = new \Dex\Uleb128($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_methodIdxDiff = new \VlqBase128Le($this-&gt;_io);
+        $this-&gt;_m_accessFlags = new \VlqBase128Le($this-&gt;_io);
+        $this-&gt;_m_codeOff = new \VlqBase128Le($this-&gt;_io);
     }
     protected $_m_methodIdxDiff;
     protected $_m_accessFlags;
@@ -1368,7 +1447,7 @@ class EncodedArray extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this-&gt;_m_size = new \Dex\Uleb128($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_size = new \VlqBase128Le($this-&gt;_io);
         $this-&gt;_m_values = [];
         $n = $this-&gt;size()-&gt;value();
         for ($i = 0; $i &lt; $n; $i++) {

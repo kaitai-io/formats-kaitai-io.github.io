@@ -8,6 +8,7 @@ from enum import Enum
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
+from vlq_base128_le import VlqBase128Le
 class Dex(KaitaiStruct):
     """
     .. seealso::
@@ -47,8 +48,7 @@ class Dex(KaitaiStruct):
 
         def _read(self):
             self.magic = self._io.ensure_fixed_contents(b"\x64\x65\x78\x0A")
-            self.version_str = (self._io.read_bytes(3)).decode(u"ascii")
-            self.magic2 = self._io.ensure_fixed_contents(b"\x00")
+            self.version_str = (KaitaiStream.bytes_terminate(self._io.read_bytes(4), 0, False)).decode(u"ascii")
             self.checksum = self._io.read_u4le()
             self.signature = self._io.read_bytes(20)
             self.file_size = self._io.read_u4le()
@@ -177,8 +177,35 @@ class Dex(KaitaiStruct):
             self.proto_idx = self._io.read_u2le()
             self.name_idx = self._io.read_u4le()
 
+        @property
+        def class_name(self):
+            """the definer of this method."""
+            if hasattr(self, '_m_class_name'):
+                return self._m_class_name if hasattr(self, '_m_class_name') else None
 
-    class Uleb128(KaitaiStruct):
+            self._m_class_name = self._root.type_ids[self.class_idx].type_name
+            return self._m_class_name if hasattr(self, '_m_class_name') else None
+
+        @property
+        def proto_desc(self):
+            """the short-form descriptor of the prototype of this method."""
+            if hasattr(self, '_m_proto_desc'):
+                return self._m_proto_desc if hasattr(self, '_m_proto_desc') else None
+
+            self._m_proto_desc = self._root.proto_ids[self.proto_idx].shorty_desc
+            return self._m_proto_desc if hasattr(self, '_m_proto_desc') else None
+
+        @property
+        def method_name(self):
+            """the name of this method."""
+            if hasattr(self, '_m_method_name'):
+                return self._m_method_name if hasattr(self, '_m_method_name') else None
+
+            self._m_method_name = self._root.string_ids[self.name_idx].value.data
+            return self._m_method_name if hasattr(self, '_m_method_name') else None
+
+
+    class TypeItem(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -186,41 +213,14 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.b1 = self._io.read_u1()
-            if (self.b1 & 128) != 0:
-                self.b2 = self._io.read_u1()
-
-            if (self.b2 & 128) != 0:
-                self.b3 = self._io.read_u1()
-
-            if (self.b3 & 128) != 0:
-                self.b4 = self._io.read_u1()
-
-            if (self.b4 & 128) != 0:
-                self.b5 = self._io.read_u1()
-
-            if (self.b5 & 128) != 0:
-                self.b6 = self._io.read_u1()
-
-            if (self.b6 & 128) != 0:
-                self.b7 = self._io.read_u1()
-
-            if (self.b7 & 128) != 0:
-                self.b8 = self._io.read_u1()
-
-            if (self.b8 & 128) != 0:
-                self.b9 = self._io.read_u1()
-
-            if (self.b9 & 128) != 0:
-                self.b10 = self._io.read_u1()
-
+            self.type_idx = self._io.read_u2le()
 
         @property
         def value(self):
             if hasattr(self, '_m_value'):
                 return self._m_value if hasattr(self, '_m_value') else None
 
-            self._m_value = (((self.b1 % 128) << 0) + (0 if (self.b1 & 128) == 0 else (((self.b2 % 128) << 7) + (0 if (self.b2 & 128) == 0 else (((self.b3 % 128) << 14) + (0 if (self.b3 & 128) == 0 else (((self.b4 % 128) << 21) + (0 if (self.b4 & 128) == 0 else (((self.b5 % 128) << 28) + (0 if (self.b5 & 128) == 0 else (((self.b6 % 128) << 35) + (0 if (self.b6 & 128) == 0 else (((self.b7 % 128) << 42) + (0 if (self.b7 & 128) == 0 else (((self.b8 % 128) << 49) + (0 if (self.b8 & 128) == 0 else (((self.b9 % 128) << 56) + (0 if (self.b8 & 128) == 0 else ((self.b10 % 128) << 63)))))))))))))))))))
+            self._m_value = self._root.type_ids[self.type_idx].type_name
             return self._m_value if hasattr(self, '_m_value') else None
 
 
@@ -251,7 +251,7 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.name_idx = self._root.Uleb128(self._io, self, self._root)
+            self.name_idx = VlqBase128Le(self._io)
             self.value = self._root.EncodedValue(self._io, self, self._root)
 
 
@@ -263,8 +263,8 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.field_idx_diff = self._root.Uleb128(self._io, self, self._root)
-            self.access_flags = self._root.Uleb128(self._io, self, self._root)
+            self.field_idx_diff = VlqBase128Le(self._io)
+            self.access_flags = VlqBase128Le(self._io)
 
 
     class EncodedArrayItem(KaitaiStruct):
@@ -286,10 +286,10 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.static_fields_size = self._root.Uleb128(self._io, self, self._root)
-            self.instance_fields_size = self._root.Uleb128(self._io, self, self._root)
-            self.direct_methods_size = self._root.Uleb128(self._io, self, self._root)
-            self.virtual_methods_size = self._root.Uleb128(self._io, self, self._root)
+            self.static_fields_size = VlqBase128Le(self._io)
+            self.instance_fields_size = VlqBase128Le(self._io)
+            self.direct_methods_size = VlqBase128Le(self._io)
+            self.virtual_methods_size = VlqBase128Le(self._io)
             self.static_fields = [None] * (self.static_fields_size.value)
             for i in range(self.static_fields_size.value):
                 self.static_fields[i] = self._root.EncodedField(self._io, self, self._root)
@@ -320,6 +320,33 @@ class Dex(KaitaiStruct):
             self.type_idx = self._io.read_u2le()
             self.name_idx = self._io.read_u4le()
 
+        @property
+        def class_name(self):
+            """the definer of this field."""
+            if hasattr(self, '_m_class_name'):
+                return self._m_class_name if hasattr(self, '_m_class_name') else None
+
+            self._m_class_name = self._root.type_ids[self.class_idx].type_name
+            return self._m_class_name if hasattr(self, '_m_class_name') else None
+
+        @property
+        def type_name(self):
+            """the type of this field."""
+            if hasattr(self, '_m_type_name'):
+                return self._m_type_name if hasattr(self, '_m_type_name') else None
+
+            self._m_type_name = self._root.type_ids[self.type_idx].type_name
+            return self._m_type_name if hasattr(self, '_m_type_name') else None
+
+        @property
+        def field_name(self):
+            """the name of this field."""
+            if hasattr(self, '_m_field_name'):
+                return self._m_field_name if hasattr(self, '_m_field_name') else None
+
+            self._m_field_name = self._root.string_ids[self.name_idx].value.data
+            return self._m_field_name if hasattr(self, '_m_field_name') else None
+
 
     class EncodedAnnotation(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -329,8 +356,8 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.type_idx = self._root.Uleb128(self._io, self, self._root)
-            self.size = self._root.Uleb128(self._io, self, self._root)
+            self.type_idx = VlqBase128Le(self._io)
+            self.size = VlqBase128Le(self._io)
             self.elements = [None] * (self.size.value)
             for i in range(self.size.value):
                 self.elements[i] = self._root.AnnotationElement(self._io, self, self._root)
@@ -389,6 +416,21 @@ class Dex(KaitaiStruct):
             return self._m_static_values if hasattr(self, '_m_static_values') else None
 
 
+    class TypeList(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.size = self._io.read_u4le()
+            self.list = [None] * (self.size)
+            for i in range(self.size):
+                self.list[i] = self._root.TypeItem(self._io, self, self._root)
+
+
+
     class StringIdItem(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -407,7 +449,7 @@ class Dex(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.utf16_size = self._root.Uleb128(self._io, self, self._root)
+                self.utf16_size = VlqBase128Le(self._io)
                 self.data = (self._io.read_bytes(self.utf16_size.value)).decode(u"ascii")
 
 
@@ -435,6 +477,39 @@ class Dex(KaitaiStruct):
             self.return_type_idx = self._io.read_u4le()
             self.parameters_off = self._io.read_u4le()
 
+        @property
+        def shorty_desc(self):
+            """short-form descriptor string of this prototype, as pointed to by shorty_idx."""
+            if hasattr(self, '_m_shorty_desc'):
+                return self._m_shorty_desc if hasattr(self, '_m_shorty_desc') else None
+
+            self._m_shorty_desc = self._root.string_ids[self.shorty_idx].value.data
+            return self._m_shorty_desc if hasattr(self, '_m_shorty_desc') else None
+
+        @property
+        def params_types(self):
+            """list of parameter types for this prototype."""
+            if hasattr(self, '_m_params_types'):
+                return self._m_params_types if hasattr(self, '_m_params_types') else None
+
+            if self.parameters_off != 0:
+                io = self._root._io
+                _pos = io.pos()
+                io.seek(self.parameters_off)
+                self._m_params_types = self._root.TypeList(io, self, self._root)
+                io.seek(_pos)
+
+            return self._m_params_types if hasattr(self, '_m_params_types') else None
+
+        @property
+        def return_type(self):
+            """return type of this prototype."""
+            if hasattr(self, '_m_return_type'):
+                return self._m_return_type if hasattr(self, '_m_return_type') else None
+
+            self._m_return_type = self._root.type_ids[self.return_type_idx].type_name
+            return self._m_return_type if hasattr(self, '_m_return_type') else None
+
 
     class EncodedMethod(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -444,9 +519,9 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.method_idx_diff = self._root.Uleb128(self._io, self, self._root)
-            self.access_flags = self._root.Uleb128(self._io, self, self._root)
-            self.code_off = self._root.Uleb128(self._io, self, self._root)
+            self.method_idx_diff = VlqBase128Le(self._io)
+            self.access_flags = VlqBase128Le(self._io)
+            self.code_off = VlqBase128Le(self._io)
 
 
     class MapItem(KaitaiStruct):
@@ -493,7 +568,7 @@ class Dex(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.size = self._root.Uleb128(self._io, self, self._root)
+            self.size = VlqBase128Le(self._io)
             self.values = [None] * (self.size.value)
             for i in range(self.size.value):
                 self.values[i] = self._root.EncodedValue(self._io, self, self._root)
