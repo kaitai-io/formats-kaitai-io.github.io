@@ -126,6 +126,7 @@ public:
         uint16_t m_checksum;
         uint16_t m_identifier;
         uint16_t m_seq_num;
+        std::string m_data;
         icmp_packet_t* m__root;
         icmp_packet_t* m__parent;
 
@@ -134,6 +135,7 @@ public:
         uint16_t checksum() const { return m_checksum; }
         uint16_t identifier() const { return m_identifier; }
         uint16_t seq_num() const { return m_seq_num; }
+        std::string data() const { return m_data; }
         icmp_packet_t* _root() const { return m__root; }
         icmp_packet_t* _parent() const { return m__parent; }
     };

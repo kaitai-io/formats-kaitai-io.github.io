@@ -189,17 +189,20 @@ public class IcmpPacket extends KaitaiStruct {
             this.checksum = this._io.readU2be();
             this.identifier = this._io.readU2be();
             this.seqNum = this._io.readU2be();
+            this.data = this._io.readBytesFull();
         }
         private byte[] code;
         private int checksum;
         private int identifier;
         private int seqNum;
+        private byte[] data;
         private IcmpPacket _root;
         private IcmpPacket _parent;
         public byte[] code() { return code; }
         public int checksum() { return checksum; }
         public int identifier() { return identifier; }
         public int seqNum() { return seqNum; }
+        public byte[] data() { return data; }
         public IcmpPacket _root() { return _root; }
         public IcmpPacket _parent() { return _parent; }
     }

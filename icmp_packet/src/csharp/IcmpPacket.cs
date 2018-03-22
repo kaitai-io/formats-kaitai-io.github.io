@@ -139,17 +139,20 @@ namespace Kaitai
                 _checksum = m_io.ReadU2be();
                 _identifier = m_io.ReadU2be();
                 _seqNum = m_io.ReadU2be();
+                _data = m_io.ReadBytesFull();
             }
             private byte[] _code;
             private ushort _checksum;
             private ushort _identifier;
             private ushort _seqNum;
+            private byte[] _data;
             private IcmpPacket m_root;
             private IcmpPacket m_parent;
             public byte[] Code { get { return _code; } }
             public ushort Checksum { get { return _checksum; } }
             public ushort Identifier { get { return _identifier; } }
             public ushort SeqNum { get { return _seqNum; } }
+            public byte[] Data { get { return _data; } }
             public IcmpPacket M_Root { get { return m_root; } }
             public IcmpPacket M_Parent { get { return m_parent; } }
         }

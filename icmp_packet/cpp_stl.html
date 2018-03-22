@@ -392,6 +392,7 @@ public:
         uint16_t m_checksum;
         uint16_t m_identifier;
         uint16_t m_seq_num;
+        std::string m_data;
         icmp_packet_t* m__root;
         icmp_packet_t* m__parent;
 
@@ -400,6 +401,7 @@ public:
         uint16_t checksum() const { return m_checksum; }
         uint16_t identifier() const { return m_identifier; }
         uint16_t seq_num() const { return m_seq_num; }
+        std::string data() const { return m_data; }
         icmp_packet_t* _root() const { return m__root; }
         icmp_packet_t* _parent() const { return m__parent; }
     };
@@ -538,6 +540,7 @@ void icmp_packet_t::echo_msg_t::_read() {
     m_checksum = m__io-&gt;read_u2be();
     m_identifier = m__io-&gt;read_u2be();
     m_seq_num = m__io-&gt;read_u2be();
+    m_data = m__io-&gt;read_bytes_full();
 }
 
 icmp_packet_t::echo_msg_t::~echo_msg_t() {

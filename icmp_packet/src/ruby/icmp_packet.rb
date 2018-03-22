@@ -100,12 +100,14 @@ class IcmpPacket < Kaitai::Struct::Struct
       @checksum = @_io.read_u2be
       @identifier = @_io.read_u2be
       @seq_num = @_io.read_u2be
+      @data = @_io.read_bytes_full
       self
     end
     attr_reader :code
     attr_reader :checksum
     attr_reader :identifier
     attr_reader :seq_num
+    attr_reader :data
   end
   attr_reader :icmp_type
   attr_reader :destination_unreachable

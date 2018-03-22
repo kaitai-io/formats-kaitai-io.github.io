@@ -80,6 +80,7 @@ void icmp_packet_t::echo_msg_t::_read() {
     m_checksum = m__io->read_u2be();
     m_identifier = m__io->read_u2be();
     m_seq_num = m__io->read_u2be();
+    m_data = m__io->read_bytes_full();
 }
 
 icmp_packet_t::echo_msg_t::~echo_msg_t() {

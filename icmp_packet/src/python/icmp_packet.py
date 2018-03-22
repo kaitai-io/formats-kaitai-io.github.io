@@ -93,6 +93,7 @@ class IcmpPacket(KaitaiStruct):
             self.checksum = self._io.read_u2be()
             self.identifier = self._io.read_u2be()
             self.seq_num = self._io.read_u2be()
+            self.data = self._io.read_bytes_full()
 
 
 

@@ -215,6 +215,7 @@ sub _read {
     $self->{checksum} = $self->{_io}->read_u2be();
     $self->{identifier} = $self->{_io}->read_u2be();
     $self->{seq_num} = $self->{_io}->read_u2be();
+    $self->{data} = $self->{_io}->read_bytes_full();
 }
 
 sub code {
@@ -235,6 +236,11 @@ sub identifier {
 sub seq_num {
     my ($self) = @_;
     return $self->{seq_num};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data};
 }
 
 1;

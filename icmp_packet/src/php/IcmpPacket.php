@@ -106,15 +106,18 @@ class EchoMsg extends \Kaitai\Struct\Struct {
         $this->_m_checksum = $this->_io->readU2be();
         $this->_m_identifier = $this->_io->readU2be();
         $this->_m_seqNum = $this->_io->readU2be();
+        $this->_m_data = $this->_io->readBytesFull();
     }
     protected $_m_code;
     protected $_m_checksum;
     protected $_m_identifier;
     protected $_m_seqNum;
+    protected $_m_data;
     public function code() { return $this->_m_code; }
     public function checksum() { return $this->_m_checksum; }
     public function identifier() { return $this->_m_identifier; }
     public function seqNum() { return $this->_m_seqNum; }
+    public function data() { return $this->_m_data; }
 }
 
 namespace \IcmpPacket;
