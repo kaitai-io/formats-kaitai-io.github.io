@@ -9,6 +9,10 @@
     root.Elf = factory(root.KaitaiStream);
   }
 }(this, function (KaitaiStream) {
+/**
+ * @see {@link https://github.com/lattera/glibc/blob/master/elf/elf.h|Source}
+ */
+
 var Elf = (function() {
   Elf.Endian = Object.freeze({
     LE: 1,
@@ -154,6 +158,228 @@ var Elf = (function() {
     50: "IA_64",
     62: "X86_64",
     183: "AARCH64",
+  });
+
+  Elf.PhdrType = Object.freeze({
+    READ: 1,
+    WRITE: 2,
+    EXECUTE: 4,
+    MASK_PROC: 4026531840,
+
+    1: "READ",
+    2: "WRITE",
+    4: "EXECUTE",
+    4026531840: "MASK_PROC",
+  });
+
+  Elf.SectionHeaderFlags = Object.freeze({
+    WRITE: 1,
+    ALLOC: 2,
+    EXEC_INSTR: 4,
+    MERGE: 16,
+    STRINGS: 32,
+    INFO_LINK: 64,
+    LINK_ORDER: 128,
+    OS_NON_CONFORMING: 256,
+    GROUP: 512,
+    TLS: 1024,
+    ORDERED: 67108864,
+    EXCLUDE: 134217728,
+    MASK_PROC: 4026531840,
+
+    1: "WRITE",
+    2: "ALLOC",
+    4: "EXEC_INSTR",
+    16: "MERGE",
+    32: "STRINGS",
+    64: "INFO_LINK",
+    128: "LINK_ORDER",
+    256: "OS_NON_CONFORMING",
+    512: "GROUP",
+    1024: "TLS",
+    67108864: "ORDERED",
+    134217728: "EXCLUDE",
+    4026531840: "MASK_PROC",
+  });
+
+  Elf.DynamicArrayTags = Object.freeze({
+    NULL: 0,
+    NEEDED: 1,
+    PLTRELSZ: 2,
+    PLTGOT: 3,
+    HASH: 4,
+    STRTAB: 5,
+    SYMTAB: 6,
+    RELA: 7,
+    RELASZ: 8,
+    RELAENT: 9,
+    STRSZ: 10,
+    SYMENT: 11,
+    INIT: 12,
+    FINI: 13,
+    SONAME: 14,
+    RPATH: 15,
+    SYMBOLIC: 16,
+    REL: 17,
+    RELSZ: 18,
+    RELENT: 19,
+    PLTREL: 20,
+    DEBUG: 21,
+    TEXTREL: 22,
+    JMPREL: 23,
+    BIND_NOW: 24,
+    INIT_ARRAY: 25,
+    FINI_ARRAY: 26,
+    INIT_ARRAYSZ: 27,
+    FINI_ARRAYSZ: 28,
+    RUNPATH: 29,
+    FLAGS: 30,
+    PREINIT_ARRAY: 32,
+    PREINIT_ARRAYSZ: 33,
+    MAXPOSTAGS: 34,
+    SUNW_AUXILIARY: 1610612749,
+    SUNW_FILTER: 1610612750,
+    SUNW_CAP: 1610612752,
+    SUNW_SYMTAB: 1610612753,
+    SUNW_SYMSZ: 1610612754,
+    SUNW_SORTENT: 1610612755,
+    SUNW_SYMSORT: 1610612756,
+    SUNW_SYMSORTSZ: 1610612757,
+    SUNW_TLSSORT: 1610612758,
+    SUNW_TLSSORTSZ: 1610612759,
+    SUNW_CAPINFO: 1610612760,
+    SUNW_STRPAD: 1610612761,
+    SUNW_CAPCHAIN: 1610612762,
+    SUNW_LDMACH: 1610612763,
+    SUNW_CAPCHAINENT: 1610612765,
+    SUNW_CAPCHAINSZ: 1610612767,
+    HIOS: 1879044096,
+    VALRNGLO: 1879047424,
+    GNU_PRELINKED: 1879047669,
+    GNU_CONFLICTSZ: 1879047670,
+    GNU_LIBLISTSZ: 1879047671,
+    CHECKSUM: 1879047672,
+    PLTPADSZ: 1879047673,
+    MOVEENT: 1879047674,
+    MOVESZ: 1879047675,
+    FEATURE_1: 1879047676,
+    POSFLAG_1: 1879047677,
+    SYMINSZ: 1879047678,
+    VALRNGHI: 1879047679,
+    ADDRRNGLO: 1879047680,
+    GNU_HASH: 1879047925,
+    TLSDESC_PLT: 1879047926,
+    TLSDESC_GOT: 1879047927,
+    GNU_CONFLICT: 1879047928,
+    GNU_LIBLIST: 1879047929,
+    CONFIG: 1879047930,
+    DEPAUDIT: 1879047931,
+    AUDIT: 1879047932,
+    PLTPAD: 1879047933,
+    MOVETAB: 1879047934,
+    ADDRRNGHI: 1879047935,
+    VERSYM: 1879048176,
+    RELACOUNT: 1879048185,
+    RELCOUNT: 1879048186,
+    FLAGS_1: 1879048187,
+    VERDEF: 1879048188,
+    VERDEFNUM: 1879048189,
+    VERNEED: 1879048190,
+    VERNEEDNUM: 1879048191,
+    LOPROC: 1879048192,
+    SPARC_REGISTER: 1879048193,
+    AUXILIARY: 2147483645,
+    USED: 2147483646,
+    HIPROC: 2147483647,
+
+    0: "NULL",
+    1: "NEEDED",
+    2: "PLTRELSZ",
+    3: "PLTGOT",
+    4: "HASH",
+    5: "STRTAB",
+    6: "SYMTAB",
+    7: "RELA",
+    8: "RELASZ",
+    9: "RELAENT",
+    10: "STRSZ",
+    11: "SYMENT",
+    12: "INIT",
+    13: "FINI",
+    14: "SONAME",
+    15: "RPATH",
+    16: "SYMBOLIC",
+    17: "REL",
+    18: "RELSZ",
+    19: "RELENT",
+    20: "PLTREL",
+    21: "DEBUG",
+    22: "TEXTREL",
+    23: "JMPREL",
+    24: "BIND_NOW",
+    25: "INIT_ARRAY",
+    26: "FINI_ARRAY",
+    27: "INIT_ARRAYSZ",
+    28: "FINI_ARRAYSZ",
+    29: "RUNPATH",
+    30: "FLAGS",
+    32: "PREINIT_ARRAY",
+    33: "PREINIT_ARRAYSZ",
+    34: "MAXPOSTAGS",
+    1610612749: "SUNW_AUXILIARY",
+    1610612750: "SUNW_FILTER",
+    1610612752: "SUNW_CAP",
+    1610612753: "SUNW_SYMTAB",
+    1610612754: "SUNW_SYMSZ",
+    1610612755: "SUNW_SORTENT",
+    1610612756: "SUNW_SYMSORT",
+    1610612757: "SUNW_SYMSORTSZ",
+    1610612758: "SUNW_TLSSORT",
+    1610612759: "SUNW_TLSSORTSZ",
+    1610612760: "SUNW_CAPINFO",
+    1610612761: "SUNW_STRPAD",
+    1610612762: "SUNW_CAPCHAIN",
+    1610612763: "SUNW_LDMACH",
+    1610612765: "SUNW_CAPCHAINENT",
+    1610612767: "SUNW_CAPCHAINSZ",
+    1879044096: "HIOS",
+    1879047424: "VALRNGLO",
+    1879047669: "GNU_PRELINKED",
+    1879047670: "GNU_CONFLICTSZ",
+    1879047671: "GNU_LIBLISTSZ",
+    1879047672: "CHECKSUM",
+    1879047673: "PLTPADSZ",
+    1879047674: "MOVEENT",
+    1879047675: "MOVESZ",
+    1879047676: "FEATURE_1",
+    1879047677: "POSFLAG_1",
+    1879047678: "SYMINSZ",
+    1879047679: "VALRNGHI",
+    1879047680: "ADDRRNGLO",
+    1879047925: "GNU_HASH",
+    1879047926: "TLSDESC_PLT",
+    1879047927: "TLSDESC_GOT",
+    1879047928: "GNU_CONFLICT",
+    1879047929: "GNU_LIBLIST",
+    1879047930: "CONFIG",
+    1879047931: "DEPAUDIT",
+    1879047932: "AUDIT",
+    1879047933: "PLTPAD",
+    1879047934: "MOVETAB",
+    1879047935: "ADDRRNGHI",
+    1879048176: "VERSYM",
+    1879048185: "RELACOUNT",
+    1879048186: "RELCOUNT",
+    1879048187: "FLAGS_1",
+    1879048188: "VERDEF",
+    1879048189: "VERDEFNUM",
+    1879048190: "VERNEED",
+    1879048191: "VERNEEDNUM",
+    1879048192: "LOPROC",
+    1879048193: "SPARC_REGISTER",
+    2147483645: "AUXILIARY",
+    2147483646: "USED",
+    2147483647: "HIPROC",
   });
 
   Elf.Bits = Object.freeze({
@@ -456,8 +682,97 @@ var Elf = (function() {
           break;
         }
       }
+      Object.defineProperty(ProgramHeader.prototype, 'dynamic', {
+        get: function() {
+          if (this._m_dynamic !== undefined)
+            return this._m_dynamic;
+          if (this.type == Elf.PhType.DYNAMIC) {
+            var io = this._root._io;
+            var _pos = io.pos;
+            io.seek(this.offset);
+            if (this._is_le) {
+              this._raw__m_dynamic = io.readBytes(this.filesz);
+              var _io__raw__m_dynamic = new KaitaiStream(this._raw__m_dynamic);
+              this._m_dynamic = new DynamicSection(_io__raw__m_dynamic, this, this._root, this._is_le);
+            } else {
+              this._raw__m_dynamic = io.readBytes(this.filesz);
+              var _io__raw__m_dynamic = new KaitaiStream(this._raw__m_dynamic);
+              this._m_dynamic = new DynamicSection(_io__raw__m_dynamic, this, this._root, this._is_le);
+            }
+            io.seek(_pos);
+          }
+          return this._m_dynamic;
+        }
+      });
 
       return ProgramHeader;
+    })();
+
+    var DynamicSectionEntry = EndianElf.DynamicSectionEntry = (function() {
+      function DynamicSectionEntry(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      DynamicSectionEntry.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      DynamicSectionEntry.prototype._readLE = function() {
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.tag = this._io.readU4le();
+          break;
+        case Elf.Bits.B64:
+          this.tag = this._io.readU8le();
+          break;
+        }
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.valueOrPtr = this._io.readU4le();
+          break;
+        case Elf.Bits.B64:
+          this.valueOrPtr = this._io.readU8le();
+          break;
+        }
+      }
+      DynamicSectionEntry.prototype._readBE = function() {
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.tag = this._io.readU4be();
+          break;
+        case Elf.Bits.B64:
+          this.tag = this._io.readU8be();
+          break;
+        }
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.valueOrPtr = this._io.readU4be();
+          break;
+        case Elf.Bits.B64:
+          this.valueOrPtr = this._io.readU8be();
+          break;
+        }
+      }
+      Object.defineProperty(DynamicSectionEntry.prototype, 'tagEnum', {
+        get: function() {
+          if (this._m_tagEnum !== undefined)
+            return this._m_tagEnum;
+          this._m_tagEnum = this.tag;
+          return this._m_tagEnum;
+        }
+      });
+
+      return DynamicSectionEntry;
     })();
 
     var SectionHeader = EndianElf.SectionHeader = (function() {
@@ -587,6 +902,14 @@ var Elf = (function() {
           break;
         }
       }
+      Object.defineProperty(SectionHeader.prototype, 'flagsEnum', {
+        get: function() {
+          if (this._m_flagsEnum !== undefined)
+            return this._m_flagsEnum;
+          this._m_flagsEnum = this.flags;
+          return this._m_flagsEnum;
+        }
+      });
       Object.defineProperty(SectionHeader.prototype, 'body', {
         get: function() {
           if (this._m_body !== undefined)
@@ -601,6 +924,28 @@ var Elf = (function() {
           }
           io.seek(_pos);
           return this._m_body;
+        }
+      });
+      Object.defineProperty(SectionHeader.prototype, 'strtab', {
+        get: function() {
+          if (this._m_strtab !== undefined)
+            return this._m_strtab;
+          if (this.type == Elf.ShType.STRTAB) {
+            var io = this._root._io;
+            var _pos = io.pos;
+            io.seek(this.offset);
+            if (this._is_le) {
+              this._raw__m_strtab = io.readBytes(this.size);
+              var _io__raw__m_strtab = new KaitaiStream(this._raw__m_strtab);
+              this._m_strtab = new StringsStruct(_io__raw__m_strtab, this, this._root, this._is_le);
+            } else {
+              this._raw__m_strtab = io.readBytes(this.size);
+              var _io__raw__m_strtab = new KaitaiStream(this._raw__m_strtab);
+              this._m_strtab = new StringsStruct(_io__raw__m_strtab, this, this._root, this._is_le);
+            }
+            io.seek(_pos);
+          }
+          return this._m_strtab;
         }
       });
       Object.defineProperty(SectionHeader.prototype, 'name', {
@@ -619,8 +964,69 @@ var Elf = (function() {
           return this._m_name;
         }
       });
+      Object.defineProperty(SectionHeader.prototype, 'dynamic', {
+        get: function() {
+          if (this._m_dynamic !== undefined)
+            return this._m_dynamic;
+          if (this.type == Elf.ShType.DYNAMIC) {
+            var io = this._root._io;
+            var _pos = io.pos;
+            io.seek(this.offset);
+            if (this._is_le) {
+              this._raw__m_dynamic = io.readBytes(this.size);
+              var _io__raw__m_dynamic = new KaitaiStream(this._raw__m_dynamic);
+              this._m_dynamic = new DynamicSection(_io__raw__m_dynamic, this, this._root, this._is_le);
+            } else {
+              this._raw__m_dynamic = io.readBytes(this.size);
+              var _io__raw__m_dynamic = new KaitaiStream(this._raw__m_dynamic);
+              this._m_dynamic = new DynamicSection(_io__raw__m_dynamic, this, this._root, this._is_le);
+            }
+            io.seek(_pos);
+          }
+          return this._m_dynamic;
+        }
+      });
 
       return SectionHeader;
+    })();
+
+    var DynamicSection = EndianElf.DynamicSection = (function() {
+      function DynamicSection(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      DynamicSection.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      DynamicSection.prototype._readLE = function() {
+        this.entries = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          this.entries.push(new DynamicSectionEntry(this._io, this, this._root, this._is_le));
+          i++;
+        }
+      }
+      DynamicSection.prototype._readBE = function() {
+        this.entries = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          this.entries.push(new DynamicSectionEntry(this._io, this, this._root, this._is_le));
+          i++;
+        }
+      }
+
+      return DynamicSection;
     })();
 
     var StringsStruct = EndianElf.StringsStruct = (function() {

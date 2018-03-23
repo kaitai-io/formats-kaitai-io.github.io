@@ -88,6 +88,114 @@ our $MACHINE_IA_64 = 50;
 our $MACHINE_X86_64 = 62;
 our $MACHINE_AARCH64 = 183;
 
+our $PHDR_TYPE_READ = 1;
+our $PHDR_TYPE_WRITE = 2;
+our $PHDR_TYPE_EXECUTE = 4;
+our $PHDR_TYPE_MASK_PROC = 4026531840;
+
+our $SECTION_HEADER_FLAGS_WRITE = 1;
+our $SECTION_HEADER_FLAGS_ALLOC = 2;
+our $SECTION_HEADER_FLAGS_EXEC_INSTR = 4;
+our $SECTION_HEADER_FLAGS_MERGE = 16;
+our $SECTION_HEADER_FLAGS_STRINGS = 32;
+our $SECTION_HEADER_FLAGS_INFO_LINK = 64;
+our $SECTION_HEADER_FLAGS_LINK_ORDER = 128;
+our $SECTION_HEADER_FLAGS_OS_NON_CONFORMING = 256;
+our $SECTION_HEADER_FLAGS_GROUP = 512;
+our $SECTION_HEADER_FLAGS_TLS = 1024;
+our $SECTION_HEADER_FLAGS_ORDERED = 67108864;
+our $SECTION_HEADER_FLAGS_EXCLUDE = 134217728;
+our $SECTION_HEADER_FLAGS_MASK_PROC = 4026531840;
+
+our $DYNAMIC_ARRAY_TAGS_NULL = 0;
+our $DYNAMIC_ARRAY_TAGS_NEEDED = 1;
+our $DYNAMIC_ARRAY_TAGS_PLTRELSZ = 2;
+our $DYNAMIC_ARRAY_TAGS_PLTGOT = 3;
+our $DYNAMIC_ARRAY_TAGS_HASH = 4;
+our $DYNAMIC_ARRAY_TAGS_STRTAB = 5;
+our $DYNAMIC_ARRAY_TAGS_SYMTAB = 6;
+our $DYNAMIC_ARRAY_TAGS_RELA = 7;
+our $DYNAMIC_ARRAY_TAGS_RELASZ = 8;
+our $DYNAMIC_ARRAY_TAGS_RELAENT = 9;
+our $DYNAMIC_ARRAY_TAGS_STRSZ = 10;
+our $DYNAMIC_ARRAY_TAGS_SYMENT = 11;
+our $DYNAMIC_ARRAY_TAGS_INIT = 12;
+our $DYNAMIC_ARRAY_TAGS_FINI = 13;
+our $DYNAMIC_ARRAY_TAGS_SONAME = 14;
+our $DYNAMIC_ARRAY_TAGS_RPATH = 15;
+our $DYNAMIC_ARRAY_TAGS_SYMBOLIC = 16;
+our $DYNAMIC_ARRAY_TAGS_REL = 17;
+our $DYNAMIC_ARRAY_TAGS_RELSZ = 18;
+our $DYNAMIC_ARRAY_TAGS_RELENT = 19;
+our $DYNAMIC_ARRAY_TAGS_PLTREL = 20;
+our $DYNAMIC_ARRAY_TAGS_DEBUG = 21;
+our $DYNAMIC_ARRAY_TAGS_TEXTREL = 22;
+our $DYNAMIC_ARRAY_TAGS_JMPREL = 23;
+our $DYNAMIC_ARRAY_TAGS_BIND_NOW = 24;
+our $DYNAMIC_ARRAY_TAGS_INIT_ARRAY = 25;
+our $DYNAMIC_ARRAY_TAGS_FINI_ARRAY = 26;
+our $DYNAMIC_ARRAY_TAGS_INIT_ARRAYSZ = 27;
+our $DYNAMIC_ARRAY_TAGS_FINI_ARRAYSZ = 28;
+our $DYNAMIC_ARRAY_TAGS_RUNPATH = 29;
+our $DYNAMIC_ARRAY_TAGS_FLAGS = 30;
+our $DYNAMIC_ARRAY_TAGS_PREINIT_ARRAY = 32;
+our $DYNAMIC_ARRAY_TAGS_PREINIT_ARRAYSZ = 33;
+our $DYNAMIC_ARRAY_TAGS_MAXPOSTAGS = 34;
+our $DYNAMIC_ARRAY_TAGS_SUNW_AUXILIARY = 1610612749;
+our $DYNAMIC_ARRAY_TAGS_SUNW_FILTER = 1610612750;
+our $DYNAMIC_ARRAY_TAGS_SUNW_CAP = 1610612752;
+our $DYNAMIC_ARRAY_TAGS_SUNW_SYMTAB = 1610612753;
+our $DYNAMIC_ARRAY_TAGS_SUNW_SYMSZ = 1610612754;
+our $DYNAMIC_ARRAY_TAGS_SUNW_SORTENT = 1610612755;
+our $DYNAMIC_ARRAY_TAGS_SUNW_SYMSORT = 1610612756;
+our $DYNAMIC_ARRAY_TAGS_SUNW_SYMSORTSZ = 1610612757;
+our $DYNAMIC_ARRAY_TAGS_SUNW_TLSSORT = 1610612758;
+our $DYNAMIC_ARRAY_TAGS_SUNW_TLSSORTSZ = 1610612759;
+our $DYNAMIC_ARRAY_TAGS_SUNW_CAPINFO = 1610612760;
+our $DYNAMIC_ARRAY_TAGS_SUNW_STRPAD = 1610612761;
+our $DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAIN = 1610612762;
+our $DYNAMIC_ARRAY_TAGS_SUNW_LDMACH = 1610612763;
+our $DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAINENT = 1610612765;
+our $DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAINSZ = 1610612767;
+our $DYNAMIC_ARRAY_TAGS_HIOS = 1879044096;
+our $DYNAMIC_ARRAY_TAGS_VALRNGLO = 1879047424;
+our $DYNAMIC_ARRAY_TAGS_GNU_PRELINKED = 1879047669;
+our $DYNAMIC_ARRAY_TAGS_GNU_CONFLICTSZ = 1879047670;
+our $DYNAMIC_ARRAY_TAGS_GNU_LIBLISTSZ = 1879047671;
+our $DYNAMIC_ARRAY_TAGS_CHECKSUM = 1879047672;
+our $DYNAMIC_ARRAY_TAGS_PLTPADSZ = 1879047673;
+our $DYNAMIC_ARRAY_TAGS_MOVEENT = 1879047674;
+our $DYNAMIC_ARRAY_TAGS_MOVESZ = 1879047675;
+our $DYNAMIC_ARRAY_TAGS_FEATURE_1 = 1879047676;
+our $DYNAMIC_ARRAY_TAGS_POSFLAG_1 = 1879047677;
+our $DYNAMIC_ARRAY_TAGS_SYMINSZ = 1879047678;
+our $DYNAMIC_ARRAY_TAGS_VALRNGHI = 1879047679;
+our $DYNAMIC_ARRAY_TAGS_ADDRRNGLO = 1879047680;
+our $DYNAMIC_ARRAY_TAGS_GNU_HASH = 1879047925;
+our $DYNAMIC_ARRAY_TAGS_TLSDESC_PLT = 1879047926;
+our $DYNAMIC_ARRAY_TAGS_TLSDESC_GOT = 1879047927;
+our $DYNAMIC_ARRAY_TAGS_GNU_CONFLICT = 1879047928;
+our $DYNAMIC_ARRAY_TAGS_GNU_LIBLIST = 1879047929;
+our $DYNAMIC_ARRAY_TAGS_CONFIG = 1879047930;
+our $DYNAMIC_ARRAY_TAGS_DEPAUDIT = 1879047931;
+our $DYNAMIC_ARRAY_TAGS_AUDIT = 1879047932;
+our $DYNAMIC_ARRAY_TAGS_PLTPAD = 1879047933;
+our $DYNAMIC_ARRAY_TAGS_MOVETAB = 1879047934;
+our $DYNAMIC_ARRAY_TAGS_ADDRRNGHI = 1879047935;
+our $DYNAMIC_ARRAY_TAGS_VERSYM = 1879048176;
+our $DYNAMIC_ARRAY_TAGS_RELACOUNT = 1879048185;
+our $DYNAMIC_ARRAY_TAGS_RELCOUNT = 1879048186;
+our $DYNAMIC_ARRAY_TAGS_FLAGS_1 = 1879048187;
+our $DYNAMIC_ARRAY_TAGS_VERDEF = 1879048188;
+our $DYNAMIC_ARRAY_TAGS_VERDEFNUM = 1879048189;
+our $DYNAMIC_ARRAY_TAGS_VERNEED = 1879048190;
+our $DYNAMIC_ARRAY_TAGS_VERNEEDNUM = 1879048191;
+our $DYNAMIC_ARRAY_TAGS_LOPROC = 1879048192;
+our $DYNAMIC_ARRAY_TAGS_SPARC_REGISTER = 1879048193;
+our $DYNAMIC_ARRAY_TAGS_AUXILIARY = 2147483645;
+our $DYNAMIC_ARRAY_TAGS_USED = 2147483646;
+our $DYNAMIC_ARRAY_TAGS_HIPROC = 2147483647;
+
 our $BITS_B32 = 1;
 our $BITS_B64 = 2;
 
@@ -596,6 +704,27 @@ sub _read_be {
     }
 }
 
+sub dynamic {
+    my ($self) = @_;
+    return $self->{dynamic} if ($self->{dynamic});
+    if ($self->type() == $PH_TYPE_DYNAMIC) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->offset());
+        if ($self->{_is_le}) {
+            $self->{_raw_dynamic} = $io->read_bytes($self->filesz());
+            my $io__raw_dynamic = IO::KaitaiStruct::Stream->new($self->{_raw_dynamic});
+            $self->{dynamic} = Elf::EndianElf::DynamicSection->new($io__raw_dynamic, $self, $self->{_root}, $self->{_is_le});
+        } else {
+            $self->{_raw_dynamic} = $io->read_bytes($self->filesz());
+            my $io__raw_dynamic = IO::KaitaiStruct::Stream->new($self->{_raw_dynamic});
+            $self->{dynamic} = Elf::EndianElf::DynamicSection->new($io__raw_dynamic, $self, $self->{_root}, $self->{_is_le});
+        }
+        $io->seek($_pos);
+    }
+    return $self->{dynamic};
+}
+
 sub type {
     my ($self) = @_;
     return $self->{type};
@@ -639,6 +768,106 @@ sub flags32 {
 sub align {
     my ($self) = @_;
     return $self->{align};
+}
+
+sub _raw_dynamic {
+    my ($self) = @_;
+    return $self->{_raw_dynamic};
+}
+
+########################################################################
+package Elf::EndianElf::DynamicSectionEntry;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    my $_on = $self->_root()->bits();
+    if ($_on == $BITS_B32) {
+        $self->{tag} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $BITS_B64) {
+        $self->{tag} = $self->{_io}->read_u8le();
+    }
+    my $_on = $self->_root()->bits();
+    if ($_on == $BITS_B32) {
+        $self->{value_or_ptr} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $BITS_B64) {
+        $self->{value_or_ptr} = $self->{_io}->read_u8le();
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    my $_on = $self->_root()->bits();
+    if ($_on == $BITS_B32) {
+        $self->{tag} = $self->{_io}->read_u4be();
+    }
+    elsif ($_on == $BITS_B64) {
+        $self->{tag} = $self->{_io}->read_u8be();
+    }
+    my $_on = $self->_root()->bits();
+    if ($_on == $BITS_B32) {
+        $self->{value_or_ptr} = $self->{_io}->read_u4be();
+    }
+    elsif ($_on == $BITS_B64) {
+        $self->{value_or_ptr} = $self->{_io}->read_u8be();
+    }
+}
+
+sub tag_enum {
+    my ($self) = @_;
+    return $self->{tag_enum} if ($self->{tag_enum});
+    $self->{tag_enum} = $self->tag();
+    return $self->{tag_enum};
+}
+
+sub tag {
+    my ($self) = @_;
+    return $self->{tag};
+}
+
+sub value_or_ptr {
+    my ($self) = @_;
+    return $self->{value_or_ptr};
 }
 
 ########################################################################
@@ -783,6 +1012,13 @@ sub _read_be {
     }
 }
 
+sub flags_enum {
+    my ($self) = @_;
+    return $self->{flags_enum} if ($self->{flags_enum});
+    $self->{flags_enum} = $self->flags();
+    return $self->{flags_enum};
+}
+
 sub body {
     my ($self) = @_;
     return $self->{body} if ($self->{body});
@@ -798,6 +1034,27 @@ sub body {
     return $self->{body};
 }
 
+sub strtab {
+    my ($self) = @_;
+    return $self->{strtab} if ($self->{strtab});
+    if ($self->type() == $SH_TYPE_STRTAB) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->offset());
+        if ($self->{_is_le}) {
+            $self->{_raw_strtab} = $io->read_bytes($self->size());
+            my $io__raw_strtab = IO::KaitaiStruct::Stream->new($self->{_raw_strtab});
+            $self->{strtab} = Elf::EndianElf::StringsStruct->new($io__raw_strtab, $self, $self->{_root}, $self->{_is_le});
+        } else {
+            $self->{_raw_strtab} = $io->read_bytes($self->size());
+            my $io__raw_strtab = IO::KaitaiStruct::Stream->new($self->{_raw_strtab});
+            $self->{strtab} = Elf::EndianElf::StringsStruct->new($io__raw_strtab, $self, $self->{_root}, $self->{_is_le});
+        }
+        $io->seek($_pos);
+    }
+    return $self->{strtab};
+}
+
 sub name {
     my ($self) = @_;
     return $self->{name} if ($self->{name});
@@ -811,6 +1068,27 @@ sub name {
     }
     $io->seek($_pos);
     return $self->{name};
+}
+
+sub dynamic {
+    my ($self) = @_;
+    return $self->{dynamic} if ($self->{dynamic});
+    if ($self->type() == $SH_TYPE_DYNAMIC) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->offset());
+        if ($self->{_is_le}) {
+            $self->{_raw_dynamic} = $io->read_bytes($self->size());
+            my $io__raw_dynamic = IO::KaitaiStruct::Stream->new($self->{_raw_dynamic});
+            $self->{dynamic} = Elf::EndianElf::DynamicSection->new($io__raw_dynamic, $self, $self->{_root}, $self->{_is_le});
+        } else {
+            $self->{_raw_dynamic} = $io->read_bytes($self->size());
+            my $io__raw_dynamic = IO::KaitaiStruct::Stream->new($self->{_raw_dynamic});
+            $self->{dynamic} = Elf::EndianElf::DynamicSection->new($io__raw_dynamic, $self, $self->{_root}, $self->{_is_le});
+        }
+        $io->seek($_pos);
+    }
+    return $self->{dynamic};
 }
 
 sub name_offset {
@@ -861,6 +1139,79 @@ sub align {
 sub entry_size {
     my ($self) = @_;
     return $self->{entry_size};
+}
+
+sub _raw_strtab {
+    my ($self) = @_;
+    return $self->{_raw_strtab};
+}
+
+sub _raw_dynamic {
+    my ($self) = @_;
+    return $self->{_raw_dynamic};
+}
+
+########################################################################
+package Elf::EndianElf::DynamicSection;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{entries} = ();
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{entries}}, Elf::EndianElf::DynamicSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{entries} = ();
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{entries}}, Elf::EndianElf::DynamicSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+    }
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
 }
 
 ########################################################################

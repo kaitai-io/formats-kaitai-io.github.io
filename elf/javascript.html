@@ -254,6 +254,10 @@ var data = new Elf(new KaitaiStream(arrayBuffer));</code></pre>
     root.Elf = factory(root.KaitaiStream);
   }
 }(this, function (KaitaiStream) {
+/**
+ * @see {@link https://github.com/lattera/glibc/blob/master/elf/elf.h|Source}
+ */
+
 var Elf = (function() {
   Elf.Endian = Object.freeze({
     LE: 1,
@@ -399,6 +403,228 @@ var Elf = (function() {
     50: &quot;IA_64&quot;,
     62: &quot;X86_64&quot;,
     183: &quot;AARCH64&quot;,
+  });
+
+  Elf.PhdrType = Object.freeze({
+    READ: 1,
+    WRITE: 2,
+    EXECUTE: 4,
+    MASK_PROC: 4026531840,
+
+    1: &quot;READ&quot;,
+    2: &quot;WRITE&quot;,
+    4: &quot;EXECUTE&quot;,
+    4026531840: &quot;MASK_PROC&quot;,
+  });
+
+  Elf.SectionHeaderFlags = Object.freeze({
+    WRITE: 1,
+    ALLOC: 2,
+    EXEC_INSTR: 4,
+    MERGE: 16,
+    STRINGS: 32,
+    INFO_LINK: 64,
+    LINK_ORDER: 128,
+    OS_NON_CONFORMING: 256,
+    GROUP: 512,
+    TLS: 1024,
+    ORDERED: 67108864,
+    EXCLUDE: 134217728,
+    MASK_PROC: 4026531840,
+
+    1: &quot;WRITE&quot;,
+    2: &quot;ALLOC&quot;,
+    4: &quot;EXEC_INSTR&quot;,
+    16: &quot;MERGE&quot;,
+    32: &quot;STRINGS&quot;,
+    64: &quot;INFO_LINK&quot;,
+    128: &quot;LINK_ORDER&quot;,
+    256: &quot;OS_NON_CONFORMING&quot;,
+    512: &quot;GROUP&quot;,
+    1024: &quot;TLS&quot;,
+    67108864: &quot;ORDERED&quot;,
+    134217728: &quot;EXCLUDE&quot;,
+    4026531840: &quot;MASK_PROC&quot;,
+  });
+
+  Elf.DynamicArrayTags = Object.freeze({
+    NULL: 0,
+    NEEDED: 1,
+    PLTRELSZ: 2,
+    PLTGOT: 3,
+    HASH: 4,
+    STRTAB: 5,
+    SYMTAB: 6,
+    RELA: 7,
+    RELASZ: 8,
+    RELAENT: 9,
+    STRSZ: 10,
+    SYMENT: 11,
+    INIT: 12,
+    FINI: 13,
+    SONAME: 14,
+    RPATH: 15,
+    SYMBOLIC: 16,
+    REL: 17,
+    RELSZ: 18,
+    RELENT: 19,
+    PLTREL: 20,
+    DEBUG: 21,
+    TEXTREL: 22,
+    JMPREL: 23,
+    BIND_NOW: 24,
+    INIT_ARRAY: 25,
+    FINI_ARRAY: 26,
+    INIT_ARRAYSZ: 27,
+    FINI_ARRAYSZ: 28,
+    RUNPATH: 29,
+    FLAGS: 30,
+    PREINIT_ARRAY: 32,
+    PREINIT_ARRAYSZ: 33,
+    MAXPOSTAGS: 34,
+    SUNW_AUXILIARY: 1610612749,
+    SUNW_FILTER: 1610612750,
+    SUNW_CAP: 1610612752,
+    SUNW_SYMTAB: 1610612753,
+    SUNW_SYMSZ: 1610612754,
+    SUNW_SORTENT: 1610612755,
+    SUNW_SYMSORT: 1610612756,
+    SUNW_SYMSORTSZ: 1610612757,
+    SUNW_TLSSORT: 1610612758,
+    SUNW_TLSSORTSZ: 1610612759,
+    SUNW_CAPINFO: 1610612760,
+    SUNW_STRPAD: 1610612761,
+    SUNW_CAPCHAIN: 1610612762,
+    SUNW_LDMACH: 1610612763,
+    SUNW_CAPCHAINENT: 1610612765,
+    SUNW_CAPCHAINSZ: 1610612767,
+    HIOS: 1879044096,
+    VALRNGLO: 1879047424,
+    GNU_PRELINKED: 1879047669,
+    GNU_CONFLICTSZ: 1879047670,
+    GNU_LIBLISTSZ: 1879047671,
+    CHECKSUM: 1879047672,
+    PLTPADSZ: 1879047673,
+    MOVEENT: 1879047674,
+    MOVESZ: 1879047675,
+    FEATURE_1: 1879047676,
+    POSFLAG_1: 1879047677,
+    SYMINSZ: 1879047678,
+    VALRNGHI: 1879047679,
+    ADDRRNGLO: 1879047680,
+    GNU_HASH: 1879047925,
+    TLSDESC_PLT: 1879047926,
+    TLSDESC_GOT: 1879047927,
+    GNU_CONFLICT: 1879047928,
+    GNU_LIBLIST: 1879047929,
+    CONFIG: 1879047930,
+    DEPAUDIT: 1879047931,
+    AUDIT: 1879047932,
+    PLTPAD: 1879047933,
+    MOVETAB: 1879047934,
+    ADDRRNGHI: 1879047935,
+    VERSYM: 1879048176,
+    RELACOUNT: 1879048185,
+    RELCOUNT: 1879048186,
+    FLAGS_1: 1879048187,
+    VERDEF: 1879048188,
+    VERDEFNUM: 1879048189,
+    VERNEED: 1879048190,
+    VERNEEDNUM: 1879048191,
+    LOPROC: 1879048192,
+    SPARC_REGISTER: 1879048193,
+    AUXILIARY: 2147483645,
+    USED: 2147483646,
+    HIPROC: 2147483647,
+
+    0: &quot;NULL&quot;,
+    1: &quot;NEEDED&quot;,
+    2: &quot;PLTRELSZ&quot;,
+    3: &quot;PLTGOT&quot;,
+    4: &quot;HASH&quot;,
+    5: &quot;STRTAB&quot;,
+    6: &quot;SYMTAB&quot;,
+    7: &quot;RELA&quot;,
+    8: &quot;RELASZ&quot;,
+    9: &quot;RELAENT&quot;,
+    10: &quot;STRSZ&quot;,
+    11: &quot;SYMENT&quot;,
+    12: &quot;INIT&quot;,
+    13: &quot;FINI&quot;,
+    14: &quot;SONAME&quot;,
+    15: &quot;RPATH&quot;,
+    16: &quot;SYMBOLIC&quot;,
+    17: &quot;REL&quot;,
+    18: &quot;RELSZ&quot;,
+    19: &quot;RELENT&quot;,
+    20: &quot;PLTREL&quot;,
+    21: &quot;DEBUG&quot;,
+    22: &quot;TEXTREL&quot;,
+    23: &quot;JMPREL&quot;,
+    24: &quot;BIND_NOW&quot;,
+    25: &quot;INIT_ARRAY&quot;,
+    26: &quot;FINI_ARRAY&quot;,
+    27: &quot;INIT_ARRAYSZ&quot;,
+    28: &quot;FINI_ARRAYSZ&quot;,
+    29: &quot;RUNPATH&quot;,
+    30: &quot;FLAGS&quot;,
+    32: &quot;PREINIT_ARRAY&quot;,
+    33: &quot;PREINIT_ARRAYSZ&quot;,
+    34: &quot;MAXPOSTAGS&quot;,
+    1610612749: &quot;SUNW_AUXILIARY&quot;,
+    1610612750: &quot;SUNW_FILTER&quot;,
+    1610612752: &quot;SUNW_CAP&quot;,
+    1610612753: &quot;SUNW_SYMTAB&quot;,
+    1610612754: &quot;SUNW_SYMSZ&quot;,
+    1610612755: &quot;SUNW_SORTENT&quot;,
+    1610612756: &quot;SUNW_SYMSORT&quot;,
+    1610612757: &quot;SUNW_SYMSORTSZ&quot;,
+    1610612758: &quot;SUNW_TLSSORT&quot;,
+    1610612759: &quot;SUNW_TLSSORTSZ&quot;,
+    1610612760: &quot;SUNW_CAPINFO&quot;,
+    1610612761: &quot;SUNW_STRPAD&quot;,
+    1610612762: &quot;SUNW_CAPCHAIN&quot;,
+    1610612763: &quot;SUNW_LDMACH&quot;,
+    1610612765: &quot;SUNW_CAPCHAINENT&quot;,
+    1610612767: &quot;SUNW_CAPCHAINSZ&quot;,
+    1879044096: &quot;HIOS&quot;,
+    1879047424: &quot;VALRNGLO&quot;,
+    1879047669: &quot;GNU_PRELINKED&quot;,
+    1879047670: &quot;GNU_CONFLICTSZ&quot;,
+    1879047671: &quot;GNU_LIBLISTSZ&quot;,
+    1879047672: &quot;CHECKSUM&quot;,
+    1879047673: &quot;PLTPADSZ&quot;,
+    1879047674: &quot;MOVEENT&quot;,
+    1879047675: &quot;MOVESZ&quot;,
+    1879047676: &quot;FEATURE_1&quot;,
+    1879047677: &quot;POSFLAG_1&quot;,
+    1879047678: &quot;SYMINSZ&quot;,
+    1879047679: &quot;VALRNGHI&quot;,
+    1879047680: &quot;ADDRRNGLO&quot;,
+    1879047925: &quot;GNU_HASH&quot;,
+    1879047926: &quot;TLSDESC_PLT&quot;,
+    1879047927: &quot;TLSDESC_GOT&quot;,
+    1879047928: &quot;GNU_CONFLICT&quot;,
+    1879047929: &quot;GNU_LIBLIST&quot;,
+    1879047930: &quot;CONFIG&quot;,
+    1879047931: &quot;DEPAUDIT&quot;,
+    1879047932: &quot;AUDIT&quot;,
+    1879047933: &quot;PLTPAD&quot;,
+    1879047934: &quot;MOVETAB&quot;,
+    1879047935: &quot;ADDRRNGHI&quot;,
+    1879048176: &quot;VERSYM&quot;,
+    1879048185: &quot;RELACOUNT&quot;,
+    1879048186: &quot;RELCOUNT&quot;,
+    1879048187: &quot;FLAGS_1&quot;,
+    1879048188: &quot;VERDEF&quot;,
+    1879048189: &quot;VERDEFNUM&quot;,
+    1879048190: &quot;VERNEED&quot;,
+    1879048191: &quot;VERNEEDNUM&quot;,
+    1879048192: &quot;LOPROC&quot;,
+    1879048193: &quot;SPARC_REGISTER&quot;,
+    2147483645: &quot;AUXILIARY&quot;,
+    2147483646: &quot;USED&quot;,
+    2147483647: &quot;HIPROC&quot;,
   });
 
   Elf.Bits = Object.freeze({
@@ -701,8 +927,97 @@ var Elf = (function() {
           break;
         }
       }
+      Object.defineProperty(ProgramHeader.prototype, &#39;dynamic&#39;, {
+        get: function() {
+          if (this._m_dynamic !== undefined)
+            return this._m_dynamic;
+          if (this.type == Elf.PhType.DYNAMIC) {
+            var io = this._root._io;
+            var _pos = io.pos;
+            io.seek(this.offset);
+            if (this._is_le) {
+              this._raw__m_dynamic = io.readBytes(this.filesz);
+              var _io__raw__m_dynamic = new KaitaiStream(this._raw__m_dynamic);
+              this._m_dynamic = new DynamicSection(_io__raw__m_dynamic, this, this._root, this._is_le);
+            } else {
+              this._raw__m_dynamic = io.readBytes(this.filesz);
+              var _io__raw__m_dynamic = new KaitaiStream(this._raw__m_dynamic);
+              this._m_dynamic = new DynamicSection(_io__raw__m_dynamic, this, this._root, this._is_le);
+            }
+            io.seek(_pos);
+          }
+          return this._m_dynamic;
+        }
+      });
 
       return ProgramHeader;
+    })();
+
+    var DynamicSectionEntry = EndianElf.DynamicSectionEntry = (function() {
+      function DynamicSectionEntry(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      DynamicSectionEntry.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      DynamicSectionEntry.prototype._readLE = function() {
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.tag = this._io.readU4le();
+          break;
+        case Elf.Bits.B64:
+          this.tag = this._io.readU8le();
+          break;
+        }
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.valueOrPtr = this._io.readU4le();
+          break;
+        case Elf.Bits.B64:
+          this.valueOrPtr = this._io.readU8le();
+          break;
+        }
+      }
+      DynamicSectionEntry.prototype._readBE = function() {
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.tag = this._io.readU4be();
+          break;
+        case Elf.Bits.B64:
+          this.tag = this._io.readU8be();
+          break;
+        }
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.valueOrPtr = this._io.readU4be();
+          break;
+        case Elf.Bits.B64:
+          this.valueOrPtr = this._io.readU8be();
+          break;
+        }
+      }
+      Object.defineProperty(DynamicSectionEntry.prototype, &#39;tagEnum&#39;, {
+        get: function() {
+          if (this._m_tagEnum !== undefined)
+            return this._m_tagEnum;
+          this._m_tagEnum = this.tag;
+          return this._m_tagEnum;
+        }
+      });
+
+      return DynamicSectionEntry;
     })();
 
     var SectionHeader = EndianElf.SectionHeader = (function() {
@@ -832,6 +1147,14 @@ var Elf = (function() {
           break;
         }
       }
+      Object.defineProperty(SectionHeader.prototype, &#39;flagsEnum&#39;, {
+        get: function() {
+          if (this._m_flagsEnum !== undefined)
+            return this._m_flagsEnum;
+          this._m_flagsEnum = this.flags;
+          return this._m_flagsEnum;
+        }
+      });
       Object.defineProperty(SectionHeader.prototype, &#39;body&#39;, {
         get: function() {
           if (this._m_body !== undefined)
@@ -846,6 +1169,28 @@ var Elf = (function() {
           }
           io.seek(_pos);
           return this._m_body;
+        }
+      });
+      Object.defineProperty(SectionHeader.prototype, &#39;strtab&#39;, {
+        get: function() {
+          if (this._m_strtab !== undefined)
+            return this._m_strtab;
+          if (this.type == Elf.ShType.STRTAB) {
+            var io = this._root._io;
+            var _pos = io.pos;
+            io.seek(this.offset);
+            if (this._is_le) {
+              this._raw__m_strtab = io.readBytes(this.size);
+              var _io__raw__m_strtab = new KaitaiStream(this._raw__m_strtab);
+              this._m_strtab = new StringsStruct(_io__raw__m_strtab, this, this._root, this._is_le);
+            } else {
+              this._raw__m_strtab = io.readBytes(this.size);
+              var _io__raw__m_strtab = new KaitaiStream(this._raw__m_strtab);
+              this._m_strtab = new StringsStruct(_io__raw__m_strtab, this, this._root, this._is_le);
+            }
+            io.seek(_pos);
+          }
+          return this._m_strtab;
         }
       });
       Object.defineProperty(SectionHeader.prototype, &#39;name&#39;, {
@@ -864,8 +1209,69 @@ var Elf = (function() {
           return this._m_name;
         }
       });
+      Object.defineProperty(SectionHeader.prototype, &#39;dynamic&#39;, {
+        get: function() {
+          if (this._m_dynamic !== undefined)
+            return this._m_dynamic;
+          if (this.type == Elf.ShType.DYNAMIC) {
+            var io = this._root._io;
+            var _pos = io.pos;
+            io.seek(this.offset);
+            if (this._is_le) {
+              this._raw__m_dynamic = io.readBytes(this.size);
+              var _io__raw__m_dynamic = new KaitaiStream(this._raw__m_dynamic);
+              this._m_dynamic = new DynamicSection(_io__raw__m_dynamic, this, this._root, this._is_le);
+            } else {
+              this._raw__m_dynamic = io.readBytes(this.size);
+              var _io__raw__m_dynamic = new KaitaiStream(this._raw__m_dynamic);
+              this._m_dynamic = new DynamicSection(_io__raw__m_dynamic, this, this._root, this._is_le);
+            }
+            io.seek(_pos);
+          }
+          return this._m_dynamic;
+        }
+      });
 
       return SectionHeader;
+    })();
+
+    var DynamicSection = EndianElf.DynamicSection = (function() {
+      function DynamicSection(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      DynamicSection.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      DynamicSection.prototype._readLE = function() {
+        this.entries = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          this.entries.push(new DynamicSectionEntry(this._io, this, this._root, this._is_le));
+          i++;
+        }
+      }
+      DynamicSection.prototype._readBE = function() {
+        this.entries = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          this.entries.push(new DynamicSectionEntry(this._io, this, this._root, this._is_le));
+          i++;
+        }
+      }
+
+      return DynamicSection;
     })();
 
     var StringsStruct = EndianElf.StringsStruct = (function() {

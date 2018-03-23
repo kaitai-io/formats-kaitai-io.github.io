@@ -292,7 +292,7 @@ endian_elf__seq_section_header_offset_switch [label=&lt;&lt;TABLE BORDER=&quot;0
 				program_header__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;type_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;type_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4?PhType&lt;/TD&gt;&lt;TD PORT=&quot;type_type&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;flags64_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;flags64_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4&lt;/TD&gt;&lt;TD PORT=&quot;flags64_type&quot;&gt;flags64&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;flags64_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;flags64_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4?PhdrType&lt;/TD&gt;&lt;TD PORT=&quot;flags64_type&quot;&gt;flags64&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;offset_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;offset_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (_root.bits)&lt;/TD&gt;&lt;TD PORT=&quot;offset_type&quot;&gt;offset&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;vaddr_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;vaddr_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (_root.bits)&lt;/TD&gt;&lt;TD PORT=&quot;vaddr_type&quot;&gt;vaddr&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;paddr_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;paddr_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (_root.bits)&lt;/TD&gt;&lt;TD PORT=&quot;paddr_type&quot;&gt;paddr&lt;/TD&gt;&lt;/TR&gt;
@@ -300,6 +300,10 @@ endian_elf__seq_section_header_offset_switch [label=&lt;&lt;TABLE BORDER=&quot;0
 					&lt;TR&gt;&lt;TD PORT=&quot;memsz_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;memsz_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (_root.bits)&lt;/TD&gt;&lt;TD PORT=&quot;memsz_type&quot;&gt;memsz&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;flags32_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;flags32_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4&lt;/TD&gt;&lt;TD PORT=&quot;flags32_type&quot;&gt;flags32&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;align_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;align_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (_root.bits)&lt;/TD&gt;&lt;TD PORT=&quot;align_type&quot;&gt;align&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+				program_header__inst__dynamic [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;dynamic_pos&quot;&gt;offset&lt;/TD&gt;&lt;TD PORT=&quot;dynamic_size&quot;&gt;filesz&lt;/TD&gt;&lt;TD&gt;DynamicSection&lt;/TD&gt;&lt;TD PORT=&quot;dynamic_type&quot;&gt;dynamic&lt;/TD&gt;&lt;/TR&gt;
 				&lt;/TABLE&gt;&gt;];
 program_header__seq_offset_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
@@ -320,6 +324,26 @@ program_header__seq_align_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLB
 	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
 &lt;/TABLE&gt;&gt;];
 			}
+			subgraph cluster__dynamic_section_entry {
+				label=&quot;Elf::EndianElf::DynamicSectionEntry&quot;;
+				graph[style=dotted];
+
+				dynamic_section_entry__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;tag_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;tag_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (_root.bits)&lt;/TD&gt;&lt;TD PORT=&quot;tag_type&quot;&gt;tag&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;value_or_ptr_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;value_or_ptr_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (_root.bits)&lt;/TD&gt;&lt;TD PORT=&quot;value_or_ptr_type&quot;&gt;value_or_ptr&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+				dynamic_section_entry__inst__tag_enum [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD&gt;tag_enum&lt;/TD&gt;&lt;TD&gt;Kaitai::Struct::Stream::resolve_enum(DYNAMIC_ARRAY_TAGS, tag)&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+dynamic_section_entry__seq_tag_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
+&lt;/TABLE&gt;&gt;];
+dynamic_section_entry__seq_value_or_ptr_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
+&lt;/TABLE&gt;&gt;];
+			}
 			subgraph cluster__section_header {
 				label=&quot;Elf::EndianElf::SectionHeader&quot;;
 				graph[style=dotted];
@@ -337,13 +361,25 @@ program_header__seq_align_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLB
 					&lt;TR&gt;&lt;TD PORT=&quot;align_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;align_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (_root.bits)&lt;/TD&gt;&lt;TD PORT=&quot;align_type&quot;&gt;align&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;entry_size_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;entry_size_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (_root.bits)&lt;/TD&gt;&lt;TD PORT=&quot;entry_size_type&quot;&gt;entry_size&lt;/TD&gt;&lt;/TR&gt;
 				&lt;/TABLE&gt;&gt;];
+				section_header__inst__flags_enum [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD&gt;flags_enum&lt;/TD&gt;&lt;TD&gt;Kaitai::Struct::Stream::resolve_enum(SECTION_HEADER_FLAGS, flags)&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
 				section_header__inst__body [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;offset&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
 				&lt;/TABLE&gt;&gt;];
+				section_header__inst__strtab [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;strtab_pos&quot;&gt;offset&lt;/TD&gt;&lt;TD PORT=&quot;strtab_size&quot;&gt;size&lt;/TD&gt;&lt;TD&gt;StringsStruct&lt;/TD&gt;&lt;TD PORT=&quot;strtab_type&quot;&gt;strtab&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
 				section_header__inst__name [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;name_pos&quot;&gt;name_offset&lt;/TD&gt;&lt;TD PORT=&quot;name_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;str(ASCII)&lt;/TD&gt;&lt;TD PORT=&quot;name_type&quot;&gt;name&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+				section_header__inst__dynamic [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;dynamic_pos&quot;&gt;offset&lt;/TD&gt;&lt;TD PORT=&quot;dynamic_size&quot;&gt;size&lt;/TD&gt;&lt;TD&gt;DynamicSection&lt;/TD&gt;&lt;TD PORT=&quot;dynamic_type&quot;&gt;dynamic&lt;/TD&gt;&lt;/TR&gt;
 				&lt;/TABLE&gt;&gt;];
 section_header__seq_flags_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
@@ -363,6 +399,16 @@ section_header__seq_align_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLB
 section_header__seq_entry_size_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
 &lt;/TABLE&gt;&gt;];
+			}
+			subgraph cluster__dynamic_section {
+				label=&quot;Elf::EndianElf::DynamicSection&quot;;
+				graph[style=dotted];
+
+				dynamic_section__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;entries_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;entries_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;DynamicSectionEntry&lt;/TD&gt;&lt;TD PORT=&quot;entries_type&quot;&gt;entries&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;entries__repeat&quot;&gt;repeat to end of stream&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
 			}
 			subgraph cluster__strings_struct {
 				label=&quot;Elf::EndianElf::StringsStruct&quot;;
@@ -406,6 +452,14 @@ section_header__seq_entry_size_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; 
 	elf__seq:bits_type -&gt; program_header__seq:memsz_type [color=&quot;#404040&quot;];
 	program_header__seq:align_type -&gt; program_header__seq_align_switch [style=bold];
 	elf__seq:bits_type -&gt; program_header__seq:align_type [color=&quot;#404040&quot;];
+	program_header__seq:offset_type -&gt; program_header__inst__dynamic:dynamic_pos [color=&quot;#404040&quot;];
+	program_header__seq:filesz_type -&gt; program_header__inst__dynamic:dynamic_size [color=&quot;#404040&quot;];
+	program_header__inst__dynamic:dynamic_type -&gt; dynamic_section__seq [style=bold];
+	dynamic_section_entry__seq:tag_type -&gt; dynamic_section_entry__seq_tag_switch [style=bold];
+	elf__seq:bits_type -&gt; dynamic_section_entry__seq:tag_type [color=&quot;#404040&quot;];
+	dynamic_section_entry__seq:value_or_ptr_type -&gt; dynamic_section_entry__seq_value_or_ptr_switch [style=bold];
+	elf__seq:bits_type -&gt; dynamic_section_entry__seq:value_or_ptr_type [color=&quot;#404040&quot;];
+	dynamic_section_entry__seq:tag_type -&gt; dynamic_section_entry__inst__tag_enum [color=&quot;#404040&quot;];
 	section_header__seq:flags_type -&gt; section_header__seq_flags_switch [style=bold];
 	elf__seq:bits_type -&gt; section_header__seq:flags_type [color=&quot;#404040&quot;];
 	section_header__seq:addr_type -&gt; section_header__seq_addr_switch [style=bold];
@@ -418,9 +472,17 @@ section_header__seq_entry_size_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; 
 	elf__seq:bits_type -&gt; section_header__seq:align_type [color=&quot;#404040&quot;];
 	section_header__seq:entry_size_type -&gt; section_header__seq_entry_size_switch [style=bold];
 	elf__seq:bits_type -&gt; section_header__seq:entry_size_type [color=&quot;#404040&quot;];
+	section_header__seq:flags_type -&gt; section_header__inst__flags_enum [color=&quot;#404040&quot;];
 	section_header__seq:offset_type -&gt; section_header__inst__body:body_pos [color=&quot;#404040&quot;];
 	section_header__seq:size_type -&gt; section_header__inst__body:body_size [color=&quot;#404040&quot;];
+	section_header__seq:offset_type -&gt; section_header__inst__strtab:strtab_pos [color=&quot;#404040&quot;];
+	section_header__seq:size_type -&gt; section_header__inst__strtab:strtab_size [color=&quot;#404040&quot;];
+	section_header__inst__strtab:strtab_type -&gt; strings_struct__seq [style=bold];
 	section_header__seq:name_offset_type -&gt; section_header__inst__name:name_pos [color=&quot;#404040&quot;];
+	section_header__seq:offset_type -&gt; section_header__inst__dynamic:dynamic_pos [color=&quot;#404040&quot;];
+	section_header__seq:size_type -&gt; section_header__inst__dynamic:dynamic_size [color=&quot;#404040&quot;];
+	section_header__inst__dynamic:dynamic_type -&gt; dynamic_section__seq [style=bold];
+	dynamic_section__seq:entries_type -&gt; dynamic_section_entry__seq [style=bold];
 }
 </code></pre>
             

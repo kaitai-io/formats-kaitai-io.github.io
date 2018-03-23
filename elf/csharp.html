@@ -253,6 +253,10 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// &lt;remarks&gt;
+    /// Reference: &lt;a href=&quot;https://github.com/lattera/glibc/blob/master/elf/elf.h&quot;&gt;Source&lt;/a&gt;
+    /// &lt;/remarks&gt;
     public partial class Elf : KaitaiStruct
     {
         public static Elf FromFile(string fileName)
@@ -340,6 +344,123 @@ namespace Kaitai
             Ia64 = 50,
             X8664 = 62,
             Aarch64 = 183,
+        }
+
+        public enum PhdrType
+        {
+            Read = 1,
+            Write = 2,
+            Execute = 4,
+            MaskProc = 4026531840,
+        }
+
+        public enum SectionHeaderFlags
+        {
+            Write = 1,
+            Alloc = 2,
+            ExecInstr = 4,
+            Merge = 16,
+            Strings = 32,
+            InfoLink = 64,
+            LinkOrder = 128,
+            OsNonConforming = 256,
+            Group = 512,
+            Tls = 1024,
+            Ordered = 67108864,
+            Exclude = 134217728,
+            MaskProc = 4026531840,
+        }
+
+        public enum DynamicArrayTags
+        {
+            Null = 0,
+            Needed = 1,
+            Pltrelsz = 2,
+            Pltgot = 3,
+            Hash = 4,
+            Strtab = 5,
+            Symtab = 6,
+            Rela = 7,
+            Relasz = 8,
+            Relaent = 9,
+            Strsz = 10,
+            Syment = 11,
+            Init = 12,
+            Fini = 13,
+            Soname = 14,
+            Rpath = 15,
+            Symbolic = 16,
+            Rel = 17,
+            Relsz = 18,
+            Relent = 19,
+            Pltrel = 20,
+            Debug = 21,
+            Textrel = 22,
+            Jmprel = 23,
+            BindNow = 24,
+            InitArray = 25,
+            FiniArray = 26,
+            InitArraysz = 27,
+            FiniArraysz = 28,
+            Runpath = 29,
+            Flags = 30,
+            PreinitArray = 32,
+            PreinitArraysz = 33,
+            Maxpostags = 34,
+            SunwAuxiliary = 1610612749,
+            SunwFilter = 1610612750,
+            SunwCap = 1610612752,
+            SunwSymtab = 1610612753,
+            SunwSymsz = 1610612754,
+            SunwSortent = 1610612755,
+            SunwSymsort = 1610612756,
+            SunwSymsortsz = 1610612757,
+            SunwTlssort = 1610612758,
+            SunwTlssortsz = 1610612759,
+            SunwCapinfo = 1610612760,
+            SunwStrpad = 1610612761,
+            SunwCapchain = 1610612762,
+            SunwLdmach = 1610612763,
+            SunwCapchainent = 1610612765,
+            SunwCapchainsz = 1610612767,
+            Hios = 1879044096,
+            Valrnglo = 1879047424,
+            GnuPrelinked = 1879047669,
+            GnuConflictsz = 1879047670,
+            GnuLiblistsz = 1879047671,
+            Checksum = 1879047672,
+            Pltpadsz = 1879047673,
+            Moveent = 1879047674,
+            Movesz = 1879047675,
+            Feature1 = 1879047676,
+            Posflag1 = 1879047677,
+            Syminsz = 1879047678,
+            Valrnghi = 1879047679,
+            Addrrnglo = 1879047680,
+            GnuHash = 1879047925,
+            TlsdescPlt = 1879047926,
+            TlsdescGot = 1879047927,
+            GnuConflict = 1879047928,
+            GnuLiblist = 1879047929,
+            Config = 1879047930,
+            Depaudit = 1879047931,
+            Audit = 1879047932,
+            Pltpad = 1879047933,
+            Movetab = 1879047934,
+            Addrrnghi = 1879047935,
+            Versym = 1879048176,
+            Relacount = 1879048185,
+            Relcount = 1879048186,
+            Flags1 = 1879048187,
+            Verdef = 1879048188,
+            Verdefnum = 1879048189,
+            Verneed = 1879048190,
+            Verneednum = 1879048191,
+            Loproc = 1879048192,
+            SparcRegister = 1879048193,
+            Auxiliary = 2147483645,
+            Used = 2147483646,
+            Hiproc = 2147483647,
         }
 
         public enum Bits
@@ -526,6 +647,7 @@ namespace Kaitai
                     m_parent = p__parent;
                     m_root = p__root;
                     m_isLe = isLe;
+                    f_dynamic = false;
                     _read();
                 }
                 private void _read()
@@ -543,7 +665,7 @@ namespace Kaitai
                 {
                     _type = ((Elf.PhType) m_io.ReadU4le());
                     if (M_Root.Bits == Elf.Bits.B64) {
-                        _flags64 = m_io.ReadU4le();
+                        _flags64 = ((Elf.PhdrType) m_io.ReadU4le());
                     }
                     switch (M_Root.Bits) {
                     case Elf.Bits.B32: {
@@ -613,7 +735,7 @@ namespace Kaitai
                 {
                     _type = ((Elf.PhType) m_io.ReadU4be());
                     if (M_Root.Bits == Elf.Bits.B64) {
-                        _flags64 = m_io.ReadU4be();
+                        _flags64 = ((Elf.PhdrType) m_io.ReadU4be());
                     }
                     switch (M_Root.Bits) {
                     case Elf.Bits.B32: {
@@ -679,8 +801,35 @@ namespace Kaitai
                     }
                     }
                 }
+                private bool f_dynamic;
+                private DynamicSection _dynamic;
+                public DynamicSection Dynamic
+                {
+                    get
+                    {
+                        if (f_dynamic)
+                            return _dynamic;
+                        if (Type == Elf.PhType.Dynamic) {
+                            KaitaiStream io = M_Root.M_Io;
+                            long _pos = io.Pos;
+                            io.Seek(Offset);
+                            if (m_isLe == true) {
+                                __raw_dynamic = io.ReadBytes(Filesz);
+                                var io___raw_dynamic = new KaitaiStream(__raw_dynamic);
+                                _dynamic = new DynamicSection(io___raw_dynamic, this, m_root, m_isLe);
+                            } else {
+                                __raw_dynamic = io.ReadBytes(Filesz);
+                                var io___raw_dynamic = new KaitaiStream(__raw_dynamic);
+                                _dynamic = new DynamicSection(io___raw_dynamic, this, m_root, m_isLe);
+                            }
+                            io.Seek(_pos);
+                        }
+                        f_dynamic = true;
+                        return _dynamic;
+                    }
+                }
                 private PhType _type;
-                private uint? _flags64;
+                private PhdrType _flags64;
                 private ulong _offset;
                 private ulong _vaddr;
                 private ulong _paddr;
@@ -690,8 +839,9 @@ namespace Kaitai
                 private ulong _align;
                 private Elf m_root;
                 private Elf.EndianElf m_parent;
+                private byte[] __raw_dynamic;
                 public PhType Type { get { return _type; } }
-                public uint? Flags64 { get { return _flags64; } }
+                public PhdrType Flags64 { get { return _flags64; } }
                 public ulong Offset { get { return _offset; } }
                 public ulong Vaddr { get { return _vaddr; } }
                 public ulong Paddr { get { return _paddr; } }
@@ -701,6 +851,102 @@ namespace Kaitai
                 public ulong Align { get { return _align; } }
                 public Elf M_Root { get { return m_root; } }
                 public Elf.EndianElf M_Parent { get { return m_parent; } }
+                public byte[] M_RawDynamic { get { return __raw_dynamic; } }
+            }
+            public partial class DynamicSectionEntry : KaitaiStruct
+            {
+                public static DynamicSectionEntry FromFile(string fileName)
+                {
+                    return new DynamicSectionEntry(new KaitaiStream(fileName));
+                }
+
+                private bool? m_isLe;
+                public DynamicSectionEntry(KaitaiStream p__io, Elf.EndianElf.DynamicSection p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    m_isLe = isLe;
+                    f_tagEnum = false;
+                    _read();
+                }
+                private void _read()
+                {
+
+                    if (m_isLe == null) {
+                        throw new Exception(&quot;Unable to decide on endianness&quot;);
+                    } else if (m_isLe == true) {
+                        _readLE();
+                    } else {
+                        _readBE();
+                    }
+                }
+                private void _readLE()
+                {
+                    switch (M_Root.Bits) {
+                    case Elf.Bits.B32: {
+                        _tag = m_io.ReadU4le();
+                        break;
+                    }
+                    case Elf.Bits.B64: {
+                        _tag = m_io.ReadU8le();
+                        break;
+                    }
+                    }
+                    switch (M_Root.Bits) {
+                    case Elf.Bits.B32: {
+                        _valueOrPtr = m_io.ReadU4le();
+                        break;
+                    }
+                    case Elf.Bits.B64: {
+                        _valueOrPtr = m_io.ReadU8le();
+                        break;
+                    }
+                    }
+                }
+                private void _readBE()
+                {
+                    switch (M_Root.Bits) {
+                    case Elf.Bits.B32: {
+                        _tag = m_io.ReadU4be();
+                        break;
+                    }
+                    case Elf.Bits.B64: {
+                        _tag = m_io.ReadU8be();
+                        break;
+                    }
+                    }
+                    switch (M_Root.Bits) {
+                    case Elf.Bits.B32: {
+                        _valueOrPtr = m_io.ReadU4be();
+                        break;
+                    }
+                    case Elf.Bits.B64: {
+                        _valueOrPtr = m_io.ReadU8be();
+                        break;
+                    }
+                    }
+                }
+                private bool f_tagEnum;
+                private DynamicArrayTags _tagEnum;
+                public DynamicArrayTags TagEnum
+                {
+                    get
+                    {
+                        if (f_tagEnum)
+                            return _tagEnum;
+                        _tagEnum = (DynamicArrayTags) (((Elf.DynamicArrayTags) Tag));
+                        f_tagEnum = true;
+                        return _tagEnum;
+                    }
+                }
+                private ulong _tag;
+                private ulong _valueOrPtr;
+                private Elf m_root;
+                private Elf.EndianElf.DynamicSection m_parent;
+                public ulong Tag { get { return _tag; } }
+                public ulong ValueOrPtr { get { return _valueOrPtr; } }
+                public Elf M_Root { get { return m_root; } }
+                public Elf.EndianElf.DynamicSection M_Parent { get { return m_parent; } }
             }
             public partial class SectionHeader : KaitaiStruct
             {
@@ -715,8 +961,11 @@ namespace Kaitai
                     m_parent = p__parent;
                     m_root = p__root;
                     m_isLe = isLe;
+                    f_flagsEnum = false;
                     f_body = false;
+                    f_strtab = false;
                     f_name = false;
+                    f_dynamic = false;
                     _read();
                 }
                 private void _read()
@@ -864,6 +1113,19 @@ namespace Kaitai
                     }
                     }
                 }
+                private bool f_flagsEnum;
+                private SectionHeaderFlags _flagsEnum;
+                public SectionHeaderFlags FlagsEnum
+                {
+                    get
+                    {
+                        if (f_flagsEnum)
+                            return _flagsEnum;
+                        _flagsEnum = (SectionHeaderFlags) (((Elf.SectionHeaderFlags) Flags));
+                        f_flagsEnum = true;
+                        return _flagsEnum;
+                    }
+                }
                 private bool f_body;
                 private byte[] _body;
                 public byte[] Body
@@ -883,6 +1145,33 @@ namespace Kaitai
                         io.Seek(_pos);
                         f_body = true;
                         return _body;
+                    }
+                }
+                private bool f_strtab;
+                private StringsStruct _strtab;
+                public StringsStruct Strtab
+                {
+                    get
+                    {
+                        if (f_strtab)
+                            return _strtab;
+                        if (Type == Elf.ShType.Strtab) {
+                            KaitaiStream io = M_Root.M_Io;
+                            long _pos = io.Pos;
+                            io.Seek(Offset);
+                            if (m_isLe == true) {
+                                __raw_strtab = io.ReadBytes(Size);
+                                var io___raw_strtab = new KaitaiStream(__raw_strtab);
+                                _strtab = new StringsStruct(io___raw_strtab, this, m_root, m_isLe);
+                            } else {
+                                __raw_strtab = io.ReadBytes(Size);
+                                var io___raw_strtab = new KaitaiStream(__raw_strtab);
+                                _strtab = new StringsStruct(io___raw_strtab, this, m_root, m_isLe);
+                            }
+                            io.Seek(_pos);
+                        }
+                        f_strtab = true;
+                        return _strtab;
                     }
                 }
                 private bool f_name;
@@ -906,6 +1195,33 @@ namespace Kaitai
                         return _name;
                     }
                 }
+                private bool f_dynamic;
+                private DynamicSection _dynamic;
+                public DynamicSection Dynamic
+                {
+                    get
+                    {
+                        if (f_dynamic)
+                            return _dynamic;
+                        if (Type == Elf.ShType.Dynamic) {
+                            KaitaiStream io = M_Root.M_Io;
+                            long _pos = io.Pos;
+                            io.Seek(Offset);
+                            if (m_isLe == true) {
+                                __raw_dynamic = io.ReadBytes(Size);
+                                var io___raw_dynamic = new KaitaiStream(__raw_dynamic);
+                                _dynamic = new DynamicSection(io___raw_dynamic, this, m_root, m_isLe);
+                            } else {
+                                __raw_dynamic = io.ReadBytes(Size);
+                                var io___raw_dynamic = new KaitaiStream(__raw_dynamic);
+                                _dynamic = new DynamicSection(io___raw_dynamic, this, m_root, m_isLe);
+                            }
+                            io.Seek(_pos);
+                        }
+                        f_dynamic = true;
+                        return _dynamic;
+                    }
+                }
                 private uint _nameOffset;
                 private ShType _type;
                 private ulong _flags;
@@ -918,6 +1234,8 @@ namespace Kaitai
                 private ulong _entrySize;
                 private Elf m_root;
                 private Elf.EndianElf m_parent;
+                private byte[] __raw_strtab;
+                private byte[] __raw_dynamic;
                 public uint NameOffset { get { return _nameOffset; } }
                 public ShType Type { get { return _type; } }
                 public ulong Flags { get { return _flags; } }
@@ -930,6 +1248,63 @@ namespace Kaitai
                 public ulong EntrySize { get { return _entrySize; } }
                 public Elf M_Root { get { return m_root; } }
                 public Elf.EndianElf M_Parent { get { return m_parent; } }
+                public byte[] M_RawStrtab { get { return __raw_strtab; } }
+                public byte[] M_RawDynamic { get { return __raw_dynamic; } }
+            }
+            public partial class DynamicSection : KaitaiStruct
+            {
+                public static DynamicSection FromFile(string fileName)
+                {
+                    return new DynamicSection(new KaitaiStream(fileName));
+                }
+
+                private bool? m_isLe;
+                public DynamicSection(KaitaiStream p__io, KaitaiStruct p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    m_isLe = isLe;
+                    _read();
+                }
+                private void _read()
+                {
+
+                    if (m_isLe == null) {
+                        throw new Exception(&quot;Unable to decide on endianness&quot;);
+                    } else if (m_isLe == true) {
+                        _readLE();
+                    } else {
+                        _readBE();
+                    }
+                }
+                private void _readLE()
+                {
+                    _entries = new List&lt;DynamicSectionEntry&gt;();
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _entries.Add(new DynamicSectionEntry(m_io, this, m_root, m_isLe));
+                            i++;
+                        }
+                    }
+                }
+                private void _readBE()
+                {
+                    _entries = new List&lt;DynamicSectionEntry&gt;();
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _entries.Add(new DynamicSectionEntry(m_io, this, m_root, m_isLe));
+                            i++;
+                        }
+                    }
+                }
+                private List&lt;DynamicSectionEntry&gt; _entries;
+                private Elf m_root;
+                private KaitaiStruct m_parent;
+                public List&lt;DynamicSectionEntry&gt; Entries { get { return _entries; } }
+                public Elf M_Root { get { return m_root; } }
+                public KaitaiStruct M_Parent { get { return m_parent; } }
             }
             public partial class StringsStruct : KaitaiStruct
             {
@@ -939,7 +1314,7 @@ namespace Kaitai
                 }
 
                 private bool? m_isLe;
-                public StringsStruct(KaitaiStream p__io, Elf.EndianElf p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
+                public StringsStruct(KaitaiStream p__io, KaitaiStruct p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
                 {
                     m_parent = p__parent;
                     m_root = p__root;
@@ -981,10 +1356,10 @@ namespace Kaitai
                 }
                 private List&lt;string&gt; _entries;
                 private Elf m_root;
-                private Elf.EndianElf m_parent;
+                private KaitaiStruct m_parent;
                 public List&lt;string&gt; Entries { get { return _entries; } }
                 public Elf M_Root { get { return m_root; } }
-                public Elf.EndianElf M_Parent { get { return m_parent; } }
+                public KaitaiStruct M_Parent { get { return m_parent; } }
             }
             private bool f_programHeaders;
             private List&lt;ProgramHeader&gt; _programHeaders;

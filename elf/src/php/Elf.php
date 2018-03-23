@@ -410,6 +410,27 @@ class ProgramHeader extends \Kaitai\Struct\Struct {
                 break;
         }
     }
+    protected $_m_dynamic;
+    public function dynamic() {
+        if ($this->_m_dynamic !== null)
+            return $this->_m_dynamic;
+        if ($this->type() == \Elf\PhType::DYNAMIC) {
+            $io = $this->_root()->_io();
+            $_pos = $io->pos();
+            $io->seek($this->offset());
+            if ($this->_m__is_le) {
+                $this->_m__raw_dynamic = $io->readBytes($this->filesz());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_dynamic);
+                $this->_m_dynamic = new \Elf\EndianElf\DynamicSection($io, $this, $this->_root, $this->_m__is_le);
+            } else {
+                $this->_m__raw_dynamic = $io->readBytes($this->filesz());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_dynamic);
+                $this->_m_dynamic = new \Elf\EndianElf\DynamicSection($io, $this, $this->_root, $this->_m__is_le);
+            }
+            $io->seek($_pos);
+        }
+        return $this->_m_dynamic;
+    }
     protected $_m_type;
     protected $_m_flags64;
     protected $_m_offset;
@@ -419,6 +440,7 @@ class ProgramHeader extends \Kaitai\Struct\Struct {
     protected $_m_memsz;
     protected $_m_flags32;
     protected $_m_align;
+    protected $_m__raw_dynamic;
     public function type() { return $this->_m_type; }
     public function flags64() { return $this->_m_flags64; }
     public function offset() { return $this->_m_offset; }
@@ -428,6 +450,79 @@ class ProgramHeader extends \Kaitai\Struct\Struct {
     public function memsz() { return $this->_m_memsz; }
     public function flags32() { return $this->_m_flags32; }
     public function align() { return $this->_m_align; }
+    public function _raw_dynamic() { return $this->_m__raw_dynamic; }
+}
+
+namespace \Elf\EndianElf;
+
+class DynamicSectionEntry extends \Kaitai\Struct\Struct {
+    protected $_m__is_le;
+
+    public function __construct(\Kaitai\Struct\Stream $_io, \Elf\EndianElf\DynamicSection $_parent = null, \Elf $_root = null, $is_le = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_m__is_le = $is_le;
+        $this->_read();
+    }
+
+    private function _read() {
+
+        if (is_null($this->_m__is_le)) {
+            throw new \RuntimeException("Unable to decide on endianness");
+        } else if ($this->_m__is_le) {
+            $this->_readLE();
+        } else {
+            $this->_readBE();
+        }
+    }
+
+    private function _readLE() {
+        switch ($this->_root()->bits()) {
+            case \Elf\Bits::B32:
+                $this->_m_tag = $this->_io->readU4le();
+                break;
+            case \Elf\Bits::B64:
+                $this->_m_tag = $this->_io->readU8le();
+                break;
+        }
+        switch ($this->_root()->bits()) {
+            case \Elf\Bits::B32:
+                $this->_m_valueOrPtr = $this->_io->readU4le();
+                break;
+            case \Elf\Bits::B64:
+                $this->_m_valueOrPtr = $this->_io->readU8le();
+                break;
+        }
+    }
+
+    private function _readBE() {
+        switch ($this->_root()->bits()) {
+            case \Elf\Bits::B32:
+                $this->_m_tag = $this->_io->readU4be();
+                break;
+            case \Elf\Bits::B64:
+                $this->_m_tag = $this->_io->readU8be();
+                break;
+        }
+        switch ($this->_root()->bits()) {
+            case \Elf\Bits::B32:
+                $this->_m_valueOrPtr = $this->_io->readU4be();
+                break;
+            case \Elf\Bits::B64:
+                $this->_m_valueOrPtr = $this->_io->readU8be();
+                break;
+        }
+    }
+    protected $_m_tagEnum;
+    public function tagEnum() {
+        if ($this->_m_tagEnum !== null)
+            return $this->_m_tagEnum;
+        $this->_m_tagEnum = $this->tag();
+        return $this->_m_tagEnum;
+    }
+    protected $_m_tag;
+    protected $_m_valueOrPtr;
+    public function tag() { return $this->_m_tag; }
+    public function valueOrPtr() { return $this->_m_valueOrPtr; }
 }
 
 namespace \Elf\EndianElf;
@@ -561,6 +656,13 @@ class SectionHeader extends \Kaitai\Struct\Struct {
                 break;
         }
     }
+    protected $_m_flagsEnum;
+    public function flagsEnum() {
+        if ($this->_m_flagsEnum !== null)
+            return $this->_m_flagsEnum;
+        $this->_m_flagsEnum = $this->flags();
+        return $this->_m_flagsEnum;
+    }
     protected $_m_body;
     public function body() {
         if ($this->_m_body !== null)
@@ -575,6 +677,27 @@ class SectionHeader extends \Kaitai\Struct\Struct {
         }
         $io->seek($_pos);
         return $this->_m_body;
+    }
+    protected $_m_strtab;
+    public function strtab() {
+        if ($this->_m_strtab !== null)
+            return $this->_m_strtab;
+        if ($this->type() == \Elf\ShType::STRTAB) {
+            $io = $this->_root()->_io();
+            $_pos = $io->pos();
+            $io->seek($this->offset());
+            if ($this->_m__is_le) {
+                $this->_m__raw_strtab = $io->readBytes($this->size());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_strtab);
+                $this->_m_strtab = new \Elf\EndianElf\StringsStruct($io, $this, $this->_root, $this->_m__is_le);
+            } else {
+                $this->_m__raw_strtab = $io->readBytes($this->size());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_strtab);
+                $this->_m_strtab = new \Elf\EndianElf\StringsStruct($io, $this, $this->_root, $this->_m__is_le);
+            }
+            $io->seek($_pos);
+        }
+        return $this->_m_strtab;
     }
     protected $_m_name;
     public function name() {
@@ -591,6 +714,27 @@ class SectionHeader extends \Kaitai\Struct\Struct {
         $io->seek($_pos);
         return $this->_m_name;
     }
+    protected $_m_dynamic;
+    public function dynamic() {
+        if ($this->_m_dynamic !== null)
+            return $this->_m_dynamic;
+        if ($this->type() == \Elf\ShType::DYNAMIC) {
+            $io = $this->_root()->_io();
+            $_pos = $io->pos();
+            $io->seek($this->offset());
+            if ($this->_m__is_le) {
+                $this->_m__raw_dynamic = $io->readBytes($this->size());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_dynamic);
+                $this->_m_dynamic = new \Elf\EndianElf\DynamicSection($io, $this, $this->_root, $this->_m__is_le);
+            } else {
+                $this->_m__raw_dynamic = $io->readBytes($this->size());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_dynamic);
+                $this->_m_dynamic = new \Elf\EndianElf\DynamicSection($io, $this, $this->_root, $this->_m__is_le);
+            }
+            $io->seek($_pos);
+        }
+        return $this->_m_dynamic;
+    }
     protected $_m_nameOffset;
     protected $_m_type;
     protected $_m_flags;
@@ -601,6 +745,8 @@ class SectionHeader extends \Kaitai\Struct\Struct {
     protected $_m_info;
     protected $_m_align;
     protected $_m_entrySize;
+    protected $_m__raw_strtab;
+    protected $_m__raw_dynamic;
     public function nameOffset() { return $this->_m_nameOffset; }
     public function type() { return $this->_m_type; }
     public function flags() { return $this->_m_flags; }
@@ -611,6 +757,51 @@ class SectionHeader extends \Kaitai\Struct\Struct {
     public function info() { return $this->_m_info; }
     public function align() { return $this->_m_align; }
     public function entrySize() { return $this->_m_entrySize; }
+    public function _raw_strtab() { return $this->_m__raw_strtab; }
+    public function _raw_dynamic() { return $this->_m__raw_dynamic; }
+}
+
+namespace \Elf\EndianElf;
+
+class DynamicSection extends \Kaitai\Struct\Struct {
+    protected $_m__is_le;
+
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Elf $_root = null, $is_le = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_m__is_le = $is_le;
+        $this->_read();
+    }
+
+    private function _read() {
+
+        if (is_null($this->_m__is_le)) {
+            throw new \RuntimeException("Unable to decide on endianness");
+        } else if ($this->_m__is_le) {
+            $this->_readLE();
+        } else {
+            $this->_readBE();
+        }
+    }
+
+    private function _readLE() {
+        $this->_m_entries = [];
+        $i = 0;
+        while (!$this->_io->isEof()) {
+            $this->_m_entries[] = new \Elf\EndianElf\DynamicSectionEntry($this->_io, $this, $this->_root, $this->_m__is_le);
+            $i++;
+        }
+    }
+
+    private function _readBE() {
+        $this->_m_entries = [];
+        $i = 0;
+        while (!$this->_io->isEof()) {
+            $this->_m_entries[] = new \Elf\EndianElf\DynamicSectionEntry($this->_io, $this, $this->_root, $this->_m__is_le);
+            $i++;
+        }
+    }
+    protected $_m_entries;
+    public function entries() { return $this->_m_entries; }
 }
 
 namespace \Elf\EndianElf;
@@ -618,7 +809,7 @@ namespace \Elf\EndianElf;
 class StringsStruct extends \Kaitai\Struct\Struct {
     protected $_m__is_le;
 
-    public function __construct(\Kaitai\Struct\Stream $_io, \Elf\EndianElf $_parent = null, \Elf $_root = null, $is_le = null) {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Elf $_root = null, $is_le = null) {
         parent::__construct($_io, $_parent, $_root);
         $this->_m__is_le = $is_le;
         $this->_read();
@@ -739,6 +930,126 @@ class Machine {
     const IA_64 = 50;
     const X86_64 = 62;
     const AARCH64 = 183;
+}
+
+namespace \Elf;
+
+class PhdrType {
+    const READ = 1;
+    const WRITE = 2;
+    const EXECUTE = 4;
+    const MASK_PROC = 4026531840;
+}
+
+namespace \Elf;
+
+class SectionHeaderFlags {
+    const WRITE = 1;
+    const ALLOC = 2;
+    const EXEC_INSTR = 4;
+    const MERGE = 16;
+    const STRINGS = 32;
+    const INFO_LINK = 64;
+    const LINK_ORDER = 128;
+    const OS_NON_CONFORMING = 256;
+    const GROUP = 512;
+    const TLS = 1024;
+    const ORDERED = 67108864;
+    const EXCLUDE = 134217728;
+    const MASK_PROC = 4026531840;
+}
+
+namespace \Elf;
+
+class DynamicArrayTags {
+    const NULL = 0;
+    const NEEDED = 1;
+    const PLTRELSZ = 2;
+    const PLTGOT = 3;
+    const HASH = 4;
+    const STRTAB = 5;
+    const SYMTAB = 6;
+    const RELA = 7;
+    const RELASZ = 8;
+    const RELAENT = 9;
+    const STRSZ = 10;
+    const SYMENT = 11;
+    const INIT = 12;
+    const FINI = 13;
+    const SONAME = 14;
+    const RPATH = 15;
+    const SYMBOLIC = 16;
+    const REL = 17;
+    const RELSZ = 18;
+    const RELENT = 19;
+    const PLTREL = 20;
+    const DEBUG = 21;
+    const TEXTREL = 22;
+    const JMPREL = 23;
+    const BIND_NOW = 24;
+    const INIT_ARRAY = 25;
+    const FINI_ARRAY = 26;
+    const INIT_ARRAYSZ = 27;
+    const FINI_ARRAYSZ = 28;
+    const RUNPATH = 29;
+    const FLAGS = 30;
+    const PREINIT_ARRAY = 32;
+    const PREINIT_ARRAYSZ = 33;
+    const MAXPOSTAGS = 34;
+    const SUNW_AUXILIARY = 1610612749;
+    const SUNW_FILTER = 1610612750;
+    const SUNW_CAP = 1610612752;
+    const SUNW_SYMTAB = 1610612753;
+    const SUNW_SYMSZ = 1610612754;
+    const SUNW_SORTENT = 1610612755;
+    const SUNW_SYMSORT = 1610612756;
+    const SUNW_SYMSORTSZ = 1610612757;
+    const SUNW_TLSSORT = 1610612758;
+    const SUNW_TLSSORTSZ = 1610612759;
+    const SUNW_CAPINFO = 1610612760;
+    const SUNW_STRPAD = 1610612761;
+    const SUNW_CAPCHAIN = 1610612762;
+    const SUNW_LDMACH = 1610612763;
+    const SUNW_CAPCHAINENT = 1610612765;
+    const SUNW_CAPCHAINSZ = 1610612767;
+    const HIOS = 1879044096;
+    const VALRNGLO = 1879047424;
+    const GNU_PRELINKED = 1879047669;
+    const GNU_CONFLICTSZ = 1879047670;
+    const GNU_LIBLISTSZ = 1879047671;
+    const CHECKSUM = 1879047672;
+    const PLTPADSZ = 1879047673;
+    const MOVEENT = 1879047674;
+    const MOVESZ = 1879047675;
+    const FEATURE_1 = 1879047676;
+    const POSFLAG_1 = 1879047677;
+    const SYMINSZ = 1879047678;
+    const VALRNGHI = 1879047679;
+    const ADDRRNGLO = 1879047680;
+    const GNU_HASH = 1879047925;
+    const TLSDESC_PLT = 1879047926;
+    const TLSDESC_GOT = 1879047927;
+    const GNU_CONFLICT = 1879047928;
+    const GNU_LIBLIST = 1879047929;
+    const CONFIG = 1879047930;
+    const DEPAUDIT = 1879047931;
+    const AUDIT = 1879047932;
+    const PLTPAD = 1879047933;
+    const MOVETAB = 1879047934;
+    const ADDRRNGHI = 1879047935;
+    const VERSYM = 1879048176;
+    const RELACOUNT = 1879048185;
+    const RELCOUNT = 1879048186;
+    const FLAGS_1 = 1879048187;
+    const VERDEF = 1879048188;
+    const VERDEFNUM = 1879048189;
+    const VERNEED = 1879048190;
+    const VERNEEDNUM = 1879048191;
+    const LOPROC = 1879048192;
+    const SPARC_REGISTER = 1879048193;
+    const AUXILIARY = 2147483645;
+    const USED = 2147483646;
+    const HIPROC = 2147483647;
 }
 
 namespace \Elf;

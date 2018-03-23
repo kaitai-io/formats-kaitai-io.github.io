@@ -6,6 +6,9 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# @see https://github.com/lattera/glibc/blob/master/elf/elf.h Source
 class Elf < Kaitai::Struct::Struct
 
   ENDIAN = {
@@ -88,6 +91,123 @@ class Elf < Kaitai::Struct::Struct
     183 => :machine_aarch64,
   }
   I__MACHINE = MACHINE.invert
+
+  PHDR_TYPE = {
+    1 => :phdr_type_read,
+    2 => :phdr_type_write,
+    4 => :phdr_type_execute,
+    4026531840 => :phdr_type_mask_proc,
+  }
+  I__PHDR_TYPE = PHDR_TYPE.invert
+
+  SECTION_HEADER_FLAGS = {
+    1 => :section_header_flags_write,
+    2 => :section_header_flags_alloc,
+    4 => :section_header_flags_exec_instr,
+    16 => :section_header_flags_merge,
+    32 => :section_header_flags_strings,
+    64 => :section_header_flags_info_link,
+    128 => :section_header_flags_link_order,
+    256 => :section_header_flags_os_non_conforming,
+    512 => :section_header_flags_group,
+    1024 => :section_header_flags_tls,
+    67108864 => :section_header_flags_ordered,
+    134217728 => :section_header_flags_exclude,
+    4026531840 => :section_header_flags_mask_proc,
+  }
+  I__SECTION_HEADER_FLAGS = SECTION_HEADER_FLAGS.invert
+
+  DYNAMIC_ARRAY_TAGS = {
+    0 => :dynamic_array_tags_null,
+    1 => :dynamic_array_tags_needed,
+    2 => :dynamic_array_tags_pltrelsz,
+    3 => :dynamic_array_tags_pltgot,
+    4 => :dynamic_array_tags_hash,
+    5 => :dynamic_array_tags_strtab,
+    6 => :dynamic_array_tags_symtab,
+    7 => :dynamic_array_tags_rela,
+    8 => :dynamic_array_tags_relasz,
+    9 => :dynamic_array_tags_relaent,
+    10 => :dynamic_array_tags_strsz,
+    11 => :dynamic_array_tags_syment,
+    12 => :dynamic_array_tags_init,
+    13 => :dynamic_array_tags_fini,
+    14 => :dynamic_array_tags_soname,
+    15 => :dynamic_array_tags_rpath,
+    16 => :dynamic_array_tags_symbolic,
+    17 => :dynamic_array_tags_rel,
+    18 => :dynamic_array_tags_relsz,
+    19 => :dynamic_array_tags_relent,
+    20 => :dynamic_array_tags_pltrel,
+    21 => :dynamic_array_tags_debug,
+    22 => :dynamic_array_tags_textrel,
+    23 => :dynamic_array_tags_jmprel,
+    24 => :dynamic_array_tags_bind_now,
+    25 => :dynamic_array_tags_init_array,
+    26 => :dynamic_array_tags_fini_array,
+    27 => :dynamic_array_tags_init_arraysz,
+    28 => :dynamic_array_tags_fini_arraysz,
+    29 => :dynamic_array_tags_runpath,
+    30 => :dynamic_array_tags_flags,
+    32 => :dynamic_array_tags_preinit_array,
+    33 => :dynamic_array_tags_preinit_arraysz,
+    34 => :dynamic_array_tags_maxpostags,
+    1610612749 => :dynamic_array_tags_sunw_auxiliary,
+    1610612750 => :dynamic_array_tags_sunw_filter,
+    1610612752 => :dynamic_array_tags_sunw_cap,
+    1610612753 => :dynamic_array_tags_sunw_symtab,
+    1610612754 => :dynamic_array_tags_sunw_symsz,
+    1610612755 => :dynamic_array_tags_sunw_sortent,
+    1610612756 => :dynamic_array_tags_sunw_symsort,
+    1610612757 => :dynamic_array_tags_sunw_symsortsz,
+    1610612758 => :dynamic_array_tags_sunw_tlssort,
+    1610612759 => :dynamic_array_tags_sunw_tlssortsz,
+    1610612760 => :dynamic_array_tags_sunw_capinfo,
+    1610612761 => :dynamic_array_tags_sunw_strpad,
+    1610612762 => :dynamic_array_tags_sunw_capchain,
+    1610612763 => :dynamic_array_tags_sunw_ldmach,
+    1610612765 => :dynamic_array_tags_sunw_capchainent,
+    1610612767 => :dynamic_array_tags_sunw_capchainsz,
+    1879044096 => :dynamic_array_tags_hios,
+    1879047424 => :dynamic_array_tags_valrnglo,
+    1879047669 => :dynamic_array_tags_gnu_prelinked,
+    1879047670 => :dynamic_array_tags_gnu_conflictsz,
+    1879047671 => :dynamic_array_tags_gnu_liblistsz,
+    1879047672 => :dynamic_array_tags_checksum,
+    1879047673 => :dynamic_array_tags_pltpadsz,
+    1879047674 => :dynamic_array_tags_moveent,
+    1879047675 => :dynamic_array_tags_movesz,
+    1879047676 => :dynamic_array_tags_feature_1,
+    1879047677 => :dynamic_array_tags_posflag_1,
+    1879047678 => :dynamic_array_tags_syminsz,
+    1879047679 => :dynamic_array_tags_valrnghi,
+    1879047680 => :dynamic_array_tags_addrrnglo,
+    1879047925 => :dynamic_array_tags_gnu_hash,
+    1879047926 => :dynamic_array_tags_tlsdesc_plt,
+    1879047927 => :dynamic_array_tags_tlsdesc_got,
+    1879047928 => :dynamic_array_tags_gnu_conflict,
+    1879047929 => :dynamic_array_tags_gnu_liblist,
+    1879047930 => :dynamic_array_tags_config,
+    1879047931 => :dynamic_array_tags_depaudit,
+    1879047932 => :dynamic_array_tags_audit,
+    1879047933 => :dynamic_array_tags_pltpad,
+    1879047934 => :dynamic_array_tags_movetab,
+    1879047935 => :dynamic_array_tags_addrrnghi,
+    1879048176 => :dynamic_array_tags_versym,
+    1879048185 => :dynamic_array_tags_relacount,
+    1879048186 => :dynamic_array_tags_relcount,
+    1879048187 => :dynamic_array_tags_flags_1,
+    1879048188 => :dynamic_array_tags_verdef,
+    1879048189 => :dynamic_array_tags_verdefnum,
+    1879048190 => :dynamic_array_tags_verneed,
+    1879048191 => :dynamic_array_tags_verneednum,
+    1879048192 => :dynamic_array_tags_loproc,
+    1879048193 => :dynamic_array_tags_sparc_register,
+    2147483645 => :dynamic_array_tags_auxiliary,
+    2147483646 => :dynamic_array_tags_used,
+    2147483647 => :dynamic_array_tags_hiproc,
+  }
+  I__DYNAMIC_ARRAY_TAGS = DYNAMIC_ARRAY_TAGS.invert
 
   BITS = {
     1 => :bits_b32,
@@ -244,7 +364,7 @@ class Elf < Kaitai::Struct::Struct
       def _read_le
         @type = Kaitai::Struct::Stream::resolve_enum(PH_TYPE, @_io.read_u4le)
         if _root.bits == :bits_b64
-          @flags64 = @_io.read_u4le
+          @flags64 = Kaitai::Struct::Stream::resolve_enum(PHDR_TYPE, @_io.read_u4le)
         end
         case _root.bits
         when :bits_b32
@@ -291,7 +411,7 @@ class Elf < Kaitai::Struct::Struct
       def _read_be
         @type = Kaitai::Struct::Stream::resolve_enum(PH_TYPE, @_io.read_u4be)
         if _root.bits == :bits_b64
-          @flags64 = @_io.read_u4be
+          @flags64 = Kaitai::Struct::Stream::resolve_enum(PHDR_TYPE, @_io.read_u4be)
         end
         case _root.bits
         when :bits_b32
@@ -334,6 +454,25 @@ class Elf < Kaitai::Struct::Struct
         end
         self
       end
+      def dynamic
+        return @dynamic unless @dynamic.nil?
+        if type == :ph_type_dynamic
+          io = _root._io
+          _pos = io.pos
+          io.seek(offset)
+          if @_is_le
+            @_raw_dynamic = io.read_bytes(filesz)
+            io = Kaitai::Struct::Stream.new(@_raw_dynamic)
+            @dynamic = DynamicSection.new(io, self, @_root, @_is_le)
+          else
+            @_raw_dynamic = io.read_bytes(filesz)
+            io = Kaitai::Struct::Stream.new(@_raw_dynamic)
+            @dynamic = DynamicSection.new(io, self, @_root, @_is_le)
+          end
+          io.seek(_pos)
+        end
+        @dynamic
+      end
       attr_reader :type
       attr_reader :flags64
       attr_reader :offset
@@ -343,6 +482,65 @@ class Elf < Kaitai::Struct::Struct
       attr_reader :memsz
       attr_reader :flags32
       attr_reader :align
+      attr_reader :_raw_dynamic
+    end
+    class DynamicSectionEntry < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
+        super(_io, _parent, _root)
+        @_is_le = _is_le
+        _read
+      end
+
+      def _read
+
+        if @_is_le == true
+          _read_le
+        elsif @_is_le == false
+          _read_be
+        else
+          raise Kaitai::Struct::Stream::UndecidedEndiannessError
+        end
+        self
+      end
+
+      def _read_le
+        case _root.bits
+        when :bits_b32
+          @tag = @_io.read_u4le
+        when :bits_b64
+          @tag = @_io.read_u8le
+        end
+        case _root.bits
+        when :bits_b32
+          @value_or_ptr = @_io.read_u4le
+        when :bits_b64
+          @value_or_ptr = @_io.read_u8le
+        end
+        self
+      end
+
+      def _read_be
+        case _root.bits
+        when :bits_b32
+          @tag = @_io.read_u4be
+        when :bits_b64
+          @tag = @_io.read_u8be
+        end
+        case _root.bits
+        when :bits_b32
+          @value_or_ptr = @_io.read_u4be
+        when :bits_b64
+          @value_or_ptr = @_io.read_u8be
+        end
+        self
+      end
+      def tag_enum
+        return @tag_enum unless @tag_enum.nil?
+        @tag_enum = Kaitai::Struct::Stream::resolve_enum(DYNAMIC_ARRAY_TAGS, tag)
+        @tag_enum
+      end
+      attr_reader :tag
+      attr_reader :value_or_ptr
     end
     class SectionHeader < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
@@ -450,6 +648,11 @@ class Elf < Kaitai::Struct::Struct
         end
         self
       end
+      def flags_enum
+        return @flags_enum unless @flags_enum.nil?
+        @flags_enum = Kaitai::Struct::Stream::resolve_enum(SECTION_HEADER_FLAGS, flags)
+        @flags_enum
+      end
       def body
         return @body unless @body.nil?
         io = _root._io
@@ -462,6 +665,25 @@ class Elf < Kaitai::Struct::Struct
         end
         io.seek(_pos)
         @body
+      end
+      def strtab
+        return @strtab unless @strtab.nil?
+        if type == :sh_type_strtab
+          io = _root._io
+          _pos = io.pos
+          io.seek(offset)
+          if @_is_le
+            @_raw_strtab = io.read_bytes(size)
+            io = Kaitai::Struct::Stream.new(@_raw_strtab)
+            @strtab = StringsStruct.new(io, self, @_root, @_is_le)
+          else
+            @_raw_strtab = io.read_bytes(size)
+            io = Kaitai::Struct::Stream.new(@_raw_strtab)
+            @strtab = StringsStruct.new(io, self, @_root, @_is_le)
+          end
+          io.seek(_pos)
+        end
+        @strtab
       end
       def name
         return @name unless @name.nil?
@@ -476,6 +698,25 @@ class Elf < Kaitai::Struct::Struct
         io.seek(_pos)
         @name
       end
+      def dynamic
+        return @dynamic unless @dynamic.nil?
+        if type == :sh_type_dynamic
+          io = _root._io
+          _pos = io.pos
+          io.seek(offset)
+          if @_is_le
+            @_raw_dynamic = io.read_bytes(size)
+            io = Kaitai::Struct::Stream.new(@_raw_dynamic)
+            @dynamic = DynamicSection.new(io, self, @_root, @_is_le)
+          else
+            @_raw_dynamic = io.read_bytes(size)
+            io = Kaitai::Struct::Stream.new(@_raw_dynamic)
+            @dynamic = DynamicSection.new(io, self, @_root, @_is_le)
+          end
+          io.seek(_pos)
+        end
+        @dynamic
+      end
       attr_reader :name_offset
       attr_reader :type
       attr_reader :flags
@@ -486,6 +727,48 @@ class Elf < Kaitai::Struct::Struct
       attr_reader :info
       attr_reader :align
       attr_reader :entry_size
+      attr_reader :_raw_strtab
+      attr_reader :_raw_dynamic
+    end
+    class DynamicSection < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
+        super(_io, _parent, _root)
+        @_is_le = _is_le
+        _read
+      end
+
+      def _read
+
+        if @_is_le == true
+          _read_le
+        elsif @_is_le == false
+          _read_be
+        else
+          raise Kaitai::Struct::Stream::UndecidedEndiannessError
+        end
+        self
+      end
+
+      def _read_le
+        @entries = []
+        i = 0
+        while not @_io.eof?
+          @entries << DynamicSectionEntry.new(@_io, self, @_root, @_is_le)
+          i += 1
+        end
+        self
+      end
+
+      def _read_be
+        @entries = []
+        i = 0
+        while not @_io.eof?
+          @entries << DynamicSectionEntry.new(@_io, self, @_root, @_is_le)
+          i += 1
+        end
+        self
+      end
+      attr_reader :entries
     end
     class StringsStruct < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
