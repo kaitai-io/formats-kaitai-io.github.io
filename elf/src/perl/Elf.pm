@@ -300,7 +300,7 @@ sub _read {
 sub read {
     my ($self) = @_;
     return $self->{read} if ($self->{read});
-    $self->{read} = ($self->value() & 1) != 0;
+    $self->{read} = ($self->value() & 4) != 0;
     return $self->{read};
 }
 
@@ -314,7 +314,7 @@ sub write {
 sub execute {
     my ($self) = @_;
     return $self->{execute} if ($self->{execute});
-    $self->{execute} = ($self->value() & 4) != 0;
+    $self->{execute} = ($self->value() & 1) != 0;
     return $self->{execute};
 }
 

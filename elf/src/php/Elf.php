@@ -78,7 +78,7 @@ class PhdrTypeFlags extends \Kaitai\Struct\Struct {
     public function read() {
         if ($this->_m_read !== null)
             return $this->_m_read;
-        $this->_m_read = ($this->value() & 1) != 0;
+        $this->_m_read = ($this->value() & 4) != 0;
         return $this->_m_read;
     }
     protected $_m_write;
@@ -92,7 +92,7 @@ class PhdrTypeFlags extends \Kaitai\Struct\Struct {
     public function execute() {
         if ($this->_m_execute !== null)
             return $this->_m_execute;
-        $this->_m_execute = ($this->value() & 4) != 0;
+        $this->_m_execute = ($this->value() & 1) != 0;
         return $this->_m_execute;
     }
     protected $_m_maskProc;

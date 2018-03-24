@@ -45,7 +45,7 @@ elf_t::phdr_type_flags_t::~phdr_type_flags_t() {
 bool elf_t::phdr_type_flags_t::read() {
     if (f_read)
         return m_read;
-    m_read = (value() & 1) != 0;
+    m_read = (value() & 4) != 0;
     f_read = true;
     return m_read;
 }
@@ -61,7 +61,7 @@ bool elf_t::phdr_type_flags_t::write() {
 bool elf_t::phdr_type_flags_t::execute() {
     if (f_execute)
         return m_execute;
-    m_execute = (value() & 4) != 0;
+    m_execute = (value() & 1) != 0;
     f_execute = true;
     return m_execute;
 }

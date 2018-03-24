@@ -233,7 +233,7 @@ class Elf(KaitaiStruct):
             if hasattr(self, '_m_read'):
                 return self._m_read if hasattr(self, '_m_read') else None
 
-            self._m_read = (self.value & 1) != 0
+            self._m_read = (self.value & 4) != 0
             return self._m_read if hasattr(self, '_m_read') else None
 
         @property
@@ -249,7 +249,7 @@ class Elf(KaitaiStruct):
             if hasattr(self, '_m_execute'):
                 return self._m_execute if hasattr(self, '_m_execute') else None
 
-            self._m_execute = (self.value & 4) != 0
+            self._m_execute = (self.value & 1) != 0
             return self._m_execute if hasattr(self, '_m_execute') else None
 
         @property

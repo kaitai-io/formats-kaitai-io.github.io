@@ -242,7 +242,7 @@ class Elf < Kaitai::Struct::Struct
     end
     def read
       return @read unless @read.nil?
-      @read = (value & 1) != 0
+      @read = (value & 4) != 0
       @read
     end
     def write
@@ -252,7 +252,7 @@ class Elf < Kaitai::Struct::Struct
     end
     def execute
       return @execute unless @execute.nil?
-      @execute = (value & 4) != 0
+      @execute = (value & 1) != 0
       @execute
     end
     def mask_proc

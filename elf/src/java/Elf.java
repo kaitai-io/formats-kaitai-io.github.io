@@ -341,7 +341,7 @@ public class Elf extends KaitaiStruct {
         public Boolean read() {
             if (this.read != null)
                 return this.read;
-            boolean _tmp = (boolean) ((value() & 1) != 0);
+            boolean _tmp = (boolean) ((value() & 4) != 0);
             this.read = _tmp;
             return this.read;
         }
@@ -357,7 +357,7 @@ public class Elf extends KaitaiStruct {
         public Boolean execute() {
             if (this.execute != null)
                 return this.execute;
-            boolean _tmp = (boolean) ((value() & 4) != 0);
+            boolean _tmp = (boolean) ((value() & 1) != 0);
             this.execute = _tmp;
             return this.execute;
         }

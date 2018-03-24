@@ -423,7 +423,7 @@ var Elf = (function() {
       get: function() {
         if (this._m_read !== undefined)
           return this._m_read;
-        this._m_read = (this.value & 1) != 0;
+        this._m_read = (this.value & 4) != 0;
         return this._m_read;
       }
     });
@@ -439,7 +439,7 @@ var Elf = (function() {
       get: function() {
         if (this._m_execute !== undefined)
           return this._m_execute;
-        this._m_execute = (this.value & 4) != 0;
+        this._m_execute = (this.value & 1) != 0;
         return this._m_execute;
       }
     });

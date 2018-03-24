@@ -261,7 +261,7 @@ namespace Kaitai
                 {
                     if (f_read)
                         return _read;
-                    _read = (bool) ((Value & 1) != 0);
+                    _read = (bool) ((Value & 4) != 0);
                     f_read = true;
                     return _read;
                 }
@@ -287,7 +287,7 @@ namespace Kaitai
                 {
                     if (f_execute)
                         return _execute;
-                    _execute = (bool) ((Value & 4) != 0);
+                    _execute = (bool) ((Value & 1) != 0);
                     f_execute = true;
                     return _execute;
                 }
