@@ -3,10 +3,10 @@
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
-use IcmpPacket;
 use UdpDatagram;
 use TcpSegment;
 use Ipv6Packet;
+use IcmpPacket;
 
 ########################################################################
 package Ipv4Packet;
