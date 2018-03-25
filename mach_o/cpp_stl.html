@@ -276,6 +276,7 @@ public:
     class source_version_command_t;
     class cs_blob_t;
     class routines_command_t;
+    class macho_flags_t;
     class routines_command_64_t;
     class linker_option_command_t;
     class segment_command_64_t;
@@ -297,6 +298,52 @@ public:
     class symtab_command_t;
     class version_min_command_t;
     class entry_point_command_t;
+
+    enum magic_type_t {
+        MAGIC_TYPE_FAT_LE = 3199925962,
+        MAGIC_TYPE_FAT_BE = 3405691582,
+        MAGIC_TYPE_MACHO_LE_X86 = 3472551422,
+        MAGIC_TYPE_MACHO_LE_X64 = 3489328638,
+        MAGIC_TYPE_MACHO_BE_X86 = 4277009102,
+        MAGIC_TYPE_MACHO_BE_X64 = 4277009103
+    };
+
+    enum cpu_type_t {
+        CPU_TYPE_VAX = 1,
+        CPU_TYPE_ROMP = 2,
+        CPU_TYPE_NS32032 = 4,
+        CPU_TYPE_NS32332 = 5,
+        CPU_TYPE_I386 = 7,
+        CPU_TYPE_MIPS = 8,
+        CPU_TYPE_NS32532 = 9,
+        CPU_TYPE_HPPA = 11,
+        CPU_TYPE_ARM = 12,
+        CPU_TYPE_MC88000 = 13,
+        CPU_TYPE_SPARC = 14,
+        CPU_TYPE_I860 = 15,
+        CPU_TYPE_I860_LITTLE = 16,
+        CPU_TYPE_RS6000 = 17,
+        CPU_TYPE_POWERPC = 18,
+        CPU_TYPE_ABI64 = 16777216,
+        CPU_TYPE_X86_64 = 16777223,
+        CPU_TYPE_ARM64 = 16777228,
+        CPU_TYPE_POWERPC64 = 16777234,
+        CPU_TYPE_ANY = 4294967295
+    };
+
+    enum file_type_t {
+        FILE_TYPE_OBJECT = 1,
+        FILE_TYPE_EXECUTE = 2,
+        FILE_TYPE_FVMLIB = 3,
+        FILE_TYPE_CORE = 4,
+        FILE_TYPE_PRELOAD = 5,
+        FILE_TYPE_DYLIB = 6,
+        FILE_TYPE_DYLINKER = 7,
+        FILE_TYPE_BUNDLE = 8,
+        FILE_TYPE_DYLIB_STUB = 9,
+        FILE_TYPE_DSYM = 10,
+        FILE_TYPE_KEXT_BUNDLE = 11
+    };
 
     enum load_command_type_t {
         LOAD_COMMAND_TYPE_SEGMENT = 1,
@@ -349,81 +396,6 @@ public:
         LOAD_COMMAND_TYPE_DYLD_INFO_ONLY = 2147483682,
         LOAD_COMMAND_TYPE_LOAD_UPWARD_DYLIB = 2147483683,
         LOAD_COMMAND_TYPE_MAIN = 2147483688
-    };
-
-    enum macho_flags_t {
-        MACHO_FLAGS_NO_UNDEFS = 1,
-        MACHO_FLAGS_INCR_LINK = 2,
-        MACHO_FLAGS_DYLD_LINK = 4,
-        MACHO_FLAGS_BIND_AT_LOAD = 8,
-        MACHO_FLAGS_PREBOUND = 16,
-        MACHO_FLAGS_SPLIT_SEGS = 32,
-        MACHO_FLAGS_LAZY_INIT = 64,
-        MACHO_FLAGS_TWO_LEVEL = 128,
-        MACHO_FLAGS_FORCE_FLAT = 256,
-        MACHO_FLAGS_NO_MULTI_DEFS = 512,
-        MACHO_FLAGS_NO_FIX_PREBINDING = 1024,
-        MACHO_FLAGS_PREBINDABLE = 2048,
-        MACHO_FLAGS_ALL_MODS_BOUND = 4096,
-        MACHO_FLAGS_SUBSECTIONS_VIA_SYMBOLS = 8192,
-        MACHO_FLAGS_CANONICAL = 16384,
-        MACHO_FLAGS_WEAK_DEFINES = 32768,
-        MACHO_FLAGS_BINDS_TO_WEAK = 65536,
-        MACHO_FLAGS_ALLOW_STACK_EXECUTION = 131072,
-        MACHO_FLAGS_ROOT_SAFE = 262144,
-        MACHO_FLAGS_SETUID_SAFE = 524288,
-        MACHO_FLAGS_NO_REEXPORTED_DYLIBS = 1048576,
-        MACHO_FLAGS_PIE = 2097152,
-        MACHO_FLAGS_DEAD_STRIPPABLE_DYLIB = 4194304,
-        MACHO_FLAGS_HAS_TLV_DESCRIPTORS = 8388608,
-        MACHO_FLAGS_NO_HEAP_EXECUTION = 16777216,
-        MACHO_FLAGS_APP_EXTENSION_SAFE = 33554432
-    };
-
-    enum magic_type_t {
-        MAGIC_TYPE_FAT_LE = 3199925962,
-        MAGIC_TYPE_FAT_BE = 3405691582,
-        MAGIC_TYPE_MACHO_LE_X86 = 3472551422,
-        MAGIC_TYPE_MACHO_LE_X64 = 3489328638,
-        MAGIC_TYPE_MACHO_BE_X86 = 4277009102,
-        MAGIC_TYPE_MACHO_BE_X64 = 4277009103
-    };
-
-    enum file_type_t {
-        FILE_TYPE_OBJECT = 1,
-        FILE_TYPE_EXECUTE = 2,
-        FILE_TYPE_FVMLIB = 3,
-        FILE_TYPE_CORE = 4,
-        FILE_TYPE_PRELOAD = 5,
-        FILE_TYPE_DYLIB = 6,
-        FILE_TYPE_DYLINKER = 7,
-        FILE_TYPE_BUNDLE = 8,
-        FILE_TYPE_DYLIB_STUB = 9,
-        FILE_TYPE_DSYM = 10,
-        FILE_TYPE_KEXT_BUNDLE = 11
-    };
-
-    enum cpu_type_t {
-        CPU_TYPE_VAX = 1,
-        CPU_TYPE_ROMP = 2,
-        CPU_TYPE_NS32032 = 4,
-        CPU_TYPE_NS32332 = 5,
-        CPU_TYPE_I386 = 7,
-        CPU_TYPE_MIPS = 8,
-        CPU_TYPE_NS32532 = 9,
-        CPU_TYPE_HPPA = 11,
-        CPU_TYPE_ARM = 12,
-        CPU_TYPE_MC88000 = 13,
-        CPU_TYPE_SPARC = 14,
-        CPU_TYPE_I860 = 15,
-        CPU_TYPE_I860_LITTLE = 16,
-        CPU_TYPE_RS6000 = 17,
-        CPU_TYPE_POWERPC = 18,
-        CPU_TYPE_ABI64 = 16777216,
-        CPU_TYPE_X86_64 = 16777223,
-        CPU_TYPE_ARM64 = 16777228,
-        CPU_TYPE_POWERPC64 = 16777234,
-        CPU_TYPE_ANY = 4294967295
     };
 
     mach_o_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, mach_o_t* p__root = 0);
@@ -1347,6 +1319,299 @@ public:
         mach_o_t::load_command_t* _parent() const { return m__parent; }
     };
 
+    class macho_flags_t : public kaitai::kstruct {
+
+    public:
+
+        macho_flags_t(uint32_t p_value, kaitai::kstream* p__io, mach_o_t::mach_header_t* p__parent = 0, mach_o_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~macho_flags_t();
+
+    private:
+        bool f_subsections_via_symbols;
+        bool m_subsections_via_symbols;
+
+    public:
+
+        /**
+         * safe to divide up the sections into sub-sections via symbols for dead code stripping
+         */
+        bool subsections_via_symbols();
+
+    private:
+        bool f_dead_strippable_dylib;
+        bool m_dead_strippable_dylib;
+
+    public:
+        bool dead_strippable_dylib();
+
+    private:
+        bool f_weak_defines;
+        bool m_weak_defines;
+
+    public:
+
+        /**
+         * the final linked image contains external weak symbols
+         */
+        bool weak_defines();
+
+    private:
+        bool f_prebound;
+        bool m_prebound;
+
+    public:
+
+        /**
+         * the file has its dynamic undefined references prebound.
+         */
+        bool prebound();
+
+    private:
+        bool f_all_mods_bound;
+        bool m_all_mods_bound;
+
+    public:
+
+        /**
+         * indicates that this binary binds to all two-level namespace modules of its dependent libraries. only used when MH_PREBINDABLE and MH_TWOLEVEL are both set.
+         */
+        bool all_mods_bound();
+
+    private:
+        bool f_has_tlv_descriptors;
+        bool m_has_tlv_descriptors;
+
+    public:
+        bool has_tlv_descriptors();
+
+    private:
+        bool f_force_flat;
+        bool m_force_flat;
+
+    public:
+
+        /**
+         * the executable is forcing all images to use flat name space bindings
+         */
+        bool force_flat();
+
+    private:
+        bool f_root_safe;
+        bool m_root_safe;
+
+    public:
+
+        /**
+         * When this bit is set, the binary declares it is safe for use in processes with uid zero
+         */
+        bool root_safe();
+
+    private:
+        bool f_no_undefs;
+        bool m_no_undefs;
+
+    public:
+
+        /**
+         * the object file has no undefined references
+         */
+        bool no_undefs();
+
+    private:
+        bool f_setuid_safe;
+        bool m_setuid_safe;
+
+    public:
+
+        /**
+         * When this bit is set, the binary declares it is safe for use in processes when issetugid() is true
+         */
+        bool setuid_safe();
+
+    private:
+        bool f_no_heap_execution;
+        bool m_no_heap_execution;
+
+    public:
+        bool no_heap_execution();
+
+    private:
+        bool f_no_reexported_dylibs;
+        bool m_no_reexported_dylibs;
+
+    public:
+
+        /**
+         * When this bit is set on a dylib, the static linker does not need to examine dependent dylibs to see if any are re-exported
+         */
+        bool no_reexported_dylibs();
+
+    private:
+        bool f_no_multi_defs;
+        bool m_no_multi_defs;
+
+    public:
+
+        /**
+         * this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
+         */
+        bool no_multi_defs();
+
+    private:
+        bool f_app_extension_safe;
+        bool m_app_extension_safe;
+
+    public:
+        bool app_extension_safe();
+
+    private:
+        bool f_prebindable;
+        bool m_prebindable;
+
+    public:
+
+        /**
+         * the binary is not prebound but can have its prebinding redone. only used when MH_PREBOUND is not set.
+         */
+        bool prebindable();
+
+    private:
+        bool f_incr_link;
+        bool m_incr_link;
+
+    public:
+
+        /**
+         * the object file is the output of an incremental link against a base file and can&#39;t be link edited again
+         */
+        bool incr_link();
+
+    private:
+        bool f_bind_at_load;
+        bool m_bind_at_load;
+
+    public:
+
+        /**
+         * the object file&#39;s undefined references are bound by the dynamic linker when loaded.
+         */
+        bool bind_at_load();
+
+    private:
+        bool f_canonical;
+        bool m_canonical;
+
+    public:
+
+        /**
+         * the binary has been canonicalized via the unprebind operation
+         */
+        bool canonical();
+
+    private:
+        bool f_two_level;
+        bool m_two_level;
+
+    public:
+
+        /**
+         * the image is using two-level name space bindings
+         */
+        bool two_level();
+
+    private:
+        bool f_split_segs;
+        bool m_split_segs;
+
+    public:
+
+        /**
+         * the file has its read-only and read-write segments split
+         */
+        bool split_segs();
+
+    private:
+        bool f_lazy_init;
+        bool m_lazy_init;
+
+    public:
+
+        /**
+         * the shared library init routine is to be run lazily via catching memory faults to its writeable segments (obsolete)
+         */
+        bool lazy_init();
+
+    private:
+        bool f_allow_stack_execution;
+        bool m_allow_stack_execution;
+
+    public:
+
+        /**
+         * When this bit is set, all stacks in the task will be given stack execution privilege.  Only used in MH_EXECUTE filetypes.
+         */
+        bool allow_stack_execution();
+
+    private:
+        bool f_binds_to_weak;
+        bool m_binds_to_weak;
+
+    public:
+
+        /**
+         * the final linked image uses weak symbols
+         */
+        bool binds_to_weak();
+
+    private:
+        bool f_no_fix_prebinding;
+        bool m_no_fix_prebinding;
+
+    public:
+
+        /**
+         * do not have dyld notify the prebinding agent about this executable
+         */
+        bool no_fix_prebinding();
+
+    private:
+        bool f_dyld_link;
+        bool m_dyld_link;
+
+    public:
+
+        /**
+         * the object file is input for the dynamic linker and can&#39;t be staticly link edited again
+         */
+        bool dyld_link();
+
+    private:
+        bool f_pie;
+        bool m_pie;
+
+    public:
+
+        /**
+         * When this bit is set, the OS will load the main executable at a random address. Only used in MH_EXECUTE filetypes.
+         */
+        bool pie();
+
+    private:
+        uint32_t m_value;
+        mach_o_t* m__root;
+        mach_o_t::mach_header_t* m__parent;
+
+    public:
+        uint32_t value() const { return m_value; }
+        mach_o_t* _root() const { return m__root; }
+        mach_o_t::mach_header_t* _parent() const { return m__parent; }
+    };
+
     class routines_command_64_t : public kaitai::kstruct {
 
     public:
@@ -1923,6 +2188,13 @@ public:
 
     public:
         ~mach_header_t();
+
+    private:
+        bool f_flags_obj;
+        macho_flags_t* m_flags_obj;
+
+    public:
+        macho_flags_t* flags_obj();
 
     private:
         cpu_type_t m_cputype;
@@ -3564,6 +3836,253 @@ void mach_o_t::routines_command_t::_read() {
 mach_o_t::routines_command_t::~routines_command_t() {
 }
 
+mach_o_t::macho_flags_t::macho_flags_t(uint32_t p_value, kaitai::kstream* p__io, mach_o_t::mach_header_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_value = p_value;
+    f_subsections_via_symbols = false;
+    f_dead_strippable_dylib = false;
+    f_weak_defines = false;
+    f_prebound = false;
+    f_all_mods_bound = false;
+    f_has_tlv_descriptors = false;
+    f_force_flat = false;
+    f_root_safe = false;
+    f_no_undefs = false;
+    f_setuid_safe = false;
+    f_no_heap_execution = false;
+    f_no_reexported_dylibs = false;
+    f_no_multi_defs = false;
+    f_app_extension_safe = false;
+    f_prebindable = false;
+    f_incr_link = false;
+    f_bind_at_load = false;
+    f_canonical = false;
+    f_two_level = false;
+    f_split_segs = false;
+    f_lazy_init = false;
+    f_allow_stack_execution = false;
+    f_binds_to_weak = false;
+    f_no_fix_prebinding = false;
+    f_dyld_link = false;
+    f_pie = false;
+    _read();
+}
+
+void mach_o_t::macho_flags_t::_read() {
+}
+
+mach_o_t::macho_flags_t::~macho_flags_t() {
+}
+
+bool mach_o_t::macho_flags_t::subsections_via_symbols() {
+    if (f_subsections_via_symbols)
+        return m_subsections_via_symbols;
+    m_subsections_via_symbols = (value() &amp; 8192) != 0;
+    f_subsections_via_symbols = true;
+    return m_subsections_via_symbols;
+}
+
+bool mach_o_t::macho_flags_t::dead_strippable_dylib() {
+    if (f_dead_strippable_dylib)
+        return m_dead_strippable_dylib;
+    m_dead_strippable_dylib = (value() &amp; 4194304) != 0;
+    f_dead_strippable_dylib = true;
+    return m_dead_strippable_dylib;
+}
+
+bool mach_o_t::macho_flags_t::weak_defines() {
+    if (f_weak_defines)
+        return m_weak_defines;
+    m_weak_defines = (value() &amp; 32768) != 0;
+    f_weak_defines = true;
+    return m_weak_defines;
+}
+
+bool mach_o_t::macho_flags_t::prebound() {
+    if (f_prebound)
+        return m_prebound;
+    m_prebound = (value() &amp; 16) != 0;
+    f_prebound = true;
+    return m_prebound;
+}
+
+bool mach_o_t::macho_flags_t::all_mods_bound() {
+    if (f_all_mods_bound)
+        return m_all_mods_bound;
+    m_all_mods_bound = (value() &amp; 4096) != 0;
+    f_all_mods_bound = true;
+    return m_all_mods_bound;
+}
+
+bool mach_o_t::macho_flags_t::has_tlv_descriptors() {
+    if (f_has_tlv_descriptors)
+        return m_has_tlv_descriptors;
+    m_has_tlv_descriptors = (value() &amp; 8388608) != 0;
+    f_has_tlv_descriptors = true;
+    return m_has_tlv_descriptors;
+}
+
+bool mach_o_t::macho_flags_t::force_flat() {
+    if (f_force_flat)
+        return m_force_flat;
+    m_force_flat = (value() &amp; 256) != 0;
+    f_force_flat = true;
+    return m_force_flat;
+}
+
+bool mach_o_t::macho_flags_t::root_safe() {
+    if (f_root_safe)
+        return m_root_safe;
+    m_root_safe = (value() &amp; 262144) != 0;
+    f_root_safe = true;
+    return m_root_safe;
+}
+
+bool mach_o_t::macho_flags_t::no_undefs() {
+    if (f_no_undefs)
+        return m_no_undefs;
+    m_no_undefs = (value() &amp; 1) != 0;
+    f_no_undefs = true;
+    return m_no_undefs;
+}
+
+bool mach_o_t::macho_flags_t::setuid_safe() {
+    if (f_setuid_safe)
+        return m_setuid_safe;
+    m_setuid_safe = (value() &amp; 524288) != 0;
+    f_setuid_safe = true;
+    return m_setuid_safe;
+}
+
+bool mach_o_t::macho_flags_t::no_heap_execution() {
+    if (f_no_heap_execution)
+        return m_no_heap_execution;
+    m_no_heap_execution = (value() &amp; 16777216) != 0;
+    f_no_heap_execution = true;
+    return m_no_heap_execution;
+}
+
+bool mach_o_t::macho_flags_t::no_reexported_dylibs() {
+    if (f_no_reexported_dylibs)
+        return m_no_reexported_dylibs;
+    m_no_reexported_dylibs = (value() &amp; 1048576) != 0;
+    f_no_reexported_dylibs = true;
+    return m_no_reexported_dylibs;
+}
+
+bool mach_o_t::macho_flags_t::no_multi_defs() {
+    if (f_no_multi_defs)
+        return m_no_multi_defs;
+    m_no_multi_defs = (value() &amp; 512) != 0;
+    f_no_multi_defs = true;
+    return m_no_multi_defs;
+}
+
+bool mach_o_t::macho_flags_t::app_extension_safe() {
+    if (f_app_extension_safe)
+        return m_app_extension_safe;
+    m_app_extension_safe = (value() &amp; 33554432) != 0;
+    f_app_extension_safe = true;
+    return m_app_extension_safe;
+}
+
+bool mach_o_t::macho_flags_t::prebindable() {
+    if (f_prebindable)
+        return m_prebindable;
+    m_prebindable = (value() &amp; 2048) != 0;
+    f_prebindable = true;
+    return m_prebindable;
+}
+
+bool mach_o_t::macho_flags_t::incr_link() {
+    if (f_incr_link)
+        return m_incr_link;
+    m_incr_link = (value() &amp; 2) != 0;
+    f_incr_link = true;
+    return m_incr_link;
+}
+
+bool mach_o_t::macho_flags_t::bind_at_load() {
+    if (f_bind_at_load)
+        return m_bind_at_load;
+    m_bind_at_load = (value() &amp; 8) != 0;
+    f_bind_at_load = true;
+    return m_bind_at_load;
+}
+
+bool mach_o_t::macho_flags_t::canonical() {
+    if (f_canonical)
+        return m_canonical;
+    m_canonical = (value() &amp; 16384) != 0;
+    f_canonical = true;
+    return m_canonical;
+}
+
+bool mach_o_t::macho_flags_t::two_level() {
+    if (f_two_level)
+        return m_two_level;
+    m_two_level = (value() &amp; 128) != 0;
+    f_two_level = true;
+    return m_two_level;
+}
+
+bool mach_o_t::macho_flags_t::split_segs() {
+    if (f_split_segs)
+        return m_split_segs;
+    m_split_segs = (value() &amp; 32) != 0;
+    f_split_segs = true;
+    return m_split_segs;
+}
+
+bool mach_o_t::macho_flags_t::lazy_init() {
+    if (f_lazy_init)
+        return m_lazy_init;
+    m_lazy_init = (value() &amp; 64) != 0;
+    f_lazy_init = true;
+    return m_lazy_init;
+}
+
+bool mach_o_t::macho_flags_t::allow_stack_execution() {
+    if (f_allow_stack_execution)
+        return m_allow_stack_execution;
+    m_allow_stack_execution = (value() &amp; 131072) != 0;
+    f_allow_stack_execution = true;
+    return m_allow_stack_execution;
+}
+
+bool mach_o_t::macho_flags_t::binds_to_weak() {
+    if (f_binds_to_weak)
+        return m_binds_to_weak;
+    m_binds_to_weak = (value() &amp; 65536) != 0;
+    f_binds_to_weak = true;
+    return m_binds_to_weak;
+}
+
+bool mach_o_t::macho_flags_t::no_fix_prebinding() {
+    if (f_no_fix_prebinding)
+        return m_no_fix_prebinding;
+    m_no_fix_prebinding = (value() &amp; 1024) != 0;
+    f_no_fix_prebinding = true;
+    return m_no_fix_prebinding;
+}
+
+bool mach_o_t::macho_flags_t::dyld_link() {
+    if (f_dyld_link)
+        return m_dyld_link;
+    m_dyld_link = (value() &amp; 4) != 0;
+    f_dyld_link = true;
+    return m_dyld_link;
+}
+
+bool mach_o_t::macho_flags_t::pie() {
+    if (f_pie)
+        return m_pie;
+    m_pie = (value() &amp; 2097152) != 0;
+    f_pie = true;
+    return m_pie;
+}
+
 mach_o_t::routines_command_64_t::routines_command_64_t(kaitai::kstream* p__io, mach_o_t::load_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -4075,6 +4594,7 @@ std::vector&lt;uint32_t&gt;* mach_o_t::dysymtab_command_t::indirect_symbols() {
 mach_o_t::mach_header_t::mach_header_t(kaitai::kstream* p__io, mach_o_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    f_flags_obj = false;
     _read();
 }
 
@@ -4095,6 +4615,17 @@ void mach_o_t::mach_header_t::_read() {
 mach_o_t::mach_header_t::~mach_header_t() {
     if (!n_reserved) {
     }
+    if (f_flags_obj) {
+        delete m_flags_obj;
+    }
+}
+
+mach_o_t::macho_flags_t* mach_o_t::mach_header_t::flags_obj() {
+    if (f_flags_obj)
+        return m_flags_obj;
+    m_flags_obj = new macho_flags_t(flags(), m__io, this, m__root);
+    f_flags_obj = true;
+    return m_flags_obj;
 }
 
 mach_o_t::linkedit_data_command_t::linkedit_data_command_t(kaitai::kstream* p__io, mach_o_t::load_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {

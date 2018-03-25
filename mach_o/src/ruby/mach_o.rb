@@ -8,6 +8,55 @@ end
 
 class MachO < Kaitai::Struct::Struct
 
+  MAGIC_TYPE = {
+    3199925962 => :magic_type_fat_le,
+    3405691582 => :magic_type_fat_be,
+    3472551422 => :magic_type_macho_le_x86,
+    3489328638 => :magic_type_macho_le_x64,
+    4277009102 => :magic_type_macho_be_x86,
+    4277009103 => :magic_type_macho_be_x64,
+  }
+  I__MAGIC_TYPE = MAGIC_TYPE.invert
+
+  CPU_TYPE = {
+    1 => :cpu_type_vax,
+    2 => :cpu_type_romp,
+    4 => :cpu_type_ns32032,
+    5 => :cpu_type_ns32332,
+    7 => :cpu_type_i386,
+    8 => :cpu_type_mips,
+    9 => :cpu_type_ns32532,
+    11 => :cpu_type_hppa,
+    12 => :cpu_type_arm,
+    13 => :cpu_type_mc88000,
+    14 => :cpu_type_sparc,
+    15 => :cpu_type_i860,
+    16 => :cpu_type_i860_little,
+    17 => :cpu_type_rs6000,
+    18 => :cpu_type_powerpc,
+    16777216 => :cpu_type_abi64,
+    16777223 => :cpu_type_x86_64,
+    16777228 => :cpu_type_arm64,
+    16777234 => :cpu_type_powerpc64,
+    4294967295 => :cpu_type_any,
+  }
+  I__CPU_TYPE = CPU_TYPE.invert
+
+  FILE_TYPE = {
+    1 => :file_type_object,
+    2 => :file_type_execute,
+    3 => :file_type_fvmlib,
+    4 => :file_type_core,
+    5 => :file_type_preload,
+    6 => :file_type_dylib,
+    7 => :file_type_dylinker,
+    8 => :file_type_bundle,
+    9 => :file_type_dylib_stub,
+    10 => :file_type_dsym,
+    11 => :file_type_kext_bundle,
+  }
+  I__FILE_TYPE = FILE_TYPE.invert
+
   LOAD_COMMAND_TYPE = {
     1 => :load_command_type_segment,
     2 => :load_command_type_symtab,
@@ -61,85 +110,6 @@ class MachO < Kaitai::Struct::Struct
     2147483688 => :load_command_type_main,
   }
   I__LOAD_COMMAND_TYPE = LOAD_COMMAND_TYPE.invert
-
-  MACHO_FLAGS = {
-    1 => :macho_flags_no_undefs,
-    2 => :macho_flags_incr_link,
-    4 => :macho_flags_dyld_link,
-    8 => :macho_flags_bind_at_load,
-    16 => :macho_flags_prebound,
-    32 => :macho_flags_split_segs,
-    64 => :macho_flags_lazy_init,
-    128 => :macho_flags_two_level,
-    256 => :macho_flags_force_flat,
-    512 => :macho_flags_no_multi_defs,
-    1024 => :macho_flags_no_fix_prebinding,
-    2048 => :macho_flags_prebindable,
-    4096 => :macho_flags_all_mods_bound,
-    8192 => :macho_flags_subsections_via_symbols,
-    16384 => :macho_flags_canonical,
-    32768 => :macho_flags_weak_defines,
-    65536 => :macho_flags_binds_to_weak,
-    131072 => :macho_flags_allow_stack_execution,
-    262144 => :macho_flags_root_safe,
-    524288 => :macho_flags_setuid_safe,
-    1048576 => :macho_flags_no_reexported_dylibs,
-    2097152 => :macho_flags_pie,
-    4194304 => :macho_flags_dead_strippable_dylib,
-    8388608 => :macho_flags_has_tlv_descriptors,
-    16777216 => :macho_flags_no_heap_execution,
-    33554432 => :macho_flags_app_extension_safe,
-  }
-  I__MACHO_FLAGS = MACHO_FLAGS.invert
-
-  MAGIC_TYPE = {
-    3199925962 => :magic_type_fat_le,
-    3405691582 => :magic_type_fat_be,
-    3472551422 => :magic_type_macho_le_x86,
-    3489328638 => :magic_type_macho_le_x64,
-    4277009102 => :magic_type_macho_be_x86,
-    4277009103 => :magic_type_macho_be_x64,
-  }
-  I__MAGIC_TYPE = MAGIC_TYPE.invert
-
-  FILE_TYPE = {
-    1 => :file_type_object,
-    2 => :file_type_execute,
-    3 => :file_type_fvmlib,
-    4 => :file_type_core,
-    5 => :file_type_preload,
-    6 => :file_type_dylib,
-    7 => :file_type_dylinker,
-    8 => :file_type_bundle,
-    9 => :file_type_dylib_stub,
-    10 => :file_type_dsym,
-    11 => :file_type_kext_bundle,
-  }
-  I__FILE_TYPE = FILE_TYPE.invert
-
-  CPU_TYPE = {
-    1 => :cpu_type_vax,
-    2 => :cpu_type_romp,
-    4 => :cpu_type_ns32032,
-    5 => :cpu_type_ns32332,
-    7 => :cpu_type_i386,
-    8 => :cpu_type_mips,
-    9 => :cpu_type_ns32532,
-    11 => :cpu_type_hppa,
-    12 => :cpu_type_arm,
-    13 => :cpu_type_mc88000,
-    14 => :cpu_type_sparc,
-    15 => :cpu_type_i860,
-    16 => :cpu_type_i860_little,
-    17 => :cpu_type_rs6000,
-    18 => :cpu_type_powerpc,
-    16777216 => :cpu_type_abi64,
-    16777223 => :cpu_type_x86_64,
-    16777228 => :cpu_type_arm64,
-    16777234 => :cpu_type_powerpc64,
-    4294967295 => :cpu_type_any,
-  }
-  I__CPU_TYPE = CPU_TYPE.invert
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
     _read
@@ -771,6 +741,214 @@ class MachO < Kaitai::Struct::Struct
     attr_reader :init_module
     attr_reader :reserved
   end
+  class MachoFlags < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self, value)
+      super(_io, _parent, _root)
+      @value = value
+      _read
+    end
+
+    def _read
+      self
+    end
+
+    ##
+    # safe to divide up the sections into sub-sections via symbols for dead code stripping
+    def subsections_via_symbols
+      return @subsections_via_symbols unless @subsections_via_symbols.nil?
+      @subsections_via_symbols = (value & 8192) != 0
+      @subsections_via_symbols
+    end
+    def dead_strippable_dylib
+      return @dead_strippable_dylib unless @dead_strippable_dylib.nil?
+      @dead_strippable_dylib = (value & 4194304) != 0
+      @dead_strippable_dylib
+    end
+
+    ##
+    # the final linked image contains external weak symbols
+    def weak_defines
+      return @weak_defines unless @weak_defines.nil?
+      @weak_defines = (value & 32768) != 0
+      @weak_defines
+    end
+
+    ##
+    # the file has its dynamic undefined references prebound.
+    def prebound
+      return @prebound unless @prebound.nil?
+      @prebound = (value & 16) != 0
+      @prebound
+    end
+
+    ##
+    # indicates that this binary binds to all two-level namespace modules of its dependent libraries. only used when MH_PREBINDABLE and MH_TWOLEVEL are both set.
+    def all_mods_bound
+      return @all_mods_bound unless @all_mods_bound.nil?
+      @all_mods_bound = (value & 4096) != 0
+      @all_mods_bound
+    end
+    def has_tlv_descriptors
+      return @has_tlv_descriptors unless @has_tlv_descriptors.nil?
+      @has_tlv_descriptors = (value & 8388608) != 0
+      @has_tlv_descriptors
+    end
+
+    ##
+    # the executable is forcing all images to use flat name space bindings
+    def force_flat
+      return @force_flat unless @force_flat.nil?
+      @force_flat = (value & 256) != 0
+      @force_flat
+    end
+
+    ##
+    # When this bit is set, the binary declares it is safe for use in processes with uid zero
+    def root_safe
+      return @root_safe unless @root_safe.nil?
+      @root_safe = (value & 262144) != 0
+      @root_safe
+    end
+
+    ##
+    # the object file has no undefined references
+    def no_undefs
+      return @no_undefs unless @no_undefs.nil?
+      @no_undefs = (value & 1) != 0
+      @no_undefs
+    end
+
+    ##
+    # When this bit is set, the binary declares it is safe for use in processes when issetugid() is true
+    def setuid_safe
+      return @setuid_safe unless @setuid_safe.nil?
+      @setuid_safe = (value & 524288) != 0
+      @setuid_safe
+    end
+    def no_heap_execution
+      return @no_heap_execution unless @no_heap_execution.nil?
+      @no_heap_execution = (value & 16777216) != 0
+      @no_heap_execution
+    end
+
+    ##
+    # When this bit is set on a dylib, the static linker does not need to examine dependent dylibs to see if any are re-exported
+    def no_reexported_dylibs
+      return @no_reexported_dylibs unless @no_reexported_dylibs.nil?
+      @no_reexported_dylibs = (value & 1048576) != 0
+      @no_reexported_dylibs
+    end
+
+    ##
+    # this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
+    def no_multi_defs
+      return @no_multi_defs unless @no_multi_defs.nil?
+      @no_multi_defs = (value & 512) != 0
+      @no_multi_defs
+    end
+    def app_extension_safe
+      return @app_extension_safe unless @app_extension_safe.nil?
+      @app_extension_safe = (value & 33554432) != 0
+      @app_extension_safe
+    end
+
+    ##
+    # the binary is not prebound but can have its prebinding redone. only used when MH_PREBOUND is not set.
+    def prebindable
+      return @prebindable unless @prebindable.nil?
+      @prebindable = (value & 2048) != 0
+      @prebindable
+    end
+
+    ##
+    # the object file is the output of an incremental link against a base file and can't be link edited again
+    def incr_link
+      return @incr_link unless @incr_link.nil?
+      @incr_link = (value & 2) != 0
+      @incr_link
+    end
+
+    ##
+    # the object file's undefined references are bound by the dynamic linker when loaded.
+    def bind_at_load
+      return @bind_at_load unless @bind_at_load.nil?
+      @bind_at_load = (value & 8) != 0
+      @bind_at_load
+    end
+
+    ##
+    # the binary has been canonicalized via the unprebind operation
+    def canonical
+      return @canonical unless @canonical.nil?
+      @canonical = (value & 16384) != 0
+      @canonical
+    end
+
+    ##
+    # the image is using two-level name space bindings
+    def two_level
+      return @two_level unless @two_level.nil?
+      @two_level = (value & 128) != 0
+      @two_level
+    end
+
+    ##
+    # the file has its read-only and read-write segments split
+    def split_segs
+      return @split_segs unless @split_segs.nil?
+      @split_segs = (value & 32) != 0
+      @split_segs
+    end
+
+    ##
+    # the shared library init routine is to be run lazily via catching memory faults to its writeable segments (obsolete)
+    def lazy_init
+      return @lazy_init unless @lazy_init.nil?
+      @lazy_init = (value & 64) != 0
+      @lazy_init
+    end
+
+    ##
+    # When this bit is set, all stacks in the task will be given stack execution privilege.  Only used in MH_EXECUTE filetypes.
+    def allow_stack_execution
+      return @allow_stack_execution unless @allow_stack_execution.nil?
+      @allow_stack_execution = (value & 131072) != 0
+      @allow_stack_execution
+    end
+
+    ##
+    # the final linked image uses weak symbols
+    def binds_to_weak
+      return @binds_to_weak unless @binds_to_weak.nil?
+      @binds_to_weak = (value & 65536) != 0
+      @binds_to_weak
+    end
+
+    ##
+    # do not have dyld notify the prebinding agent about this executable
+    def no_fix_prebinding
+      return @no_fix_prebinding unless @no_fix_prebinding.nil?
+      @no_fix_prebinding = (value & 1024) != 0
+      @no_fix_prebinding
+    end
+
+    ##
+    # the object file is input for the dynamic linker and can't be staticly link edited again
+    def dyld_link
+      return @dyld_link unless @dyld_link.nil?
+      @dyld_link = (value & 4) != 0
+      @dyld_link
+    end
+
+    ##
+    # When this bit is set, the OS will load the main executable at a random address. Only used in MH_EXECUTE filetypes.
+    def pie
+      return @pie unless @pie.nil?
+      @pie = (value & 2097152) != 0
+      @pie
+    end
+    attr_reader :value
+  end
   class RoutinesCommand64 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -1254,6 +1432,11 @@ class MachO < Kaitai::Struct::Struct
         @reserved = @_io.read_u4le
       end
       self
+    end
+    def flags_obj
+      return @flags_obj unless @flags_obj.nil?
+      @flags_obj = MachoFlags.new(@_io, self, @_root, flags)
+      @flags_obj
     end
     attr_reader :cputype
     attr_reader :cpusubtype

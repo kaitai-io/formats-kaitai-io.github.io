@@ -224,6 +224,46 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
 }
 
+our $MAGIC_TYPE_FAT_LE = 3199925962;
+our $MAGIC_TYPE_FAT_BE = 3405691582;
+our $MAGIC_TYPE_MACHO_LE_X86 = 3472551422;
+our $MAGIC_TYPE_MACHO_LE_X64 = 3489328638;
+our $MAGIC_TYPE_MACHO_BE_X86 = 4277009102;
+our $MAGIC_TYPE_MACHO_BE_X64 = 4277009103;
+
+our $CPU_TYPE_VAX = 1;
+our $CPU_TYPE_ROMP = 2;
+our $CPU_TYPE_NS32032 = 4;
+our $CPU_TYPE_NS32332 = 5;
+our $CPU_TYPE_I386 = 7;
+our $CPU_TYPE_MIPS = 8;
+our $CPU_TYPE_NS32532 = 9;
+our $CPU_TYPE_HPPA = 11;
+our $CPU_TYPE_ARM = 12;
+our $CPU_TYPE_MC88000 = 13;
+our $CPU_TYPE_SPARC = 14;
+our $CPU_TYPE_I860 = 15;
+our $CPU_TYPE_I860_LITTLE = 16;
+our $CPU_TYPE_RS6000 = 17;
+our $CPU_TYPE_POWERPC = 18;
+our $CPU_TYPE_ABI64 = 16777216;
+our $CPU_TYPE_X86_64 = 16777223;
+our $CPU_TYPE_ARM64 = 16777228;
+our $CPU_TYPE_POWERPC64 = 16777234;
+our $CPU_TYPE_ANY = 4294967295;
+
+our $FILE_TYPE_OBJECT = 1;
+our $FILE_TYPE_EXECUTE = 2;
+our $FILE_TYPE_FVMLIB = 3;
+our $FILE_TYPE_CORE = 4;
+our $FILE_TYPE_PRELOAD = 5;
+our $FILE_TYPE_DYLIB = 6;
+our $FILE_TYPE_DYLINKER = 7;
+our $FILE_TYPE_BUNDLE = 8;
+our $FILE_TYPE_DYLIB_STUB = 9;
+our $FILE_TYPE_DSYM = 10;
+our $FILE_TYPE_KEXT_BUNDLE = 11;
+
 our $LOAD_COMMAND_TYPE_SEGMENT = 1;
 our $LOAD_COMMAND_TYPE_SYMTAB = 2;
 our $LOAD_COMMAND_TYPE_SYMSEG = 3;
@@ -274,73 +314,6 @@ our $LOAD_COMMAND_TYPE_REEXPORT_DYLIB = 2147483679;
 our $LOAD_COMMAND_TYPE_DYLD_INFO_ONLY = 2147483682;
 our $LOAD_COMMAND_TYPE_LOAD_UPWARD_DYLIB = 2147483683;
 our $LOAD_COMMAND_TYPE_MAIN = 2147483688;
-
-our $MACHO_FLAGS_NO_UNDEFS = 1;
-our $MACHO_FLAGS_INCR_LINK = 2;
-our $MACHO_FLAGS_DYLD_LINK = 4;
-our $MACHO_FLAGS_BIND_AT_LOAD = 8;
-our $MACHO_FLAGS_PREBOUND = 16;
-our $MACHO_FLAGS_SPLIT_SEGS = 32;
-our $MACHO_FLAGS_LAZY_INIT = 64;
-our $MACHO_FLAGS_TWO_LEVEL = 128;
-our $MACHO_FLAGS_FORCE_FLAT = 256;
-our $MACHO_FLAGS_NO_MULTI_DEFS = 512;
-our $MACHO_FLAGS_NO_FIX_PREBINDING = 1024;
-our $MACHO_FLAGS_PREBINDABLE = 2048;
-our $MACHO_FLAGS_ALL_MODS_BOUND = 4096;
-our $MACHO_FLAGS_SUBSECTIONS_VIA_SYMBOLS = 8192;
-our $MACHO_FLAGS_CANONICAL = 16384;
-our $MACHO_FLAGS_WEAK_DEFINES = 32768;
-our $MACHO_FLAGS_BINDS_TO_WEAK = 65536;
-our $MACHO_FLAGS_ALLOW_STACK_EXECUTION = 131072;
-our $MACHO_FLAGS_ROOT_SAFE = 262144;
-our $MACHO_FLAGS_SETUID_SAFE = 524288;
-our $MACHO_FLAGS_NO_REEXPORTED_DYLIBS = 1048576;
-our $MACHO_FLAGS_PIE = 2097152;
-our $MACHO_FLAGS_DEAD_STRIPPABLE_DYLIB = 4194304;
-our $MACHO_FLAGS_HAS_TLV_DESCRIPTORS = 8388608;
-our $MACHO_FLAGS_NO_HEAP_EXECUTION = 16777216;
-our $MACHO_FLAGS_APP_EXTENSION_SAFE = 33554432;
-
-our $MAGIC_TYPE_FAT_LE = 3199925962;
-our $MAGIC_TYPE_FAT_BE = 3405691582;
-our $MAGIC_TYPE_MACHO_LE_X86 = 3472551422;
-our $MAGIC_TYPE_MACHO_LE_X64 = 3489328638;
-our $MAGIC_TYPE_MACHO_BE_X86 = 4277009102;
-our $MAGIC_TYPE_MACHO_BE_X64 = 4277009103;
-
-our $FILE_TYPE_OBJECT = 1;
-our $FILE_TYPE_EXECUTE = 2;
-our $FILE_TYPE_FVMLIB = 3;
-our $FILE_TYPE_CORE = 4;
-our $FILE_TYPE_PRELOAD = 5;
-our $FILE_TYPE_DYLIB = 6;
-our $FILE_TYPE_DYLINKER = 7;
-our $FILE_TYPE_BUNDLE = 8;
-our $FILE_TYPE_DYLIB_STUB = 9;
-our $FILE_TYPE_DSYM = 10;
-our $FILE_TYPE_KEXT_BUNDLE = 11;
-
-our $CPU_TYPE_VAX = 1;
-our $CPU_TYPE_ROMP = 2;
-our $CPU_TYPE_NS32032 = 4;
-our $CPU_TYPE_NS32332 = 5;
-our $CPU_TYPE_I386 = 7;
-our $CPU_TYPE_MIPS = 8;
-our $CPU_TYPE_NS32532 = 9;
-our $CPU_TYPE_HPPA = 11;
-our $CPU_TYPE_ARM = 12;
-our $CPU_TYPE_MC88000 = 13;
-our $CPU_TYPE_SPARC = 14;
-our $CPU_TYPE_I860 = 15;
-our $CPU_TYPE_I860_LITTLE = 16;
-our $CPU_TYPE_RS6000 = 17;
-our $CPU_TYPE_POWERPC = 18;
-our $CPU_TYPE_ABI64 = 16777216;
-our $CPU_TYPE_X86_64 = 16777223;
-our $CPU_TYPE_ARM64 = 16777228;
-our $CPU_TYPE_POWERPC64 = 16777234;
-our $CPU_TYPE_ANY = 4294967295;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
@@ -1878,6 +1851,225 @@ sub reserved {
 }
 
 ########################################################################
+package MachO::MachoFlags;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+}
+
+sub subsections_via_symbols {
+    my ($self) = @_;
+    return $self-&gt;{subsections_via_symbols} if ($self-&gt;{subsections_via_symbols});
+    $self-&gt;{subsections_via_symbols} = ($self-&gt;value() &amp; 8192) != 0;
+    return $self-&gt;{subsections_via_symbols};
+}
+
+sub dead_strippable_dylib {
+    my ($self) = @_;
+    return $self-&gt;{dead_strippable_dylib} if ($self-&gt;{dead_strippable_dylib});
+    $self-&gt;{dead_strippable_dylib} = ($self-&gt;value() &amp; 4194304) != 0;
+    return $self-&gt;{dead_strippable_dylib};
+}
+
+sub weak_defines {
+    my ($self) = @_;
+    return $self-&gt;{weak_defines} if ($self-&gt;{weak_defines});
+    $self-&gt;{weak_defines} = ($self-&gt;value() &amp; 32768) != 0;
+    return $self-&gt;{weak_defines};
+}
+
+sub prebound {
+    my ($self) = @_;
+    return $self-&gt;{prebound} if ($self-&gt;{prebound});
+    $self-&gt;{prebound} = ($self-&gt;value() &amp; 16) != 0;
+    return $self-&gt;{prebound};
+}
+
+sub all_mods_bound {
+    my ($self) = @_;
+    return $self-&gt;{all_mods_bound} if ($self-&gt;{all_mods_bound});
+    $self-&gt;{all_mods_bound} = ($self-&gt;value() &amp; 4096) != 0;
+    return $self-&gt;{all_mods_bound};
+}
+
+sub has_tlv_descriptors {
+    my ($self) = @_;
+    return $self-&gt;{has_tlv_descriptors} if ($self-&gt;{has_tlv_descriptors});
+    $self-&gt;{has_tlv_descriptors} = ($self-&gt;value() &amp; 8388608) != 0;
+    return $self-&gt;{has_tlv_descriptors};
+}
+
+sub force_flat {
+    my ($self) = @_;
+    return $self-&gt;{force_flat} if ($self-&gt;{force_flat});
+    $self-&gt;{force_flat} = ($self-&gt;value() &amp; 256) != 0;
+    return $self-&gt;{force_flat};
+}
+
+sub root_safe {
+    my ($self) = @_;
+    return $self-&gt;{root_safe} if ($self-&gt;{root_safe});
+    $self-&gt;{root_safe} = ($self-&gt;value() &amp; 262144) != 0;
+    return $self-&gt;{root_safe};
+}
+
+sub no_undefs {
+    my ($self) = @_;
+    return $self-&gt;{no_undefs} if ($self-&gt;{no_undefs});
+    $self-&gt;{no_undefs} = ($self-&gt;value() &amp; 1) != 0;
+    return $self-&gt;{no_undefs};
+}
+
+sub setuid_safe {
+    my ($self) = @_;
+    return $self-&gt;{setuid_safe} if ($self-&gt;{setuid_safe});
+    $self-&gt;{setuid_safe} = ($self-&gt;value() &amp; 524288) != 0;
+    return $self-&gt;{setuid_safe};
+}
+
+sub no_heap_execution {
+    my ($self) = @_;
+    return $self-&gt;{no_heap_execution} if ($self-&gt;{no_heap_execution});
+    $self-&gt;{no_heap_execution} = ($self-&gt;value() &amp; 16777216) != 0;
+    return $self-&gt;{no_heap_execution};
+}
+
+sub no_reexported_dylibs {
+    my ($self) = @_;
+    return $self-&gt;{no_reexported_dylibs} if ($self-&gt;{no_reexported_dylibs});
+    $self-&gt;{no_reexported_dylibs} = ($self-&gt;value() &amp; 1048576) != 0;
+    return $self-&gt;{no_reexported_dylibs};
+}
+
+sub no_multi_defs {
+    my ($self) = @_;
+    return $self-&gt;{no_multi_defs} if ($self-&gt;{no_multi_defs});
+    $self-&gt;{no_multi_defs} = ($self-&gt;value() &amp; 512) != 0;
+    return $self-&gt;{no_multi_defs};
+}
+
+sub app_extension_safe {
+    my ($self) = @_;
+    return $self-&gt;{app_extension_safe} if ($self-&gt;{app_extension_safe});
+    $self-&gt;{app_extension_safe} = ($self-&gt;value() &amp; 33554432) != 0;
+    return $self-&gt;{app_extension_safe};
+}
+
+sub prebindable {
+    my ($self) = @_;
+    return $self-&gt;{prebindable} if ($self-&gt;{prebindable});
+    $self-&gt;{prebindable} = ($self-&gt;value() &amp; 2048) != 0;
+    return $self-&gt;{prebindable};
+}
+
+sub incr_link {
+    my ($self) = @_;
+    return $self-&gt;{incr_link} if ($self-&gt;{incr_link});
+    $self-&gt;{incr_link} = ($self-&gt;value() &amp; 2) != 0;
+    return $self-&gt;{incr_link};
+}
+
+sub bind_at_load {
+    my ($self) = @_;
+    return $self-&gt;{bind_at_load} if ($self-&gt;{bind_at_load});
+    $self-&gt;{bind_at_load} = ($self-&gt;value() &amp; 8) != 0;
+    return $self-&gt;{bind_at_load};
+}
+
+sub canonical {
+    my ($self) = @_;
+    return $self-&gt;{canonical} if ($self-&gt;{canonical});
+    $self-&gt;{canonical} = ($self-&gt;value() &amp; 16384) != 0;
+    return $self-&gt;{canonical};
+}
+
+sub two_level {
+    my ($self) = @_;
+    return $self-&gt;{two_level} if ($self-&gt;{two_level});
+    $self-&gt;{two_level} = ($self-&gt;value() &amp; 128) != 0;
+    return $self-&gt;{two_level};
+}
+
+sub split_segs {
+    my ($self) = @_;
+    return $self-&gt;{split_segs} if ($self-&gt;{split_segs});
+    $self-&gt;{split_segs} = ($self-&gt;value() &amp; 32) != 0;
+    return $self-&gt;{split_segs};
+}
+
+sub lazy_init {
+    my ($self) = @_;
+    return $self-&gt;{lazy_init} if ($self-&gt;{lazy_init});
+    $self-&gt;{lazy_init} = ($self-&gt;value() &amp; 64) != 0;
+    return $self-&gt;{lazy_init};
+}
+
+sub allow_stack_execution {
+    my ($self) = @_;
+    return $self-&gt;{allow_stack_execution} if ($self-&gt;{allow_stack_execution});
+    $self-&gt;{allow_stack_execution} = ($self-&gt;value() &amp; 131072) != 0;
+    return $self-&gt;{allow_stack_execution};
+}
+
+sub binds_to_weak {
+    my ($self) = @_;
+    return $self-&gt;{binds_to_weak} if ($self-&gt;{binds_to_weak});
+    $self-&gt;{binds_to_weak} = ($self-&gt;value() &amp; 65536) != 0;
+    return $self-&gt;{binds_to_weak};
+}
+
+sub no_fix_prebinding {
+    my ($self) = @_;
+    return $self-&gt;{no_fix_prebinding} if ($self-&gt;{no_fix_prebinding});
+    $self-&gt;{no_fix_prebinding} = ($self-&gt;value() &amp; 1024) != 0;
+    return $self-&gt;{no_fix_prebinding};
+}
+
+sub dyld_link {
+    my ($self) = @_;
+    return $self-&gt;{dyld_link} if ($self-&gt;{dyld_link});
+    $self-&gt;{dyld_link} = ($self-&gt;value() &amp; 4) != 0;
+    return $self-&gt;{dyld_link};
+}
+
+sub pie {
+    my ($self) = @_;
+    return $self-&gt;{pie} if ($self-&gt;{pie});
+    $self-&gt;{pie} = ($self-&gt;value() &amp; 2097152) != 0;
+    return $self-&gt;{pie};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self-&gt;{value};
+}
+
+########################################################################
 package MachO::RoutinesCommand64;
 
 our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
@@ -3014,6 +3206,13 @@ sub _read {
     if ( (($self-&gt;_root()-&gt;magic() == $MAGIC_TYPE_MACHO_BE_X64) || ($self-&gt;_root()-&gt;magic() == $MAGIC_TYPE_MACHO_LE_X64)) ) {
         $self-&gt;{reserved} = $self-&gt;{_io}-&gt;read_u4le();
     }
+}
+
+sub flags_obj {
+    my ($self) = @_;
+    return $self-&gt;{flags_obj} if ($self-&gt;{flags_obj});
+    $self-&gt;{flags_obj} = MachO::MachoFlags-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    return $self-&gt;{flags_obj};
 }
 
 sub cputype {
