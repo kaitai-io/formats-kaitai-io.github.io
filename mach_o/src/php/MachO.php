@@ -811,291 +811,6 @@ class RoutinesCommand extends \Kaitai\Struct\Struct {
 
 namespace \MachO;
 
-class MachoFlags extends \Kaitai\Struct\Struct {
-    public function __construct(int $value, \Kaitai\Struct\Stream $_io, \MachO\MachHeader $_parent = null, \MachO $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this->_m_value = $value;
-        $this->_read();
-    }
-
-    private function _read() {
-    }
-    protected $_m_subsectionsViaSymbols;
-
-    /**
-     * safe to divide up the sections into sub-sections via symbols for dead code stripping
-     */
-    public function subsectionsViaSymbols() {
-        if ($this->_m_subsectionsViaSymbols !== null)
-            return $this->_m_subsectionsViaSymbols;
-        $this->_m_subsectionsViaSymbols = ($this->value() & 8192) != 0;
-        return $this->_m_subsectionsViaSymbols;
-    }
-    protected $_m_deadStrippableDylib;
-    public function deadStrippableDylib() {
-        if ($this->_m_deadStrippableDylib !== null)
-            return $this->_m_deadStrippableDylib;
-        $this->_m_deadStrippableDylib = ($this->value() & 4194304) != 0;
-        return $this->_m_deadStrippableDylib;
-    }
-    protected $_m_weakDefines;
-
-    /**
-     * the final linked image contains external weak symbols
-     */
-    public function weakDefines() {
-        if ($this->_m_weakDefines !== null)
-            return $this->_m_weakDefines;
-        $this->_m_weakDefines = ($this->value() & 32768) != 0;
-        return $this->_m_weakDefines;
-    }
-    protected $_m_prebound;
-
-    /**
-     * the file has its dynamic undefined references prebound.
-     */
-    public function prebound() {
-        if ($this->_m_prebound !== null)
-            return $this->_m_prebound;
-        $this->_m_prebound = ($this->value() & 16) != 0;
-        return $this->_m_prebound;
-    }
-    protected $_m_allModsBound;
-
-    /**
-     * indicates that this binary binds to all two-level namespace modules of its dependent libraries. only used when MH_PREBINDABLE and MH_TWOLEVEL are both set.
-     */
-    public function allModsBound() {
-        if ($this->_m_allModsBound !== null)
-            return $this->_m_allModsBound;
-        $this->_m_allModsBound = ($this->value() & 4096) != 0;
-        return $this->_m_allModsBound;
-    }
-    protected $_m_hasTlvDescriptors;
-    public function hasTlvDescriptors() {
-        if ($this->_m_hasTlvDescriptors !== null)
-            return $this->_m_hasTlvDescriptors;
-        $this->_m_hasTlvDescriptors = ($this->value() & 8388608) != 0;
-        return $this->_m_hasTlvDescriptors;
-    }
-    protected $_m_forceFlat;
-
-    /**
-     * the executable is forcing all images to use flat name space bindings
-     */
-    public function forceFlat() {
-        if ($this->_m_forceFlat !== null)
-            return $this->_m_forceFlat;
-        $this->_m_forceFlat = ($this->value() & 256) != 0;
-        return $this->_m_forceFlat;
-    }
-    protected $_m_rootSafe;
-
-    /**
-     * When this bit is set, the binary declares it is safe for use in processes with uid zero
-     */
-    public function rootSafe() {
-        if ($this->_m_rootSafe !== null)
-            return $this->_m_rootSafe;
-        $this->_m_rootSafe = ($this->value() & 262144) != 0;
-        return $this->_m_rootSafe;
-    }
-    protected $_m_noUndefs;
-
-    /**
-     * the object file has no undefined references
-     */
-    public function noUndefs() {
-        if ($this->_m_noUndefs !== null)
-            return $this->_m_noUndefs;
-        $this->_m_noUndefs = ($this->value() & 1) != 0;
-        return $this->_m_noUndefs;
-    }
-    protected $_m_setuidSafe;
-
-    /**
-     * When this bit is set, the binary declares it is safe for use in processes when issetugid() is true
-     */
-    public function setuidSafe() {
-        if ($this->_m_setuidSafe !== null)
-            return $this->_m_setuidSafe;
-        $this->_m_setuidSafe = ($this->value() & 524288) != 0;
-        return $this->_m_setuidSafe;
-    }
-    protected $_m_noHeapExecution;
-    public function noHeapExecution() {
-        if ($this->_m_noHeapExecution !== null)
-            return $this->_m_noHeapExecution;
-        $this->_m_noHeapExecution = ($this->value() & 16777216) != 0;
-        return $this->_m_noHeapExecution;
-    }
-    protected $_m_noReexportedDylibs;
-
-    /**
-     * When this bit is set on a dylib, the static linker does not need to examine dependent dylibs to see if any are re-exported
-     */
-    public function noReexportedDylibs() {
-        if ($this->_m_noReexportedDylibs !== null)
-            return $this->_m_noReexportedDylibs;
-        $this->_m_noReexportedDylibs = ($this->value() & 1048576) != 0;
-        return $this->_m_noReexportedDylibs;
-    }
-    protected $_m_noMultiDefs;
-
-    /**
-     * this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
-     */
-    public function noMultiDefs() {
-        if ($this->_m_noMultiDefs !== null)
-            return $this->_m_noMultiDefs;
-        $this->_m_noMultiDefs = ($this->value() & 512) != 0;
-        return $this->_m_noMultiDefs;
-    }
-    protected $_m_appExtensionSafe;
-    public function appExtensionSafe() {
-        if ($this->_m_appExtensionSafe !== null)
-            return $this->_m_appExtensionSafe;
-        $this->_m_appExtensionSafe = ($this->value() & 33554432) != 0;
-        return $this->_m_appExtensionSafe;
-    }
-    protected $_m_prebindable;
-
-    /**
-     * the binary is not prebound but can have its prebinding redone. only used when MH_PREBOUND is not set.
-     */
-    public function prebindable() {
-        if ($this->_m_prebindable !== null)
-            return $this->_m_prebindable;
-        $this->_m_prebindable = ($this->value() & 2048) != 0;
-        return $this->_m_prebindable;
-    }
-    protected $_m_incrLink;
-
-    /**
-     * the object file is the output of an incremental link against a base file and can't be link edited again
-     */
-    public function incrLink() {
-        if ($this->_m_incrLink !== null)
-            return $this->_m_incrLink;
-        $this->_m_incrLink = ($this->value() & 2) != 0;
-        return $this->_m_incrLink;
-    }
-    protected $_m_bindAtLoad;
-
-    /**
-     * the object file's undefined references are bound by the dynamic linker when loaded.
-     */
-    public function bindAtLoad() {
-        if ($this->_m_bindAtLoad !== null)
-            return $this->_m_bindAtLoad;
-        $this->_m_bindAtLoad = ($this->value() & 8) != 0;
-        return $this->_m_bindAtLoad;
-    }
-    protected $_m_canonical;
-
-    /**
-     * the binary has been canonicalized via the unprebind operation
-     */
-    public function canonical() {
-        if ($this->_m_canonical !== null)
-            return $this->_m_canonical;
-        $this->_m_canonical = ($this->value() & 16384) != 0;
-        return $this->_m_canonical;
-    }
-    protected $_m_twoLevel;
-
-    /**
-     * the image is using two-level name space bindings
-     */
-    public function twoLevel() {
-        if ($this->_m_twoLevel !== null)
-            return $this->_m_twoLevel;
-        $this->_m_twoLevel = ($this->value() & 128) != 0;
-        return $this->_m_twoLevel;
-    }
-    protected $_m_splitSegs;
-
-    /**
-     * the file has its read-only and read-write segments split
-     */
-    public function splitSegs() {
-        if ($this->_m_splitSegs !== null)
-            return $this->_m_splitSegs;
-        $this->_m_splitSegs = ($this->value() & 32) != 0;
-        return $this->_m_splitSegs;
-    }
-    protected $_m_lazyInit;
-
-    /**
-     * the shared library init routine is to be run lazily via catching memory faults to its writeable segments (obsolete)
-     */
-    public function lazyInit() {
-        if ($this->_m_lazyInit !== null)
-            return $this->_m_lazyInit;
-        $this->_m_lazyInit = ($this->value() & 64) != 0;
-        return $this->_m_lazyInit;
-    }
-    protected $_m_allowStackExecution;
-
-    /**
-     * When this bit is set, all stacks in the task will be given stack execution privilege.  Only used in MH_EXECUTE filetypes.
-     */
-    public function allowStackExecution() {
-        if ($this->_m_allowStackExecution !== null)
-            return $this->_m_allowStackExecution;
-        $this->_m_allowStackExecution = ($this->value() & 131072) != 0;
-        return $this->_m_allowStackExecution;
-    }
-    protected $_m_bindsToWeak;
-
-    /**
-     * the final linked image uses weak symbols
-     */
-    public function bindsToWeak() {
-        if ($this->_m_bindsToWeak !== null)
-            return $this->_m_bindsToWeak;
-        $this->_m_bindsToWeak = ($this->value() & 65536) != 0;
-        return $this->_m_bindsToWeak;
-    }
-    protected $_m_noFixPrebinding;
-
-    /**
-     * do not have dyld notify the prebinding agent about this executable
-     */
-    public function noFixPrebinding() {
-        if ($this->_m_noFixPrebinding !== null)
-            return $this->_m_noFixPrebinding;
-        $this->_m_noFixPrebinding = ($this->value() & 1024) != 0;
-        return $this->_m_noFixPrebinding;
-    }
-    protected $_m_dyldLink;
-
-    /**
-     * the object file is input for the dynamic linker and can't be staticly link edited again
-     */
-    public function dyldLink() {
-        if ($this->_m_dyldLink !== null)
-            return $this->_m_dyldLink;
-        $this->_m_dyldLink = ($this->value() & 4) != 0;
-        return $this->_m_dyldLink;
-    }
-    protected $_m_pie;
-
-    /**
-     * When this bit is set, the OS will load the main executable at a random address. Only used in MH_EXECUTE filetypes.
-     */
-    public function pie() {
-        if ($this->_m_pie !== null)
-            return $this->_m_pie;
-        $this->_m_pie = ($this->value() & 2097152) != 0;
-        return $this->_m_pie;
-    }
-    protected $_m_value;
-    public function value() { return $this->_m_value; }
-}
-
-namespace \MachO;
-
 class RoutinesCommand64 extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \MachO\LoadCommand $_parent = null, \MachO $_root = null) {
         parent::__construct($_io, $_parent, $_root);
@@ -1722,13 +1437,6 @@ class MachHeader extends \Kaitai\Struct\Struct {
         if ( (($this->_root()->magic() == \MachO\MagicType::MACHO_BE_X64) || ($this->_root()->magic() == \MachO\MagicType::MACHO_LE_X64)) ) {
             $this->_m_reserved = $this->_io->readU4le();
         }
-    }
-    protected $_m_flagsObj;
-    public function flagsObj() {
-        if ($this->_m_flagsObj !== null)
-            return $this->_m_flagsObj;
-        $this->_m_flagsObj = new \MachO\MachoFlags($this->flags(), $this->_io, $this, $this->_root);
-        return $this->_m_flagsObj;
     }
     protected $_m_cputype;
     protected $_m_cpusubtype;
@@ -2650,58 +2358,6 @@ class EntryPointCommand extends \Kaitai\Struct\Struct {
 
 namespace \MachO;
 
-class MagicType {
-    const FAT_LE = 3199925962;
-    const FAT_BE = 3405691582;
-    const MACHO_LE_X86 = 3472551422;
-    const MACHO_LE_X64 = 3489328638;
-    const MACHO_BE_X86 = 4277009102;
-    const MACHO_BE_X64 = 4277009103;
-}
-
-namespace \MachO;
-
-class CpuType {
-    const VAX = 1;
-    const ROMP = 2;
-    const NS32032 = 4;
-    const NS32332 = 5;
-    const I386 = 7;
-    const MIPS = 8;
-    const NS32532 = 9;
-    const HPPA = 11;
-    const ARM = 12;
-    const MC88000 = 13;
-    const SPARC = 14;
-    const I860 = 15;
-    const I860_LITTLE = 16;
-    const RS6000 = 17;
-    const POWERPC = 18;
-    const ABI64 = 16777216;
-    const X86_64 = 16777223;
-    const ARM64 = 16777228;
-    const POWERPC64 = 16777234;
-    const ANY = 4294967295;
-}
-
-namespace \MachO;
-
-class FileType {
-    const OBJECT = 1;
-    const EXECUTE = 2;
-    const FVMLIB = 3;
-    const CORE = 4;
-    const PRELOAD = 5;
-    const DYLIB = 6;
-    const DYLINKER = 7;
-    const BUNDLE = 8;
-    const DYLIB_STUB = 9;
-    const DSYM = 10;
-    const KEXT_BUNDLE = 11;
-}
-
-namespace \MachO;
-
 class LoadCommandType {
     const SEGMENT = 1;
     const SYMTAB = 2;
@@ -2753,4 +2409,87 @@ class LoadCommandType {
     const DYLD_INFO_ONLY = 2147483682;
     const LOAD_UPWARD_DYLIB = 2147483683;
     const MAIN = 2147483688;
+}
+
+namespace \MachO;
+
+class MachoFlags {
+    const NO_UNDEFS = 1;
+    const INCR_LINK = 2;
+    const DYLD_LINK = 4;
+    const BIND_AT_LOAD = 8;
+    const PREBOUND = 16;
+    const SPLIT_SEGS = 32;
+    const LAZY_INIT = 64;
+    const TWO_LEVEL = 128;
+    const FORCE_FLAT = 256;
+    const NO_MULTI_DEFS = 512;
+    const NO_FIX_PREBINDING = 1024;
+    const PREBINDABLE = 2048;
+    const ALL_MODS_BOUND = 4096;
+    const SUBSECTIONS_VIA_SYMBOLS = 8192;
+    const CANONICAL = 16384;
+    const WEAK_DEFINES = 32768;
+    const BINDS_TO_WEAK = 65536;
+    const ALLOW_STACK_EXECUTION = 131072;
+    const ROOT_SAFE = 262144;
+    const SETUID_SAFE = 524288;
+    const NO_REEXPORTED_DYLIBS = 1048576;
+    const PIE = 2097152;
+    const DEAD_STRIPPABLE_DYLIB = 4194304;
+    const HAS_TLV_DESCRIPTORS = 8388608;
+    const NO_HEAP_EXECUTION = 16777216;
+    const APP_EXTENSION_SAFE = 33554432;
+}
+
+namespace \MachO;
+
+class MagicType {
+    const FAT_LE = 3199925962;
+    const FAT_BE = 3405691582;
+    const MACHO_LE_X86 = 3472551422;
+    const MACHO_LE_X64 = 3489328638;
+    const MACHO_BE_X86 = 4277009102;
+    const MACHO_BE_X64 = 4277009103;
+}
+
+namespace \MachO;
+
+class FileType {
+    const OBJECT = 1;
+    const EXECUTE = 2;
+    const FVMLIB = 3;
+    const CORE = 4;
+    const PRELOAD = 5;
+    const DYLIB = 6;
+    const DYLINKER = 7;
+    const BUNDLE = 8;
+    const DYLIB_STUB = 9;
+    const DSYM = 10;
+    const KEXT_BUNDLE = 11;
+}
+
+namespace \MachO;
+
+class CpuType {
+    const VAX = 1;
+    const ROMP = 2;
+    const NS32032 = 4;
+    const NS32332 = 5;
+    const I386 = 7;
+    const MIPS = 8;
+    const NS32532 = 9;
+    const HPPA = 11;
+    const ARM = 12;
+    const MC88000 = 13;
+    const SPARC = 14;
+    const I860 = 15;
+    const I860_LITTLE = 16;
+    const RS6000 = 17;
+    const POWERPC = 18;
+    const ABI64 = 16777216;
+    const X86_64 = 16777223;
+    const ARM64 = 16777228;
+    const POWERPC64 = 16777234;
+    const ANY = 4294967295;
 }

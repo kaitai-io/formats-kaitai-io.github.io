@@ -20,7 +20,6 @@ public:
     class source_version_command_t;
     class cs_blob_t;
     class routines_command_t;
-    class macho_flags_t;
     class routines_command_64_t;
     class linker_option_command_t;
     class segment_command_64_t;
@@ -42,52 +41,6 @@ public:
     class symtab_command_t;
     class version_min_command_t;
     class entry_point_command_t;
-
-    enum magic_type_t {
-        MAGIC_TYPE_FAT_LE = 3199925962,
-        MAGIC_TYPE_FAT_BE = 3405691582,
-        MAGIC_TYPE_MACHO_LE_X86 = 3472551422,
-        MAGIC_TYPE_MACHO_LE_X64 = 3489328638,
-        MAGIC_TYPE_MACHO_BE_X86 = 4277009102,
-        MAGIC_TYPE_MACHO_BE_X64 = 4277009103
-    };
-
-    enum cpu_type_t {
-        CPU_TYPE_VAX = 1,
-        CPU_TYPE_ROMP = 2,
-        CPU_TYPE_NS32032 = 4,
-        CPU_TYPE_NS32332 = 5,
-        CPU_TYPE_I386 = 7,
-        CPU_TYPE_MIPS = 8,
-        CPU_TYPE_NS32532 = 9,
-        CPU_TYPE_HPPA = 11,
-        CPU_TYPE_ARM = 12,
-        CPU_TYPE_MC88000 = 13,
-        CPU_TYPE_SPARC = 14,
-        CPU_TYPE_I860 = 15,
-        CPU_TYPE_I860_LITTLE = 16,
-        CPU_TYPE_RS6000 = 17,
-        CPU_TYPE_POWERPC = 18,
-        CPU_TYPE_ABI64 = 16777216,
-        CPU_TYPE_X86_64 = 16777223,
-        CPU_TYPE_ARM64 = 16777228,
-        CPU_TYPE_POWERPC64 = 16777234,
-        CPU_TYPE_ANY = 4294967295
-    };
-
-    enum file_type_t {
-        FILE_TYPE_OBJECT = 1,
-        FILE_TYPE_EXECUTE = 2,
-        FILE_TYPE_FVMLIB = 3,
-        FILE_TYPE_CORE = 4,
-        FILE_TYPE_PRELOAD = 5,
-        FILE_TYPE_DYLIB = 6,
-        FILE_TYPE_DYLINKER = 7,
-        FILE_TYPE_BUNDLE = 8,
-        FILE_TYPE_DYLIB_STUB = 9,
-        FILE_TYPE_DSYM = 10,
-        FILE_TYPE_KEXT_BUNDLE = 11
-    };
 
     enum load_command_type_t {
         LOAD_COMMAND_TYPE_SEGMENT = 1,
@@ -140,6 +93,81 @@ public:
         LOAD_COMMAND_TYPE_DYLD_INFO_ONLY = 2147483682,
         LOAD_COMMAND_TYPE_LOAD_UPWARD_DYLIB = 2147483683,
         LOAD_COMMAND_TYPE_MAIN = 2147483688
+    };
+
+    enum macho_flags_t {
+        MACHO_FLAGS_NO_UNDEFS = 1,
+        MACHO_FLAGS_INCR_LINK = 2,
+        MACHO_FLAGS_DYLD_LINK = 4,
+        MACHO_FLAGS_BIND_AT_LOAD = 8,
+        MACHO_FLAGS_PREBOUND = 16,
+        MACHO_FLAGS_SPLIT_SEGS = 32,
+        MACHO_FLAGS_LAZY_INIT = 64,
+        MACHO_FLAGS_TWO_LEVEL = 128,
+        MACHO_FLAGS_FORCE_FLAT = 256,
+        MACHO_FLAGS_NO_MULTI_DEFS = 512,
+        MACHO_FLAGS_NO_FIX_PREBINDING = 1024,
+        MACHO_FLAGS_PREBINDABLE = 2048,
+        MACHO_FLAGS_ALL_MODS_BOUND = 4096,
+        MACHO_FLAGS_SUBSECTIONS_VIA_SYMBOLS = 8192,
+        MACHO_FLAGS_CANONICAL = 16384,
+        MACHO_FLAGS_WEAK_DEFINES = 32768,
+        MACHO_FLAGS_BINDS_TO_WEAK = 65536,
+        MACHO_FLAGS_ALLOW_STACK_EXECUTION = 131072,
+        MACHO_FLAGS_ROOT_SAFE = 262144,
+        MACHO_FLAGS_SETUID_SAFE = 524288,
+        MACHO_FLAGS_NO_REEXPORTED_DYLIBS = 1048576,
+        MACHO_FLAGS_PIE = 2097152,
+        MACHO_FLAGS_DEAD_STRIPPABLE_DYLIB = 4194304,
+        MACHO_FLAGS_HAS_TLV_DESCRIPTORS = 8388608,
+        MACHO_FLAGS_NO_HEAP_EXECUTION = 16777216,
+        MACHO_FLAGS_APP_EXTENSION_SAFE = 33554432
+    };
+
+    enum magic_type_t {
+        MAGIC_TYPE_FAT_LE = 3199925962,
+        MAGIC_TYPE_FAT_BE = 3405691582,
+        MAGIC_TYPE_MACHO_LE_X86 = 3472551422,
+        MAGIC_TYPE_MACHO_LE_X64 = 3489328638,
+        MAGIC_TYPE_MACHO_BE_X86 = 4277009102,
+        MAGIC_TYPE_MACHO_BE_X64 = 4277009103
+    };
+
+    enum file_type_t {
+        FILE_TYPE_OBJECT = 1,
+        FILE_TYPE_EXECUTE = 2,
+        FILE_TYPE_FVMLIB = 3,
+        FILE_TYPE_CORE = 4,
+        FILE_TYPE_PRELOAD = 5,
+        FILE_TYPE_DYLIB = 6,
+        FILE_TYPE_DYLINKER = 7,
+        FILE_TYPE_BUNDLE = 8,
+        FILE_TYPE_DYLIB_STUB = 9,
+        FILE_TYPE_DSYM = 10,
+        FILE_TYPE_KEXT_BUNDLE = 11
+    };
+
+    enum cpu_type_t {
+        CPU_TYPE_VAX = 1,
+        CPU_TYPE_ROMP = 2,
+        CPU_TYPE_NS32032 = 4,
+        CPU_TYPE_NS32332 = 5,
+        CPU_TYPE_I386 = 7,
+        CPU_TYPE_MIPS = 8,
+        CPU_TYPE_NS32532 = 9,
+        CPU_TYPE_HPPA = 11,
+        CPU_TYPE_ARM = 12,
+        CPU_TYPE_MC88000 = 13,
+        CPU_TYPE_SPARC = 14,
+        CPU_TYPE_I860 = 15,
+        CPU_TYPE_I860_LITTLE = 16,
+        CPU_TYPE_RS6000 = 17,
+        CPU_TYPE_POWERPC = 18,
+        CPU_TYPE_ABI64 = 16777216,
+        CPU_TYPE_X86_64 = 16777223,
+        CPU_TYPE_ARM64 = 16777228,
+        CPU_TYPE_POWERPC64 = 16777234,
+        CPU_TYPE_ANY = 4294967295
     };
 
     mach_o_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, mach_o_t* p__root = 0);
@@ -1063,299 +1091,6 @@ public:
         mach_o_t::load_command_t* _parent() const { return m__parent; }
     };
 
-    class macho_flags_t : public kaitai::kstruct {
-
-    public:
-
-        macho_flags_t(uint32_t p_value, kaitai::kstream* p__io, mach_o_t::mach_header_t* p__parent = 0, mach_o_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~macho_flags_t();
-
-    private:
-        bool f_subsections_via_symbols;
-        bool m_subsections_via_symbols;
-
-    public:
-
-        /**
-         * safe to divide up the sections into sub-sections via symbols for dead code stripping
-         */
-        bool subsections_via_symbols();
-
-    private:
-        bool f_dead_strippable_dylib;
-        bool m_dead_strippable_dylib;
-
-    public:
-        bool dead_strippable_dylib();
-
-    private:
-        bool f_weak_defines;
-        bool m_weak_defines;
-
-    public:
-
-        /**
-         * the final linked image contains external weak symbols
-         */
-        bool weak_defines();
-
-    private:
-        bool f_prebound;
-        bool m_prebound;
-
-    public:
-
-        /**
-         * the file has its dynamic undefined references prebound.
-         */
-        bool prebound();
-
-    private:
-        bool f_all_mods_bound;
-        bool m_all_mods_bound;
-
-    public:
-
-        /**
-         * indicates that this binary binds to all two-level namespace modules of its dependent libraries. only used when MH_PREBINDABLE and MH_TWOLEVEL are both set.
-         */
-        bool all_mods_bound();
-
-    private:
-        bool f_has_tlv_descriptors;
-        bool m_has_tlv_descriptors;
-
-    public:
-        bool has_tlv_descriptors();
-
-    private:
-        bool f_force_flat;
-        bool m_force_flat;
-
-    public:
-
-        /**
-         * the executable is forcing all images to use flat name space bindings
-         */
-        bool force_flat();
-
-    private:
-        bool f_root_safe;
-        bool m_root_safe;
-
-    public:
-
-        /**
-         * When this bit is set, the binary declares it is safe for use in processes with uid zero
-         */
-        bool root_safe();
-
-    private:
-        bool f_no_undefs;
-        bool m_no_undefs;
-
-    public:
-
-        /**
-         * the object file has no undefined references
-         */
-        bool no_undefs();
-
-    private:
-        bool f_setuid_safe;
-        bool m_setuid_safe;
-
-    public:
-
-        /**
-         * When this bit is set, the binary declares it is safe for use in processes when issetugid() is true
-         */
-        bool setuid_safe();
-
-    private:
-        bool f_no_heap_execution;
-        bool m_no_heap_execution;
-
-    public:
-        bool no_heap_execution();
-
-    private:
-        bool f_no_reexported_dylibs;
-        bool m_no_reexported_dylibs;
-
-    public:
-
-        /**
-         * When this bit is set on a dylib, the static linker does not need to examine dependent dylibs to see if any are re-exported
-         */
-        bool no_reexported_dylibs();
-
-    private:
-        bool f_no_multi_defs;
-        bool m_no_multi_defs;
-
-    public:
-
-        /**
-         * this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
-         */
-        bool no_multi_defs();
-
-    private:
-        bool f_app_extension_safe;
-        bool m_app_extension_safe;
-
-    public:
-        bool app_extension_safe();
-
-    private:
-        bool f_prebindable;
-        bool m_prebindable;
-
-    public:
-
-        /**
-         * the binary is not prebound but can have its prebinding redone. only used when MH_PREBOUND is not set.
-         */
-        bool prebindable();
-
-    private:
-        bool f_incr_link;
-        bool m_incr_link;
-
-    public:
-
-        /**
-         * the object file is the output of an incremental link against a base file and can't be link edited again
-         */
-        bool incr_link();
-
-    private:
-        bool f_bind_at_load;
-        bool m_bind_at_load;
-
-    public:
-
-        /**
-         * the object file's undefined references are bound by the dynamic linker when loaded.
-         */
-        bool bind_at_load();
-
-    private:
-        bool f_canonical;
-        bool m_canonical;
-
-    public:
-
-        /**
-         * the binary has been canonicalized via the unprebind operation
-         */
-        bool canonical();
-
-    private:
-        bool f_two_level;
-        bool m_two_level;
-
-    public:
-
-        /**
-         * the image is using two-level name space bindings
-         */
-        bool two_level();
-
-    private:
-        bool f_split_segs;
-        bool m_split_segs;
-
-    public:
-
-        /**
-         * the file has its read-only and read-write segments split
-         */
-        bool split_segs();
-
-    private:
-        bool f_lazy_init;
-        bool m_lazy_init;
-
-    public:
-
-        /**
-         * the shared library init routine is to be run lazily via catching memory faults to its writeable segments (obsolete)
-         */
-        bool lazy_init();
-
-    private:
-        bool f_allow_stack_execution;
-        bool m_allow_stack_execution;
-
-    public:
-
-        /**
-         * When this bit is set, all stacks in the task will be given stack execution privilege.  Only used in MH_EXECUTE filetypes.
-         */
-        bool allow_stack_execution();
-
-    private:
-        bool f_binds_to_weak;
-        bool m_binds_to_weak;
-
-    public:
-
-        /**
-         * the final linked image uses weak symbols
-         */
-        bool binds_to_weak();
-
-    private:
-        bool f_no_fix_prebinding;
-        bool m_no_fix_prebinding;
-
-    public:
-
-        /**
-         * do not have dyld notify the prebinding agent about this executable
-         */
-        bool no_fix_prebinding();
-
-    private:
-        bool f_dyld_link;
-        bool m_dyld_link;
-
-    public:
-
-        /**
-         * the object file is input for the dynamic linker and can't be staticly link edited again
-         */
-        bool dyld_link();
-
-    private:
-        bool f_pie;
-        bool m_pie;
-
-    public:
-
-        /**
-         * When this bit is set, the OS will load the main executable at a random address. Only used in MH_EXECUTE filetypes.
-         */
-        bool pie();
-
-    private:
-        uint32_t m_value;
-        mach_o_t* m__root;
-        mach_o_t::mach_header_t* m__parent;
-
-    public:
-        uint32_t value() const { return m_value; }
-        mach_o_t* _root() const { return m__root; }
-        mach_o_t::mach_header_t* _parent() const { return m__parent; }
-    };
-
     class routines_command_64_t : public kaitai::kstruct {
 
     public:
@@ -1932,13 +1667,6 @@ public:
 
     public:
         ~mach_header_t();
-
-    private:
-        bool f_flags_obj;
-        macho_flags_t* m_flags_obj;
-
-    public:
-        macho_flags_t* flags_obj();
 
     private:
         cpu_type_t m_cputype;

@@ -14,82 +14,6 @@ public class MachO extends KaitaiStruct {
         return new MachO(new ByteBufferKaitaiStream(fileName));
     }
 
-    public enum MagicType {
-        FAT_LE(3199925962),
-        FAT_BE(3405691582),
-        MACHO_LE_X86(3472551422),
-        MACHO_LE_X64(3489328638),
-        MACHO_BE_X86(4277009102),
-        MACHO_BE_X64(4277009103);
-
-        private final long id;
-        MagicType(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, MagicType> byId = new HashMap<Long, MagicType>(6);
-        static {
-            for (MagicType e : MagicType.values())
-                byId.put(e.id(), e);
-        }
-        public static MagicType byId(long id) { return byId.get(id); }
-    }
-
-    public enum CpuType {
-        VAX(1),
-        ROMP(2),
-        NS32032(4),
-        NS32332(5),
-        I386(7),
-        MIPS(8),
-        NS32532(9),
-        HPPA(11),
-        ARM(12),
-        MC88000(13),
-        SPARC(14),
-        I860(15),
-        I860_LITTLE(16),
-        RS6000(17),
-        POWERPC(18),
-        ABI64(16777216),
-        X86_64(16777223),
-        ARM64(16777228),
-        POWERPC64(16777234),
-        ANY(4294967295);
-
-        private final long id;
-        CpuType(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, CpuType> byId = new HashMap<Long, CpuType>(20);
-        static {
-            for (CpuType e : CpuType.values())
-                byId.put(e.id(), e);
-        }
-        public static CpuType byId(long id) { return byId.get(id); }
-    }
-
-    public enum FileType {
-        OBJECT(1),
-        EXECUTE(2),
-        FVMLIB(3),
-        CORE(4),
-        PRELOAD(5),
-        DYLIB(6),
-        DYLINKER(7),
-        BUNDLE(8),
-        DYLIB_STUB(9),
-        DSYM(10),
-        KEXT_BUNDLE(11);
-
-        private final long id;
-        FileType(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, FileType> byId = new HashMap<Long, FileType>(11);
-        static {
-            for (FileType e : FileType.values())
-                byId.put(e.id(), e);
-        }
-        public static FileType byId(long id) { return byId.get(id); }
-    }
-
     public enum LoadCommandType {
         SEGMENT(1),
         SYMTAB(2),
@@ -151,6 +75,121 @@ public class MachO extends KaitaiStruct {
                 byId.put(e.id(), e);
         }
         public static LoadCommandType byId(long id) { return byId.get(id); }
+    }
+
+    public enum MachoFlags {
+        NO_UNDEFS(1),
+        INCR_LINK(2),
+        DYLD_LINK(4),
+        BIND_AT_LOAD(8),
+        PREBOUND(16),
+        SPLIT_SEGS(32),
+        LAZY_INIT(64),
+        TWO_LEVEL(128),
+        FORCE_FLAT(256),
+        NO_MULTI_DEFS(512),
+        NO_FIX_PREBINDING(1024),
+        PREBINDABLE(2048),
+        ALL_MODS_BOUND(4096),
+        SUBSECTIONS_VIA_SYMBOLS(8192),
+        CANONICAL(16384),
+        WEAK_DEFINES(32768),
+        BINDS_TO_WEAK(65536),
+        ALLOW_STACK_EXECUTION(131072),
+        ROOT_SAFE(262144),
+        SETUID_SAFE(524288),
+        NO_REEXPORTED_DYLIBS(1048576),
+        PIE(2097152),
+        DEAD_STRIPPABLE_DYLIB(4194304),
+        HAS_TLV_DESCRIPTORS(8388608),
+        NO_HEAP_EXECUTION(16777216),
+        APP_EXTENSION_SAFE(33554432);
+
+        private final long id;
+        MachoFlags(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, MachoFlags> byId = new HashMap<Long, MachoFlags>(26);
+        static {
+            for (MachoFlags e : MachoFlags.values())
+                byId.put(e.id(), e);
+        }
+        public static MachoFlags byId(long id) { return byId.get(id); }
+    }
+
+    public enum MagicType {
+        FAT_LE(3199925962),
+        FAT_BE(3405691582),
+        MACHO_LE_X86(3472551422),
+        MACHO_LE_X64(3489328638),
+        MACHO_BE_X86(4277009102),
+        MACHO_BE_X64(4277009103);
+
+        private final long id;
+        MagicType(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, MagicType> byId = new HashMap<Long, MagicType>(6);
+        static {
+            for (MagicType e : MagicType.values())
+                byId.put(e.id(), e);
+        }
+        public static MagicType byId(long id) { return byId.get(id); }
+    }
+
+    public enum FileType {
+        OBJECT(1),
+        EXECUTE(2),
+        FVMLIB(3),
+        CORE(4),
+        PRELOAD(5),
+        DYLIB(6),
+        DYLINKER(7),
+        BUNDLE(8),
+        DYLIB_STUB(9),
+        DSYM(10),
+        KEXT_BUNDLE(11);
+
+        private final long id;
+        FileType(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, FileType> byId = new HashMap<Long, FileType>(11);
+        static {
+            for (FileType e : FileType.values())
+                byId.put(e.id(), e);
+        }
+        public static FileType byId(long id) { return byId.get(id); }
+    }
+
+    public enum CpuType {
+        VAX(1),
+        ROMP(2),
+        NS32032(4),
+        NS32332(5),
+        I386(7),
+        MIPS(8),
+        NS32532(9),
+        HPPA(11),
+        ARM(12),
+        MC88000(13),
+        SPARC(14),
+        I860(15),
+        I860_LITTLE(16),
+        RS6000(17),
+        POWERPC(18),
+        ABI64(16777216),
+        X86_64(16777223),
+        ARM64(16777228),
+        POWERPC64(16777234),
+        ANY(4294967295);
+
+        private final long id;
+        CpuType(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, CpuType> byId = new HashMap<Long, CpuType>(20);
+        static {
+            for (CpuType e : CpuType.values())
+                byId.put(e.id(), e);
+        }
+        public static CpuType byId(long id) { return byId.get(id); }
     }
 
     public MachO(KaitaiStream _io) {
@@ -1391,328 +1430,6 @@ public class MachO extends KaitaiStruct {
         public MachO _root() { return _root; }
         public MachO.LoadCommand _parent() { return _parent; }
     }
-    public static class MachoFlags extends KaitaiStruct {
-
-        public MachoFlags(KaitaiStream _io, long value) {
-            this(_io, null, null, value);
-        }
-
-        public MachoFlags(KaitaiStream _io, MachO.MachHeader _parent, long value) {
-            this(_io, _parent, null, value);
-        }
-
-        public MachoFlags(KaitaiStream _io, MachO.MachHeader _parent, MachO _root, long value) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            this.value = value;
-            _read();
-        }
-        private void _read() {
-        }
-        private Boolean subsectionsViaSymbols;
-
-        /**
-         * safe to divide up the sections into sub-sections via symbols for dead code stripping
-         */
-        public Boolean subsectionsViaSymbols() {
-            if (this.subsectionsViaSymbols != null)
-                return this.subsectionsViaSymbols;
-            boolean _tmp = (boolean) ((value() & 8192) != 0);
-            this.subsectionsViaSymbols = _tmp;
-            return this.subsectionsViaSymbols;
-        }
-        private Boolean deadStrippableDylib;
-        public Boolean deadStrippableDylib() {
-            if (this.deadStrippableDylib != null)
-                return this.deadStrippableDylib;
-            boolean _tmp = (boolean) ((value() & 4194304) != 0);
-            this.deadStrippableDylib = _tmp;
-            return this.deadStrippableDylib;
-        }
-        private Boolean weakDefines;
-
-        /**
-         * the final linked image contains external weak symbols
-         */
-        public Boolean weakDefines() {
-            if (this.weakDefines != null)
-                return this.weakDefines;
-            boolean _tmp = (boolean) ((value() & 32768) != 0);
-            this.weakDefines = _tmp;
-            return this.weakDefines;
-        }
-        private Boolean prebound;
-
-        /**
-         * the file has its dynamic undefined references prebound.
-         */
-        public Boolean prebound() {
-            if (this.prebound != null)
-                return this.prebound;
-            boolean _tmp = (boolean) ((value() & 16) != 0);
-            this.prebound = _tmp;
-            return this.prebound;
-        }
-        private Boolean allModsBound;
-
-        /**
-         * indicates that this binary binds to all two-level namespace modules of its dependent libraries. only used when MH_PREBINDABLE and MH_TWOLEVEL are both set.
-         */
-        public Boolean allModsBound() {
-            if (this.allModsBound != null)
-                return this.allModsBound;
-            boolean _tmp = (boolean) ((value() & 4096) != 0);
-            this.allModsBound = _tmp;
-            return this.allModsBound;
-        }
-        private Boolean hasTlvDescriptors;
-        public Boolean hasTlvDescriptors() {
-            if (this.hasTlvDescriptors != null)
-                return this.hasTlvDescriptors;
-            boolean _tmp = (boolean) ((value() & 8388608) != 0);
-            this.hasTlvDescriptors = _tmp;
-            return this.hasTlvDescriptors;
-        }
-        private Boolean forceFlat;
-
-        /**
-         * the executable is forcing all images to use flat name space bindings
-         */
-        public Boolean forceFlat() {
-            if (this.forceFlat != null)
-                return this.forceFlat;
-            boolean _tmp = (boolean) ((value() & 256) != 0);
-            this.forceFlat = _tmp;
-            return this.forceFlat;
-        }
-        private Boolean rootSafe;
-
-        /**
-         * When this bit is set, the binary declares it is safe for use in processes with uid zero
-         */
-        public Boolean rootSafe() {
-            if (this.rootSafe != null)
-                return this.rootSafe;
-            boolean _tmp = (boolean) ((value() & 262144) != 0);
-            this.rootSafe = _tmp;
-            return this.rootSafe;
-        }
-        private Boolean noUndefs;
-
-        /**
-         * the object file has no undefined references
-         */
-        public Boolean noUndefs() {
-            if (this.noUndefs != null)
-                return this.noUndefs;
-            boolean _tmp = (boolean) ((value() & 1) != 0);
-            this.noUndefs = _tmp;
-            return this.noUndefs;
-        }
-        private Boolean setuidSafe;
-
-        /**
-         * When this bit is set, the binary declares it is safe for use in processes when issetugid() is true
-         */
-        public Boolean setuidSafe() {
-            if (this.setuidSafe != null)
-                return this.setuidSafe;
-            boolean _tmp = (boolean) ((value() & 524288) != 0);
-            this.setuidSafe = _tmp;
-            return this.setuidSafe;
-        }
-        private Boolean noHeapExecution;
-        public Boolean noHeapExecution() {
-            if (this.noHeapExecution != null)
-                return this.noHeapExecution;
-            boolean _tmp = (boolean) ((value() & 16777216) != 0);
-            this.noHeapExecution = _tmp;
-            return this.noHeapExecution;
-        }
-        private Boolean noReexportedDylibs;
-
-        /**
-         * When this bit is set on a dylib, the static linker does not need to examine dependent dylibs to see if any are re-exported
-         */
-        public Boolean noReexportedDylibs() {
-            if (this.noReexportedDylibs != null)
-                return this.noReexportedDylibs;
-            boolean _tmp = (boolean) ((value() & 1048576) != 0);
-            this.noReexportedDylibs = _tmp;
-            return this.noReexportedDylibs;
-        }
-        private Boolean noMultiDefs;
-
-        /**
-         * this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
-         */
-        public Boolean noMultiDefs() {
-            if (this.noMultiDefs != null)
-                return this.noMultiDefs;
-            boolean _tmp = (boolean) ((value() & 512) != 0);
-            this.noMultiDefs = _tmp;
-            return this.noMultiDefs;
-        }
-        private Boolean appExtensionSafe;
-        public Boolean appExtensionSafe() {
-            if (this.appExtensionSafe != null)
-                return this.appExtensionSafe;
-            boolean _tmp = (boolean) ((value() & 33554432) != 0);
-            this.appExtensionSafe = _tmp;
-            return this.appExtensionSafe;
-        }
-        private Boolean prebindable;
-
-        /**
-         * the binary is not prebound but can have its prebinding redone. only used when MH_PREBOUND is not set.
-         */
-        public Boolean prebindable() {
-            if (this.prebindable != null)
-                return this.prebindable;
-            boolean _tmp = (boolean) ((value() & 2048) != 0);
-            this.prebindable = _tmp;
-            return this.prebindable;
-        }
-        private Boolean incrLink;
-
-        /**
-         * the object file is the output of an incremental link against a base file and can't be link edited again
-         */
-        public Boolean incrLink() {
-            if (this.incrLink != null)
-                return this.incrLink;
-            boolean _tmp = (boolean) ((value() & 2) != 0);
-            this.incrLink = _tmp;
-            return this.incrLink;
-        }
-        private Boolean bindAtLoad;
-
-        /**
-         * the object file's undefined references are bound by the dynamic linker when loaded.
-         */
-        public Boolean bindAtLoad() {
-            if (this.bindAtLoad != null)
-                return this.bindAtLoad;
-            boolean _tmp = (boolean) ((value() & 8) != 0);
-            this.bindAtLoad = _tmp;
-            return this.bindAtLoad;
-        }
-        private Boolean canonical;
-
-        /**
-         * the binary has been canonicalized via the unprebind operation
-         */
-        public Boolean canonical() {
-            if (this.canonical != null)
-                return this.canonical;
-            boolean _tmp = (boolean) ((value() & 16384) != 0);
-            this.canonical = _tmp;
-            return this.canonical;
-        }
-        private Boolean twoLevel;
-
-        /**
-         * the image is using two-level name space bindings
-         */
-        public Boolean twoLevel() {
-            if (this.twoLevel != null)
-                return this.twoLevel;
-            boolean _tmp = (boolean) ((value() & 128) != 0);
-            this.twoLevel = _tmp;
-            return this.twoLevel;
-        }
-        private Boolean splitSegs;
-
-        /**
-         * the file has its read-only and read-write segments split
-         */
-        public Boolean splitSegs() {
-            if (this.splitSegs != null)
-                return this.splitSegs;
-            boolean _tmp = (boolean) ((value() & 32) != 0);
-            this.splitSegs = _tmp;
-            return this.splitSegs;
-        }
-        private Boolean lazyInit;
-
-        /**
-         * the shared library init routine is to be run lazily via catching memory faults to its writeable segments (obsolete)
-         */
-        public Boolean lazyInit() {
-            if (this.lazyInit != null)
-                return this.lazyInit;
-            boolean _tmp = (boolean) ((value() & 64) != 0);
-            this.lazyInit = _tmp;
-            return this.lazyInit;
-        }
-        private Boolean allowStackExecution;
-
-        /**
-         * When this bit is set, all stacks in the task will be given stack execution privilege.  Only used in MH_EXECUTE filetypes.
-         */
-        public Boolean allowStackExecution() {
-            if (this.allowStackExecution != null)
-                return this.allowStackExecution;
-            boolean _tmp = (boolean) ((value() & 131072) != 0);
-            this.allowStackExecution = _tmp;
-            return this.allowStackExecution;
-        }
-        private Boolean bindsToWeak;
-
-        /**
-         * the final linked image uses weak symbols
-         */
-        public Boolean bindsToWeak() {
-            if (this.bindsToWeak != null)
-                return this.bindsToWeak;
-            boolean _tmp = (boolean) ((value() & 65536) != 0);
-            this.bindsToWeak = _tmp;
-            return this.bindsToWeak;
-        }
-        private Boolean noFixPrebinding;
-
-        /**
-         * do not have dyld notify the prebinding agent about this executable
-         */
-        public Boolean noFixPrebinding() {
-            if (this.noFixPrebinding != null)
-                return this.noFixPrebinding;
-            boolean _tmp = (boolean) ((value() & 1024) != 0);
-            this.noFixPrebinding = _tmp;
-            return this.noFixPrebinding;
-        }
-        private Boolean dyldLink;
-
-        /**
-         * the object file is input for the dynamic linker and can't be staticly link edited again
-         */
-        public Boolean dyldLink() {
-            if (this.dyldLink != null)
-                return this.dyldLink;
-            boolean _tmp = (boolean) ((value() & 4) != 0);
-            this.dyldLink = _tmp;
-            return this.dyldLink;
-        }
-        private Boolean pie;
-
-        /**
-         * When this bit is set, the OS will load the main executable at a random address. Only used in MH_EXECUTE filetypes.
-         */
-        public Boolean pie() {
-            if (this.pie != null)
-                return this.pie;
-            boolean _tmp = (boolean) ((value() & 2097152) != 0);
-            this.pie = _tmp;
-            return this.pie;
-        }
-        private long value;
-        private MachO _root;
-        private MachO.MachHeader _parent;
-        public long value() { return value; }
-        public MachO _root() { return _root; }
-        public MachO.MachHeader _parent() { return _parent; }
-    }
     public static class RoutinesCommand64 extends KaitaiStruct {
         public static RoutinesCommand64 fromFile(String fileName) throws IOException {
             return new RoutinesCommand64(new ByteBufferKaitaiStream(fileName));
@@ -2587,13 +2304,6 @@ public class MachO extends KaitaiStruct {
             if ( ((_root.magic() == MachO.MagicType.MACHO_BE_X64) || (_root.magic() == MachO.MagicType.MACHO_LE_X64)) ) {
                 this.reserved = this._io.readU4le();
             }
-        }
-        private MachoFlags flagsObj;
-        public MachoFlags flagsObj() {
-            if (this.flagsObj != null)
-                return this.flagsObj;
-            this.flagsObj = new MachoFlags(this._io, this, _root, flags());
-            return this.flagsObj;
         }
         private CpuType cputype;
         private long cpusubtype;

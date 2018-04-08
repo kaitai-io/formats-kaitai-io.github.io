@@ -12,55 +12,6 @@ namespace Kaitai
         }
 
 
-        public enum MagicType
-        {
-            FatLe = 3199925962,
-            FatBe = 3405691582,
-            MachoLeX86 = 3472551422,
-            MachoLeX64 = 3489328638,
-            MachoBeX86 = 4277009102,
-            MachoBeX64 = 4277009103,
-        }
-
-        public enum CpuType
-        {
-            Vax = 1,
-            Romp = 2,
-            Ns32032 = 4,
-            Ns32332 = 5,
-            I386 = 7,
-            Mips = 8,
-            Ns32532 = 9,
-            Hppa = 11,
-            Arm = 12,
-            Mc88000 = 13,
-            Sparc = 14,
-            I860 = 15,
-            I860Little = 16,
-            Rs6000 = 17,
-            Powerpc = 18,
-            Abi64 = 16777216,
-            X8664 = 16777223,
-            Arm64 = 16777228,
-            Powerpc64 = 16777234,
-            Any = 4294967295,
-        }
-
-        public enum FileType
-        {
-            Object = 1,
-            Execute = 2,
-            Fvmlib = 3,
-            Core = 4,
-            Preload = 5,
-            Dylib = 6,
-            Dylinker = 7,
-            Bundle = 8,
-            DylibStub = 9,
-            Dsym = 10,
-            KextBundle = 11,
-        }
-
         public enum LoadCommandType
         {
             Segment = 1,
@@ -113,6 +64,85 @@ namespace Kaitai
             DyldInfoOnly = 2147483682,
             LoadUpwardDylib = 2147483683,
             Main = 2147483688,
+        }
+
+        public enum MachoFlags
+        {
+            NoUndefs = 1,
+            IncrLink = 2,
+            DyldLink = 4,
+            BindAtLoad = 8,
+            Prebound = 16,
+            SplitSegs = 32,
+            LazyInit = 64,
+            TwoLevel = 128,
+            ForceFlat = 256,
+            NoMultiDefs = 512,
+            NoFixPrebinding = 1024,
+            Prebindable = 2048,
+            AllModsBound = 4096,
+            SubsectionsViaSymbols = 8192,
+            Canonical = 16384,
+            WeakDefines = 32768,
+            BindsToWeak = 65536,
+            AllowStackExecution = 131072,
+            RootSafe = 262144,
+            SetuidSafe = 524288,
+            NoReexportedDylibs = 1048576,
+            Pie = 2097152,
+            DeadStrippableDylib = 4194304,
+            HasTlvDescriptors = 8388608,
+            NoHeapExecution = 16777216,
+            AppExtensionSafe = 33554432,
+        }
+
+        public enum MagicType
+        {
+            FatLe = 3199925962,
+            FatBe = 3405691582,
+            MachoLeX86 = 3472551422,
+            MachoLeX64 = 3489328638,
+            MachoBeX86 = 4277009102,
+            MachoBeX64 = 4277009103,
+        }
+
+        public enum FileType
+        {
+            Object = 1,
+            Execute = 2,
+            Fvmlib = 3,
+            Core = 4,
+            Preload = 5,
+            Dylib = 6,
+            Dylinker = 7,
+            Bundle = 8,
+            DylibStub = 9,
+            Dsym = 10,
+            KextBundle = 11,
+        }
+
+        public enum CpuType
+        {
+            Vax = 1,
+            Romp = 2,
+            Ns32032 = 4,
+            Ns32332 = 5,
+            I386 = 7,
+            Mips = 8,
+            Ns32532 = 9,
+            Hppa = 11,
+            Arm = 12,
+            Mc88000 = 13,
+            Sparc = 14,
+            I860 = 15,
+            I860Little = 16,
+            Rs6000 = 17,
+            Powerpc = 18,
+            Abi64 = 16777216,
+            X8664 = 16777223,
+            Arm64 = 16777228,
+            Powerpc64 = 16777234,
+            Any = 4294967295,
         }
         public MachO(KaitaiStream p__io, KaitaiStruct p__parent = null, MachO p__root = null) : base(p__io)
         {
@@ -1213,477 +1243,6 @@ namespace Kaitai
             public MachO M_Root { get { return m_root; } }
             public MachO.LoadCommand M_Parent { get { return m_parent; } }
         }
-        public partial class MachoFlags : KaitaiStruct
-        {
-            public MachoFlags(uint p_value, KaitaiStream p__io, MachO.MachHeader p__parent = null, MachO p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _value = p_value;
-                f_subsectionsViaSymbols = false;
-                f_deadStrippableDylib = false;
-                f_weakDefines = false;
-                f_prebound = false;
-                f_allModsBound = false;
-                f_hasTlvDescriptors = false;
-                f_forceFlat = false;
-                f_rootSafe = false;
-                f_noUndefs = false;
-                f_setuidSafe = false;
-                f_noHeapExecution = false;
-                f_noReexportedDylibs = false;
-                f_noMultiDefs = false;
-                f_appExtensionSafe = false;
-                f_prebindable = false;
-                f_incrLink = false;
-                f_bindAtLoad = false;
-                f_canonical = false;
-                f_twoLevel = false;
-                f_splitSegs = false;
-                f_lazyInit = false;
-                f_allowStackExecution = false;
-                f_bindsToWeak = false;
-                f_noFixPrebinding = false;
-                f_dyldLink = false;
-                f_pie = false;
-                _read();
-            }
-            private void _read()
-            {
-            }
-            private bool f_subsectionsViaSymbols;
-            private bool _subsectionsViaSymbols;
-
-            /// <summary>
-            /// safe to divide up the sections into sub-sections via symbols for dead code stripping
-            /// </summary>
-            public bool SubsectionsViaSymbols
-            {
-                get
-                {
-                    if (f_subsectionsViaSymbols)
-                        return _subsectionsViaSymbols;
-                    _subsectionsViaSymbols = (bool) ((Value & 8192) != 0);
-                    f_subsectionsViaSymbols = true;
-                    return _subsectionsViaSymbols;
-                }
-            }
-            private bool f_deadStrippableDylib;
-            private bool _deadStrippableDylib;
-            public bool DeadStrippableDylib
-            {
-                get
-                {
-                    if (f_deadStrippableDylib)
-                        return _deadStrippableDylib;
-                    _deadStrippableDylib = (bool) ((Value & 4194304) != 0);
-                    f_deadStrippableDylib = true;
-                    return _deadStrippableDylib;
-                }
-            }
-            private bool f_weakDefines;
-            private bool _weakDefines;
-
-            /// <summary>
-            /// the final linked image contains external weak symbols
-            /// </summary>
-            public bool WeakDefines
-            {
-                get
-                {
-                    if (f_weakDefines)
-                        return _weakDefines;
-                    _weakDefines = (bool) ((Value & 32768) != 0);
-                    f_weakDefines = true;
-                    return _weakDefines;
-                }
-            }
-            private bool f_prebound;
-            private bool _prebound;
-
-            /// <summary>
-            /// the file has its dynamic undefined references prebound.
-            /// </summary>
-            public bool Prebound
-            {
-                get
-                {
-                    if (f_prebound)
-                        return _prebound;
-                    _prebound = (bool) ((Value & 16) != 0);
-                    f_prebound = true;
-                    return _prebound;
-                }
-            }
-            private bool f_allModsBound;
-            private bool _allModsBound;
-
-            /// <summary>
-            /// indicates that this binary binds to all two-level namespace modules of its dependent libraries. only used when MH_PREBINDABLE and MH_TWOLEVEL are both set.
-            /// </summary>
-            public bool AllModsBound
-            {
-                get
-                {
-                    if (f_allModsBound)
-                        return _allModsBound;
-                    _allModsBound = (bool) ((Value & 4096) != 0);
-                    f_allModsBound = true;
-                    return _allModsBound;
-                }
-            }
-            private bool f_hasTlvDescriptors;
-            private bool _hasTlvDescriptors;
-            public bool HasTlvDescriptors
-            {
-                get
-                {
-                    if (f_hasTlvDescriptors)
-                        return _hasTlvDescriptors;
-                    _hasTlvDescriptors = (bool) ((Value & 8388608) != 0);
-                    f_hasTlvDescriptors = true;
-                    return _hasTlvDescriptors;
-                }
-            }
-            private bool f_forceFlat;
-            private bool _forceFlat;
-
-            /// <summary>
-            /// the executable is forcing all images to use flat name space bindings
-            /// </summary>
-            public bool ForceFlat
-            {
-                get
-                {
-                    if (f_forceFlat)
-                        return _forceFlat;
-                    _forceFlat = (bool) ((Value & 256) != 0);
-                    f_forceFlat = true;
-                    return _forceFlat;
-                }
-            }
-            private bool f_rootSafe;
-            private bool _rootSafe;
-
-            /// <summary>
-            /// When this bit is set, the binary declares it is safe for use in processes with uid zero
-            /// </summary>
-            public bool RootSafe
-            {
-                get
-                {
-                    if (f_rootSafe)
-                        return _rootSafe;
-                    _rootSafe = (bool) ((Value & 262144) != 0);
-                    f_rootSafe = true;
-                    return _rootSafe;
-                }
-            }
-            private bool f_noUndefs;
-            private bool _noUndefs;
-
-            /// <summary>
-            /// the object file has no undefined references
-            /// </summary>
-            public bool NoUndefs
-            {
-                get
-                {
-                    if (f_noUndefs)
-                        return _noUndefs;
-                    _noUndefs = (bool) ((Value & 1) != 0);
-                    f_noUndefs = true;
-                    return _noUndefs;
-                }
-            }
-            private bool f_setuidSafe;
-            private bool _setuidSafe;
-
-            /// <summary>
-            /// When this bit is set, the binary declares it is safe for use in processes when issetugid() is true
-            /// </summary>
-            public bool SetuidSafe
-            {
-                get
-                {
-                    if (f_setuidSafe)
-                        return _setuidSafe;
-                    _setuidSafe = (bool) ((Value & 524288) != 0);
-                    f_setuidSafe = true;
-                    return _setuidSafe;
-                }
-            }
-            private bool f_noHeapExecution;
-            private bool _noHeapExecution;
-            public bool NoHeapExecution
-            {
-                get
-                {
-                    if (f_noHeapExecution)
-                        return _noHeapExecution;
-                    _noHeapExecution = (bool) ((Value & 16777216) != 0);
-                    f_noHeapExecution = true;
-                    return _noHeapExecution;
-                }
-            }
-            private bool f_noReexportedDylibs;
-            private bool _noReexportedDylibs;
-
-            /// <summary>
-            /// When this bit is set on a dylib, the static linker does not need to examine dependent dylibs to see if any are re-exported
-            /// </summary>
-            public bool NoReexportedDylibs
-            {
-                get
-                {
-                    if (f_noReexportedDylibs)
-                        return _noReexportedDylibs;
-                    _noReexportedDylibs = (bool) ((Value & 1048576) != 0);
-                    f_noReexportedDylibs = true;
-                    return _noReexportedDylibs;
-                }
-            }
-            private bool f_noMultiDefs;
-            private bool _noMultiDefs;
-
-            /// <summary>
-            /// this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
-            /// </summary>
-            public bool NoMultiDefs
-            {
-                get
-                {
-                    if (f_noMultiDefs)
-                        return _noMultiDefs;
-                    _noMultiDefs = (bool) ((Value & 512) != 0);
-                    f_noMultiDefs = true;
-                    return _noMultiDefs;
-                }
-            }
-            private bool f_appExtensionSafe;
-            private bool _appExtensionSafe;
-            public bool AppExtensionSafe
-            {
-                get
-                {
-                    if (f_appExtensionSafe)
-                        return _appExtensionSafe;
-                    _appExtensionSafe = (bool) ((Value & 33554432) != 0);
-                    f_appExtensionSafe = true;
-                    return _appExtensionSafe;
-                }
-            }
-            private bool f_prebindable;
-            private bool _prebindable;
-
-            /// <summary>
-            /// the binary is not prebound but can have its prebinding redone. only used when MH_PREBOUND is not set.
-            /// </summary>
-            public bool Prebindable
-            {
-                get
-                {
-                    if (f_prebindable)
-                        return _prebindable;
-                    _prebindable = (bool) ((Value & 2048) != 0);
-                    f_prebindable = true;
-                    return _prebindable;
-                }
-            }
-            private bool f_incrLink;
-            private bool _incrLink;
-
-            /// <summary>
-            /// the object file is the output of an incremental link against a base file and can't be link edited again
-            /// </summary>
-            public bool IncrLink
-            {
-                get
-                {
-                    if (f_incrLink)
-                        return _incrLink;
-                    _incrLink = (bool) ((Value & 2) != 0);
-                    f_incrLink = true;
-                    return _incrLink;
-                }
-            }
-            private bool f_bindAtLoad;
-            private bool _bindAtLoad;
-
-            /// <summary>
-            /// the object file's undefined references are bound by the dynamic linker when loaded.
-            /// </summary>
-            public bool BindAtLoad
-            {
-                get
-                {
-                    if (f_bindAtLoad)
-                        return _bindAtLoad;
-                    _bindAtLoad = (bool) ((Value & 8) != 0);
-                    f_bindAtLoad = true;
-                    return _bindAtLoad;
-                }
-            }
-            private bool f_canonical;
-            private bool _canonical;
-
-            /// <summary>
-            /// the binary has been canonicalized via the unprebind operation
-            /// </summary>
-            public bool Canonical
-            {
-                get
-                {
-                    if (f_canonical)
-                        return _canonical;
-                    _canonical = (bool) ((Value & 16384) != 0);
-                    f_canonical = true;
-                    return _canonical;
-                }
-            }
-            private bool f_twoLevel;
-            private bool _twoLevel;
-
-            /// <summary>
-            /// the image is using two-level name space bindings
-            /// </summary>
-            public bool TwoLevel
-            {
-                get
-                {
-                    if (f_twoLevel)
-                        return _twoLevel;
-                    _twoLevel = (bool) ((Value & 128) != 0);
-                    f_twoLevel = true;
-                    return _twoLevel;
-                }
-            }
-            private bool f_splitSegs;
-            private bool _splitSegs;
-
-            /// <summary>
-            /// the file has its read-only and read-write segments split
-            /// </summary>
-            public bool SplitSegs
-            {
-                get
-                {
-                    if (f_splitSegs)
-                        return _splitSegs;
-                    _splitSegs = (bool) ((Value & 32) != 0);
-                    f_splitSegs = true;
-                    return _splitSegs;
-                }
-            }
-            private bool f_lazyInit;
-            private bool _lazyInit;
-
-            /// <summary>
-            /// the shared library init routine is to be run lazily via catching memory faults to its writeable segments (obsolete)
-            /// </summary>
-            public bool LazyInit
-            {
-                get
-                {
-                    if (f_lazyInit)
-                        return _lazyInit;
-                    _lazyInit = (bool) ((Value & 64) != 0);
-                    f_lazyInit = true;
-                    return _lazyInit;
-                }
-            }
-            private bool f_allowStackExecution;
-            private bool _allowStackExecution;
-
-            /// <summary>
-            /// When this bit is set, all stacks in the task will be given stack execution privilege.  Only used in MH_EXECUTE filetypes.
-            /// </summary>
-            public bool AllowStackExecution
-            {
-                get
-                {
-                    if (f_allowStackExecution)
-                        return _allowStackExecution;
-                    _allowStackExecution = (bool) ((Value & 131072) != 0);
-                    f_allowStackExecution = true;
-                    return _allowStackExecution;
-                }
-            }
-            private bool f_bindsToWeak;
-            private bool _bindsToWeak;
-
-            /// <summary>
-            /// the final linked image uses weak symbols
-            /// </summary>
-            public bool BindsToWeak
-            {
-                get
-                {
-                    if (f_bindsToWeak)
-                        return _bindsToWeak;
-                    _bindsToWeak = (bool) ((Value & 65536) != 0);
-                    f_bindsToWeak = true;
-                    return _bindsToWeak;
-                }
-            }
-            private bool f_noFixPrebinding;
-            private bool _noFixPrebinding;
-
-            /// <summary>
-            /// do not have dyld notify the prebinding agent about this executable
-            /// </summary>
-            public bool NoFixPrebinding
-            {
-                get
-                {
-                    if (f_noFixPrebinding)
-                        return _noFixPrebinding;
-                    _noFixPrebinding = (bool) ((Value & 1024) != 0);
-                    f_noFixPrebinding = true;
-                    return _noFixPrebinding;
-                }
-            }
-            private bool f_dyldLink;
-            private bool _dyldLink;
-
-            /// <summary>
-            /// the object file is input for the dynamic linker and can't be staticly link edited again
-            /// </summary>
-            public bool DyldLink
-            {
-                get
-                {
-                    if (f_dyldLink)
-                        return _dyldLink;
-                    _dyldLink = (bool) ((Value & 4) != 0);
-                    f_dyldLink = true;
-                    return _dyldLink;
-                }
-            }
-            private bool f_pie;
-            private bool _pie;
-
-            /// <summary>
-            /// When this bit is set, the OS will load the main executable at a random address. Only used in MH_EXECUTE filetypes.
-            /// </summary>
-            public bool Pie
-            {
-                get
-                {
-                    if (f_pie)
-                        return _pie;
-                    _pie = (bool) ((Value & 2097152) != 0);
-                    f_pie = true;
-                    return _pie;
-                }
-            }
-            private uint _value;
-            private MachO m_root;
-            private MachO.MachHeader m_parent;
-            public uint Value { get { return _value; } }
-            public MachO M_Root { get { return m_root; } }
-            public MachO.MachHeader M_Parent { get { return m_parent; } }
-        }
         public partial class RoutinesCommand64 : KaitaiStruct
         {
             public static RoutinesCommand64 FromFile(string fileName)
@@ -2482,7 +2041,6 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_flagsObj = false;
                 _read();
             }
             private void _read()
@@ -2495,19 +2053,6 @@ namespace Kaitai
                 _flags = m_io.ReadU4le();
                 if ( ((M_Root.Magic == MachO.MagicType.MachoBeX64) || (M_Root.Magic == MachO.MagicType.MachoLeX64)) ) {
                     _reserved = m_io.ReadU4le();
-                }
-            }
-            private bool f_flagsObj;
-            private MachoFlags _flagsObj;
-            public MachoFlags FlagsObj
-            {
-                get
-                {
-                    if (f_flagsObj)
-                        return _flagsObj;
-                    _flagsObj = new MachoFlags(Flags, m_io, this, m_root);
-                    f_flagsObj = true;
-                    return _flagsObj;
                 }
             }
             private CpuType _cputype;
