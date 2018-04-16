@@ -267,6 +267,20 @@ endian_elf__seq_program_header_offset_switch [label=<<TABLE BORDER="0" CELLBORDE
 endian_elf__seq_section_header_offset_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 </TABLE>>];
+			subgraph cluster__dynsym_section_entry64 {
+				label="Elf::EndianElf::DynsymSectionEntry64";
+				graph[style=dotted];
+
+				dynsym_section_entry64__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="name_offset_pos">0</TD><TD PORT="name_offset_size">4</TD><TD>u4</TD><TD PORT="name_offset_type">name_offset</TD></TR>
+					<TR><TD PORT="info_pos">4</TD><TD PORT="info_size">1</TD><TD>u1</TD><TD PORT="info_type">info</TD></TR>
+					<TR><TD PORT="other_pos">5</TD><TD PORT="other_size">1</TD><TD>u1</TD><TD PORT="other_type">other</TD></TR>
+					<TR><TD PORT="shndx_pos">6</TD><TD PORT="shndx_size">2</TD><TD>u2</TD><TD PORT="shndx_type">shndx</TD></TR>
+					<TR><TD PORT="value_pos">8</TD><TD PORT="value_size">8</TD><TD>u8</TD><TD PORT="value_type">value</TD></TR>
+					<TR><TD PORT="size_pos">16</TD><TD PORT="size_size">8</TD><TD>u8</TD><TD PORT="size_type">size</TD></TR>
+				</TABLE>>];
+			}
 			subgraph cluster__program_header {
 				label="Elf::EndianElf::ProgramHeader";
 				graph[style=dotted];
@@ -351,6 +365,14 @@ dynamic_section_entry__seq_value_or_ptr_switch [label=<<TABLE BORDER="0" CELLBOR
 					<TR><TD PORT="align_pos">...</TD><TD PORT="align_size">...</TD><TD>switch (_root.bits)</TD><TD PORT="align_type">align</TD></TR>
 					<TR><TD PORT="entry_size_pos">...</TD><TD PORT="entry_size_size">...</TD><TD>switch (_root.bits)</TD><TD PORT="entry_size_type">entry_size</TD></TR>
 				</TABLE>>];
+				section_header__inst__dynstr [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="dynstr_pos">offset</TD><TD PORT="dynstr_size">size</TD><TD>StringsStruct</TD><TD PORT="dynstr_type">dynstr</TD></TR>
+				</TABLE>>];
+				section_header__inst__dynsym [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="dynsym_pos">offset</TD><TD PORT="dynsym_size">size</TD><TD>DynsymSection</TD><TD PORT="dynsym_type">dynsym</TD></TR>
+				</TABLE>>];
 				section_header__inst__body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="body_pos">offset</TD><TD PORT="body_size">size</TD><TD></TD><TD PORT="body_type">body</TD></TR>
@@ -398,6 +420,35 @@ section_header__seq_entry_size_switch [label=<<TABLE BORDER="0" CELLBORDER="1" C
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>DynamicSectionEntry</TD><TD PORT="entries_type">entries</TD></TR>
 					<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__dynsym_section {
+				label="Elf::EndianElf::DynsymSection";
+				graph[style=dotted];
+
+				dynsym_section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>switch (_root.bits)</TD><TD PORT="entries_type">entries</TD></TR>
+					<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+				</TABLE>>];
+dynsym_section__seq_entries_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:bits_b32</TD><TD PORT="case0">DynsymSectionEntry32</TD></TR>
+	<TR><TD>:bits_b64</TD><TD PORT="case1">DynsymSectionEntry64</TD></TR>
+</TABLE>>];
+			}
+			subgraph cluster__dynsym_section_entry32 {
+				label="Elf::EndianElf::DynsymSectionEntry32";
+				graph[style=dotted];
+
+				dynsym_section_entry32__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="name_offset_pos">0</TD><TD PORT="name_offset_size">4</TD><TD>u4</TD><TD PORT="name_offset_type">name_offset</TD></TR>
+					<TR><TD PORT="value_pos">4</TD><TD PORT="value_size">4</TD><TD>u4</TD><TD PORT="value_type">value</TD></TR>
+					<TR><TD PORT="size_pos">8</TD><TD PORT="size_size">4</TD><TD>u4</TD><TD PORT="size_type">size</TD></TR>
+					<TR><TD PORT="info_pos">12</TD><TD PORT="info_size">1</TD><TD>u1</TD><TD PORT="info_type">info</TD></TR>
+					<TR><TD PORT="other_pos">13</TD><TD PORT="other_size">1</TD><TD>u1</TD><TD PORT="other_type">other</TD></TR>
+					<TR><TD PORT="shndx_pos">14</TD><TD PORT="shndx_size">2</TD><TD>u2</TD><TD PORT="shndx_type">shndx</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__strings_struct {
@@ -510,6 +561,12 @@ section_header__seq_entry_size_switch [label=<<TABLE BORDER="0" CELLBORDER="1" C
 	elf__seq:bits_type -> section_header__seq:align_type [color="#404040"];
 	section_header__seq:entry_size_type -> section_header__seq_entry_size_switch [style=bold];
 	elf__seq:bits_type -> section_header__seq:entry_size_type [color="#404040"];
+	section_header__seq:offset_type -> section_header__inst__dynstr:dynstr_pos [color="#404040"];
+	section_header__seq:size_type -> section_header__inst__dynstr:dynstr_size [color="#404040"];
+	section_header__inst__dynstr:dynstr_type -> strings_struct__seq [style=bold];
+	section_header__seq:offset_type -> section_header__inst__dynsym:dynsym_pos [color="#404040"];
+	section_header__seq:size_type -> section_header__inst__dynsym:dynsym_size [color="#404040"];
+	section_header__inst__dynsym:dynsym_type -> dynsym_section__seq [style=bold];
 	section_header__seq:offset_type -> section_header__inst__body:body_pos [color="#404040"];
 	section_header__seq:size_type -> section_header__inst__body:body_size [color="#404040"];
 	section_header__inst__flags_obj:flags_obj_type -> section_header_flags__seq [style=bold];
@@ -521,4 +578,8 @@ section_header__seq_entry_size_switch [label=<<TABLE BORDER="0" CELLBORDER="1" C
 	section_header__seq:size_type -> section_header__inst__dynamic:dynamic_size [color="#404040"];
 	section_header__inst__dynamic:dynamic_type -> dynamic_section__seq [style=bold];
 	dynamic_section__seq:entries_type -> dynamic_section_entry__seq [style=bold];
+	dynsym_section__seq:entries_type -> dynsym_section__seq_entries_switch [style=bold];
+	dynsym_section__seq_entries_switch:case0 -> dynsym_section_entry32__seq [style=bold];
+	dynsym_section__seq_entries_switch:case1 -> dynsym_section_entry64__seq [style=bold];
+	elf__seq:bits_type -> dynsym_section__seq:entries_type [color="#404040"];
 }

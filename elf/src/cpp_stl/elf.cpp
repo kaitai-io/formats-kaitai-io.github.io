@@ -648,6 +648,45 @@ elf_t::endian_elf_t::~endian_elf_t() {
     }
 }
 
+elf_t::endian_elf_t::dynsym_section_entry64_t::dynsym_section_entry64_t(kaitai::kstream* p__io, elf_t::endian_elf_t::dynsym_section_t* p__parent, elf_t* p__root, int p_is_le) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m__is_le = p_is_le;
+    _read();
+}
+
+void elf_t::endian_elf_t::dynsym_section_entry64_t::_read() {
+
+    if (m__is_le == -1) {
+        throw std::runtime_error("unable to decide on endianness");
+    } else if (m__is_le == 1) {
+        _read_le();
+    } else {
+        _read_be();
+    }
+}
+
+void elf_t::endian_elf_t::dynsym_section_entry64_t::_read_le() {
+    m_name_offset = m__io->read_u4le();
+    m_info = m__io->read_u1();
+    m_other = m__io->read_u1();
+    m_shndx = m__io->read_u2le();
+    m_value = m__io->read_u8le();
+    m_size = m__io->read_u8le();
+}
+
+void elf_t::endian_elf_t::dynsym_section_entry64_t::_read_be() {
+    m_name_offset = m__io->read_u4be();
+    m_info = m__io->read_u1();
+    m_other = m__io->read_u1();
+    m_shndx = m__io->read_u2be();
+    m_value = m__io->read_u8be();
+    m_size = m__io->read_u8be();
+}
+
+elf_t::endian_elf_t::dynsym_section_entry64_t::~dynsym_section_entry64_t() {
+}
+
 elf_t::endian_elf_t::program_header_t::program_header_t(kaitai::kstream* p__io, elf_t::endian_elf_t* p__parent, elf_t* p__root, int p_is_le) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -1030,6 +1069,8 @@ elf_t::endian_elf_t::section_header_t::section_header_t(kaitai::kstream* p__io, 
     m__parent = p__parent;
     m__root = p__root;
     m__is_le = p_is_le;
+    f_dynstr = false;
+    f_dynsym = false;
     f_body = false;
     f_flags_obj = false;
     f_strtab = false;
@@ -1232,6 +1273,14 @@ elf_t::endian_elf_t::section_header_t::~section_header_t() {
     }
     if (!n_entry_size) {
     }
+    if (f_dynstr && !n_dynstr) {
+        delete m__io__raw_dynstr;
+        delete m_dynstr;
+    }
+    if (f_dynsym && !n_dynsym) {
+        delete m__io__raw_dynsym;
+        delete m_dynsym;
+    }
     if (f_body) {
     }
     if (f_flags_obj) {
@@ -1247,6 +1296,54 @@ elf_t::endian_elf_t::section_header_t::~section_header_t() {
         delete m__io__raw_dynamic;
         delete m_dynamic;
     }
+}
+
+elf_t::endian_elf_t::strings_struct_t* elf_t::endian_elf_t::section_header_t::dynstr() {
+    if (f_dynstr)
+        return m_dynstr;
+    n_dynstr = true;
+    if (type() == SH_TYPE_DYNSTR) {
+        n_dynstr = false;
+        kaitai::kstream *io = _root()->_io();
+        std::streampos _pos = io->pos();
+        io->seek(offset());
+        if (m__is_le == 1) {
+            m__raw_dynstr = io->read_bytes(size());
+            m__io__raw_dynstr = new kaitai::kstream(m__raw_dynstr);
+            m_dynstr = new strings_struct_t(m__io__raw_dynstr, this, m__root, m__is_le);
+        } else {
+            m__raw_dynstr = io->read_bytes(size());
+            m__io__raw_dynstr = new kaitai::kstream(m__raw_dynstr);
+            m_dynstr = new strings_struct_t(m__io__raw_dynstr, this, m__root, m__is_le);
+        }
+        io->seek(_pos);
+    }
+    f_dynstr = true;
+    return m_dynstr;
+}
+
+elf_t::endian_elf_t::dynsym_section_t* elf_t::endian_elf_t::section_header_t::dynsym() {
+    if (f_dynsym)
+        return m_dynsym;
+    n_dynsym = true;
+    if (type() == SH_TYPE_DYNSYM) {
+        n_dynsym = false;
+        kaitai::kstream *io = _root()->_io();
+        std::streampos _pos = io->pos();
+        io->seek(offset());
+        if (m__is_le == 1) {
+            m__raw_dynsym = io->read_bytes(size());
+            m__io__raw_dynsym = new kaitai::kstream(m__raw_dynsym);
+            m_dynsym = new dynsym_section_t(m__io__raw_dynsym, this, m__root, m__is_le);
+        } else {
+            m__raw_dynsym = io->read_bytes(size());
+            m__io__raw_dynsym = new kaitai::kstream(m__raw_dynsym);
+            m_dynsym = new dynsym_section_t(m__io__raw_dynsym, this, m__root, m__is_le);
+        }
+        io->seek(_pos);
+    }
+    f_dynsym = true;
+    return m_dynsym;
 }
 
 std::string elf_t::endian_elf_t::section_header_t::body() {
@@ -1386,6 +1483,118 @@ elf_t::endian_elf_t::dynamic_section_t::~dynamic_section_t() {
         delete *it;
     }
     delete m_entries;
+}
+
+elf_t::endian_elf_t::dynsym_section_t::dynsym_section_t(kaitai::kstream* p__io, elf_t::endian_elf_t::section_header_t* p__parent, elf_t* p__root, int p_is_le) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m__is_le = p_is_le;
+    _read();
+}
+
+void elf_t::endian_elf_t::dynsym_section_t::_read() {
+
+    if (m__is_le == -1) {
+        throw std::runtime_error("unable to decide on endianness");
+    } else if (m__is_le == 1) {
+        _read_le();
+    } else {
+        _read_be();
+    }
+}
+
+void elf_t::endian_elf_t::dynsym_section_t::_read_le() {
+    m_entries = new std::vector<kaitai::kstruct*>();
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            n_entries = true;
+            switch (_root()->bits()) {
+            case BITS_B32: {
+                n_entries = false;
+                m_entries->push_back(new dynsym_section_entry32_t(m__io, this, m__root, m__is_le));
+                break;
+            }
+            case BITS_B64: {
+                n_entries = false;
+                m_entries->push_back(new dynsym_section_entry64_t(m__io, this, m__root, m__is_le));
+                break;
+            }
+            }
+            i++;
+        }
+    }
+}
+
+void elf_t::endian_elf_t::dynsym_section_t::_read_be() {
+    m_entries = new std::vector<kaitai::kstruct*>();
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            n_entries = true;
+            switch (_root()->bits()) {
+            case BITS_B32: {
+                n_entries = false;
+                m_entries->push_back(new dynsym_section_entry32_t(m__io, this, m__root, m__is_le));
+                break;
+            }
+            case BITS_B64: {
+                n_entries = false;
+                m_entries->push_back(new dynsym_section_entry64_t(m__io, this, m__root, m__is_le));
+                break;
+            }
+            }
+            i++;
+        }
+    }
+}
+
+elf_t::endian_elf_t::dynsym_section_t::~dynsym_section_t() {
+    if (!n_entries) {
+        for (std::vector<kaitai::kstruct*>::iterator it = m_entries->begin(); it != m_entries->end(); ++it) {
+            delete *it;
+        }
+        delete m_entries;
+    }
+}
+
+elf_t::endian_elf_t::dynsym_section_entry32_t::dynsym_section_entry32_t(kaitai::kstream* p__io, elf_t::endian_elf_t::dynsym_section_t* p__parent, elf_t* p__root, int p_is_le) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m__is_le = p_is_le;
+    _read();
+}
+
+void elf_t::endian_elf_t::dynsym_section_entry32_t::_read() {
+
+    if (m__is_le == -1) {
+        throw std::runtime_error("unable to decide on endianness");
+    } else if (m__is_le == 1) {
+        _read_le();
+    } else {
+        _read_be();
+    }
+}
+
+void elf_t::endian_elf_t::dynsym_section_entry32_t::_read_le() {
+    m_name_offset = m__io->read_u4le();
+    m_value = m__io->read_u4le();
+    m_size = m__io->read_u4le();
+    m_info = m__io->read_u1();
+    m_other = m__io->read_u1();
+    m_shndx = m__io->read_u2le();
+}
+
+void elf_t::endian_elf_t::dynsym_section_entry32_t::_read_be() {
+    m_name_offset = m__io->read_u4be();
+    m_value = m__io->read_u4be();
+    m_size = m__io->read_u4be();
+    m_info = m__io->read_u1();
+    m_other = m__io->read_u1();
+    m_shndx = m__io->read_u2be();
+}
+
+elf_t::endian_elf_t::dynsym_section_entry32_t::~dynsym_section_entry32_t() {
 }
 
 elf_t::endian_elf_t::strings_struct_t::strings_struct_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, elf_t* p__root, int p_is_le) : kaitai::kstruct(p__io) {

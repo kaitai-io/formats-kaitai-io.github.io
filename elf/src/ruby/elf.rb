@@ -691,6 +691,51 @@ class Elf < Kaitai::Struct::Struct
       @section_names_idx = @_io.read_u2be
       self
     end
+    class DynsymSectionEntry64 < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
+        super(_io, _parent, _root)
+        @_is_le = _is_le
+        _read
+      end
+
+      def _read
+
+        if @_is_le == true
+          _read_le
+        elsif @_is_le == false
+          _read_be
+        else
+          raise Kaitai::Struct::Stream::UndecidedEndiannessError
+        end
+        self
+      end
+
+      def _read_le
+        @name_offset = @_io.read_u4le
+        @info = @_io.read_u1
+        @other = @_io.read_u1
+        @shndx = @_io.read_u2le
+        @value = @_io.read_u8le
+        @size = @_io.read_u8le
+        self
+      end
+
+      def _read_be
+        @name_offset = @_io.read_u4be
+        @info = @_io.read_u1
+        @other = @_io.read_u1
+        @shndx = @_io.read_u2be
+        @value = @_io.read_u8be
+        @size = @_io.read_u8be
+        self
+      end
+      attr_reader :name_offset
+      attr_reader :info
+      attr_reader :other
+      attr_reader :shndx
+      attr_reader :value
+      attr_reader :size
+    end
     class ProgramHeader < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
         super(_io, _parent, _root)
@@ -1017,6 +1062,44 @@ class Elf < Kaitai::Struct::Struct
         end
         self
       end
+      def dynstr
+        return @dynstr unless @dynstr.nil?
+        if type == :sh_type_dynstr
+          io = _root._io
+          _pos = io.pos
+          io.seek(offset)
+          if @_is_le
+            @_raw_dynstr = io.read_bytes(size)
+            io = Kaitai::Struct::Stream.new(@_raw_dynstr)
+            @dynstr = StringsStruct.new(io, self, @_root, @_is_le)
+          else
+            @_raw_dynstr = io.read_bytes(size)
+            io = Kaitai::Struct::Stream.new(@_raw_dynstr)
+            @dynstr = StringsStruct.new(io, self, @_root, @_is_le)
+          end
+          io.seek(_pos)
+        end
+        @dynstr
+      end
+      def dynsym
+        return @dynsym unless @dynsym.nil?
+        if type == :sh_type_dynsym
+          io = _root._io
+          _pos = io.pos
+          io.seek(offset)
+          if @_is_le
+            @_raw_dynsym = io.read_bytes(size)
+            io = Kaitai::Struct::Stream.new(@_raw_dynsym)
+            @dynsym = DynsymSection.new(io, self, @_root, @_is_le)
+          else
+            @_raw_dynsym = io.read_bytes(size)
+            io = Kaitai::Struct::Stream.new(@_raw_dynsym)
+            @dynsym = DynsymSection.new(io, self, @_root, @_is_le)
+          end
+          io.seek(_pos)
+        end
+        @dynsym
+      end
       def body
         return @body unless @body.nil?
         io = _root._io
@@ -1100,6 +1183,8 @@ class Elf < Kaitai::Struct::Struct
       attr_reader :info
       attr_reader :align
       attr_reader :entry_size
+      attr_reader :_raw_dynstr
+      attr_reader :_raw_dynsym
       attr_reader :_raw_strtab
       attr_reader :_raw_dynamic
     end
@@ -1142,6 +1227,101 @@ class Elf < Kaitai::Struct::Struct
         self
       end
       attr_reader :entries
+    end
+    class DynsymSection < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
+        super(_io, _parent, _root)
+        @_is_le = _is_le
+        _read
+      end
+
+      def _read
+
+        if @_is_le == true
+          _read_le
+        elsif @_is_le == false
+          _read_be
+        else
+          raise Kaitai::Struct::Stream::UndecidedEndiannessError
+        end
+        self
+      end
+
+      def _read_le
+        @entries = []
+        i = 0
+        while not @_io.eof?
+          case _root.bits
+          when :bits_b32
+            @entries << DynsymSectionEntry32.new(@_io, self, @_root, @_is_le)
+          when :bits_b64
+            @entries << DynsymSectionEntry64.new(@_io, self, @_root, @_is_le)
+          end
+          i += 1
+        end
+        self
+      end
+
+      def _read_be
+        @entries = []
+        i = 0
+        while not @_io.eof?
+          case _root.bits
+          when :bits_b32
+            @entries << DynsymSectionEntry32.new(@_io, self, @_root, @_is_le)
+          when :bits_b64
+            @entries << DynsymSectionEntry64.new(@_io, self, @_root, @_is_le)
+          end
+          i += 1
+        end
+        self
+      end
+      attr_reader :entries
+    end
+    class DynsymSectionEntry32 < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
+        super(_io, _parent, _root)
+        @_is_le = _is_le
+        _read
+      end
+
+      def _read
+
+        if @_is_le == true
+          _read_le
+        elsif @_is_le == false
+          _read_be
+        else
+          raise Kaitai::Struct::Stream::UndecidedEndiannessError
+        end
+        self
+      end
+
+      def _read_le
+        @name_offset = @_io.read_u4le
+        @value = @_io.read_u4le
+        @size = @_io.read_u4le
+        @info = @_io.read_u1
+        @other = @_io.read_u1
+        @shndx = @_io.read_u2le
+        self
+      end
+
+      def _read_be
+        @name_offset = @_io.read_u4be
+        @value = @_io.read_u4be
+        @size = @_io.read_u4be
+        @info = @_io.read_u1
+        @other = @_io.read_u1
+        @shndx = @_io.read_u2be
+        self
+      end
+      attr_reader :name_offset
+      attr_reader :value
+      attr_reader :size
+      attr_reader :info
+      attr_reader :other
+      attr_reader :shndx
     end
     class StringsStruct < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)

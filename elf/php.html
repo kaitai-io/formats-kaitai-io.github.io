@@ -1008,6 +1008,59 @@ class EndianElf extends \Kaitai\Struct\Struct {
 
 namespace \Elf\EndianElf;
 
+class DynsymSectionEntry64 extends \Kaitai\Struct\Struct {
+    protected $_m__is_le;
+
+    public function __construct(\Kaitai\Struct\Stream $_io, \Elf\EndianElf\DynsymSection $_parent = null, \Elf $_root = null, $is_le = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_m__is_le = $is_le;
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+
+        if (is_null($this-&gt;_m__is_le)) {
+            throw new \RuntimeException(&quot;Unable to decide on endianness&quot;);
+        } else if ($this-&gt;_m__is_le) {
+            $this-&gt;_readLE();
+        } else {
+            $this-&gt;_readBE();
+        }
+    }
+
+    private function _readLE() {
+        $this-&gt;_m_nameOffset = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_info = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_other = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_shndx = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_value = $this-&gt;_io-&gt;readU8le();
+        $this-&gt;_m_size = $this-&gt;_io-&gt;readU8le();
+    }
+
+    private function _readBE() {
+        $this-&gt;_m_nameOffset = $this-&gt;_io-&gt;readU4be();
+        $this-&gt;_m_info = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_other = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_shndx = $this-&gt;_io-&gt;readU2be();
+        $this-&gt;_m_value = $this-&gt;_io-&gt;readU8be();
+        $this-&gt;_m_size = $this-&gt;_io-&gt;readU8be();
+    }
+    protected $_m_nameOffset;
+    protected $_m_info;
+    protected $_m_other;
+    protected $_m_shndx;
+    protected $_m_value;
+    protected $_m_size;
+    public function nameOffset() { return $this-&gt;_m_nameOffset; }
+    public function info() { return $this-&gt;_m_info; }
+    public function other() { return $this-&gt;_m_other; }
+    public function shndx() { return $this-&gt;_m_shndx; }
+    public function value() { return $this-&gt;_m_value; }
+    public function size() { return $this-&gt;_m_size; }
+}
+
+namespace \Elf\EndianElf;
+
 class ProgramHeader extends \Kaitai\Struct\Struct {
     protected $_m__is_le;
 
@@ -1413,6 +1466,48 @@ class SectionHeader extends \Kaitai\Struct\Struct {
                 break;
         }
     }
+    protected $_m_dynstr;
+    public function dynstr() {
+        if ($this-&gt;_m_dynstr !== null)
+            return $this-&gt;_m_dynstr;
+        if ($this-&gt;type() == \Elf\ShType::DYNSTR) {
+            $io = $this-&gt;_root()-&gt;_io();
+            $_pos = $io-&gt;pos();
+            $io-&gt;seek($this-&gt;offset());
+            if ($this-&gt;_m__is_le) {
+                $this-&gt;_m__raw_dynstr = $io-&gt;readBytes($this-&gt;size());
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_dynstr);
+                $this-&gt;_m_dynstr = new \Elf\EndianElf\StringsStruct($io, $this, $this-&gt;_root, $this-&gt;_m__is_le);
+            } else {
+                $this-&gt;_m__raw_dynstr = $io-&gt;readBytes($this-&gt;size());
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_dynstr);
+                $this-&gt;_m_dynstr = new \Elf\EndianElf\StringsStruct($io, $this, $this-&gt;_root, $this-&gt;_m__is_le);
+            }
+            $io-&gt;seek($_pos);
+        }
+        return $this-&gt;_m_dynstr;
+    }
+    protected $_m_dynsym;
+    public function dynsym() {
+        if ($this-&gt;_m_dynsym !== null)
+            return $this-&gt;_m_dynsym;
+        if ($this-&gt;type() == \Elf\ShType::DYNSYM) {
+            $io = $this-&gt;_root()-&gt;_io();
+            $_pos = $io-&gt;pos();
+            $io-&gt;seek($this-&gt;offset());
+            if ($this-&gt;_m__is_le) {
+                $this-&gt;_m__raw_dynsym = $io-&gt;readBytes($this-&gt;size());
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_dynsym);
+                $this-&gt;_m_dynsym = new \Elf\EndianElf\DynsymSection($io, $this, $this-&gt;_root, $this-&gt;_m__is_le);
+            } else {
+                $this-&gt;_m__raw_dynsym = $io-&gt;readBytes($this-&gt;size());
+                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_dynsym);
+                $this-&gt;_m_dynsym = new \Elf\EndianElf\DynsymSection($io, $this, $this-&gt;_root, $this-&gt;_m__is_le);
+            }
+            $io-&gt;seek($_pos);
+        }
+        return $this-&gt;_m_dynsym;
+    }
     protected $_m_body;
     public function body() {
         if ($this-&gt;_m_body !== null)
@@ -1506,6 +1601,8 @@ class SectionHeader extends \Kaitai\Struct\Struct {
     protected $_m_info;
     protected $_m_align;
     protected $_m_entrySize;
+    protected $_m__raw_dynstr;
+    protected $_m__raw_dynsym;
     protected $_m__raw_strtab;
     protected $_m__raw_dynamic;
     public function nameOffset() { return $this-&gt;_m_nameOffset; }
@@ -1518,6 +1615,8 @@ class SectionHeader extends \Kaitai\Struct\Struct {
     public function info() { return $this-&gt;_m_info; }
     public function align() { return $this-&gt;_m_align; }
     public function entrySize() { return $this-&gt;_m_entrySize; }
+    public function _raw_dynstr() { return $this-&gt;_m__raw_dynstr; }
+    public function _raw_dynsym() { return $this-&gt;_m__raw_dynsym; }
     public function _raw_strtab() { return $this-&gt;_m__raw_strtab; }
     public function _raw_dynamic() { return $this-&gt;_m__raw_dynamic; }
 }
@@ -1563,6 +1662,116 @@ class DynamicSection extends \Kaitai\Struct\Struct {
     }
     protected $_m_entries;
     public function entries() { return $this-&gt;_m_entries; }
+}
+
+namespace \Elf\EndianElf;
+
+class DynsymSection extends \Kaitai\Struct\Struct {
+    protected $_m__is_le;
+
+    public function __construct(\Kaitai\Struct\Stream $_io, \Elf\EndianElf\SectionHeader $_parent = null, \Elf $_root = null, $is_le = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_m__is_le = $is_le;
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+
+        if (is_null($this-&gt;_m__is_le)) {
+            throw new \RuntimeException(&quot;Unable to decide on endianness&quot;);
+        } else if ($this-&gt;_m__is_le) {
+            $this-&gt;_readLE();
+        } else {
+            $this-&gt;_readBE();
+        }
+    }
+
+    private function _readLE() {
+        $this-&gt;_m_entries = [];
+        $i = 0;
+        while (!$this-&gt;_io-&gt;isEof()) {
+            switch ($this-&gt;_root()-&gt;bits()) {
+                case \Elf\Bits::B32:
+                    $this-&gt;_m_entries[] = new \Elf\EndianElf\DynsymSectionEntry32($this-&gt;_io, $this, $this-&gt;_root, $this-&gt;_m__is_le);
+                    break;
+                case \Elf\Bits::B64:
+                    $this-&gt;_m_entries[] = new \Elf\EndianElf\DynsymSectionEntry64($this-&gt;_io, $this, $this-&gt;_root, $this-&gt;_m__is_le);
+                    break;
+            }
+            $i++;
+        }
+    }
+
+    private function _readBE() {
+        $this-&gt;_m_entries = [];
+        $i = 0;
+        while (!$this-&gt;_io-&gt;isEof()) {
+            switch ($this-&gt;_root()-&gt;bits()) {
+                case \Elf\Bits::B32:
+                    $this-&gt;_m_entries[] = new \Elf\EndianElf\DynsymSectionEntry32($this-&gt;_io, $this, $this-&gt;_root, $this-&gt;_m__is_le);
+                    break;
+                case \Elf\Bits::B64:
+                    $this-&gt;_m_entries[] = new \Elf\EndianElf\DynsymSectionEntry64($this-&gt;_io, $this, $this-&gt;_root, $this-&gt;_m__is_le);
+                    break;
+            }
+            $i++;
+        }
+    }
+    protected $_m_entries;
+    public function entries() { return $this-&gt;_m_entries; }
+}
+
+namespace \Elf\EndianElf;
+
+class DynsymSectionEntry32 extends \Kaitai\Struct\Struct {
+    protected $_m__is_le;
+
+    public function __construct(\Kaitai\Struct\Stream $_io, \Elf\EndianElf\DynsymSection $_parent = null, \Elf $_root = null, $is_le = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_m__is_le = $is_le;
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+
+        if (is_null($this-&gt;_m__is_le)) {
+            throw new \RuntimeException(&quot;Unable to decide on endianness&quot;);
+        } else if ($this-&gt;_m__is_le) {
+            $this-&gt;_readLE();
+        } else {
+            $this-&gt;_readBE();
+        }
+    }
+
+    private function _readLE() {
+        $this-&gt;_m_nameOffset = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_value = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_size = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_info = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_other = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_shndx = $this-&gt;_io-&gt;readU2le();
+    }
+
+    private function _readBE() {
+        $this-&gt;_m_nameOffset = $this-&gt;_io-&gt;readU4be();
+        $this-&gt;_m_value = $this-&gt;_io-&gt;readU4be();
+        $this-&gt;_m_size = $this-&gt;_io-&gt;readU4be();
+        $this-&gt;_m_info = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_other = $this-&gt;_io-&gt;readU1();
+        $this-&gt;_m_shndx = $this-&gt;_io-&gt;readU2be();
+    }
+    protected $_m_nameOffset;
+    protected $_m_value;
+    protected $_m_size;
+    protected $_m_info;
+    protected $_m_other;
+    protected $_m_shndx;
+    public function nameOffset() { return $this-&gt;_m_nameOffset; }
+    public function value() { return $this-&gt;_m_value; }
+    public function size() { return $this-&gt;_m_size; }
+    public function info() { return $this-&gt;_m_info; }
+    public function other() { return $this-&gt;_m_other; }
+    public function shndx() { return $this-&gt;_m_shndx; }
 }
 
 namespace \Elf\EndianElf;

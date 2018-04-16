@@ -1311,6 +1311,45 @@ var Elf = (function() {
       this.sectionNamesIdx = this._io.readU2be();
     }
 
+    var DynsymSectionEntry64 = EndianElf.DynsymSectionEntry64 = (function() {
+      function DynsymSectionEntry64(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      DynsymSectionEntry64.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      DynsymSectionEntry64.prototype._readLE = function() {
+        this.nameOffset = this._io.readU4le();
+        this.info = this._io.readU1();
+        this.other = this._io.readU1();
+        this.shndx = this._io.readU2le();
+        this.value = this._io.readU8le();
+        this.size = this._io.readU8le();
+      }
+      DynsymSectionEntry64.prototype._readBE = function() {
+        this.nameOffset = this._io.readU4be();
+        this.info = this._io.readU1();
+        this.other = this._io.readU1();
+        this.shndx = this._io.readU2be();
+        this.value = this._io.readU8be();
+        this.size = this._io.readU8be();
+      }
+
+      return DynsymSectionEntry64;
+    })();
+
     var ProgramHeader = EndianElf.ProgramHeader = (function() {
       function ProgramHeader(_io, _parent, _root, _is_le) {
         this._io = _io;
@@ -1690,6 +1729,50 @@ var Elf = (function() {
           break;
         }
       }
+      Object.defineProperty(SectionHeader.prototype, &#39;dynstr&#39;, {
+        get: function() {
+          if (this._m_dynstr !== undefined)
+            return this._m_dynstr;
+          if (this.type == Elf.ShType.DYNSTR) {
+            var io = this._root._io;
+            var _pos = io.pos;
+            io.seek(this.offset);
+            if (this._is_le) {
+              this._raw__m_dynstr = io.readBytes(this.size);
+              var _io__raw__m_dynstr = new KaitaiStream(this._raw__m_dynstr);
+              this._m_dynstr = new StringsStruct(_io__raw__m_dynstr, this, this._root, this._is_le);
+            } else {
+              this._raw__m_dynstr = io.readBytes(this.size);
+              var _io__raw__m_dynstr = new KaitaiStream(this._raw__m_dynstr);
+              this._m_dynstr = new StringsStruct(_io__raw__m_dynstr, this, this._root, this._is_le);
+            }
+            io.seek(_pos);
+          }
+          return this._m_dynstr;
+        }
+      });
+      Object.defineProperty(SectionHeader.prototype, &#39;dynsym&#39;, {
+        get: function() {
+          if (this._m_dynsym !== undefined)
+            return this._m_dynsym;
+          if (this.type == Elf.ShType.DYNSYM) {
+            var io = this._root._io;
+            var _pos = io.pos;
+            io.seek(this.offset);
+            if (this._is_le) {
+              this._raw__m_dynsym = io.readBytes(this.size);
+              var _io__raw__m_dynsym = new KaitaiStream(this._raw__m_dynsym);
+              this._m_dynsym = new DynsymSection(_io__raw__m_dynsym, this, this._root, this._is_le);
+            } else {
+              this._raw__m_dynsym = io.readBytes(this.size);
+              var _io__raw__m_dynsym = new KaitaiStream(this._raw__m_dynsym);
+              this._m_dynsym = new DynsymSection(_io__raw__m_dynsym, this, this._root, this._is_le);
+            }
+            io.seek(_pos);
+          }
+          return this._m_dynsym;
+        }
+      });
       Object.defineProperty(SectionHeader.prototype, &#39;body&#39;, {
         get: function() {
           if (this._m_body !== undefined)
@@ -1819,6 +1902,98 @@ var Elf = (function() {
       }
 
       return DynamicSection;
+    })();
+
+    var DynsymSection = EndianElf.DynsymSection = (function() {
+      function DynsymSection(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      DynsymSection.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      DynsymSection.prototype._readLE = function() {
+        this.entries = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          switch (this._root.bits) {
+          case Elf.Bits.B32:
+            this.entries.push(new DynsymSectionEntry32(this._io, this, this._root, this._is_le));
+            break;
+          case Elf.Bits.B64:
+            this.entries.push(new DynsymSectionEntry64(this._io, this, this._root, this._is_le));
+            break;
+          }
+          i++;
+        }
+      }
+      DynsymSection.prototype._readBE = function() {
+        this.entries = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          switch (this._root.bits) {
+          case Elf.Bits.B32:
+            this.entries.push(new DynsymSectionEntry32(this._io, this, this._root, this._is_le));
+            break;
+          case Elf.Bits.B64:
+            this.entries.push(new DynsymSectionEntry64(this._io, this, this._root, this._is_le));
+            break;
+          }
+          i++;
+        }
+      }
+
+      return DynsymSection;
+    })();
+
+    var DynsymSectionEntry32 = EndianElf.DynsymSectionEntry32 = (function() {
+      function DynsymSectionEntry32(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      DynsymSectionEntry32.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      DynsymSectionEntry32.prototype._readLE = function() {
+        this.nameOffset = this._io.readU4le();
+        this.value = this._io.readU4le();
+        this.size = this._io.readU4le();
+        this.info = this._io.readU1();
+        this.other = this._io.readU1();
+        this.shndx = this._io.readU2le();
+      }
+      DynsymSectionEntry32.prototype._readBE = function() {
+        this.nameOffset = this._io.readU4be();
+        this.value = this._io.readU4be();
+        this.size = this._io.readU4be();
+        this.info = this._io.readU1();
+        this.other = this._io.readU1();
+        this.shndx = this._io.readU2be();
+      }
+
+      return DynsymSectionEntry32;
     })();
 
     var StringsStruct = EndianElf.StringsStruct = (function() {

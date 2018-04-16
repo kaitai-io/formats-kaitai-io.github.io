@@ -984,6 +984,40 @@ class Elf(KaitaiStruct):
             self.qty_section_header = self._io.read_u2be()
             self.section_names_idx = self._io.read_u2be()
 
+        class DynsymSectionEntry64(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None, _is_le=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._is_le = _is_le
+                self._read()
+
+            def _read(self):
+
+                if self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                else:
+                    raise Exception(&quot;Unable to decide endianness&quot;)
+
+            def _read_le(self):
+                self.name_offset = self._io.read_u4le()
+                self.info = self._io.read_u1()
+                self.other = self._io.read_u1()
+                self.shndx = self._io.read_u2le()
+                self.value = self._io.read_u8le()
+                self.size = self._io.read_u8le()
+
+            def _read_be(self):
+                self.name_offset = self._io.read_u4be()
+                self.info = self._io.read_u1()
+                self.other = self._io.read_u1()
+                self.shndx = self._io.read_u2be()
+                self.value = self._io.read_u8be()
+                self.size = self._io.read_u8be()
+
+
         class ProgramHeader(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None, _is_le=None):
                 self._io = _io
@@ -1265,6 +1299,48 @@ class Elf(KaitaiStruct):
                     self.entry_size = self._io.read_u8be()
 
             @property
+            def dynstr(self):
+                if hasattr(self, &#39;_m_dynstr&#39;):
+                    return self._m_dynstr if hasattr(self, &#39;_m_dynstr&#39;) else None
+
+                if self.type == self._root.ShType.dynstr:
+                    io = self._root._io
+                    _pos = io.pos()
+                    io.seek(self.offset)
+                    if self._is_le:
+                        self._raw__m_dynstr = io.read_bytes(self.size)
+                        io = KaitaiStream(BytesIO(self._raw__m_dynstr))
+                        self._m_dynstr = self._root.EndianElf.StringsStruct(io, self, self._root, self._is_le)
+                    else:
+                        self._raw__m_dynstr = io.read_bytes(self.size)
+                        io = KaitaiStream(BytesIO(self._raw__m_dynstr))
+                        self._m_dynstr = self._root.EndianElf.StringsStruct(io, self, self._root, self._is_le)
+                    io.seek(_pos)
+
+                return self._m_dynstr if hasattr(self, &#39;_m_dynstr&#39;) else None
+
+            @property
+            def dynsym(self):
+                if hasattr(self, &#39;_m_dynsym&#39;):
+                    return self._m_dynsym if hasattr(self, &#39;_m_dynsym&#39;) else None
+
+                if self.type == self._root.ShType.dynsym:
+                    io = self._root._io
+                    _pos = io.pos()
+                    io.seek(self.offset)
+                    if self._is_le:
+                        self._raw__m_dynsym = io.read_bytes(self.size)
+                        io = KaitaiStream(BytesIO(self._raw__m_dynsym))
+                        self._m_dynsym = self._root.EndianElf.DynsymSection(io, self, self._root, self._is_le)
+                    else:
+                        self._raw__m_dynsym = io.read_bytes(self.size)
+                        io = KaitaiStream(BytesIO(self._raw__m_dynsym))
+                        self._m_dynsym = self._root.EndianElf.DynsymSection(io, self, self._root, self._is_le)
+                    io.seek(_pos)
+
+                return self._m_dynsym if hasattr(self, &#39;_m_dynsym&#39;) else None
+
+            @property
             def body(self):
                 if hasattr(self, &#39;_m_body&#39;):
                     return self._m_body if hasattr(self, &#39;_m_body&#39;) else None
@@ -1380,6 +1456,82 @@ class Elf(KaitaiStruct):
                     self.entries.append(self._root.EndianElf.DynamicSectionEntry(self._io, self, self._root, self._is_le))
                     i += 1
 
+
+
+        class DynsymSection(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None, _is_le=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._is_le = _is_le
+                self._read()
+
+            def _read(self):
+
+                if self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                else:
+                    raise Exception(&quot;Unable to decide endianness&quot;)
+
+            def _read_le(self):
+                self.entries = []
+                i = 0
+                while not self._io.is_eof():
+                    _on = self._root.bits
+                    if _on == self._root.Bits.b32:
+                        self.entries.append(self._root.EndianElf.DynsymSectionEntry32(self._io, self, self._root, self._is_le))
+                    elif _on == self._root.Bits.b64:
+                        self.entries.append(self._root.EndianElf.DynsymSectionEntry64(self._io, self, self._root, self._is_le))
+                    i += 1
+
+
+            def _read_be(self):
+                self.entries = []
+                i = 0
+                while not self._io.is_eof():
+                    _on = self._root.bits
+                    if _on == self._root.Bits.b32:
+                        self.entries.append(self._root.EndianElf.DynsymSectionEntry32(self._io, self, self._root, self._is_le))
+                    elif _on == self._root.Bits.b64:
+                        self.entries.append(self._root.EndianElf.DynsymSectionEntry64(self._io, self, self._root, self._is_le))
+                    i += 1
+
+
+
+        class DynsymSectionEntry32(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None, _is_le=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._is_le = _is_le
+                self._read()
+
+            def _read(self):
+
+                if self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                else:
+                    raise Exception(&quot;Unable to decide endianness&quot;)
+
+            def _read_le(self):
+                self.name_offset = self._io.read_u4le()
+                self.value = self._io.read_u4le()
+                self.size = self._io.read_u4le()
+                self.info = self._io.read_u1()
+                self.other = self._io.read_u1()
+                self.shndx = self._io.read_u2le()
+
+            def _read_be(self):
+                self.name_offset = self._io.read_u4be()
+                self.value = self._io.read_u4be()
+                self.size = self._io.read_u4be()
+                self.info = self._io.read_u1()
+                self.other = self._io.read_u1()
+                self.shndx = self._io.read_u2be()
 
 
         class StringsStruct(KaitaiStruct):

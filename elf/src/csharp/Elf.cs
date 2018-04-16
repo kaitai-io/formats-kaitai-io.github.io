@@ -1205,6 +1205,67 @@ namespace Kaitai
                 _qtySectionHeader = m_io.ReadU2be();
                 _sectionNamesIdx = m_io.ReadU2be();
             }
+            public partial class DynsymSectionEntry64 : KaitaiStruct
+            {
+                public static DynsymSectionEntry64 FromFile(string fileName)
+                {
+                    return new DynsymSectionEntry64(new KaitaiStream(fileName));
+                }
+
+                private bool? m_isLe;
+                public DynsymSectionEntry64(KaitaiStream p__io, Elf.EndianElf.DynsymSection p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    m_isLe = isLe;
+                    _read();
+                }
+                private void _read()
+                {
+
+                    if (m_isLe == null) {
+                        throw new Exception("Unable to decide on endianness");
+                    } else if (m_isLe == true) {
+                        _readLE();
+                    } else {
+                        _readBE();
+                    }
+                }
+                private void _readLE()
+                {
+                    _nameOffset = m_io.ReadU4le();
+                    _info = m_io.ReadU1();
+                    _other = m_io.ReadU1();
+                    _shndx = m_io.ReadU2le();
+                    _value = m_io.ReadU8le();
+                    _size = m_io.ReadU8le();
+                }
+                private void _readBE()
+                {
+                    _nameOffset = m_io.ReadU4be();
+                    _info = m_io.ReadU1();
+                    _other = m_io.ReadU1();
+                    _shndx = m_io.ReadU2be();
+                    _value = m_io.ReadU8be();
+                    _size = m_io.ReadU8be();
+                }
+                private uint _nameOffset;
+                private byte _info;
+                private byte _other;
+                private ushort _shndx;
+                private ulong _value;
+                private ulong _size;
+                private Elf m_root;
+                private Elf.EndianElf.DynsymSection m_parent;
+                public uint NameOffset { get { return _nameOffset; } }
+                public byte Info { get { return _info; } }
+                public byte Other { get { return _other; } }
+                public ushort Shndx { get { return _shndx; } }
+                public ulong Value { get { return _value; } }
+                public ulong Size { get { return _size; } }
+                public Elf M_Root { get { return m_root; } }
+                public Elf.EndianElf.DynsymSection M_Parent { get { return m_parent; } }
+            }
             public partial class ProgramHeader : KaitaiStruct
             {
                 public static ProgramHeader FromFile(string fileName)
@@ -1570,6 +1631,8 @@ namespace Kaitai
                     m_parent = p__parent;
                     m_root = p__root;
                     m_isLe = isLe;
+                    f_dynstr = false;
+                    f_dynsym = false;
                     f_body = false;
                     f_flagsObj = false;
                     f_strtab = false;
@@ -1722,6 +1785,60 @@ namespace Kaitai
                     }
                     }
                 }
+                private bool f_dynstr;
+                private StringsStruct _dynstr;
+                public StringsStruct Dynstr
+                {
+                    get
+                    {
+                        if (f_dynstr)
+                            return _dynstr;
+                        if (Type == Elf.ShType.Dynstr) {
+                            KaitaiStream io = M_Root.M_Io;
+                            long _pos = io.Pos;
+                            io.Seek(Offset);
+                            if (m_isLe == true) {
+                                __raw_dynstr = io.ReadBytes(Size);
+                                var io___raw_dynstr = new KaitaiStream(__raw_dynstr);
+                                _dynstr = new StringsStruct(io___raw_dynstr, this, m_root, m_isLe);
+                            } else {
+                                __raw_dynstr = io.ReadBytes(Size);
+                                var io___raw_dynstr = new KaitaiStream(__raw_dynstr);
+                                _dynstr = new StringsStruct(io___raw_dynstr, this, m_root, m_isLe);
+                            }
+                            io.Seek(_pos);
+                        }
+                        f_dynstr = true;
+                        return _dynstr;
+                    }
+                }
+                private bool f_dynsym;
+                private DynsymSection _dynsym;
+                public DynsymSection Dynsym
+                {
+                    get
+                    {
+                        if (f_dynsym)
+                            return _dynsym;
+                        if (Type == Elf.ShType.Dynsym) {
+                            KaitaiStream io = M_Root.M_Io;
+                            long _pos = io.Pos;
+                            io.Seek(Offset);
+                            if (m_isLe == true) {
+                                __raw_dynsym = io.ReadBytes(Size);
+                                var io___raw_dynsym = new KaitaiStream(__raw_dynsym);
+                                _dynsym = new DynsymSection(io___raw_dynsym, this, m_root, m_isLe);
+                            } else {
+                                __raw_dynsym = io.ReadBytes(Size);
+                                var io___raw_dynsym = new KaitaiStream(__raw_dynsym);
+                                _dynsym = new DynsymSection(io___raw_dynsym, this, m_root, m_isLe);
+                            }
+                            io.Seek(_pos);
+                        }
+                        f_dynsym = true;
+                        return _dynsym;
+                    }
+                }
                 private bool f_body;
                 private byte[] _body;
                 public byte[] Body
@@ -1847,6 +1964,8 @@ namespace Kaitai
                 private ulong _entrySize;
                 private Elf m_root;
                 private Elf.EndianElf m_parent;
+                private byte[] __raw_dynstr;
+                private byte[] __raw_dynsym;
                 private byte[] __raw_strtab;
                 private byte[] __raw_dynamic;
                 public uint NameOffset { get { return _nameOffset; } }
@@ -1861,6 +1980,8 @@ namespace Kaitai
                 public ulong EntrySize { get { return _entrySize; } }
                 public Elf M_Root { get { return m_root; } }
                 public Elf.EndianElf M_Parent { get { return m_parent; } }
+                public byte[] M_RawDynstr { get { return __raw_dynstr; } }
+                public byte[] M_RawDynsym { get { return __raw_dynsym; } }
                 public byte[] M_RawStrtab { get { return __raw_strtab; } }
                 public byte[] M_RawDynamic { get { return __raw_dynamic; } }
             }
@@ -1918,6 +2039,140 @@ namespace Kaitai
                 public List<DynamicSectionEntry> Entries { get { return _entries; } }
                 public Elf M_Root { get { return m_root; } }
                 public KaitaiStruct M_Parent { get { return m_parent; } }
+            }
+            public partial class DynsymSection : KaitaiStruct
+            {
+                public static DynsymSection FromFile(string fileName)
+                {
+                    return new DynsymSection(new KaitaiStream(fileName));
+                }
+
+                private bool? m_isLe;
+                public DynsymSection(KaitaiStream p__io, Elf.EndianElf.SectionHeader p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    m_isLe = isLe;
+                    _read();
+                }
+                private void _read()
+                {
+
+                    if (m_isLe == null) {
+                        throw new Exception("Unable to decide on endianness");
+                    } else if (m_isLe == true) {
+                        _readLE();
+                    } else {
+                        _readBE();
+                    }
+                }
+                private void _readLE()
+                {
+                    _entries = new List<KaitaiStruct>();
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            switch (M_Root.Bits) {
+                            case Elf.Bits.B32: {
+                                _entries.Add(new DynsymSectionEntry32(m_io, this, m_root, m_isLe));
+                                break;
+                            }
+                            case Elf.Bits.B64: {
+                                _entries.Add(new DynsymSectionEntry64(m_io, this, m_root, m_isLe));
+                                break;
+                            }
+                            }
+                            i++;
+                        }
+                    }
+                }
+                private void _readBE()
+                {
+                    _entries = new List<KaitaiStruct>();
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            switch (M_Root.Bits) {
+                            case Elf.Bits.B32: {
+                                _entries.Add(new DynsymSectionEntry32(m_io, this, m_root, m_isLe));
+                                break;
+                            }
+                            case Elf.Bits.B64: {
+                                _entries.Add(new DynsymSectionEntry64(m_io, this, m_root, m_isLe));
+                                break;
+                            }
+                            }
+                            i++;
+                        }
+                    }
+                }
+                private List<KaitaiStruct> _entries;
+                private Elf m_root;
+                private Elf.EndianElf.SectionHeader m_parent;
+                public List<KaitaiStruct> Entries { get { return _entries; } }
+                public Elf M_Root { get { return m_root; } }
+                public Elf.EndianElf.SectionHeader M_Parent { get { return m_parent; } }
+            }
+            public partial class DynsymSectionEntry32 : KaitaiStruct
+            {
+                public static DynsymSectionEntry32 FromFile(string fileName)
+                {
+                    return new DynsymSectionEntry32(new KaitaiStream(fileName));
+                }
+
+                private bool? m_isLe;
+                public DynsymSectionEntry32(KaitaiStream p__io, Elf.EndianElf.DynsymSection p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    m_isLe = isLe;
+                    _read();
+                }
+                private void _read()
+                {
+
+                    if (m_isLe == null) {
+                        throw new Exception("Unable to decide on endianness");
+                    } else if (m_isLe == true) {
+                        _readLE();
+                    } else {
+                        _readBE();
+                    }
+                }
+                private void _readLE()
+                {
+                    _nameOffset = m_io.ReadU4le();
+                    _value = m_io.ReadU4le();
+                    _size = m_io.ReadU4le();
+                    _info = m_io.ReadU1();
+                    _other = m_io.ReadU1();
+                    _shndx = m_io.ReadU2le();
+                }
+                private void _readBE()
+                {
+                    _nameOffset = m_io.ReadU4be();
+                    _value = m_io.ReadU4be();
+                    _size = m_io.ReadU4be();
+                    _info = m_io.ReadU1();
+                    _other = m_io.ReadU1();
+                    _shndx = m_io.ReadU2be();
+                }
+                private uint _nameOffset;
+                private uint _value;
+                private uint _size;
+                private byte _info;
+                private byte _other;
+                private ushort _shndx;
+                private Elf m_root;
+                private Elf.EndianElf.DynsymSection m_parent;
+                public uint NameOffset { get { return _nameOffset; } }
+                public uint Value { get { return _value; } }
+                public uint Size { get { return _size; } }
+                public byte Info { get { return _info; } }
+                public byte Other { get { return _other; } }
+                public ushort Shndx { get { return _shndx; } }
+                public Elf M_Root { get { return m_root; } }
+                public Elf.EndianElf.DynsymSection M_Parent { get { return m_parent; } }
             }
             public partial class StringsStruct : KaitaiStruct
             {

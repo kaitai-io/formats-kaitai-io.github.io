@@ -974,6 +974,98 @@ sub _raw_strings {
 }
 
 ########################################################################
+package Elf::EndianElf::DynsymSectionEntry64;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{name_offset} = $self->{_io}->read_u4le();
+    $self->{info} = $self->{_io}->read_u1();
+    $self->{other} = $self->{_io}->read_u1();
+    $self->{shndx} = $self->{_io}->read_u2le();
+    $self->{value} = $self->{_io}->read_u8le();
+    $self->{size} = $self->{_io}->read_u8le();
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{name_offset} = $self->{_io}->read_u4be();
+    $self->{info} = $self->{_io}->read_u1();
+    $self->{other} = $self->{_io}->read_u1();
+    $self->{shndx} = $self->{_io}->read_u2be();
+    $self->{value} = $self->{_io}->read_u8be();
+    $self->{size} = $self->{_io}->read_u8be();
+}
+
+sub name_offset {
+    my ($self) = @_;
+    return $self->{name_offset};
+}
+
+sub info {
+    my ($self) = @_;
+    return $self->{info};
+}
+
+sub other {
+    my ($self) = @_;
+    return $self->{other};
+}
+
+sub shndx {
+    my ($self) = @_;
+    return $self->{shndx};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self->{value};
+}
+
+sub size {
+    my ($self) = @_;
+    return $self->{size};
+}
+
+########################################################################
 package Elf::EndianElf::ProgramHeader;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1453,6 +1545,48 @@ sub _read_be {
     }
 }
 
+sub dynstr {
+    my ($self) = @_;
+    return $self->{dynstr} if ($self->{dynstr});
+    if ($self->type() == $SH_TYPE_DYNSTR) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->offset());
+        if ($self->{_is_le}) {
+            $self->{_raw_dynstr} = $io->read_bytes($self->size());
+            my $io__raw_dynstr = IO::KaitaiStruct::Stream->new($self->{_raw_dynstr});
+            $self->{dynstr} = Elf::EndianElf::StringsStruct->new($io__raw_dynstr, $self, $self->{_root}, $self->{_is_le});
+        } else {
+            $self->{_raw_dynstr} = $io->read_bytes($self->size());
+            my $io__raw_dynstr = IO::KaitaiStruct::Stream->new($self->{_raw_dynstr});
+            $self->{dynstr} = Elf::EndianElf::StringsStruct->new($io__raw_dynstr, $self, $self->{_root}, $self->{_is_le});
+        }
+        $io->seek($_pos);
+    }
+    return $self->{dynstr};
+}
+
+sub dynsym {
+    my ($self) = @_;
+    return $self->{dynsym} if ($self->{dynsym});
+    if ($self->type() == $SH_TYPE_DYNSYM) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->offset());
+        if ($self->{_is_le}) {
+            $self->{_raw_dynsym} = $io->read_bytes($self->size());
+            my $io__raw_dynsym = IO::KaitaiStruct::Stream->new($self->{_raw_dynsym});
+            $self->{dynsym} = Elf::EndianElf::DynsymSection->new($io__raw_dynsym, $self, $self->{_root}, $self->{_is_le});
+        } else {
+            $self->{_raw_dynsym} = $io->read_bytes($self->size());
+            my $io__raw_dynsym = IO::KaitaiStruct::Stream->new($self->{_raw_dynsym});
+            $self->{dynsym} = Elf::EndianElf::DynsymSection->new($io__raw_dynsym, $self, $self->{_root}, $self->{_is_le});
+        }
+        $io->seek($_pos);
+    }
+    return $self->{dynsym};
+}
+
 sub body {
     my ($self) = @_;
     return $self->{body} if ($self->{body});
@@ -1586,6 +1720,16 @@ sub entry_size {
     return $self->{entry_size};
 }
 
+sub _raw_dynstr {
+    my ($self) = @_;
+    return $self->{_raw_dynstr};
+}
+
+sub _raw_dynsym {
+    my ($self) = @_;
+    return $self->{_raw_dynsym};
+}
+
 sub _raw_strtab {
     my ($self) = @_;
     return $self->{_raw_strtab};
@@ -1657,6 +1801,173 @@ sub _read_be {
 sub entries {
     my ($self) = @_;
     return $self->{entries};
+}
+
+########################################################################
+package Elf::EndianElf::DynsymSection;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{entries} = ();
+    while (!$self->{_io}->is_eof()) {
+        my $_on = $self->_root()->bits();
+        if ($_on == $BITS_B32) {
+            push @{$self->{entries}}, Elf::EndianElf::DynsymSectionEntry32->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+        }
+        elsif ($_on == $BITS_B64) {
+            push @{$self->{entries}}, Elf::EndianElf::DynsymSectionEntry64->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+        }
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{entries} = ();
+    while (!$self->{_io}->is_eof()) {
+        my $_on = $self->_root()->bits();
+        if ($_on == $BITS_B32) {
+            push @{$self->{entries}}, Elf::EndianElf::DynsymSectionEntry32->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+        }
+        elsif ($_on == $BITS_B64) {
+            push @{$self->{entries}}, Elf::EndianElf::DynsymSectionEntry64->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+        }
+    }
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
+}
+
+########################################################################
+package Elf::EndianElf::DynsymSectionEntry32;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{name_offset} = $self->{_io}->read_u4le();
+    $self->{value} = $self->{_io}->read_u4le();
+    $self->{size} = $self->{_io}->read_u4le();
+    $self->{info} = $self->{_io}->read_u1();
+    $self->{other} = $self->{_io}->read_u1();
+    $self->{shndx} = $self->{_io}->read_u2le();
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{name_offset} = $self->{_io}->read_u4be();
+    $self->{value} = $self->{_io}->read_u4be();
+    $self->{size} = $self->{_io}->read_u4be();
+    $self->{info} = $self->{_io}->read_u1();
+    $self->{other} = $self->{_io}->read_u1();
+    $self->{shndx} = $self->{_io}->read_u2be();
+}
+
+sub name_offset {
+    my ($self) = @_;
+    return $self->{name_offset};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self->{value};
+}
+
+sub size {
+    my ($self) = @_;
+    return $self->{size};
+}
+
+sub info {
+    my ($self) = @_;
+    return $self->{info};
+}
+
+sub other {
+    my ($self) = @_;
+    return $self->{other};
+}
+
+sub shndx {
+    my ($self) = @_;
+    return $self->{shndx};
 }
 
 ########################################################################
