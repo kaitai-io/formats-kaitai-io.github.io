@@ -1427,7 +1427,9 @@ class ShType {
     const SUNW_VERNEED = 1879048190;
     const SUNW_VERSYM = 1879048191;
     const SPARC_GOTDATA = 1879048192;
-    const AMD64_UNWIND = 1879048193;
+    const ARM_EXIDX = 1879048193;
+    const ARM_PREEMPTMAP = 1879048194;
+    const ARM_ATTRIBUTES = 1879048195;
 }
 
 namespace \Elf;
@@ -1583,6 +1585,7 @@ class PhType {
     const GNU_RELRO = 1685382482;
     const PAX_FLAGS = 1694766464;
     const HIOS = 1879048191;
+    const ARM_EXIDX = 1879048193;
 }
 
 namespace \Elf;

@@ -69,12 +69,14 @@ public class Elf extends KaitaiStruct {
         SUNW_VERNEED(1879048190),
         SUNW_VERSYM(1879048191),
         SPARC_GOTDATA(1879048192),
-        AMD64_UNWIND(1879048193);
+        ARM_EXIDX(1879048193),
+        ARM_PREEMPTMAP(1879048194),
+        ARM_ATTRIBUTES(1879048195);
 
         private final long id;
         ShType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, ShType> byId = new HashMap<Long, ShType>(36);
+        private static final Map<Long, ShType> byId = new HashMap<Long, ShType>(38);
         static {
             for (ShType e : ShType.values())
                 byId.put(e.id(), e);
@@ -264,12 +266,13 @@ public class Elf extends KaitaiStruct {
         GNU_STACK(1685382481),
         GNU_RELRO(1685382482),
         PAX_FLAGS(1694766464),
-        HIOS(1879048191);
+        HIOS(1879048191),
+        ARM_EXIDX(1879048193);
 
         private final long id;
         PhType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, PhType> byId = new HashMap<Long, PhType>(13);
+        private static final Map<Long, PhType> byId = new HashMap<Long, PhType>(14);
         static {
             for (PhType e : PhType.values())
                 byId.put(e.id(), e);

@@ -58,7 +58,9 @@ var Elf = (function() {
     SUNW_VERNEED: 1879048190,
     SUNW_VERSYM: 1879048191,
     SPARC_GOTDATA: 1879048192,
-    AMD64_UNWIND: 1879048193,
+    ARM_EXIDX: 1879048193,
+    ARM_PREEMPTMAP: 1879048194,
+    ARM_ATTRIBUTES: 1879048195,
 
     0: "NULL_TYPE",
     1: "PROGBITS",
@@ -95,7 +97,9 @@ var Elf = (function() {
     1879048190: "SUNW_VERNEED",
     1879048191: "SUNW_VERSYM",
     1879048192: "SPARC_GOTDATA",
-    1879048193: "AMD64_UNWIND",
+    1879048193: "ARM_EXIDX",
+    1879048194: "ARM_PREEMPTMAP",
+    1879048195: "ARM_ATTRIBUTES",
   });
 
   Elf.OsAbi = Object.freeze({
@@ -362,6 +366,7 @@ var Elf = (function() {
     GNU_RELRO: 1685382482,
     PAX_FLAGS: 1694766464,
     HIOS: 1879048191,
+    ARM_EXIDX: 1879048193,
 
     0: "NULL_TYPE",
     1: "LOAD",
@@ -376,6 +381,7 @@ var Elf = (function() {
     1685382482: "GNU_RELRO",
     1694766464: "PAX_FLAGS",
     1879048191: "HIOS",
+    1879048193: "ARM_EXIDX",
   });
 
   Elf.ObjType = Object.freeze({

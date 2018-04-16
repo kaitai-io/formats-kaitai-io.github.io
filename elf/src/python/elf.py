@@ -54,7 +54,9 @@ class Elf(KaitaiStruct):
         sunw_verneed = 1879048190
         sunw_versym = 1879048191
         sparc_gotdata = 1879048192
-        amd64_unwind = 1879048193
+        arm_exidx = 1879048193
+        arm_preemptmap = 1879048194
+        arm_attributes = 1879048195
 
     class OsAbi(Enum):
         system_v = 0
@@ -195,6 +197,7 @@ class Elf(KaitaiStruct):
         gnu_relro = 1685382482
         pax_flags = 1694766464
         hios = 1879048191
+        arm_exidx = 1879048193
 
     class ObjType(Enum):
         relocatable = 1
