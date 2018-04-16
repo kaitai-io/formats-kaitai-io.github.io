@@ -289,9 +289,16 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
 #error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
 #endif
 
+/**
+ * \sa Source
+ */
+
 class elf_t : public kaitai::kstruct {
 
 public:
+    class phdr_type_flags_t;
+    class section_header_flags_t;
+    class dt_flag_1_values_t;
     class endian_elf_t;
 
     enum endian_t {
@@ -371,6 +378,97 @@ public:
         MACHINE_AARCH64 = 183
     };
 
+    enum dynamic_array_tags_t {
+        DYNAMIC_ARRAY_TAGS_NULL = 0,
+        DYNAMIC_ARRAY_TAGS_NEEDED = 1,
+        DYNAMIC_ARRAY_TAGS_PLTRELSZ = 2,
+        DYNAMIC_ARRAY_TAGS_PLTGOT = 3,
+        DYNAMIC_ARRAY_TAGS_HASH = 4,
+        DYNAMIC_ARRAY_TAGS_STRTAB = 5,
+        DYNAMIC_ARRAY_TAGS_SYMTAB = 6,
+        DYNAMIC_ARRAY_TAGS_RELA = 7,
+        DYNAMIC_ARRAY_TAGS_RELASZ = 8,
+        DYNAMIC_ARRAY_TAGS_RELAENT = 9,
+        DYNAMIC_ARRAY_TAGS_STRSZ = 10,
+        DYNAMIC_ARRAY_TAGS_SYMENT = 11,
+        DYNAMIC_ARRAY_TAGS_INIT = 12,
+        DYNAMIC_ARRAY_TAGS_FINI = 13,
+        DYNAMIC_ARRAY_TAGS_SONAME = 14,
+        DYNAMIC_ARRAY_TAGS_RPATH = 15,
+        DYNAMIC_ARRAY_TAGS_SYMBOLIC = 16,
+        DYNAMIC_ARRAY_TAGS_REL = 17,
+        DYNAMIC_ARRAY_TAGS_RELSZ = 18,
+        DYNAMIC_ARRAY_TAGS_RELENT = 19,
+        DYNAMIC_ARRAY_TAGS_PLTREL = 20,
+        DYNAMIC_ARRAY_TAGS_DEBUG = 21,
+        DYNAMIC_ARRAY_TAGS_TEXTREL = 22,
+        DYNAMIC_ARRAY_TAGS_JMPREL = 23,
+        DYNAMIC_ARRAY_TAGS_BIND_NOW = 24,
+        DYNAMIC_ARRAY_TAGS_INIT_ARRAY = 25,
+        DYNAMIC_ARRAY_TAGS_FINI_ARRAY = 26,
+        DYNAMIC_ARRAY_TAGS_INIT_ARRAYSZ = 27,
+        DYNAMIC_ARRAY_TAGS_FINI_ARRAYSZ = 28,
+        DYNAMIC_ARRAY_TAGS_RUNPATH = 29,
+        DYNAMIC_ARRAY_TAGS_FLAGS = 30,
+        DYNAMIC_ARRAY_TAGS_PREINIT_ARRAY = 32,
+        DYNAMIC_ARRAY_TAGS_PREINIT_ARRAYSZ = 33,
+        DYNAMIC_ARRAY_TAGS_MAXPOSTAGS = 34,
+        DYNAMIC_ARRAY_TAGS_SUNW_AUXILIARY = 1610612749,
+        DYNAMIC_ARRAY_TAGS_SUNW_FILTER = 1610612750,
+        DYNAMIC_ARRAY_TAGS_SUNW_CAP = 1610612752,
+        DYNAMIC_ARRAY_TAGS_SUNW_SYMTAB = 1610612753,
+        DYNAMIC_ARRAY_TAGS_SUNW_SYMSZ = 1610612754,
+        DYNAMIC_ARRAY_TAGS_SUNW_SORTENT = 1610612755,
+        DYNAMIC_ARRAY_TAGS_SUNW_SYMSORT = 1610612756,
+        DYNAMIC_ARRAY_TAGS_SUNW_SYMSORTSZ = 1610612757,
+        DYNAMIC_ARRAY_TAGS_SUNW_TLSSORT = 1610612758,
+        DYNAMIC_ARRAY_TAGS_SUNW_TLSSORTSZ = 1610612759,
+        DYNAMIC_ARRAY_TAGS_SUNW_CAPINFO = 1610612760,
+        DYNAMIC_ARRAY_TAGS_SUNW_STRPAD = 1610612761,
+        DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAIN = 1610612762,
+        DYNAMIC_ARRAY_TAGS_SUNW_LDMACH = 1610612763,
+        DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAINENT = 1610612765,
+        DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAINSZ = 1610612767,
+        DYNAMIC_ARRAY_TAGS_HIOS = 1879044096,
+        DYNAMIC_ARRAY_TAGS_VALRNGLO = 1879047424,
+        DYNAMIC_ARRAY_TAGS_GNU_PRELINKED = 1879047669,
+        DYNAMIC_ARRAY_TAGS_GNU_CONFLICTSZ = 1879047670,
+        DYNAMIC_ARRAY_TAGS_GNU_LIBLISTSZ = 1879047671,
+        DYNAMIC_ARRAY_TAGS_CHECKSUM = 1879047672,
+        DYNAMIC_ARRAY_TAGS_PLTPADSZ = 1879047673,
+        DYNAMIC_ARRAY_TAGS_MOVEENT = 1879047674,
+        DYNAMIC_ARRAY_TAGS_MOVESZ = 1879047675,
+        DYNAMIC_ARRAY_TAGS_FEATURE_1 = 1879047676,
+        DYNAMIC_ARRAY_TAGS_POSFLAG_1 = 1879047677,
+        DYNAMIC_ARRAY_TAGS_SYMINSZ = 1879047678,
+        DYNAMIC_ARRAY_TAGS_VALRNGHI = 1879047679,
+        DYNAMIC_ARRAY_TAGS_ADDRRNGLO = 1879047680,
+        DYNAMIC_ARRAY_TAGS_GNU_HASH = 1879047925,
+        DYNAMIC_ARRAY_TAGS_TLSDESC_PLT = 1879047926,
+        DYNAMIC_ARRAY_TAGS_TLSDESC_GOT = 1879047927,
+        DYNAMIC_ARRAY_TAGS_GNU_CONFLICT = 1879047928,
+        DYNAMIC_ARRAY_TAGS_GNU_LIBLIST = 1879047929,
+        DYNAMIC_ARRAY_TAGS_CONFIG = 1879047930,
+        DYNAMIC_ARRAY_TAGS_DEPAUDIT = 1879047931,
+        DYNAMIC_ARRAY_TAGS_AUDIT = 1879047932,
+        DYNAMIC_ARRAY_TAGS_PLTPAD = 1879047933,
+        DYNAMIC_ARRAY_TAGS_MOVETAB = 1879047934,
+        DYNAMIC_ARRAY_TAGS_ADDRRNGHI = 1879047935,
+        DYNAMIC_ARRAY_TAGS_VERSYM = 1879048176,
+        DYNAMIC_ARRAY_TAGS_RELACOUNT = 1879048185,
+        DYNAMIC_ARRAY_TAGS_RELCOUNT = 1879048186,
+        DYNAMIC_ARRAY_TAGS_FLAGS_1 = 1879048187,
+        DYNAMIC_ARRAY_TAGS_VERDEF = 1879048188,
+        DYNAMIC_ARRAY_TAGS_VERDEFNUM = 1879048189,
+        DYNAMIC_ARRAY_TAGS_VERNEED = 1879048190,
+        DYNAMIC_ARRAY_TAGS_VERNEEDNUM = 1879048191,
+        DYNAMIC_ARRAY_TAGS_LOPROC = 1879048192,
+        DYNAMIC_ARRAY_TAGS_SPARC_REGISTER = 1879048193,
+        DYNAMIC_ARRAY_TAGS_AUXILIARY = 2147483645,
+        DYNAMIC_ARRAY_TAGS_USED = 2147483646,
+        DYNAMIC_ARRAY_TAGS_HIPROC = 2147483647
+    };
+
     enum bits_t {
         BITS_B32 = 1,
         BITS_B64 = 2
@@ -407,11 +505,544 @@ private:
 public:
     ~elf_t();
 
+    class phdr_type_flags_t : public kaitai::kstruct {
+
+    public:
+
+        phdr_type_flags_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::program_header_t* p__parent = 0, elf_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~phdr_type_flags_t();
+
+    private:
+        bool f_read;
+        bool m_read;
+
+    public:
+        bool read();
+
+    private:
+        bool f_write;
+        bool m_write;
+
+    public:
+        bool write();
+
+    private:
+        bool f_execute;
+        bool m_execute;
+
+    public:
+        bool execute();
+
+    private:
+        bool f_mask_proc;
+        bool m_mask_proc;
+
+    public:
+        bool mask_proc();
+
+    private:
+        uint32_t m_value;
+        elf_t* m__root;
+        elf_t::endian_elf_t::program_header_t* m__parent;
+
+    public:
+        uint32_t value() const { return m_value; }
+        elf_t* _root() const { return m__root; }
+        elf_t::endian_elf_t::program_header_t* _parent() const { return m__parent; }
+    };
+
+    class section_header_flags_t : public kaitai::kstruct {
+
+    public:
+
+        section_header_flags_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::section_header_t* p__parent = 0, elf_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~section_header_flags_t();
+
+    private:
+        bool f_merge;
+        bool m_merge;
+
+    public:
+
+        /**
+         * might be merged
+         */
+        bool merge();
+
+    private:
+        bool f_mask_os;
+        bool m_mask_os;
+
+    public:
+
+        /**
+         * OS-specific
+         */
+        bool mask_os();
+
+    private:
+        bool f_exclude;
+        bool m_exclude;
+
+    public:
+
+        /**
+         * section is excluded unless referenced or allocated (Solaris)
+         */
+        bool exclude();
+
+    private:
+        bool f_mask_proc;
+        bool m_mask_proc;
+
+    public:
+
+        /**
+         * Processor-specific
+         */
+        bool mask_proc();
+
+    private:
+        bool f_strings;
+        bool m_strings;
+
+    public:
+
+        /**
+         * contains nul-terminated strings
+         */
+        bool strings();
+
+    private:
+        bool f_os_non_conforming;
+        bool m_os_non_conforming;
+
+    public:
+
+        /**
+         * non-standard OS specific handling required
+         */
+        bool os_non_conforming();
+
+    private:
+        bool f_alloc;
+        bool m_alloc;
+
+    public:
+
+        /**
+         * occupies memory during execution
+         */
+        bool alloc();
+
+    private:
+        bool f_exec_instr;
+        bool m_exec_instr;
+
+    public:
+
+        /**
+         * executable
+         */
+        bool exec_instr();
+
+    private:
+        bool f_info_link;
+        bool m_info_link;
+
+    public:
+
+        /**
+         * &#39;sh_info&#39; contains SHT index
+         */
+        bool info_link();
+
+    private:
+        bool f_write;
+        bool m_write;
+
+    public:
+
+        /**
+         * writable
+         */
+        bool write();
+
+    private:
+        bool f_link_order;
+        bool m_link_order;
+
+    public:
+
+        /**
+         * preserve order after combining
+         */
+        bool link_order();
+
+    private:
+        bool f_ordered;
+        bool m_ordered;
+
+    public:
+
+        /**
+         * special ordering requirement (Solaris)
+         */
+        bool ordered();
+
+    private:
+        bool f_tls;
+        bool m_tls;
+
+    public:
+
+        /**
+         * section hold thread-local data
+         */
+        bool tls();
+
+    private:
+        bool f_group;
+        bool m_group;
+
+    public:
+
+        /**
+         * section is member of a group
+         */
+        bool group();
+
+    private:
+        uint32_t m_value;
+        elf_t* m__root;
+        elf_t::endian_elf_t::section_header_t* m__parent;
+
+    public:
+        uint32_t value() const { return m_value; }
+        elf_t* _root() const { return m__root; }
+        elf_t::endian_elf_t::section_header_t* _parent() const { return m__parent; }
+    };
+
+    class dt_flag_1_values_t : public kaitai::kstruct {
+
+    public:
+
+        dt_flag_1_values_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::dynamic_section_entry_t* p__parent = 0, elf_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~dt_flag_1_values_t();
+
+    private:
+        bool f_singleton;
+        bool m_singleton;
+
+    public:
+
+        /**
+         * Singleton symbols are used.
+         */
+        bool singleton();
+
+    private:
+        bool f_ignmuldef;
+        bool m_ignmuldef;
+
+    public:
+        bool ignmuldef();
+
+    private:
+        bool f_loadfltr;
+        bool m_loadfltr;
+
+    public:
+
+        /**
+         * Trigger filtee loading at runtime.
+         */
+        bool loadfltr();
+
+    private:
+        bool f_initfirst;
+        bool m_initfirst;
+
+    public:
+
+        /**
+         * Set RTLD_INITFIRST for this object
+         */
+        bool initfirst();
+
+    private:
+        bool f_symintpose;
+        bool m_symintpose;
+
+    public:
+
+        /**
+         * Object has individual interposers.
+         */
+        bool symintpose();
+
+    private:
+        bool f_noreloc;
+        bool m_noreloc;
+
+    public:
+        bool noreloc();
+
+    private:
+        bool f_confalt;
+        bool m_confalt;
+
+    public:
+
+        /**
+         * Configuration alternative created.
+         */
+        bool confalt();
+
+    private:
+        bool f_dispreldne;
+        bool m_dispreldne;
+
+    public:
+
+        /**
+         * Disp reloc applied at build time.
+         */
+        bool dispreldne();
+
+    private:
+        bool f_rtld_global;
+        bool m_rtld_global;
+
+    public:
+
+        /**
+         * Set RTLD_GLOBAL for this object.
+         */
+        bool rtld_global();
+
+    private:
+        bool f_nodelete;
+        bool m_nodelete;
+
+    public:
+
+        /**
+         * Set RTLD_NODELETE for this object.
+         */
+        bool nodelete();
+
+    private:
+        bool f_trans;
+        bool m_trans;
+
+    public:
+        bool trans();
+
+    private:
+        bool f_origin;
+        bool m_origin;
+
+    public:
+
+        /**
+         * $ORIGIN must be handled.
+         */
+        bool origin();
+
+    private:
+        bool f_now;
+        bool m_now;
+
+    public:
+
+        /**
+         * Set RTLD_NOW for this object.
+         */
+        bool now();
+
+    private:
+        bool f_nohdr;
+        bool m_nohdr;
+
+    public:
+        bool nohdr();
+
+    private:
+        bool f_endfiltee;
+        bool m_endfiltee;
+
+    public:
+
+        /**
+         * Filtee terminates filters search.
+         */
+        bool endfiltee();
+
+    private:
+        bool f_nodirect;
+        bool m_nodirect;
+
+    public:
+
+        /**
+         * Object has no-direct binding.
+         */
+        bool nodirect();
+
+    private:
+        bool f_globaudit;
+        bool m_globaudit;
+
+    public:
+
+        /**
+         * Global auditing required.
+         */
+        bool globaudit();
+
+    private:
+        bool f_noksyms;
+        bool m_noksyms;
+
+    public:
+        bool noksyms();
+
+    private:
+        bool f_interpose;
+        bool m_interpose;
+
+    public:
+
+        /**
+         * Object is used to interpose.
+         */
+        bool interpose();
+
+    private:
+        bool f_nodump;
+        bool m_nodump;
+
+    public:
+
+        /**
+         * Object can&#39;t be dldump&#39;ed.
+         */
+        bool nodump();
+
+    private:
+        bool f_disprelpnd;
+        bool m_disprelpnd;
+
+    public:
+
+        /**
+         * Disp reloc applied at run-time.
+         */
+        bool disprelpnd();
+
+    private:
+        bool f_noopen;
+        bool m_noopen;
+
+    public:
+
+        /**
+         * Set RTLD_NOOPEN for this object.
+         */
+        bool noopen();
+
+    private:
+        bool f_stub;
+        bool m_stub;
+
+    public:
+        bool stub();
+
+    private:
+        bool f_direct;
+        bool m_direct;
+
+    public:
+
+        /**
+         * Direct binding enabled.
+         */
+        bool direct();
+
+    private:
+        bool f_edited;
+        bool m_edited;
+
+    public:
+
+        /**
+         * Object is modified after built.
+         */
+        bool edited();
+
+    private:
+        bool f_group;
+        bool m_group;
+
+    public:
+
+        /**
+         * Set RTLD_GROUP for this object.
+         */
+        bool group();
+
+    private:
+        bool f_pie;
+        bool m_pie;
+
+    public:
+        bool pie();
+
+    private:
+        bool f_nodeflib;
+        bool m_nodeflib;
+
+    public:
+
+        /**
+         * Ignore default lib search path.
+         */
+        bool nodeflib();
+
+    private:
+        uint32_t m_value;
+        elf_t* m__root;
+        elf_t::endian_elf_t::dynamic_section_entry_t* m__parent;
+
+    public:
+        uint32_t value() const { return m_value; }
+        elf_t* _root() const { return m__root; }
+        elf_t::endian_elf_t::dynamic_section_entry_t* _parent() const { return m__parent; }
+    };
+
     class endian_elf_t : public kaitai::kstruct {
 
     public:
         class program_header_t;
+        class dynamic_section_entry_t;
         class section_header_t;
+        class dynamic_section_t;
         class strings_struct_t;
 
         endian_elf_t(kaitai::kstream* p__io, elf_t* p__parent = 0, elf_t* p__root = 0);
@@ -463,6 +1094,26 @@ public:
 
         public:
             ~program_header_t();
+
+        private:
+            bool f_dynamic;
+            dynamic_section_t* m_dynamic;
+            bool n_dynamic;
+
+        public:
+            bool _is_null_dynamic() { dynamic(); return n_dynamic; };
+
+        private:
+
+        public:
+            dynamic_section_t* dynamic();
+
+        private:
+            bool f_flags_obj;
+            phdr_type_flags_t* m_flags_obj;
+
+        public:
+            phdr_type_flags_t* flags_obj();
 
         private:
             ph_type_t m_type;
@@ -524,6 +1175,8 @@ public:
         private:
             elf_t* m__root;
             elf_t::endian_elf_t* m__parent;
+            std::string m__raw_dynamic;
+            kaitai::kstream* m__io__raw_dynamic;
 
         public:
             ph_type_t type() const { return m_type; }
@@ -537,6 +1190,80 @@ public:
             uint64_t align() const { return m_align; }
             elf_t* _root() const { return m__root; }
             elf_t::endian_elf_t* _parent() const { return m__parent; }
+            std::string _raw_dynamic() const { return m__raw_dynamic; }
+            kaitai::kstream* _io__raw_dynamic() const { return m__io__raw_dynamic; }
+        };
+
+        class dynamic_section_entry_t : public kaitai::kstruct {
+
+        public:
+
+            dynamic_section_entry_t(kaitai::kstream* p__io, elf_t::endian_elf_t::dynamic_section_t* p__parent = 0, elf_t* p__root = 0, int p_is_le = -1);
+
+        private:
+            int m__is_le;
+
+        public:
+
+        private:
+            void _read();
+
+        public:
+
+        private:
+            void _read_le();
+
+        public:
+
+        private:
+            void _read_be();
+
+        public:
+            ~dynamic_section_entry_t();
+
+        private:
+            bool f_tag_enum;
+            dynamic_array_tags_t m_tag_enum;
+
+        public:
+            dynamic_array_tags_t tag_enum();
+
+        private:
+            bool f_flag_1_values;
+            dt_flag_1_values_t* m_flag_1_values;
+            bool n_flag_1_values;
+
+        public:
+            bool _is_null_flag_1_values() { flag_1_values(); return n_flag_1_values; };
+
+        private:
+
+        public:
+            dt_flag_1_values_t* flag_1_values();
+
+        private:
+            uint64_t m_tag;
+            bool n_tag;
+
+        public:
+            bool _is_null_tag() { tag(); return n_tag; };
+
+        private:
+            uint64_t m_value_or_ptr;
+            bool n_value_or_ptr;
+
+        public:
+            bool _is_null_value_or_ptr() { value_or_ptr(); return n_value_or_ptr; };
+
+        private:
+            elf_t* m__root;
+            elf_t::endian_elf_t::dynamic_section_t* m__parent;
+
+        public:
+            uint64_t tag() const { return m_tag; }
+            uint64_t value_or_ptr() const { return m_value_or_ptr; }
+            elf_t* _root() const { return m__root; }
+            elf_t::endian_elf_t::dynamic_section_t* _parent() const { return m__parent; }
         };
 
         class section_header_t : public kaitai::kstruct {
@@ -574,11 +1301,44 @@ public:
             std::string body();
 
         private:
+            bool f_flags_obj;
+            section_header_flags_t* m_flags_obj;
+
+        public:
+            section_header_flags_t* flags_obj();
+
+        private:
+            bool f_strtab;
+            strings_struct_t* m_strtab;
+            bool n_strtab;
+
+        public:
+            bool _is_null_strtab() { strtab(); return n_strtab; };
+
+        private:
+
+        public:
+            strings_struct_t* strtab();
+
+        private:
             bool f_name;
             std::string m_name;
 
         public:
             std::string name();
+
+        private:
+            bool f_dynamic;
+            dynamic_section_t* m_dynamic;
+            bool n_dynamic;
+
+        public:
+            bool _is_null_dynamic() { dynamic(); return n_dynamic; };
+
+        private:
+
+        public:
+            dynamic_section_t* dynamic();
 
         private:
             uint32_t m_name_offset;
@@ -629,6 +1389,10 @@ public:
         private:
             elf_t* m__root;
             elf_t::endian_elf_t* m__parent;
+            std::string m__raw_strtab;
+            kaitai::kstream* m__io__raw_strtab;
+            std::string m__raw_dynamic;
+            kaitai::kstream* m__io__raw_dynamic;
 
         public:
             uint32_t name_offset() const { return m_name_offset; }
@@ -643,13 +1407,55 @@ public:
             uint64_t entry_size() const { return m_entry_size; }
             elf_t* _root() const { return m__root; }
             elf_t::endian_elf_t* _parent() const { return m__parent; }
+            std::string _raw_strtab() const { return m__raw_strtab; }
+            kaitai::kstream* _io__raw_strtab() const { return m__io__raw_strtab; }
+            std::string _raw_dynamic() const { return m__raw_dynamic; }
+            kaitai::kstream* _io__raw_dynamic() const { return m__io__raw_dynamic; }
+        };
+
+        class dynamic_section_t : public kaitai::kstruct {
+
+        public:
+
+            dynamic_section_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, elf_t* p__root = 0, int p_is_le = -1);
+
+        private:
+            int m__is_le;
+
+        public:
+
+        private:
+            void _read();
+
+        public:
+
+        private:
+            void _read_le();
+
+        public:
+
+        private:
+            void _read_be();
+
+        public:
+            ~dynamic_section_t();
+
+        private:
+            std::vector&lt;dynamic_section_entry_t*&gt;* m_entries;
+            elf_t* m__root;
+            kaitai::kstruct* m__parent;
+
+        public:
+            std::vector&lt;dynamic_section_entry_t*&gt;* entries() const { return m_entries; }
+            elf_t* _root() const { return m__root; }
+            kaitai::kstruct* _parent() const { return m__parent; }
         };
 
         class strings_struct_t : public kaitai::kstruct {
 
         public:
 
-            strings_struct_t(kaitai::kstream* p__io, elf_t::endian_elf_t* p__parent = 0, elf_t* p__root = 0, int p_is_le = -1);
+            strings_struct_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, elf_t* p__root = 0, int p_is_le = -1);
 
         private:
             int m__is_le;
@@ -675,12 +1481,12 @@ public:
         private:
             std::vector&lt;std::string&gt;* m_entries;
             elf_t* m__root;
-            elf_t::endian_elf_t* m__parent;
+            kaitai::kstruct* m__parent;
 
         public:
             std::vector&lt;std::string&gt;* entries() const { return m_entries; }
             elf_t* _root() const { return m__root; }
-            elf_t::endian_elf_t* _parent() const { return m__parent; }
+            kaitai::kstruct* _parent() const { return m__parent; }
         };
 
     private:
@@ -866,6 +1672,459 @@ elf_t::~elf_t() {
     delete m_header;
 }
 
+elf_t::phdr_type_flags_t::phdr_type_flags_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::program_header_t* p__parent, elf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_value = p_value;
+    f_read = false;
+    f_write = false;
+    f_execute = false;
+    f_mask_proc = false;
+    _read();
+}
+
+void elf_t::phdr_type_flags_t::_read() {
+}
+
+elf_t::phdr_type_flags_t::~phdr_type_flags_t() {
+}
+
+bool elf_t::phdr_type_flags_t::read() {
+    if (f_read)
+        return m_read;
+    m_read = (value() &amp; 4) != 0;
+    f_read = true;
+    return m_read;
+}
+
+bool elf_t::phdr_type_flags_t::write() {
+    if (f_write)
+        return m_write;
+    m_write = (value() &amp; 2) != 0;
+    f_write = true;
+    return m_write;
+}
+
+bool elf_t::phdr_type_flags_t::execute() {
+    if (f_execute)
+        return m_execute;
+    m_execute = (value() &amp; 1) != 0;
+    f_execute = true;
+    return m_execute;
+}
+
+bool elf_t::phdr_type_flags_t::mask_proc() {
+    if (f_mask_proc)
+        return m_mask_proc;
+    m_mask_proc = (value() &amp; 4026531840) != 0;
+    f_mask_proc = true;
+    return m_mask_proc;
+}
+
+elf_t::section_header_flags_t::section_header_flags_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::section_header_t* p__parent, elf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_value = p_value;
+    f_merge = false;
+    f_mask_os = false;
+    f_exclude = false;
+    f_mask_proc = false;
+    f_strings = false;
+    f_os_non_conforming = false;
+    f_alloc = false;
+    f_exec_instr = false;
+    f_info_link = false;
+    f_write = false;
+    f_link_order = false;
+    f_ordered = false;
+    f_tls = false;
+    f_group = false;
+    _read();
+}
+
+void elf_t::section_header_flags_t::_read() {
+}
+
+elf_t::section_header_flags_t::~section_header_flags_t() {
+}
+
+bool elf_t::section_header_flags_t::merge() {
+    if (f_merge)
+        return m_merge;
+    m_merge = (value() &amp; 16) != 0;
+    f_merge = true;
+    return m_merge;
+}
+
+bool elf_t::section_header_flags_t::mask_os() {
+    if (f_mask_os)
+        return m_mask_os;
+    m_mask_os = (value() &amp; 267386880) != 0;
+    f_mask_os = true;
+    return m_mask_os;
+}
+
+bool elf_t::section_header_flags_t::exclude() {
+    if (f_exclude)
+        return m_exclude;
+    m_exclude = (value() &amp; 134217728) != 0;
+    f_exclude = true;
+    return m_exclude;
+}
+
+bool elf_t::section_header_flags_t::mask_proc() {
+    if (f_mask_proc)
+        return m_mask_proc;
+    m_mask_proc = (value() &amp; 4026531840) != 0;
+    f_mask_proc = true;
+    return m_mask_proc;
+}
+
+bool elf_t::section_header_flags_t::strings() {
+    if (f_strings)
+        return m_strings;
+    m_strings = (value() &amp; 32) != 0;
+    f_strings = true;
+    return m_strings;
+}
+
+bool elf_t::section_header_flags_t::os_non_conforming() {
+    if (f_os_non_conforming)
+        return m_os_non_conforming;
+    m_os_non_conforming = (value() &amp; 256) != 0;
+    f_os_non_conforming = true;
+    return m_os_non_conforming;
+}
+
+bool elf_t::section_header_flags_t::alloc() {
+    if (f_alloc)
+        return m_alloc;
+    m_alloc = (value() &amp; 2) != 0;
+    f_alloc = true;
+    return m_alloc;
+}
+
+bool elf_t::section_header_flags_t::exec_instr() {
+    if (f_exec_instr)
+        return m_exec_instr;
+    m_exec_instr = (value() &amp; 4) != 0;
+    f_exec_instr = true;
+    return m_exec_instr;
+}
+
+bool elf_t::section_header_flags_t::info_link() {
+    if (f_info_link)
+        return m_info_link;
+    m_info_link = (value() &amp; 64) != 0;
+    f_info_link = true;
+    return m_info_link;
+}
+
+bool elf_t::section_header_flags_t::write() {
+    if (f_write)
+        return m_write;
+    m_write = (value() &amp; 1) != 0;
+    f_write = true;
+    return m_write;
+}
+
+bool elf_t::section_header_flags_t::link_order() {
+    if (f_link_order)
+        return m_link_order;
+    m_link_order = (value() &amp; 128) != 0;
+    f_link_order = true;
+    return m_link_order;
+}
+
+bool elf_t::section_header_flags_t::ordered() {
+    if (f_ordered)
+        return m_ordered;
+    m_ordered = (value() &amp; 67108864) != 0;
+    f_ordered = true;
+    return m_ordered;
+}
+
+bool elf_t::section_header_flags_t::tls() {
+    if (f_tls)
+        return m_tls;
+    m_tls = (value() &amp; 1024) != 0;
+    f_tls = true;
+    return m_tls;
+}
+
+bool elf_t::section_header_flags_t::group() {
+    if (f_group)
+        return m_group;
+    m_group = (value() &amp; 512) != 0;
+    f_group = true;
+    return m_group;
+}
+
+elf_t::dt_flag_1_values_t::dt_flag_1_values_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::dynamic_section_entry_t* p__parent, elf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_value = p_value;
+    f_singleton = false;
+    f_ignmuldef = false;
+    f_loadfltr = false;
+    f_initfirst = false;
+    f_symintpose = false;
+    f_noreloc = false;
+    f_confalt = false;
+    f_dispreldne = false;
+    f_rtld_global = false;
+    f_nodelete = false;
+    f_trans = false;
+    f_origin = false;
+    f_now = false;
+    f_nohdr = false;
+    f_endfiltee = false;
+    f_nodirect = false;
+    f_globaudit = false;
+    f_noksyms = false;
+    f_interpose = false;
+    f_nodump = false;
+    f_disprelpnd = false;
+    f_noopen = false;
+    f_stub = false;
+    f_direct = false;
+    f_edited = false;
+    f_group = false;
+    f_pie = false;
+    f_nodeflib = false;
+    _read();
+}
+
+void elf_t::dt_flag_1_values_t::_read() {
+}
+
+elf_t::dt_flag_1_values_t::~dt_flag_1_values_t() {
+}
+
+bool elf_t::dt_flag_1_values_t::singleton() {
+    if (f_singleton)
+        return m_singleton;
+    m_singleton = (value() &amp; 33554432) != 0;
+    f_singleton = true;
+    return m_singleton;
+}
+
+bool elf_t::dt_flag_1_values_t::ignmuldef() {
+    if (f_ignmuldef)
+        return m_ignmuldef;
+    m_ignmuldef = (value() &amp; 262144) != 0;
+    f_ignmuldef = true;
+    return m_ignmuldef;
+}
+
+bool elf_t::dt_flag_1_values_t::loadfltr() {
+    if (f_loadfltr)
+        return m_loadfltr;
+    m_loadfltr = (value() &amp; 16) != 0;
+    f_loadfltr = true;
+    return m_loadfltr;
+}
+
+bool elf_t::dt_flag_1_values_t::initfirst() {
+    if (f_initfirst)
+        return m_initfirst;
+    m_initfirst = (value() &amp; 32) != 0;
+    f_initfirst = true;
+    return m_initfirst;
+}
+
+bool elf_t::dt_flag_1_values_t::symintpose() {
+    if (f_symintpose)
+        return m_symintpose;
+    m_symintpose = (value() &amp; 8388608) != 0;
+    f_symintpose = true;
+    return m_symintpose;
+}
+
+bool elf_t::dt_flag_1_values_t::noreloc() {
+    if (f_noreloc)
+        return m_noreloc;
+    m_noreloc = (value() &amp; 4194304) != 0;
+    f_noreloc = true;
+    return m_noreloc;
+}
+
+bool elf_t::dt_flag_1_values_t::confalt() {
+    if (f_confalt)
+        return m_confalt;
+    m_confalt = (value() &amp; 8192) != 0;
+    f_confalt = true;
+    return m_confalt;
+}
+
+bool elf_t::dt_flag_1_values_t::dispreldne() {
+    if (f_dispreldne)
+        return m_dispreldne;
+    m_dispreldne = (value() &amp; 32768) != 0;
+    f_dispreldne = true;
+    return m_dispreldne;
+}
+
+bool elf_t::dt_flag_1_values_t::rtld_global() {
+    if (f_rtld_global)
+        return m_rtld_global;
+    m_rtld_global = (value() &amp; 2) != 0;
+    f_rtld_global = true;
+    return m_rtld_global;
+}
+
+bool elf_t::dt_flag_1_values_t::nodelete() {
+    if (f_nodelete)
+        return m_nodelete;
+    m_nodelete = (value() &amp; 8) != 0;
+    f_nodelete = true;
+    return m_nodelete;
+}
+
+bool elf_t::dt_flag_1_values_t::trans() {
+    if (f_trans)
+        return m_trans;
+    m_trans = (value() &amp; 512) != 0;
+    f_trans = true;
+    return m_trans;
+}
+
+bool elf_t::dt_flag_1_values_t::origin() {
+    if (f_origin)
+        return m_origin;
+    m_origin = (value() &amp; 128) != 0;
+    f_origin = true;
+    return m_origin;
+}
+
+bool elf_t::dt_flag_1_values_t::now() {
+    if (f_now)
+        return m_now;
+    m_now = (value() &amp; 1) != 0;
+    f_now = true;
+    return m_now;
+}
+
+bool elf_t::dt_flag_1_values_t::nohdr() {
+    if (f_nohdr)
+        return m_nohdr;
+    m_nohdr = (value() &amp; 1048576) != 0;
+    f_nohdr = true;
+    return m_nohdr;
+}
+
+bool elf_t::dt_flag_1_values_t::endfiltee() {
+    if (f_endfiltee)
+        return m_endfiltee;
+    m_endfiltee = (value() &amp; 16384) != 0;
+    f_endfiltee = true;
+    return m_endfiltee;
+}
+
+bool elf_t::dt_flag_1_values_t::nodirect() {
+    if (f_nodirect)
+        return m_nodirect;
+    m_nodirect = (value() &amp; 131072) != 0;
+    f_nodirect = true;
+    return m_nodirect;
+}
+
+bool elf_t::dt_flag_1_values_t::globaudit() {
+    if (f_globaudit)
+        return m_globaudit;
+    m_globaudit = (value() &amp; 16777216) != 0;
+    f_globaudit = true;
+    return m_globaudit;
+}
+
+bool elf_t::dt_flag_1_values_t::noksyms() {
+    if (f_noksyms)
+        return m_noksyms;
+    m_noksyms = (value() &amp; 524288) != 0;
+    f_noksyms = true;
+    return m_noksyms;
+}
+
+bool elf_t::dt_flag_1_values_t::interpose() {
+    if (f_interpose)
+        return m_interpose;
+    m_interpose = (value() &amp; 1024) != 0;
+    f_interpose = true;
+    return m_interpose;
+}
+
+bool elf_t::dt_flag_1_values_t::nodump() {
+    if (f_nodump)
+        return m_nodump;
+    m_nodump = (value() &amp; 4096) != 0;
+    f_nodump = true;
+    return m_nodump;
+}
+
+bool elf_t::dt_flag_1_values_t::disprelpnd() {
+    if (f_disprelpnd)
+        return m_disprelpnd;
+    m_disprelpnd = (value() &amp; 65536) != 0;
+    f_disprelpnd = true;
+    return m_disprelpnd;
+}
+
+bool elf_t::dt_flag_1_values_t::noopen() {
+    if (f_noopen)
+        return m_noopen;
+    m_noopen = (value() &amp; 64) != 0;
+    f_noopen = true;
+    return m_noopen;
+}
+
+bool elf_t::dt_flag_1_values_t::stub() {
+    if (f_stub)
+        return m_stub;
+    m_stub = (value() &amp; 67108864) != 0;
+    f_stub = true;
+    return m_stub;
+}
+
+bool elf_t::dt_flag_1_values_t::direct() {
+    if (f_direct)
+        return m_direct;
+    m_direct = (value() &amp; 256) != 0;
+    f_direct = true;
+    return m_direct;
+}
+
+bool elf_t::dt_flag_1_values_t::edited() {
+    if (f_edited)
+        return m_edited;
+    m_edited = (value() &amp; 2097152) != 0;
+    f_edited = true;
+    return m_edited;
+}
+
+bool elf_t::dt_flag_1_values_t::group() {
+    if (f_group)
+        return m_group;
+    m_group = (value() &amp; 4) != 0;
+    f_group = true;
+    return m_group;
+}
+
+bool elf_t::dt_flag_1_values_t::pie() {
+    if (f_pie)
+        return m_pie;
+    m_pie = (value() &amp; 134217728) != 0;
+    f_pie = true;
+    return m_pie;
+}
+
+bool elf_t::dt_flag_1_values_t::nodeflib() {
+    if (f_nodeflib)
+        return m_nodeflib;
+    m_nodeflib = (value() &amp; 2048) != 0;
+    f_nodeflib = true;
+    return m_nodeflib;
+}
+
 elf_t::endian_elf_t::endian_elf_t(kaitai::kstream* p__io, elf_t* p__parent, elf_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -1040,6 +2299,8 @@ elf_t::endian_elf_t::program_header_t::program_header_t(kaitai::kstream* p__io, 
     m__parent = p__parent;
     m__root = p__root;
     m__is_le = p_is_le;
+    f_dynamic = false;
+    f_flags_obj = false;
     _read();
 }
 
@@ -1255,6 +2516,161 @@ elf_t::endian_elf_t::program_header_t::~program_header_t() {
     }
     if (!n_align) {
     }
+    if (f_dynamic &amp;&amp; !n_dynamic) {
+        delete m__io__raw_dynamic;
+        delete m_dynamic;
+    }
+    if (f_flags_obj) {
+        delete m_flags_obj;
+    }
+}
+
+elf_t::endian_elf_t::dynamic_section_t* elf_t::endian_elf_t::program_header_t::dynamic() {
+    if (f_dynamic)
+        return m_dynamic;
+    n_dynamic = true;
+    if (type() == PH_TYPE_DYNAMIC) {
+        n_dynamic = false;
+        kaitai::kstream *io = _root()-&gt;_io();
+        std::streampos _pos = io-&gt;pos();
+        io-&gt;seek(offset());
+        if (m__is_le == 1) {
+            m__raw_dynamic = io-&gt;read_bytes(filesz());
+            m__io__raw_dynamic = new kaitai::kstream(m__raw_dynamic);
+            m_dynamic = new dynamic_section_t(m__io__raw_dynamic, this, m__root, m__is_le);
+        } else {
+            m__raw_dynamic = io-&gt;read_bytes(filesz());
+            m__io__raw_dynamic = new kaitai::kstream(m__raw_dynamic);
+            m_dynamic = new dynamic_section_t(m__io__raw_dynamic, this, m__root, m__is_le);
+        }
+        io-&gt;seek(_pos);
+    }
+    f_dynamic = true;
+    return m_dynamic;
+}
+
+elf_t::phdr_type_flags_t* elf_t::endian_elf_t::program_header_t::flags_obj() {
+    if (f_flags_obj)
+        return m_flags_obj;
+    if (m__is_le == 1) {
+        m_flags_obj = new phdr_type_flags_t((flags64() | flags32()), m__io, this, m__root);
+    } else {
+        m_flags_obj = new phdr_type_flags_t((flags64() | flags32()), m__io, this, m__root);
+    }
+    f_flags_obj = true;
+    return m_flags_obj;
+}
+
+elf_t::endian_elf_t::dynamic_section_entry_t::dynamic_section_entry_t(kaitai::kstream* p__io, elf_t::endian_elf_t::dynamic_section_t* p__parent, elf_t* p__root, int p_is_le) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m__is_le = p_is_le;
+    f_tag_enum = false;
+    f_flag_1_values = false;
+    _read();
+}
+
+void elf_t::endian_elf_t::dynamic_section_entry_t::_read() {
+
+    if (m__is_le == -1) {
+        throw std::runtime_error(&quot;unable to decide on endianness&quot;);
+    } else if (m__is_le == 1) {
+        _read_le();
+    } else {
+        _read_be();
+    }
+}
+
+void elf_t::endian_elf_t::dynamic_section_entry_t::_read_le() {
+    n_tag = true;
+    switch (_root()-&gt;bits()) {
+    case BITS_B32: {
+        n_tag = false;
+        m_tag = m__io-&gt;read_u4le();
+        break;
+    }
+    case BITS_B64: {
+        n_tag = false;
+        m_tag = m__io-&gt;read_u8le();
+        break;
+    }
+    }
+    n_value_or_ptr = true;
+    switch (_root()-&gt;bits()) {
+    case BITS_B32: {
+        n_value_or_ptr = false;
+        m_value_or_ptr = m__io-&gt;read_u4le();
+        break;
+    }
+    case BITS_B64: {
+        n_value_or_ptr = false;
+        m_value_or_ptr = m__io-&gt;read_u8le();
+        break;
+    }
+    }
+}
+
+void elf_t::endian_elf_t::dynamic_section_entry_t::_read_be() {
+    n_tag = true;
+    switch (_root()-&gt;bits()) {
+    case BITS_B32: {
+        n_tag = false;
+        m_tag = m__io-&gt;read_u4be();
+        break;
+    }
+    case BITS_B64: {
+        n_tag = false;
+        m_tag = m__io-&gt;read_u8be();
+        break;
+    }
+    }
+    n_value_or_ptr = true;
+    switch (_root()-&gt;bits()) {
+    case BITS_B32: {
+        n_value_or_ptr = false;
+        m_value_or_ptr = m__io-&gt;read_u4be();
+        break;
+    }
+    case BITS_B64: {
+        n_value_or_ptr = false;
+        m_value_or_ptr = m__io-&gt;read_u8be();
+        break;
+    }
+    }
+}
+
+elf_t::endian_elf_t::dynamic_section_entry_t::~dynamic_section_entry_t() {
+    if (!n_tag) {
+    }
+    if (!n_value_or_ptr) {
+    }
+    if (f_flag_1_values &amp;&amp; !n_flag_1_values) {
+        delete m_flag_1_values;
+    }
+}
+
+elf_t::dynamic_array_tags_t elf_t::endian_elf_t::dynamic_section_entry_t::tag_enum() {
+    if (f_tag_enum)
+        return m_tag_enum;
+    m_tag_enum = static_cast&lt;elf_t::dynamic_array_tags_t&gt;(tag());
+    f_tag_enum = true;
+    return m_tag_enum;
+}
+
+elf_t::dt_flag_1_values_t* elf_t::endian_elf_t::dynamic_section_entry_t::flag_1_values() {
+    if (f_flag_1_values)
+        return m_flag_1_values;
+    n_flag_1_values = true;
+    if (tag_enum() == DYNAMIC_ARRAY_TAGS_FLAGS_1) {
+        n_flag_1_values = false;
+        if (m__is_le == 1) {
+            m_flag_1_values = new dt_flag_1_values_t(value_or_ptr(), m__io, this, m__root);
+        } else {
+            m_flag_1_values = new dt_flag_1_values_t(value_or_ptr(), m__io, this, m__root);
+        }
+    }
+    f_flag_1_values = true;
+    return m_flag_1_values;
 }
 
 elf_t::endian_elf_t::section_header_t::section_header_t(kaitai::kstream* p__io, elf_t::endian_elf_t* p__parent, elf_t* p__root, int p_is_le) : kaitai::kstruct(p__io) {
@@ -1262,7 +2678,10 @@ elf_t::endian_elf_t::section_header_t::section_header_t(kaitai::kstream* p__io, 
     m__root = p__root;
     m__is_le = p_is_le;
     f_body = false;
+    f_flags_obj = false;
+    f_strtab = false;
     f_name = false;
+    f_dynamic = false;
     _read();
 }
 
@@ -1462,7 +2881,18 @@ elf_t::endian_elf_t::section_header_t::~section_header_t() {
     }
     if (f_body) {
     }
+    if (f_flags_obj) {
+        delete m_flags_obj;
+    }
+    if (f_strtab &amp;&amp; !n_strtab) {
+        delete m__io__raw_strtab;
+        delete m_strtab;
+    }
     if (f_name) {
+    }
+    if (f_dynamic &amp;&amp; !n_dynamic) {
+        delete m__io__raw_dynamic;
+        delete m_dynamic;
     }
 }
 
@@ -1482,6 +2912,42 @@ std::string elf_t::endian_elf_t::section_header_t::body() {
     return m_body;
 }
 
+elf_t::section_header_flags_t* elf_t::endian_elf_t::section_header_t::flags_obj() {
+    if (f_flags_obj)
+        return m_flags_obj;
+    if (m__is_le == 1) {
+        m_flags_obj = new section_header_flags_t(flags(), m__io, this, m__root);
+    } else {
+        m_flags_obj = new section_header_flags_t(flags(), m__io, this, m__root);
+    }
+    f_flags_obj = true;
+    return m_flags_obj;
+}
+
+elf_t::endian_elf_t::strings_struct_t* elf_t::endian_elf_t::section_header_t::strtab() {
+    if (f_strtab)
+        return m_strtab;
+    n_strtab = true;
+    if (type() == SH_TYPE_STRTAB) {
+        n_strtab = false;
+        kaitai::kstream *io = _root()-&gt;_io();
+        std::streampos _pos = io-&gt;pos();
+        io-&gt;seek(offset());
+        if (m__is_le == 1) {
+            m__raw_strtab = io-&gt;read_bytes(size());
+            m__io__raw_strtab = new kaitai::kstream(m__raw_strtab);
+            m_strtab = new strings_struct_t(m__io__raw_strtab, this, m__root, m__is_le);
+        } else {
+            m__raw_strtab = io-&gt;read_bytes(size());
+            m__io__raw_strtab = new kaitai::kstream(m__raw_strtab);
+            m_strtab = new strings_struct_t(m__io__raw_strtab, this, m__root, m__is_le);
+        }
+        io-&gt;seek(_pos);
+    }
+    f_strtab = true;
+    return m_strtab;
+}
+
 std::string elf_t::endian_elf_t::section_header_t::name() {
     if (f_name)
         return m_name;
@@ -1498,7 +2964,78 @@ std::string elf_t::endian_elf_t::section_header_t::name() {
     return m_name;
 }
 
-elf_t::endian_elf_t::strings_struct_t::strings_struct_t(kaitai::kstream* p__io, elf_t::endian_elf_t* p__parent, elf_t* p__root, int p_is_le) : kaitai::kstruct(p__io) {
+elf_t::endian_elf_t::dynamic_section_t* elf_t::endian_elf_t::section_header_t::dynamic() {
+    if (f_dynamic)
+        return m_dynamic;
+    n_dynamic = true;
+    if (type() == SH_TYPE_DYNAMIC) {
+        n_dynamic = false;
+        kaitai::kstream *io = _root()-&gt;_io();
+        std::streampos _pos = io-&gt;pos();
+        io-&gt;seek(offset());
+        if (m__is_le == 1) {
+            m__raw_dynamic = io-&gt;read_bytes(size());
+            m__io__raw_dynamic = new kaitai::kstream(m__raw_dynamic);
+            m_dynamic = new dynamic_section_t(m__io__raw_dynamic, this, m__root, m__is_le);
+        } else {
+            m__raw_dynamic = io-&gt;read_bytes(size());
+            m__io__raw_dynamic = new kaitai::kstream(m__raw_dynamic);
+            m_dynamic = new dynamic_section_t(m__io__raw_dynamic, this, m__root, m__is_le);
+        }
+        io-&gt;seek(_pos);
+    }
+    f_dynamic = true;
+    return m_dynamic;
+}
+
+elf_t::endian_elf_t::dynamic_section_t::dynamic_section_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, elf_t* p__root, int p_is_le) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m__is_le = p_is_le;
+    _read();
+}
+
+void elf_t::endian_elf_t::dynamic_section_t::_read() {
+
+    if (m__is_le == -1) {
+        throw std::runtime_error(&quot;unable to decide on endianness&quot;);
+    } else if (m__is_le == 1) {
+        _read_le();
+    } else {
+        _read_be();
+    }
+}
+
+void elf_t::endian_elf_t::dynamic_section_t::_read_le() {
+    m_entries = new std::vector&lt;dynamic_section_entry_t*&gt;();
+    {
+        int i = 0;
+        while (!m__io-&gt;is_eof()) {
+            m_entries-&gt;push_back(new dynamic_section_entry_t(m__io, this, m__root, m__is_le));
+            i++;
+        }
+    }
+}
+
+void elf_t::endian_elf_t::dynamic_section_t::_read_be() {
+    m_entries = new std::vector&lt;dynamic_section_entry_t*&gt;();
+    {
+        int i = 0;
+        while (!m__io-&gt;is_eof()) {
+            m_entries-&gt;push_back(new dynamic_section_entry_t(m__io, this, m__root, m__is_le));
+            i++;
+        }
+    }
+}
+
+elf_t::endian_elf_t::dynamic_section_t::~dynamic_section_t() {
+    for (std::vector&lt;dynamic_section_entry_t*&gt;::iterator it = m_entries-&gt;begin(); it != m_entries-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_entries;
+}
+
+elf_t::endian_elf_t::strings_struct_t::strings_struct_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, elf_t* p__root, int p_is_le) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
     m__is_le = p_is_le;

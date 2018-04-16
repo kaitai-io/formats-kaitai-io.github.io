@@ -10,6 +10,49 @@ if parse_version(ks_version) < parse_version('0.7'):
 
 class MachO(KaitaiStruct):
 
+    class MagicType(Enum):
+        fat_le = 3199925962
+        fat_be = 3405691582
+        macho_le_x86 = 3472551422
+        macho_le_x64 = 3489328638
+        macho_be_x86 = 4277009102
+        macho_be_x64 = 4277009103
+
+    class CpuType(Enum):
+        vax = 1
+        romp = 2
+        ns32032 = 4
+        ns32332 = 5
+        i386 = 7
+        mips = 8
+        ns32532 = 9
+        hppa = 11
+        arm = 12
+        mc88000 = 13
+        sparc = 14
+        i860 = 15
+        i860_little = 16
+        rs6000 = 17
+        powerpc = 18
+        abi64 = 16777216
+        x86_64 = 16777223
+        arm64 = 16777228
+        powerpc64 = 16777234
+        any = 4294967295
+
+    class FileType(Enum):
+        object = 1
+        execute = 2
+        fvmlib = 3
+        core = 4
+        preload = 5
+        dylib = 6
+        dylinker = 7
+        bundle = 8
+        dylib_stub = 9
+        dsym = 10
+        kext_bundle = 11
+
     class LoadCommandType(Enum):
         segment = 1
         symtab = 2
@@ -61,77 +104,6 @@ class MachO(KaitaiStruct):
         dyld_info_only = 2147483682
         load_upward_dylib = 2147483683
         main = 2147483688
-
-    class MachoFlags(Enum):
-        no_undefs = 1
-        incr_link = 2
-        dyld_link = 4
-        bind_at_load = 8
-        prebound = 16
-        split_segs = 32
-        lazy_init = 64
-        two_level = 128
-        force_flat = 256
-        no_multi_defs = 512
-        no_fix_prebinding = 1024
-        prebindable = 2048
-        all_mods_bound = 4096
-        subsections_via_symbols = 8192
-        canonical = 16384
-        weak_defines = 32768
-        binds_to_weak = 65536
-        allow_stack_execution = 131072
-        root_safe = 262144
-        setuid_safe = 524288
-        no_reexported_dylibs = 1048576
-        pie = 2097152
-        dead_strippable_dylib = 4194304
-        has_tlv_descriptors = 8388608
-        no_heap_execution = 16777216
-        app_extension_safe = 33554432
-
-    class MagicType(Enum):
-        fat_le = 3199925962
-        fat_be = 3405691582
-        macho_le_x86 = 3472551422
-        macho_le_x64 = 3489328638
-        macho_be_x86 = 4277009102
-        macho_be_x64 = 4277009103
-
-    class FileType(Enum):
-        object = 1
-        execute = 2
-        fvmlib = 3
-        core = 4
-        preload = 5
-        dylib = 6
-        dylinker = 7
-        bundle = 8
-        dylib_stub = 9
-        dsym = 10
-        kext_bundle = 11
-
-    class CpuType(Enum):
-        vax = 1
-        romp = 2
-        ns32032 = 4
-        ns32332 = 5
-        i386 = 7
-        mips = 8
-        ns32532 = 9
-        hppa = 11
-        arm = 12
-        mc88000 = 13
-        sparc = 14
-        i860 = 15
-        i860_little = 16
-        rs6000 = 17
-        powerpc = 18
-        abi64 = 16777216
-        x86_64 = 16777223
-        arm64 = 16777228
-        powerpc64 = 16777234
-        any = 4294967295
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -699,6 +671,248 @@ class MachO(KaitaiStruct):
             self.reserved = self._io.read_bytes(24)
 
 
+    class MachoFlags(KaitaiStruct):
+        def __init__(self, value, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self.value = value
+            self._read()
+
+        def _read(self):
+            pass
+
+        @property
+        def subsections_via_symbols(self):
+            """safe to divide up the sections into sub-sections via symbols for dead code stripping."""
+            if hasattr(self, '_m_subsections_via_symbols'):
+                return self._m_subsections_via_symbols if hasattr(self, '_m_subsections_via_symbols') else None
+
+            self._m_subsections_via_symbols = (self.value & 8192) != 0
+            return self._m_subsections_via_symbols if hasattr(self, '_m_subsections_via_symbols') else None
+
+        @property
+        def dead_strippable_dylib(self):
+            if hasattr(self, '_m_dead_strippable_dylib'):
+                return self._m_dead_strippable_dylib if hasattr(self, '_m_dead_strippable_dylib') else None
+
+            self._m_dead_strippable_dylib = (self.value & 4194304) != 0
+            return self._m_dead_strippable_dylib if hasattr(self, '_m_dead_strippable_dylib') else None
+
+        @property
+        def weak_defines(self):
+            """the final linked image contains external weak symbols."""
+            if hasattr(self, '_m_weak_defines'):
+                return self._m_weak_defines if hasattr(self, '_m_weak_defines') else None
+
+            self._m_weak_defines = (self.value & 32768) != 0
+            return self._m_weak_defines if hasattr(self, '_m_weak_defines') else None
+
+        @property
+        def prebound(self):
+            """the file has its dynamic undefined references prebound."""
+            if hasattr(self, '_m_prebound'):
+                return self._m_prebound if hasattr(self, '_m_prebound') else None
+
+            self._m_prebound = (self.value & 16) != 0
+            return self._m_prebound if hasattr(self, '_m_prebound') else None
+
+        @property
+        def all_mods_bound(self):
+            """indicates that this binary binds to all two-level namespace modules of its dependent libraries. only used when MH_PREBINDABLE and MH_TWOLEVEL are both set."""
+            if hasattr(self, '_m_all_mods_bound'):
+                return self._m_all_mods_bound if hasattr(self, '_m_all_mods_bound') else None
+
+            self._m_all_mods_bound = (self.value & 4096) != 0
+            return self._m_all_mods_bound if hasattr(self, '_m_all_mods_bound') else None
+
+        @property
+        def has_tlv_descriptors(self):
+            if hasattr(self, '_m_has_tlv_descriptors'):
+                return self._m_has_tlv_descriptors if hasattr(self, '_m_has_tlv_descriptors') else None
+
+            self._m_has_tlv_descriptors = (self.value & 8388608) != 0
+            return self._m_has_tlv_descriptors if hasattr(self, '_m_has_tlv_descriptors') else None
+
+        @property
+        def force_flat(self):
+            """the executable is forcing all images to use flat name space bindings."""
+            if hasattr(self, '_m_force_flat'):
+                return self._m_force_flat if hasattr(self, '_m_force_flat') else None
+
+            self._m_force_flat = (self.value & 256) != 0
+            return self._m_force_flat if hasattr(self, '_m_force_flat') else None
+
+        @property
+        def root_safe(self):
+            """When this bit is set, the binary declares it is safe for use in processes with uid zero."""
+            if hasattr(self, '_m_root_safe'):
+                return self._m_root_safe if hasattr(self, '_m_root_safe') else None
+
+            self._m_root_safe = (self.value & 262144) != 0
+            return self._m_root_safe if hasattr(self, '_m_root_safe') else None
+
+        @property
+        def no_undefs(self):
+            """the object file has no undefined references."""
+            if hasattr(self, '_m_no_undefs'):
+                return self._m_no_undefs if hasattr(self, '_m_no_undefs') else None
+
+            self._m_no_undefs = (self.value & 1) != 0
+            return self._m_no_undefs if hasattr(self, '_m_no_undefs') else None
+
+        @property
+        def setuid_safe(self):
+            """When this bit is set, the binary declares it is safe for use in processes when issetugid() is true."""
+            if hasattr(self, '_m_setuid_safe'):
+                return self._m_setuid_safe if hasattr(self, '_m_setuid_safe') else None
+
+            self._m_setuid_safe = (self.value & 524288) != 0
+            return self._m_setuid_safe if hasattr(self, '_m_setuid_safe') else None
+
+        @property
+        def no_heap_execution(self):
+            if hasattr(self, '_m_no_heap_execution'):
+                return self._m_no_heap_execution if hasattr(self, '_m_no_heap_execution') else None
+
+            self._m_no_heap_execution = (self.value & 16777216) != 0
+            return self._m_no_heap_execution if hasattr(self, '_m_no_heap_execution') else None
+
+        @property
+        def no_reexported_dylibs(self):
+            """When this bit is set on a dylib, the static linker does not need to examine dependent dylibs to see if any are re-exported."""
+            if hasattr(self, '_m_no_reexported_dylibs'):
+                return self._m_no_reexported_dylibs if hasattr(self, '_m_no_reexported_dylibs') else None
+
+            self._m_no_reexported_dylibs = (self.value & 1048576) != 0
+            return self._m_no_reexported_dylibs if hasattr(self, '_m_no_reexported_dylibs') else None
+
+        @property
+        def no_multi_defs(self):
+            """this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used."""
+            if hasattr(self, '_m_no_multi_defs'):
+                return self._m_no_multi_defs if hasattr(self, '_m_no_multi_defs') else None
+
+            self._m_no_multi_defs = (self.value & 512) != 0
+            return self._m_no_multi_defs if hasattr(self, '_m_no_multi_defs') else None
+
+        @property
+        def app_extension_safe(self):
+            if hasattr(self, '_m_app_extension_safe'):
+                return self._m_app_extension_safe if hasattr(self, '_m_app_extension_safe') else None
+
+            self._m_app_extension_safe = (self.value & 33554432) != 0
+            return self._m_app_extension_safe if hasattr(self, '_m_app_extension_safe') else None
+
+        @property
+        def prebindable(self):
+            """the binary is not prebound but can have its prebinding redone. only used when MH_PREBOUND is not set."""
+            if hasattr(self, '_m_prebindable'):
+                return self._m_prebindable if hasattr(self, '_m_prebindable') else None
+
+            self._m_prebindable = (self.value & 2048) != 0
+            return self._m_prebindable if hasattr(self, '_m_prebindable') else None
+
+        @property
+        def incr_link(self):
+            """the object file is the output of an incremental link against a base file and can't be link edited again."""
+            if hasattr(self, '_m_incr_link'):
+                return self._m_incr_link if hasattr(self, '_m_incr_link') else None
+
+            self._m_incr_link = (self.value & 2) != 0
+            return self._m_incr_link if hasattr(self, '_m_incr_link') else None
+
+        @property
+        def bind_at_load(self):
+            """the object file's undefined references are bound by the dynamic linker when loaded."""
+            if hasattr(self, '_m_bind_at_load'):
+                return self._m_bind_at_load if hasattr(self, '_m_bind_at_load') else None
+
+            self._m_bind_at_load = (self.value & 8) != 0
+            return self._m_bind_at_load if hasattr(self, '_m_bind_at_load') else None
+
+        @property
+        def canonical(self):
+            """the binary has been canonicalized via the unprebind operation."""
+            if hasattr(self, '_m_canonical'):
+                return self._m_canonical if hasattr(self, '_m_canonical') else None
+
+            self._m_canonical = (self.value & 16384) != 0
+            return self._m_canonical if hasattr(self, '_m_canonical') else None
+
+        @property
+        def two_level(self):
+            """the image is using two-level name space bindings."""
+            if hasattr(self, '_m_two_level'):
+                return self._m_two_level if hasattr(self, '_m_two_level') else None
+
+            self._m_two_level = (self.value & 128) != 0
+            return self._m_two_level if hasattr(self, '_m_two_level') else None
+
+        @property
+        def split_segs(self):
+            """the file has its read-only and read-write segments split."""
+            if hasattr(self, '_m_split_segs'):
+                return self._m_split_segs if hasattr(self, '_m_split_segs') else None
+
+            self._m_split_segs = (self.value & 32) != 0
+            return self._m_split_segs if hasattr(self, '_m_split_segs') else None
+
+        @property
+        def lazy_init(self):
+            """the shared library init routine is to be run lazily via catching memory faults to its writeable segments (obsolete)."""
+            if hasattr(self, '_m_lazy_init'):
+                return self._m_lazy_init if hasattr(self, '_m_lazy_init') else None
+
+            self._m_lazy_init = (self.value & 64) != 0
+            return self._m_lazy_init if hasattr(self, '_m_lazy_init') else None
+
+        @property
+        def allow_stack_execution(self):
+            """When this bit is set, all stacks in the task will be given stack execution privilege.  Only used in MH_EXECUTE filetypes."""
+            if hasattr(self, '_m_allow_stack_execution'):
+                return self._m_allow_stack_execution if hasattr(self, '_m_allow_stack_execution') else None
+
+            self._m_allow_stack_execution = (self.value & 131072) != 0
+            return self._m_allow_stack_execution if hasattr(self, '_m_allow_stack_execution') else None
+
+        @property
+        def binds_to_weak(self):
+            """the final linked image uses weak symbols."""
+            if hasattr(self, '_m_binds_to_weak'):
+                return self._m_binds_to_weak if hasattr(self, '_m_binds_to_weak') else None
+
+            self._m_binds_to_weak = (self.value & 65536) != 0
+            return self._m_binds_to_weak if hasattr(self, '_m_binds_to_weak') else None
+
+        @property
+        def no_fix_prebinding(self):
+            """do not have dyld notify the prebinding agent about this executable."""
+            if hasattr(self, '_m_no_fix_prebinding'):
+                return self._m_no_fix_prebinding if hasattr(self, '_m_no_fix_prebinding') else None
+
+            self._m_no_fix_prebinding = (self.value & 1024) != 0
+            return self._m_no_fix_prebinding if hasattr(self, '_m_no_fix_prebinding') else None
+
+        @property
+        def dyld_link(self):
+            """the object file is input for the dynamic linker and can't be staticly link edited again."""
+            if hasattr(self, '_m_dyld_link'):
+                return self._m_dyld_link if hasattr(self, '_m_dyld_link') else None
+
+            self._m_dyld_link = (self.value & 4) != 0
+            return self._m_dyld_link if hasattr(self, '_m_dyld_link') else None
+
+        @property
+        def pie(self):
+            """When this bit is set, the OS will load the main executable at a random address. Only used in MH_EXECUTE filetypes."""
+            if hasattr(self, '_m_pie'):
+                return self._m_pie if hasattr(self, '_m_pie') else None
+
+            self._m_pie = (self.value & 2097152) != 0
+            return self._m_pie if hasattr(self, '_m_pie') else None
+
+
     class RoutinesCommand64(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -1081,6 +1295,14 @@ class MachO(KaitaiStruct):
             if  ((self._root.magic == self._root.MagicType.macho_be_x64) or (self._root.magic == self._root.MagicType.macho_le_x64)) :
                 self.reserved = self._io.read_u4le()
 
+
+        @property
+        def flags_obj(self):
+            if hasattr(self, '_m_flags_obj'):
+                return self._m_flags_obj if hasattr(self, '_m_flags_obj') else None
+
+            self._m_flags_obj = self._root.MachoFlags(self.flags, self._io, self, self._root)
+            return self._m_flags_obj if hasattr(self, '_m_flags_obj') else None
 
 
     class LinkeditDataCommand(KaitaiStruct):

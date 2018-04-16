@@ -12,9 +12,16 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 
+/**
+ * \sa Source
+ */
+
 class elf_t : public kaitai::kstruct {
 
 public:
+    class phdr_type_flags_t;
+    class section_header_flags_t;
+    class dt_flag_1_values_t;
     class endian_elf_t;
 
     enum endian_t {
@@ -94,6 +101,97 @@ public:
         MACHINE_AARCH64 = 183
     };
 
+    enum dynamic_array_tags_t {
+        DYNAMIC_ARRAY_TAGS_NULL = 0,
+        DYNAMIC_ARRAY_TAGS_NEEDED = 1,
+        DYNAMIC_ARRAY_TAGS_PLTRELSZ = 2,
+        DYNAMIC_ARRAY_TAGS_PLTGOT = 3,
+        DYNAMIC_ARRAY_TAGS_HASH = 4,
+        DYNAMIC_ARRAY_TAGS_STRTAB = 5,
+        DYNAMIC_ARRAY_TAGS_SYMTAB = 6,
+        DYNAMIC_ARRAY_TAGS_RELA = 7,
+        DYNAMIC_ARRAY_TAGS_RELASZ = 8,
+        DYNAMIC_ARRAY_TAGS_RELAENT = 9,
+        DYNAMIC_ARRAY_TAGS_STRSZ = 10,
+        DYNAMIC_ARRAY_TAGS_SYMENT = 11,
+        DYNAMIC_ARRAY_TAGS_INIT = 12,
+        DYNAMIC_ARRAY_TAGS_FINI = 13,
+        DYNAMIC_ARRAY_TAGS_SONAME = 14,
+        DYNAMIC_ARRAY_TAGS_RPATH = 15,
+        DYNAMIC_ARRAY_TAGS_SYMBOLIC = 16,
+        DYNAMIC_ARRAY_TAGS_REL = 17,
+        DYNAMIC_ARRAY_TAGS_RELSZ = 18,
+        DYNAMIC_ARRAY_TAGS_RELENT = 19,
+        DYNAMIC_ARRAY_TAGS_PLTREL = 20,
+        DYNAMIC_ARRAY_TAGS_DEBUG = 21,
+        DYNAMIC_ARRAY_TAGS_TEXTREL = 22,
+        DYNAMIC_ARRAY_TAGS_JMPREL = 23,
+        DYNAMIC_ARRAY_TAGS_BIND_NOW = 24,
+        DYNAMIC_ARRAY_TAGS_INIT_ARRAY = 25,
+        DYNAMIC_ARRAY_TAGS_FINI_ARRAY = 26,
+        DYNAMIC_ARRAY_TAGS_INIT_ARRAYSZ = 27,
+        DYNAMIC_ARRAY_TAGS_FINI_ARRAYSZ = 28,
+        DYNAMIC_ARRAY_TAGS_RUNPATH = 29,
+        DYNAMIC_ARRAY_TAGS_FLAGS = 30,
+        DYNAMIC_ARRAY_TAGS_PREINIT_ARRAY = 32,
+        DYNAMIC_ARRAY_TAGS_PREINIT_ARRAYSZ = 33,
+        DYNAMIC_ARRAY_TAGS_MAXPOSTAGS = 34,
+        DYNAMIC_ARRAY_TAGS_SUNW_AUXILIARY = 1610612749,
+        DYNAMIC_ARRAY_TAGS_SUNW_FILTER = 1610612750,
+        DYNAMIC_ARRAY_TAGS_SUNW_CAP = 1610612752,
+        DYNAMIC_ARRAY_TAGS_SUNW_SYMTAB = 1610612753,
+        DYNAMIC_ARRAY_TAGS_SUNW_SYMSZ = 1610612754,
+        DYNAMIC_ARRAY_TAGS_SUNW_SORTENT = 1610612755,
+        DYNAMIC_ARRAY_TAGS_SUNW_SYMSORT = 1610612756,
+        DYNAMIC_ARRAY_TAGS_SUNW_SYMSORTSZ = 1610612757,
+        DYNAMIC_ARRAY_TAGS_SUNW_TLSSORT = 1610612758,
+        DYNAMIC_ARRAY_TAGS_SUNW_TLSSORTSZ = 1610612759,
+        DYNAMIC_ARRAY_TAGS_SUNW_CAPINFO = 1610612760,
+        DYNAMIC_ARRAY_TAGS_SUNW_STRPAD = 1610612761,
+        DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAIN = 1610612762,
+        DYNAMIC_ARRAY_TAGS_SUNW_LDMACH = 1610612763,
+        DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAINENT = 1610612765,
+        DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAINSZ = 1610612767,
+        DYNAMIC_ARRAY_TAGS_HIOS = 1879044096,
+        DYNAMIC_ARRAY_TAGS_VALRNGLO = 1879047424,
+        DYNAMIC_ARRAY_TAGS_GNU_PRELINKED = 1879047669,
+        DYNAMIC_ARRAY_TAGS_GNU_CONFLICTSZ = 1879047670,
+        DYNAMIC_ARRAY_TAGS_GNU_LIBLISTSZ = 1879047671,
+        DYNAMIC_ARRAY_TAGS_CHECKSUM = 1879047672,
+        DYNAMIC_ARRAY_TAGS_PLTPADSZ = 1879047673,
+        DYNAMIC_ARRAY_TAGS_MOVEENT = 1879047674,
+        DYNAMIC_ARRAY_TAGS_MOVESZ = 1879047675,
+        DYNAMIC_ARRAY_TAGS_FEATURE_1 = 1879047676,
+        DYNAMIC_ARRAY_TAGS_POSFLAG_1 = 1879047677,
+        DYNAMIC_ARRAY_TAGS_SYMINSZ = 1879047678,
+        DYNAMIC_ARRAY_TAGS_VALRNGHI = 1879047679,
+        DYNAMIC_ARRAY_TAGS_ADDRRNGLO = 1879047680,
+        DYNAMIC_ARRAY_TAGS_GNU_HASH = 1879047925,
+        DYNAMIC_ARRAY_TAGS_TLSDESC_PLT = 1879047926,
+        DYNAMIC_ARRAY_TAGS_TLSDESC_GOT = 1879047927,
+        DYNAMIC_ARRAY_TAGS_GNU_CONFLICT = 1879047928,
+        DYNAMIC_ARRAY_TAGS_GNU_LIBLIST = 1879047929,
+        DYNAMIC_ARRAY_TAGS_CONFIG = 1879047930,
+        DYNAMIC_ARRAY_TAGS_DEPAUDIT = 1879047931,
+        DYNAMIC_ARRAY_TAGS_AUDIT = 1879047932,
+        DYNAMIC_ARRAY_TAGS_PLTPAD = 1879047933,
+        DYNAMIC_ARRAY_TAGS_MOVETAB = 1879047934,
+        DYNAMIC_ARRAY_TAGS_ADDRRNGHI = 1879047935,
+        DYNAMIC_ARRAY_TAGS_VERSYM = 1879048176,
+        DYNAMIC_ARRAY_TAGS_RELACOUNT = 1879048185,
+        DYNAMIC_ARRAY_TAGS_RELCOUNT = 1879048186,
+        DYNAMIC_ARRAY_TAGS_FLAGS_1 = 1879048187,
+        DYNAMIC_ARRAY_TAGS_VERDEF = 1879048188,
+        DYNAMIC_ARRAY_TAGS_VERDEFNUM = 1879048189,
+        DYNAMIC_ARRAY_TAGS_VERNEED = 1879048190,
+        DYNAMIC_ARRAY_TAGS_VERNEEDNUM = 1879048191,
+        DYNAMIC_ARRAY_TAGS_LOPROC = 1879048192,
+        DYNAMIC_ARRAY_TAGS_SPARC_REGISTER = 1879048193,
+        DYNAMIC_ARRAY_TAGS_AUXILIARY = 2147483645,
+        DYNAMIC_ARRAY_TAGS_USED = 2147483646,
+        DYNAMIC_ARRAY_TAGS_HIPROC = 2147483647
+    };
+
     enum bits_t {
         BITS_B32 = 1,
         BITS_B64 = 2
@@ -130,11 +228,544 @@ private:
 public:
     ~elf_t();
 
+    class phdr_type_flags_t : public kaitai::kstruct {
+
+    public:
+
+        phdr_type_flags_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::program_header_t* p__parent = 0, elf_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~phdr_type_flags_t();
+
+    private:
+        bool f_read;
+        bool m_read;
+
+    public:
+        bool read();
+
+    private:
+        bool f_write;
+        bool m_write;
+
+    public:
+        bool write();
+
+    private:
+        bool f_execute;
+        bool m_execute;
+
+    public:
+        bool execute();
+
+    private:
+        bool f_mask_proc;
+        bool m_mask_proc;
+
+    public:
+        bool mask_proc();
+
+    private:
+        uint32_t m_value;
+        elf_t* m__root;
+        elf_t::endian_elf_t::program_header_t* m__parent;
+
+    public:
+        uint32_t value() const { return m_value; }
+        elf_t* _root() const { return m__root; }
+        elf_t::endian_elf_t::program_header_t* _parent() const { return m__parent; }
+    };
+
+    class section_header_flags_t : public kaitai::kstruct {
+
+    public:
+
+        section_header_flags_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::section_header_t* p__parent = 0, elf_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~section_header_flags_t();
+
+    private:
+        bool f_merge;
+        bool m_merge;
+
+    public:
+
+        /**
+         * might be merged
+         */
+        bool merge();
+
+    private:
+        bool f_mask_os;
+        bool m_mask_os;
+
+    public:
+
+        /**
+         * OS-specific
+         */
+        bool mask_os();
+
+    private:
+        bool f_exclude;
+        bool m_exclude;
+
+    public:
+
+        /**
+         * section is excluded unless referenced or allocated (Solaris)
+         */
+        bool exclude();
+
+    private:
+        bool f_mask_proc;
+        bool m_mask_proc;
+
+    public:
+
+        /**
+         * Processor-specific
+         */
+        bool mask_proc();
+
+    private:
+        bool f_strings;
+        bool m_strings;
+
+    public:
+
+        /**
+         * contains nul-terminated strings
+         */
+        bool strings();
+
+    private:
+        bool f_os_non_conforming;
+        bool m_os_non_conforming;
+
+    public:
+
+        /**
+         * non-standard OS specific handling required
+         */
+        bool os_non_conforming();
+
+    private:
+        bool f_alloc;
+        bool m_alloc;
+
+    public:
+
+        /**
+         * occupies memory during execution
+         */
+        bool alloc();
+
+    private:
+        bool f_exec_instr;
+        bool m_exec_instr;
+
+    public:
+
+        /**
+         * executable
+         */
+        bool exec_instr();
+
+    private:
+        bool f_info_link;
+        bool m_info_link;
+
+    public:
+
+        /**
+         * 'sh_info' contains SHT index
+         */
+        bool info_link();
+
+    private:
+        bool f_write;
+        bool m_write;
+
+    public:
+
+        /**
+         * writable
+         */
+        bool write();
+
+    private:
+        bool f_link_order;
+        bool m_link_order;
+
+    public:
+
+        /**
+         * preserve order after combining
+         */
+        bool link_order();
+
+    private:
+        bool f_ordered;
+        bool m_ordered;
+
+    public:
+
+        /**
+         * special ordering requirement (Solaris)
+         */
+        bool ordered();
+
+    private:
+        bool f_tls;
+        bool m_tls;
+
+    public:
+
+        /**
+         * section hold thread-local data
+         */
+        bool tls();
+
+    private:
+        bool f_group;
+        bool m_group;
+
+    public:
+
+        /**
+         * section is member of a group
+         */
+        bool group();
+
+    private:
+        uint32_t m_value;
+        elf_t* m__root;
+        elf_t::endian_elf_t::section_header_t* m__parent;
+
+    public:
+        uint32_t value() const { return m_value; }
+        elf_t* _root() const { return m__root; }
+        elf_t::endian_elf_t::section_header_t* _parent() const { return m__parent; }
+    };
+
+    class dt_flag_1_values_t : public kaitai::kstruct {
+
+    public:
+
+        dt_flag_1_values_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::dynamic_section_entry_t* p__parent = 0, elf_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~dt_flag_1_values_t();
+
+    private:
+        bool f_singleton;
+        bool m_singleton;
+
+    public:
+
+        /**
+         * Singleton symbols are used.
+         */
+        bool singleton();
+
+    private:
+        bool f_ignmuldef;
+        bool m_ignmuldef;
+
+    public:
+        bool ignmuldef();
+
+    private:
+        bool f_loadfltr;
+        bool m_loadfltr;
+
+    public:
+
+        /**
+         * Trigger filtee loading at runtime.
+         */
+        bool loadfltr();
+
+    private:
+        bool f_initfirst;
+        bool m_initfirst;
+
+    public:
+
+        /**
+         * Set RTLD_INITFIRST for this object
+         */
+        bool initfirst();
+
+    private:
+        bool f_symintpose;
+        bool m_symintpose;
+
+    public:
+
+        /**
+         * Object has individual interposers.
+         */
+        bool symintpose();
+
+    private:
+        bool f_noreloc;
+        bool m_noreloc;
+
+    public:
+        bool noreloc();
+
+    private:
+        bool f_confalt;
+        bool m_confalt;
+
+    public:
+
+        /**
+         * Configuration alternative created.
+         */
+        bool confalt();
+
+    private:
+        bool f_dispreldne;
+        bool m_dispreldne;
+
+    public:
+
+        /**
+         * Disp reloc applied at build time.
+         */
+        bool dispreldne();
+
+    private:
+        bool f_rtld_global;
+        bool m_rtld_global;
+
+    public:
+
+        /**
+         * Set RTLD_GLOBAL for this object.
+         */
+        bool rtld_global();
+
+    private:
+        bool f_nodelete;
+        bool m_nodelete;
+
+    public:
+
+        /**
+         * Set RTLD_NODELETE for this object.
+         */
+        bool nodelete();
+
+    private:
+        bool f_trans;
+        bool m_trans;
+
+    public:
+        bool trans();
+
+    private:
+        bool f_origin;
+        bool m_origin;
+
+    public:
+
+        /**
+         * $ORIGIN must be handled.
+         */
+        bool origin();
+
+    private:
+        bool f_now;
+        bool m_now;
+
+    public:
+
+        /**
+         * Set RTLD_NOW for this object.
+         */
+        bool now();
+
+    private:
+        bool f_nohdr;
+        bool m_nohdr;
+
+    public:
+        bool nohdr();
+
+    private:
+        bool f_endfiltee;
+        bool m_endfiltee;
+
+    public:
+
+        /**
+         * Filtee terminates filters search.
+         */
+        bool endfiltee();
+
+    private:
+        bool f_nodirect;
+        bool m_nodirect;
+
+    public:
+
+        /**
+         * Object has no-direct binding.
+         */
+        bool nodirect();
+
+    private:
+        bool f_globaudit;
+        bool m_globaudit;
+
+    public:
+
+        /**
+         * Global auditing required.
+         */
+        bool globaudit();
+
+    private:
+        bool f_noksyms;
+        bool m_noksyms;
+
+    public:
+        bool noksyms();
+
+    private:
+        bool f_interpose;
+        bool m_interpose;
+
+    public:
+
+        /**
+         * Object is used to interpose.
+         */
+        bool interpose();
+
+    private:
+        bool f_nodump;
+        bool m_nodump;
+
+    public:
+
+        /**
+         * Object can't be dldump'ed.
+         */
+        bool nodump();
+
+    private:
+        bool f_disprelpnd;
+        bool m_disprelpnd;
+
+    public:
+
+        /**
+         * Disp reloc applied at run-time.
+         */
+        bool disprelpnd();
+
+    private:
+        bool f_noopen;
+        bool m_noopen;
+
+    public:
+
+        /**
+         * Set RTLD_NOOPEN for this object.
+         */
+        bool noopen();
+
+    private:
+        bool f_stub;
+        bool m_stub;
+
+    public:
+        bool stub();
+
+    private:
+        bool f_direct;
+        bool m_direct;
+
+    public:
+
+        /**
+         * Direct binding enabled.
+         */
+        bool direct();
+
+    private:
+        bool f_edited;
+        bool m_edited;
+
+    public:
+
+        /**
+         * Object is modified after built.
+         */
+        bool edited();
+
+    private:
+        bool f_group;
+        bool m_group;
+
+    public:
+
+        /**
+         * Set RTLD_GROUP for this object.
+         */
+        bool group();
+
+    private:
+        bool f_pie;
+        bool m_pie;
+
+    public:
+        bool pie();
+
+    private:
+        bool f_nodeflib;
+        bool m_nodeflib;
+
+    public:
+
+        /**
+         * Ignore default lib search path.
+         */
+        bool nodeflib();
+
+    private:
+        uint32_t m_value;
+        elf_t* m__root;
+        elf_t::endian_elf_t::dynamic_section_entry_t* m__parent;
+
+    public:
+        uint32_t value() const { return m_value; }
+        elf_t* _root() const { return m__root; }
+        elf_t::endian_elf_t::dynamic_section_entry_t* _parent() const { return m__parent; }
+    };
+
     class endian_elf_t : public kaitai::kstruct {
 
     public:
         class program_header_t;
+        class dynamic_section_entry_t;
         class section_header_t;
+        class dynamic_section_t;
         class strings_struct_t;
 
         endian_elf_t(kaitai::kstream* p__io, elf_t* p__parent = 0, elf_t* p__root = 0);
@@ -186,6 +817,26 @@ public:
 
         public:
             ~program_header_t();
+
+        private:
+            bool f_dynamic;
+            dynamic_section_t* m_dynamic;
+            bool n_dynamic;
+
+        public:
+            bool _is_null_dynamic() { dynamic(); return n_dynamic; };
+
+        private:
+
+        public:
+            dynamic_section_t* dynamic();
+
+        private:
+            bool f_flags_obj;
+            phdr_type_flags_t* m_flags_obj;
+
+        public:
+            phdr_type_flags_t* flags_obj();
 
         private:
             ph_type_t m_type;
@@ -247,6 +898,8 @@ public:
         private:
             elf_t* m__root;
             elf_t::endian_elf_t* m__parent;
+            std::string m__raw_dynamic;
+            kaitai::kstream* m__io__raw_dynamic;
 
         public:
             ph_type_t type() const { return m_type; }
@@ -260,6 +913,80 @@ public:
             uint64_t align() const { return m_align; }
             elf_t* _root() const { return m__root; }
             elf_t::endian_elf_t* _parent() const { return m__parent; }
+            std::string _raw_dynamic() const { return m__raw_dynamic; }
+            kaitai::kstream* _io__raw_dynamic() const { return m__io__raw_dynamic; }
+        };
+
+        class dynamic_section_entry_t : public kaitai::kstruct {
+
+        public:
+
+            dynamic_section_entry_t(kaitai::kstream* p__io, elf_t::endian_elf_t::dynamic_section_t* p__parent = 0, elf_t* p__root = 0, int p_is_le = -1);
+
+        private:
+            int m__is_le;
+
+        public:
+
+        private:
+            void _read();
+
+        public:
+
+        private:
+            void _read_le();
+
+        public:
+
+        private:
+            void _read_be();
+
+        public:
+            ~dynamic_section_entry_t();
+
+        private:
+            bool f_tag_enum;
+            dynamic_array_tags_t m_tag_enum;
+
+        public:
+            dynamic_array_tags_t tag_enum();
+
+        private:
+            bool f_flag_1_values;
+            dt_flag_1_values_t* m_flag_1_values;
+            bool n_flag_1_values;
+
+        public:
+            bool _is_null_flag_1_values() { flag_1_values(); return n_flag_1_values; };
+
+        private:
+
+        public:
+            dt_flag_1_values_t* flag_1_values();
+
+        private:
+            uint64_t m_tag;
+            bool n_tag;
+
+        public:
+            bool _is_null_tag() { tag(); return n_tag; };
+
+        private:
+            uint64_t m_value_or_ptr;
+            bool n_value_or_ptr;
+
+        public:
+            bool _is_null_value_or_ptr() { value_or_ptr(); return n_value_or_ptr; };
+
+        private:
+            elf_t* m__root;
+            elf_t::endian_elf_t::dynamic_section_t* m__parent;
+
+        public:
+            uint64_t tag() const { return m_tag; }
+            uint64_t value_or_ptr() const { return m_value_or_ptr; }
+            elf_t* _root() const { return m__root; }
+            elf_t::endian_elf_t::dynamic_section_t* _parent() const { return m__parent; }
         };
 
         class section_header_t : public kaitai::kstruct {
@@ -297,11 +1024,44 @@ public:
             std::string body();
 
         private:
+            bool f_flags_obj;
+            section_header_flags_t* m_flags_obj;
+
+        public:
+            section_header_flags_t* flags_obj();
+
+        private:
+            bool f_strtab;
+            strings_struct_t* m_strtab;
+            bool n_strtab;
+
+        public:
+            bool _is_null_strtab() { strtab(); return n_strtab; };
+
+        private:
+
+        public:
+            strings_struct_t* strtab();
+
+        private:
             bool f_name;
             std::string m_name;
 
         public:
             std::string name();
+
+        private:
+            bool f_dynamic;
+            dynamic_section_t* m_dynamic;
+            bool n_dynamic;
+
+        public:
+            bool _is_null_dynamic() { dynamic(); return n_dynamic; };
+
+        private:
+
+        public:
+            dynamic_section_t* dynamic();
 
         private:
             uint32_t m_name_offset;
@@ -352,6 +1112,10 @@ public:
         private:
             elf_t* m__root;
             elf_t::endian_elf_t* m__parent;
+            std::string m__raw_strtab;
+            kaitai::kstream* m__io__raw_strtab;
+            std::string m__raw_dynamic;
+            kaitai::kstream* m__io__raw_dynamic;
 
         public:
             uint32_t name_offset() const { return m_name_offset; }
@@ -366,13 +1130,55 @@ public:
             uint64_t entry_size() const { return m_entry_size; }
             elf_t* _root() const { return m__root; }
             elf_t::endian_elf_t* _parent() const { return m__parent; }
+            std::string _raw_strtab() const { return m__raw_strtab; }
+            kaitai::kstream* _io__raw_strtab() const { return m__io__raw_strtab; }
+            std::string _raw_dynamic() const { return m__raw_dynamic; }
+            kaitai::kstream* _io__raw_dynamic() const { return m__io__raw_dynamic; }
+        };
+
+        class dynamic_section_t : public kaitai::kstruct {
+
+        public:
+
+            dynamic_section_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, elf_t* p__root = 0, int p_is_le = -1);
+
+        private:
+            int m__is_le;
+
+        public:
+
+        private:
+            void _read();
+
+        public:
+
+        private:
+            void _read_le();
+
+        public:
+
+        private:
+            void _read_be();
+
+        public:
+            ~dynamic_section_t();
+
+        private:
+            std::vector<dynamic_section_entry_t*>* m_entries;
+            elf_t* m__root;
+            kaitai::kstruct* m__parent;
+
+        public:
+            std::vector<dynamic_section_entry_t*>* entries() const { return m_entries; }
+            elf_t* _root() const { return m__root; }
+            kaitai::kstruct* _parent() const { return m__parent; }
         };
 
         class strings_struct_t : public kaitai::kstruct {
 
         public:
 
-            strings_struct_t(kaitai::kstream* p__io, elf_t::endian_elf_t* p__parent = 0, elf_t* p__root = 0, int p_is_le = -1);
+            strings_struct_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, elf_t* p__root = 0, int p_is_le = -1);
 
         private:
             int m__is_le;
@@ -398,12 +1204,12 @@ public:
         private:
             std::vector<std::string>* m_entries;
             elf_t* m__root;
-            elf_t::endian_elf_t* m__parent;
+            kaitai::kstruct* m__parent;
 
         public:
             std::vector<std::string>* entries() const { return m_entries; }
             elf_t* _root() const { return m__root; }
-            elf_t::endian_elf_t* _parent() const { return m__parent; }
+            kaitai::kstruct* _parent() const { return m__parent; }
         };
 
     private:

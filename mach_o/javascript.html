@@ -234,6 +234,92 @@ var data = new MachO(new KaitaiStream(arrayBuffer));</code></pre>
   }
 }(this, function (KaitaiStream) {
 var MachO = (function() {
+  MachO.MagicType = Object.freeze({
+    FAT_LE: 3199925962,
+    FAT_BE: 3405691582,
+    MACHO_LE_X86: 3472551422,
+    MACHO_LE_X64: 3489328638,
+    MACHO_BE_X86: 4277009102,
+    MACHO_BE_X64: 4277009103,
+
+    3199925962: &quot;FAT_LE&quot;,
+    3405691582: &quot;FAT_BE&quot;,
+    3472551422: &quot;MACHO_LE_X86&quot;,
+    3489328638: &quot;MACHO_LE_X64&quot;,
+    4277009102: &quot;MACHO_BE_X86&quot;,
+    4277009103: &quot;MACHO_BE_X64&quot;,
+  });
+
+  MachO.CpuType = Object.freeze({
+    VAX: 1,
+    ROMP: 2,
+    NS32032: 4,
+    NS32332: 5,
+    I386: 7,
+    MIPS: 8,
+    NS32532: 9,
+    HPPA: 11,
+    ARM: 12,
+    MC88000: 13,
+    SPARC: 14,
+    I860: 15,
+    I860_LITTLE: 16,
+    RS6000: 17,
+    POWERPC: 18,
+    ABI64: 16777216,
+    X86_64: 16777223,
+    ARM64: 16777228,
+    POWERPC64: 16777234,
+    ANY: 4294967295,
+
+    1: &quot;VAX&quot;,
+    2: &quot;ROMP&quot;,
+    4: &quot;NS32032&quot;,
+    5: &quot;NS32332&quot;,
+    7: &quot;I386&quot;,
+    8: &quot;MIPS&quot;,
+    9: &quot;NS32532&quot;,
+    11: &quot;HPPA&quot;,
+    12: &quot;ARM&quot;,
+    13: &quot;MC88000&quot;,
+    14: &quot;SPARC&quot;,
+    15: &quot;I860&quot;,
+    16: &quot;I860_LITTLE&quot;,
+    17: &quot;RS6000&quot;,
+    18: &quot;POWERPC&quot;,
+    16777216: &quot;ABI64&quot;,
+    16777223: &quot;X86_64&quot;,
+    16777228: &quot;ARM64&quot;,
+    16777234: &quot;POWERPC64&quot;,
+    4294967295: &quot;ANY&quot;,
+  });
+
+  MachO.FileType = Object.freeze({
+    OBJECT: 1,
+    EXECUTE: 2,
+    FVMLIB: 3,
+    CORE: 4,
+    PRELOAD: 5,
+    DYLIB: 6,
+    DYLINKER: 7,
+    BUNDLE: 8,
+    DYLIB_STUB: 9,
+    DSYM: 10,
+    KEXT_BUNDLE: 11,
+
+    1: &quot;OBJECT&quot;,
+    2: &quot;EXECUTE&quot;,
+    3: &quot;FVMLIB&quot;,
+    4: &quot;CORE&quot;,
+    5: &quot;PRELOAD&quot;,
+    6: &quot;DYLIB&quot;,
+    7: &quot;DYLINKER&quot;,
+    8: &quot;BUNDLE&quot;,
+    9: &quot;DYLIB_STUB&quot;,
+    10: &quot;DSYM&quot;,
+    11: &quot;KEXT_BUNDLE&quot;,
+  });
+
   MachO.LoadCommandType = Object.freeze({
     SEGMENT: 1,
     SYMTAB: 2,
@@ -336,148 +422,6 @@ var MachO = (function() {
     2147483682: &quot;DYLD_INFO_ONLY&quot;,
     2147483683: &quot;LOAD_UPWARD_DYLIB&quot;,
     2147483688: &quot;MAIN&quot;,
-  });
-
-  MachO.MachoFlags = Object.freeze({
-    NO_UNDEFS: 1,
-    INCR_LINK: 2,
-    DYLD_LINK: 4,
-    BIND_AT_LOAD: 8,
-    PREBOUND: 16,
-    SPLIT_SEGS: 32,
-    LAZY_INIT: 64,
-    TWO_LEVEL: 128,
-    FORCE_FLAT: 256,
-    NO_MULTI_DEFS: 512,
-    NO_FIX_PREBINDING: 1024,
-    PREBINDABLE: 2048,
-    ALL_MODS_BOUND: 4096,
-    SUBSECTIONS_VIA_SYMBOLS: 8192,
-    CANONICAL: 16384,
-    WEAK_DEFINES: 32768,
-    BINDS_TO_WEAK: 65536,
-    ALLOW_STACK_EXECUTION: 131072,
-    ROOT_SAFE: 262144,
-    SETUID_SAFE: 524288,
-    NO_REEXPORTED_DYLIBS: 1048576,
-    PIE: 2097152,
-    DEAD_STRIPPABLE_DYLIB: 4194304,
-    HAS_TLV_DESCRIPTORS: 8388608,
-    NO_HEAP_EXECUTION: 16777216,
-    APP_EXTENSION_SAFE: 33554432,
-
-    1: &quot;NO_UNDEFS&quot;,
-    2: &quot;INCR_LINK&quot;,
-    4: &quot;DYLD_LINK&quot;,
-    8: &quot;BIND_AT_LOAD&quot;,
-    16: &quot;PREBOUND&quot;,
-    32: &quot;SPLIT_SEGS&quot;,
-    64: &quot;LAZY_INIT&quot;,
-    128: &quot;TWO_LEVEL&quot;,
-    256: &quot;FORCE_FLAT&quot;,
-    512: &quot;NO_MULTI_DEFS&quot;,
-    1024: &quot;NO_FIX_PREBINDING&quot;,
-    2048: &quot;PREBINDABLE&quot;,
-    4096: &quot;ALL_MODS_BOUND&quot;,
-    8192: &quot;SUBSECTIONS_VIA_SYMBOLS&quot;,
-    16384: &quot;CANONICAL&quot;,
-    32768: &quot;WEAK_DEFINES&quot;,
-    65536: &quot;BINDS_TO_WEAK&quot;,
-    131072: &quot;ALLOW_STACK_EXECUTION&quot;,
-    262144: &quot;ROOT_SAFE&quot;,
-    524288: &quot;SETUID_SAFE&quot;,
-    1048576: &quot;NO_REEXPORTED_DYLIBS&quot;,
-    2097152: &quot;PIE&quot;,
-    4194304: &quot;DEAD_STRIPPABLE_DYLIB&quot;,
-    8388608: &quot;HAS_TLV_DESCRIPTORS&quot;,
-    16777216: &quot;NO_HEAP_EXECUTION&quot;,
-    33554432: &quot;APP_EXTENSION_SAFE&quot;,
-  });
-
-  MachO.MagicType = Object.freeze({
-    FAT_LE: 3199925962,
-    FAT_BE: 3405691582,
-    MACHO_LE_X86: 3472551422,
-    MACHO_LE_X64: 3489328638,
-    MACHO_BE_X86: 4277009102,
-    MACHO_BE_X64: 4277009103,
-
-    3199925962: &quot;FAT_LE&quot;,
-    3405691582: &quot;FAT_BE&quot;,
-    3472551422: &quot;MACHO_LE_X86&quot;,
-    3489328638: &quot;MACHO_LE_X64&quot;,
-    4277009102: &quot;MACHO_BE_X86&quot;,
-    4277009103: &quot;MACHO_BE_X64&quot;,
-  });
-
-  MachO.FileType = Object.freeze({
-    OBJECT: 1,
-    EXECUTE: 2,
-    FVMLIB: 3,
-    CORE: 4,
-    PRELOAD: 5,
-    DYLIB: 6,
-    DYLINKER: 7,
-    BUNDLE: 8,
-    DYLIB_STUB: 9,
-    DSYM: 10,
-    KEXT_BUNDLE: 11,
-
-    1: &quot;OBJECT&quot;,
-    2: &quot;EXECUTE&quot;,
-    3: &quot;FVMLIB&quot;,
-    4: &quot;CORE&quot;,
-    5: &quot;PRELOAD&quot;,
-    6: &quot;DYLIB&quot;,
-    7: &quot;DYLINKER&quot;,
-    8: &quot;BUNDLE&quot;,
-    9: &quot;DYLIB_STUB&quot;,
-    10: &quot;DSYM&quot;,
-    11: &quot;KEXT_BUNDLE&quot;,
-  });
-
-  MachO.CpuType = Object.freeze({
-    VAX: 1,
-    ROMP: 2,
-    NS32032: 4,
-    NS32332: 5,
-    I386: 7,
-    MIPS: 8,
-    NS32532: 9,
-    HPPA: 11,
-    ARM: 12,
-    MC88000: 13,
-    SPARC: 14,
-    I860: 15,
-    I860_LITTLE: 16,
-    RS6000: 17,
-    POWERPC: 18,
-    ABI64: 16777216,
-    X86_64: 16777223,
-    ARM64: 16777228,
-    POWERPC64: 16777234,
-    ANY: 4294967295,
-
-    1: &quot;VAX&quot;,
-    2: &quot;ROMP&quot;,
-    4: &quot;NS32032&quot;,
-    5: &quot;NS32332&quot;,
-    7: &quot;I386&quot;,
-    8: &quot;MIPS&quot;,
-    9: &quot;NS32532&quot;,
-    11: &quot;HPPA&quot;,
-    12: &quot;ARM&quot;,
-    13: &quot;MC88000&quot;,
-    14: &quot;SPARC&quot;,
-    15: &quot;I860&quot;,
-    16: &quot;I860_LITTLE&quot;,
-    17: &quot;RS6000&quot;,
-    18: &quot;POWERPC&quot;,
-    16777216: &quot;ABI64&quot;,
-    16777223: &quot;X86_64&quot;,
-    16777228: &quot;ARM64&quot;,
-    16777234: &quot;POWERPC64&quot;,
-    4294967295: &quot;ANY&quot;,
   });
 
   function MachO(_io, _parent, _root) {
@@ -1234,6 +1178,317 @@ var MachO = (function() {
     return RoutinesCommand;
   })();
 
+  var MachoFlags = MachO.MachoFlags = (function() {
+    function MachoFlags(_io, _parent, _root, value) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+      this.value = value;
+
+      this._read();
+    }
+    MachoFlags.prototype._read = function() {
+    }
+
+    /**
+     * safe to divide up the sections into sub-sections via symbols for dead code stripping
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;subsectionsViaSymbols&#39;, {
+      get: function() {
+        if (this._m_subsectionsViaSymbols !== undefined)
+          return this._m_subsectionsViaSymbols;
+        this._m_subsectionsViaSymbols = (this.value &amp; 8192) != 0;
+        return this._m_subsectionsViaSymbols;
+      }
+    });
+    Object.defineProperty(MachoFlags.prototype, &#39;deadStrippableDylib&#39;, {
+      get: function() {
+        if (this._m_deadStrippableDylib !== undefined)
+          return this._m_deadStrippableDylib;
+        this._m_deadStrippableDylib = (this.value &amp; 4194304) != 0;
+        return this._m_deadStrippableDylib;
+      }
+    });
+
+    /**
+     * the final linked image contains external weak symbols
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;weakDefines&#39;, {
+      get: function() {
+        if (this._m_weakDefines !== undefined)
+          return this._m_weakDefines;
+        this._m_weakDefines = (this.value &amp; 32768) != 0;
+        return this._m_weakDefines;
+      }
+    });
+
+    /**
+     * the file has its dynamic undefined references prebound.
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;prebound&#39;, {
+      get: function() {
+        if (this._m_prebound !== undefined)
+          return this._m_prebound;
+        this._m_prebound = (this.value &amp; 16) != 0;
+        return this._m_prebound;
+      }
+    });
+
+    /**
+     * indicates that this binary binds to all two-level namespace modules of its dependent libraries. only used when MH_PREBINDABLE and MH_TWOLEVEL are both set.
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;allModsBound&#39;, {
+      get: function() {
+        if (this._m_allModsBound !== undefined)
+          return this._m_allModsBound;
+        this._m_allModsBound = (this.value &amp; 4096) != 0;
+        return this._m_allModsBound;
+      }
+    });
+    Object.defineProperty(MachoFlags.prototype, &#39;hasTlvDescriptors&#39;, {
+      get: function() {
+        if (this._m_hasTlvDescriptors !== undefined)
+          return this._m_hasTlvDescriptors;
+        this._m_hasTlvDescriptors = (this.value &amp; 8388608) != 0;
+        return this._m_hasTlvDescriptors;
+      }
+    });
+
+    /**
+     * the executable is forcing all images to use flat name space bindings
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;forceFlat&#39;, {
+      get: function() {
+        if (this._m_forceFlat !== undefined)
+          return this._m_forceFlat;
+        this._m_forceFlat = (this.value &amp; 256) != 0;
+        return this._m_forceFlat;
+      }
+    });
+
+    /**
+     * When this bit is set, the binary declares it is safe for use in processes with uid zero
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;rootSafe&#39;, {
+      get: function() {
+        if (this._m_rootSafe !== undefined)
+          return this._m_rootSafe;
+        this._m_rootSafe = (this.value &amp; 262144) != 0;
+        return this._m_rootSafe;
+      }
+    });
+
+    /**
+     * the object file has no undefined references
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;noUndefs&#39;, {
+      get: function() {
+        if (this._m_noUndefs !== undefined)
+          return this._m_noUndefs;
+        this._m_noUndefs = (this.value &amp; 1) != 0;
+        return this._m_noUndefs;
+      }
+    });
+
+    /**
+     * When this bit is set, the binary declares it is safe for use in processes when issetugid() is true
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;setuidSafe&#39;, {
+      get: function() {
+        if (this._m_setuidSafe !== undefined)
+          return this._m_setuidSafe;
+        this._m_setuidSafe = (this.value &amp; 524288) != 0;
+        return this._m_setuidSafe;
+      }
+    });
+    Object.defineProperty(MachoFlags.prototype, &#39;noHeapExecution&#39;, {
+      get: function() {
+        if (this._m_noHeapExecution !== undefined)
+          return this._m_noHeapExecution;
+        this._m_noHeapExecution = (this.value &amp; 16777216) != 0;
+        return this._m_noHeapExecution;
+      }
+    });
+
+    /**
+     * When this bit is set on a dylib, the static linker does not need to examine dependent dylibs to see if any are re-exported
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;noReexportedDylibs&#39;, {
+      get: function() {
+        if (this._m_noReexportedDylibs !== undefined)
+          return this._m_noReexportedDylibs;
+        this._m_noReexportedDylibs = (this.value &amp; 1048576) != 0;
+        return this._m_noReexportedDylibs;
+      }
+    });
+
+    /**
+     * this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;noMultiDefs&#39;, {
+      get: function() {
+        if (this._m_noMultiDefs !== undefined)
+          return this._m_noMultiDefs;
+        this._m_noMultiDefs = (this.value &amp; 512) != 0;
+        return this._m_noMultiDefs;
+      }
+    });
+    Object.defineProperty(MachoFlags.prototype, &#39;appExtensionSafe&#39;, {
+      get: function() {
+        if (this._m_appExtensionSafe !== undefined)
+          return this._m_appExtensionSafe;
+        this._m_appExtensionSafe = (this.value &amp; 33554432) != 0;
+        return this._m_appExtensionSafe;
+      }
+    });
+
+    /**
+     * the binary is not prebound but can have its prebinding redone. only used when MH_PREBOUND is not set.
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;prebindable&#39;, {
+      get: function() {
+        if (this._m_prebindable !== undefined)
+          return this._m_prebindable;
+        this._m_prebindable = (this.value &amp; 2048) != 0;
+        return this._m_prebindable;
+      }
+    });
+
+    /**
+     * the object file is the output of an incremental link against a base file and can&#39;t be link edited again
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;incrLink&#39;, {
+      get: function() {
+        if (this._m_incrLink !== undefined)
+          return this._m_incrLink;
+        this._m_incrLink = (this.value &amp; 2) != 0;
+        return this._m_incrLink;
+      }
+    });
+
+    /**
+     * the object file&#39;s undefined references are bound by the dynamic linker when loaded.
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;bindAtLoad&#39;, {
+      get: function() {
+        if (this._m_bindAtLoad !== undefined)
+          return this._m_bindAtLoad;
+        this._m_bindAtLoad = (this.value &amp; 8) != 0;
+        return this._m_bindAtLoad;
+      }
+    });
+
+    /**
+     * the binary has been canonicalized via the unprebind operation
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;canonical&#39;, {
+      get: function() {
+        if (this._m_canonical !== undefined)
+          return this._m_canonical;
+        this._m_canonical = (this.value &amp; 16384) != 0;
+        return this._m_canonical;
+      }
+    });
+
+    /**
+     * the image is using two-level name space bindings
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;twoLevel&#39;, {
+      get: function() {
+        if (this._m_twoLevel !== undefined)
+          return this._m_twoLevel;
+        this._m_twoLevel = (this.value &amp; 128) != 0;
+        return this._m_twoLevel;
+      }
+    });
+
+    /**
+     * the file has its read-only and read-write segments split
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;splitSegs&#39;, {
+      get: function() {
+        if (this._m_splitSegs !== undefined)
+          return this._m_splitSegs;
+        this._m_splitSegs = (this.value &amp; 32) != 0;
+        return this._m_splitSegs;
+      }
+    });
+
+    /**
+     * the shared library init routine is to be run lazily via catching memory faults to its writeable segments (obsolete)
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;lazyInit&#39;, {
+      get: function() {
+        if (this._m_lazyInit !== undefined)
+          return this._m_lazyInit;
+        this._m_lazyInit = (this.value &amp; 64) != 0;
+        return this._m_lazyInit;
+      }
+    });
+
+    /**
+     * When this bit is set, all stacks in the task will be given stack execution privilege.  Only used in MH_EXECUTE filetypes.
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;allowStackExecution&#39;, {
+      get: function() {
+        if (this._m_allowStackExecution !== undefined)
+          return this._m_allowStackExecution;
+        this._m_allowStackExecution = (this.value &amp; 131072) != 0;
+        return this._m_allowStackExecution;
+      }
+    });
+
+    /**
+     * the final linked image uses weak symbols
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;bindsToWeak&#39;, {
+      get: function() {
+        if (this._m_bindsToWeak !== undefined)
+          return this._m_bindsToWeak;
+        this._m_bindsToWeak = (this.value &amp; 65536) != 0;
+        return this._m_bindsToWeak;
+      }
+    });
+
+    /**
+     * do not have dyld notify the prebinding agent about this executable
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;noFixPrebinding&#39;, {
+      get: function() {
+        if (this._m_noFixPrebinding !== undefined)
+          return this._m_noFixPrebinding;
+        this._m_noFixPrebinding = (this.value &amp; 1024) != 0;
+        return this._m_noFixPrebinding;
+      }
+    });
+
+    /**
+     * the object file is input for the dynamic linker and can&#39;t be staticly link edited again
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;dyldLink&#39;, {
+      get: function() {
+        if (this._m_dyldLink !== undefined)
+          return this._m_dyldLink;
+        this._m_dyldLink = (this.value &amp; 4) != 0;
+        return this._m_dyldLink;
+      }
+    });
+
+    /**
+     * When this bit is set, the OS will load the main executable at a random address. Only used in MH_EXECUTE filetypes.
+     */
+    Object.defineProperty(MachoFlags.prototype, &#39;pie&#39;, {
+      get: function() {
+        if (this._m_pie !== undefined)
+          return this._m_pie;
+        this._m_pie = (this.value &amp; 2097152) != 0;
+        return this._m_pie;
+      }
+    });
+
+    return MachoFlags;
+  })();
+
   var RoutinesCommand64 = MachO.RoutinesCommand64 = (function() {
     function RoutinesCommand64(_io, _parent, _root) {
       this._io = _io;
@@ -1736,6 +1991,14 @@ var MachO = (function() {
         this.reserved = this._io.readU4le();
       }
     }
+    Object.defineProperty(MachHeader.prototype, &#39;flagsObj&#39;, {
+      get: function() {
+        if (this._m_flagsObj !== undefined)
+          return this._m_flagsObj;
+        this._m_flagsObj = new MachoFlags(this._io, this, this._root, this.flags);
+        return this._m_flagsObj;
+      }
+    });
 
     return MachHeader;
   })();
