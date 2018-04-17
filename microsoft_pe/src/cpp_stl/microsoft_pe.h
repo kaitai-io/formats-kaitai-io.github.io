@@ -23,6 +23,7 @@ public:
     class optional_header_data_dirs_t;
     class data_dir_t;
     class coff_symbol_t;
+    class pe_header_t;
     class optional_header_t;
     class section_t;
     class mz_placeholder_t;
@@ -318,11 +319,44 @@ public:
         kaitai::kstream* _io__raw_name_annoying() const { return m__io__raw_name_annoying; }
     };
 
+    class pe_header_t : public kaitai::kstruct {
+
+    public:
+
+        pe_header_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~pe_header_t();
+
+    private:
+        std::string m_pe_signature;
+        coff_header_t* m_coff_hdr;
+        optional_header_t* m_optional_hdr;
+        std::vector<section_t*>* m_sections;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t* m__parent;
+        std::string m__raw_optional_hdr;
+        kaitai::kstream* m__io__raw_optional_hdr;
+
+    public:
+        std::string pe_signature() const { return m_pe_signature; }
+        coff_header_t* coff_hdr() const { return m_coff_hdr; }
+        optional_header_t* optional_hdr() const { return m_optional_hdr; }
+        std::vector<section_t*>* sections() const { return m_sections; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t* _parent() const { return m__parent; }
+        std::string _raw_optional_hdr() const { return m__raw_optional_hdr; }
+        kaitai::kstream* _io__raw_optional_hdr() const { return m__io__raw_optional_hdr; }
+    };
+
     class optional_header_t : public kaitai::kstruct {
 
     public:
 
-        optional_header_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+        optional_header_t(kaitai::kstream* p__io, microsoft_pe_t::pe_header_t* p__parent = 0, microsoft_pe_t* p__root = 0);
 
     private:
         void _read();
@@ -335,21 +369,21 @@ public:
         optional_header_windows_t* m_windows;
         optional_header_data_dirs_t* m_data_dirs;
         microsoft_pe_t* m__root;
-        microsoft_pe_t* m__parent;
+        microsoft_pe_t::pe_header_t* m__parent;
 
     public:
         optional_header_std_t* std() const { return m_std; }
         optional_header_windows_t* windows() const { return m_windows; }
         optional_header_data_dirs_t* data_dirs() const { return m_data_dirs; }
         microsoft_pe_t* _root() const { return m__root; }
-        microsoft_pe_t* _parent() const { return m__parent; }
+        microsoft_pe_t::pe_header_t* _parent() const { return m__parent; }
     };
 
     class section_t : public kaitai::kstruct {
 
     public:
 
-        section_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+        section_t(kaitai::kstream* p__io, microsoft_pe_t::pe_header_t* p__parent = 0, microsoft_pe_t* p__root = 0);
 
     private:
         void _read();
@@ -376,7 +410,7 @@ public:
         uint16_t m_number_of_linenumbers;
         uint32_t m_characteristics;
         microsoft_pe_t* m__root;
-        microsoft_pe_t* m__parent;
+        microsoft_pe_t::pe_header_t* m__parent;
 
     public:
         std::string name() const { return m_name; }
@@ -390,7 +424,7 @@ public:
         uint16_t number_of_linenumbers() const { return m_number_of_linenumbers; }
         uint32_t characteristics() const { return m_characteristics; }
         microsoft_pe_t* _root() const { return m__root; }
-        microsoft_pe_t* _parent() const { return m__parent; }
+        microsoft_pe_t::pe_header_t* _parent() const { return m__parent; }
     };
 
     class mz_placeholder_t : public kaitai::kstruct {
@@ -408,14 +442,18 @@ public:
     private:
         std::string m_magic;
         std::string m_data1;
-        uint32_t m_header_size;
+        uint32_t m_ofs_pe;
         microsoft_pe_t* m__root;
         microsoft_pe_t* m__parent;
 
     public:
         std::string magic() const { return m_magic; }
         std::string data1() const { return m_data1; }
-        uint32_t header_size() const { return m_header_size; }
+
+        /**
+         * In PE file, an offset to PE header
+         */
+        uint32_t ofs_pe() const { return m_ofs_pe; }
         microsoft_pe_t* _root() const { return m__root; }
         microsoft_pe_t* _parent() const { return m__parent; }
     };
@@ -500,7 +538,7 @@ public:
             MACHINE_TYPE_M32R = 36929
         };
 
-        coff_header_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+        coff_header_t(kaitai::kstream* p__io, microsoft_pe_t::pe_header_t* p__parent = 0, microsoft_pe_t* p__root = 0);
 
     private:
         void _read();
@@ -545,7 +583,7 @@ public:
         uint16_t m_size_of_optional_header;
         uint16_t m_characteristics;
         microsoft_pe_t* m__root;
-        microsoft_pe_t* m__parent;
+        microsoft_pe_t::pe_header_t* m__parent;
 
     public:
         machine_type_t machine() const { return m_machine; }
@@ -556,7 +594,7 @@ public:
         uint16_t size_of_optional_header() const { return m_size_of_optional_header; }
         uint16_t characteristics() const { return m_characteristics; }
         microsoft_pe_t* _root() const { return m__root; }
-        microsoft_pe_t* _parent() const { return m__parent; }
+        microsoft_pe_t::pe_header_t* _parent() const { return m__parent; }
     };
 
     class annoyingstring_t : public kaitai::kstruct {
@@ -616,28 +654,21 @@ public:
     };
 
 private:
-    mz_placeholder_t* m_mz1;
-    std::string m_mz2;
-    std::string m_pe_signature;
-    coff_header_t* m_coff_hdr;
-    optional_header_t* m_optional_hdr;
-    std::vector<section_t*>* m_sections;
-    microsoft_pe_t* m__root;
-    kaitai::kstruct* m__parent;
-    std::string m__raw_optional_hdr;
-    kaitai::kstream* m__io__raw_optional_hdr;
+    bool f_pe;
+    pe_header_t* m_pe;
 
 public:
-    mz_placeholder_t* mz1() const { return m_mz1; }
-    std::string mz2() const { return m_mz2; }
-    std::string pe_signature() const { return m_pe_signature; }
-    coff_header_t* coff_hdr() const { return m_coff_hdr; }
-    optional_header_t* optional_hdr() const { return m_optional_hdr; }
-    std::vector<section_t*>* sections() const { return m_sections; }
+    pe_header_t* pe();
+
+private:
+    mz_placeholder_t* m_mz;
+    microsoft_pe_t* m__root;
+    kaitai::kstruct* m__parent;
+
+public:
+    mz_placeholder_t* mz() const { return m_mz; }
     microsoft_pe_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
-    std::string _raw_optional_hdr() const { return m__raw_optional_hdr; }
-    kaitai::kstream* _io__raw_optional_hdr() const { return m__io__raw_optional_hdr; }
 };
 
 #endif  // MICROSOFT_PE_H_

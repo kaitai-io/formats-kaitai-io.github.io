@@ -26,22 +26,12 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
+            f_pe = false;
             _read();
         }
         private void _read()
         {
-            _mz1 = new MzPlaceholder(m_io, this, m_root);
-            _mz2 = m_io.ReadBytes((Mz1.HeaderSize - 64));
-            _peSignature = m_io.EnsureFixedContents(new byte[] { 80, 69, 0, 0 });
-            _coffHdr = new CoffHeader(m_io, this, m_root);
-            __raw_optionalHdr = m_io.ReadBytes(CoffHdr.SizeOfOptionalHeader);
-            var io___raw_optionalHdr = new KaitaiStream(__raw_optionalHdr);
-            _optionalHdr = new OptionalHeader(io___raw_optionalHdr, this, m_root);
-            _sections = new List<Section>((int) (CoffHdr.NumberOfSections));
-            for (var i = 0; i < CoffHdr.NumberOfSections; i++)
-            {
-                _sections.Add(new Section(m_io, this, m_root));
-            }
+            _mz = new MzPlaceholder(m_io, this, m_root);
         }
         public partial class OptionalHeaderWindows : KaitaiStruct
         {
@@ -304,7 +294,7 @@ namespace Kaitai
                 {
                     if (f_section)
                         return _section;
-                    _section = (Section) (M_Root.Sections[(SectionNumber - 1)]);
+                    _section = (Section) (M_Root.Pe.Sections[(SectionNumber - 1)]);
                     f_section = true;
                     return _section;
                 }
@@ -344,6 +334,47 @@ namespace Kaitai
             public MicrosoftPe.CoffHeader M_Parent { get { return m_parent; } }
             public byte[] M_RawNameAnnoying { get { return __raw_nameAnnoying; } }
         }
+        public partial class PeHeader : KaitaiStruct
+        {
+            public static PeHeader FromFile(string fileName)
+            {
+                return new PeHeader(new KaitaiStream(fileName));
+            }
+
+            public PeHeader(KaitaiStream p__io, MicrosoftPe p__parent = null, MicrosoftPe p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _peSignature = m_io.EnsureFixedContents(new byte[] { 80, 69, 0, 0 });
+                _coffHdr = new CoffHeader(m_io, this, m_root);
+                __raw_optionalHdr = m_io.ReadBytes(CoffHdr.SizeOfOptionalHeader);
+                var io___raw_optionalHdr = new KaitaiStream(__raw_optionalHdr);
+                _optionalHdr = new OptionalHeader(io___raw_optionalHdr, this, m_root);
+                _sections = new List<Section>((int) (CoffHdr.NumberOfSections));
+                for (var i = 0; i < CoffHdr.NumberOfSections; i++)
+                {
+                    _sections.Add(new Section(m_io, this, m_root));
+                }
+            }
+            private byte[] _peSignature;
+            private CoffHeader _coffHdr;
+            private OptionalHeader _optionalHdr;
+            private List<Section> _sections;
+            private MicrosoftPe m_root;
+            private MicrosoftPe m_parent;
+            private byte[] __raw_optionalHdr;
+            public byte[] PeSignature { get { return _peSignature; } }
+            public CoffHeader CoffHdr { get { return _coffHdr; } }
+            public OptionalHeader OptionalHdr { get { return _optionalHdr; } }
+            public List<Section> Sections { get { return _sections; } }
+            public MicrosoftPe M_Root { get { return m_root; } }
+            public MicrosoftPe M_Parent { get { return m_parent; } }
+            public byte[] M_RawOptionalHdr { get { return __raw_optionalHdr; } }
+        }
         public partial class OptionalHeader : KaitaiStruct
         {
             public static OptionalHeader FromFile(string fileName)
@@ -351,7 +382,7 @@ namespace Kaitai
                 return new OptionalHeader(new KaitaiStream(fileName));
             }
 
-            public OptionalHeader(KaitaiStream p__io, MicrosoftPe p__parent = null, MicrosoftPe p__root = null) : base(p__io)
+            public OptionalHeader(KaitaiStream p__io, MicrosoftPe.PeHeader p__parent = null, MicrosoftPe p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -367,12 +398,12 @@ namespace Kaitai
             private OptionalHeaderWindows _windows;
             private OptionalHeaderDataDirs _dataDirs;
             private MicrosoftPe m_root;
-            private MicrosoftPe m_parent;
+            private MicrosoftPe.PeHeader m_parent;
             public OptionalHeaderStd Std { get { return _std; } }
             public OptionalHeaderWindows Windows { get { return _windows; } }
             public OptionalHeaderDataDirs DataDirs { get { return _dataDirs; } }
             public MicrosoftPe M_Root { get { return m_root; } }
-            public MicrosoftPe M_Parent { get { return m_parent; } }
+            public MicrosoftPe.PeHeader M_Parent { get { return m_parent; } }
         }
         public partial class Section : KaitaiStruct
         {
@@ -381,7 +412,7 @@ namespace Kaitai
                 return new Section(new KaitaiStream(fileName));
             }
 
-            public Section(KaitaiStream p__io, MicrosoftPe p__parent = null, MicrosoftPe p__root = null) : base(p__io)
+            public Section(KaitaiStream p__io, MicrosoftPe.PeHeader p__parent = null, MicrosoftPe p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -428,7 +459,7 @@ namespace Kaitai
             private ushort _numberOfLinenumbers;
             private uint _characteristics;
             private MicrosoftPe m_root;
-            private MicrosoftPe m_parent;
+            private MicrosoftPe.PeHeader m_parent;
             public string Name { get { return _name; } }
             public uint VirtualSize { get { return _virtualSize; } }
             public uint VirtualAddress { get { return _virtualAddress; } }
@@ -440,7 +471,7 @@ namespace Kaitai
             public ushort NumberOfLinenumbers { get { return _numberOfLinenumbers; } }
             public uint Characteristics { get { return _characteristics; } }
             public MicrosoftPe M_Root { get { return m_root; } }
-            public MicrosoftPe M_Parent { get { return m_parent; } }
+            public MicrosoftPe.PeHeader M_Parent { get { return m_parent; } }
         }
         public partial class MzPlaceholder : KaitaiStruct
         {
@@ -459,16 +490,20 @@ namespace Kaitai
             {
                 _magic = m_io.EnsureFixedContents(new byte[] { 77, 90 });
                 _data1 = m_io.ReadBytes(58);
-                _headerSize = m_io.ReadU4le();
+                _ofsPe = m_io.ReadU4le();
             }
             private byte[] _magic;
             private byte[] _data1;
-            private uint _headerSize;
+            private uint _ofsPe;
             private MicrosoftPe m_root;
             private MicrosoftPe m_parent;
             public byte[] Magic { get { return _magic; } }
             public byte[] Data1 { get { return _data1; } }
-            public uint HeaderSize { get { return _headerSize; } }
+
+            /// <summary>
+            /// In PE file, an offset to PE header
+            /// </summary>
+            public uint OfsPe { get { return _ofsPe; } }
             public MicrosoftPe M_Root { get { return m_root; } }
             public MicrosoftPe M_Parent { get { return m_parent; } }
         }
@@ -561,7 +596,7 @@ namespace Kaitai
                 Amd64 = 34404,
                 M32r = 36929,
             }
-            public CoffHeader(KaitaiStream p__io, MicrosoftPe p__parent = null, MicrosoftPe p__root = null) : base(p__io)
+            public CoffHeader(KaitaiStream p__io, MicrosoftPe.PeHeader p__parent = null, MicrosoftPe p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -651,7 +686,7 @@ namespace Kaitai
             private ushort _sizeOfOptionalHeader;
             private ushort _characteristics;
             private MicrosoftPe m_root;
-            private MicrosoftPe m_parent;
+            private MicrosoftPe.PeHeader m_parent;
             public MachineType Machine { get { return _machine; } }
             public ushort NumberOfSections { get { return _numberOfSections; } }
             public uint TimeDateStamp { get { return _timeDateStamp; } }
@@ -660,7 +695,7 @@ namespace Kaitai
             public ushort SizeOfOptionalHeader { get { return _sizeOfOptionalHeader; } }
             public ushort Characteristics { get { return _characteristics; } }
             public MicrosoftPe M_Root { get { return m_root; } }
-            public MicrosoftPe M_Parent { get { return m_parent; } }
+            public MicrosoftPe.PeHeader M_Parent { get { return m_parent; } }
         }
         public partial class Annoyingstring : KaitaiStruct
         {
@@ -766,23 +801,27 @@ namespace Kaitai
             public MicrosoftPe M_Root { get { return m_root; } }
             public MicrosoftPe.CoffSymbol M_Parent { get { return m_parent; } }
         }
-        private MzPlaceholder _mz1;
-        private byte[] _mz2;
-        private byte[] _peSignature;
-        private CoffHeader _coffHdr;
-        private OptionalHeader _optionalHdr;
-        private List<Section> _sections;
+        private bool f_pe;
+        private PeHeader _pe;
+        public PeHeader Pe
+        {
+            get
+            {
+                if (f_pe)
+                    return _pe;
+                long _pos = m_io.Pos;
+                m_io.Seek(Mz.OfsPe);
+                _pe = new PeHeader(m_io, this, m_root);
+                m_io.Seek(_pos);
+                f_pe = true;
+                return _pe;
+            }
+        }
+        private MzPlaceholder _mz;
         private MicrosoftPe m_root;
         private KaitaiStruct m_parent;
-        private byte[] __raw_optionalHdr;
-        public MzPlaceholder Mz1 { get { return _mz1; } }
-        public byte[] Mz2 { get { return _mz2; } }
-        public byte[] PeSignature { get { return _peSignature; } }
-        public CoffHeader CoffHdr { get { return _coffHdr; } }
-        public OptionalHeader OptionalHdr { get { return _optionalHdr; } }
-        public List<Section> Sections { get { return _sections; } }
+        public MzPlaceholder Mz { get { return _mz; } }
         public MicrosoftPe M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
-        public byte[] M_RawOptionalHdr { get { return __raw_optionalHdr; } }
     }
 }

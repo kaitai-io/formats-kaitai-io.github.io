@@ -230,33 +230,20 @@ class MicrosoftPe extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this-&gt;_m_mz1 = new \MicrosoftPe\MzPlaceholder($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_mz2 = $this-&gt;_io-&gt;readBytes(($this-&gt;mz1()-&gt;headerSize() - 64));
-        $this-&gt;_m_peSignature = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x50\x45\x00\x00&quot;);
-        $this-&gt;_m_coffHdr = new \MicrosoftPe\CoffHeader($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m__raw_optionalHdr = $this-&gt;_io-&gt;readBytes($this-&gt;coffHdr()-&gt;sizeOfOptionalHeader());
-        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_optionalHdr);
-        $this-&gt;_m_optionalHdr = new \MicrosoftPe\OptionalHeader($io, $this, $this-&gt;_root);
-        $this-&gt;_m_sections = [];
-        $n = $this-&gt;coffHdr()-&gt;numberOfSections();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_sections[] = new \MicrosoftPe\Section($this-&gt;_io, $this, $this-&gt;_root);
-        }
+        $this-&gt;_m_mz = new \MicrosoftPe\MzPlaceholder($this-&gt;_io, $this, $this-&gt;_root);
     }
-    protected $_m_mz1;
-    protected $_m_mz2;
-    protected $_m_peSignature;
-    protected $_m_coffHdr;
-    protected $_m_optionalHdr;
-    protected $_m_sections;
-    protected $_m__raw_optionalHdr;
-    public function mz1() { return $this-&gt;_m_mz1; }
-    public function mz2() { return $this-&gt;_m_mz2; }
-    public function peSignature() { return $this-&gt;_m_peSignature; }
-    public function coffHdr() { return $this-&gt;_m_coffHdr; }
-    public function optionalHdr() { return $this-&gt;_m_optionalHdr; }
-    public function sections() { return $this-&gt;_m_sections; }
-    public function _raw_optionalHdr() { return $this-&gt;_m__raw_optionalHdr; }
+    protected $_m_pe;
+    public function pe() {
+        if ($this-&gt;_m_pe !== null)
+            return $this-&gt;_m_pe;
+        $_pos = $this-&gt;_io-&gt;pos();
+        $this-&gt;_io-&gt;seek($this-&gt;mz()-&gt;ofsPe());
+        $this-&gt;_m_pe = new \MicrosoftPe\PeHeader($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_io-&gt;seek($_pos);
+        return $this-&gt;_m_pe;
+    }
+    protected $_m_mz;
+    public function mz() { return $this-&gt;_m_mz; }
 }
 
 namespace \MicrosoftPe;
@@ -482,7 +469,7 @@ class CoffSymbol extends \Kaitai\Struct\Struct {
     public function section() {
         if ($this-&gt;_m_section !== null)
             return $this-&gt;_m_section;
-        $this-&gt;_m_section = $this-&gt;_root()-&gt;sections()[($this-&gt;sectionNumber() - 1)];
+        $this-&gt;_m_section = $this-&gt;_root()-&gt;pe()-&gt;sections()[($this-&gt;sectionNumber() - 1)];
         return $this-&gt;_m_section;
     }
     protected $_m_data;
@@ -513,8 +500,40 @@ class CoffSymbol extends \Kaitai\Struct\Struct {
 
 namespace \MicrosoftPe;
 
-class OptionalHeader extends \Kaitai\Struct\Struct {
+class PeHeader extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe $_parent = null, \MicrosoftPe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_peSignature = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x50\x45\x00\x00&quot;);
+        $this-&gt;_m_coffHdr = new \MicrosoftPe\CoffHeader($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m__raw_optionalHdr = $this-&gt;_io-&gt;readBytes($this-&gt;coffHdr()-&gt;sizeOfOptionalHeader());
+        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_optionalHdr);
+        $this-&gt;_m_optionalHdr = new \MicrosoftPe\OptionalHeader($io, $this, $this-&gt;_root);
+        $this-&gt;_m_sections = [];
+        $n = $this-&gt;coffHdr()-&gt;numberOfSections();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_sections[] = new \MicrosoftPe\Section($this-&gt;_io, $this, $this-&gt;_root);
+        }
+    }
+    protected $_m_peSignature;
+    protected $_m_coffHdr;
+    protected $_m_optionalHdr;
+    protected $_m_sections;
+    protected $_m__raw_optionalHdr;
+    public function peSignature() { return $this-&gt;_m_peSignature; }
+    public function coffHdr() { return $this-&gt;_m_coffHdr; }
+    public function optionalHdr() { return $this-&gt;_m_optionalHdr; }
+    public function sections() { return $this-&gt;_m_sections; }
+    public function _raw_optionalHdr() { return $this-&gt;_m__raw_optionalHdr; }
+}
+
+namespace \MicrosoftPe;
+
+class OptionalHeader extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe\PeHeader $_parent = null, \MicrosoftPe $_root = null) {
         parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
@@ -535,7 +554,7 @@ class OptionalHeader extends \Kaitai\Struct\Struct {
 namespace \MicrosoftPe;
 
 class Section extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe $_parent = null, \MicrosoftPe $_root = null) {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe\PeHeader $_parent = null, \MicrosoftPe $_root = null) {
         parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
@@ -595,14 +614,18 @@ class MzPlaceholder extends \Kaitai\Struct\Struct {
     private function _read() {
         $this-&gt;_m_magic = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x4D\x5A&quot;);
         $this-&gt;_m_data1 = $this-&gt;_io-&gt;readBytes(58);
-        $this-&gt;_m_headerSize = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_ofsPe = $this-&gt;_io-&gt;readU4le();
     }
     protected $_m_magic;
     protected $_m_data1;
-    protected $_m_headerSize;
+    protected $_m_ofsPe;
     public function magic() { return $this-&gt;_m_magic; }
     public function data1() { return $this-&gt;_m_data1; }
-    public function headerSize() { return $this-&gt;_m_headerSize; }
+
+    /**
+     * In PE file, an offset to PE header
+     */
+    public function ofsPe() { return $this-&gt;_m_ofsPe; }
 }
 
 namespace \MicrosoftPe;
@@ -649,7 +672,7 @@ class OptionalHeaderStd extends \Kaitai\Struct\Struct {
 namespace \MicrosoftPe;
 
 class CoffHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe $_parent = null, \MicrosoftPe $_root = null) {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe\PeHeader $_parent = null, \MicrosoftPe $_root = null) {
         parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }

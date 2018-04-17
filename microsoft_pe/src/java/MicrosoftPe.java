@@ -49,17 +49,7 @@ public class MicrosoftPe extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.mz1 = new MzPlaceholder(this._io, this, _root);
-        this.mz2 = this._io.readBytes((mz1().headerSize() - 64));
-        this.peSignature = this._io.ensureFixedContents(new byte[] { 80, 69, 0, 0 });
-        this.coffHdr = new CoffHeader(this._io, this, _root);
-        this._raw_optionalHdr = this._io.readBytes(coffHdr().sizeOfOptionalHeader());
-        KaitaiStream _io__raw_optionalHdr = new ByteBufferKaitaiStream(_raw_optionalHdr);
-        this.optionalHdr = new OptionalHeader(_io__raw_optionalHdr, this, _root);
-        sections = new ArrayList<Section>((int) (coffHdr().numberOfSections()));
-        for (int i = 0; i < coffHdr().numberOfSections(); i++) {
-            this.sections.add(new Section(this._io, this, _root));
-        }
+        this.mz = new MzPlaceholder(this._io, this, _root);
     }
     public static class OptionalHeaderWindows extends KaitaiStruct {
         public static OptionalHeaderWindows fromFile(String fileName) throws IOException {
@@ -345,7 +335,7 @@ public class MicrosoftPe extends KaitaiStruct {
         public Section section() {
             if (this.section != null)
                 return this.section;
-            this.section = _root.sections().get((int) (sectionNumber() - 1));
+            this.section = _root.pe().sections().get((int) (sectionNumber() - 1));
             return this.section;
         }
         private byte[] data;
@@ -377,6 +367,51 @@ public class MicrosoftPe extends KaitaiStruct {
         public MicrosoftPe.CoffHeader _parent() { return _parent; }
         public byte[] _raw_nameAnnoying() { return _raw_nameAnnoying; }
     }
+    public static class PeHeader extends KaitaiStruct {
+        public static PeHeader fromFile(String fileName) throws IOException {
+            return new PeHeader(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PeHeader(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PeHeader(KaitaiStream _io, MicrosoftPe _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PeHeader(KaitaiStream _io, MicrosoftPe _parent, MicrosoftPe _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.peSignature = this._io.ensureFixedContents(new byte[] { 80, 69, 0, 0 });
+            this.coffHdr = new CoffHeader(this._io, this, _root);
+            this._raw_optionalHdr = this._io.readBytes(coffHdr().sizeOfOptionalHeader());
+            KaitaiStream _io__raw_optionalHdr = new ByteBufferKaitaiStream(_raw_optionalHdr);
+            this.optionalHdr = new OptionalHeader(_io__raw_optionalHdr, this, _root);
+            sections = new ArrayList<Section>((int) (coffHdr().numberOfSections()));
+            for (int i = 0; i < coffHdr().numberOfSections(); i++) {
+                this.sections.add(new Section(this._io, this, _root));
+            }
+        }
+        private byte[] peSignature;
+        private CoffHeader coffHdr;
+        private OptionalHeader optionalHdr;
+        private ArrayList<Section> sections;
+        private MicrosoftPe _root;
+        private MicrosoftPe _parent;
+        private byte[] _raw_optionalHdr;
+        public byte[] peSignature() { return peSignature; }
+        public CoffHeader coffHdr() { return coffHdr; }
+        public OptionalHeader optionalHdr() { return optionalHdr; }
+        public ArrayList<Section> sections() { return sections; }
+        public MicrosoftPe _root() { return _root; }
+        public MicrosoftPe _parent() { return _parent; }
+        public byte[] _raw_optionalHdr() { return _raw_optionalHdr; }
+    }
     public static class OptionalHeader extends KaitaiStruct {
         public static OptionalHeader fromFile(String fileName) throws IOException {
             return new OptionalHeader(new ByteBufferKaitaiStream(fileName));
@@ -386,11 +421,11 @@ public class MicrosoftPe extends KaitaiStruct {
             this(_io, null, null);
         }
 
-        public OptionalHeader(KaitaiStream _io, MicrosoftPe _parent) {
+        public OptionalHeader(KaitaiStream _io, MicrosoftPe.PeHeader _parent) {
             this(_io, _parent, null);
         }
 
-        public OptionalHeader(KaitaiStream _io, MicrosoftPe _parent, MicrosoftPe _root) {
+        public OptionalHeader(KaitaiStream _io, MicrosoftPe.PeHeader _parent, MicrosoftPe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -405,12 +440,12 @@ public class MicrosoftPe extends KaitaiStruct {
         private OptionalHeaderWindows windows;
         private OptionalHeaderDataDirs dataDirs;
         private MicrosoftPe _root;
-        private MicrosoftPe _parent;
+        private MicrosoftPe.PeHeader _parent;
         public OptionalHeaderStd std() { return std; }
         public OptionalHeaderWindows windows() { return windows; }
         public OptionalHeaderDataDirs dataDirs() { return dataDirs; }
         public MicrosoftPe _root() { return _root; }
-        public MicrosoftPe _parent() { return _parent; }
+        public MicrosoftPe.PeHeader _parent() { return _parent; }
     }
     public static class Section extends KaitaiStruct {
         public static Section fromFile(String fileName) throws IOException {
@@ -421,11 +456,11 @@ public class MicrosoftPe extends KaitaiStruct {
             this(_io, null, null);
         }
 
-        public Section(KaitaiStream _io, MicrosoftPe _parent) {
+        public Section(KaitaiStream _io, MicrosoftPe.PeHeader _parent) {
             this(_io, _parent, null);
         }
 
-        public Section(KaitaiStream _io, MicrosoftPe _parent, MicrosoftPe _root) {
+        public Section(KaitaiStream _io, MicrosoftPe.PeHeader _parent, MicrosoftPe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -464,7 +499,7 @@ public class MicrosoftPe extends KaitaiStruct {
         private int numberOfLinenumbers;
         private long characteristics;
         private MicrosoftPe _root;
-        private MicrosoftPe _parent;
+        private MicrosoftPe.PeHeader _parent;
         public String name() { return name; }
         public long virtualSize() { return virtualSize; }
         public long virtualAddress() { return virtualAddress; }
@@ -476,7 +511,7 @@ public class MicrosoftPe extends KaitaiStruct {
         public int numberOfLinenumbers() { return numberOfLinenumbers; }
         public long characteristics() { return characteristics; }
         public MicrosoftPe _root() { return _root; }
-        public MicrosoftPe _parent() { return _parent; }
+        public MicrosoftPe.PeHeader _parent() { return _parent; }
     }
     public static class MzPlaceholder extends KaitaiStruct {
         public static MzPlaceholder fromFile(String fileName) throws IOException {
@@ -500,16 +535,20 @@ public class MicrosoftPe extends KaitaiStruct {
         private void _read() {
             this.magic = this._io.ensureFixedContents(new byte[] { 77, 90 });
             this.data1 = this._io.readBytes(58);
-            this.headerSize = this._io.readU4le();
+            this.ofsPe = this._io.readU4le();
         }
         private byte[] magic;
         private byte[] data1;
-        private long headerSize;
+        private long ofsPe;
         private MicrosoftPe _root;
         private MicrosoftPe _parent;
         public byte[] magic() { return magic; }
         public byte[] data1() { return data1; }
-        public long headerSize() { return headerSize; }
+
+        /**
+         * In PE file, an offset to PE header
+         */
+        public long ofsPe() { return ofsPe; }
         public MicrosoftPe _root() { return _root; }
         public MicrosoftPe _parent() { return _parent; }
     }
@@ -618,11 +657,11 @@ public class MicrosoftPe extends KaitaiStruct {
             this(_io, null, null);
         }
 
-        public CoffHeader(KaitaiStream _io, MicrosoftPe _parent) {
+        public CoffHeader(KaitaiStream _io, MicrosoftPe.PeHeader _parent) {
             this(_io, _parent, null);
         }
 
-        public CoffHeader(KaitaiStream _io, MicrosoftPe _parent, MicrosoftPe _root) {
+        public CoffHeader(KaitaiStream _io, MicrosoftPe.PeHeader _parent, MicrosoftPe _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -684,7 +723,7 @@ public class MicrosoftPe extends KaitaiStruct {
         private int sizeOfOptionalHeader;
         private int characteristics;
         private MicrosoftPe _root;
-        private MicrosoftPe _parent;
+        private MicrosoftPe.PeHeader _parent;
         public MachineType machine() { return machine; }
         public int numberOfSections() { return numberOfSections; }
         public long timeDateStamp() { return timeDateStamp; }
@@ -693,7 +732,7 @@ public class MicrosoftPe extends KaitaiStruct {
         public int sizeOfOptionalHeader() { return sizeOfOptionalHeader; }
         public int characteristics() { return characteristics; }
         public MicrosoftPe _root() { return _root; }
-        public MicrosoftPe _parent() { return _parent; }
+        public MicrosoftPe.PeHeader _parent() { return _parent; }
     }
     public static class Annoyingstring extends KaitaiStruct {
         public static Annoyingstring fromFile(String fileName) throws IOException {
@@ -769,22 +808,20 @@ public class MicrosoftPe extends KaitaiStruct {
         public MicrosoftPe _root() { return _root; }
         public MicrosoftPe.CoffSymbol _parent() { return _parent; }
     }
-    private MzPlaceholder mz1;
-    private byte[] mz2;
-    private byte[] peSignature;
-    private CoffHeader coffHdr;
-    private OptionalHeader optionalHdr;
-    private ArrayList<Section> sections;
+    private PeHeader pe;
+    public PeHeader pe() {
+        if (this.pe != null)
+            return this.pe;
+        long _pos = this._io.pos();
+        this._io.seek(mz().ofsPe());
+        this.pe = new PeHeader(this._io, this, _root);
+        this._io.seek(_pos);
+        return this.pe;
+    }
+    private MzPlaceholder mz;
     private MicrosoftPe _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_optionalHdr;
-    public MzPlaceholder mz1() { return mz1; }
-    public byte[] mz2() { return mz2; }
-    public byte[] peSignature() { return peSignature; }
-    public CoffHeader coffHdr() { return coffHdr; }
-    public OptionalHeader optionalHdr() { return optionalHdr; }
-    public ArrayList<Section> sections() { return sections; }
+    public MzPlaceholder mz() { return mz; }
     public MicrosoftPe _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_optionalHdr() { return _raw_optionalHdr; }
 }

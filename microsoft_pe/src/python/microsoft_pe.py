@@ -25,17 +25,7 @@ class MicrosoftPe(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.mz1 = self._root.MzPlaceholder(self._io, self, self._root)
-        self.mz2 = self._io.read_bytes((self.mz1.header_size - 64))
-        self.pe_signature = self._io.ensure_fixed_contents(b"\x50\x45\x00\x00")
-        self.coff_hdr = self._root.CoffHeader(self._io, self, self._root)
-        self._raw_optional_hdr = self._io.read_bytes(self.coff_hdr.size_of_optional_header)
-        io = KaitaiStream(BytesIO(self._raw_optional_hdr))
-        self.optional_hdr = self._root.OptionalHeader(io, self, self._root)
-        self.sections = [None] * (self.coff_hdr.number_of_sections)
-        for i in range(self.coff_hdr.number_of_sections):
-            self.sections[i] = self._root.Section(self._io, self, self._root)
-
+        self.mz = self._root.MzPlaceholder(self._io, self, self._root)
 
     class OptionalHeaderWindows(KaitaiStruct):
 
@@ -165,7 +155,7 @@ class MicrosoftPe(KaitaiStruct):
             if hasattr(self, '_m_section'):
                 return self._m_section if hasattr(self, '_m_section') else None
 
-            self._m_section = self._root.sections[(self.section_number - 1)]
+            self._m_section = self._root.pe.sections[(self.section_number - 1)]
             return self._m_section if hasattr(self, '_m_section') else None
 
         @property
@@ -178,6 +168,25 @@ class MicrosoftPe(KaitaiStruct):
             self._m_data = self._io.read_bytes(1)
             self._io.seek(_pos)
             return self._m_data if hasattr(self, '_m_data') else None
+
+
+    class PeHeader(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.pe_signature = self._io.ensure_fixed_contents(b"\x50\x45\x00\x00")
+            self.coff_hdr = self._root.CoffHeader(self._io, self, self._root)
+            self._raw_optional_hdr = self._io.read_bytes(self.coff_hdr.size_of_optional_header)
+            io = KaitaiStream(BytesIO(self._raw_optional_hdr))
+            self.optional_hdr = self._root.OptionalHeader(io, self, self._root)
+            self.sections = [None] * (self.coff_hdr.number_of_sections)
+            for i in range(self.coff_hdr.number_of_sections):
+                self.sections[i] = self._root.Section(self._io, self, self._root)
+
 
 
     class OptionalHeader(KaitaiStruct):
@@ -234,7 +243,7 @@ class MicrosoftPe(KaitaiStruct):
         def _read(self):
             self.magic = self._io.ensure_fixed_contents(b"\x4D\x5A")
             self.data1 = self._io.read_bytes(58)
-            self.header_size = self._io.read_u4le()
+            self.ofs_pe = self._io.read_u4le()
 
 
     class OptionalHeaderStd(KaitaiStruct):
@@ -409,5 +418,16 @@ class MicrosoftPe(KaitaiStruct):
             self._io.seek(_pos)
             return self._m_name_from_short if hasattr(self, '_m_name_from_short') else None
 
+
+    @property
+    def pe(self):
+        if hasattr(self, '_m_pe'):
+            return self._m_pe if hasattr(self, '_m_pe') else None
+
+        _pos = self._io.pos()
+        self._io.seek(self.mz.ofs_pe)
+        self._m_pe = self._root.PeHeader(self._io, self, self._root)
+        self._io.seek(_pos)
+        return self._m_pe if hasattr(self, '_m_pe') else None
 
 

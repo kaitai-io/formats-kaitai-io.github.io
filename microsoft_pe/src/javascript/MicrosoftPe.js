@@ -32,17 +32,7 @@ var MicrosoftPe = (function() {
     this._read();
   }
   MicrosoftPe.prototype._read = function() {
-    this.mz1 = new MzPlaceholder(this._io, this, this._root);
-    this.mz2 = this._io.readBytes((this.mz1.headerSize - 64));
-    this.peSignature = this._io.ensureFixedContents([80, 69, 0, 0]);
-    this.coffHdr = new CoffHeader(this._io, this, this._root);
-    this._raw_optionalHdr = this._io.readBytes(this.coffHdr.sizeOfOptionalHeader);
-    var _io__raw_optionalHdr = new KaitaiStream(this._raw_optionalHdr);
-    this.optionalHdr = new OptionalHeader(_io__raw_optionalHdr, this, this._root);
-    this.sections = new Array(this.coffHdr.numberOfSections);
-    for (var i = 0; i < this.coffHdr.numberOfSections; i++) {
-      this.sections[i] = new Section(this._io, this, this._root);
-    }
+    this.mz = new MzPlaceholder(this._io, this, this._root);
   }
 
   var OptionalHeaderWindows = MicrosoftPe.OptionalHeaderWindows = (function() {
@@ -198,7 +188,7 @@ var MicrosoftPe = (function() {
       get: function() {
         if (this._m_section !== undefined)
           return this._m_section;
-        this._m_section = this._root.sections[(this.sectionNumber - 1)];
+        this._m_section = this._root.pe.sections[(this.sectionNumber - 1)];
         return this._m_section;
       }
     });
@@ -215,6 +205,29 @@ var MicrosoftPe = (function() {
     });
 
     return CoffSymbol;
+  })();
+
+  var PeHeader = MicrosoftPe.PeHeader = (function() {
+    function PeHeader(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    PeHeader.prototype._read = function() {
+      this.peSignature = this._io.ensureFixedContents([80, 69, 0, 0]);
+      this.coffHdr = new CoffHeader(this._io, this, this._root);
+      this._raw_optionalHdr = this._io.readBytes(this.coffHdr.sizeOfOptionalHeader);
+      var _io__raw_optionalHdr = new KaitaiStream(this._raw_optionalHdr);
+      this.optionalHdr = new OptionalHeader(_io__raw_optionalHdr, this, this._root);
+      this.sections = new Array(this.coffHdr.numberOfSections);
+      for (var i = 0; i < this.coffHdr.numberOfSections; i++) {
+        this.sections[i] = new Section(this._io, this, this._root);
+      }
+    }
+
+    return PeHeader;
   })();
 
   var OptionalHeader = MicrosoftPe.OptionalHeader = (function() {
@@ -280,8 +293,12 @@ var MicrosoftPe = (function() {
     MzPlaceholder.prototype._read = function() {
       this.magic = this._io.ensureFixedContents([77, 90]);
       this.data1 = this._io.readBytes(58);
-      this.headerSize = this._io.readU4le();
+      this.ofsPe = this._io.readU4le();
     }
+
+    /**
+     * In PE file, an offset to PE header
+     */
 
     return MzPlaceholder;
   })();
@@ -495,6 +512,17 @@ var MicrosoftPe = (function() {
 
     return Annoyingstring;
   })();
+  Object.defineProperty(MicrosoftPe.prototype, 'pe', {
+    get: function() {
+      if (this._m_pe !== undefined)
+        return this._m_pe;
+      var _pos = this._io.pos;
+      this._io.seek(this.mz.ofsPe);
+      this._m_pe = new PeHeader(this._io, this, this._root);
+      this._io.seek(_pos);
+      return this._m_pe;
+    }
+  });
 
   return MicrosoftPe;
 })();

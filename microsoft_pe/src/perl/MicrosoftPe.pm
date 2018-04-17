@@ -39,53 +39,22 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{mz1} = MicrosoftPe::MzPlaceholder->new($self->{_io}, $self, $self->{_root});
-    $self->{mz2} = $self->{_io}->read_bytes(($self->mz1()->header_size() - 64));
-    $self->{pe_signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (80, 69, 0, 0)));
-    $self->{coff_hdr} = MicrosoftPe::CoffHeader->new($self->{_io}, $self, $self->{_root});
-    $self->{_raw_optional_hdr} = $self->{_io}->read_bytes($self->coff_hdr()->size_of_optional_header());
-    my $io__raw_optional_hdr = IO::KaitaiStruct::Stream->new($self->{_raw_optional_hdr});
-    $self->{optional_hdr} = MicrosoftPe::OptionalHeader->new($io__raw_optional_hdr, $self, $self->{_root});
-    $self->{sections} = ();
-    my $n_sections = $self->coff_hdr()->number_of_sections();
-    for (my $i = 0; $i < $n_sections; $i++) {
-        $self->{sections}[$i] = MicrosoftPe::Section->new($self->{_io}, $self, $self->{_root});
-    }
+    $self->{mz} = MicrosoftPe::MzPlaceholder->new($self->{_io}, $self, $self->{_root});
 }
 
-sub mz1 {
+sub pe {
     my ($self) = @_;
-    return $self->{mz1};
+    return $self->{pe} if ($self->{pe});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek($self->mz()->ofs_pe());
+    $self->{pe} = MicrosoftPe::PeHeader->new($self->{_io}, $self, $self->{_root});
+    $self->{_io}->seek($_pos);
+    return $self->{pe};
 }
 
-sub mz2 {
+sub mz {
     my ($self) = @_;
-    return $self->{mz2};
-}
-
-sub pe_signature {
-    my ($self) = @_;
-    return $self->{pe_signature};
-}
-
-sub coff_hdr {
-    my ($self) = @_;
-    return $self->{coff_hdr};
-}
-
-sub optional_hdr {
-    my ($self) = @_;
-    return $self->{optional_hdr};
-}
-
-sub sections {
-    my ($self) = @_;
-    return $self->{sections};
-}
-
-sub _raw_optional_hdr {
-    my ($self) = @_;
-    return $self->{_raw_optional_hdr};
+    return $self->{mz};
 }
 
 ########################################################################
@@ -517,7 +486,7 @@ sub _read {
 sub section {
     my ($self) = @_;
     return $self->{section} if ($self->{section});
-    $self->{section} = @{$self->_root()->sections()}[($self->section_number() - 1)];
+    $self->{section} = @{$self->_root()->pe()->sections()}[($self->section_number() - 1)];
     return $self->{section};
 }
 
@@ -564,6 +533,73 @@ sub number_of_aux_symbols {
 sub _raw_name_annoying {
     my ($self) = @_;
     return $self->{_raw_name_annoying};
+}
+
+########################################################################
+package MicrosoftPe::PeHeader;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{pe_signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (80, 69, 0, 0)));
+    $self->{coff_hdr} = MicrosoftPe::CoffHeader->new($self->{_io}, $self, $self->{_root});
+    $self->{_raw_optional_hdr} = $self->{_io}->read_bytes($self->coff_hdr()->size_of_optional_header());
+    my $io__raw_optional_hdr = IO::KaitaiStruct::Stream->new($self->{_raw_optional_hdr});
+    $self->{optional_hdr} = MicrosoftPe::OptionalHeader->new($io__raw_optional_hdr, $self, $self->{_root});
+    $self->{sections} = ();
+    my $n_sections = $self->coff_hdr()->number_of_sections();
+    for (my $i = 0; $i < $n_sections; $i++) {
+        $self->{sections}[$i] = MicrosoftPe::Section->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub pe_signature {
+    my ($self) = @_;
+    return $self->{pe_signature};
+}
+
+sub coff_hdr {
+    my ($self) = @_;
+    return $self->{coff_hdr};
+}
+
+sub optional_hdr {
+    my ($self) = @_;
+    return $self->{optional_hdr};
+}
+
+sub sections {
+    my ($self) = @_;
+    return $self->{sections};
+}
+
+sub _raw_optional_hdr {
+    my ($self) = @_;
+    return $self->{_raw_optional_hdr};
 }
 
 ########################################################################
@@ -750,7 +786,7 @@ sub _read {
 
     $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (77, 90)));
     $self->{data1} = $self->{_io}->read_bytes(58);
-    $self->{header_size} = $self->{_io}->read_u4le();
+    $self->{ofs_pe} = $self->{_io}->read_u4le();
 }
 
 sub magic {
@@ -763,9 +799,9 @@ sub data1 {
     return $self->{data1};
 }
 
-sub header_size {
+sub ofs_pe {
     my ($self) = @_;
-    return $self->{header_size};
+    return $self->{ofs_pe};
 }
 
 ########################################################################

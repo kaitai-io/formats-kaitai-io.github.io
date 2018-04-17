@@ -7,13 +7,11 @@ digraph {
 
 		microsoft_pe__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="mz1_pos">0</TD><TD PORT="mz1_size">64</TD><TD>MzPlaceholder</TD><TD PORT="mz1_type">mz1</TD></TR>
-			<TR><TD PORT="mz2_pos">64</TD><TD PORT="mz2_size">(mz1.header_size - 64)</TD><TD></TD><TD PORT="mz2_type">mz2</TD></TR>
-			<TR><TD PORT="pe_signature_pos">...</TD><TD PORT="pe_signature_size">4</TD><TD>50 45 00 00</TD><TD PORT="pe_signature_type">pe_signature</TD></TR>
-			<TR><TD PORT="coff_hdr_pos">...</TD><TD PORT="coff_hdr_size">20</TD><TD>CoffHeader</TD><TD PORT="coff_hdr_type">coff_hdr</TD></TR>
-			<TR><TD PORT="optional_hdr_pos">...</TD><TD PORT="optional_hdr_size">coff_hdr.size_of_optional_header</TD><TD>OptionalHeader</TD><TD PORT="optional_hdr_type">optional_hdr</TD></TR>
-			<TR><TD PORT="sections_pos">...</TD><TD PORT="sections_size">40</TD><TD>Section</TD><TD PORT="sections_type">sections</TD></TR>
-			<TR><TD COLSPAN="4" PORT="sections__repeat">repeat coff_hdr.number_of_sections times</TD></TR>
+			<TR><TD PORT="mz_pos">0</TD><TD PORT="mz_size">64</TD><TD>MzPlaceholder</TD><TD PORT="mz_type">mz</TD></TR>
+		</TABLE>>];
+		microsoft_pe__inst__pe [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="pe_pos">mz.ofs_pe</TD><TD PORT="pe_size">...</TD><TD>PeHeader</TD><TD PORT="pe_type">pe</TD></TR>
 		</TABLE>>];
 		subgraph cluster__optional_header_windows {
 			label="MicrosoftPe::OptionalHeaderWindows";
@@ -97,11 +95,24 @@ digraph {
 			</TABLE>>];
 			coff_symbol__inst__section [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>section</TD><TD>_root.sections[(section_number - 1)]</TD></TR>
+				<TR><TD>section</TD><TD>_root.pe.sections[(section_number - 1)]</TD></TR>
 			</TABLE>>];
 			coff_symbol__inst__data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="data_pos">(section.pointer_to_raw_data + value)</TD><TD PORT="data_size">1</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__pe_header {
+			label="MicrosoftPe::PeHeader";
+			graph[style=dotted];
+
+			pe_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="pe_signature_pos">0</TD><TD PORT="pe_signature_size">4</TD><TD>50 45 00 00</TD><TD PORT="pe_signature_type">pe_signature</TD></TR>
+				<TR><TD PORT="coff_hdr_pos">4</TD><TD PORT="coff_hdr_size">20</TD><TD>CoffHeader</TD><TD PORT="coff_hdr_type">coff_hdr</TD></TR>
+				<TR><TD PORT="optional_hdr_pos">24</TD><TD PORT="optional_hdr_size">coff_hdr.size_of_optional_header</TD><TD>OptionalHeader</TD><TD PORT="optional_hdr_type">optional_hdr</TD></TR>
+				<TR><TD PORT="sections_pos">...</TD><TD PORT="sections_size">40</TD><TD>Section</TD><TD PORT="sections_type">sections</TD></TR>
+				<TR><TD COLSPAN="4" PORT="sections__repeat">repeat coff_hdr.number_of_sections times</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__optional_header {
@@ -145,7 +156,7 @@ digraph {
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">2</TD><TD>4D 5A</TD><TD PORT="magic_type">magic</TD></TR>
 				<TR><TD PORT="data1_pos">2</TD><TD PORT="data1_size">58</TD><TD></TD><TD PORT="data1_type">data1</TD></TR>
-				<TR><TD PORT="header_size_pos">60</TD><TD PORT="header_size_size">4</TD><TD>u4le</TD><TD PORT="header_size_type">header_size</TD></TR>
+				<TR><TD PORT="ofs_pe_pos">60</TD><TD PORT="ofs_pe_size">4</TD><TD>u4le</TD><TD PORT="ofs_pe_type">ofs_pe</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__optional_header_std {
@@ -226,13 +237,9 @@ digraph {
 			</TABLE>>];
 		}
 	}
-	microsoft_pe__seq:mz1_type -> mz_placeholder__seq [style=bold];
-	mz_placeholder__seq:header_size_type -> microsoft_pe__seq:mz2_size [color="#404040"];
-	microsoft_pe__seq:coff_hdr_type -> coff_header__seq [style=bold];
-	coff_header__seq:size_of_optional_header_type -> microsoft_pe__seq:optional_hdr_size [color="#404040"];
-	microsoft_pe__seq:optional_hdr_type -> optional_header__seq [style=bold];
-	microsoft_pe__seq:sections_type -> section__seq [style=bold];
-	coff_header__seq:number_of_sections_type -> microsoft_pe__seq:sections__repeat [color="#404040"];
+	microsoft_pe__seq:mz_type -> mz_placeholder__seq [style=bold];
+	mz_placeholder__seq:ofs_pe_type -> microsoft_pe__inst__pe:pe_pos [color="#404040"];
+	microsoft_pe__inst__pe:pe_type -> pe_header__seq [style=bold];
 	optional_header_data_dirs__seq:export_table_type -> data_dir__seq [style=bold];
 	optional_header_data_dirs__seq:import_table_type -> data_dir__seq [style=bold];
 	optional_header_data_dirs__seq:resource_table_type -> data_dir__seq [style=bold];
@@ -249,10 +256,15 @@ digraph {
 	optional_header_data_dirs__seq:delay_import_descriptor_type -> data_dir__seq [style=bold];
 	optional_header_data_dirs__seq:clr_runtime_header_type -> data_dir__seq [style=bold];
 	coff_symbol__seq:name_annoying_type -> annoyingstring__seq [style=bold];
-	microsoft_pe__seq:sections_type -> coff_symbol__inst__section [color="#404040"];
+	pe_header__seq:sections_type -> coff_symbol__inst__section [color="#404040"];
 	coff_symbol__seq:section_number_type -> coff_symbol__inst__section [color="#404040"];
 	section__seq:pointer_to_raw_data_type -> coff_symbol__inst__data:data_pos [color="#404040"];
 	coff_symbol__seq:value_type -> coff_symbol__inst__data:data_pos [color="#404040"];
+	pe_header__seq:coff_hdr_type -> coff_header__seq [style=bold];
+	coff_header__seq:size_of_optional_header_type -> pe_header__seq:optional_hdr_size [color="#404040"];
+	pe_header__seq:optional_hdr_type -> optional_header__seq [style=bold];
+	pe_header__seq:sections_type -> section__seq [style=bold];
+	coff_header__seq:number_of_sections_type -> pe_header__seq:sections__repeat [color="#404040"];
 	optional_header__seq:std_type -> optional_header_std__seq [style=bold];
 	optional_header__seq:windows_type -> optional_header_windows__seq [style=bold];
 	optional_header__seq:data_dirs_type -> optional_header_data_dirs__seq [style=bold];

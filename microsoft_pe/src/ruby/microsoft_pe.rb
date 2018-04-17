@@ -23,17 +23,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
   end
 
   def _read
-    @mz1 = MzPlaceholder.new(@_io, self, @_root)
-    @mz2 = @_io.read_bytes((mz1.header_size - 64))
-    @pe_signature = @_io.ensure_fixed_contents([80, 69, 0, 0].pack('C*'))
-    @coff_hdr = CoffHeader.new(@_io, self, @_root)
-    @_raw_optional_hdr = @_io.read_bytes(coff_hdr.size_of_optional_header)
-    io = Kaitai::Struct::Stream.new(@_raw_optional_hdr)
-    @optional_hdr = OptionalHeader.new(io, self, @_root)
-    @sections = Array.new(coff_hdr.number_of_sections)
-    (coff_hdr.number_of_sections).times { |i|
-      @sections[i] = Section.new(@_io, self, @_root)
-    }
+    @mz = MzPlaceholder.new(@_io, self, @_root)
     self
   end
   class OptionalHeaderWindows < Kaitai::Struct::Struct
@@ -206,7 +196,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
     end
     def section
       return @section unless @section.nil?
-      @section = _root.sections[(section_number - 1)]
+      @section = _root.pe.sections[(section_number - 1)]
       @section
     end
     def data
@@ -224,6 +214,30 @@ class MicrosoftPe < Kaitai::Struct::Struct
     attr_reader :storage_class
     attr_reader :number_of_aux_symbols
     attr_reader :_raw_name_annoying
+  end
+  class PeHeader < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @pe_signature = @_io.ensure_fixed_contents([80, 69, 0, 0].pack('C*'))
+      @coff_hdr = CoffHeader.new(@_io, self, @_root)
+      @_raw_optional_hdr = @_io.read_bytes(coff_hdr.size_of_optional_header)
+      io = Kaitai::Struct::Stream.new(@_raw_optional_hdr)
+      @optional_hdr = OptionalHeader.new(io, self, @_root)
+      @sections = Array.new(coff_hdr.number_of_sections)
+      (coff_hdr.number_of_sections).times { |i|
+        @sections[i] = Section.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :pe_signature
+    attr_reader :coff_hdr
+    attr_reader :optional_hdr
+    attr_reader :sections
+    attr_reader :_raw_optional_hdr
   end
   class OptionalHeader < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -288,12 +302,15 @@ class MicrosoftPe < Kaitai::Struct::Struct
     def _read
       @magic = @_io.ensure_fixed_contents([77, 90].pack('C*'))
       @data1 = @_io.read_bytes(58)
-      @header_size = @_io.read_u4le
+      @ofs_pe = @_io.read_u4le
       self
     end
     attr_reader :magic
     attr_reader :data1
-    attr_reader :header_size
+
+    ##
+    # In PE file, an offset to PE header
+    attr_reader :ofs_pe
   end
   class OptionalHeaderStd < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -457,11 +474,13 @@ class MicrosoftPe < Kaitai::Struct::Struct
       @name_from_short
     end
   end
-  attr_reader :mz1
-  attr_reader :mz2
-  attr_reader :pe_signature
-  attr_reader :coff_hdr
-  attr_reader :optional_hdr
-  attr_reader :sections
-  attr_reader :_raw_optional_hdr
+  def pe
+    return @pe unless @pe.nil?
+    _pos = @_io.pos
+    @_io.seek(mz.ofs_pe)
+    @pe = PeHeader.new(@_io, self, @_root)
+    @_io.seek(_pos)
+    @pe
+  end
+  attr_reader :mz
 end

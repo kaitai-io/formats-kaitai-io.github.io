@@ -229,13 +229,11 @@ section#format-index .row {
 
 		microsoft_pe__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;mz1_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;mz1_size&quot;&gt;64&lt;/TD&gt;&lt;TD&gt;MzPlaceholder&lt;/TD&gt;&lt;TD PORT=&quot;mz1_type&quot;&gt;mz1&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;mz2_pos&quot;&gt;64&lt;/TD&gt;&lt;TD PORT=&quot;mz2_size&quot;&gt;(mz1.header_size - 64)&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;mz2_type&quot;&gt;mz2&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;pe_signature_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;pe_signature_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;50 45 00 00&lt;/TD&gt;&lt;TD PORT=&quot;pe_signature_type&quot;&gt;pe_signature&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;coff_hdr_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;coff_hdr_size&quot;&gt;20&lt;/TD&gt;&lt;TD&gt;CoffHeader&lt;/TD&gt;&lt;TD PORT=&quot;coff_hdr_type&quot;&gt;coff_hdr&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;optional_hdr_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;optional_hdr_size&quot;&gt;coff_hdr.size_of_optional_header&lt;/TD&gt;&lt;TD&gt;OptionalHeader&lt;/TD&gt;&lt;TD PORT=&quot;optional_hdr_type&quot;&gt;optional_hdr&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;sections_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;sections_size&quot;&gt;40&lt;/TD&gt;&lt;TD&gt;Section&lt;/TD&gt;&lt;TD PORT=&quot;sections_type&quot;&gt;sections&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;sections__repeat&quot;&gt;repeat coff_hdr.number_of_sections times&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;mz_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;mz_size&quot;&gt;64&lt;/TD&gt;&lt;TD&gt;MzPlaceholder&lt;/TD&gt;&lt;TD PORT=&quot;mz_type&quot;&gt;mz&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		microsoft_pe__inst__pe [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;pe_pos&quot;&gt;mz.ofs_pe&lt;/TD&gt;&lt;TD PORT=&quot;pe_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;PeHeader&lt;/TD&gt;&lt;TD PORT=&quot;pe_type&quot;&gt;pe&lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
 		subgraph cluster__optional_header_windows {
 			label=&quot;MicrosoftPe::OptionalHeaderWindows&quot;;
@@ -319,11 +317,24 @@ section#format-index .row {
 			&lt;/TABLE&gt;&gt;];
 			coff_symbol__inst__section [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD&gt;section&lt;/TD&gt;&lt;TD&gt;_root.sections[(section_number - 1)]&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD&gt;section&lt;/TD&gt;&lt;TD&gt;_root.pe.sections[(section_number - 1)]&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 			coff_symbol__inst__data [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;data_pos&quot;&gt;(section.pointer_to_raw_data + value)&lt;/TD&gt;&lt;TD PORT=&quot;data_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;data_type&quot;&gt;data&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__pe_header {
+			label=&quot;MicrosoftPe::PeHeader&quot;;
+			graph[style=dotted];
+
+			pe_header__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;pe_signature_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;pe_signature_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;50 45 00 00&lt;/TD&gt;&lt;TD PORT=&quot;pe_signature_type&quot;&gt;pe_signature&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;coff_hdr_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;coff_hdr_size&quot;&gt;20&lt;/TD&gt;&lt;TD&gt;CoffHeader&lt;/TD&gt;&lt;TD PORT=&quot;coff_hdr_type&quot;&gt;coff_hdr&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;optional_hdr_pos&quot;&gt;24&lt;/TD&gt;&lt;TD PORT=&quot;optional_hdr_size&quot;&gt;coff_hdr.size_of_optional_header&lt;/TD&gt;&lt;TD&gt;OptionalHeader&lt;/TD&gt;&lt;TD PORT=&quot;optional_hdr_type&quot;&gt;optional_hdr&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;sections_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;sections_size&quot;&gt;40&lt;/TD&gt;&lt;TD&gt;Section&lt;/TD&gt;&lt;TD PORT=&quot;sections_type&quot;&gt;sections&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;sections__repeat&quot;&gt;repeat coff_hdr.number_of_sections times&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
 		subgraph cluster__optional_header {
@@ -367,7 +378,7 @@ section#format-index .row {
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;magic_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;magic_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;4D 5A&lt;/TD&gt;&lt;TD PORT=&quot;magic_type&quot;&gt;magic&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;data1_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;data1_size&quot;&gt;58&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;data1_type&quot;&gt;data1&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;header_size_pos&quot;&gt;60&lt;/TD&gt;&lt;TD PORT=&quot;header_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;header_size_type&quot;&gt;header_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;ofs_pe_pos&quot;&gt;60&lt;/TD&gt;&lt;TD PORT=&quot;ofs_pe_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;ofs_pe_type&quot;&gt;ofs_pe&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
 		subgraph cluster__optional_header_std {
@@ -448,13 +459,9 @@ section#format-index .row {
 			&lt;/TABLE&gt;&gt;];
 		}
 	}
-	microsoft_pe__seq:mz1_type -&gt; mz_placeholder__seq [style=bold];
-	mz_placeholder__seq:header_size_type -&gt; microsoft_pe__seq:mz2_size [color=&quot;#404040&quot;];
-	microsoft_pe__seq:coff_hdr_type -&gt; coff_header__seq [style=bold];
-	coff_header__seq:size_of_optional_header_type -&gt; microsoft_pe__seq:optional_hdr_size [color=&quot;#404040&quot;];
-	microsoft_pe__seq:optional_hdr_type -&gt; optional_header__seq [style=bold];
-	microsoft_pe__seq:sections_type -&gt; section__seq [style=bold];
-	coff_header__seq:number_of_sections_type -&gt; microsoft_pe__seq:sections__repeat [color=&quot;#404040&quot;];
+	microsoft_pe__seq:mz_type -&gt; mz_placeholder__seq [style=bold];
+	mz_placeholder__seq:ofs_pe_type -&gt; microsoft_pe__inst__pe:pe_pos [color=&quot;#404040&quot;];
+	microsoft_pe__inst__pe:pe_type -&gt; pe_header__seq [style=bold];
 	optional_header_data_dirs__seq:export_table_type -&gt; data_dir__seq [style=bold];
 	optional_header_data_dirs__seq:import_table_type -&gt; data_dir__seq [style=bold];
 	optional_header_data_dirs__seq:resource_table_type -&gt; data_dir__seq [style=bold];
@@ -471,10 +478,15 @@ section#format-index .row {
 	optional_header_data_dirs__seq:delay_import_descriptor_type -&gt; data_dir__seq [style=bold];
 	optional_header_data_dirs__seq:clr_runtime_header_type -&gt; data_dir__seq [style=bold];
 	coff_symbol__seq:name_annoying_type -&gt; annoyingstring__seq [style=bold];
-	microsoft_pe__seq:sections_type -&gt; coff_symbol__inst__section [color=&quot;#404040&quot;];
+	pe_header__seq:sections_type -&gt; coff_symbol__inst__section [color=&quot;#404040&quot;];
 	coff_symbol__seq:section_number_type -&gt; coff_symbol__inst__section [color=&quot;#404040&quot;];
 	section__seq:pointer_to_raw_data_type -&gt; coff_symbol__inst__data:data_pos [color=&quot;#404040&quot;];
 	coff_symbol__seq:value_type -&gt; coff_symbol__inst__data:data_pos [color=&quot;#404040&quot;];
+	pe_header__seq:coff_hdr_type -&gt; coff_header__seq [style=bold];
+	coff_header__seq:size_of_optional_header_type -&gt; pe_header__seq:optional_hdr_size [color=&quot;#404040&quot;];
+	pe_header__seq:optional_hdr_type -&gt; optional_header__seq [style=bold];
+	pe_header__seq:sections_type -&gt; section__seq [style=bold];
+	coff_header__seq:number_of_sections_type -&gt; pe_header__seq:sections__repeat [color=&quot;#404040&quot;];
 	optional_header__seq:std_type -&gt; optional_header_std__seq [style=bold];
 	optional_header__seq:windows_type -&gt; optional_header_windows__seq [style=bold];
 	optional_header__seq:data_dirs_type -&gt; optional_header_data_dirs__seq [style=bold];
