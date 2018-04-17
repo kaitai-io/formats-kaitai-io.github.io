@@ -10,8 +10,8 @@ if parse_version(ks_version) < parse_version('0.7'):
 
 from udp_datagram import UdpDatagram
 from tcp_segment import TcpSegment
-from ipv6_packet import Ipv6Packet
 from icmp_packet import IcmpPacket
+from ipv6_packet import Ipv6Packet
 class Ipv4Packet(KaitaiStruct):
 
     class ProtocolEnum(Enum):

@@ -24,9 +24,10 @@
  * https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration
  * 
  * The RCM file contains the user-specified comment, so it may be useful
- * for automatic conversion of data.
+ * for automatic conversion of data. You may wish to divide the spectra by 
+ * the integration time before comparing them.
  * 
- * Written and tested by Filip Dominec, 2017
+ * Written and tested by Filip Dominec, 2017-2018
  */
 
 class AvantesRoh60 extends \Kaitai\Struct\Struct {
@@ -59,11 +60,9 @@ class AvantesRoh60 extends \Kaitai\Struct\Struct {
         for ($i = 0; $i < $n; $i++) {
             $this->_m_spectrum[] = $this->_io->readF4le();
         }
-        $this->_m_unknown4 = [];
-        $n = 3;
-        for ($i = 0; $i < $n; $i++) {
-            $this->_m_unknown4[] = $this->_io->readF4le();
-        }
+        $this->_m_integrationMs = $this->_io->readF4le();
+        $this->_m_averaging = $this->_io->readF4le();
+        $this->_m_pixelSmoothing = $this->_io->readF4le();
     }
     protected $_m_unknown1;
     protected $_m_wlintercept;
@@ -76,7 +75,9 @@ class AvantesRoh60 extends \Kaitai\Struct\Struct {
     protected $_m_ipixlast;
     protected $_m_unknown3;
     protected $_m_spectrum;
-    protected $_m_unknown4;
+    protected $_m_integrationMs;
+    protected $_m_averaging;
+    protected $_m_pixelSmoothing;
     public function unknown1() { return $this->_m_unknown1; }
     public function wlintercept() { return $this->_m_wlintercept; }
     public function wlx1() { return $this->_m_wlx1; }
@@ -88,5 +89,7 @@ class AvantesRoh60 extends \Kaitai\Struct\Struct {
     public function ipixlast() { return $this->_m_ipixlast; }
     public function unknown3() { return $this->_m_unknown3; }
     public function spectrum() { return $this->_m_spectrum; }
-    public function unknown4() { return $this->_m_unknown4; }
+    public function integrationMs() { return $this->_m_integrationMs; }
+    public function averaging() { return $this->_m_averaging; }
+    public function pixelSmoothing() { return $this->_m_pixelSmoothing; }
 }

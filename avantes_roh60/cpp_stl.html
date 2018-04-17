@@ -117,8 +117,9 @@ to get reasonable spectral results.</p>
 newer version of Avantes software has a different format, see also
 https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration</p>
 <p>The RCM file contains the user-specified comment, so it may be useful
-for automatic conversion of data.</p>
-<p>Written and tested by Filip Dominec, 2017</p>
+for automatic conversion of data. You may wish to divide the spectra by
+the integration time before comparing them.</p>
+<p>Written and tested by Filip Dominec, 2017-2018</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -329,9 +330,10 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
  * https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration
  * 
  * The RCM file contains the user-specified comment, so it may be useful
- * for automatic conversion of data.
+ * for automatic conversion of data. You may wish to divide the spectra by 
+ * the integration time before comparing them.
  * 
- * Written and tested by Filip Dominec, 2017
+ * Written and tested by Filip Dominec, 2017-2018
  */
 
 class avantes_roh60_t : public kaitai::kstruct {
@@ -358,7 +360,9 @@ private:
     float m_ipixlast;
     std::vector&lt;float&gt;* m_unknown3;
     std::vector&lt;float&gt;* m_spectrum;
-    std::vector&lt;float&gt;* m_unknown4;
+    float m_integration_ms;
+    float m_averaging;
+    float m_pixel_smoothing;
     avantes_roh60_t* m__root;
     kaitai::kstruct* m__parent;
 
@@ -374,7 +378,9 @@ public:
     float ipixlast() const { return m_ipixlast; }
     std::vector&lt;float&gt;* unknown3() const { return m_unknown3; }
     std::vector&lt;float&gt;* spectrum() const { return m_spectrum; }
-    std::vector&lt;float&gt;* unknown4() const { return m_unknown4; }
+    float integration_ms() const { return m_integration_ms; }
+    float averaging() const { return m_averaging; }
+    float pixel_smoothing() const { return m_pixel_smoothing; }
     avantes_roh60_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
 };
@@ -435,19 +441,15 @@ void avantes_roh60_t::_read() {
     for (int i = 0; i &lt; l_spectrum; i++) {
         m_spectrum-&gt;push_back(m__io-&gt;read_f4le());
     }
-    int l_unknown4 = 3;
-    m_unknown4 = new std::vector&lt;float&gt;();
-    m_unknown4-&gt;reserve(l_unknown4);
-    for (int i = 0; i &lt; l_unknown4; i++) {
-        m_unknown4-&gt;push_back(m__io-&gt;read_f4le());
-    }
+    m_integration_ms = m__io-&gt;read_f4le();
+    m_averaging = m__io-&gt;read_f4le();
+    m_pixel_smoothing = m__io-&gt;read_f4le();
 }
 
 avantes_roh60_t::~avantes_roh60_t() {
     delete m_unknown2;
     delete m_unknown3;
     delete m_spectrum;
-    delete m_unknown4;
 }
 </code></pre>
             

@@ -30,9 +30,10 @@ end
 # https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration
 # 
 # The RCM file contains the user-specified comment, so it may be useful
-# for automatic conversion of data.
+# for automatic conversion of data. You may wish to divide the spectra by 
+# the integration time before comparing them.
 # 
-# Written and tested by Filip Dominec, 2017
+# Written and tested by Filip Dominec, 2017-2018
 class AvantesRoh60 < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -60,10 +61,9 @@ class AvantesRoh60 < Kaitai::Struct::Struct
     ((((ipixlast).to_i - (ipixfirst).to_i) - 1)).times { |i|
       @spectrum[i] = @_io.read_f4le
     }
-    @unknown4 = Array.new(3)
-    (3).times { |i|
-      @unknown4[i] = @_io.read_f4le
-    }
+    @integration_ms = @_io.read_f4le
+    @averaging = @_io.read_f4le
+    @pixel_smoothing = @_io.read_f4le
     self
   end
   attr_reader :unknown1
@@ -77,5 +77,7 @@ class AvantesRoh60 < Kaitai::Struct::Struct
   attr_reader :ipixlast
   attr_reader :unknown3
   attr_reader :spectrum
-  attr_reader :unknown4
+  attr_reader :integration_ms
+  attr_reader :averaging
+  attr_reader :pixel_smoothing
 end

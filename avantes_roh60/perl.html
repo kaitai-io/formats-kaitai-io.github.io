@@ -117,8 +117,9 @@ to get reasonable spectral results.</p>
 newer version of Avantes software has a different format, see also
 https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration</p>
 <p>The RCM file contains the user-specified comment, so it may be useful
-for automatic conversion of data.</p>
-<p>Written and tested by Filip Dominec, 2017</p>
+for automatic conversion of data. You may wish to divide the spectra by
+the integration time before comparing them.</p>
+<p>Written and tested by Filip Dominec, 2017-2018</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -300,11 +301,9 @@ sub _read {
     for (my $i = 0; $i &lt; $n_spectrum; $i++) {
         $self-&gt;{spectrum}[$i] = $self-&gt;{_io}-&gt;read_f4le();
     }
-    $self-&gt;{unknown4} = ();
-    my $n_unknown4 = 3;
-    for (my $i = 0; $i &lt; $n_unknown4; $i++) {
-        $self-&gt;{unknown4}[$i] = $self-&gt;{_io}-&gt;read_f4le();
-    }
+    $self-&gt;{integration_ms} = $self-&gt;{_io}-&gt;read_f4le();
+    $self-&gt;{averaging} = $self-&gt;{_io}-&gt;read_f4le();
+    $self-&gt;{pixel_smoothing} = $self-&gt;{_io}-&gt;read_f4le();
 }
 
 sub unknown1 {
@@ -362,9 +361,19 @@ sub spectrum {
     return $self-&gt;{spectrum};
 }
 
-sub unknown4 {
+sub integration_ms {
     my ($self) = @_;
-    return $self-&gt;{unknown4};
+    return $self-&gt;{integration_ms};
+}
+
+sub averaging {
+    my ($self) = @_;
+    return $self-&gt;{averaging};
+}
+
+sub pixel_smoothing {
+    my ($self) = @_;
+    return $self-&gt;{pixel_smoothing};
 }
 
 1;

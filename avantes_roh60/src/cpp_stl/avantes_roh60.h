@@ -35,9 +35,10 @@
  * https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration
  * 
  * The RCM file contains the user-specified comment, so it may be useful
- * for automatic conversion of data.
+ * for automatic conversion of data. You may wish to divide the spectra by 
+ * the integration time before comparing them.
  * 
- * Written and tested by Filip Dominec, 2017
+ * Written and tested by Filip Dominec, 2017-2018
  */
 
 class avantes_roh60_t : public kaitai::kstruct {
@@ -64,7 +65,9 @@ private:
     float m_ipixlast;
     std::vector<float>* m_unknown3;
     std::vector<float>* m_spectrum;
-    std::vector<float>* m_unknown4;
+    float m_integration_ms;
+    float m_averaging;
+    float m_pixel_smoothing;
     avantes_roh60_t* m__root;
     kaitai::kstruct* m__parent;
 
@@ -80,7 +83,9 @@ public:
     float ipixlast() const { return m_ipixlast; }
     std::vector<float>* unknown3() const { return m_unknown3; }
     std::vector<float>* spectrum() const { return m_spectrum; }
-    std::vector<float>* unknown4() const { return m_unknown4; }
+    float integration_ms() const { return m_integration_ms; }
+    float averaging() const { return m_averaging; }
+    float pixel_smoothing() const { return m_pixel_smoothing; }
     avantes_roh60_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
 };

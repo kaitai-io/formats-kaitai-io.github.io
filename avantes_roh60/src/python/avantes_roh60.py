@@ -30,9 +30,10 @@ class AvantesRoh60(KaitaiStruct):
     https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration
     
     The RCM file contains the user-specified comment, so it may be useful
-    for automatic conversion of data.
+    for automatic conversion of data. You may wish to divide the spectra by 
+    the integration time before comparing them.
     
-    Written and tested by Filip Dominec, 2017
+    Written and tested by Filip Dominec, 2017-2018
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
@@ -61,9 +62,8 @@ class AvantesRoh60(KaitaiStruct):
         for i in range(((int(self.ipixlast) - int(self.ipixfirst)) - 1)):
             self.spectrum[i] = self._io.read_f4le()
 
-        self.unknown4 = [None] * (3)
-        for i in range(3):
-            self.unknown4[i] = self._io.read_f4le()
-
+        self.integration_ms = self._io.read_f4le()
+        self.averaging = self._io.read_f4le()
+        self.pixel_smoothing = self._io.read_f4le()
 
 

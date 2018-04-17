@@ -30,9 +30,10 @@ import java.util.ArrayList;
  * https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration
  * 
  * The RCM file contains the user-specified comment, so it may be useful
- * for automatic conversion of data.
+ * for automatic conversion of data. You may wish to divide the spectra by 
+ * the integration time before comparing them.
  * 
- * Written and tested by Filip Dominec, 2017
+ * Written and tested by Filip Dominec, 2017-2018
  */
 public class AvantesRoh60 extends KaitaiStruct {
     public static AvantesRoh60 fromFile(String fileName) throws IOException {
@@ -74,10 +75,9 @@ public class AvantesRoh60 extends KaitaiStruct {
         for (int i = 0; i < (((int) (ipixlast() + 0) - (int) (ipixfirst() + 0)) - 1); i++) {
             this.spectrum.add(this._io.readF4le());
         }
-        unknown4 = new ArrayList<Float>((int) (3));
-        for (int i = 0; i < 3; i++) {
-            this.unknown4.add(this._io.readF4le());
-        }
+        this.integrationMs = this._io.readF4le();
+        this.averaging = this._io.readF4le();
+        this.pixelSmoothing = this._io.readF4le();
     }
     private float unknown1;
     private float wlintercept;
@@ -90,7 +90,9 @@ public class AvantesRoh60 extends KaitaiStruct {
     private float ipixlast;
     private ArrayList<Float> unknown3;
     private ArrayList<Float> spectrum;
-    private ArrayList<Float> unknown4;
+    private float integrationMs;
+    private float averaging;
+    private float pixelSmoothing;
     private AvantesRoh60 _root;
     private KaitaiStruct _parent;
     public float unknown1() { return unknown1; }
@@ -104,7 +106,9 @@ public class AvantesRoh60 extends KaitaiStruct {
     public float ipixlast() { return ipixlast; }
     public ArrayList<Float> unknown3() { return unknown3; }
     public ArrayList<Float> spectrum() { return spectrum; }
-    public ArrayList<Float> unknown4() { return unknown4; }
+    public float integrationMs() { return integrationMs; }
+    public float averaging() { return averaging; }
+    public float pixelSmoothing() { return pixelSmoothing; }
     public AvantesRoh60 _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

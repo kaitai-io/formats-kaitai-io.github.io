@@ -37,17 +37,13 @@ void avantes_roh60_t::_read() {
     for (int i = 0; i < l_spectrum; i++) {
         m_spectrum->push_back(m__io->read_f4le());
     }
-    int l_unknown4 = 3;
-    m_unknown4 = new std::vector<float>();
-    m_unknown4->reserve(l_unknown4);
-    for (int i = 0; i < l_unknown4; i++) {
-        m_unknown4->push_back(m__io->read_f4le());
-    }
+    m_integration_ms = m__io->read_f4le();
+    m_averaging = m__io->read_f4le();
+    m_pixel_smoothing = m__io->read_f4le();
 }
 
 avantes_roh60_t::~avantes_roh60_t() {
     delete m_unknown2;
     delete m_unknown3;
     delete m_spectrum;
-    delete m_unknown4;
 }

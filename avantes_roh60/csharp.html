@@ -117,8 +117,9 @@ to get reasonable spectral results.</p>
 newer version of Avantes software has a different format, see also
 https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration</p>
 <p>The RCM file contains the user-specified comment, so it may be useful
-for automatic conversion of data.</p>
-<p>Written and tested by Filip Dominec, 2017</p>
+for automatic conversion of data. You may wish to divide the spectra by
+the integration time before comparing them.</p>
+<p>Written and tested by Filip Dominec, 2017-2018</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -293,9 +294,10 @@ namespace Kaitai
     /// https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration
     /// 
     /// The RCM file contains the user-specified comment, so it may be useful
-    /// for automatic conversion of data.
+    /// for automatic conversion of data. You may wish to divide the spectra by 
+    /// the integration time before comparing them.
     /// 
-    /// Written and tested by Filip Dominec, 2017
+    /// Written and tested by Filip Dominec, 2017-2018
     /// &lt;/summary&gt;
     public partial class AvantesRoh60 : KaitaiStruct
     {
@@ -335,11 +337,9 @@ namespace Kaitai
             {
                 _spectrum.Add(m_io.ReadF4le());
             }
-            _unknown4 = new List&lt;float&gt;((int) (3));
-            for (var i = 0; i &lt; 3; i++)
-            {
-                _unknown4.Add(m_io.ReadF4le());
-            }
+            _integrationMs = m_io.ReadF4le();
+            _averaging = m_io.ReadF4le();
+            _pixelSmoothing = m_io.ReadF4le();
         }
         private float _unknown1;
         private float _wlintercept;
@@ -352,7 +352,9 @@ namespace Kaitai
         private float _ipixlast;
         private List&lt;float&gt; _unknown3;
         private List&lt;float&gt; _spectrum;
-        private List&lt;float&gt; _unknown4;
+        private float _integrationMs;
+        private float _averaging;
+        private float _pixelSmoothing;
         private AvantesRoh60 m_root;
         private KaitaiStruct m_parent;
         public float Unknown1 { get { return _unknown1; } }
@@ -366,7 +368,9 @@ namespace Kaitai
         public float Ipixlast { get { return _ipixlast; } }
         public List&lt;float&gt; Unknown3 { get { return _unknown3; } }
         public List&lt;float&gt; Spectrum { get { return _spectrum; } }
-        public List&lt;float&gt; Unknown4 { get { return _unknown4; } }
+        public float IntegrationMs { get { return _integrationMs; } }
+        public float Averaging { get { return _averaging; } }
+        public float PixelSmoothing { get { return _pixelSmoothing; } }
         public AvantesRoh60 M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
     }

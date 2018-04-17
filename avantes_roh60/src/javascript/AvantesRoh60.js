@@ -32,9 +32,10 @@
  * https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration
  * 
  * The RCM file contains the user-specified comment, so it may be useful
- * for automatic conversion of data.
+ * for automatic conversion of data. You may wish to divide the spectra by 
+ * the integration time before comparing them.
  * 
- * Written and tested by Filip Dominec, 2017
+ * Written and tested by Filip Dominec, 2017-2018
  */
 
 var AvantesRoh60 = (function() {
@@ -66,10 +67,9 @@ var AvantesRoh60 = (function() {
     for (var i = 0; i < ((Math.trunc(this.ipixlast) - Math.trunc(this.ipixfirst)) - 1); i++) {
       this.spectrum[i] = this._io.readF4le();
     }
-    this.unknown4 = new Array(3);
-    for (var i = 0; i < 3; i++) {
-      this.unknown4[i] = this._io.readF4le();
-    }
+    this.integrationMs = this._io.readF4le();
+    this.averaging = this._io.readF4le();
+    this.pixelSmoothing = this._io.readF4le();
   }
 
   return AvantesRoh60;

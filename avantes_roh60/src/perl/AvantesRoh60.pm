@@ -57,11 +57,9 @@ sub _read {
     for (my $i = 0; $i < $n_spectrum; $i++) {
         $self->{spectrum}[$i] = $self->{_io}->read_f4le();
     }
-    $self->{unknown4} = ();
-    my $n_unknown4 = 3;
-    for (my $i = 0; $i < $n_unknown4; $i++) {
-        $self->{unknown4}[$i] = $self->{_io}->read_f4le();
-    }
+    $self->{integration_ms} = $self->{_io}->read_f4le();
+    $self->{averaging} = $self->{_io}->read_f4le();
+    $self->{pixel_smoothing} = $self->{_io}->read_f4le();
 }
 
 sub unknown1 {
@@ -119,9 +117,19 @@ sub spectrum {
     return $self->{spectrum};
 }
 
-sub unknown4 {
+sub integration_ms {
     my ($self) = @_;
-    return $self->{unknown4};
+    return $self->{integration_ms};
+}
+
+sub averaging {
+    my ($self) = @_;
+    return $self->{averaging};
+}
+
+sub pixel_smoothing {
+    my ($self) = @_;
+    return $self->{pixel_smoothing};
 }
 
 1;

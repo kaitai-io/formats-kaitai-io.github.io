@@ -28,9 +28,10 @@ namespace Kaitai
     /// https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration
     /// 
     /// The RCM file contains the user-specified comment, so it may be useful
-    /// for automatic conversion of data.
+    /// for automatic conversion of data. You may wish to divide the spectra by 
+    /// the integration time before comparing them.
     /// 
-    /// Written and tested by Filip Dominec, 2017
+    /// Written and tested by Filip Dominec, 2017-2018
     /// </summary>
     public partial class AvantesRoh60 : KaitaiStruct
     {
@@ -70,11 +71,9 @@ namespace Kaitai
             {
                 _spectrum.Add(m_io.ReadF4le());
             }
-            _unknown4 = new List<float>((int) (3));
-            for (var i = 0; i < 3; i++)
-            {
-                _unknown4.Add(m_io.ReadF4le());
-            }
+            _integrationMs = m_io.ReadF4le();
+            _averaging = m_io.ReadF4le();
+            _pixelSmoothing = m_io.ReadF4le();
         }
         private float _unknown1;
         private float _wlintercept;
@@ -87,7 +86,9 @@ namespace Kaitai
         private float _ipixlast;
         private List<float> _unknown3;
         private List<float> _spectrum;
-        private List<float> _unknown4;
+        private float _integrationMs;
+        private float _averaging;
+        private float _pixelSmoothing;
         private AvantesRoh60 m_root;
         private KaitaiStruct m_parent;
         public float Unknown1 { get { return _unknown1; } }
@@ -101,7 +102,9 @@ namespace Kaitai
         public float Ipixlast { get { return _ipixlast; } }
         public List<float> Unknown3 { get { return _unknown3; } }
         public List<float> Spectrum { get { return _spectrum; } }
-        public List<float> Unknown4 { get { return _unknown4; } }
+        public float IntegrationMs { get { return _integrationMs; } }
+        public float Averaging { get { return _averaging; } }
+        public float PixelSmoothing { get { return _pixelSmoothing; } }
         public AvantesRoh60 M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
     }
