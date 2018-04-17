@@ -352,6 +352,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
       332 => :machine_type_i386,
       358 => :machine_type_r4000,
       361 => :machine_type_wcemipsv2,
+      388 => :machine_type_alpha,
       418 => :machine_type_sh3,
       419 => :machine_type_sh3dsp,
       422 => :machine_type_sh4,
@@ -372,6 +373,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
       20776 => :machine_type_riscv128,
       34404 => :machine_type_amd64,
       36929 => :machine_type_m32r,
+      43620 => :machine_type_arm64,
     }
     I__MACHINE_TYPE = MACHINE_TYPE.invert
     def initialize(_io, _parent = nil, _root = self)

@@ -338,6 +338,7 @@ var MicrosoftPe = (function() {
       I386: 332,
       R4000: 358,
       WCEMIPSV2: 361,
+      ALPHA: 388,
       SH3: 418,
       SH3DSP: 419,
       SH4: 422,
@@ -358,11 +359,13 @@ var MicrosoftPe = (function() {
       RISCV128: 20776,
       AMD64: 34404,
       M32R: 36929,
+      ARM64: 43620,
 
       0: "UNKNOWN",
       332: "I386",
       358: "R4000",
       361: "WCEMIPSV2",
+      388: "ALPHA",
       418: "SH3",
       419: "SH3DSP",
       422: "SH4",
@@ -383,6 +386,7 @@ var MicrosoftPe = (function() {
       20776: "RISCV128",
       34404: "AMD64",
       36929: "M32R",
+      43620: "ARM64",
     });
 
     function CoffHeader(_io, _parent, _root) {

@@ -525,6 +525,7 @@ class MachineType {
     const I386 = 332;
     const R4000 = 358;
     const WCEMIPSV2 = 361;
+    const ALPHA = 388;
     const SH3 = 418;
     const SH3DSP = 419;
     const SH4 = 422;
@@ -545,6 +546,7 @@ class MachineType {
     const RISCV128 = 20776;
     const AMD64 = 34404;
     const M32R = 36929;
+    const ARM64 = 43620;
 }
 
 namespace \MicrosoftPe;
