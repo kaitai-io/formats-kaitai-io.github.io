@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Microsoft PE (Portable Executable) file format: C++/STL parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="http://kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="http://kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="http://kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Executables and Byte-code</li>
+        <li class="active">Microsoft PE (Portable Executable) file format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Microsoft PE (Portable Executable) file format:
+            
+            C++/STL parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Microsoft Windows
+                    </div>
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.7
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Microsoft PE (Portable Executable) file format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Microsoft PE (Portable Executable) file format parsing Overview library">Overview</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="cpp_stl.html" title="Microsoft PE (Portable Executable) file format parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Microsoft PE (Portable Executable) file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Microsoft PE (Portable Executable) file format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Microsoft PE (Portable Executable) file format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Microsoft PE (Portable Executable) file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Microsoft PE (Portable Executable) file format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Microsoft PE (Portable Executable) file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Microsoft PE (Portable Executable) file format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Microsoft PE (Portable Executable) file format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Microsoft PE (Portable Executable) file format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+
+<p>Using Kaitai Struct in C++/STL usually consists of 3 steps.</p>
+
+<ol>
+    <li>We need to create an STL input stream (<code>std::istream</code>).
+        <ul>
+            <li>One can open a stream for reading from a local file:
+
+<pre><code class="cpp">#include &lt;fstream&gt;
+
+std::ifstream is("path/to/local/file.microsoft_pe", std::ifstream::binary);</code></pre></li>
+
+            <li>Or one can prepare a stream for reading from existing <code>std::string str</code>:
+
+<pre><code class="cpp">#include &lt;sstream&gt;
+
+std::istringstream is(str);</code></pre></li>
+
+            <li>Or one can parse arbitrary <code>char*</code> buffer in memory, given that we know its size:
+
+<pre><code class="cpp">#include &lt;sstream&gt;
+
+const char buf[] = { ... };
+std::string str(buf, sizeof buf);
+std::istringstream is(str);</code></pre></li>
+
+    </ul></li>
+
+    <li>We need to wrap our input stream into Kaitai stream:
+
+<pre><code class="cpp">#include &lt;kaitai/kaitaistream.h&gt;
+
+kaitai::kstream ks(&amp;is);</code></pre></li>
+
+    <li>And finally, we can invoke the parsing:
+
+<pre><code class="cpp">microsoft_pe_t data(&amp;ks);</code></pre></li>
+</ol>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="cpp">data.mz1() // => get mz1</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C++/STL source code to parse Microsoft PE (Portable Executable) file format
+            
+        </h2>
+
+        
+
+        <h3>microsoft_pe.h</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl/microsoft_pe.h" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="cpp_stl">#ifndef MICROSOFT_PE_H_
+#define MICROSOFT_PE_H_
+
+// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include &quot;kaitai/kaitaistruct.h&quot;
+
+#include &lt;stdint.h&gt;
+#include &lt;vector&gt;
+
+#if KAITAI_STRUCT_VERSION &lt; 7000L
+#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
+#endif
+
+/**
+ * \sa Source
+ */
+
+class microsoft_pe_t : public kaitai::kstruct {
+
+public:
+    class optional_header_windows_t;
+    class optional_header_data_dirs_t;
+    class data_dir_t;
+    class coff_symbol_t;
+    class optional_header_t;
+    class section_t;
+    class mz_placeholder_t;
+    class optional_header_std_t;
+    class coff_header_t;
+    class annoyingstring_t;
+
+    enum pe_format_t {
+        PE_FORMAT_ROM_IMAGE = 263,
+        PE_FORMAT_PE32 = 267,
+        PE_FORMAT_PE32_PLUS = 523
+    };
+
+    microsoft_pe_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+private:
+    void _read();
+
+public:
+    ~microsoft_pe_t();
+
+    class optional_header_windows_t : public kaitai::kstruct {
+
+    public:
+
+        enum subsystem_enum_t {
+            SUBSYSTEM_ENUM_UNKNOWN = 0,
+            SUBSYSTEM_ENUM_NATIVE = 1,
+            SUBSYSTEM_ENUM_WINDOWS_GUI = 2,
+            SUBSYSTEM_ENUM_WINDOWS_CUI = 3,
+            SUBSYSTEM_ENUM_POSIX_CUI = 7,
+            SUBSYSTEM_ENUM_WINDOWS_CE_GUI = 9,
+            SUBSYSTEM_ENUM_EFI_APPLICATION = 10,
+            SUBSYSTEM_ENUM_EFI_BOOT_SERVICE_DRIVER = 11,
+            SUBSYSTEM_ENUM_EFI_RUNTIME_DRIVER = 12,
+            SUBSYSTEM_ENUM_EFI_ROM = 13,
+            SUBSYSTEM_ENUM_XBOX = 14
+        };
+
+        optional_header_windows_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~optional_header_windows_t();
+
+    private:
+        uint32_t m_image_base_32;
+        bool n_image_base_32;
+
+    public:
+        bool _is_null_image_base_32() { image_base_32(); return n_image_base_32; };
+
+    private:
+        uint64_t m_image_base_64;
+        bool n_image_base_64;
+
+    public:
+        bool _is_null_image_base_64() { image_base_64(); return n_image_base_64; };
+
+    private:
+        uint32_t m_section_alignment;
+        uint32_t m_file_alignment;
+        uint16_t m_major_operating_system_version;
+        uint16_t m_minor_operating_system_version;
+        uint16_t m_major_image_version;
+        uint16_t m_minor_image_version;
+        uint16_t m_major_subsystem_version;
+        uint16_t m_minor_subsystem_version;
+        uint32_t m_win32_version_value;
+        uint32_t m_size_of_image;
+        uint32_t m_size_of_headers;
+        uint32_t m_check_sum;
+        subsystem_enum_t m_subsystem;
+        uint16_t m_dll_characteristics;
+        uint32_t m_size_of_stack_reserve_32;
+        bool n_size_of_stack_reserve_32;
+
+    public:
+        bool _is_null_size_of_stack_reserve_32() { size_of_stack_reserve_32(); return n_size_of_stack_reserve_32; };
+
+    private:
+        uint64_t m_size_of_stack_reserve_64;
+        bool n_size_of_stack_reserve_64;
+
+    public:
+        bool _is_null_size_of_stack_reserve_64() { size_of_stack_reserve_64(); return n_size_of_stack_reserve_64; };
+
+    private:
+        uint32_t m_size_of_stack_commit_32;
+        bool n_size_of_stack_commit_32;
+
+    public:
+        bool _is_null_size_of_stack_commit_32() { size_of_stack_commit_32(); return n_size_of_stack_commit_32; };
+
+    private:
+        uint64_t m_size_of_stack_commit_64;
+        bool n_size_of_stack_commit_64;
+
+    public:
+        bool _is_null_size_of_stack_commit_64() { size_of_stack_commit_64(); return n_size_of_stack_commit_64; };
+
+    private:
+        uint32_t m_size_of_heap_reserve_32;
+        bool n_size_of_heap_reserve_32;
+
+    public:
+        bool _is_null_size_of_heap_reserve_32() { size_of_heap_reserve_32(); return n_size_of_heap_reserve_32; };
+
+    private:
+        uint64_t m_size_of_heap_reserve_64;
+        bool n_size_of_heap_reserve_64;
+
+    public:
+        bool _is_null_size_of_heap_reserve_64() { size_of_heap_reserve_64(); return n_size_of_heap_reserve_64; };
+
+    private:
+        uint32_t m_size_of_heap_commit_32;
+        bool n_size_of_heap_commit_32;
+
+    public:
+        bool _is_null_size_of_heap_commit_32() { size_of_heap_commit_32(); return n_size_of_heap_commit_32; };
+
+    private:
+        uint64_t m_size_of_heap_commit_64;
+        bool n_size_of_heap_commit_64;
+
+    public:
+        bool _is_null_size_of_heap_commit_64() { size_of_heap_commit_64(); return n_size_of_heap_commit_64; };
+
+    private:
+        uint32_t m_loader_flags;
+        uint32_t m_number_of_rva_and_sizes;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::optional_header_t* m__parent;
+
+    public:
+        uint32_t image_base_32() const { return m_image_base_32; }
+        uint64_t image_base_64() const { return m_image_base_64; }
+        uint32_t section_alignment() const { return m_section_alignment; }
+        uint32_t file_alignment() const { return m_file_alignment; }
+        uint16_t major_operating_system_version() const { return m_major_operating_system_version; }
+        uint16_t minor_operating_system_version() const { return m_minor_operating_system_version; }
+        uint16_t major_image_version() const { return m_major_image_version; }
+        uint16_t minor_image_version() const { return m_minor_image_version; }
+        uint16_t major_subsystem_version() const { return m_major_subsystem_version; }
+        uint16_t minor_subsystem_version() const { return m_minor_subsystem_version; }
+        uint32_t win32_version_value() const { return m_win32_version_value; }
+        uint32_t size_of_image() const { return m_size_of_image; }
+        uint32_t size_of_headers() const { return m_size_of_headers; }
+        uint32_t check_sum() const { return m_check_sum; }
+        subsystem_enum_t subsystem() const { return m_subsystem; }
+        uint16_t dll_characteristics() const { return m_dll_characteristics; }
+        uint32_t size_of_stack_reserve_32() const { return m_size_of_stack_reserve_32; }
+        uint64_t size_of_stack_reserve_64() const { return m_size_of_stack_reserve_64; }
+        uint32_t size_of_stack_commit_32() const { return m_size_of_stack_commit_32; }
+        uint64_t size_of_stack_commit_64() const { return m_size_of_stack_commit_64; }
+        uint32_t size_of_heap_reserve_32() const { return m_size_of_heap_reserve_32; }
+        uint64_t size_of_heap_reserve_64() const { return m_size_of_heap_reserve_64; }
+        uint32_t size_of_heap_commit_32() const { return m_size_of_heap_commit_32; }
+        uint64_t size_of_heap_commit_64() const { return m_size_of_heap_commit_64; }
+        uint32_t loader_flags() const { return m_loader_flags; }
+        uint32_t number_of_rva_and_sizes() const { return m_number_of_rva_and_sizes; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::optional_header_t* _parent() const { return m__parent; }
+    };
+
+    class optional_header_data_dirs_t : public kaitai::kstruct {
+
+    public:
+
+        optional_header_data_dirs_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~optional_header_data_dirs_t();
+
+    private:
+        data_dir_t* m_export_table;
+        data_dir_t* m_import_table;
+        data_dir_t* m_resource_table;
+        data_dir_t* m_exception_table;
+        data_dir_t* m_certificate_table;
+        data_dir_t* m_base_relocation_table;
+        data_dir_t* m_debug;
+        data_dir_t* m_architecture;
+        data_dir_t* m_global_ptr;
+        data_dir_t* m_tls_table;
+        data_dir_t* m_load_config_table;
+        data_dir_t* m_bound_import;
+        data_dir_t* m_iat;
+        data_dir_t* m_delay_import_descriptor;
+        data_dir_t* m_clr_runtime_header;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::optional_header_t* m__parent;
+
+    public:
+        data_dir_t* export_table() const { return m_export_table; }
+        data_dir_t* import_table() const { return m_import_table; }
+        data_dir_t* resource_table() const { return m_resource_table; }
+        data_dir_t* exception_table() const { return m_exception_table; }
+        data_dir_t* certificate_table() const { return m_certificate_table; }
+        data_dir_t* base_relocation_table() const { return m_base_relocation_table; }
+        data_dir_t* debug() const { return m_debug; }
+        data_dir_t* architecture() const { return m_architecture; }
+        data_dir_t* global_ptr() const { return m_global_ptr; }
+        data_dir_t* tls_table() const { return m_tls_table; }
+        data_dir_t* load_config_table() const { return m_load_config_table; }
+        data_dir_t* bound_import() const { return m_bound_import; }
+        data_dir_t* iat() const { return m_iat; }
+        data_dir_t* delay_import_descriptor() const { return m_delay_import_descriptor; }
+        data_dir_t* clr_runtime_header() const { return m_clr_runtime_header; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::optional_header_t* _parent() const { return m__parent; }
+    };
+
+    class data_dir_t : public kaitai::kstruct {
+
+    public:
+
+        data_dir_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_data_dirs_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~data_dir_t();
+
+    private:
+        uint32_t m_virtual_address;
+        uint32_t m_size;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::optional_header_data_dirs_t* m__parent;
+
+    public:
+        uint32_t virtual_address() const { return m_virtual_address; }
+        uint32_t size() const { return m_size; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::optional_header_data_dirs_t* _parent() const { return m__parent; }
+    };
+
+    class coff_symbol_t : public kaitai::kstruct {
+
+    public:
+
+        coff_symbol_t(kaitai::kstream* p__io, microsoft_pe_t::coff_header_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~coff_symbol_t();
+
+    private:
+        bool f_section;
+        section_t* m_section;
+
+    public:
+        section_t* section();
+
+    private:
+        bool f_data;
+        std::string m_data;
+
+    public:
+        std::string data();
+
+    private:
+        annoyingstring_t* m_name_annoying;
+        uint32_t m_value;
+        uint16_t m_section_number;
+        uint16_t m_type;
+        uint8_t m_storage_class;
+        uint8_t m_number_of_aux_symbols;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::coff_header_t* m__parent;
+        std::string m__raw_name_annoying;
+        kaitai::kstream* m__io__raw_name_annoying;
+
+    public:
+        annoyingstring_t* name_annoying() const { return m_name_annoying; }
+        uint32_t value() const { return m_value; }
+        uint16_t section_number() const { return m_section_number; }
+        uint16_t type() const { return m_type; }
+        uint8_t storage_class() const { return m_storage_class; }
+        uint8_t number_of_aux_symbols() const { return m_number_of_aux_symbols; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::coff_header_t* _parent() const { return m__parent; }
+        std::string _raw_name_annoying() const { return m__raw_name_annoying; }
+        kaitai::kstream* _io__raw_name_annoying() const { return m__io__raw_name_annoying; }
+    };
+
+    class optional_header_t : public kaitai::kstruct {
+
+    public:
+
+        optional_header_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~optional_header_t();
+
+    private:
+        optional_header_std_t* m_std;
+        optional_header_windows_t* m_windows;
+        optional_header_data_dirs_t* m_data_dirs;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t* m__parent;
+
+    public:
+        optional_header_std_t* std() const { return m_std; }
+        optional_header_windows_t* windows() const { return m_windows; }
+        optional_header_data_dirs_t* data_dirs() const { return m_data_dirs; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t* _parent() const { return m__parent; }
+    };
+
+    class section_t : public kaitai::kstruct {
+
+    public:
+
+        section_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~section_t();
+
+    private:
+        bool f_body;
+        std::string m_body;
+
+    public:
+        std::string body();
+
+    private:
+        std::string m_name;
+        uint32_t m_virtual_size;
+        uint32_t m_virtual_address;
+        uint32_t m_size_of_raw_data;
+        uint32_t m_pointer_to_raw_data;
+        uint32_t m_pointer_to_relocations;
+        uint32_t m_pointer_to_linenumbers;
+        uint16_t m_number_of_relocations;
+        uint16_t m_number_of_linenumbers;
+        uint32_t m_characteristics;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t* m__parent;
+
+    public:
+        std::string name() const { return m_name; }
+        uint32_t virtual_size() const { return m_virtual_size; }
+        uint32_t virtual_address() const { return m_virtual_address; }
+        uint32_t size_of_raw_data() const { return m_size_of_raw_data; }
+        uint32_t pointer_to_raw_data() const { return m_pointer_to_raw_data; }
+        uint32_t pointer_to_relocations() const { return m_pointer_to_relocations; }
+        uint32_t pointer_to_linenumbers() const { return m_pointer_to_linenumbers; }
+        uint16_t number_of_relocations() const { return m_number_of_relocations; }
+        uint16_t number_of_linenumbers() const { return m_number_of_linenumbers; }
+        uint32_t characteristics() const { return m_characteristics; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t* _parent() const { return m__parent; }
+    };
+
+    class mz_placeholder_t : public kaitai::kstruct {
+
+    public:
+
+        mz_placeholder_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~mz_placeholder_t();
+
+    private:
+        std::string m_magic;
+        std::string m_data1;
+        uint32_t m_header_size;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t* m__parent;
+
+    public:
+        std::string magic() const { return m_magic; }
+        std::string data1() const { return m_data1; }
+        uint32_t header_size() const { return m_header_size; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t* _parent() const { return m__parent; }
+    };
+
+    class optional_header_std_t : public kaitai::kstruct {
+
+    public:
+
+        optional_header_std_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~optional_header_std_t();
+
+    private:
+        pe_format_t m_format;
+        uint8_t m_major_linker_version;
+        uint8_t m_minor_linker_version;
+        uint32_t m_size_of_code;
+        uint32_t m_size_of_initialized_data;
+        uint32_t m_size_of_uninitialized_data;
+        uint32_t m_address_of_entry_point;
+        uint32_t m_base_of_code;
+        uint32_t m_base_of_data;
+        bool n_base_of_data;
+
+    public:
+        bool _is_null_base_of_data() { base_of_data(); return n_base_of_data; };
+
+    private:
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::optional_header_t* m__parent;
+
+    public:
+        pe_format_t format() const { return m_format; }
+        uint8_t major_linker_version() const { return m_major_linker_version; }
+        uint8_t minor_linker_version() const { return m_minor_linker_version; }
+        uint32_t size_of_code() const { return m_size_of_code; }
+        uint32_t size_of_initialized_data() const { return m_size_of_initialized_data; }
+        uint32_t size_of_uninitialized_data() const { return m_size_of_uninitialized_data; }
+        uint32_t address_of_entry_point() const { return m_address_of_entry_point; }
+        uint32_t base_of_code() const { return m_base_of_code; }
+        uint32_t base_of_data() const { return m_base_of_data; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::optional_header_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa 3.3. COFF File Header (Object and Image)
+     */
+
+    class coff_header_t : public kaitai::kstruct {
+
+    public:
+
+        enum machine_type_t {
+            MACHINE_TYPE_UNKNOWN = 0,
+            MACHINE_TYPE_I386 = 332,
+            MACHINE_TYPE_R4000 = 358,
+            MACHINE_TYPE_WCEMIPSV2 = 361,
+            MACHINE_TYPE_SH3 = 418,
+            MACHINE_TYPE_SH3DSP = 419,
+            MACHINE_TYPE_SH4 = 422,
+            MACHINE_TYPE_SH5 = 424,
+            MACHINE_TYPE_ARM = 448,
+            MACHINE_TYPE_THUMB = 450,
+            MACHINE_TYPE_ARMNT = 452,
+            MACHINE_TYPE_AM33 = 467,
+            MACHINE_TYPE_POWERPC = 496,
+            MACHINE_TYPE_POWERPCFP = 497,
+            MACHINE_TYPE_IA64 = 512,
+            MACHINE_TYPE_MIPS16 = 614,
+            MACHINE_TYPE_MIPSFPU = 870,
+            MACHINE_TYPE_MIPSFPU16 = 1126,
+            MACHINE_TYPE_EBC = 3772,
+            MACHINE_TYPE_RISCV32 = 20530,
+            MACHINE_TYPE_RISCV64 = 20580,
+            MACHINE_TYPE_RISCV128 = 20776,
+            MACHINE_TYPE_AMD64 = 34404,
+            MACHINE_TYPE_M32R = 36929
+        };
+
+        coff_header_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~coff_header_t();
+
+    private:
+        bool f_symbol_table_size;
+        int32_t m_symbol_table_size;
+
+    public:
+        int32_t symbol_table_size();
+
+    private:
+        bool f_symbol_name_table_offset;
+        int32_t m_symbol_name_table_offset;
+
+    public:
+        int32_t symbol_name_table_offset();
+
+    private:
+        bool f_symbol_name_table_size;
+        uint32_t m_symbol_name_table_size;
+
+    public:
+        uint32_t symbol_name_table_size();
+
+    private:
+        bool f_symbol_table;
+        std::vector&lt;coff_symbol_t*&gt;* m_symbol_table;
+
+    public:
+        std::vector&lt;coff_symbol_t*&gt;* symbol_table();
+
+    private:
+        machine_type_t m_machine;
+        uint16_t m_number_of_sections;
+        uint32_t m_time_date_stamp;
+        uint32_t m_pointer_to_symbol_table;
+        uint32_t m_number_of_symbols;
+        uint16_t m_size_of_optional_header;
+        uint16_t m_characteristics;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t* m__parent;
+
+    public:
+        machine_type_t machine() const { return m_machine; }
+        uint16_t number_of_sections() const { return m_number_of_sections; }
+        uint32_t time_date_stamp() const { return m_time_date_stamp; }
+        uint32_t pointer_to_symbol_table() const { return m_pointer_to_symbol_table; }
+        uint32_t number_of_symbols() const { return m_number_of_symbols; }
+        uint16_t size_of_optional_header() const { return m_size_of_optional_header; }
+        uint16_t characteristics() const { return m_characteristics; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t* _parent() const { return m__parent; }
+    };
+
+    class annoyingstring_t : public kaitai::kstruct {
+
+    public:
+
+        annoyingstring_t(kaitai::kstream* p__io, microsoft_pe_t::coff_symbol_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~annoyingstring_t();
+
+    private:
+        bool f_name_from_offset;
+        std::string m_name_from_offset;
+
+    public:
+        std::string name_from_offset();
+
+    private:
+        bool f_name_offset;
+        uint32_t m_name_offset;
+
+    public:
+        uint32_t name_offset();
+
+    private:
+        bool f_name;
+        std::string m_name;
+
+    public:
+        std::string name();
+
+    private:
+        bool f_name_zeroes;
+        uint32_t m_name_zeroes;
+
+    public:
+        uint32_t name_zeroes();
+
+    private:
+        bool f_name_from_short;
+        std::string m_name_from_short;
+
+    public:
+        std::string name_from_short();
+
+    private:
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::coff_symbol_t* m__parent;
+
+    public:
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::coff_symbol_t* _parent() const { return m__parent; }
+    };
+
+private:
+    mz_placeholder_t* m_mz1;
+    std::string m_mz2;
+    std::string m_pe_signature;
+    coff_header_t* m_coff_hdr;
+    optional_header_t* m_optional_hdr;
+    std::vector&lt;section_t*&gt;* m_sections;
+    microsoft_pe_t* m__root;
+    kaitai::kstruct* m__parent;
+    std::string m__raw_optional_hdr;
+    kaitai::kstream* m__io__raw_optional_hdr;
+
+public:
+    mz_placeholder_t* mz1() const { return m_mz1; }
+    std::string mz2() const { return m_mz2; }
+    std::string pe_signature() const { return m_pe_signature; }
+    coff_header_t* coff_hdr() const { return m_coff_hdr; }
+    optional_header_t* optional_hdr() const { return m_optional_hdr; }
+    std::vector&lt;section_t*&gt;* sections() const { return m_sections; }
+    microsoft_pe_t* _root() const { return m__root; }
+    kaitai::kstruct* _parent() const { return m__parent; }
+    std::string _raw_optional_hdr() const { return m__raw_optional_hdr; }
+    kaitai::kstream* _io__raw_optional_hdr() const { return m__io__raw_optional_hdr; }
+};
+
+#endif  // MICROSOFT_PE_H_
+</code></pre>
+            
+        </div>
+        
+
+        <h3>microsoft_pe.cpp</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl/microsoft_pe.cpp" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include &quot;microsoft_pe.h&quot;
+
+
+
+microsoft_pe_t::microsoft_pe_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = this;
+    _read();
+}
+
+void microsoft_pe_t::_read() {
+    m_mz1 = new mz_placeholder_t(m__io, this, m__root);
+    m_mz2 = m__io-&gt;read_bytes((mz1()-&gt;header_size() - 64));
+    m_pe_signature = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x50\x45\x00\x00&quot;, 4));
+    m_coff_hdr = new coff_header_t(m__io, this, m__root);
+    m__raw_optional_hdr = m__io-&gt;read_bytes(coff_hdr()-&gt;size_of_optional_header());
+    m__io__raw_optional_hdr = new kaitai::kstream(m__raw_optional_hdr);
+    m_optional_hdr = new optional_header_t(m__io__raw_optional_hdr, this, m__root);
+    int l_sections = coff_hdr()-&gt;number_of_sections();
+    m_sections = new std::vector&lt;section_t*&gt;();
+    m_sections-&gt;reserve(l_sections);
+    for (int i = 0; i &lt; l_sections; i++) {
+        m_sections-&gt;push_back(new section_t(m__io, this, m__root));
+    }
+}
+
+microsoft_pe_t::~microsoft_pe_t() {
+    delete m_mz1;
+    delete m_coff_hdr;
+    delete m__io__raw_optional_hdr;
+    delete m_optional_hdr;
+    for (std::vector&lt;section_t*&gt;::iterator it = m_sections-&gt;begin(); it != m_sections-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_sections;
+}
+
+microsoft_pe_t::optional_header_windows_t::optional_header_windows_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void microsoft_pe_t::optional_header_windows_t::_read() {
+    n_image_base_32 = true;
+    if (_parent()-&gt;std()-&gt;format() == PE_FORMAT_PE32) {
+        n_image_base_32 = false;
+        m_image_base_32 = m__io-&gt;read_u4le();
+    }
+    n_image_base_64 = true;
+    if (_parent()-&gt;std()-&gt;format() == PE_FORMAT_PE32_PLUS) {
+        n_image_base_64 = false;
+        m_image_base_64 = m__io-&gt;read_u8le();
+    }
+    m_section_alignment = m__io-&gt;read_u4le();
+    m_file_alignment = m__io-&gt;read_u4le();
+    m_major_operating_system_version = m__io-&gt;read_u2le();
+    m_minor_operating_system_version = m__io-&gt;read_u2le();
+    m_major_image_version = m__io-&gt;read_u2le();
+    m_minor_image_version = m__io-&gt;read_u2le();
+    m_major_subsystem_version = m__io-&gt;read_u2le();
+    m_minor_subsystem_version = m__io-&gt;read_u2le();
+    m_win32_version_value = m__io-&gt;read_u4le();
+    m_size_of_image = m__io-&gt;read_u4le();
+    m_size_of_headers = m__io-&gt;read_u4le();
+    m_check_sum = m__io-&gt;read_u4le();
+    m_subsystem = static_cast&lt;microsoft_pe_t::optional_header_windows_t::subsystem_enum_t&gt;(m__io-&gt;read_u2le());
+    m_dll_characteristics = m__io-&gt;read_u2le();
+    n_size_of_stack_reserve_32 = true;
+    if (_parent()-&gt;std()-&gt;format() == PE_FORMAT_PE32) {
+        n_size_of_stack_reserve_32 = false;
+        m_size_of_stack_reserve_32 = m__io-&gt;read_u4le();
+    }
+    n_size_of_stack_reserve_64 = true;
+    if (_parent()-&gt;std()-&gt;format() == PE_FORMAT_PE32_PLUS) {
+        n_size_of_stack_reserve_64 = false;
+        m_size_of_stack_reserve_64 = m__io-&gt;read_u8le();
+    }
+    n_size_of_stack_commit_32 = true;
+    if (_parent()-&gt;std()-&gt;format() == PE_FORMAT_PE32) {
+        n_size_of_stack_commit_32 = false;
+        m_size_of_stack_commit_32 = m__io-&gt;read_u4le();
+    }
+    n_size_of_stack_commit_64 = true;
+    if (_parent()-&gt;std()-&gt;format() == PE_FORMAT_PE32_PLUS) {
+        n_size_of_stack_commit_64 = false;
+        m_size_of_stack_commit_64 = m__io-&gt;read_u8le();
+    }
+    n_size_of_heap_reserve_32 = true;
+    if (_parent()-&gt;std()-&gt;format() == PE_FORMAT_PE32) {
+        n_size_of_heap_reserve_32 = false;
+        m_size_of_heap_reserve_32 = m__io-&gt;read_u4le();
+    }
+    n_size_of_heap_reserve_64 = true;
+    if (_parent()-&gt;std()-&gt;format() == PE_FORMAT_PE32_PLUS) {
+        n_size_of_heap_reserve_64 = false;
+        m_size_of_heap_reserve_64 = m__io-&gt;read_u8le();
+    }
+    n_size_of_heap_commit_32 = true;
+    if (_parent()-&gt;std()-&gt;format() == PE_FORMAT_PE32) {
+        n_size_of_heap_commit_32 = false;
+        m_size_of_heap_commit_32 = m__io-&gt;read_u4le();
+    }
+    n_size_of_heap_commit_64 = true;
+    if (_parent()-&gt;std()-&gt;format() == PE_FORMAT_PE32_PLUS) {
+        n_size_of_heap_commit_64 = false;
+        m_size_of_heap_commit_64 = m__io-&gt;read_u8le();
+    }
+    m_loader_flags = m__io-&gt;read_u4le();
+    m_number_of_rva_and_sizes = m__io-&gt;read_u4le();
+}
+
+microsoft_pe_t::optional_header_windows_t::~optional_header_windows_t() {
+    if (!n_image_base_32) {
+    }
+    if (!n_image_base_64) {
+    }
+    if (!n_size_of_stack_reserve_32) {
+    }
+    if (!n_size_of_stack_reserve_64) {
+    }
+    if (!n_size_of_stack_commit_32) {
+    }
+    if (!n_size_of_stack_commit_64) {
+    }
+    if (!n_size_of_heap_reserve_32) {
+    }
+    if (!n_size_of_heap_reserve_64) {
+    }
+    if (!n_size_of_heap_commit_32) {
+    }
+    if (!n_size_of_heap_commit_64) {
+    }
+}
+
+microsoft_pe_t::optional_header_data_dirs_t::optional_header_data_dirs_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void microsoft_pe_t::optional_header_data_dirs_t::_read() {
+    m_export_table = new data_dir_t(m__io, this, m__root);
+    m_import_table = new data_dir_t(m__io, this, m__root);
+    m_resource_table = new data_dir_t(m__io, this, m__root);
+    m_exception_table = new data_dir_t(m__io, this, m__root);
+    m_certificate_table = new data_dir_t(m__io, this, m__root);
+    m_base_relocation_table = new data_dir_t(m__io, this, m__root);
+    m_debug = new data_dir_t(m__io, this, m__root);
+    m_architecture = new data_dir_t(m__io, this, m__root);
+    m_global_ptr = new data_dir_t(m__io, this, m__root);
+    m_tls_table = new data_dir_t(m__io, this, m__root);
+    m_load_config_table = new data_dir_t(m__io, this, m__root);
+    m_bound_import = new data_dir_t(m__io, this, m__root);
+    m_iat = new data_dir_t(m__io, this, m__root);
+    m_delay_import_descriptor = new data_dir_t(m__io, this, m__root);
+    m_clr_runtime_header = new data_dir_t(m__io, this, m__root);
+}
+
+microsoft_pe_t::optional_header_data_dirs_t::~optional_header_data_dirs_t() {
+    delete m_export_table;
+    delete m_import_table;
+    delete m_resource_table;
+    delete m_exception_table;
+    delete m_certificate_table;
+    delete m_base_relocation_table;
+    delete m_debug;
+    delete m_architecture;
+    delete m_global_ptr;
+    delete m_tls_table;
+    delete m_load_config_table;
+    delete m_bound_import;
+    delete m_iat;
+    delete m_delay_import_descriptor;
+    delete m_clr_runtime_header;
+}
+
+microsoft_pe_t::data_dir_t::data_dir_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_data_dirs_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void microsoft_pe_t::data_dir_t::_read() {
+    m_virtual_address = m__io-&gt;read_u4le();
+    m_size = m__io-&gt;read_u4le();
+}
+
+microsoft_pe_t::data_dir_t::~data_dir_t() {
+}
+
+microsoft_pe_t::coff_symbol_t::coff_symbol_t(kaitai::kstream* p__io, microsoft_pe_t::coff_header_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_section = false;
+    f_data = false;
+    _read();
+}
+
+void microsoft_pe_t::coff_symbol_t::_read() {
+    m__raw_name_annoying = m__io-&gt;read_bytes(8);
+    m__io__raw_name_annoying = new kaitai::kstream(m__raw_name_annoying);
+    m_name_annoying = new annoyingstring_t(m__io__raw_name_annoying, this, m__root);
+    m_value = m__io-&gt;read_u4le();
+    m_section_number = m__io-&gt;read_u2le();
+    m_type = m__io-&gt;read_u2le();
+    m_storage_class = m__io-&gt;read_u1();
+    m_number_of_aux_symbols = m__io-&gt;read_u1();
+}
+
+microsoft_pe_t::coff_symbol_t::~coff_symbol_t() {
+    delete m__io__raw_name_annoying;
+    delete m_name_annoying;
+    if (f_data) {
+    }
+}
+
+microsoft_pe_t::section_t* microsoft_pe_t::coff_symbol_t::section() {
+    if (f_section)
+        return m_section;
+    m_section = _root()-&gt;sections()-&gt;at((section_number() - 1));
+    f_section = true;
+    return m_section;
+}
+
+std::string microsoft_pe_t::coff_symbol_t::data() {
+    if (f_data)
+        return m_data;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek((section()-&gt;pointer_to_raw_data() + value()));
+    m_data = m__io-&gt;read_bytes(1);
+    m__io-&gt;seek(_pos);
+    f_data = true;
+    return m_data;
+}
+
+microsoft_pe_t::optional_header_t::optional_header_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void microsoft_pe_t::optional_header_t::_read() {
+    m_std = new optional_header_std_t(m__io, this, m__root);
+    m_windows = new optional_header_windows_t(m__io, this, m__root);
+    m_data_dirs = new optional_header_data_dirs_t(m__io, this, m__root);
+}
+
+microsoft_pe_t::optional_header_t::~optional_header_t() {
+    delete m_std;
+    delete m_windows;
+    delete m_data_dirs;
+}
+
+microsoft_pe_t::section_t::section_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_body = false;
+    _read();
+}
+
+void microsoft_pe_t::section_t::_read() {
+    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io-&gt;read_bytes(8), 0), std::string(&quot;UTF-8&quot;));
+    m_virtual_size = m__io-&gt;read_u4le();
+    m_virtual_address = m__io-&gt;read_u4le();
+    m_size_of_raw_data = m__io-&gt;read_u4le();
+    m_pointer_to_raw_data = m__io-&gt;read_u4le();
+    m_pointer_to_relocations = m__io-&gt;read_u4le();
+    m_pointer_to_linenumbers = m__io-&gt;read_u4le();
+    m_number_of_relocations = m__io-&gt;read_u2le();
+    m_number_of_linenumbers = m__io-&gt;read_u2le();
+    m_characteristics = m__io-&gt;read_u4le();
+}
+
+microsoft_pe_t::section_t::~section_t() {
+    if (f_body) {
+    }
+}
+
+std::string microsoft_pe_t::section_t::body() {
+    if (f_body)
+        return m_body;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(pointer_to_raw_data());
+    m_body = m__io-&gt;read_bytes(size_of_raw_data());
+    m__io-&gt;seek(_pos);
+    f_body = true;
+    return m_body;
+}
+
+microsoft_pe_t::mz_placeholder_t::mz_placeholder_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void microsoft_pe_t::mz_placeholder_t::_read() {
+    m_magic = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x4D\x5A&quot;, 2));
+    m_data1 = m__io-&gt;read_bytes(58);
+    m_header_size = m__io-&gt;read_u4le();
+}
+
+microsoft_pe_t::mz_placeholder_t::~mz_placeholder_t() {
+}
+
+microsoft_pe_t::optional_header_std_t::optional_header_std_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void microsoft_pe_t::optional_header_std_t::_read() {
+    m_format = static_cast&lt;microsoft_pe_t::pe_format_t&gt;(m__io-&gt;read_u2le());
+    m_major_linker_version = m__io-&gt;read_u1();
+    m_minor_linker_version = m__io-&gt;read_u1();
+    m_size_of_code = m__io-&gt;read_u4le();
+    m_size_of_initialized_data = m__io-&gt;read_u4le();
+    m_size_of_uninitialized_data = m__io-&gt;read_u4le();
+    m_address_of_entry_point = m__io-&gt;read_u4le();
+    m_base_of_code = m__io-&gt;read_u4le();
+    n_base_of_data = true;
+    if (format() == PE_FORMAT_PE32) {
+        n_base_of_data = false;
+        m_base_of_data = m__io-&gt;read_u4le();
+    }
+}
+
+microsoft_pe_t::optional_header_std_t::~optional_header_std_t() {
+    if (!n_base_of_data) {
+    }
+}
+
+microsoft_pe_t::coff_header_t::coff_header_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_symbol_table_size = false;
+    f_symbol_name_table_offset = false;
+    f_symbol_name_table_size = false;
+    f_symbol_table = false;
+    _read();
+}
+
+void microsoft_pe_t::coff_header_t::_read() {
+    m_machine = static_cast&lt;microsoft_pe_t::coff_header_t::machine_type_t&gt;(m__io-&gt;read_u2le());
+    m_number_of_sections = m__io-&gt;read_u2le();
+    m_time_date_stamp = m__io-&gt;read_u4le();
+    m_pointer_to_symbol_table = m__io-&gt;read_u4le();
+    m_number_of_symbols = m__io-&gt;read_u4le();
+    m_size_of_optional_header = m__io-&gt;read_u2le();
+    m_characteristics = m__io-&gt;read_u2le();
+}
+
+microsoft_pe_t::coff_header_t::~coff_header_t() {
+    if (f_symbol_name_table_size) {
+    }
+    if (f_symbol_table) {
+        for (std::vector&lt;coff_symbol_t*&gt;::iterator it = m_symbol_table-&gt;begin(); it != m_symbol_table-&gt;end(); ++it) {
+            delete *it;
+        }
+        delete m_symbol_table;
+    }
+}
+
+int32_t microsoft_pe_t::coff_header_t::symbol_table_size() {
+    if (f_symbol_table_size)
+        return m_symbol_table_size;
+    m_symbol_table_size = (number_of_symbols() * 18);
+    f_symbol_table_size = true;
+    return m_symbol_table_size;
+}
+
+int32_t microsoft_pe_t::coff_header_t::symbol_name_table_offset() {
+    if (f_symbol_name_table_offset)
+        return m_symbol_name_table_offset;
+    m_symbol_name_table_offset = (pointer_to_symbol_table() + symbol_table_size());
+    f_symbol_name_table_offset = true;
+    return m_symbol_name_table_offset;
+}
+
+uint32_t microsoft_pe_t::coff_header_t::symbol_name_table_size() {
+    if (f_symbol_name_table_size)
+        return m_symbol_name_table_size;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(symbol_name_table_offset());
+    m_symbol_name_table_size = m__io-&gt;read_u4le();
+    m__io-&gt;seek(_pos);
+    f_symbol_name_table_size = true;
+    return m_symbol_name_table_size;
+}
+
+std::vector&lt;microsoft_pe_t::coff_symbol_t*&gt;* microsoft_pe_t::coff_header_t::symbol_table() {
+    if (f_symbol_table)
+        return m_symbol_table;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(pointer_to_symbol_table());
+    int l_symbol_table = number_of_symbols();
+    m_symbol_table = new std::vector&lt;coff_symbol_t*&gt;();
+    m_symbol_table-&gt;reserve(l_symbol_table);
+    for (int i = 0; i &lt; l_symbol_table; i++) {
+        m_symbol_table-&gt;push_back(new coff_symbol_t(m__io, this, m__root));
+    }
+    m__io-&gt;seek(_pos);
+    f_symbol_table = true;
+    return m_symbol_table;
+}
+
+microsoft_pe_t::annoyingstring_t::annoyingstring_t(kaitai::kstream* p__io, microsoft_pe_t::coff_symbol_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_name_from_offset = false;
+    f_name_offset = false;
+    f_name = false;
+    f_name_zeroes = false;
+    f_name_from_short = false;
+    _read();
+}
+
+void microsoft_pe_t::annoyingstring_t::_read() {
+}
+
+microsoft_pe_t::annoyingstring_t::~annoyingstring_t() {
+    if (f_name_from_offset) {
+    }
+    if (f_name_offset) {
+    }
+    if (f_name_zeroes) {
+    }
+    if (f_name_from_short) {
+    }
+}
+
+std::string microsoft_pe_t::annoyingstring_t::name_from_offset() {
+    if (f_name_from_offset)
+        return m_name_from_offset;
+    kaitai::kstream *io = _root()-&gt;_io();
+    std::streampos _pos = io-&gt;pos();
+    io-&gt;seek(((name_zeroes() == 0) ? ((_parent()-&gt;_parent()-&gt;symbol_name_table_offset() + name_offset())) : (0)));
+    m_name_from_offset = kaitai::kstream::bytes_to_str(io-&gt;read_bytes_term(0, false, true, false), std::string(&quot;ascii&quot;));
+    io-&gt;seek(_pos);
+    f_name_from_offset = true;
+    return m_name_from_offset;
+}
+
+uint32_t microsoft_pe_t::annoyingstring_t::name_offset() {
+    if (f_name_offset)
+        return m_name_offset;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(4);
+    m_name_offset = m__io-&gt;read_u4le();
+    m__io-&gt;seek(_pos);
+    f_name_offset = true;
+    return m_name_offset;
+}
+
+std::string microsoft_pe_t::annoyingstring_t::name() {
+    if (f_name)
+        return m_name;
+    m_name = ((name_zeroes() == 0) ? (name_from_offset()) : (name_from_short()));
+    f_name = true;
+    return m_name;
+}
+
+uint32_t microsoft_pe_t::annoyingstring_t::name_zeroes() {
+    if (f_name_zeroes)
+        return m_name_zeroes;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(0);
+    m_name_zeroes = m__io-&gt;read_u4le();
+    m__io-&gt;seek(_pos);
+    f_name_zeroes = true;
+    return m_name_zeroes;
+}
+
+std::string microsoft_pe_t::annoyingstring_t::name_from_short() {
+    if (f_name_from_short)
+        return m_name_from_short;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(0);
+    m_name_from_short = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes_term(0, false, true, false), std::string(&quot;ascii&quot;));
+    m__io-&gt;seek(_pos);
+    f_name_from_short = true;
+    return m_name_from_short;
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2018 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="http://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="http://kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
