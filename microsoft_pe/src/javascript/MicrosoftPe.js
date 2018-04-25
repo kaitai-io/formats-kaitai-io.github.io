@@ -48,6 +48,7 @@ var MicrosoftPe = (function() {
       EFI_RUNTIME_DRIVER: 12,
       EFI_ROM: 13,
       XBOX: 14,
+      WINDOWS_BOOT_APPLICATION: 16,
 
       0: "UNKNOWN",
       1: "NATIVE",
@@ -60,6 +61,7 @@ var MicrosoftPe = (function() {
       12: "EFI_RUNTIME_DRIVER",
       13: "EFI_ROM",
       14: "XBOX",
+      16: "WINDOWS_BOOT_APPLICATION",
     });
 
     function OptionalHeaderWindows(_io, _parent, _root) {

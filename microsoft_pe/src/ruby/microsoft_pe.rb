@@ -40,6 +40,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
       12 => :subsystem_enum_efi_runtime_driver,
       13 => :subsystem_enum_efi_rom,
       14 => :subsystem_enum_xbox,
+      16 => :subsystem_enum_windows_boot_application,
     }
     I__SUBSYSTEM_ENUM = SUBSYSTEM_ENUM.invert
     def initialize(_io, _parent = nil, _root = self)

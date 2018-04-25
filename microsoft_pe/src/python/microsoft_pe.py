@@ -41,6 +41,7 @@ class MicrosoftPe(KaitaiStruct):
             efi_runtime_driver = 12
             efi_rom = 13
             xbox = 14
+            windows_boot_application = 16
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent

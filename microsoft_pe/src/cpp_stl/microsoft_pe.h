@@ -60,7 +60,8 @@ public:
             SUBSYSTEM_ENUM_EFI_BOOT_SERVICE_DRIVER = 11,
             SUBSYSTEM_ENUM_EFI_RUNTIME_DRIVER = 12,
             SUBSYSTEM_ENUM_EFI_ROM = 13,
-            SUBSYSTEM_ENUM_XBOX = 14
+            SUBSYSTEM_ENUM_XBOX = 14,
+            SUBSYSTEM_ENUM_WINDOWS_BOOT_APPLICATION = 16
         };
 
         optional_header_windows_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent = 0, microsoft_pe_t* p__root = 0);

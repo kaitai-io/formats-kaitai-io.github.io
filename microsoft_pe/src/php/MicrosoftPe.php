@@ -148,6 +148,7 @@ class SubsystemEnum {
     const EFI_RUNTIME_DRIVER = 12;
     const EFI_ROM = 13;
     const XBOX = 14;
+    const WINDOWS_BOOT_APPLICATION = 16;
 }
 
 namespace \MicrosoftPe;

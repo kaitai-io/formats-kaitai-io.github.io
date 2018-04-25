@@ -67,12 +67,13 @@ public class MicrosoftPe extends KaitaiStruct {
             EFI_BOOT_SERVICE_DRIVER(11),
             EFI_RUNTIME_DRIVER(12),
             EFI_ROM(13),
-            XBOX(14);
+            XBOX(14),
+            WINDOWS_BOOT_APPLICATION(16);
 
             private final long id;
             SubsystemEnum(long id) { this.id = id; }
             public long id() { return id; }
-            private static final Map<Long, SubsystemEnum> byId = new HashMap<Long, SubsystemEnum>(11);
+            private static final Map<Long, SubsystemEnum> byId = new HashMap<Long, SubsystemEnum>(12);
             static {
                 for (SubsystemEnum e : SubsystemEnum.values())
                     byId.put(e.id(), e);
