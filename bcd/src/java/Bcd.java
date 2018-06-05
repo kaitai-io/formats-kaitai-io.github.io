@@ -71,6 +71,10 @@ public class Bcd extends KaitaiStruct {
         }
     }
     private Integer asInt;
+
+    /**
+     * Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.
+     */
     public Integer asInt() {
         if (this.asInt != null)
             return this.asInt;
@@ -79,6 +83,10 @@ public class Bcd extends KaitaiStruct {
         return this.asInt;
     }
     private Integer asIntLe;
+
+    /**
+     * Value of this BCD number as integer (treating digit order as little-endian).
+     */
     public Integer asIntLe() {
         if (this.asIntLe != null)
             return this.asIntLe;
@@ -87,6 +95,10 @@ public class Bcd extends KaitaiStruct {
         return this.asIntLe;
     }
     private Integer lastIdx;
+
+    /**
+     * Index of last digit (0-based).
+     */
     public Integer lastIdx() {
         if (this.lastIdx != null)
             return this.lastIdx;
@@ -95,6 +107,10 @@ public class Bcd extends KaitaiStruct {
         return this.lastIdx;
     }
     private Integer asIntBe;
+
+    /**
+     * Value of this BCD number as integer (treating digit order as big-endian).
+     */
     public Integer asIntBe() {
         if (this.asIntBe != null)
             return this.asIntBe;
@@ -119,6 +135,10 @@ public class Bcd extends KaitaiStruct {
      * Number of bits per digit. Only values of 4 and 8 are supported.
      */
     public int bitsPerDigit() { return bitsPerDigit; }
+
+    /**
+     * Endianness used by this BCD representation. True means little-endian, false is for big-endian.
+     */
     public boolean isLe() { return isLe; }
     public Bcd _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }

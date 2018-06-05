@@ -232,7 +232,7 @@ var data = new Bcd(new KaitaiStream(someArray));</code></pre>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
-<pre><code class="csharp">data.Digits // => get digits</code></pre>
+<pre><code class="csharp">data.AsInt // => Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.</code></pre>
 
     </div>
 </section>
@@ -329,6 +329,10 @@ namespace Kaitai
         }
         private bool f_asInt;
         private int _asInt;
+
+        /// &lt;summary&gt;
+        /// Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.
+        /// &lt;/summary&gt;
         public int AsInt
         {
             get
@@ -342,6 +346,10 @@ namespace Kaitai
         }
         private bool f_asIntLe;
         private int _asIntLe;
+
+        /// &lt;summary&gt;
+        /// Value of this BCD number as integer (treating digit order as little-endian).
+        /// &lt;/summary&gt;
         public int AsIntLe
         {
             get
@@ -355,6 +363,10 @@ namespace Kaitai
         }
         private bool f_lastIdx;
         private int _lastIdx;
+
+        /// &lt;summary&gt;
+        /// Index of last digit (0-based).
+        /// &lt;/summary&gt;
         public int LastIdx
         {
             get
@@ -368,6 +380,10 @@ namespace Kaitai
         }
         private bool f_asIntBe;
         private int _asIntBe;
+
+        /// &lt;summary&gt;
+        /// Value of this BCD number as integer (treating digit order as big-endian).
+        /// &lt;/summary&gt;
         public int AsIntBe
         {
             get
@@ -396,6 +412,10 @@ namespace Kaitai
         /// Number of bits per digit. Only values of 4 and 8 are supported.
         /// &lt;/summary&gt;
         public byte BitsPerDigit { get { return _bitsPerDigit; } }
+
+        /// &lt;summary&gt;
+        /// Endianness used by this BCD representation. True means little-endian, false is for big-endian.
+        /// &lt;/summary&gt;
         public bool IsLe { get { return _isLe; } }
         public Bcd M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }

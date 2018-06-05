@@ -234,7 +234,7 @@ data = Bcd(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="python">data.digits # => get digits</code></pre>
+<pre><code class="python">data.asInt # => Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.</code></pre>
 
     </div>
 </section>
@@ -320,6 +320,7 @@ class Bcd(KaitaiStruct):
 
     @property
     def as_int(self):
+        &quot;&quot;&quot;Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.&quot;&quot;&quot;
         if hasattr(self, &#39;_m_as_int&#39;):
             return self._m_as_int if hasattr(self, &#39;_m_as_int&#39;) else None
 
@@ -328,6 +329,7 @@ class Bcd(KaitaiStruct):
 
     @property
     def as_int_le(self):
+        &quot;&quot;&quot;Value of this BCD number as integer (treating digit order as little-endian).&quot;&quot;&quot;
         if hasattr(self, &#39;_m_as_int_le&#39;):
             return self._m_as_int_le if hasattr(self, &#39;_m_as_int_le&#39;) else None
 
@@ -336,6 +338,7 @@ class Bcd(KaitaiStruct):
 
     @property
     def last_idx(self):
+        &quot;&quot;&quot;Index of last digit (0-based).&quot;&quot;&quot;
         if hasattr(self, &#39;_m_last_idx&#39;):
             return self._m_last_idx if hasattr(self, &#39;_m_last_idx&#39;) else None
 
@@ -344,6 +347,7 @@ class Bcd(KaitaiStruct):
 
     @property
     def as_int_be(self):
+        &quot;&quot;&quot;Value of this BCD number as integer (treating digit order as big-endian).&quot;&quot;&quot;
         if hasattr(self, &#39;_m_as_int_be&#39;):
             return self._m_as_int_be if hasattr(self, &#39;_m_as_int_be&#39;) else None
 

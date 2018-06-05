@@ -63,6 +63,10 @@ var Bcd = (function() {
       }
     }
   }
+
+  /**
+   * Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.
+   */
   Object.defineProperty(Bcd.prototype, 'asInt', {
     get: function() {
       if (this._m_asInt !== undefined)
@@ -71,6 +75,10 @@ var Bcd = (function() {
       return this._m_asInt;
     }
   });
+
+  /**
+   * Value of this BCD number as integer (treating digit order as little-endian).
+   */
   Object.defineProperty(Bcd.prototype, 'asIntLe', {
     get: function() {
       if (this._m_asIntLe !== undefined)
@@ -79,6 +87,10 @@ var Bcd = (function() {
       return this._m_asIntLe;
     }
   });
+
+  /**
+   * Index of last digit (0-based).
+   */
   Object.defineProperty(Bcd.prototype, 'lastIdx', {
     get: function() {
       if (this._m_lastIdx !== undefined)
@@ -87,6 +99,10 @@ var Bcd = (function() {
       return this._m_lastIdx;
     }
   });
+
+  /**
+   * Value of this BCD number as integer (treating digit order as big-endian).
+   */
   Object.defineProperty(Bcd.prototype, 'asIntBe', {
     get: function() {
       if (this._m_asIntBe !== undefined)
@@ -102,6 +118,10 @@ var Bcd = (function() {
 
   /**
    * Number of bits per digit. Only values of 4 and 8 are supported.
+   */
+
+  /**
+   * Endianness used by this BCD representation. True means little-endian, false is for big-endian.
    */
 
   return Bcd;

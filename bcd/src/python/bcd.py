@@ -57,6 +57,7 @@ class Bcd(KaitaiStruct):
 
     @property
     def as_int(self):
+        """Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given."""
         if hasattr(self, '_m_as_int'):
             return self._m_as_int if hasattr(self, '_m_as_int') else None
 
@@ -65,6 +66,7 @@ class Bcd(KaitaiStruct):
 
     @property
     def as_int_le(self):
+        """Value of this BCD number as integer (treating digit order as little-endian)."""
         if hasattr(self, '_m_as_int_le'):
             return self._m_as_int_le if hasattr(self, '_m_as_int_le') else None
 
@@ -73,6 +75,7 @@ class Bcd(KaitaiStruct):
 
     @property
     def last_idx(self):
+        """Index of last digit (0-based)."""
         if hasattr(self, '_m_last_idx'):
             return self._m_last_idx if hasattr(self, '_m_last_idx') else None
 
@@ -81,6 +84,7 @@ class Bcd(KaitaiStruct):
 
     @property
     def as_int_be(self):
+        """Value of this BCD number as integer (treating digit order as big-endian)."""
         if hasattr(self, '_m_as_int_be'):
             return self._m_as_int_be if hasattr(self, '_m_as_int_be') else None
 

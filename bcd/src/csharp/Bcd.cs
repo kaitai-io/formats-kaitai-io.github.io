@@ -68,6 +68,10 @@ namespace Kaitai
         }
         private bool f_asInt;
         private int _asInt;
+
+        /// <summary>
+        /// Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.
+        /// </summary>
         public int AsInt
         {
             get
@@ -81,6 +85,10 @@ namespace Kaitai
         }
         private bool f_asIntLe;
         private int _asIntLe;
+
+        /// <summary>
+        /// Value of this BCD number as integer (treating digit order as little-endian).
+        /// </summary>
         public int AsIntLe
         {
             get
@@ -94,6 +102,10 @@ namespace Kaitai
         }
         private bool f_lastIdx;
         private int _lastIdx;
+
+        /// <summary>
+        /// Index of last digit (0-based).
+        /// </summary>
         public int LastIdx
         {
             get
@@ -107,6 +119,10 @@ namespace Kaitai
         }
         private bool f_asIntBe;
         private int _asIntBe;
+
+        /// <summary>
+        /// Value of this BCD number as integer (treating digit order as big-endian).
+        /// </summary>
         public int AsIntBe
         {
             get
@@ -135,6 +151,10 @@ namespace Kaitai
         /// Number of bits per digit. Only values of 4 and 8 are supported.
         /// </summary>
         public byte BitsPerDigit { get { return _bitsPerDigit; } }
+
+        /// <summary>
+        /// Endianness used by this BCD representation. True means little-endian, false is for big-endian.
+        /// </summary>
         public bool IsLe { get { return _isLe; } }
         public Bcd M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }

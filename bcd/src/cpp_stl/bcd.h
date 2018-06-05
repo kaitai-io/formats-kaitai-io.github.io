@@ -59,6 +59,10 @@ private:
     int32_t m_as_int;
 
 public:
+
+    /**
+     * Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.
+     */
     int32_t as_int();
 
 private:
@@ -66,6 +70,10 @@ private:
     int32_t m_as_int_le;
 
 public:
+
+    /**
+     * Value of this BCD number as integer (treating digit order as little-endian).
+     */
     int32_t as_int_le();
 
 private:
@@ -73,6 +81,10 @@ private:
     int32_t m_last_idx;
 
 public:
+
+    /**
+     * Index of last digit (0-based).
+     */
     int32_t last_idx();
 
 private:
@@ -80,6 +92,10 @@ private:
     int32_t m_as_int_be;
 
 public:
+
+    /**
+     * Value of this BCD number as integer (treating digit order as big-endian).
+     */
     int32_t as_int_be();
 
 private:
@@ -108,6 +124,10 @@ public:
      * Number of bits per digit. Only values of 4 and 8 are supported.
      */
     uint8_t bits_per_digit() const { return m_bits_per_digit; }
+
+    /**
+     * Endianness used by this BCD representation. True means little-endian, false is for big-endian.
+     */
     bool is_le() const { return m_is_le; }
     bcd_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }

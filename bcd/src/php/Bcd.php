@@ -55,6 +55,10 @@ class Bcd extends \Kaitai\Struct\Struct {
         }
     }
     protected $_m_asInt;
+
+    /**
+     * Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.
+     */
     public function asInt() {
         if ($this->_m_asInt !== null)
             return $this->_m_asInt;
@@ -62,6 +66,10 @@ class Bcd extends \Kaitai\Struct\Struct {
         return $this->_m_asInt;
     }
     protected $_m_asIntLe;
+
+    /**
+     * Value of this BCD number as integer (treating digit order as little-endian).
+     */
     public function asIntLe() {
         if ($this->_m_asIntLe !== null)
             return $this->_m_asIntLe;
@@ -69,6 +77,10 @@ class Bcd extends \Kaitai\Struct\Struct {
         return $this->_m_asIntLe;
     }
     protected $_m_lastIdx;
+
+    /**
+     * Index of last digit (0-based).
+     */
     public function lastIdx() {
         if ($this->_m_lastIdx !== null)
             return $this->_m_lastIdx;
@@ -76,6 +88,10 @@ class Bcd extends \Kaitai\Struct\Struct {
         return $this->_m_lastIdx;
     }
     protected $_m_asIntBe;
+
+    /**
+     * Value of this BCD number as integer (treating digit order as big-endian).
+     */
     public function asIntBe() {
         if ($this->_m_asIntBe !== null)
             return $this->_m_asIntBe;
@@ -97,5 +113,9 @@ class Bcd extends \Kaitai\Struct\Struct {
      * Number of bits per digit. Only values of 4 and 8 are supported.
      */
     public function bitsPerDigit() { return $this->_m_bitsPerDigit; }
+
+    /**
+     * Endianness used by this BCD representation. True means little-endian, false is for big-endian.
+     */
     public function isLe() { return $this->_m_isLe; }
 }
