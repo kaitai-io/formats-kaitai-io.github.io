@@ -273,6 +273,7 @@ types:
       certificate_table:
         pos: optional_hdr.data_dirs.certificate_table.virtual_address
         if: optional_hdr.data_dirs.certificate_table.virtual_address != 0
+        size: optional_hdr.data_dirs.certificate_table.size
         type: certificate_table
   coff_header:
     doc-ref: 3.3. COFF File Header (Object and Image)
@@ -570,6 +571,11 @@ types:
         pos: pointer_to_raw_data
         size: size_of_raw_data
   certificate_table:
+    seq:
+      - id: items
+        type: certificate_entry
+        repeat: eos
+  certificate_entry:
     enums:
       certificate_revision:
         0x0100:

@@ -27,6 +27,34 @@ class MicrosoftPe(KaitaiStruct):
     def _read(self):
         self.mz = self._root.MzPlaceholder(self._io, self, self._root)
 
+    class CertificateEntry(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only
+        """
+
+        class CertificateRevision(Enum):
+            revision_1_0 = 256
+            revision_2_0 = 512
+
+        class CertificateType(Enum):
+            x509 = 1
+            pkcs_signed_data = 2
+            reserved_1 = 3
+            ts_stack_signed = 4
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.length = self._io.read_u4le()
+            self.revision = self._root.CertificateEntry.CertificateRevision(self._io.read_u2le())
+            self.certificate_type = self._root.CertificateEntry.CertificateType(self._io.read_u2le())
+            self.certificate_bytes = self._io.read_bytes((self.length - 8))
+
+
     class OptionalHeaderWindows(KaitaiStruct):
 
         class SubsystemEnum(Enum):
@@ -197,7 +225,9 @@ class MicrosoftPe(KaitaiStruct):
             if self.optional_hdr.data_dirs.certificate_table.virtual_address != 0:
                 _pos = self._io.pos()
                 self._io.seek(self.optional_hdr.data_dirs.certificate_table.virtual_address)
-                self._m_certificate_table = self._root.CertificateTable(self._io, self, self._root)
+                self._raw__m_certificate_table = self._io.read_bytes(self.optional_hdr.data_dirs.certificate_table.size)
+                io = KaitaiStream(BytesIO(self._raw__m_certificate_table))
+                self._m_certificate_table = self._root.CertificateTable(io, self, self._root)
                 self._io.seek(_pos)
 
             return self._m_certificate_table if hasattr(self, '_m_certificate_table') else None
@@ -248,20 +278,6 @@ class MicrosoftPe(KaitaiStruct):
 
 
     class CertificateTable(KaitaiStruct):
-        """
-        .. seealso::
-           Source - https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only
-        """
-
-        class CertificateRevision(Enum):
-            revision_1_0 = 256
-            revision_2_0 = 512
-
-        class CertificateType(Enum):
-            x509 = 1
-            pkcs_signed_data = 2
-            reserved_1 = 3
-            ts_stack_signed = 4
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -269,10 +285,12 @@ class MicrosoftPe(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.length = self._io.read_u4le()
-            self.revision = self._root.CertificateTable.CertificateRevision(self._io.read_u2le())
-            self.certificate_type = self._root.CertificateTable.CertificateType(self._io.read_u2le())
-            self.certificate_bytes = self._io.read_bytes((self.length - 8))
+            self.items = []
+            i = 0
+            while not self._io.is_eof():
+                self.items.append(self._root.CertificateEntry(self._io, self, self._root))
+                i += 1
+
 
 
     class MzPlaceholder(KaitaiStruct):

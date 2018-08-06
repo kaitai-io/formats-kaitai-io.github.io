@@ -19,6 +19,7 @@
 class microsoft_pe_t : public kaitai::kstruct {
 
 public:
+    class certificate_entry_t;
     class optional_header_windows_t;
     class optional_header_data_dirs_t;
     class data_dir_t;
@@ -45,6 +46,67 @@ private:
 
 public:
     ~microsoft_pe_t();
+
+    /**
+     * \sa Source
+     */
+
+    class certificate_entry_t : public kaitai::kstruct {
+
+    public:
+
+        enum certificate_revision_t {
+            CERTIFICATE_REVISION_REVISION_1_0 = 256,
+            CERTIFICATE_REVISION_REVISION_2_0 = 512
+        };
+
+        enum certificate_type_t {
+            CERTIFICATE_TYPE_X509 = 1,
+            CERTIFICATE_TYPE_PKCS_SIGNED_DATA = 2,
+            CERTIFICATE_TYPE_RESERVED_1 = 3,
+            CERTIFICATE_TYPE_TS_STACK_SIGNED = 4
+        };
+
+        certificate_entry_t(kaitai::kstream* p__io, microsoft_pe_t::certificate_table_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~certificate_entry_t();
+
+    private:
+        uint32_t m_length;
+        certificate_revision_t m_revision;
+        certificate_type_t m_certificate_type;
+        std::string m_certificate_bytes;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::certificate_table_t* m__parent;
+
+    public:
+
+        /**
+         * Specifies the length of the attribute certificate entry.
+         */
+        uint32_t length() const { return m_length; }
+
+        /**
+         * Contains the certificate version number.
+         */
+        certificate_revision_t revision() const { return m_revision; }
+
+        /**
+         * Specifies the type of content in bCertificate
+         */
+        certificate_type_t certificate_type() const { return m_certificate_type; }
+
+        /**
+         * Contains a certificate, such as an Authenticode signature.
+         */
+        std::string certificate_bytes() const { return m_certificate_bytes; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::certificate_table_t* _parent() const { return m__parent; }
+    };
 
     class optional_header_windows_t : public kaitai::kstruct {
 
@@ -355,6 +417,8 @@ public:
         microsoft_pe_t* m__parent;
         std::string m__raw_optional_hdr;
         kaitai::kstream* m__io__raw_optional_hdr;
+        std::string m__raw_certificate_table;
+        kaitai::kstream* m__io__raw_certificate_table;
 
     public:
         std::string pe_signature() const { return m_pe_signature; }
@@ -365,6 +429,8 @@ public:
         microsoft_pe_t* _parent() const { return m__parent; }
         std::string _raw_optional_hdr() const { return m__raw_optional_hdr; }
         kaitai::kstream* _io__raw_optional_hdr() const { return m__io__raw_optional_hdr; }
+        std::string _raw_certificate_table() const { return m__raw_certificate_table; }
+        kaitai::kstream* _io__raw_certificate_table() const { return m__io__raw_certificate_table; }
     };
 
     class optional_header_t : public kaitai::kstruct {
@@ -442,25 +508,9 @@ public:
         microsoft_pe_t::pe_header_t* _parent() const { return m__parent; }
     };
 
-    /**
-     * \sa Source
-     */
-
     class certificate_table_t : public kaitai::kstruct {
 
     public:
-
-        enum certificate_revision_t {
-            CERTIFICATE_REVISION_REVISION_1_0 = 256,
-            CERTIFICATE_REVISION_REVISION_2_0 = 512
-        };
-
-        enum certificate_type_t {
-            CERTIFICATE_TYPE_X509 = 1,
-            CERTIFICATE_TYPE_PKCS_SIGNED_DATA = 2,
-            CERTIFICATE_TYPE_RESERVED_1 = 3,
-            CERTIFICATE_TYPE_TS_STACK_SIGNED = 4
-        };
 
         certificate_table_t(kaitai::kstream* p__io, microsoft_pe_t::pe_header_t* p__parent = 0, microsoft_pe_t* p__root = 0);
 
@@ -471,34 +521,12 @@ public:
         ~certificate_table_t();
 
     private:
-        uint32_t m_length;
-        certificate_revision_t m_revision;
-        certificate_type_t m_certificate_type;
-        std::string m_certificate_bytes;
+        std::vector<certificate_entry_t*>* m_items;
         microsoft_pe_t* m__root;
         microsoft_pe_t::pe_header_t* m__parent;
 
     public:
-
-        /**
-         * Specifies the length of the attribute certificate entry.
-         */
-        uint32_t length() const { return m_length; }
-
-        /**
-         * Contains the certificate version number.
-         */
-        certificate_revision_t revision() const { return m_revision; }
-
-        /**
-         * Specifies the type of content in bCertificate
-         */
-        certificate_type_t certificate_type() const { return m_certificate_type; }
-
-        /**
-         * Contains a certificate, such as an Authenticode signature.
-         */
-        std::string certificate_bytes() const { return m_certificate_bytes; }
+        std::vector<certificate_entry_t*>* items() const { return m_items; }
         microsoft_pe_t* _root() const { return m__root; }
         microsoft_pe_t::pe_header_t* _parent() const { return m__parent; }
     };

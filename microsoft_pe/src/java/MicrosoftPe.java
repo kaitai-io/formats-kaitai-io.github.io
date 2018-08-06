@@ -51,6 +51,96 @@ public class MicrosoftPe extends KaitaiStruct {
     private void _read() {
         this.mz = new MzPlaceholder(this._io, this, _root);
     }
+
+    /**
+     * @see <a href="https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only">Source</a>
+     */
+    public static class CertificateEntry extends KaitaiStruct {
+        public static CertificateEntry fromFile(String fileName) throws IOException {
+            return new CertificateEntry(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public enum CertificateRevision {
+            REVISION_1_0(256),
+            REVISION_2_0(512);
+
+            private final long id;
+            CertificateRevision(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, CertificateRevision> byId = new HashMap<Long, CertificateRevision>(2);
+            static {
+                for (CertificateRevision e : CertificateRevision.values())
+                    byId.put(e.id(), e);
+            }
+            public static CertificateRevision byId(long id) { return byId.get(id); }
+        }
+
+        public enum CertificateType {
+            X509(1),
+            PKCS_SIGNED_DATA(2),
+            RESERVED_1(3),
+            TS_STACK_SIGNED(4);
+
+            private final long id;
+            CertificateType(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, CertificateType> byId = new HashMap<Long, CertificateType>(4);
+            static {
+                for (CertificateType e : CertificateType.values())
+                    byId.put(e.id(), e);
+            }
+            public static CertificateType byId(long id) { return byId.get(id); }
+        }
+
+        public CertificateEntry(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public CertificateEntry(KaitaiStream _io, MicrosoftPe.CertificateTable _parent) {
+            this(_io, _parent, null);
+        }
+
+        public CertificateEntry(KaitaiStream _io, MicrosoftPe.CertificateTable _parent, MicrosoftPe _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.length = this._io.readU4le();
+            this.revision = CertificateRevision.byId(this._io.readU2le());
+            this.certificateType = CertificateType.byId(this._io.readU2le());
+            this.certificateBytes = this._io.readBytes((length() - 8));
+        }
+        private long length;
+        private CertificateRevision revision;
+        private CertificateType certificateType;
+        private byte[] certificateBytes;
+        private MicrosoftPe _root;
+        private MicrosoftPe.CertificateTable _parent;
+
+        /**
+         * Specifies the length of the attribute certificate entry.
+         */
+        public long length() { return length; }
+
+        /**
+         * Contains the certificate version number.
+         */
+        public CertificateRevision revision() { return revision; }
+
+        /**
+         * Specifies the type of content in bCertificate
+         */
+        public CertificateType certificateType() { return certificateType; }
+
+        /**
+         * Contains a certificate, such as an Authenticode signature.
+         */
+        public byte[] certificateBytes() { return certificateBytes; }
+        public MicrosoftPe _root() { return _root; }
+        public MicrosoftPe.CertificateTable _parent() { return _parent; }
+    }
     public static class OptionalHeaderWindows extends KaitaiStruct {
         public static OptionalHeaderWindows fromFile(String fileName) throws IOException {
             return new OptionalHeaderWindows(new ByteBufferKaitaiStream(fileName));
@@ -405,7 +495,9 @@ public class MicrosoftPe extends KaitaiStruct {
             if (optionalHdr().dataDirs().certificateTable().virtualAddress() != 0) {
                 long _pos = this._io.pos();
                 this._io.seek(optionalHdr().dataDirs().certificateTable().virtualAddress());
-                this.certificateTable = new CertificateTable(this._io, this, _root);
+                this._raw_certificateTable = this._io.readBytes(optionalHdr().dataDirs().certificateTable().size());
+                KaitaiStream _io__raw_certificateTable = new ByteBufferKaitaiStream(_raw_certificateTable);
+                this.certificateTable = new CertificateTable(_io__raw_certificateTable, this, _root);
                 this._io.seek(_pos);
             }
             return this.certificateTable;
@@ -417,6 +509,7 @@ public class MicrosoftPe extends KaitaiStruct {
         private MicrosoftPe _root;
         private MicrosoftPe _parent;
         private byte[] _raw_optionalHdr;
+        private byte[] _raw_certificateTable;
         public byte[] peSignature() { return peSignature; }
         public CoffHeader coffHdr() { return coffHdr; }
         public OptionalHeader optionalHdr() { return optionalHdr; }
@@ -424,6 +517,7 @@ public class MicrosoftPe extends KaitaiStruct {
         public MicrosoftPe _root() { return _root; }
         public MicrosoftPe _parent() { return _parent; }
         public byte[] _raw_optionalHdr() { return _raw_optionalHdr; }
+        public byte[] _raw_certificateTable() { return _raw_certificateTable; }
     }
     public static class OptionalHeader extends KaitaiStruct {
         public static OptionalHeader fromFile(String fileName) throws IOException {
@@ -526,45 +620,9 @@ public class MicrosoftPe extends KaitaiStruct {
         public MicrosoftPe _root() { return _root; }
         public MicrosoftPe.PeHeader _parent() { return _parent; }
     }
-
-    /**
-     * @see <a href="https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only">Source</a>
-     */
     public static class CertificateTable extends KaitaiStruct {
         public static CertificateTable fromFile(String fileName) throws IOException {
             return new CertificateTable(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public enum CertificateRevision {
-            REVISION_1_0(256),
-            REVISION_2_0(512);
-
-            private final long id;
-            CertificateRevision(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map<Long, CertificateRevision> byId = new HashMap<Long, CertificateRevision>(2);
-            static {
-                for (CertificateRevision e : CertificateRevision.values())
-                    byId.put(e.id(), e);
-            }
-            public static CertificateRevision byId(long id) { return byId.get(id); }
-        }
-
-        public enum CertificateType {
-            X509(1),
-            PKCS_SIGNED_DATA(2),
-            RESERVED_1(3),
-            TS_STACK_SIGNED(4);
-
-            private final long id;
-            CertificateType(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map<Long, CertificateType> byId = new HashMap<Long, CertificateType>(4);
-            static {
-                for (CertificateType e : CertificateType.values())
-                    byId.put(e.id(), e);
-            }
-            public static CertificateType byId(long id) { return byId.get(id); }
         }
 
         public CertificateTable(KaitaiStream _io) {
@@ -582,37 +640,19 @@ public class MicrosoftPe extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.length = this._io.readU4le();
-            this.revision = CertificateRevision.byId(this._io.readU2le());
-            this.certificateType = CertificateType.byId(this._io.readU2le());
-            this.certificateBytes = this._io.readBytes((length() - 8));
+            this.items = new ArrayList<CertificateEntry>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.items.add(new CertificateEntry(this._io, this, _root));
+                    i++;
+                }
+            }
         }
-        private long length;
-        private CertificateRevision revision;
-        private CertificateType certificateType;
-        private byte[] certificateBytes;
+        private ArrayList<CertificateEntry> items;
         private MicrosoftPe _root;
         private MicrosoftPe.PeHeader _parent;
-
-        /**
-         * Specifies the length of the attribute certificate entry.
-         */
-        public long length() { return length; }
-
-        /**
-         * Contains the certificate version number.
-         */
-        public CertificateRevision revision() { return revision; }
-
-        /**
-         * Specifies the type of content in bCertificate
-         */
-        public CertificateType certificateType() { return certificateType; }
-
-        /**
-         * Contains a certificate, such as an Authenticode signature.
-         */
-        public byte[] certificateBytes() { return certificateBytes; }
+        public ArrayList<CertificateEntry> items() { return items; }
         public MicrosoftPe _root() { return _root; }
         public MicrosoftPe.PeHeader _parent() { return _parent; }
     }

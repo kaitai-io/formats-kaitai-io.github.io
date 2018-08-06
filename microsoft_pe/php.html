@@ -260,6 +260,89 @@ class MicrosoftPe extends \Kaitai\Struct\Struct {
 
 namespace \MicrosoftPe;
 
+class CertificateEntry extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe\CertificateTable $_parent = null, \MicrosoftPe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_length = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_revision = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_certificateType = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_certificateBytes = $this-&gt;_io-&gt;readBytes(($this-&gt;length() - 8));
+    }
+    protected $_m_length;
+    protected $_m_revision;
+    protected $_m_certificateType;
+    protected $_m_certificateBytes;
+
+    /**
+     * Specifies the length of the attribute certificate entry.
+     */
+    public function length() { return $this-&gt;_m_length; }
+
+    /**
+     * Contains the certificate version number.
+     */
+    public function revision() { return $this-&gt;_m_revision; }
+
+    /**
+     * Specifies the type of content in bCertificate
+     */
+    public function certificateType() { return $this-&gt;_m_certificateType; }
+
+    /**
+     * Contains a certificate, such as an Authenticode signature.
+     */
+    public function certificateBytes() { return $this-&gt;_m_certificateBytes; }
+}
+
+namespace \MicrosoftPe\CertificateEntry;
+
+class CertificateRevision {
+
+    /**
+     * Version 1, legacy version of the Win_Certificate structure.
+     * It is supported only for purposes of verifying legacy Authenticode signatures
+     */
+    const REVISION_1_0 = 256;
+
+    /**
+     * Version 2 is the current version of the Win_Certificate structure.
+     */
+    const REVISION_2_0 = 512;
+}
+
+namespace \MicrosoftPe\CertificateEntry;
+
+class CertificateType {
+
+    /**
+     * bCertificate contains an X.509 Certificate 
+     * Not Supported
+     */
+    const X509 = 1;
+
+    /**
+     * bCertificate contains a PKCS#7 SignedData structure
+     */
+    const PKCS_SIGNED_DATA = 2;
+
+    /**
+     * Reserved
+     */
+    const RESERVED_1 = 3;
+
+    /**
+     * Terminal Server Protocol Stack Certificate signing 
+     * Not Supported
+     */
+    const TS_STACK_SIGNED = 4;
+}
+
+namespace \MicrosoftPe;
+
 class OptionalHeaderWindows extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe\OptionalHeader $_parent = null, \MicrosoftPe $_root = null) {
         parent::__construct($_io, $_parent, $_root);
@@ -538,7 +621,9 @@ class PeHeader extends \Kaitai\Struct\Struct {
         if ($this-&gt;optionalHdr()-&gt;dataDirs()-&gt;certificateTable()-&gt;virtualAddress() != 0) {
             $_pos = $this-&gt;_io-&gt;pos();
             $this-&gt;_io-&gt;seek($this-&gt;optionalHdr()-&gt;dataDirs()-&gt;certificateTable()-&gt;virtualAddress());
-            $this-&gt;_m_certificateTable = new \MicrosoftPe\CertificateTable($this-&gt;_io, $this, $this-&gt;_root);
+            $this-&gt;_m__raw_certificateTable = $this-&gt;_io-&gt;readBytes($this-&gt;optionalHdr()-&gt;dataDirs()-&gt;certificateTable()-&gt;size());
+            $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_certificateTable);
+            $this-&gt;_m_certificateTable = new \MicrosoftPe\CertificateTable($io, $this, $this-&gt;_root);
             $this-&gt;_io-&gt;seek($_pos);
         }
         return $this-&gt;_m_certificateTable;
@@ -548,11 +633,13 @@ class PeHeader extends \Kaitai\Struct\Struct {
     protected $_m_optionalHdr;
     protected $_m_sections;
     protected $_m__raw_optionalHdr;
+    protected $_m__raw_certificateTable;
     public function peSignature() { return $this-&gt;_m_peSignature; }
     public function coffHdr() { return $this-&gt;_m_coffHdr; }
     public function optionalHdr() { return $this-&gt;_m_optionalHdr; }
     public function sections() { return $this-&gt;_m_sections; }
     public function _raw_optionalHdr() { return $this-&gt;_m__raw_optionalHdr; }
+    public function _raw_certificateTable() { return $this-&gt;_m__raw_certificateTable; }
 }
 
 namespace \MicrosoftPe;
@@ -637,78 +724,15 @@ class CertificateTable extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this-&gt;_m_length = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_revision = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_certificateType = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_certificateBytes = $this-&gt;_io-&gt;readBytes(($this-&gt;length() - 8));
+        $this-&gt;_m_items = [];
+        $i = 0;
+        while (!$this-&gt;_io-&gt;isEof()) {
+            $this-&gt;_m_items[] = new \MicrosoftPe\CertificateEntry($this-&gt;_io, $this, $this-&gt;_root);
+            $i++;
+        }
     }
-    protected $_m_length;
-    protected $_m_revision;
-    protected $_m_certificateType;
-    protected $_m_certificateBytes;
-
-    /**
-     * Specifies the length of the attribute certificate entry.
-     */
-    public function length() { return $this-&gt;_m_length; }
-
-    /**
-     * Contains the certificate version number.
-     */
-    public function revision() { return $this-&gt;_m_revision; }
-
-    /**
-     * Specifies the type of content in bCertificate
-     */
-    public function certificateType() { return $this-&gt;_m_certificateType; }
-
-    /**
-     * Contains a certificate, such as an Authenticode signature.
-     */
-    public function certificateBytes() { return $this-&gt;_m_certificateBytes; }
-}
-
-namespace \MicrosoftPe\CertificateTable;
-
-class CertificateRevision {
-
-    /**
-     * Version 1, legacy version of the Win_Certificate structure.
-     * It is supported only for purposes of verifying legacy Authenticode signatures
-     */
-    const REVISION_1_0 = 256;
-
-    /**
-     * Version 2 is the current version of the Win_Certificate structure.
-     */
-    const REVISION_2_0 = 512;
-}
-
-namespace \MicrosoftPe\CertificateTable;
-
-class CertificateType {
-
-    /**
-     * bCertificate contains an X.509 Certificate 
-     * Not Supported
-     */
-    const X509 = 1;
-
-    /**
-     * bCertificate contains a PKCS#7 SignedData structure
-     */
-    const PKCS_SIGNED_DATA = 2;
-
-    /**
-     * Reserved
-     */
-    const RESERVED_1 = 3;
-
-    /**
-     * Terminal Server Protocol Stack Certificate signing 
-     * Not Supported
-     */
-    const TS_STACK_SIGNED = 4;
+    protected $_m_items;
+    public function items() { return $this-&gt;_m_items; }
 }
 
 namespace \MicrosoftPe;

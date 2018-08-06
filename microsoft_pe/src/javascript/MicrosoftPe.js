@@ -35,6 +35,64 @@ var MicrosoftPe = (function() {
     this.mz = new MzPlaceholder(this._io, this, this._root);
   }
 
+  /**
+   * @see {@link https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only|Source}
+   */
+
+  var CertificateEntry = MicrosoftPe.CertificateEntry = (function() {
+    CertificateEntry.CertificateRevision = Object.freeze({
+      REVISION_1_0: 256,
+      REVISION_2_0: 512,
+
+      256: "REVISION_1_0",
+      512: "REVISION_2_0",
+    });
+
+    CertificateEntry.CertificateType = Object.freeze({
+      X509: 1,
+      PKCS_SIGNED_DATA: 2,
+      RESERVED_1: 3,
+      TS_STACK_SIGNED: 4,
+
+      1: "X509",
+      2: "PKCS_SIGNED_DATA",
+      3: "RESERVED_1",
+      4: "TS_STACK_SIGNED",
+    });
+
+    function CertificateEntry(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    CertificateEntry.prototype._read = function() {
+      this.length = this._io.readU4le();
+      this.revision = this._io.readU2le();
+      this.certificateType = this._io.readU2le();
+      this.certificateBytes = this._io.readBytes((this.length - 8));
+    }
+
+    /**
+     * Specifies the length of the attribute certificate entry.
+     */
+
+    /**
+     * Contains the certificate version number.
+     */
+
+    /**
+     * Specifies the type of content in bCertificate
+     */
+
+    /**
+     * Contains a certificate, such as an Authenticode signature.
+     */
+
+    return CertificateEntry;
+  })();
+
   var OptionalHeaderWindows = MicrosoftPe.OptionalHeaderWindows = (function() {
     OptionalHeaderWindows.SubsystemEnum = Object.freeze({
       UNKNOWN: 0,
@@ -235,7 +293,9 @@ var MicrosoftPe = (function() {
         if (this.optionalHdr.dataDirs.certificateTable.virtualAddress != 0) {
           var _pos = this._io.pos;
           this._io.seek(this.optionalHdr.dataDirs.certificateTable.virtualAddress);
-          this._m_certificateTable = new CertificateTable(this._io, this, this._root);
+          this._raw__m_certificateTable = this._io.readBytes(this.optionalHdr.dataDirs.certificateTable.size);
+          var _io__raw__m_certificateTable = new KaitaiStream(this._raw__m_certificateTable);
+          this._m_certificateTable = new CertificateTable(_io__raw__m_certificateTable, this, this._root);
           this._io.seek(_pos);
         }
         return this._m_certificateTable;
@@ -297,31 +357,7 @@ var MicrosoftPe = (function() {
     return Section;
   })();
 
-  /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only|Source}
-   */
-
   var CertificateTable = MicrosoftPe.CertificateTable = (function() {
-    CertificateTable.CertificateRevision = Object.freeze({
-      REVISION_1_0: 256,
-      REVISION_2_0: 512,
-
-      256: "REVISION_1_0",
-      512: "REVISION_2_0",
-    });
-
-    CertificateTable.CertificateType = Object.freeze({
-      X509: 1,
-      PKCS_SIGNED_DATA: 2,
-      RESERVED_1: 3,
-      TS_STACK_SIGNED: 4,
-
-      1: "X509",
-      2: "PKCS_SIGNED_DATA",
-      3: "RESERVED_1",
-      4: "TS_STACK_SIGNED",
-    });
-
     function CertificateTable(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
@@ -330,27 +366,13 @@ var MicrosoftPe = (function() {
       this._read();
     }
     CertificateTable.prototype._read = function() {
-      this.length = this._io.readU4le();
-      this.revision = this._io.readU2le();
-      this.certificateType = this._io.readU2le();
-      this.certificateBytes = this._io.readBytes((this.length - 8));
+      this.items = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.items.push(new CertificateEntry(this._io, this, this._root));
+        i++;
+      }
     }
-
-    /**
-     * Specifies the length of the attribute certificate entry.
-     */
-
-    /**
-     * Contains the certificate version number.
-     */
-
-    /**
-     * Specifies the type of content in bCertificate
-     */
-
-    /**
-     * Contains a certificate, such as an Authenticode signature.
-     */
 
     return CertificateTable;
   })();

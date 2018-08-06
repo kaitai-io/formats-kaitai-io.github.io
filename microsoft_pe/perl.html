@@ -292,6 +292,70 @@ sub mz {
 }
 
 ########################################################################
+package MicrosoftPe::CertificateEntry;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $CERTIFICATE_REVISION_REVISION_1_0 = 256;
+our $CERTIFICATE_REVISION_REVISION_2_0 = 512;
+
+our $CERTIFICATE_TYPE_X509 = 1;
+our $CERTIFICATE_TYPE_PKCS_SIGNED_DATA = 2;
+our $CERTIFICATE_TYPE_RESERVED_1 = 3;
+our $CERTIFICATE_TYPE_TS_STACK_SIGNED = 4;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{length} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{revision} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{certificate_type} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{certificate_bytes} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 8));
+}
+
+sub length {
+    my ($self) = @_;
+    return $self-&gt;{length};
+}
+
+sub revision {
+    my ($self) = @_;
+    return $self-&gt;{revision};
+}
+
+sub certificate_type {
+    my ($self) = @_;
+    return $self-&gt;{certificate_type};
+}
+
+sub certificate_bytes {
+    my ($self) = @_;
+    return $self-&gt;{certificate_bytes};
+}
+
+########################################################################
 package MicrosoftPe::OptionalHeaderWindows;
 
 our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
@@ -818,7 +882,9 @@ sub certificate_table {
     if ($self-&gt;optional_hdr()-&gt;data_dirs()-&gt;certificate_table()-&gt;virtual_address() != 0) {
         my $_pos = $self-&gt;{_io}-&gt;pos();
         $self-&gt;{_io}-&gt;seek($self-&gt;optional_hdr()-&gt;data_dirs()-&gt;certificate_table()-&gt;virtual_address());
-        $self-&gt;{certificate_table} = MicrosoftPe::CertificateTable-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+        $self-&gt;{_raw_certificate_table} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;optional_hdr()-&gt;data_dirs()-&gt;certificate_table()-&gt;size());
+        my $io__raw_certificate_table = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_certificate_table});
+        $self-&gt;{certificate_table} = MicrosoftPe::CertificateTable-&gt;new($io__raw_certificate_table, $self, $self-&gt;{_root});
         $self-&gt;{_io}-&gt;seek($_pos);
     }
     return $self-&gt;{certificate_table};
@@ -847,6 +913,11 @@ sub sections {
 sub _raw_optional_hdr {
     my ($self) = @_;
     return $self-&gt;{_raw_optional_hdr};
+}
+
+sub _raw_certificate_table {
+    my ($self) = @_;
+    return $self-&gt;{_raw_certificate_table};
 }
 
 ########################################################################
@@ -1015,14 +1086,6 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
 }
 
-our $CERTIFICATE_REVISION_REVISION_1_0 = 256;
-our $CERTIFICATE_REVISION_REVISION_2_0 = 512;
-
-our $CERTIFICATE_TYPE_X509 = 1;
-our $CERTIFICATE_TYPE_PKCS_SIGNED_DATA = 2;
-our $CERTIFICATE_TYPE_RESERVED_1 = 3;
-our $CERTIFICATE_TYPE_TS_STACK_SIGNED = 4;
-
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
     my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
@@ -1039,30 +1102,15 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{length} = $self-&gt;{_io}-&gt;read_u4le();
-    $self-&gt;{revision} = $self-&gt;{_io}-&gt;read_u2le();
-    $self-&gt;{certificate_type} = $self-&gt;{_io}-&gt;read_u2le();
-    $self-&gt;{certificate_bytes} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;length() - 8));
+    $self-&gt;{items} = ();
+    while (!$self-&gt;{_io}-&gt;is_eof()) {
+        push @{$self-&gt;{items}}, MicrosoftPe::CertificateEntry-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
 }
 
-sub length {
+sub items {
     my ($self) = @_;
-    return $self-&gt;{length};
-}
-
-sub revision {
-    my ($self) = @_;
-    return $self-&gt;{revision};
-}
-
-sub certificate_type {
-    my ($self) = @_;
-    return $self-&gt;{certificate_type};
-}
-
-sub certificate_bytes {
-    my ($self) = @_;
-    return $self-&gt;{certificate_bytes};
+    return $self-&gt;{items};
 }
 
 ########################################################################

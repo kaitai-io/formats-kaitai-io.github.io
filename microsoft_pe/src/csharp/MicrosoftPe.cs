@@ -33,6 +33,73 @@ namespace Kaitai
         {
             _mz = new MzPlaceholder(m_io, this, m_root);
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only">Source</a>
+        /// </remarks>
+        public partial class CertificateEntry : KaitaiStruct
+        {
+            public static CertificateEntry FromFile(string fileName)
+            {
+                return new CertificateEntry(new KaitaiStream(fileName));
+            }
+
+
+            public enum CertificateRevision
+            {
+                Revision10 = 256,
+                Revision20 = 512,
+            }
+
+            public enum CertificateType
+            {
+                X509 = 1,
+                PkcsSignedData = 2,
+                Reserved1 = 3,
+                TsStackSigned = 4,
+            }
+            public CertificateEntry(KaitaiStream p__io, MicrosoftPe.CertificateTable p__parent = null, MicrosoftPe p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _length = m_io.ReadU4le();
+                _revision = ((CertificateRevision) m_io.ReadU2le());
+                _certificateType = ((CertificateType) m_io.ReadU2le());
+                _certificateBytes = m_io.ReadBytes((Length - 8));
+            }
+            private uint _length;
+            private CertificateRevision _revision;
+            private CertificateType _certificateType;
+            private byte[] _certificateBytes;
+            private MicrosoftPe m_root;
+            private MicrosoftPe.CertificateTable m_parent;
+
+            /// <summary>
+            /// Specifies the length of the attribute certificate entry.
+            /// </summary>
+            public uint Length { get { return _length; } }
+
+            /// <summary>
+            /// Contains the certificate version number.
+            /// </summary>
+            public CertificateRevision Revision { get { return _revision; } }
+
+            /// <summary>
+            /// Specifies the type of content in bCertificate
+            /// </summary>
+            public CertificateType CertificateType { get { return _certificateType; } }
+
+            /// <summary>
+            /// Contains a certificate, such as an Authenticode signature.
+            /// </summary>
+            public byte[] CertificateBytes { get { return _certificateBytes; } }
+            public MicrosoftPe M_Root { get { return m_root; } }
+            public MicrosoftPe.CertificateTable M_Parent { get { return m_parent; } }
+        }
         public partial class OptionalHeaderWindows : KaitaiStruct
         {
             public static OptionalHeaderWindows FromFile(string fileName)
@@ -373,7 +440,9 @@ namespace Kaitai
                     if (OptionalHdr.DataDirs.CertificateTable.VirtualAddress != 0) {
                         long _pos = m_io.Pos;
                         m_io.Seek(OptionalHdr.DataDirs.CertificateTable.VirtualAddress);
-                        _certificateTable = new CertificateTable(m_io, this, m_root);
+                        __raw_certificateTable = m_io.ReadBytes(OptionalHdr.DataDirs.CertificateTable.Size);
+                        var io___raw_certificateTable = new KaitaiStream(__raw_certificateTable);
+                        _certificateTable = new CertificateTable(io___raw_certificateTable, this, m_root);
                         m_io.Seek(_pos);
                     }
                     f_certificateTable = true;
@@ -387,6 +456,7 @@ namespace Kaitai
             private MicrosoftPe m_root;
             private MicrosoftPe m_parent;
             private byte[] __raw_optionalHdr;
+            private byte[] __raw_certificateTable;
             public byte[] PeSignature { get { return _peSignature; } }
             public CoffHeader CoffHdr { get { return _coffHdr; } }
             public OptionalHeader OptionalHdr { get { return _optionalHdr; } }
@@ -394,6 +464,7 @@ namespace Kaitai
             public MicrosoftPe M_Root { get { return m_root; } }
             public MicrosoftPe M_Parent { get { return m_parent; } }
             public byte[] M_RawOptionalHdr { get { return __raw_optionalHdr; } }
+            public byte[] M_RawCertificateTable { get { return __raw_certificateTable; } }
         }
         public partial class OptionalHeader : KaitaiStruct
         {
@@ -493,10 +564,6 @@ namespace Kaitai
             public MicrosoftPe M_Root { get { return m_root; } }
             public MicrosoftPe.PeHeader M_Parent { get { return m_parent; } }
         }
-
-        /// <remarks>
-        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only">Source</a>
-        /// </remarks>
         public partial class CertificateTable : KaitaiStruct
         {
             public static CertificateTable FromFile(string fileName)
@@ -504,20 +571,6 @@ namespace Kaitai
                 return new CertificateTable(new KaitaiStream(fileName));
             }
 
-
-            public enum CertificateRevision
-            {
-                Revision10 = 256,
-                Revision20 = 512,
-            }
-
-            public enum CertificateType
-            {
-                X509 = 1,
-                PkcsSignedData = 2,
-                Reserved1 = 3,
-                TsStackSigned = 4,
-            }
             public CertificateTable(KaitaiStream p__io, MicrosoftPe.PeHeader p__parent = null, MicrosoftPe p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
@@ -526,37 +579,19 @@ namespace Kaitai
             }
             private void _read()
             {
-                _length = m_io.ReadU4le();
-                _revision = ((CertificateRevision) m_io.ReadU2le());
-                _certificateType = ((CertificateType) m_io.ReadU2le());
-                _certificateBytes = m_io.ReadBytes((Length - 8));
+                _items = new List<CertificateEntry>();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _items.Add(new CertificateEntry(m_io, this, m_root));
+                        i++;
+                    }
+                }
             }
-            private uint _length;
-            private CertificateRevision _revision;
-            private CertificateType _certificateType;
-            private byte[] _certificateBytes;
+            private List<CertificateEntry> _items;
             private MicrosoftPe m_root;
             private MicrosoftPe.PeHeader m_parent;
-
-            /// <summary>
-            /// Specifies the length of the attribute certificate entry.
-            /// </summary>
-            public uint Length { get { return _length; } }
-
-            /// <summary>
-            /// Contains the certificate version number.
-            /// </summary>
-            public CertificateRevision Revision { get { return _revision; } }
-
-            /// <summary>
-            /// Specifies the type of content in bCertificate
-            /// </summary>
-            public CertificateType CertificateType { get { return _certificateType; } }
-
-            /// <summary>
-            /// Contains a certificate, such as an Authenticode signature.
-            /// </summary>
-            public byte[] CertificateBytes { get { return _certificateBytes; } }
+            public List<CertificateEntry> Items { get { return _items; } }
             public MicrosoftPe M_Root { get { return m_root; } }
             public MicrosoftPe.PeHeader M_Parent { get { return m_parent; } }
         }

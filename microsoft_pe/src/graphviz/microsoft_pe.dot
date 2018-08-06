@@ -13,6 +13,18 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="pe_pos">mz.ofs_pe</TD><TD PORT="pe_size">...</TD><TD>PeHeader</TD><TD PORT="pe_type">pe</TD></TR>
 		</TABLE>>];
+		subgraph cluster__certificate_entry {
+			label="MicrosoftPe::CertificateEntry";
+			graph[style=dotted];
+
+			certificate_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">4</TD><TD>u4le</TD><TD PORT="length_type">length</TD></TR>
+				<TR><TD PORT="revision_pos">4</TD><TD PORT="revision_size">2</TD><TD>u2le?CertificateRevision</TD><TD PORT="revision_type">revision</TD></TR>
+				<TR><TD PORT="certificate_type_pos">6</TD><TD PORT="certificate_type_size">2</TD><TD>u2le?CertificateType</TD><TD PORT="certificate_type_type">certificate_type</TD></TR>
+				<TR><TD PORT="certificate_bytes_pos">8</TD><TD PORT="certificate_bytes_size">(length - 8)</TD><TD></TD><TD PORT="certificate_bytes_type">certificate_bytes</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__optional_header_windows {
 			label="MicrosoftPe::OptionalHeaderWindows";
 			graph[style=dotted];
@@ -116,7 +128,7 @@ digraph {
 			</TABLE>>];
 			pe_header__inst__certificate_table [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="certificate_table_pos">optional_hdr.data_dirs.certificate_table.virtual_address</TD><TD PORT="certificate_table_size">...</TD><TD>CertificateTable</TD><TD PORT="certificate_table_type">certificate_table</TD></TR>
+				<TR><TD PORT="certificate_table_pos">optional_hdr.data_dirs.certificate_table.virtual_address</TD><TD PORT="certificate_table_size">optional_hdr.data_dirs.certificate_table.size</TD><TD>CertificateTable</TD><TD PORT="certificate_table_type">certificate_table</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__optional_header {
@@ -158,10 +170,8 @@ digraph {
 
 			certificate_table__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">4</TD><TD>u4le</TD><TD PORT="length_type">length</TD></TR>
-				<TR><TD PORT="revision_pos">4</TD><TD PORT="revision_size">2</TD><TD>u2le?CertificateRevision</TD><TD PORT="revision_type">revision</TD></TR>
-				<TR><TD PORT="certificate_type_pos">6</TD><TD PORT="certificate_type_size">2</TD><TD>u2le?CertificateType</TD><TD PORT="certificate_type_type">certificate_type</TD></TR>
-				<TR><TD PORT="certificate_bytes_pos">8</TD><TD PORT="certificate_bytes_size">(length - 8)</TD><TD></TD><TD PORT="certificate_bytes_type">certificate_bytes</TD></TR>
+				<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">...</TD><TD>CertificateEntry</TD><TD PORT="items_type">items</TD></TR>
+				<TR><TD COLSPAN="4" PORT="items__repeat">repeat to end of stream</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__mz_placeholder {
@@ -256,6 +266,7 @@ digraph {
 	microsoft_pe__seq:mz_type -> mz_placeholder__seq [style=bold];
 	mz_placeholder__seq:ofs_pe_type -> microsoft_pe__inst__pe:pe_pos [color="#404040"];
 	microsoft_pe__inst__pe:pe_type -> pe_header__seq [style=bold];
+	certificate_entry__seq:length_type -> certificate_entry__seq:certificate_bytes_size [color="#404040"];
 	optional_header_data_dirs__seq:export_table_type -> data_dir__seq [style=bold];
 	optional_header_data_dirs__seq:import_table_type -> data_dir__seq [style=bold];
 	optional_header_data_dirs__seq:resource_table_type -> data_dir__seq [style=bold];
@@ -282,13 +293,14 @@ digraph {
 	pe_header__seq:sections_type -> section__seq [style=bold];
 	coff_header__seq:number_of_sections_type -> pe_header__seq:sections__repeat [color="#404040"];
 	data_dir__seq:virtual_address_type -> pe_header__inst__certificate_table:certificate_table_pos [color="#404040"];
+	data_dir__seq:size_type -> pe_header__inst__certificate_table:certificate_table_size [color="#404040"];
 	pe_header__inst__certificate_table:certificate_table_type -> certificate_table__seq [style=bold];
 	optional_header__seq:std_type -> optional_header_std__seq [style=bold];
 	optional_header__seq:windows_type -> optional_header_windows__seq [style=bold];
 	optional_header__seq:data_dirs_type -> optional_header_data_dirs__seq [style=bold];
 	section__seq:pointer_to_raw_data_type -> section__inst__body:body_pos [color="#404040"];
 	section__seq:size_of_raw_data_type -> section__inst__body:body_size [color="#404040"];
-	certificate_table__seq:length_type -> certificate_table__seq:certificate_bytes_size [color="#404040"];
+	certificate_table__seq:items_type -> certificate_entry__seq [style=bold];
 	coff_header__seq:number_of_symbols_type -> coff_header__inst__symbol_table_size [color="#404040"];
 	coff_header__seq:pointer_to_symbol_table_type -> coff_header__inst__symbol_name_table_offset [color="#404040"];
 	coff_header__inst__symbol_table_size:symbol_table_size_type -> coff_header__inst__symbol_name_table_offset [color="#404040"];
