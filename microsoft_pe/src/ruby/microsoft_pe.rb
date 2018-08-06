@@ -234,6 +234,16 @@ class MicrosoftPe < Kaitai::Struct::Struct
       }
       self
     end
+    def certificate_table
+      return @certificate_table unless @certificate_table.nil?
+      if optional_hdr.data_dirs.certificate_table.virtual_address != 0
+        _pos = @_io.pos
+        @_io.seek(optional_hdr.data_dirs.certificate_table.virtual_address)
+        @certificate_table = CertificateTable.new(@_io, self, @_root)
+        @_io.seek(_pos)
+      end
+      @certificate_table
+    end
     attr_reader :pe_signature
     attr_reader :coff_hdr
     attr_reader :optional_hdr
@@ -293,6 +303,53 @@ class MicrosoftPe < Kaitai::Struct::Struct
     attr_reader :number_of_relocations
     attr_reader :number_of_linenumbers
     attr_reader :characteristics
+  end
+
+  ##
+  # @see https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only Source
+  class CertificateTable < Kaitai::Struct::Struct
+
+    CERTIFICATE_REVISION = {
+      256 => :certificate_revision_revision_1_0,
+      512 => :certificate_revision_revision_2_0,
+    }
+    I__CERTIFICATE_REVISION = CERTIFICATE_REVISION.invert
+
+    CERTIFICATE_TYPE = {
+      1 => :certificate_type_x509,
+      2 => :certificate_type_pkcs_signed_data,
+      3 => :certificate_type_reserved_1,
+      4 => :certificate_type_ts_stack_signed,
+    }
+    I__CERTIFICATE_TYPE = CERTIFICATE_TYPE.invert
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @length = @_io.read_u4le
+      @revision = Kaitai::Struct::Stream::resolve_enum(CERTIFICATE_REVISION, @_io.read_u2le)
+      @certificate_type = Kaitai::Struct::Stream::resolve_enum(CERTIFICATE_TYPE, @_io.read_u2le)
+      @certificate_bytes = @_io.read_bytes((length - 8))
+      self
+    end
+
+    ##
+    # Specifies the length of the attribute certificate entry.
+    attr_reader :length
+
+    ##
+    # Contains the certificate version number.
+    attr_reader :revision
+
+    ##
+    # Specifies the type of content in bCertificate
+    attr_reader :certificate_type
+
+    ##
+    # Contains a certificate, such as an Authenticode signature.
+    attr_reader :certificate_bytes
   end
   class MzPlaceholder < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)

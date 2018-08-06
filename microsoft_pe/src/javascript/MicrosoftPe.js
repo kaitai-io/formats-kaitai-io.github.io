@@ -228,6 +228,19 @@ var MicrosoftPe = (function() {
         this.sections[i] = new Section(this._io, this, this._root);
       }
     }
+    Object.defineProperty(PeHeader.prototype, 'certificateTable', {
+      get: function() {
+        if (this._m_certificateTable !== undefined)
+          return this._m_certificateTable;
+        if (this.optionalHdr.dataDirs.certificateTable.virtualAddress != 0) {
+          var _pos = this._io.pos;
+          this._io.seek(this.optionalHdr.dataDirs.certificateTable.virtualAddress);
+          this._m_certificateTable = new CertificateTable(this._io, this, this._root);
+          this._io.seek(_pos);
+        }
+        return this._m_certificateTable;
+      }
+    });
 
     return PeHeader;
   })();
@@ -282,6 +295,64 @@ var MicrosoftPe = (function() {
     });
 
     return Section;
+  })();
+
+  /**
+   * @see {@link https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only|Source}
+   */
+
+  var CertificateTable = MicrosoftPe.CertificateTable = (function() {
+    CertificateTable.CertificateRevision = Object.freeze({
+      REVISION_1_0: 256,
+      REVISION_2_0: 512,
+
+      256: "REVISION_1_0",
+      512: "REVISION_2_0",
+    });
+
+    CertificateTable.CertificateType = Object.freeze({
+      X509: 1,
+      PKCS_SIGNED_DATA: 2,
+      RESERVED_1: 3,
+      TS_STACK_SIGNED: 4,
+
+      1: "X509",
+      2: "PKCS_SIGNED_DATA",
+      3: "RESERVED_1",
+      4: "TS_STACK_SIGNED",
+    });
+
+    function CertificateTable(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    CertificateTable.prototype._read = function() {
+      this.length = this._io.readU4le();
+      this.revision = this._io.readU2le();
+      this.certificateType = this._io.readU2le();
+      this.certificateBytes = this._io.readBytes((this.length - 8));
+    }
+
+    /**
+     * Specifies the length of the attribute certificate entry.
+     */
+
+    /**
+     * Contains the certificate version number.
+     */
+
+    /**
+     * Specifies the type of content in bCertificate
+     */
+
+    /**
+     * Contains a certificate, such as an Authenticode signature.
+     */
+
+    return CertificateTable;
   })();
 
   var MzPlaceholder = MicrosoftPe.MzPlaceholder = (function() {

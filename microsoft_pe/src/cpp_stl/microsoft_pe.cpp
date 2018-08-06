@@ -224,6 +224,7 @@ std::string microsoft_pe_t::coff_symbol_t::data() {
 microsoft_pe_t::pe_header_t::pe_header_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    f_certificate_table = false;
     _read();
 }
 
@@ -249,6 +250,24 @@ microsoft_pe_t::pe_header_t::~pe_header_t() {
         delete *it;
     }
     delete m_sections;
+    if (f_certificate_table && !n_certificate_table) {
+        delete m_certificate_table;
+    }
+}
+
+microsoft_pe_t::certificate_table_t* microsoft_pe_t::pe_header_t::certificate_table() {
+    if (f_certificate_table)
+        return m_certificate_table;
+    n_certificate_table = true;
+    if (optional_hdr()->data_dirs()->certificate_table()->virtual_address() != 0) {
+        n_certificate_table = false;
+        std::streampos _pos = m__io->pos();
+        m__io->seek(optional_hdr()->data_dirs()->certificate_table()->virtual_address());
+        m_certificate_table = new certificate_table_t(m__io, this, m__root);
+        m__io->seek(_pos);
+    }
+    f_certificate_table = true;
+    return m_certificate_table;
 }
 
 microsoft_pe_t::optional_header_t::optional_header_t(kaitai::kstream* p__io, microsoft_pe_t::pe_header_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
@@ -303,6 +322,22 @@ std::string microsoft_pe_t::section_t::body() {
     m__io->seek(_pos);
     f_body = true;
     return m_body;
+}
+
+microsoft_pe_t::certificate_table_t::certificate_table_t(kaitai::kstream* p__io, microsoft_pe_t::pe_header_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void microsoft_pe_t::certificate_table_t::_read() {
+    m_length = m__io->read_u4le();
+    m_revision = static_cast<microsoft_pe_t::certificate_table_t::certificate_revision_t>(m__io->read_u2le());
+    m_certificate_type = static_cast<microsoft_pe_t::certificate_table_t::certificate_type_t>(m__io->read_u2le());
+    m_certificate_bytes = m__io->read_bytes((length() - 8));
+}
+
+microsoft_pe_t::certificate_table_t::~certificate_table_t() {
 }
 
 microsoft_pe_t::mz_placeholder_t::mz_placeholder_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {

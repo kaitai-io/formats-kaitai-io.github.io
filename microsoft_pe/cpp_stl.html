@@ -311,6 +311,7 @@ public:
     class pe_header_t;
     class optional_header_t;
     class section_t;
+    class certificate_table_t;
     class mz_placeholder_t;
     class optional_header_std_t;
     class coff_header_t;
@@ -618,6 +619,19 @@ public:
         ~pe_header_t();
 
     private:
+        bool f_certificate_table;
+        certificate_table_t* m_certificate_table;
+        bool n_certificate_table;
+
+    public:
+        bool _is_null_certificate_table() { certificate_table(); return n_certificate_table; };
+
+    private:
+
+    public:
+        certificate_table_t* certificate_table();
+
+    private:
         std::string m_pe_signature;
         coff_header_t* m_coff_hdr;
         optional_header_t* m_optional_hdr;
@@ -709,6 +723,67 @@ public:
         uint16_t number_of_relocations() const { return m_number_of_relocations; }
         uint16_t number_of_linenumbers() const { return m_number_of_linenumbers; }
         uint32_t characteristics() const { return m_characteristics; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::pe_header_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa Source
+     */
+
+    class certificate_table_t : public kaitai::kstruct {
+
+    public:
+
+        enum certificate_revision_t {
+            CERTIFICATE_REVISION_REVISION_1_0 = 256,
+            CERTIFICATE_REVISION_REVISION_2_0 = 512
+        };
+
+        enum certificate_type_t {
+            CERTIFICATE_TYPE_X509 = 1,
+            CERTIFICATE_TYPE_PKCS_SIGNED_DATA = 2,
+            CERTIFICATE_TYPE_RESERVED_1 = 3,
+            CERTIFICATE_TYPE_TS_STACK_SIGNED = 4
+        };
+
+        certificate_table_t(kaitai::kstream* p__io, microsoft_pe_t::pe_header_t* p__parent = 0, microsoft_pe_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~certificate_table_t();
+
+    private:
+        uint32_t m_length;
+        certificate_revision_t m_revision;
+        certificate_type_t m_certificate_type;
+        std::string m_certificate_bytes;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::pe_header_t* m__parent;
+
+    public:
+
+        /**
+         * Specifies the length of the attribute certificate entry.
+         */
+        uint32_t length() const { return m_length; }
+
+        /**
+         * Contains the certificate version number.
+         */
+        certificate_revision_t revision() const { return m_revision; }
+
+        /**
+         * Specifies the type of content in bCertificate
+         */
+        certificate_type_t certificate_type() const { return m_certificate_type; }
+
+        /**
+         * Contains a certificate, such as an Authenticode signature.
+         */
+        std::string certificate_bytes() const { return m_certificate_bytes; }
         microsoft_pe_t* _root() const { return m__root; }
         microsoft_pe_t::pe_header_t* _parent() const { return m__parent; }
     };
@@ -1202,6 +1277,7 @@ std::string microsoft_pe_t::coff_symbol_t::data() {
 microsoft_pe_t::pe_header_t::pe_header_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    f_certificate_table = false;
     _read();
 }
 
@@ -1227,6 +1303,24 @@ microsoft_pe_t::pe_header_t::~pe_header_t() {
         delete *it;
     }
     delete m_sections;
+    if (f_certificate_table &amp;&amp; !n_certificate_table) {
+        delete m_certificate_table;
+    }
+}
+
+microsoft_pe_t::certificate_table_t* microsoft_pe_t::pe_header_t::certificate_table() {
+    if (f_certificate_table)
+        return m_certificate_table;
+    n_certificate_table = true;
+    if (optional_hdr()-&gt;data_dirs()-&gt;certificate_table()-&gt;virtual_address() != 0) {
+        n_certificate_table = false;
+        std::streampos _pos = m__io-&gt;pos();
+        m__io-&gt;seek(optional_hdr()-&gt;data_dirs()-&gt;certificate_table()-&gt;virtual_address());
+        m_certificate_table = new certificate_table_t(m__io, this, m__root);
+        m__io-&gt;seek(_pos);
+    }
+    f_certificate_table = true;
+    return m_certificate_table;
 }
 
 microsoft_pe_t::optional_header_t::optional_header_t(kaitai::kstream* p__io, microsoft_pe_t::pe_header_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
@@ -1281,6 +1375,22 @@ std::string microsoft_pe_t::section_t::body() {
     m__io-&gt;seek(_pos);
     f_body = true;
     return m_body;
+}
+
+microsoft_pe_t::certificate_table_t::certificate_table_t(kaitai::kstream* p__io, microsoft_pe_t::pe_header_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void microsoft_pe_t::certificate_table_t::_read() {
+    m_length = m__io-&gt;read_u4le();
+    m_revision = static_cast&lt;microsoft_pe_t::certificate_table_t::certificate_revision_t&gt;(m__io-&gt;read_u2le());
+    m_certificate_type = static_cast&lt;microsoft_pe_t::certificate_table_t::certificate_type_t&gt;(m__io-&gt;read_u2le());
+    m_certificate_bytes = m__io-&gt;read_bytes((length() - 8));
+}
+
+microsoft_pe_t::certificate_table_t::~certificate_table_t() {
 }
 
 microsoft_pe_t::mz_placeholder_t::mz_placeholder_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent, microsoft_pe_t* p__root) : kaitai::kstruct(p__io) {

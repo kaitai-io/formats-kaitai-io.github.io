@@ -348,6 +348,10 @@ section#format-index .row {
 				&lt;TR&gt;&lt;TD PORT=&quot;sections_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;sections_size&quot;&gt;40&lt;/TD&gt;&lt;TD&gt;Section&lt;/TD&gt;&lt;TD PORT=&quot;sections_type&quot;&gt;sections&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;sections__repeat&quot;&gt;repeat coff_hdr.number_of_sections times&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
+			pe_header__inst__certificate_table [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;certificate_table_pos&quot;&gt;optional_hdr.data_dirs.certificate_table.virtual_address&lt;/TD&gt;&lt;TD PORT=&quot;certificate_table_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;CertificateTable&lt;/TD&gt;&lt;TD PORT=&quot;certificate_table_type&quot;&gt;certificate_table&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
 		}
 		subgraph cluster__optional_header {
 			label=&quot;MicrosoftPe::OptionalHeader&quot;;
@@ -380,6 +384,18 @@ section#format-index .row {
 			section__inst__body [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;pointer_to_raw_data&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;size_of_raw_data&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__certificate_table {
+			label=&quot;MicrosoftPe::CertificateTable&quot;;
+			graph[style=dotted];
+
+			certificate_table__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;length_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;length_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;length_type&quot;&gt;length&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;revision_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;revision_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le?CertificateRevision&lt;/TD&gt;&lt;TD PORT=&quot;revision_type&quot;&gt;revision&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;certificate_type_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;certificate_type_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le?CertificateType&lt;/TD&gt;&lt;TD PORT=&quot;certificate_type_type&quot;&gt;certificate_type&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;certificate_bytes_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;certificate_bytes_size&quot;&gt;(length - 8)&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;certificate_bytes_type&quot;&gt;certificate_bytes&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
 		subgraph cluster__mz_placeholder {
@@ -499,11 +515,14 @@ section#format-index .row {
 	pe_header__seq:optional_hdr_type -&gt; optional_header__seq [style=bold];
 	pe_header__seq:sections_type -&gt; section__seq [style=bold];
 	coff_header__seq:number_of_sections_type -&gt; pe_header__seq:sections__repeat [color=&quot;#404040&quot;];
+	data_dir__seq:virtual_address_type -&gt; pe_header__inst__certificate_table:certificate_table_pos [color=&quot;#404040&quot;];
+	pe_header__inst__certificate_table:certificate_table_type -&gt; certificate_table__seq [style=bold];
 	optional_header__seq:std_type -&gt; optional_header_std__seq [style=bold];
 	optional_header__seq:windows_type -&gt; optional_header_windows__seq [style=bold];
 	optional_header__seq:data_dirs_type -&gt; optional_header_data_dirs__seq [style=bold];
 	section__seq:pointer_to_raw_data_type -&gt; section__inst__body:body_pos [color=&quot;#404040&quot;];
 	section__seq:size_of_raw_data_type -&gt; section__inst__body:body_size [color=&quot;#404040&quot;];
+	certificate_table__seq:length_type -&gt; certificate_table__seq:certificate_bytes_size [color=&quot;#404040&quot;];
 	coff_header__seq:number_of_symbols_type -&gt; coff_header__inst__symbol_table_size [color=&quot;#404040&quot;];
 	coff_header__seq:pointer_to_symbol_table_type -&gt; coff_header__inst__symbol_name_table_offset [color=&quot;#404040&quot;];
 	coff_header__inst__symbol_table_size:symbol_table_size_type -&gt; coff_header__inst__symbol_name_table_offset [color=&quot;#404040&quot;];

@@ -189,6 +189,19 @@ class MicrosoftPe(KaitaiStruct):
                 self.sections[i] = self._root.Section(self._io, self, self._root)
 
 
+        @property
+        def certificate_table(self):
+            if hasattr(self, '_m_certificate_table'):
+                return self._m_certificate_table if hasattr(self, '_m_certificate_table') else None
+
+            if self.optional_hdr.data_dirs.certificate_table.virtual_address != 0:
+                _pos = self._io.pos()
+                self._io.seek(self.optional_hdr.data_dirs.certificate_table.virtual_address)
+                self._m_certificate_table = self._root.CertificateTable(self._io, self, self._root)
+                self._io.seek(_pos)
+
+            return self._m_certificate_table if hasattr(self, '_m_certificate_table') else None
+
 
     class OptionalHeader(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -232,6 +245,34 @@ class MicrosoftPe(KaitaiStruct):
             self._m_body = self._io.read_bytes(self.size_of_raw_data)
             self._io.seek(_pos)
             return self._m_body if hasattr(self, '_m_body') else None
+
+
+    class CertificateTable(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only
+        """
+
+        class CertificateRevision(Enum):
+            revision_1_0 = 256
+            revision_2_0 = 512
+
+        class CertificateType(Enum):
+            x509 = 1
+            pkcs_signed_data = 2
+            reserved_1 = 3
+            ts_stack_signed = 4
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.length = self._io.read_u4le()
+            self.revision = self._root.CertificateTable.CertificateRevision(self._io.read_u2le())
+            self.certificate_type = self._root.CertificateTable.CertificateType(self._io.read_u2le())
+            self.certificate_bytes = self._io.read_bytes((self.length - 8))
 
 
     class MzPlaceholder(KaitaiStruct):

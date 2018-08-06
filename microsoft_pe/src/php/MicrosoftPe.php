@@ -297,6 +297,18 @@ class PeHeader extends \Kaitai\Struct\Struct {
             $this->_m_sections[] = new \MicrosoftPe\Section($this->_io, $this, $this->_root);
         }
     }
+    protected $_m_certificateTable;
+    public function certificateTable() {
+        if ($this->_m_certificateTable !== null)
+            return $this->_m_certificateTable;
+        if ($this->optionalHdr()->dataDirs()->certificateTable()->virtualAddress() != 0) {
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->optionalHdr()->dataDirs()->certificateTable()->virtualAddress());
+            $this->_m_certificateTable = new \MicrosoftPe\CertificateTable($this->_io, $this, $this->_root);
+            $this->_io->seek($_pos);
+        }
+        return $this->_m_certificateTable;
+    }
     protected $_m_peSignature;
     protected $_m_coffHdr;
     protected $_m_optionalHdr;
@@ -380,6 +392,89 @@ class Section extends \Kaitai\Struct\Struct {
     public function numberOfRelocations() { return $this->_m_numberOfRelocations; }
     public function numberOfLinenumbers() { return $this->_m_numberOfLinenumbers; }
     public function characteristics() { return $this->_m_characteristics; }
+}
+
+namespace \MicrosoftPe;
+
+class CertificateTable extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftPe\PeHeader $_parent = null, \MicrosoftPe $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_length = $this->_io->readU4le();
+        $this->_m_revision = $this->_io->readU2le();
+        $this->_m_certificateType = $this->_io->readU2le();
+        $this->_m_certificateBytes = $this->_io->readBytes(($this->length() - 8));
+    }
+    protected $_m_length;
+    protected $_m_revision;
+    protected $_m_certificateType;
+    protected $_m_certificateBytes;
+
+    /**
+     * Specifies the length of the attribute certificate entry.
+     */
+    public function length() { return $this->_m_length; }
+
+    /**
+     * Contains the certificate version number.
+     */
+    public function revision() { return $this->_m_revision; }
+
+    /**
+     * Specifies the type of content in bCertificate
+     */
+    public function certificateType() { return $this->_m_certificateType; }
+
+    /**
+     * Contains a certificate, such as an Authenticode signature.
+     */
+    public function certificateBytes() { return $this->_m_certificateBytes; }
+}
+
+namespace \MicrosoftPe\CertificateTable;
+
+class CertificateRevision {
+
+    /**
+     * Version 1, legacy version of the Win_Certificate structure.
+     * It is supported only for purposes of verifying legacy Authenticode signatures
+     */
+    const REVISION_1_0 = 256;
+
+    /**
+     * Version 2 is the current version of the Win_Certificate structure.
+     */
+    const REVISION_2_0 = 512;
+}
+
+namespace \MicrosoftPe\CertificateTable;
+
+class CertificateType {
+
+    /**
+     * bCertificate contains an X.509 Certificate 
+     * Not Supported
+     */
+    const X509 = 1;
+
+    /**
+     * bCertificate contains a PKCS#7 SignedData structure
+     */
+    const PKCS_SIGNED_DATA = 2;
+
+    /**
+     * Reserved
+     */
+    const RESERVED_1 = 3;
+
+    /**
+     * Terminal Server Protocol Stack Certificate signing 
+     * Not Supported
+     */
+    const TS_STACK_SIGNED = 4;
 }
 
 namespace \MicrosoftPe;
