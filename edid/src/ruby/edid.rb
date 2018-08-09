@@ -427,7 +427,7 @@ class Edid < Kaitai::Struct::Struct
   attr_reader :mfg_week
 
   ##
-  # Year of manufacture, less 1990. (1990???2245). If week=255, it is the model year instead.
+  # Year of manufacture, less 1990. (1990–2245). If week=255, it is the model year instead.
   attr_reader :mfg_year_mod
 
   ##
@@ -448,7 +448,7 @@ class Edid < Kaitai::Struct::Struct
   attr_reader :screen_size_v
 
   ##
-  # Display gamma, datavalue = (gamma*100)-100 (range 1.00???3.54)
+  # Display gamma, datavalue = (gamma*100)-100 (range 1.00–3.54)
   attr_reader :gamma_mod
   attr_reader :features_flags
 

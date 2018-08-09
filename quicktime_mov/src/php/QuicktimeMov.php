@@ -69,7 +69,7 @@ class MvhdBody extends \Kaitai\Struct\Struct {
 
     /**
      * A time value that indicates the time scale for this
-     * movie???that is, the number of time units that pass per second
+     * movie—that is, the number of time units that pass per second
      * in its time coordinate system. A time coordinate system that
      * measures time in sixtieths of a second, for example, has a
      * time scale of 60.
@@ -79,7 +79,7 @@ class MvhdBody extends \Kaitai\Struct\Struct {
     /**
      * A time value that indicates the duration of the movie in
      * time scale units. Note that this property is derived from
-     * the movie???s tracks. The value of this field corresponds to
+     * the movie’s tracks. The value of this field corresponds to
      * the duration of the longest track in the movie.
      */
     public function duration() { return $this->_m_duration; }
@@ -90,7 +90,7 @@ class MvhdBody extends \Kaitai\Struct\Struct {
     public function preferredRate() { return $this->_m_preferredRate; }
 
     /**
-     * How loud to play this movie???s sound. A value of 1.0 indicates full volume.
+     * How loud to play this movie’s sound. A value of 1.0 indicates full volume.
      */
     public function preferredVolume() { return $this->_m_preferredVolume; }
     public function reserved1() { return $this->_m_reserved1; }
