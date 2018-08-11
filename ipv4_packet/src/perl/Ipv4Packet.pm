@@ -4,9 +4,9 @@ use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
 use UdpDatagram;
+use IcmpPacket;
 use TcpSegment;
 use Ipv6Packet;
-use IcmpPacket;
 
 ########################################################################
 package Ipv4Packet;
