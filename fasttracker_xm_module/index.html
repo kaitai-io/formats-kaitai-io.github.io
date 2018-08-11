@@ -160,52 +160,7 @@ particular hardware samplers or synths.</p>
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="Extended Module parsing C++/STL library">C++/STL</a></li>
-                
-                
-                <li>
-                
-                <a href="csharp.html" title="Extended Module parsing C# library">C#</a></li>
-                
-                
-                <li>
-                
-                <a href="graphviz.html" title="Extended Module parsing GraphViz library">GraphViz</a></li>
-                
-                
-                <li>
-                
-                <a href="java.html" title="Extended Module parsing Java library">Java</a></li>
-                
-                
-                <li>
-                
-                <a href="javascript.html" title="Extended Module parsing JavaScript library">JavaScript</a></li>
-                
-                
-                <li>
-                
                 <a href="lua.html" title="Extended Module parsing Lua library">Lua</a></li>
-                
-                
-                <li>
-                
-                <a href="perl.html" title="Extended Module parsing Perl library">Perl</a></li>
-                
-                
-                <li>
-                
-                <a href="php.html" title="Extended Module parsing PHP library">PHP</a></li>
-                
-                
-                <li>
-                
-                <a href="python.html" title="Extended Module parsing Python library">Python</a></li>
-                
-                
-                <li>
-                
-                <a href="ruby.html" title="Extended Module parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -366,6 +321,15 @@ types:
               num_rows:
                 value: 'num_rows_raw + (_root.preheader.version_number.value == 0x0102 ? 1 : 0)'
   instrument:
+    doc: |
+      XM's notion of "instrument" typically constitutes of a
+      instrument metadata and one or several samples. Metadata
+      includes:
+
+      * instrument's name
+      * instruction of which sample to use for which note
+      * volume and panning envelopes and looping instructions
+      * vibrato settings
     seq:
       - id: header_size
         type: u4
@@ -380,7 +344,7 @@ types:
         repeat: expr
         repeat-expr: header.num_samples
       - id: samples
-        type: samples_data(_index)
+        type: samples_data(samples_headers[_index])
         repeat: expr
         repeat-expr: header.num_samples
     types:
@@ -401,10 +365,14 @@ types:
         seq:
           - id: len_sample_header
             type: u4
-          - id: sample_number_for_all_notes
+          - id: idx_sample_per_note
             type: u1
             repeat: expr
             repeat-expr: 96
+            doc: |
+              Index of sample that should be used for any particular
+              note. In the simplest case, where it's only one sample
+              is available, it's an array of full of zeroes.
           - id: volume_points
             type: envelope_point
             repeat: expr
@@ -484,17 +452,11 @@ types:
             sample[i] = new;
             old = new;
         params:
-          - id: index
-            type: u2
+          - id: header
+            type: sample_header
         seq:
-          - id: samples_data
-            type:
-              switch-on: _parent.samples_headers[index].type.is_sample_data_16_bit
-              cases:
-                true: u2
-                false: u1
-            repeat: expr
-            repeat-expr: _parent.samples_headers[index].sample_length
+          - id: data
+            size: 'header.sample_length * (header.type.is_sample_data_16_bit ? 2 : 1)'
       sample_header:
         seq:
           - id: sample_length
