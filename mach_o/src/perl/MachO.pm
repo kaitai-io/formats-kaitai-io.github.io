@@ -423,7 +423,7 @@ sub _read {
     elsif ($_on == $CS_MAGIC_REQUIREMENTS) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::CsBlob::Entitlements->new($io__raw_body, $self, $self->{_root});
+        $self->{body} = MachO::CsBlob::Requirements->new($io__raw_body, $self, $self->{_root});
     }
     else {
         $self->{body} = $self->{_io}->read_bytes(($self->length() - 8));
@@ -640,65 +640,6 @@ sub scatter_offset {
 sub team_id_offset {
     my ($self) = @_;
     return $self->{team_id_offset};
-}
-
-########################################################################
-package MachO::CsBlob::EntitlementsBlobIndex;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-our $REQUIREMENT_TYPE_HOST = 1;
-our $REQUIREMENT_TYPE_GUEST = 2;
-our $REQUIREMENT_TYPE_DESIGNATED = 3;
-our $REQUIREMENT_TYPE_LIBRARY = 4;
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{type} = $self->{_io}->read_u4be();
-    $self->{offset} = $self->{_io}->read_u4be();
-}
-
-sub value {
-    my ($self) = @_;
-    return $self->{value} if ($self->{value});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->offset() - 8));
-    $self->{value} = MachO::CsBlob->new($self->{_io}, $self, $self->{_root});
-    $self->{_io}->seek($_pos);
-    return $self->{value};
-}
-
-sub type {
-    my ($self) = @_;
-    return $self->{type};
-}
-
-sub offset {
-    my ($self) = @_;
-    return $self->{offset};
 }
 
 ########################################################################
@@ -1510,6 +1451,54 @@ sub expr {
 }
 
 ########################################################################
+package MachO::CsBlob::Requirements;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{count} = $self->{_io}->read_u4be();
+    $self->{items} = ();
+    my $n_items = $self->count();
+    for (my $i = 0; $i < $n_items; $i++) {
+        $self->{items}[$i] = MachO::CsBlob::RequirementsBlobIndex->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub count {
+    my ($self) = @_;
+    return $self->{count};
+}
+
+sub items {
+    my ($self) = @_;
+    return $self->{items};
+}
+
+########################################################################
 package MachO::CsBlob::BlobWrapper;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1548,7 +1537,7 @@ sub data {
 }
 
 ########################################################################
-package MachO::CsBlob::Entitlements;
+package MachO::CsBlob::RequirementsBlobIndex;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -1560,6 +1549,11 @@ sub from_file {
     binmode($fd);
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
+
+our $REQUIREMENT_TYPE_HOST = 1;
+our $REQUIREMENT_TYPE_GUEST = 2;
+our $REQUIREMENT_TYPE_DESIGNATED = 3;
+our $REQUIREMENT_TYPE_LIBRARY = 4;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
@@ -1577,22 +1571,28 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{count} = $self->{_io}->read_u4be();
-    $self->{items} = ();
-    my $n_items = $self->count();
-    for (my $i = 0; $i < $n_items; $i++) {
-        $self->{items}[$i] = MachO::CsBlob::EntitlementsBlobIndex->new($self->{_io}, $self, $self->{_root});
-    }
+    $self->{type} = $self->{_io}->read_u4be();
+    $self->{offset} = $self->{_io}->read_u4be();
 }
 
-sub count {
+sub value {
     my ($self) = @_;
-    return $self->{count};
+    return $self->{value} if ($self->{value});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek(($self->offset() - 8));
+    $self->{value} = MachO::CsBlob->new($self->{_io}, $self, $self->{_root});
+    $self->{_io}->seek($_pos);
+    return $self->{value};
 }
 
-sub items {
+sub type {
     my ($self) = @_;
-    return $self->{items};
+    return $self->{type};
+}
+
+sub offset {
+    my ($self) = @_;
+    return $self->{offset};
 }
 
 ########################################################################

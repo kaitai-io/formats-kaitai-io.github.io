@@ -375,7 +375,7 @@ class CsBlob extends \Kaitai\Struct\Struct {
             case \MachO\CsBlob\CsMagic::REQUIREMENTS:
                 $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes(($this-&gt;length() - 8));
                 $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \MachO\CsBlob\Entitlements($io, $this, $this-&gt;_root);
+                $this-&gt;_m_body = new \MachO\CsBlob\Requirements($io, $this, $this-&gt;_root);
                 break;
             default:
                 $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes(($this-&gt;length() - 8));
@@ -497,43 +497,6 @@ class CodeDirectory extends \Kaitai\Struct\Struct {
     public function spare2() { return $this-&gt;_m_spare2; }
     public function scatterOffset() { return $this-&gt;_m_scatterOffset; }
     public function teamIdOffset() { return $this-&gt;_m_teamIdOffset; }
-}
-
-namespace \MachO\CsBlob;
-
-class EntitlementsBlobIndex extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob\Entitlements $_parent = null, \MachO $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_type = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_offset = $this-&gt;_io-&gt;readU4be();
-    }
-    protected $_m_value;
-    public function value() {
-        if ($this-&gt;_m_value !== null)
-            return $this-&gt;_m_value;
-        $_pos = $this-&gt;_io-&gt;pos();
-        $this-&gt;_io-&gt;seek(($this-&gt;offset() - 8));
-        $this-&gt;_m_value = new \MachO\CsBlob($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_io-&gt;seek($_pos);
-        return $this-&gt;_m_value;
-    }
-    protected $_m_type;
-    protected $_m_offset;
-    public function type() { return $this-&gt;_m_type; }
-    public function offset() { return $this-&gt;_m_offset; }
-}
-
-namespace \MachO\CsBlob\EntitlementsBlobIndex;
-
-class RequirementType {
-    const HOST = 1;
-    const GUEST = 2;
-    const DESIGNATED = 3;
-    const LIBRARY = 4;
 }
 
 namespace \MachO\CsBlob;
@@ -947,6 +910,28 @@ class Requirement extends \Kaitai\Struct\Struct {
 
 namespace \MachO\CsBlob;
 
+class Requirements extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob $_parent = null, \MachO $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_count = $this-&gt;_io-&gt;readU4be();
+        $this-&gt;_m_items = [];
+        $n = $this-&gt;count();
+        for ($i = 0; $i &lt; $n; $i++) {
+            $this-&gt;_m_items[] = new \MachO\CsBlob\RequirementsBlobIndex($this-&gt;_io, $this, $this-&gt;_root);
+        }
+    }
+    protected $_m_count;
+    protected $_m_items;
+    public function count() { return $this-&gt;_m_count; }
+    public function items() { return $this-&gt;_m_items; }
+}
+
+namespace \MachO\CsBlob;
+
 class BlobWrapper extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob $_parent = null, \MachO $_root = null) {
         parent::__construct($_io, $_parent, $_root);
@@ -962,24 +947,39 @@ class BlobWrapper extends \Kaitai\Struct\Struct {
 
 namespace \MachO\CsBlob;
 
-class Entitlements extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob $_parent = null, \MachO $_root = null) {
+class RequirementsBlobIndex extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob\Requirements $_parent = null, \MachO $_root = null) {
         parent::__construct($_io, $_parent, $_root);
         $this-&gt;_read();
     }
 
     private function _read() {
-        $this-&gt;_m_count = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_items = [];
-        $n = $this-&gt;count();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_items[] = new \MachO\CsBlob\EntitlementsBlobIndex($this-&gt;_io, $this, $this-&gt;_root);
-        }
+        $this-&gt;_m_type = $this-&gt;_io-&gt;readU4be();
+        $this-&gt;_m_offset = $this-&gt;_io-&gt;readU4be();
     }
-    protected $_m_count;
-    protected $_m_items;
-    public function count() { return $this-&gt;_m_count; }
-    public function items() { return $this-&gt;_m_items; }
+    protected $_m_value;
+    public function value() {
+        if ($this-&gt;_m_value !== null)
+            return $this-&gt;_m_value;
+        $_pos = $this-&gt;_io-&gt;pos();
+        $this-&gt;_io-&gt;seek(($this-&gt;offset() - 8));
+        $this-&gt;_m_value = new \MachO\CsBlob($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_io-&gt;seek($_pos);
+        return $this-&gt;_m_value;
+    }
+    protected $_m_type;
+    protected $_m_offset;
+    public function type() { return $this-&gt;_m_type; }
+    public function offset() { return $this-&gt;_m_offset; }
+}
+
+namespace \MachO\CsBlob\RequirementsBlobIndex;
+
+class RequirementType {
+    const HOST = 1;
+    const GUEST = 2;
+    const DESIGNATED = 3;
+    const LIBRARY = 4;
 }
 
 namespace \MachO\CsBlob;

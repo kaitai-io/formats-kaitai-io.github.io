@@ -71,7 +71,7 @@ cs_blob__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0
 	<TR><TD>:cs_magic_blob_wrapper</TD><TD PORT="case3">BlobWrapper</TD></TR>
 	<TR><TD>:cs_magic_requirement</TD><TD PORT="case4">Requirement</TD></TR>
 	<TR><TD>:cs_magic_code_directory</TD><TD PORT="case5">CodeDirectory</TD></TR>
-	<TR><TD>:cs_magic_requirements</TD><TD PORT="case6">Entitlements</TD></TR>
+	<TR><TD>:cs_magic_requirements</TD><TD PORT="case6">Requirements</TD></TR>
 </TABLE>>];
 			subgraph cluster__entitlement {
 				label="MachO::CsBlob::Entitlement";
@@ -115,20 +115,6 @@ cs_blob__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="hashes_pos">((hash_offset - 8) - (hash_size * n_special_slots))</TD><TD PORT="hashes_size">hash_size</TD><TD></TD><TD PORT="hashes_type">hashes</TD></TR>
 					<TR><TD COLSPAN="4" PORT="hashes__repeat">repeat (n_special_slots + n_code_slots) times</TD></TR>
-				</TABLE>>];
-			}
-			subgraph cluster__entitlements_blob_index {
-				label="MachO::CsBlob::EntitlementsBlobIndex";
-				graph[style=dotted];
-
-				entitlements_blob_index__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4be→RequirementType</TD><TD PORT="type_type">type</TD></TR>
-					<TR><TD PORT="offset_pos">4</TD><TD PORT="offset_size">4</TD><TD>u4be</TD><TD PORT="offset_type">offset</TD></TR>
-				</TABLE>>];
-				entitlements_blob_index__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="value_pos">(offset - 8)</TD><TD PORT="value_size">...</TD><TD>CsBlob</TD><TD PORT="value_type">value</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__data {
@@ -315,6 +301,17 @@ expr__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD PORT="expr_pos">4</TD><TD PORT="expr_size">...</TD><TD>Expr</TD><TD PORT="expr_type">expr</TD></TR>
 				</TABLE>>];
 			}
+			subgraph cluster__requirements {
+				label="MachO::CsBlob::Requirements";
+				graph[style=dotted];
+
+				requirements__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="count_pos">0</TD><TD PORT="count_size">4</TD><TD>u4be</TD><TD PORT="count_type">count</TD></TR>
+					<TR><TD PORT="items_pos">4</TD><TD PORT="items_size">8</TD><TD>RequirementsBlobIndex</TD><TD PORT="items_type">items</TD></TR>
+					<TR><TD COLSPAN="4" PORT="items__repeat">repeat count times</TD></TR>
+				</TABLE>>];
+			}
 			subgraph cluster__blob_wrapper {
 				label="MachO::CsBlob::BlobWrapper";
 				graph[style=dotted];
@@ -324,15 +321,18 @@ expr__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
 				</TABLE>>];
 			}
-			subgraph cluster__entitlements {
-				label="MachO::CsBlob::Entitlements";
+			subgraph cluster__requirements_blob_index {
+				label="MachO::CsBlob::RequirementsBlobIndex";
 				graph[style=dotted];
 
-				entitlements__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				requirements_blob_index__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="count_pos">0</TD><TD PORT="count_size">4</TD><TD>u4be</TD><TD PORT="count_type">count</TD></TR>
-					<TR><TD PORT="items_pos">4</TD><TD PORT="items_size">8</TD><TD>EntitlementsBlobIndex</TD><TD PORT="items_type">items</TD></TR>
-					<TR><TD COLSPAN="4" PORT="items__repeat">repeat count times</TD></TR>
+					<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4be→RequirementType</TD><TD PORT="type_type">type</TD></TR>
+					<TR><TD PORT="offset_pos">4</TD><TD PORT="offset_size">4</TD><TD>u4be</TD><TD PORT="offset_type">offset</TD></TR>
+				</TABLE>>];
+				requirements_blob_index__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_pos">(offset - 8)</TD><TD PORT="value_size">...</TD><TD>CsBlob</TD><TD PORT="value_type">value</TD></TR>
 				</TABLE>>];
 			}
 		}
@@ -1098,7 +1098,7 @@ load_command__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 	cs_blob__seq_body_switch:case3 -> blob_wrapper__seq [style=bold];
 	cs_blob__seq_body_switch:case4 -> requirement__seq [style=bold];
 	cs_blob__seq_body_switch:case5 -> code_directory__seq [style=bold];
-	cs_blob__seq_body_switch:case6 -> entitlements__seq [style=bold];
+	cs_blob__seq_body_switch:case6 -> requirements__seq [style=bold];
 	cs_blob__seq:magic_type -> cs_blob__seq:body_type [color="#404040"];
 	code_directory__seq:ident_offset_type -> code_directory__inst__ident:ident_pos [color="#404040"];
 	code_directory__seq:team_id_offset_type -> code_directory__inst__team_id:team_id_pos [color="#404040"];
@@ -1108,8 +1108,6 @@ load_command__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 	code_directory__seq:hash_size_type -> code_directory__inst__hashes:hashes_size [color="#404040"];
 	code_directory__seq:n_special_slots_type -> code_directory__inst__hashes:hashes__repeat [color="#404040"];
 	code_directory__seq:n_code_slots_type -> code_directory__inst__hashes:hashes__repeat [color="#404040"];
-	entitlements_blob_index__seq:offset_type -> entitlements_blob_index__inst__value:value_pos [color="#404040"];
-	entitlements_blob_index__inst__value:value_type -> cs_blob__seq [style=bold];
 	data__seq:length_type -> data__seq:value_size [color="#404040"];
 	data__seq:length_type -> data__seq:padding_size [color="#404040"];
 	super_blob__seq:blobs_type -> blob_index__seq [style=bold];
@@ -1147,8 +1145,10 @@ load_command__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 	blob_index__inst__blob:blob_type -> cs_blob__seq [style=bold];
 	match__seq:data_type -> data__seq [style=bold];
 	requirement__seq:expr_type -> expr__seq [style=bold];
-	entitlements__seq:items_type -> entitlements_blob_index__seq [style=bold];
-	entitlements__seq:count_type -> entitlements__seq:items__repeat [color="#404040"];
+	requirements__seq:items_type -> requirements_blob_index__seq [style=bold];
+	requirements__seq:count_type -> requirements__seq:items__repeat [color="#404040"];
+	requirements_blob_index__seq:offset_type -> requirements_blob_index__inst__value:value_pos [color="#404040"];
+	requirements_blob_index__inst__value:value_type -> cs_blob__seq [style=bold];
 	macho_flags__params:value_type -> macho_flags__inst__subsections_via_symbols [color="#404040"];
 	macho_flags__params:value_type -> macho_flags__inst__dead_strippable_dylib [color="#404040"];
 	macho_flags__params:value_type -> macho_flags__inst__weak_defines [color="#404040"];

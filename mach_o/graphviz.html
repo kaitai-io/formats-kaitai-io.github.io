@@ -277,7 +277,7 @@ cs_blob__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&q
 	&lt;TR&gt;&lt;TD&gt;:cs_magic_blob_wrapper&lt;/TD&gt;&lt;TD PORT=&quot;case3&quot;&gt;BlobWrapper&lt;/TD&gt;&lt;/TR&gt;
 	&lt;TR&gt;&lt;TD&gt;:cs_magic_requirement&lt;/TD&gt;&lt;TD PORT=&quot;case4&quot;&gt;Requirement&lt;/TD&gt;&lt;/TR&gt;
 	&lt;TR&gt;&lt;TD&gt;:cs_magic_code_directory&lt;/TD&gt;&lt;TD PORT=&quot;case5&quot;&gt;CodeDirectory&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:cs_magic_requirements&lt;/TD&gt;&lt;TD PORT=&quot;case6&quot;&gt;Entitlements&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:cs_magic_requirements&lt;/TD&gt;&lt;TD PORT=&quot;case6&quot;&gt;Requirements&lt;/TD&gt;&lt;/TR&gt;
 &lt;/TABLE&gt;&gt;];
 			subgraph cluster__entitlement {
 				label=&quot;MachO::CsBlob::Entitlement&quot;;
@@ -321,20 +321,6 @@ cs_blob__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&q
 					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD PORT=&quot;hashes_pos&quot;&gt;((hash_offset - 8) - (hash_size * n_special_slots))&lt;/TD&gt;&lt;TD PORT=&quot;hashes_size&quot;&gt;hash_size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;hashes_type&quot;&gt;hashes&lt;/TD&gt;&lt;/TR&gt;
 					&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;hashes__repeat&quot;&gt;repeat (n_special_slots + n_code_slots) times&lt;/TD&gt;&lt;/TR&gt;
-				&lt;/TABLE&gt;&gt;];
-			}
-			subgraph cluster__entitlements_blob_index {
-				label=&quot;MachO::CsBlob::EntitlementsBlobIndex&quot;;
-				graph[style=dotted];
-
-				entitlements_blob_index__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
-					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;type_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;type_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be→RequirementType&lt;/TD&gt;&lt;TD PORT=&quot;type_type&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;offset_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;offset_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;offset_type&quot;&gt;offset&lt;/TD&gt;&lt;/TR&gt;
-				&lt;/TABLE&gt;&gt;];
-				entitlements_blob_index__inst__value [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
-					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;value_pos&quot;&gt;(offset - 8)&lt;/TD&gt;&lt;TD PORT=&quot;value_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;CsBlob&lt;/TD&gt;&lt;TD PORT=&quot;value_type&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
 				&lt;/TABLE&gt;&gt;];
 			}
 			subgraph cluster__data {
@@ -521,6 +507,17 @@ expr__seq_data_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot
 					&lt;TR&gt;&lt;TD PORT=&quot;expr_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;expr_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Expr&lt;/TD&gt;&lt;TD PORT=&quot;expr_type&quot;&gt;expr&lt;/TD&gt;&lt;/TR&gt;
 				&lt;/TABLE&gt;&gt;];
 			}
+			subgraph cluster__requirements {
+				label=&quot;MachO::CsBlob::Requirements&quot;;
+				graph[style=dotted];
+
+				requirements__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;count_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;count_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;count_type&quot;&gt;count&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;items_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;items_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;RequirementsBlobIndex&lt;/TD&gt;&lt;TD PORT=&quot;items_type&quot;&gt;items&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;items__repeat&quot;&gt;repeat count times&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+			}
 			subgraph cluster__blob_wrapper {
 				label=&quot;MachO::CsBlob::BlobWrapper&quot;;
 				graph[style=dotted];
@@ -530,15 +527,18 @@ expr__seq_data_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot
 					&lt;TR&gt;&lt;TD PORT=&quot;data_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;data_size&quot;&gt;⇲&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;data_type&quot;&gt;data&lt;/TD&gt;&lt;/TR&gt;
 				&lt;/TABLE&gt;&gt;];
 			}
-			subgraph cluster__entitlements {
-				label=&quot;MachO::CsBlob::Entitlements&quot;;
+			subgraph cluster__requirements_blob_index {
+				label=&quot;MachO::CsBlob::RequirementsBlobIndex&quot;;
 				graph[style=dotted];
 
-				entitlements__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				requirements_blob_index__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;count_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;count_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;count_type&quot;&gt;count&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD PORT=&quot;items_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;items_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;EntitlementsBlobIndex&lt;/TD&gt;&lt;TD PORT=&quot;items_type&quot;&gt;items&lt;/TD&gt;&lt;/TR&gt;
-					&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;items__repeat&quot;&gt;repeat count times&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;type_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;type_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be→RequirementType&lt;/TD&gt;&lt;TD PORT=&quot;type_type&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;offset_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;offset_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;offset_type&quot;&gt;offset&lt;/TD&gt;&lt;/TR&gt;
+				&lt;/TABLE&gt;&gt;];
+				requirements_blob_index__inst__value [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+					&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+					&lt;TR&gt;&lt;TD PORT=&quot;value_pos&quot;&gt;(offset - 8)&lt;/TD&gt;&lt;TD PORT=&quot;value_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;CsBlob&lt;/TD&gt;&lt;TD PORT=&quot;value_type&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
 				&lt;/TABLE&gt;&gt;];
 			}
 		}
@@ -1304,7 +1304,7 @@ load_command__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORD
 	cs_blob__seq_body_switch:case3 -&gt; blob_wrapper__seq [style=bold];
 	cs_blob__seq_body_switch:case4 -&gt; requirement__seq [style=bold];
 	cs_blob__seq_body_switch:case5 -&gt; code_directory__seq [style=bold];
-	cs_blob__seq_body_switch:case6 -&gt; entitlements__seq [style=bold];
+	cs_blob__seq_body_switch:case6 -&gt; requirements__seq [style=bold];
 	cs_blob__seq:magic_type -&gt; cs_blob__seq:body_type [color=&quot;#404040&quot;];
 	code_directory__seq:ident_offset_type -&gt; code_directory__inst__ident:ident_pos [color=&quot;#404040&quot;];
 	code_directory__seq:team_id_offset_type -&gt; code_directory__inst__team_id:team_id_pos [color=&quot;#404040&quot;];
@@ -1314,8 +1314,6 @@ load_command__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORD
 	code_directory__seq:hash_size_type -&gt; code_directory__inst__hashes:hashes_size [color=&quot;#404040&quot;];
 	code_directory__seq:n_special_slots_type -&gt; code_directory__inst__hashes:hashes__repeat [color=&quot;#404040&quot;];
 	code_directory__seq:n_code_slots_type -&gt; code_directory__inst__hashes:hashes__repeat [color=&quot;#404040&quot;];
-	entitlements_blob_index__seq:offset_type -&gt; entitlements_blob_index__inst__value:value_pos [color=&quot;#404040&quot;];
-	entitlements_blob_index__inst__value:value_type -&gt; cs_blob__seq [style=bold];
 	data__seq:length_type -&gt; data__seq:value_size [color=&quot;#404040&quot;];
 	data__seq:length_type -&gt; data__seq:padding_size [color=&quot;#404040&quot;];
 	super_blob__seq:blobs_type -&gt; blob_index__seq [style=bold];
@@ -1353,8 +1351,10 @@ load_command__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORD
 	blob_index__inst__blob:blob_type -&gt; cs_blob__seq [style=bold];
 	match__seq:data_type -&gt; data__seq [style=bold];
 	requirement__seq:expr_type -&gt; expr__seq [style=bold];
-	entitlements__seq:items_type -&gt; entitlements_blob_index__seq [style=bold];
-	entitlements__seq:count_type -&gt; entitlements__seq:items__repeat [color=&quot;#404040&quot;];
+	requirements__seq:items_type -&gt; requirements_blob_index__seq [style=bold];
+	requirements__seq:count_type -&gt; requirements__seq:items__repeat [color=&quot;#404040&quot;];
+	requirements_blob_index__seq:offset_type -&gt; requirements_blob_index__inst__value:value_pos [color=&quot;#404040&quot;];
+	requirements_blob_index__inst__value:value_type -&gt; cs_blob__seq [style=bold];
 	macho_flags__params:value_type -&gt; macho_flags__inst__subsections_via_symbols [color=&quot;#404040&quot;];
 	macho_flags__params:value_type -&gt; macho_flags__inst__dead_strippable_dylib [color=&quot;#404040&quot;];
 	macho_flags__params:value_type -&gt; macho_flags__inst__weak_defines [color=&quot;#404040&quot;];

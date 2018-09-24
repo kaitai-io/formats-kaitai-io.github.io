@@ -464,7 +464,7 @@ class MachO(KaitaiStruct):
             elif _on == self._root.CsBlob.CsMagic.requirements:
                 self._raw_body = self._io.read_bytes((self.length - 8))
                 io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.CsBlob.Entitlements(io, self, self._root)
+                self.body = self._root.CsBlob.Requirements(io, self, self._root)
             else:
                 self.body = self._io.read_bytes((self.length - 8))
 
@@ -541,35 +541,6 @@ class MachO(KaitaiStruct):
 
                 self._io.seek(_pos)
                 return self._m_hashes if hasattr(self, &#39;_m_hashes&#39;) else None
-
-
-        class EntitlementsBlobIndex(KaitaiStruct):
-
-            class RequirementType(Enum):
-                host = 1
-                guest = 2
-                designated = 3
-                library = 4
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.type = self._root.CsBlob.EntitlementsBlobIndex.RequirementType(self._io.read_u4be())
-                self.offset = self._io.read_u4be()
-
-            @property
-            def value(self):
-                if hasattr(self, &#39;_m_value&#39;):
-                    return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
-
-                _pos = self._io.pos()
-                self._io.seek((self.offset - 8))
-                self._m_value = self._root.CsBlob(self._io, self, self._root)
-                self._io.seek(_pos)
-                return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
 
 
         class Data(KaitaiStruct):
@@ -861,6 +832,21 @@ class MachO(KaitaiStruct):
                 self.expr = self._root.CsBlob.Expr(self._io, self, self._root)
 
 
+        class Requirements(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.count = self._io.read_u4be()
+                self.items = [None] * (self.count)
+                for i in range(self.count):
+                    self.items[i] = self._root.CsBlob.RequirementsBlobIndex(self._io, self, self._root)
+
+
+
         class BlobWrapper(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
                 self._io = _io
@@ -872,7 +858,13 @@ class MachO(KaitaiStruct):
                 self.data = self._io.read_bytes_full()
 
 
-        class Entitlements(KaitaiStruct):
+        class RequirementsBlobIndex(KaitaiStruct):
+
+            class RequirementType(Enum):
+                host = 1
+                guest = 2
+                designated = 3
+                library = 4
             def __init__(self, _io, _parent=None, _root=None):
                 self._io = _io
                 self._parent = _parent
@@ -880,11 +872,19 @@ class MachO(KaitaiStruct):
                 self._read()
 
             def _read(self):
-                self.count = self._io.read_u4be()
-                self.items = [None] * (self.count)
-                for i in range(self.count):
-                    self.items[i] = self._root.CsBlob.EntitlementsBlobIndex(self._io, self, self._root)
+                self.type = self._root.CsBlob.RequirementsBlobIndex.RequirementType(self._io.read_u4be())
+                self.offset = self._io.read_u4be()
 
+            @property
+            def value(self):
+                if hasattr(self, &#39;_m_value&#39;):
+                    return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
+
+                _pos = self._io.pos()
+                self._io.seek((self.offset - 8))
+                self._m_value = self._root.CsBlob(self._io, self, self._root)
+                self._io.seek(_pos)
+                return self._m_value if hasattr(self, &#39;_m_value&#39;) else None
 
 
 

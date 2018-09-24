@@ -400,7 +400,7 @@ public class MachO extends KaitaiStruct {
             case REQUIREMENTS: {
                 this._raw_body = this._io.readBytes((length() - 8));
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new Entitlements(_io__raw_body, this, _root);
+                this.body = new Requirements(_io__raw_body, this, _root);
                 break;
             }
             default: {
@@ -542,65 +542,6 @@ public class MachO extends KaitaiStruct {
             public Long teamIdOffset() { return teamIdOffset; }
             public MachO _root() { return _root; }
             public MachO.CsBlob _parent() { return _parent; }
-        }
-        public static class EntitlementsBlobIndex extends KaitaiStruct {
-            public static EntitlementsBlobIndex fromFile(String fileName) throws IOException {
-                return new EntitlementsBlobIndex(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public enum RequirementType {
-                HOST(1),
-                GUEST(2),
-                DESIGNATED(3),
-                LIBRARY(4);
-
-                private final long id;
-                RequirementType(long id) { this.id = id; }
-                public long id() { return id; }
-                private static final Map<Long, RequirementType> byId = new HashMap<Long, RequirementType>(4);
-                static {
-                    for (RequirementType e : RequirementType.values())
-                        byId.put(e.id(), e);
-                }
-                public static RequirementType byId(long id) { return byId.get(id); }
-            }
-
-            public EntitlementsBlobIndex(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public EntitlementsBlobIndex(KaitaiStream _io, MachO.CsBlob.Entitlements _parent) {
-                this(_io, _parent, null);
-            }
-
-            public EntitlementsBlobIndex(KaitaiStream _io, MachO.CsBlob.Entitlements _parent, MachO _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.type = RequirementType.byId(this._io.readU4be());
-                this.offset = this._io.readU4be();
-            }
-            private CsBlob value;
-            public CsBlob value() {
-                if (this.value != null)
-                    return this.value;
-                long _pos = this._io.pos();
-                this._io.seek((offset() - 8));
-                this.value = new CsBlob(this._io, this, _root);
-                this._io.seek(_pos);
-                return this.value;
-            }
-            private RequirementType type;
-            private long offset;
-            private MachO _root;
-            private MachO.CsBlob.Entitlements _parent;
-            public RequirementType type() { return type; }
-            public long offset() { return offset; }
-            public MachO _root() { return _root; }
-            public MachO.CsBlob.Entitlements _parent() { return _parent; }
         }
         public static class Data extends KaitaiStruct {
             public static Data fromFile(String fileName) throws IOException {
@@ -1279,6 +1220,41 @@ public class MachO extends KaitaiStruct {
             public MachO _root() { return _root; }
             public MachO.CsBlob _parent() { return _parent; }
         }
+        public static class Requirements extends KaitaiStruct {
+            public static Requirements fromFile(String fileName) throws IOException {
+                return new Requirements(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Requirements(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Requirements(KaitaiStream _io, MachO.CsBlob _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Requirements(KaitaiStream _io, MachO.CsBlob _parent, MachO _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.count = this._io.readU4be();
+                items = new ArrayList<RequirementsBlobIndex>((int) (count()));
+                for (int i = 0; i < count(); i++) {
+                    this.items.add(new RequirementsBlobIndex(this._io, this, _root));
+                }
+            }
+            private long count;
+            private ArrayList<RequirementsBlobIndex> items;
+            private MachO _root;
+            private MachO.CsBlob _parent;
+            public long count() { return count; }
+            public ArrayList<RequirementsBlobIndex> items() { return items; }
+            public MachO _root() { return _root; }
+            public MachO.CsBlob _parent() { return _parent; }
+        }
         public static class BlobWrapper extends KaitaiStruct {
             public static BlobWrapper fromFile(String fileName) throws IOException {
                 return new BlobWrapper(new ByteBufferKaitaiStream(fileName));
@@ -1308,40 +1284,64 @@ public class MachO extends KaitaiStruct {
             public MachO _root() { return _root; }
             public MachO.CsBlob _parent() { return _parent; }
         }
-        public static class Entitlements extends KaitaiStruct {
-            public static Entitlements fromFile(String fileName) throws IOException {
-                return new Entitlements(new ByteBufferKaitaiStream(fileName));
+        public static class RequirementsBlobIndex extends KaitaiStruct {
+            public static RequirementsBlobIndex fromFile(String fileName) throws IOException {
+                return new RequirementsBlobIndex(new ByteBufferKaitaiStream(fileName));
             }
 
-            public Entitlements(KaitaiStream _io) {
+            public enum RequirementType {
+                HOST(1),
+                GUEST(2),
+                DESIGNATED(3),
+                LIBRARY(4);
+
+                private final long id;
+                RequirementType(long id) { this.id = id; }
+                public long id() { return id; }
+                private static final Map<Long, RequirementType> byId = new HashMap<Long, RequirementType>(4);
+                static {
+                    for (RequirementType e : RequirementType.values())
+                        byId.put(e.id(), e);
+                }
+                public static RequirementType byId(long id) { return byId.get(id); }
+            }
+
+            public RequirementsBlobIndex(KaitaiStream _io) {
                 this(_io, null, null);
             }
 
-            public Entitlements(KaitaiStream _io, MachO.CsBlob _parent) {
+            public RequirementsBlobIndex(KaitaiStream _io, MachO.CsBlob.Requirements _parent) {
                 this(_io, _parent, null);
             }
 
-            public Entitlements(KaitaiStream _io, MachO.CsBlob _parent, MachO _root) {
+            public RequirementsBlobIndex(KaitaiStream _io, MachO.CsBlob.Requirements _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
                 _read();
             }
             private void _read() {
-                this.count = this._io.readU4be();
-                items = new ArrayList<EntitlementsBlobIndex>((int) (count()));
-                for (int i = 0; i < count(); i++) {
-                    this.items.add(new EntitlementsBlobIndex(this._io, this, _root));
-                }
+                this.type = RequirementType.byId(this._io.readU4be());
+                this.offset = this._io.readU4be();
             }
-            private long count;
-            private ArrayList<EntitlementsBlobIndex> items;
+            private CsBlob value;
+            public CsBlob value() {
+                if (this.value != null)
+                    return this.value;
+                long _pos = this._io.pos();
+                this._io.seek((offset() - 8));
+                this.value = new CsBlob(this._io, this, _root);
+                this._io.seek(_pos);
+                return this.value;
+            }
+            private RequirementType type;
+            private long offset;
             private MachO _root;
-            private MachO.CsBlob _parent;
-            public long count() { return count; }
-            public ArrayList<EntitlementsBlobIndex> items() { return items; }
+            private MachO.CsBlob.Requirements _parent;
+            public RequirementType type() { return type; }
+            public long offset() { return offset; }
             public MachO _root() { return _root; }
-            public MachO.CsBlob _parent() { return _parent; }
+            public MachO.CsBlob.Requirements _parent() { return _parent; }
         }
         private CsMagic magic;
         private long length;

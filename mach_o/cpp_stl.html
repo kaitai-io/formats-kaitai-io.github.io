@@ -562,15 +562,15 @@ public:
     public:
         class entitlement_t;
         class code_directory_t;
-        class entitlements_blob_index_t;
         class data_t;
         class super_blob_t;
         class expr_t;
         class blob_index_t;
         class match_t;
         class requirement_t;
+        class requirements_t;
         class blob_wrapper_t;
-        class entitlements_t;
+        class requirements_blob_index_t;
 
         enum cs_magic_t {
             CS_MAGIC_BLOB_WRAPPER = 4208855809,
@@ -693,45 +693,6 @@ public:
             uint32_t team_id_offset() const { return m_team_id_offset; }
             mach_o_t* _root() const { return m__root; }
             mach_o_t::cs_blob_t* _parent() const { return m__parent; }
-        };
-
-        class entitlements_blob_index_t : public kaitai::kstruct {
-
-        public:
-
-            enum requirement_type_t {
-                REQUIREMENT_TYPE_HOST = 1,
-                REQUIREMENT_TYPE_GUEST = 2,
-                REQUIREMENT_TYPE_DESIGNATED = 3,
-                REQUIREMENT_TYPE_LIBRARY = 4
-            };
-
-            entitlements_blob_index_t(kaitai::kstream* p__io, mach_o_t::cs_blob_t::entitlements_t* p__parent = 0, mach_o_t* p__root = 0);
-
-        private:
-            void _read();
-
-        public:
-            ~entitlements_blob_index_t();
-
-        private:
-            bool f_value;
-            cs_blob_t* m_value;
-
-        public:
-            cs_blob_t* value();
-
-        private:
-            requirement_type_t m_type;
-            uint32_t m_offset;
-            mach_o_t* m__root;
-            mach_o_t::cs_blob_t::entitlements_t* m__parent;
-
-        public:
-            requirement_type_t type() const { return m_type; }
-            uint32_t offset() const { return m_offset; }
-            mach_o_t* _root() const { return m__root; }
-            mach_o_t::cs_blob_t::entitlements_t* _parent() const { return m__parent; }
         };
 
         class data_t : public kaitai::kstruct {
@@ -1220,6 +1181,31 @@ public:
             mach_o_t::cs_blob_t* _parent() const { return m__parent; }
         };
 
+        class requirements_t : public kaitai::kstruct {
+
+        public:
+
+            requirements_t(kaitai::kstream* p__io, mach_o_t::cs_blob_t* p__parent = 0, mach_o_t* p__root = 0);
+
+        private:
+            void _read();
+
+        public:
+            ~requirements_t();
+
+        private:
+            uint32_t m_count;
+            std::vector&lt;requirements_blob_index_t*&gt;* m_items;
+            mach_o_t* m__root;
+            mach_o_t::cs_blob_t* m__parent;
+
+        public:
+            uint32_t count() const { return m_count; }
+            std::vector&lt;requirements_blob_index_t*&gt;* items() const { return m_items; }
+            mach_o_t* _root() const { return m__root; }
+            mach_o_t::cs_blob_t* _parent() const { return m__parent; }
+        };
+
         class blob_wrapper_t : public kaitai::kstruct {
 
         public:
@@ -1243,29 +1229,43 @@ public:
             mach_o_t::cs_blob_t* _parent() const { return m__parent; }
         };
 
-        class entitlements_t : public kaitai::kstruct {
+        class requirements_blob_index_t : public kaitai::kstruct {
 
         public:
 
-            entitlements_t(kaitai::kstream* p__io, mach_o_t::cs_blob_t* p__parent = 0, mach_o_t* p__root = 0);
+            enum requirement_type_t {
+                REQUIREMENT_TYPE_HOST = 1,
+                REQUIREMENT_TYPE_GUEST = 2,
+                REQUIREMENT_TYPE_DESIGNATED = 3,
+                REQUIREMENT_TYPE_LIBRARY = 4
+            };
+
+            requirements_blob_index_t(kaitai::kstream* p__io, mach_o_t::cs_blob_t::requirements_t* p__parent = 0, mach_o_t* p__root = 0);
 
         private:
             void _read();
 
         public:
-            ~entitlements_t();
+            ~requirements_blob_index_t();
 
         private:
-            uint32_t m_count;
-            std::vector&lt;entitlements_blob_index_t*&gt;* m_items;
-            mach_o_t* m__root;
-            mach_o_t::cs_blob_t* m__parent;
+            bool f_value;
+            cs_blob_t* m_value;
 
         public:
-            uint32_t count() const { return m_count; }
-            std::vector&lt;entitlements_blob_index_t*&gt;* items() const { return m_items; }
+            cs_blob_t* value();
+
+        private:
+            requirement_type_t m_type;
+            uint32_t m_offset;
+            mach_o_t* m__root;
+            mach_o_t::cs_blob_t::requirements_t* m__parent;
+
+        public:
+            requirement_type_t type() const { return m_type; }
+            uint32_t offset() const { return m_offset; }
             mach_o_t* _root() const { return m__root; }
-            mach_o_t::cs_blob_t* _parent() const { return m__parent; }
+            mach_o_t::cs_blob_t::requirements_t* _parent() const { return m__parent; }
         };
 
     private:
@@ -3289,7 +3289,7 @@ void mach_o_t::cs_blob_t::_read() {
         n_body = false;
         m__raw_body = m__io-&gt;read_bytes((length() - 8));
         m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new entitlements_t(m__io__raw_body, this, m__root);
+        m_body = new requirements_t(m__io__raw_body, this, m__root);
         break;
     }
     default: {
@@ -3403,35 +3403,6 @@ std::vector&lt;std::string&gt;* mach_o_t::cs_blob_t::code_directory_t::hashes() 
     m__io-&gt;seek(_pos);
     f_hashes = true;
     return m_hashes;
-}
-
-mach_o_t::cs_blob_t::entitlements_blob_index_t::entitlements_blob_index_t(kaitai::kstream* p__io, mach_o_t::cs_blob_t::entitlements_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_value = false;
-    _read();
-}
-
-void mach_o_t::cs_blob_t::entitlements_blob_index_t::_read() {
-    m_type = static_cast&lt;mach_o_t::cs_blob_t::entitlements_blob_index_t::requirement_type_t&gt;(m__io-&gt;read_u4be());
-    m_offset = m__io-&gt;read_u4be();
-}
-
-mach_o_t::cs_blob_t::entitlements_blob_index_t::~entitlements_blob_index_t() {
-    if (f_value) {
-        delete m_value;
-    }
-}
-
-mach_o_t::cs_blob_t* mach_o_t::cs_blob_t::entitlements_blob_index_t::value() {
-    if (f_value)
-        return m_value;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek((offset() - 8));
-    m_value = new cs_blob_t(m__io, this, m__root);
-    m__io-&gt;seek(_pos);
-    f_value = true;
-    return m_value;
 }
 
 mach_o_t::cs_blob_t::data_t::data_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
@@ -3786,6 +3757,29 @@ mach_o_t::cs_blob_t::requirement_t::~requirement_t() {
     delete m_expr;
 }
 
+mach_o_t::cs_blob_t::requirements_t::requirements_t(kaitai::kstream* p__io, mach_o_t::cs_blob_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void mach_o_t::cs_blob_t::requirements_t::_read() {
+    m_count = m__io-&gt;read_u4be();
+    int l_items = count();
+    m_items = new std::vector&lt;requirements_blob_index_t*&gt;();
+    m_items-&gt;reserve(l_items);
+    for (int i = 0; i &lt; l_items; i++) {
+        m_items-&gt;push_back(new requirements_blob_index_t(m__io, this, m__root));
+    }
+}
+
+mach_o_t::cs_blob_t::requirements_t::~requirements_t() {
+    for (std::vector&lt;requirements_blob_index_t*&gt;::iterator it = m_items-&gt;begin(); it != m_items-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_items;
+}
+
 mach_o_t::cs_blob_t::blob_wrapper_t::blob_wrapper_t(kaitai::kstream* p__io, mach_o_t::cs_blob_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -3799,27 +3793,33 @@ void mach_o_t::cs_blob_t::blob_wrapper_t::_read() {
 mach_o_t::cs_blob_t::blob_wrapper_t::~blob_wrapper_t() {
 }
 
-mach_o_t::cs_blob_t::entitlements_t::entitlements_t(kaitai::kstream* p__io, mach_o_t::cs_blob_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
+mach_o_t::cs_blob_t::requirements_blob_index_t::requirements_blob_index_t(kaitai::kstream* p__io, mach_o_t::cs_blob_t::requirements_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    f_value = false;
     _read();
 }
 
-void mach_o_t::cs_blob_t::entitlements_t::_read() {
-    m_count = m__io-&gt;read_u4be();
-    int l_items = count();
-    m_items = new std::vector&lt;entitlements_blob_index_t*&gt;();
-    m_items-&gt;reserve(l_items);
-    for (int i = 0; i &lt; l_items; i++) {
-        m_items-&gt;push_back(new entitlements_blob_index_t(m__io, this, m__root));
+void mach_o_t::cs_blob_t::requirements_blob_index_t::_read() {
+    m_type = static_cast&lt;mach_o_t::cs_blob_t::requirements_blob_index_t::requirement_type_t&gt;(m__io-&gt;read_u4be());
+    m_offset = m__io-&gt;read_u4be();
+}
+
+mach_o_t::cs_blob_t::requirements_blob_index_t::~requirements_blob_index_t() {
+    if (f_value) {
+        delete m_value;
     }
 }
 
-mach_o_t::cs_blob_t::entitlements_t::~entitlements_t() {
-    for (std::vector&lt;entitlements_blob_index_t*&gt;::iterator it = m_items-&gt;begin(); it != m_items-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_items;
+mach_o_t::cs_blob_t* mach_o_t::cs_blob_t::requirements_blob_index_t::value() {
+    if (f_value)
+        return m_value;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek((offset() - 8));
+    m_value = new cs_blob_t(m__io, this, m__root);
+    m__io-&gt;seek(_pos);
+    f_value = true;
+    return m_value;
 }
 
 mach_o_t::routines_command_t::routines_command_t(kaitai::kstream* p__io, mach_o_t::load_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {

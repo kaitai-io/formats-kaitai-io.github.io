@@ -479,7 +479,7 @@ class MachO &lt; Kaitai::Struct::Struct
       when :cs_magic_requirements
         @_raw_body = @_io.read_bytes((length - 8))
         io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Entitlements.new(io, self, @_root)
+        @body = Requirements.new(io, self, @_root)
       else
         @body = @_io.read_bytes((length - 8))
       end
@@ -565,36 +565,6 @@ class MachO &lt; Kaitai::Struct::Struct
       attr_reader :spare2
       attr_reader :scatter_offset
       attr_reader :team_id_offset
-    end
-    class EntitlementsBlobIndex &lt; Kaitai::Struct::Struct
-
-      REQUIREMENT_TYPE = {
-        1 =&gt; :requirement_type_host,
-        2 =&gt; :requirement_type_guest,
-        3 =&gt; :requirement_type_designated,
-        4 =&gt; :requirement_type_library,
-      }
-      I__REQUIREMENT_TYPE = REQUIREMENT_TYPE.invert
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @type = Kaitai::Struct::Stream::resolve_enum(REQUIREMENT_TYPE, @_io.read_u4be)
-        @offset = @_io.read_u4be
-        self
-      end
-      def value
-        return @value unless @value.nil?
-        _pos = @_io.pos
-        @_io.seek((offset - 8))
-        @value = CsBlob.new(@_io, self, @_root)
-        @_io.seek(_pos)
-        @value
-      end
-      attr_reader :type
-      attr_reader :offset
     end
     class Data &lt; Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
@@ -919,6 +889,23 @@ class MachO &lt; Kaitai::Struct::Struct
       attr_reader :kind
       attr_reader :expr
     end
+    class Requirements &lt; Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @count = @_io.read_u4be
+        @items = Array.new(count)
+        (count).times { |i|
+          @items[i] = RequirementsBlobIndex.new(@_io, self, @_root)
+        }
+        self
+      end
+      attr_reader :count
+      attr_reader :items
+    end
     class BlobWrapper &lt; Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
@@ -931,22 +918,35 @@ class MachO &lt; Kaitai::Struct::Struct
       end
       attr_reader :data
     end
-    class Entitlements &lt; Kaitai::Struct::Struct
+    class RequirementsBlobIndex &lt; Kaitai::Struct::Struct
+
+      REQUIREMENT_TYPE = {
+        1 =&gt; :requirement_type_host,
+        2 =&gt; :requirement_type_guest,
+        3 =&gt; :requirement_type_designated,
+        4 =&gt; :requirement_type_library,
+      }
+      I__REQUIREMENT_TYPE = REQUIREMENT_TYPE.invert
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read
       end
 
       def _read
-        @count = @_io.read_u4be
-        @items = Array.new(count)
-        (count).times { |i|
-          @items[i] = EntitlementsBlobIndex.new(@_io, self, @_root)
-        }
+        @type = Kaitai::Struct::Stream::resolve_enum(REQUIREMENT_TYPE, @_io.read_u4be)
+        @offset = @_io.read_u4be
         self
       end
-      attr_reader :count
-      attr_reader :items
+      def value
+        return @value unless @value.nil?
+        _pos = @_io.pos
+        @_io.seek((offset - 8))
+        @value = CsBlob.new(@_io, self, @_root)
+        @_io.seek(_pos)
+        @value
+      end
+      attr_reader :type
+      attr_reader :offset
     end
     attr_reader :magic
     attr_reader :length

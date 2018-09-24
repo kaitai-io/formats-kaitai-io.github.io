@@ -332,7 +332,7 @@ namespace Kaitai
                 case CsMagic.Requirements: {
                     __raw_body = m_io.ReadBytes((Length - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new Entitlements(io___raw_body, this, m_root);
+                    _body = new Requirements(io___raw_body, this, m_root);
                     break;
                 }
                 default: {
@@ -486,58 +486,6 @@ namespace Kaitai
                 public uint? TeamIdOffset { get { return _teamIdOffset; } }
                 public MachO M_Root { get { return m_root; } }
                 public MachO.CsBlob M_Parent { get { return m_parent; } }
-            }
-            public partial class EntitlementsBlobIndex : KaitaiStruct
-            {
-                public static EntitlementsBlobIndex FromFile(string fileName)
-                {
-                    return new EntitlementsBlobIndex(new KaitaiStream(fileName));
-                }
-
-
-                public enum RequirementType
-                {
-                    Host = 1,
-                    Guest = 2,
-                    Designated = 3,
-                    Library = 4,
-                }
-                public EntitlementsBlobIndex(KaitaiStream p__io, MachO.CsBlob.Entitlements p__parent = null, MachO p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    f_value = false;
-                    _read();
-                }
-                private void _read()
-                {
-                    _type = ((RequirementType) m_io.ReadU4be());
-                    _offset = m_io.ReadU4be();
-                }
-                private bool f_value;
-                private CsBlob _value;
-                public CsBlob Value
-                {
-                    get
-                    {
-                        if (f_value)
-                            return _value;
-                        long _pos = m_io.Pos;
-                        m_io.Seek((Offset - 8));
-                        _value = new CsBlob(m_io, this, m_root);
-                        m_io.Seek(_pos);
-                        f_value = true;
-                        return _value;
-                    }
-                }
-                private RequirementType _type;
-                private uint _offset;
-                private MachO m_root;
-                private MachO.CsBlob.Entitlements m_parent;
-                public RequirementType Type { get { return _type; } }
-                public uint Offset { get { return _offset; } }
-                public MachO M_Root { get { return m_root; } }
-                public MachO.CsBlob.Entitlements M_Parent { get { return m_parent; } }
             }
             public partial class Data : KaitaiStruct
             {
@@ -1115,6 +1063,37 @@ namespace Kaitai
                 public MachO M_Root { get { return m_root; } }
                 public MachO.CsBlob M_Parent { get { return m_parent; } }
             }
+            public partial class Requirements : KaitaiStruct
+            {
+                public static Requirements FromFile(string fileName)
+                {
+                    return new Requirements(new KaitaiStream(fileName));
+                }
+
+                public Requirements(KaitaiStream p__io, MachO.CsBlob p__parent = null, MachO p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _count = m_io.ReadU4be();
+                    _items = new List<RequirementsBlobIndex>((int) (Count));
+                    for (var i = 0; i < Count; i++)
+                    {
+                        _items.Add(new RequirementsBlobIndex(m_io, this, m_root));
+                    }
+                }
+                private uint _count;
+                private List<RequirementsBlobIndex> _items;
+                private MachO m_root;
+                private MachO.CsBlob m_parent;
+                public uint Count { get { return _count; } }
+                public List<RequirementsBlobIndex> Items { get { return _items; } }
+                public MachO M_Root { get { return m_root; } }
+                public MachO.CsBlob M_Parent { get { return m_parent; } }
+            }
             public partial class BlobWrapper : KaitaiStruct
             {
                 public static BlobWrapper FromFile(string fileName)
@@ -1139,36 +1118,57 @@ namespace Kaitai
                 public MachO M_Root { get { return m_root; } }
                 public MachO.CsBlob M_Parent { get { return m_parent; } }
             }
-            public partial class Entitlements : KaitaiStruct
+            public partial class RequirementsBlobIndex : KaitaiStruct
             {
-                public static Entitlements FromFile(string fileName)
+                public static RequirementsBlobIndex FromFile(string fileName)
                 {
-                    return new Entitlements(new KaitaiStream(fileName));
+                    return new RequirementsBlobIndex(new KaitaiStream(fileName));
                 }
 
-                public Entitlements(KaitaiStream p__io, MachO.CsBlob p__parent = null, MachO p__root = null) : base(p__io)
+
+                public enum RequirementType
+                {
+                    Host = 1,
+                    Guest = 2,
+                    Designated = 3,
+                    Library = 4,
+                }
+                public RequirementsBlobIndex(KaitaiStream p__io, MachO.CsBlob.Requirements p__parent = null, MachO p__root = null) : base(p__io)
                 {
                     m_parent = p__parent;
                     m_root = p__root;
+                    f_value = false;
                     _read();
                 }
                 private void _read()
                 {
-                    _count = m_io.ReadU4be();
-                    _items = new List<EntitlementsBlobIndex>((int) (Count));
-                    for (var i = 0; i < Count; i++)
+                    _type = ((RequirementType) m_io.ReadU4be());
+                    _offset = m_io.ReadU4be();
+                }
+                private bool f_value;
+                private CsBlob _value;
+                public CsBlob Value
+                {
+                    get
                     {
-                        _items.Add(new EntitlementsBlobIndex(m_io, this, m_root));
+                        if (f_value)
+                            return _value;
+                        long _pos = m_io.Pos;
+                        m_io.Seek((Offset - 8));
+                        _value = new CsBlob(m_io, this, m_root);
+                        m_io.Seek(_pos);
+                        f_value = true;
+                        return _value;
                     }
                 }
-                private uint _count;
-                private List<EntitlementsBlobIndex> _items;
+                private RequirementType _type;
+                private uint _offset;
                 private MachO m_root;
-                private MachO.CsBlob m_parent;
-                public uint Count { get { return _count; } }
-                public List<EntitlementsBlobIndex> Items { get { return _items; } }
+                private MachO.CsBlob.Requirements m_parent;
+                public RequirementType Type { get { return _type; } }
+                public uint Offset { get { return _offset; } }
                 public MachO M_Root { get { return m_root; } }
-                public MachO.CsBlob M_Parent { get { return m_parent; } }
+                public MachO.CsBlob.Requirements M_Parent { get { return m_parent; } }
             }
             private CsMagic _magic;
             private uint _length;

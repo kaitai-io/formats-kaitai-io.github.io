@@ -360,7 +360,7 @@ var MachO = (function() {
       case MachO.CsBlob.CsMagic.REQUIREMENTS:
         this._raw_body = this._io.readBytes((this.length - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new Entitlements(_io__raw_body, this, this._root);
+        this.body = new Requirements(_io__raw_body, this, this._root);
         break;
       default:
         this.body = this._io.readBytes((this.length - 8));
@@ -449,45 +449,6 @@ var MachO = (function() {
       });
 
       return CodeDirectory;
-    })();
-
-    var EntitlementsBlobIndex = CsBlob.EntitlementsBlobIndex = (function() {
-      EntitlementsBlobIndex.RequirementType = Object.freeze({
-        HOST: 1,
-        GUEST: 2,
-        DESIGNATED: 3,
-        LIBRARY: 4,
-
-        1: "HOST",
-        2: "GUEST",
-        3: "DESIGNATED",
-        4: "LIBRARY",
-      });
-
-      function EntitlementsBlobIndex(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      EntitlementsBlobIndex.prototype._read = function() {
-        this.type = this._io.readU4be();
-        this.offset = this._io.readU4be();
-      }
-      Object.defineProperty(EntitlementsBlobIndex.prototype, 'value', {
-        get: function() {
-          if (this._m_value !== undefined)
-            return this._m_value;
-          var _pos = this._io.pos;
-          this._io.seek((this.offset - 8));
-          this._m_value = new CsBlob(this._io, this, this._root);
-          this._io.seek(_pos);
-          return this._m_value;
-        }
-      });
-
-      return EntitlementsBlobIndex;
     })();
 
     var Data = CsBlob.Data = (function() {
@@ -900,6 +861,25 @@ var MachO = (function() {
       return Requirement;
     })();
 
+    var Requirements = CsBlob.Requirements = (function() {
+      function Requirements(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      Requirements.prototype._read = function() {
+        this.count = this._io.readU4be();
+        this.items = new Array(this.count);
+        for (var i = 0; i < this.count; i++) {
+          this.items[i] = new RequirementsBlobIndex(this._io, this, this._root);
+        }
+      }
+
+      return Requirements;
+    })();
+
     var BlobWrapper = CsBlob.BlobWrapper = (function() {
       function BlobWrapper(_io, _parent, _root) {
         this._io = _io;
@@ -915,23 +895,43 @@ var MachO = (function() {
       return BlobWrapper;
     })();
 
-    var Entitlements = CsBlob.Entitlements = (function() {
-      function Entitlements(_io, _parent, _root) {
+    var RequirementsBlobIndex = CsBlob.RequirementsBlobIndex = (function() {
+      RequirementsBlobIndex.RequirementType = Object.freeze({
+        HOST: 1,
+        GUEST: 2,
+        DESIGNATED: 3,
+        LIBRARY: 4,
+
+        1: "HOST",
+        2: "GUEST",
+        3: "DESIGNATED",
+        4: "LIBRARY",
+      });
+
+      function RequirementsBlobIndex(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
         this._root = _root || this;
 
         this._read();
       }
-      Entitlements.prototype._read = function() {
-        this.count = this._io.readU4be();
-        this.items = new Array(this.count);
-        for (var i = 0; i < this.count; i++) {
-          this.items[i] = new EntitlementsBlobIndex(this._io, this, this._root);
-        }
+      RequirementsBlobIndex.prototype._read = function() {
+        this.type = this._io.readU4be();
+        this.offset = this._io.readU4be();
       }
+      Object.defineProperty(RequirementsBlobIndex.prototype, 'value', {
+        get: function() {
+          if (this._m_value !== undefined)
+            return this._m_value;
+          var _pos = this._io.pos;
+          this._io.seek((this.offset - 8));
+          this._m_value = new CsBlob(this._io, this, this._root);
+          this._io.seek(_pos);
+          return this._m_value;
+        }
+      });
 
-      return Entitlements;
+      return RequirementsBlobIndex;
     })();
 
     return CsBlob;
