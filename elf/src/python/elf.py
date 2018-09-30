@@ -977,7 +977,7 @@ class Elf(KaitaiStruct):
                     raise Exception("Unable to decide endianness")
 
             def _read_le(self):
-                self.name_offset = self._io.read_u4le()
+                self.ofs_name = self._io.read_u4le()
                 self.type = self._root.ShType(self._io.read_u4le())
                 _on = self._root.bits
                 if _on == self._root.Bits.b32:
@@ -991,14 +991,14 @@ class Elf(KaitaiStruct):
                     self.addr = self._io.read_u8le()
                 _on = self._root.bits
                 if _on == self._root.Bits.b32:
-                    self.offset = self._io.read_u4le()
+                    self.ofs_body = self._io.read_u4le()
                 elif _on == self._root.Bits.b64:
-                    self.offset = self._io.read_u8le()
+                    self.ofs_body = self._io.read_u8le()
                 _on = self._root.bits
                 if _on == self._root.Bits.b32:
-                    self.size = self._io.read_u4le()
+                    self.len_body = self._io.read_u4le()
                 elif _on == self._root.Bits.b64:
-                    self.size = self._io.read_u8le()
+                    self.len_body = self._io.read_u8le()
                 self.linked_section_idx = self._io.read_u4le()
                 self.info = self._io.read_bytes(4)
                 _on = self._root.bits
@@ -1013,7 +1013,7 @@ class Elf(KaitaiStruct):
                     self.entry_size = self._io.read_u8le()
 
             def _read_be(self):
-                self.name_offset = self._io.read_u4be()
+                self.ofs_name = self._io.read_u4be()
                 self.type = self._root.ShType(self._io.read_u4be())
                 _on = self._root.bits
                 if _on == self._root.Bits.b32:
@@ -1027,14 +1027,14 @@ class Elf(KaitaiStruct):
                     self.addr = self._io.read_u8be()
                 _on = self._root.bits
                 if _on == self._root.Bits.b32:
-                    self.offset = self._io.read_u4be()
+                    self.ofs_body = self._io.read_u4be()
                 elif _on == self._root.Bits.b64:
-                    self.offset = self._io.read_u8be()
+                    self.ofs_body = self._io.read_u8be()
                 _on = self._root.bits
                 if _on == self._root.Bits.b32:
-                    self.size = self._io.read_u4be()
+                    self.len_body = self._io.read_u4be()
                 elif _on == self._root.Bits.b64:
-                    self.size = self._io.read_u8be()
+                    self.len_body = self._io.read_u8be()
                 self.linked_section_idx = self._io.read_u4be()
                 self.info = self._io.read_bytes(4)
                 _on = self._root.bits
@@ -1049,61 +1049,70 @@ class Elf(KaitaiStruct):
                     self.entry_size = self._io.read_u8be()
 
             @property
-            def dynstr(self):
-                if hasattr(self, '_m_dynstr'):
-                    return self._m_dynstr if hasattr(self, '_m_dynstr') else None
-
-                if self.type == self._root.ShType.dynstr:
-                    io = self._root._io
-                    _pos = io.pos()
-                    io.seek(self.offset)
-                    if self._is_le:
-                        self._raw__m_dynstr = io.read_bytes(self.size)
-                        io = KaitaiStream(BytesIO(self._raw__m_dynstr))
-                        self._m_dynstr = self._root.EndianElf.StringsStruct(io, self, self._root, self._is_le)
-                    else:
-                        self._raw__m_dynstr = io.read_bytes(self.size)
-                        io = KaitaiStream(BytesIO(self._raw__m_dynstr))
-                        self._m_dynstr = self._root.EndianElf.StringsStruct(io, self, self._root, self._is_le)
-                    io.seek(_pos)
-
-                return self._m_dynstr if hasattr(self, '_m_dynstr') else None
-
-            @property
-            def dynsym(self):
-                if hasattr(self, '_m_dynsym'):
-                    return self._m_dynsym if hasattr(self, '_m_dynsym') else None
-
-                if self.type == self._root.ShType.dynsym:
-                    io = self._root._io
-                    _pos = io.pos()
-                    io.seek(self.offset)
-                    if self._is_le:
-                        self._raw__m_dynsym = io.read_bytes(self.size)
-                        io = KaitaiStream(BytesIO(self._raw__m_dynsym))
-                        self._m_dynsym = self._root.EndianElf.DynsymSection(io, self, self._root, self._is_le)
-                    else:
-                        self._raw__m_dynsym = io.read_bytes(self.size)
-                        io = KaitaiStream(BytesIO(self._raw__m_dynsym))
-                        self._m_dynsym = self._root.EndianElf.DynsymSection(io, self, self._root, self._is_le)
-                    io.seek(_pos)
-
-                return self._m_dynsym if hasattr(self, '_m_dynsym') else None
-
-            @property
             def body(self):
                 if hasattr(self, '_m_body'):
                     return self._m_body if hasattr(self, '_m_body') else None
 
                 io = self._root._io
                 _pos = io.pos()
-                io.seek(self.offset)
+                io.seek(self.ofs_body)
                 if self._is_le:
-                    self._m_body = io.read_bytes(self.size)
+                    _on = self.type
+                    if _on == self._root.ShType.dynamic:
+                        self._raw__m_body = io.read_bytes(self.len_body)
+                        io = KaitaiStream(BytesIO(self._raw__m_body))
+                        self._m_body = self._root.EndianElf.DynamicSection(io, self, self._root, self._is_le)
+                    elif _on == self._root.ShType.strtab:
+                        self._raw__m_body = io.read_bytes(self.len_body)
+                        io = KaitaiStream(BytesIO(self._raw__m_body))
+                        self._m_body = self._root.EndianElf.StringsStruct(io, self, self._root, self._is_le)
+                    elif _on == self._root.ShType.dynstr:
+                        self._raw__m_body = io.read_bytes(self.len_body)
+                        io = KaitaiStream(BytesIO(self._raw__m_body))
+                        self._m_body = self._root.EndianElf.StringsStruct(io, self, self._root, self._is_le)
+                    elif _on == self._root.ShType.dynsym:
+                        self._raw__m_body = io.read_bytes(self.len_body)
+                        io = KaitaiStream(BytesIO(self._raw__m_body))
+                        self._m_body = self._root.EndianElf.DynsymSection(io, self, self._root, self._is_le)
+                    else:
+                        self._m_body = io.read_bytes(self.len_body)
                 else:
-                    self._m_body = io.read_bytes(self.size)
+                    _on = self.type
+                    if _on == self._root.ShType.dynamic:
+                        self._raw__m_body = io.read_bytes(self.len_body)
+                        io = KaitaiStream(BytesIO(self._raw__m_body))
+                        self._m_body = self._root.EndianElf.DynamicSection(io, self, self._root, self._is_le)
+                    elif _on == self._root.ShType.strtab:
+                        self._raw__m_body = io.read_bytes(self.len_body)
+                        io = KaitaiStream(BytesIO(self._raw__m_body))
+                        self._m_body = self._root.EndianElf.StringsStruct(io, self, self._root, self._is_le)
+                    elif _on == self._root.ShType.dynstr:
+                        self._raw__m_body = io.read_bytes(self.len_body)
+                        io = KaitaiStream(BytesIO(self._raw__m_body))
+                        self._m_body = self._root.EndianElf.StringsStruct(io, self, self._root, self._is_le)
+                    elif _on == self._root.ShType.dynsym:
+                        self._raw__m_body = io.read_bytes(self.len_body)
+                        io = KaitaiStream(BytesIO(self._raw__m_body))
+                        self._m_body = self._root.EndianElf.DynsymSection(io, self, self._root, self._is_le)
+                    else:
+                        self._m_body = io.read_bytes(self.len_body)
                 io.seek(_pos)
                 return self._m_body if hasattr(self, '_m_body') else None
+
+            @property
+            def name(self):
+                if hasattr(self, '_m_name'):
+                    return self._m_name if hasattr(self, '_m_name') else None
+
+                io = self._root.header.strings._io
+                _pos = io.pos()
+                io.seek(self.ofs_name)
+                if self._is_le:
+                    self._m_name = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
+                else:
+                    self._m_name = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
+                io.seek(_pos)
+                return self._m_name if hasattr(self, '_m_name') else None
 
             @property
             def flags_obj(self):
@@ -1115,63 +1124,6 @@ class Elf(KaitaiStruct):
                 else:
                     self._m_flags_obj = self._root.SectionHeaderFlags(self.flags, self._io, self, self._root)
                 return self._m_flags_obj if hasattr(self, '_m_flags_obj') else None
-
-            @property
-            def strtab(self):
-                if hasattr(self, '_m_strtab'):
-                    return self._m_strtab if hasattr(self, '_m_strtab') else None
-
-                if self.type == self._root.ShType.strtab:
-                    io = self._root._io
-                    _pos = io.pos()
-                    io.seek(self.offset)
-                    if self._is_le:
-                        self._raw__m_strtab = io.read_bytes(self.size)
-                        io = KaitaiStream(BytesIO(self._raw__m_strtab))
-                        self._m_strtab = self._root.EndianElf.StringsStruct(io, self, self._root, self._is_le)
-                    else:
-                        self._raw__m_strtab = io.read_bytes(self.size)
-                        io = KaitaiStream(BytesIO(self._raw__m_strtab))
-                        self._m_strtab = self._root.EndianElf.StringsStruct(io, self, self._root, self._is_le)
-                    io.seek(_pos)
-
-                return self._m_strtab if hasattr(self, '_m_strtab') else None
-
-            @property
-            def name(self):
-                if hasattr(self, '_m_name'):
-                    return self._m_name if hasattr(self, '_m_name') else None
-
-                io = self._root.header.strings._io
-                _pos = io.pos()
-                io.seek(self.name_offset)
-                if self._is_le:
-                    self._m_name = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
-                else:
-                    self._m_name = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
-                io.seek(_pos)
-                return self._m_name if hasattr(self, '_m_name') else None
-
-            @property
-            def dynamic(self):
-                if hasattr(self, '_m_dynamic'):
-                    return self._m_dynamic if hasattr(self, '_m_dynamic') else None
-
-                if self.type == self._root.ShType.dynamic:
-                    io = self._root._io
-                    _pos = io.pos()
-                    io.seek(self.offset)
-                    if self._is_le:
-                        self._raw__m_dynamic = io.read_bytes(self.size)
-                        io = KaitaiStream(BytesIO(self._raw__m_dynamic))
-                        self._m_dynamic = self._root.EndianElf.DynamicSection(io, self, self._root, self._is_le)
-                    else:
-                        self._raw__m_dynamic = io.read_bytes(self.size)
-                        io = KaitaiStream(BytesIO(self._raw__m_dynamic))
-                        self._m_dynamic = self._root.EndianElf.DynamicSection(io, self, self._root, self._is_le)
-                    io.seek(_pos)
-
-                return self._m_dynamic if hasattr(self, '_m_dynamic') else None
 
 
         class DynamicSection(KaitaiStruct):
@@ -1376,13 +1328,13 @@ class Elf(KaitaiStruct):
                 return self._m_strings if hasattr(self, '_m_strings') else None
 
             _pos = self._io.pos()
-            self._io.seek(self.section_headers[self.section_names_idx].offset)
+            self._io.seek(self.section_headers[self.section_names_idx].ofs_body)
             if self._is_le:
-                self._raw__m_strings = self._io.read_bytes(self.section_headers[self.section_names_idx].size)
+                self._raw__m_strings = self._io.read_bytes(self.section_headers[self.section_names_idx].len_body)
                 io = KaitaiStream(BytesIO(self._raw__m_strings))
                 self._m_strings = self._root.EndianElf.StringsStruct(io, self, self._root, self._is_le)
             else:
-                self._raw__m_strings = self._io.read_bytes(self.section_headers[self.section_names_idx].size)
+                self._raw__m_strings = self._io.read_bytes(self.section_headers[self.section_names_idx].len_body)
                 io = KaitaiStream(BytesIO(self._raw__m_strings))
                 self._m_strings = self._root.EndianElf.StringsStruct(io, self, self._root, self._is_le)
             self._io.seek(_pos)

@@ -1415,7 +1415,7 @@ public class Elf extends KaitaiStruct {
                 }
             }
             private void _readLE() {
-                this.nameOffset = this._io.readU4le();
+                this.ofsName = this._io.readU4le();
                 this.type = Elf.ShType.byId(this._io.readU4le());
                 switch (_root.bits()) {
                 case B32: {
@@ -1439,21 +1439,21 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.offset = (long) (this._io.readU4le());
+                    this.ofsBody = (long) (this._io.readU4le());
                     break;
                 }
                 case B64: {
-                    this.offset = this._io.readU8le();
+                    this.ofsBody = this._io.readU8le();
                     break;
                 }
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.size = (long) (this._io.readU4le());
+                    this.lenBody = (long) (this._io.readU4le());
                     break;
                 }
                 case B64: {
-                    this.size = this._io.readU8le();
+                    this.lenBody = this._io.readU8le();
                     break;
                 }
                 }
@@ -1481,7 +1481,7 @@ public class Elf extends KaitaiStruct {
                 }
             }
             private void _readBE() {
-                this.nameOffset = this._io.readU4be();
+                this.ofsName = this._io.readU4be();
                 this.type = Elf.ShType.byId(this._io.readU4be());
                 switch (_root.bits()) {
                 case B32: {
@@ -1505,21 +1505,21 @@ public class Elf extends KaitaiStruct {
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.offset = (long) (this._io.readU4be());
+                    this.ofsBody = (long) (this._io.readU4be());
                     break;
                 }
                 case B64: {
-                    this.offset = this._io.readU8be();
+                    this.ofsBody = this._io.readU8be();
                     break;
                 }
                 }
                 switch (_root.bits()) {
                 case B32: {
-                    this.size = (long) (this._io.readU4be());
+                    this.lenBody = (long) (this._io.readU4be());
                     break;
                 }
                 case B64: {
-                    this.size = this._io.readU8be();
+                    this.lenBody = this._io.readU8be();
                     break;
                 }
                 }
@@ -1546,62 +1546,93 @@ public class Elf extends KaitaiStruct {
                 }
                 }
             }
-            private StringsStruct dynstr;
-            public StringsStruct dynstr() {
-                if (this.dynstr != null)
-                    return this.dynstr;
-                if (type() == Elf.ShType.DYNSTR) {
-                    KaitaiStream io = _root._io();
-                    long _pos = io.pos();
-                    io.seek(offset());
-                    if (_is_le) {
-                        this._raw_dynstr = io.readBytes(size());
-                        KaitaiStream _io__raw_dynstr = new ByteBufferKaitaiStream(_raw_dynstr);
-                        this.dynstr = new StringsStruct(_io__raw_dynstr, this, _root, _is_le);
-                    } else {
-                        this._raw_dynstr = io.readBytes(size());
-                        KaitaiStream _io__raw_dynstr = new ByteBufferKaitaiStream(_raw_dynstr);
-                        this.dynstr = new StringsStruct(_io__raw_dynstr, this, _root, _is_le);
-                    }
-                    io.seek(_pos);
-                }
-                return this.dynstr;
-            }
-            private DynsymSection dynsym;
-            public DynsymSection dynsym() {
-                if (this.dynsym != null)
-                    return this.dynsym;
-                if (type() == Elf.ShType.DYNSYM) {
-                    KaitaiStream io = _root._io();
-                    long _pos = io.pos();
-                    io.seek(offset());
-                    if (_is_le) {
-                        this._raw_dynsym = io.readBytes(size());
-                        KaitaiStream _io__raw_dynsym = new ByteBufferKaitaiStream(_raw_dynsym);
-                        this.dynsym = new DynsymSection(_io__raw_dynsym, this, _root, _is_le);
-                    } else {
-                        this._raw_dynsym = io.readBytes(size());
-                        KaitaiStream _io__raw_dynsym = new ByteBufferKaitaiStream(_raw_dynsym);
-                        this.dynsym = new DynsymSection(_io__raw_dynsym, this, _root, _is_le);
-                    }
-                    io.seek(_pos);
-                }
-                return this.dynsym;
-            }
-            private byte[] body;
-            public byte[] body() {
+            private Object body;
+            public Object body() {
                 if (this.body != null)
                     return this.body;
                 KaitaiStream io = _root._io();
                 long _pos = io.pos();
-                io.seek(offset());
+                io.seek(ofsBody());
                 if (_is_le) {
-                    this.body = io.readBytes(size());
+                    switch (type()) {
+                    case DYNAMIC: {
+                        this._raw_body = io.readBytes(lenBody());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DynamicSection(_io__raw_body, this, _root, _is_le);
+                        break;
+                    }
+                    case STRTAB: {
+                        this._raw_body = io.readBytes(lenBody());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
+                        break;
+                    }
+                    case DYNSTR: {
+                        this._raw_body = io.readBytes(lenBody());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
+                        break;
+                    }
+                    case DYNSYM: {
+                        this._raw_body = io.readBytes(lenBody());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
+                        break;
+                    }
+                    default: {
+                        this.body = io.readBytes(lenBody());
+                        break;
+                    }
+                    }
                 } else {
-                    this.body = io.readBytes(size());
+                    switch (type()) {
+                    case DYNAMIC: {
+                        this._raw_body = io.readBytes(lenBody());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DynamicSection(_io__raw_body, this, _root, _is_le);
+                        break;
+                    }
+                    case STRTAB: {
+                        this._raw_body = io.readBytes(lenBody());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
+                        break;
+                    }
+                    case DYNSTR: {
+                        this._raw_body = io.readBytes(lenBody());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
+                        break;
+                    }
+                    case DYNSYM: {
+                        this._raw_body = io.readBytes(lenBody());
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
+                        break;
+                    }
+                    default: {
+                        this.body = io.readBytes(lenBody());
+                        break;
+                    }
+                    }
                 }
                 io.seek(_pos);
                 return this.body;
+            }
+            private String name;
+            public String name() {
+                if (this.name != null)
+                    return this.name;
+                KaitaiStream io = _root.header().strings()._io();
+                long _pos = io.pos();
+                io.seek(ofsName());
+                if (_is_le) {
+                    this.name = new String(io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+                } else {
+                    this.name = new String(io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+                }
+                io.seek(_pos);
+                return this.name;
             }
             private SectionHeaderFlags flagsObj;
             public SectionHeaderFlags flagsObj() {
@@ -1614,95 +1645,32 @@ public class Elf extends KaitaiStruct {
                 }
                 return this.flagsObj;
             }
-            private StringsStruct strtab;
-            public StringsStruct strtab() {
-                if (this.strtab != null)
-                    return this.strtab;
-                if (type() == Elf.ShType.STRTAB) {
-                    KaitaiStream io = _root._io();
-                    long _pos = io.pos();
-                    io.seek(offset());
-                    if (_is_le) {
-                        this._raw_strtab = io.readBytes(size());
-                        KaitaiStream _io__raw_strtab = new ByteBufferKaitaiStream(_raw_strtab);
-                        this.strtab = new StringsStruct(_io__raw_strtab, this, _root, _is_le);
-                    } else {
-                        this._raw_strtab = io.readBytes(size());
-                        KaitaiStream _io__raw_strtab = new ByteBufferKaitaiStream(_raw_strtab);
-                        this.strtab = new StringsStruct(_io__raw_strtab, this, _root, _is_le);
-                    }
-                    io.seek(_pos);
-                }
-                return this.strtab;
-            }
-            private String name;
-            public String name() {
-                if (this.name != null)
-                    return this.name;
-                KaitaiStream io = _root.header().strings()._io();
-                long _pos = io.pos();
-                io.seek(nameOffset());
-                if (_is_le) {
-                    this.name = new String(io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
-                } else {
-                    this.name = new String(io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
-                }
-                io.seek(_pos);
-                return this.name;
-            }
-            private DynamicSection dynamic;
-            public DynamicSection dynamic() {
-                if (this.dynamic != null)
-                    return this.dynamic;
-                if (type() == Elf.ShType.DYNAMIC) {
-                    KaitaiStream io = _root._io();
-                    long _pos = io.pos();
-                    io.seek(offset());
-                    if (_is_le) {
-                        this._raw_dynamic = io.readBytes(size());
-                        KaitaiStream _io__raw_dynamic = new ByteBufferKaitaiStream(_raw_dynamic);
-                        this.dynamic = new DynamicSection(_io__raw_dynamic, this, _root, _is_le);
-                    } else {
-                        this._raw_dynamic = io.readBytes(size());
-                        KaitaiStream _io__raw_dynamic = new ByteBufferKaitaiStream(_raw_dynamic);
-                        this.dynamic = new DynamicSection(_io__raw_dynamic, this, _root, _is_le);
-                    }
-                    io.seek(_pos);
-                }
-                return this.dynamic;
-            }
-            private long nameOffset;
+            private long ofsName;
             private ShType type;
             private Long flags;
             private Long addr;
-            private Long offset;
-            private Long size;
+            private Long ofsBody;
+            private Long lenBody;
             private long linkedSectionIdx;
             private byte[] info;
             private Long align;
             private Long entrySize;
             private Elf _root;
             private Elf.EndianElf _parent;
-            private byte[] _raw_dynstr;
-            private byte[] _raw_dynsym;
-            private byte[] _raw_strtab;
-            private byte[] _raw_dynamic;
-            public long nameOffset() { return nameOffset; }
+            private byte[] _raw_body;
+            public long ofsName() { return ofsName; }
             public ShType type() { return type; }
             public Long flags() { return flags; }
             public Long addr() { return addr; }
-            public Long offset() { return offset; }
-            public Long size() { return size; }
+            public Long ofsBody() { return ofsBody; }
+            public Long lenBody() { return lenBody; }
             public long linkedSectionIdx() { return linkedSectionIdx; }
             public byte[] info() { return info; }
             public Long align() { return align; }
             public Long entrySize() { return entrySize; }
             public Elf _root() { return _root; }
             public Elf.EndianElf _parent() { return _parent; }
-            public byte[] _raw_dynstr() { return _raw_dynstr; }
-            public byte[] _raw_dynsym() { return _raw_dynsym; }
-            public byte[] _raw_strtab() { return _raw_strtab; }
-            public byte[] _raw_dynamic() { return _raw_dynamic; }
+            public byte[] _raw_body() { return _raw_body; }
         }
         public static class DynamicSection extends KaitaiStruct {
             private Boolean _is_le;
@@ -1973,13 +1941,13 @@ public class Elf extends KaitaiStruct {
             if (this.strings != null)
                 return this.strings;
             long _pos = this._io.pos();
-            this._io.seek(sectionHeaders().get((int) sectionNamesIdx()).offset());
+            this._io.seek(sectionHeaders().get((int) sectionNamesIdx()).ofsBody());
             if (_is_le) {
-                this._raw_strings = this._io.readBytes(sectionHeaders().get((int) sectionNamesIdx()).size());
+                this._raw_strings = this._io.readBytes(sectionHeaders().get((int) sectionNamesIdx()).lenBody());
                 KaitaiStream _io__raw_strings = new ByteBufferKaitaiStream(_raw_strings);
                 this.strings = new StringsStruct(_io__raw_strings, this, _root, _is_le);
             } else {
-                this._raw_strings = this._io.readBytes(sectionHeaders().get((int) sectionNamesIdx()).size());
+                this._raw_strings = this._io.readBytes(sectionHeaders().get((int) sectionNamesIdx()).lenBody());
                 KaitaiStream _io__raw_strings = new ByteBufferKaitaiStream(_raw_strings);
                 this.strings = new StringsStruct(_io__raw_strings, this, _root, _is_le);
             }

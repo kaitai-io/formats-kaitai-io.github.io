@@ -1106,13 +1106,13 @@ sub strings {
     my ($self) = @_;
     return $self-&gt;{strings} if ($self-&gt;{strings});
     my $_pos = $self-&gt;{_io}-&gt;pos();
-    $self-&gt;{_io}-&gt;seek(@{$self-&gt;section_headers()}[$self-&gt;section_names_idx()]-&gt;offset());
+    $self-&gt;{_io}-&gt;seek(@{$self-&gt;section_headers()}[$self-&gt;section_names_idx()]-&gt;ofs_body());
     if ($self-&gt;{_is_le}) {
-        $self-&gt;{_raw_strings} = $self-&gt;{_io}-&gt;read_bytes(@{$self-&gt;section_headers()}[$self-&gt;section_names_idx()]-&gt;size());
+        $self-&gt;{_raw_strings} = $self-&gt;{_io}-&gt;read_bytes(@{$self-&gt;section_headers()}[$self-&gt;section_names_idx()]-&gt;len_body());
         my $io__raw_strings = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_strings});
         $self-&gt;{strings} = Elf::EndianElf::StringsStruct-&gt;new($io__raw_strings, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
     } else {
-        $self-&gt;{_raw_strings} = $self-&gt;{_io}-&gt;read_bytes(@{$self-&gt;section_headers()}[$self-&gt;section_names_idx()]-&gt;size());
+        $self-&gt;{_raw_strings} = $self-&gt;{_io}-&gt;read_bytes(@{$self-&gt;section_headers()}[$self-&gt;section_names_idx()]-&gt;len_body());
         my $io__raw_strings = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_strings});
         $self-&gt;{strings} = Elf::EndianElf::StringsStruct-&gt;new($io__raw_strings, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
     }
@@ -1673,7 +1673,7 @@ sub _read {
 sub _read_le {
     my ($self) = @_;
 
-    $self-&gt;{name_offset} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{ofs_name} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{type} = $self-&gt;{_io}-&gt;read_u4le();
     my $_on = $self-&gt;_root()-&gt;bits();
     if ($_on == $BITS_B32) {
@@ -1691,17 +1691,17 @@ sub _read_le {
     }
     my $_on = $self-&gt;_root()-&gt;bits();
     if ($_on == $BITS_B32) {
-        $self-&gt;{offset} = $self-&gt;{_io}-&gt;read_u4le();
+        $self-&gt;{ofs_body} = $self-&gt;{_io}-&gt;read_u4le();
     }
     elsif ($_on == $BITS_B64) {
-        $self-&gt;{offset} = $self-&gt;{_io}-&gt;read_u8le();
+        $self-&gt;{ofs_body} = $self-&gt;{_io}-&gt;read_u8le();
     }
     my $_on = $self-&gt;_root()-&gt;bits();
     if ($_on == $BITS_B32) {
-        $self-&gt;{size} = $self-&gt;{_io}-&gt;read_u4le();
+        $self-&gt;{len_body} = $self-&gt;{_io}-&gt;read_u4le();
     }
     elsif ($_on == $BITS_B64) {
-        $self-&gt;{size} = $self-&gt;{_io}-&gt;read_u8le();
+        $self-&gt;{len_body} = $self-&gt;{_io}-&gt;read_u8le();
     }
     $self-&gt;{linked_section_idx} = $self-&gt;{_io}-&gt;read_u4le();
     $self-&gt;{info} = $self-&gt;{_io}-&gt;read_bytes(4);
@@ -1724,7 +1724,7 @@ sub _read_le {
 sub _read_be {
     my ($self) = @_;
 
-    $self-&gt;{name_offset} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{ofs_name} = $self-&gt;{_io}-&gt;read_u4be();
     $self-&gt;{type} = $self-&gt;{_io}-&gt;read_u4be();
     my $_on = $self-&gt;_root()-&gt;bits();
     if ($_on == $BITS_B32) {
@@ -1742,17 +1742,17 @@ sub _read_be {
     }
     my $_on = $self-&gt;_root()-&gt;bits();
     if ($_on == $BITS_B32) {
-        $self-&gt;{offset} = $self-&gt;{_io}-&gt;read_u4be();
+        $self-&gt;{ofs_body} = $self-&gt;{_io}-&gt;read_u4be();
     }
     elsif ($_on == $BITS_B64) {
-        $self-&gt;{offset} = $self-&gt;{_io}-&gt;read_u8be();
+        $self-&gt;{ofs_body} = $self-&gt;{_io}-&gt;read_u8be();
     }
     my $_on = $self-&gt;_root()-&gt;bits();
     if ($_on == $BITS_B32) {
-        $self-&gt;{size} = $self-&gt;{_io}-&gt;read_u4be();
+        $self-&gt;{len_body} = $self-&gt;{_io}-&gt;read_u4be();
     }
     elsif ($_on == $BITS_B64) {
-        $self-&gt;{size} = $self-&gt;{_io}-&gt;read_u8be();
+        $self-&gt;{len_body} = $self-&gt;{_io}-&gt;read_u8be();
     }
     $self-&gt;{linked_section_idx} = $self-&gt;{_io}-&gt;read_u4be();
     $self-&gt;{info} = $self-&gt;{_io}-&gt;read_bytes(4);
@@ -1772,61 +1772,80 @@ sub _read_be {
     }
 }
 
-sub dynstr {
-    my ($self) = @_;
-    return $self-&gt;{dynstr} if ($self-&gt;{dynstr});
-    if ($self-&gt;type() == $SH_TYPE_DYNSTR) {
-        my $io = $self-&gt;_root()-&gt;_io();
-        my $_pos = $io-&gt;pos();
-        $io-&gt;seek($self-&gt;offset());
-        if ($self-&gt;{_is_le}) {
-            $self-&gt;{_raw_dynstr} = $io-&gt;read_bytes($self-&gt;size());
-            my $io__raw_dynstr = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_dynstr});
-            $self-&gt;{dynstr} = Elf::EndianElf::StringsStruct-&gt;new($io__raw_dynstr, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
-        } else {
-            $self-&gt;{_raw_dynstr} = $io-&gt;read_bytes($self-&gt;size());
-            my $io__raw_dynstr = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_dynstr});
-            $self-&gt;{dynstr} = Elf::EndianElf::StringsStruct-&gt;new($io__raw_dynstr, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
-        }
-        $io-&gt;seek($_pos);
-    }
-    return $self-&gt;{dynstr};
-}
-
-sub dynsym {
-    my ($self) = @_;
-    return $self-&gt;{dynsym} if ($self-&gt;{dynsym});
-    if ($self-&gt;type() == $SH_TYPE_DYNSYM) {
-        my $io = $self-&gt;_root()-&gt;_io();
-        my $_pos = $io-&gt;pos();
-        $io-&gt;seek($self-&gt;offset());
-        if ($self-&gt;{_is_le}) {
-            $self-&gt;{_raw_dynsym} = $io-&gt;read_bytes($self-&gt;size());
-            my $io__raw_dynsym = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_dynsym});
-            $self-&gt;{dynsym} = Elf::EndianElf::DynsymSection-&gt;new($io__raw_dynsym, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
-        } else {
-            $self-&gt;{_raw_dynsym} = $io-&gt;read_bytes($self-&gt;size());
-            my $io__raw_dynsym = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_dynsym});
-            $self-&gt;{dynsym} = Elf::EndianElf::DynsymSection-&gt;new($io__raw_dynsym, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
-        }
-        $io-&gt;seek($_pos);
-    }
-    return $self-&gt;{dynsym};
-}
-
 sub body {
     my ($self) = @_;
     return $self-&gt;{body} if ($self-&gt;{body});
     my $io = $self-&gt;_root()-&gt;_io();
     my $_pos = $io-&gt;pos();
-    $io-&gt;seek($self-&gt;offset());
+    $io-&gt;seek($self-&gt;ofs_body());
     if ($self-&gt;{_is_le}) {
-        $self-&gt;{body} = $io-&gt;read_bytes($self-&gt;size());
+        my $_on = $self-&gt;type();
+        if ($_on == $SH_TYPE_DYNAMIC) {
+            $self-&gt;{_raw_body} = $io-&gt;read_bytes($self-&gt;len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+            $self-&gt;{body} = Elf::EndianElf::DynamicSection-&gt;new($io__raw_body, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
+        }
+        elsif ($_on == $SH_TYPE_STRTAB) {
+            $self-&gt;{_raw_body} = $io-&gt;read_bytes($self-&gt;len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+            $self-&gt;{body} = Elf::EndianElf::StringsStruct-&gt;new($io__raw_body, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
+        }
+        elsif ($_on == $SH_TYPE_DYNSTR) {
+            $self-&gt;{_raw_body} = $io-&gt;read_bytes($self-&gt;len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+            $self-&gt;{body} = Elf::EndianElf::StringsStruct-&gt;new($io__raw_body, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
+        }
+        elsif ($_on == $SH_TYPE_DYNSYM) {
+            $self-&gt;{_raw_body} = $io-&gt;read_bytes($self-&gt;len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+            $self-&gt;{body} = Elf::EndianElf::DynsymSection-&gt;new($io__raw_body, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
+        }
+        else {
+            $self-&gt;{body} = $io-&gt;read_bytes($self-&gt;len_body());
+        }
     } else {
-        $self-&gt;{body} = $io-&gt;read_bytes($self-&gt;size());
+        my $_on = $self-&gt;type();
+        if ($_on == $SH_TYPE_DYNAMIC) {
+            $self-&gt;{_raw_body} = $io-&gt;read_bytes($self-&gt;len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+            $self-&gt;{body} = Elf::EndianElf::DynamicSection-&gt;new($io__raw_body, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
+        }
+        elsif ($_on == $SH_TYPE_STRTAB) {
+            $self-&gt;{_raw_body} = $io-&gt;read_bytes($self-&gt;len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+            $self-&gt;{body} = Elf::EndianElf::StringsStruct-&gt;new($io__raw_body, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
+        }
+        elsif ($_on == $SH_TYPE_DYNSTR) {
+            $self-&gt;{_raw_body} = $io-&gt;read_bytes($self-&gt;len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+            $self-&gt;{body} = Elf::EndianElf::StringsStruct-&gt;new($io__raw_body, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
+        }
+        elsif ($_on == $SH_TYPE_DYNSYM) {
+            $self-&gt;{_raw_body} = $io-&gt;read_bytes($self-&gt;len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
+            $self-&gt;{body} = Elf::EndianElf::DynsymSection-&gt;new($io__raw_body, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
+        }
+        else {
+            $self-&gt;{body} = $io-&gt;read_bytes($self-&gt;len_body());
+        }
     }
     $io-&gt;seek($_pos);
     return $self-&gt;{body};
+}
+
+sub name {
+    my ($self) = @_;
+    return $self-&gt;{name} if ($self-&gt;{name});
+    my $io = $self-&gt;_root()-&gt;header()-&gt;strings()-&gt;_io();
+    my $_pos = $io-&gt;pos();
+    $io-&gt;seek($self-&gt;ofs_name());
+    if ($self-&gt;{_is_le}) {
+        $self-&gt;{name} = Encode::decode(&quot;ASCII&quot;, $io-&gt;read_bytes_term(0, 0, 1, 1));
+    } else {
+        $self-&gt;{name} = Encode::decode(&quot;ASCII&quot;, $io-&gt;read_bytes_term(0, 0, 1, 1));
+    }
+    $io-&gt;seek($_pos);
+    return $self-&gt;{name};
 }
 
 sub flags_obj {
@@ -1840,66 +1859,9 @@ sub flags_obj {
     return $self-&gt;{flags_obj};
 }
 
-sub strtab {
+sub ofs_name {
     my ($self) = @_;
-    return $self-&gt;{strtab} if ($self-&gt;{strtab});
-    if ($self-&gt;type() == $SH_TYPE_STRTAB) {
-        my $io = $self-&gt;_root()-&gt;_io();
-        my $_pos = $io-&gt;pos();
-        $io-&gt;seek($self-&gt;offset());
-        if ($self-&gt;{_is_le}) {
-            $self-&gt;{_raw_strtab} = $io-&gt;read_bytes($self-&gt;size());
-            my $io__raw_strtab = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_strtab});
-            $self-&gt;{strtab} = Elf::EndianElf::StringsStruct-&gt;new($io__raw_strtab, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
-        } else {
-            $self-&gt;{_raw_strtab} = $io-&gt;read_bytes($self-&gt;size());
-            my $io__raw_strtab = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_strtab});
-            $self-&gt;{strtab} = Elf::EndianElf::StringsStruct-&gt;new($io__raw_strtab, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
-        }
-        $io-&gt;seek($_pos);
-    }
-    return $self-&gt;{strtab};
-}
-
-sub name {
-    my ($self) = @_;
-    return $self-&gt;{name} if ($self-&gt;{name});
-    my $io = $self-&gt;_root()-&gt;header()-&gt;strings()-&gt;_io();
-    my $_pos = $io-&gt;pos();
-    $io-&gt;seek($self-&gt;name_offset());
-    if ($self-&gt;{_is_le}) {
-        $self-&gt;{name} = Encode::decode(&quot;ASCII&quot;, $io-&gt;read_bytes_term(0, 0, 1, 1));
-    } else {
-        $self-&gt;{name} = Encode::decode(&quot;ASCII&quot;, $io-&gt;read_bytes_term(0, 0, 1, 1));
-    }
-    $io-&gt;seek($_pos);
-    return $self-&gt;{name};
-}
-
-sub dynamic {
-    my ($self) = @_;
-    return $self-&gt;{dynamic} if ($self-&gt;{dynamic});
-    if ($self-&gt;type() == $SH_TYPE_DYNAMIC) {
-        my $io = $self-&gt;_root()-&gt;_io();
-        my $_pos = $io-&gt;pos();
-        $io-&gt;seek($self-&gt;offset());
-        if ($self-&gt;{_is_le}) {
-            $self-&gt;{_raw_dynamic} = $io-&gt;read_bytes($self-&gt;size());
-            my $io__raw_dynamic = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_dynamic});
-            $self-&gt;{dynamic} = Elf::EndianElf::DynamicSection-&gt;new($io__raw_dynamic, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
-        } else {
-            $self-&gt;{_raw_dynamic} = $io-&gt;read_bytes($self-&gt;size());
-            my $io__raw_dynamic = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_dynamic});
-            $self-&gt;{dynamic} = Elf::EndianElf::DynamicSection-&gt;new($io__raw_dynamic, $self, $self-&gt;{_root}, $self-&gt;{_is_le});
-        }
-        $io-&gt;seek($_pos);
-    }
-    return $self-&gt;{dynamic};
-}
-
-sub name_offset {
-    my ($self) = @_;
-    return $self-&gt;{name_offset};
+    return $self-&gt;{ofs_name};
 }
 
 sub type {
@@ -1917,14 +1879,14 @@ sub addr {
     return $self-&gt;{addr};
 }
 
-sub offset {
+sub ofs_body {
     my ($self) = @_;
-    return $self-&gt;{offset};
+    return $self-&gt;{ofs_body};
 }
 
-sub size {
+sub len_body {
     my ($self) = @_;
-    return $self-&gt;{size};
+    return $self-&gt;{len_body};
 }
 
 sub linked_section_idx {
@@ -1947,24 +1909,9 @@ sub entry_size {
     return $self-&gt;{entry_size};
 }
 
-sub _raw_dynstr {
+sub _raw_body {
     my ($self) = @_;
-    return $self-&gt;{_raw_dynstr};
-}
-
-sub _raw_dynsym {
-    my ($self) = @_;
-    return $self-&gt;{_raw_dynsym};
-}
-
-sub _raw_strtab {
-    my ($self) = @_;
-    return $self-&gt;{_raw_strtab};
-}
-
-sub _raw_dynamic {
-    my ($self) = @_;
-    return $self-&gt;{_raw_dynamic};
+    return $self-&gt;{_raw_body};
 }
 
 ########################################################################

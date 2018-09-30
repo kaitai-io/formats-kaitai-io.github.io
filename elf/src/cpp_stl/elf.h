@@ -1071,57 +1071,11 @@ public:
             ~section_header_t();
 
         private:
-            bool f_dynstr;
-            strings_struct_t* m_dynstr;
-            bool n_dynstr;
-
-        public:
-            bool _is_null_dynstr() { dynstr(); return n_dynstr; };
-
-        private:
-
-        public:
-            strings_struct_t* dynstr();
-
-        private:
-            bool f_dynsym;
-            dynsym_section_t* m_dynsym;
-            bool n_dynsym;
-
-        public:
-            bool _is_null_dynsym() { dynsym(); return n_dynsym; };
-
-        private:
-
-        public:
-            dynsym_section_t* dynsym();
-
-        private:
             bool f_body;
-            std::string m_body;
+            kaitai::kstruct* m_body;
 
         public:
-            std::string body();
-
-        private:
-            bool f_flags_obj;
-            section_header_flags_t* m_flags_obj;
-
-        public:
-            section_header_flags_t* flags_obj();
-
-        private:
-            bool f_strtab;
-            strings_struct_t* m_strtab;
-            bool n_strtab;
-
-        public:
-            bool _is_null_strtab() { strtab(); return n_strtab; };
-
-        private:
-
-        public:
-            strings_struct_t* strtab();
+            kaitai::kstruct* body();
 
         private:
             bool f_name;
@@ -1131,20 +1085,14 @@ public:
             std::string name();
 
         private:
-            bool f_dynamic;
-            dynamic_section_t* m_dynamic;
-            bool n_dynamic;
+            bool f_flags_obj;
+            section_header_flags_t* m_flags_obj;
 
         public:
-            bool _is_null_dynamic() { dynamic(); return n_dynamic; };
+            section_header_flags_t* flags_obj();
 
         private:
-
-        public:
-            dynamic_section_t* dynamic();
-
-        private:
-            uint32_t m_name_offset;
+            uint32_t m_ofs_name;
             sh_type_t m_type;
             uint64_t m_flags;
             bool n_flags;
@@ -1160,18 +1108,18 @@ public:
             bool _is_null_addr() { addr(); return n_addr; };
 
         private:
-            uint64_t m_offset;
-            bool n_offset;
+            uint64_t m_ofs_body;
+            bool n_ofs_body;
 
         public:
-            bool _is_null_offset() { offset(); return n_offset; };
+            bool _is_null_ofs_body() { ofs_body(); return n_ofs_body; };
 
         private:
-            uint64_t m_size;
-            bool n_size;
+            uint64_t m_len_body;
+            bool n_len_body;
 
         public:
-            bool _is_null_size() { size(); return n_size; };
+            bool _is_null_len_body() { len_body(); return n_len_body; };
 
         private:
             uint32_t m_linked_section_idx;
@@ -1192,36 +1140,24 @@ public:
         private:
             elf_t* m__root;
             elf_t::endian_elf_t* m__parent;
-            std::string m__raw_dynstr;
-            kaitai::kstream* m__io__raw_dynstr;
-            std::string m__raw_dynsym;
-            kaitai::kstream* m__io__raw_dynsym;
-            std::string m__raw_strtab;
-            kaitai::kstream* m__io__raw_strtab;
-            std::string m__raw_dynamic;
-            kaitai::kstream* m__io__raw_dynamic;
+            std::string m__raw_body;
+            kaitai::kstream* m__io__raw_body;
 
         public:
-            uint32_t name_offset() const { return m_name_offset; }
+            uint32_t ofs_name() const { return m_ofs_name; }
             sh_type_t type() const { return m_type; }
             uint64_t flags() const { return m_flags; }
             uint64_t addr() const { return m_addr; }
-            uint64_t offset() const { return m_offset; }
-            uint64_t size() const { return m_size; }
+            uint64_t ofs_body() const { return m_ofs_body; }
+            uint64_t len_body() const { return m_len_body; }
             uint32_t linked_section_idx() const { return m_linked_section_idx; }
             std::string info() const { return m_info; }
             uint64_t align() const { return m_align; }
             uint64_t entry_size() const { return m_entry_size; }
             elf_t* _root() const { return m__root; }
             elf_t::endian_elf_t* _parent() const { return m__parent; }
-            std::string _raw_dynstr() const { return m__raw_dynstr; }
-            kaitai::kstream* _io__raw_dynstr() const { return m__io__raw_dynstr; }
-            std::string _raw_dynsym() const { return m__raw_dynsym; }
-            kaitai::kstream* _io__raw_dynsym() const { return m__io__raw_dynsym; }
-            std::string _raw_strtab() const { return m__raw_strtab; }
-            kaitai::kstream* _io__raw_strtab() const { return m__io__raw_strtab; }
-            std::string _raw_dynamic() const { return m__raw_dynamic; }
-            kaitai::kstream* _io__raw_dynamic() const { return m__io__raw_dynamic; }
+            std::string _raw_body() const { return m__raw_body; }
+            kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
         };
 
         class dynamic_section_t : public kaitai::kstruct {

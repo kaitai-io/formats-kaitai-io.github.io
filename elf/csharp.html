@@ -1880,13 +1880,9 @@ namespace Kaitai
                     m_parent = p__parent;
                     m_root = p__root;
                     m_isLe = isLe;
-                    f_dynstr = false;
-                    f_dynsym = false;
                     f_body = false;
-                    f_flagsObj = false;
-                    f_strtab = false;
                     f_name = false;
-                    f_dynamic = false;
+                    f_flagsObj = false;
                     _read();
                 }
                 private void _read()
@@ -1902,7 +1898,7 @@ namespace Kaitai
                 }
                 private void _readLE()
                 {
-                    _nameOffset = m_io.ReadU4le();
+                    _ofsName = m_io.ReadU4le();
                     _type = ((Elf.ShType) m_io.ReadU4le());
                     switch (M_Root.Bits) {
                     case Elf.Bits.B32: {
@@ -1926,21 +1922,21 @@ namespace Kaitai
                     }
                     switch (M_Root.Bits) {
                     case Elf.Bits.B32: {
-                        _offset = m_io.ReadU4le();
+                        _ofsBody = m_io.ReadU4le();
                         break;
                     }
                     case Elf.Bits.B64: {
-                        _offset = m_io.ReadU8le();
+                        _ofsBody = m_io.ReadU8le();
                         break;
                     }
                     }
                     switch (M_Root.Bits) {
                     case Elf.Bits.B32: {
-                        _size = m_io.ReadU4le();
+                        _lenBody = m_io.ReadU4le();
                         break;
                     }
                     case Elf.Bits.B64: {
-                        _size = m_io.ReadU8le();
+                        _lenBody = m_io.ReadU8le();
                         break;
                     }
                     }
@@ -1969,7 +1965,7 @@ namespace Kaitai
                 }
                 private void _readBE()
                 {
-                    _nameOffset = m_io.ReadU4be();
+                    _ofsName = m_io.ReadU4be();
                     _type = ((Elf.ShType) m_io.ReadU4be());
                     switch (M_Root.Bits) {
                     case Elf.Bits.B32: {
@@ -1993,21 +1989,21 @@ namespace Kaitai
                     }
                     switch (M_Root.Bits) {
                     case Elf.Bits.B32: {
-                        _offset = m_io.ReadU4be();
+                        _ofsBody = m_io.ReadU4be();
                         break;
                     }
                     case Elf.Bits.B64: {
-                        _offset = m_io.ReadU8be();
+                        _ofsBody = m_io.ReadU8be();
                         break;
                     }
                     }
                     switch (M_Root.Bits) {
                     case Elf.Bits.B32: {
-                        _size = m_io.ReadU4be();
+                        _lenBody = m_io.ReadU4be();
                         break;
                     }
                     case Elf.Bits.B64: {
-                        _size = m_io.ReadU8be();
+                        _lenBody = m_io.ReadU8be();
                         break;
                     }
                     }
@@ -2034,63 +2030,9 @@ namespace Kaitai
                     }
                     }
                 }
-                private bool f_dynstr;
-                private StringsStruct _dynstr;
-                public StringsStruct Dynstr
-                {
-                    get
-                    {
-                        if (f_dynstr)
-                            return _dynstr;
-                        if (Type == Elf.ShType.Dynstr) {
-                            KaitaiStream io = M_Root.M_Io;
-                            long _pos = io.Pos;
-                            io.Seek(Offset);
-                            if (m_isLe == true) {
-                                __raw_dynstr = io.ReadBytes(Size);
-                                var io___raw_dynstr = new KaitaiStream(__raw_dynstr);
-                                _dynstr = new StringsStruct(io___raw_dynstr, this, m_root, m_isLe);
-                            } else {
-                                __raw_dynstr = io.ReadBytes(Size);
-                                var io___raw_dynstr = new KaitaiStream(__raw_dynstr);
-                                _dynstr = new StringsStruct(io___raw_dynstr, this, m_root, m_isLe);
-                            }
-                            io.Seek(_pos);
-                        }
-                        f_dynstr = true;
-                        return _dynstr;
-                    }
-                }
-                private bool f_dynsym;
-                private DynsymSection _dynsym;
-                public DynsymSection Dynsym
-                {
-                    get
-                    {
-                        if (f_dynsym)
-                            return _dynsym;
-                        if (Type == Elf.ShType.Dynsym) {
-                            KaitaiStream io = M_Root.M_Io;
-                            long _pos = io.Pos;
-                            io.Seek(Offset);
-                            if (m_isLe == true) {
-                                __raw_dynsym = io.ReadBytes(Size);
-                                var io___raw_dynsym = new KaitaiStream(__raw_dynsym);
-                                _dynsym = new DynsymSection(io___raw_dynsym, this, m_root, m_isLe);
-                            } else {
-                                __raw_dynsym = io.ReadBytes(Size);
-                                var io___raw_dynsym = new KaitaiStream(__raw_dynsym);
-                                _dynsym = new DynsymSection(io___raw_dynsym, this, m_root, m_isLe);
-                            }
-                            io.Seek(_pos);
-                        }
-                        f_dynsym = true;
-                        return _dynsym;
-                    }
-                }
                 private bool f_body;
-                private byte[] _body;
-                public byte[] Body
+                private object _body;
+                public object Body
                 {
                     get
                     {
@@ -2098,15 +2040,94 @@ namespace Kaitai
                             return _body;
                         KaitaiStream io = M_Root.M_Io;
                         long _pos = io.Pos;
-                        io.Seek(Offset);
+                        io.Seek(OfsBody);
                         if (m_isLe == true) {
-                            _body = io.ReadBytes(Size);
+                            switch (Type) {
+                            case Elf.ShType.Dynamic: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new DynamicSection(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            case Elf.ShType.Strtab: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            case Elf.ShType.Dynstr: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            case Elf.ShType.Dynsym: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            default: {
+                                _body = io.ReadBytes(LenBody);
+                                break;
+                            }
+                            }
                         } else {
-                            _body = io.ReadBytes(Size);
+                            switch (Type) {
+                            case Elf.ShType.Dynamic: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new DynamicSection(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            case Elf.ShType.Strtab: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            case Elf.ShType.Dynstr: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            case Elf.ShType.Dynsym: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            default: {
+                                _body = io.ReadBytes(LenBody);
+                                break;
+                            }
+                            }
                         }
                         io.Seek(_pos);
                         f_body = true;
                         return _body;
+                    }
+                }
+                private bool f_name;
+                private string _name;
+                public string Name
+                {
+                    get
+                    {
+                        if (f_name)
+                            return _name;
+                        KaitaiStream io = M_Root.Header.Strings.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(OfsName);
+                        if (m_isLe == true) {
+                            _name = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(io.ReadBytesTerm(0, false, true, true));
+                        } else {
+                            _name = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(io.ReadBytesTerm(0, false, true, true));
+                        }
+                        io.Seek(_pos);
+                        f_name = true;
+                        return _name;
                     }
                 }
                 private bool f_flagsObj;
@@ -2126,113 +2147,32 @@ namespace Kaitai
                         return _flagsObj;
                     }
                 }
-                private bool f_strtab;
-                private StringsStruct _strtab;
-                public StringsStruct Strtab
-                {
-                    get
-                    {
-                        if (f_strtab)
-                            return _strtab;
-                        if (Type == Elf.ShType.Strtab) {
-                            KaitaiStream io = M_Root.M_Io;
-                            long _pos = io.Pos;
-                            io.Seek(Offset);
-                            if (m_isLe == true) {
-                                __raw_strtab = io.ReadBytes(Size);
-                                var io___raw_strtab = new KaitaiStream(__raw_strtab);
-                                _strtab = new StringsStruct(io___raw_strtab, this, m_root, m_isLe);
-                            } else {
-                                __raw_strtab = io.ReadBytes(Size);
-                                var io___raw_strtab = new KaitaiStream(__raw_strtab);
-                                _strtab = new StringsStruct(io___raw_strtab, this, m_root, m_isLe);
-                            }
-                            io.Seek(_pos);
-                        }
-                        f_strtab = true;
-                        return _strtab;
-                    }
-                }
-                private bool f_name;
-                private string _name;
-                public string Name
-                {
-                    get
-                    {
-                        if (f_name)
-                            return _name;
-                        KaitaiStream io = M_Root.Header.Strings.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek(NameOffset);
-                        if (m_isLe == true) {
-                            _name = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(io.ReadBytesTerm(0, false, true, true));
-                        } else {
-                            _name = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(io.ReadBytesTerm(0, false, true, true));
-                        }
-                        io.Seek(_pos);
-                        f_name = true;
-                        return _name;
-                    }
-                }
-                private bool f_dynamic;
-                private DynamicSection _dynamic;
-                public DynamicSection Dynamic
-                {
-                    get
-                    {
-                        if (f_dynamic)
-                            return _dynamic;
-                        if (Type == Elf.ShType.Dynamic) {
-                            KaitaiStream io = M_Root.M_Io;
-                            long _pos = io.Pos;
-                            io.Seek(Offset);
-                            if (m_isLe == true) {
-                                __raw_dynamic = io.ReadBytes(Size);
-                                var io___raw_dynamic = new KaitaiStream(__raw_dynamic);
-                                _dynamic = new DynamicSection(io___raw_dynamic, this, m_root, m_isLe);
-                            } else {
-                                __raw_dynamic = io.ReadBytes(Size);
-                                var io___raw_dynamic = new KaitaiStream(__raw_dynamic);
-                                _dynamic = new DynamicSection(io___raw_dynamic, this, m_root, m_isLe);
-                            }
-                            io.Seek(_pos);
-                        }
-                        f_dynamic = true;
-                        return _dynamic;
-                    }
-                }
-                private uint _nameOffset;
+                private uint _ofsName;
                 private ShType _type;
                 private ulong _flags;
                 private ulong _addr;
-                private ulong _offset;
-                private ulong _size;
+                private ulong _ofsBody;
+                private ulong _lenBody;
                 private uint _linkedSectionIdx;
                 private byte[] _info;
                 private ulong _align;
                 private ulong _entrySize;
                 private Elf m_root;
                 private Elf.EndianElf m_parent;
-                private byte[] __raw_dynstr;
-                private byte[] __raw_dynsym;
-                private byte[] __raw_strtab;
-                private byte[] __raw_dynamic;
-                public uint NameOffset { get { return _nameOffset; } }
+                private byte[] __raw_body;
+                public uint OfsName { get { return _ofsName; } }
                 public ShType Type { get { return _type; } }
                 public ulong Flags { get { return _flags; } }
                 public ulong Addr { get { return _addr; } }
-                public ulong Offset { get { return _offset; } }
-                public ulong Size { get { return _size; } }
+                public ulong OfsBody { get { return _ofsBody; } }
+                public ulong LenBody { get { return _lenBody; } }
                 public uint LinkedSectionIdx { get { return _linkedSectionIdx; } }
                 public byte[] Info { get { return _info; } }
                 public ulong Align { get { return _align; } }
                 public ulong EntrySize { get { return _entrySize; } }
                 public Elf M_Root { get { return m_root; } }
                 public Elf.EndianElf M_Parent { get { return m_parent; } }
-                public byte[] M_RawDynstr { get { return __raw_dynstr; } }
-                public byte[] M_RawDynsym { get { return __raw_dynsym; } }
-                public byte[] M_RawStrtab { get { return __raw_strtab; } }
-                public byte[] M_RawDynamic { get { return __raw_dynamic; } }
+                public byte[] M_RawBody { get { return __raw_body; } }
             }
             public partial class DynamicSection : KaitaiStruct
             {
@@ -2555,13 +2495,13 @@ namespace Kaitai
                     if (f_strings)
                         return _strings;
                     long _pos = m_io.Pos;
-                    m_io.Seek(SectionHeaders[SectionNamesIdx].Offset);
+                    m_io.Seek(SectionHeaders[SectionNamesIdx].OfsBody);
                     if (m_isLe == true) {
-                        __raw_strings = m_io.ReadBytes(SectionHeaders[SectionNamesIdx].Size);
+                        __raw_strings = m_io.ReadBytes(SectionHeaders[SectionNamesIdx].LenBody);
                         var io___raw_strings = new KaitaiStream(__raw_strings);
                         _strings = new StringsStruct(io___raw_strings, this, m_root, m_isLe);
                     } else {
-                        __raw_strings = m_io.ReadBytes(SectionHeaders[SectionNamesIdx].Size);
+                        __raw_strings = m_io.ReadBytes(SectionHeaders[SectionNamesIdx].LenBody);
                         var io___raw_strings = new KaitaiStream(__raw_strings);
                         _strings = new StringsStruct(io___raw_strings, this, m_root, m_isLe);
                     }

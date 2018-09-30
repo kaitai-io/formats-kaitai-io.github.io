@@ -1377,7 +1377,7 @@ var Elf = (function() {
         }
       }
       SectionHeader.prototype._readLE = function() {
-        this.nameOffset = this._io.readU4le();
+        this.ofsName = this._io.readU4le();
         this.type = this._io.readU4le();
         switch (this._root.bits) {
         case Elf.Bits.B32:
@@ -1397,18 +1397,18 @@ var Elf = (function() {
         }
         switch (this._root.bits) {
         case Elf.Bits.B32:
-          this.offset = this._io.readU4le();
+          this.ofsBody = this._io.readU4le();
           break;
         case Elf.Bits.B64:
-          this.offset = this._io.readU8le();
+          this.ofsBody = this._io.readU8le();
           break;
         }
         switch (this._root.bits) {
         case Elf.Bits.B32:
-          this.size = this._io.readU4le();
+          this.lenBody = this._io.readU4le();
           break;
         case Elf.Bits.B64:
-          this.size = this._io.readU8le();
+          this.lenBody = this._io.readU8le();
           break;
         }
         this.linkedSectionIdx = this._io.readU4le();
@@ -1431,7 +1431,7 @@ var Elf = (function() {
         }
       }
       SectionHeader.prototype._readBE = function() {
-        this.nameOffset = this._io.readU4be();
+        this.ofsName = this._io.readU4be();
         this.type = this._io.readU4be();
         switch (this._root.bits) {
         case Elf.Bits.B32:
@@ -1451,18 +1451,18 @@ var Elf = (function() {
         }
         switch (this._root.bits) {
         case Elf.Bits.B32:
-          this.offset = this._io.readU4be();
+          this.ofsBody = this._io.readU4be();
           break;
         case Elf.Bits.B64:
-          this.offset = this._io.readU8be();
+          this.ofsBody = this._io.readU8be();
           break;
         }
         switch (this._root.bits) {
         case Elf.Bits.B32:
-          this.size = this._io.readU4be();
+          this.lenBody = this._io.readU4be();
           break;
         case Elf.Bits.B64:
-          this.size = this._io.readU8be();
+          this.lenBody = this._io.readU8be();
           break;
         }
         this.linkedSectionIdx = this._io.readU4be();
@@ -1484,64 +1484,84 @@ var Elf = (function() {
           break;
         }
       }
-      Object.defineProperty(SectionHeader.prototype, 'dynstr', {
-        get: function() {
-          if (this._m_dynstr !== undefined)
-            return this._m_dynstr;
-          if (this.type == Elf.ShType.DYNSTR) {
-            var io = this._root._io;
-            var _pos = io.pos;
-            io.seek(this.offset);
-            if (this._is_le) {
-              this._raw__m_dynstr = io.readBytes(this.size);
-              var _io__raw__m_dynstr = new KaitaiStream(this._raw__m_dynstr);
-              this._m_dynstr = new StringsStruct(_io__raw__m_dynstr, this, this._root, this._is_le);
-            } else {
-              this._raw__m_dynstr = io.readBytes(this.size);
-              var _io__raw__m_dynstr = new KaitaiStream(this._raw__m_dynstr);
-              this._m_dynstr = new StringsStruct(_io__raw__m_dynstr, this, this._root, this._is_le);
-            }
-            io.seek(_pos);
-          }
-          return this._m_dynstr;
-        }
-      });
-      Object.defineProperty(SectionHeader.prototype, 'dynsym', {
-        get: function() {
-          if (this._m_dynsym !== undefined)
-            return this._m_dynsym;
-          if (this.type == Elf.ShType.DYNSYM) {
-            var io = this._root._io;
-            var _pos = io.pos;
-            io.seek(this.offset);
-            if (this._is_le) {
-              this._raw__m_dynsym = io.readBytes(this.size);
-              var _io__raw__m_dynsym = new KaitaiStream(this._raw__m_dynsym);
-              this._m_dynsym = new DynsymSection(_io__raw__m_dynsym, this, this._root, this._is_le);
-            } else {
-              this._raw__m_dynsym = io.readBytes(this.size);
-              var _io__raw__m_dynsym = new KaitaiStream(this._raw__m_dynsym);
-              this._m_dynsym = new DynsymSection(_io__raw__m_dynsym, this, this._root, this._is_le);
-            }
-            io.seek(_pos);
-          }
-          return this._m_dynsym;
-        }
-      });
       Object.defineProperty(SectionHeader.prototype, 'body', {
         get: function() {
           if (this._m_body !== undefined)
             return this._m_body;
           var io = this._root._io;
           var _pos = io.pos;
-          io.seek(this.offset);
+          io.seek(this.ofsBody);
           if (this._is_le) {
-            this._m_body = io.readBytes(this.size);
+            switch (this.type) {
+            case Elf.ShType.DYNAMIC:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new DynamicSection(_io__raw__m_body, this, this._root, this._is_le);
+              break;
+            case Elf.ShType.STRTAB:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
+              break;
+            case Elf.ShType.DYNSTR:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
+              break;
+            case Elf.ShType.DYNSYM:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
+              break;
+            default:
+              this._m_body = io.readBytes(this.lenBody);
+              break;
+            }
           } else {
-            this._m_body = io.readBytes(this.size);
+            switch (this.type) {
+            case Elf.ShType.DYNAMIC:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new DynamicSection(_io__raw__m_body, this, this._root, this._is_le);
+              break;
+            case Elf.ShType.STRTAB:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
+              break;
+            case Elf.ShType.DYNSTR:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
+              break;
+            case Elf.ShType.DYNSYM:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
+              break;
+            default:
+              this._m_body = io.readBytes(this.lenBody);
+              break;
+            }
           }
           io.seek(_pos);
           return this._m_body;
+        }
+      });
+      Object.defineProperty(SectionHeader.prototype, 'name', {
+        get: function() {
+          if (this._m_name !== undefined)
+            return this._m_name;
+          var io = this._root.header.strings._io;
+          var _pos = io.pos;
+          io.seek(this.ofsName);
+          if (this._is_le) {
+            this._m_name = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "ASCII");
+          } else {
+            this._m_name = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "ASCII");
+          }
+          io.seek(_pos);
+          return this._m_name;
         }
       });
       Object.defineProperty(SectionHeader.prototype, 'flagsObj', {
@@ -1554,66 +1574,6 @@ var Elf = (function() {
             this._m_flagsObj = new SectionHeaderFlags(this._io, this, this._root, this.flags);
           }
           return this._m_flagsObj;
-        }
-      });
-      Object.defineProperty(SectionHeader.prototype, 'strtab', {
-        get: function() {
-          if (this._m_strtab !== undefined)
-            return this._m_strtab;
-          if (this.type == Elf.ShType.STRTAB) {
-            var io = this._root._io;
-            var _pos = io.pos;
-            io.seek(this.offset);
-            if (this._is_le) {
-              this._raw__m_strtab = io.readBytes(this.size);
-              var _io__raw__m_strtab = new KaitaiStream(this._raw__m_strtab);
-              this._m_strtab = new StringsStruct(_io__raw__m_strtab, this, this._root, this._is_le);
-            } else {
-              this._raw__m_strtab = io.readBytes(this.size);
-              var _io__raw__m_strtab = new KaitaiStream(this._raw__m_strtab);
-              this._m_strtab = new StringsStruct(_io__raw__m_strtab, this, this._root, this._is_le);
-            }
-            io.seek(_pos);
-          }
-          return this._m_strtab;
-        }
-      });
-      Object.defineProperty(SectionHeader.prototype, 'name', {
-        get: function() {
-          if (this._m_name !== undefined)
-            return this._m_name;
-          var io = this._root.header.strings._io;
-          var _pos = io.pos;
-          io.seek(this.nameOffset);
-          if (this._is_le) {
-            this._m_name = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "ASCII");
-          } else {
-            this._m_name = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "ASCII");
-          }
-          io.seek(_pos);
-          return this._m_name;
-        }
-      });
-      Object.defineProperty(SectionHeader.prototype, 'dynamic', {
-        get: function() {
-          if (this._m_dynamic !== undefined)
-            return this._m_dynamic;
-          if (this.type == Elf.ShType.DYNAMIC) {
-            var io = this._root._io;
-            var _pos = io.pos;
-            io.seek(this.offset);
-            if (this._is_le) {
-              this._raw__m_dynamic = io.readBytes(this.size);
-              var _io__raw__m_dynamic = new KaitaiStream(this._raw__m_dynamic);
-              this._m_dynamic = new DynamicSection(_io__raw__m_dynamic, this, this._root, this._is_le);
-            } else {
-              this._raw__m_dynamic = io.readBytes(this.size);
-              var _io__raw__m_dynamic = new KaitaiStream(this._raw__m_dynamic);
-              this._m_dynamic = new DynamicSection(_io__raw__m_dynamic, this, this._root, this._is_le);
-            }
-            io.seek(_pos);
-          }
-          return this._m_dynamic;
         }
       });
 
@@ -1848,13 +1808,13 @@ var Elf = (function() {
         if (this._m_strings !== undefined)
           return this._m_strings;
         var _pos = this._io.pos;
-        this._io.seek(this.sectionHeaders[this.sectionNamesIdx].offset);
+        this._io.seek(this.sectionHeaders[this.sectionNamesIdx].ofsBody);
         if (this._is_le) {
-          this._raw__m_strings = this._io.readBytes(this.sectionHeaders[this.sectionNamesIdx].size);
+          this._raw__m_strings = this._io.readBytes(this.sectionHeaders[this.sectionNamesIdx].lenBody);
           var _io__raw__m_strings = new KaitaiStream(this._raw__m_strings);
           this._m_strings = new StringsStruct(_io__raw__m_strings, this, this._root, this._is_le);
         } else {
-          this._raw__m_strings = this._io.readBytes(this.sectionHeaders[this.sectionNamesIdx].size);
+          this._raw__m_strings = this._io.readBytes(this.sectionHeaders[this.sectionNamesIdx].lenBody);
           var _io__raw__m_strings = new KaitaiStream(this._raw__m_strings);
           this._m_strings = new StringsStruct(_io__raw__m_strings, this, this._root, this._is_le);
         }

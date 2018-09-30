@@ -976,7 +976,7 @@ class Elf < Kaitai::Struct::Struct
       end
 
       def _read_le
-        @name_offset = @_io.read_u4le
+        @ofs_name = @_io.read_u4le
         @type = Kaitai::Struct::Stream::resolve_enum(SH_TYPE, @_io.read_u4le)
         case _root.bits
         when :bits_b32
@@ -992,15 +992,15 @@ class Elf < Kaitai::Struct::Struct
         end
         case _root.bits
         when :bits_b32
-          @offset = @_io.read_u4le
+          @ofs_body = @_io.read_u4le
         when :bits_b64
-          @offset = @_io.read_u8le
+          @ofs_body = @_io.read_u8le
         end
         case _root.bits
         when :bits_b32
-          @size = @_io.read_u4le
+          @len_body = @_io.read_u4le
         when :bits_b64
-          @size = @_io.read_u8le
+          @len_body = @_io.read_u8le
         end
         @linked_section_idx = @_io.read_u4le
         @info = @_io.read_bytes(4)
@@ -1020,7 +1020,7 @@ class Elf < Kaitai::Struct::Struct
       end
 
       def _read_be
-        @name_offset = @_io.read_u4be
+        @ofs_name = @_io.read_u4be
         @type = Kaitai::Struct::Stream::resolve_enum(SH_TYPE, @_io.read_u4be)
         case _root.bits
         when :bits_b32
@@ -1036,15 +1036,15 @@ class Elf < Kaitai::Struct::Struct
         end
         case _root.bits
         when :bits_b32
-          @offset = @_io.read_u4be
+          @ofs_body = @_io.read_u4be
         when :bits_b64
-          @offset = @_io.read_u8be
+          @ofs_body = @_io.read_u8be
         end
         case _root.bits
         when :bits_b32
-          @size = @_io.read_u4be
+          @len_body = @_io.read_u4be
         when :bits_b64
-          @size = @_io.read_u8be
+          @len_body = @_io.read_u8be
         end
         @linked_section_idx = @_io.read_u4be
         @info = @_io.read_bytes(4)
@@ -1062,56 +1062,69 @@ class Elf < Kaitai::Struct::Struct
         end
         self
       end
-      def dynstr
-        return @dynstr unless @dynstr.nil?
-        if type == :sh_type_dynstr
-          io = _root._io
-          _pos = io.pos
-          io.seek(offset)
-          if @_is_le
-            @_raw_dynstr = io.read_bytes(size)
-            io = Kaitai::Struct::Stream.new(@_raw_dynstr)
-            @dynstr = StringsStruct.new(io, self, @_root, @_is_le)
-          else
-            @_raw_dynstr = io.read_bytes(size)
-            io = Kaitai::Struct::Stream.new(@_raw_dynstr)
-            @dynstr = StringsStruct.new(io, self, @_root, @_is_le)
-          end
-          io.seek(_pos)
-        end
-        @dynstr
-      end
-      def dynsym
-        return @dynsym unless @dynsym.nil?
-        if type == :sh_type_dynsym
-          io = _root._io
-          _pos = io.pos
-          io.seek(offset)
-          if @_is_le
-            @_raw_dynsym = io.read_bytes(size)
-            io = Kaitai::Struct::Stream.new(@_raw_dynsym)
-            @dynsym = DynsymSection.new(io, self, @_root, @_is_le)
-          else
-            @_raw_dynsym = io.read_bytes(size)
-            io = Kaitai::Struct::Stream.new(@_raw_dynsym)
-            @dynsym = DynsymSection.new(io, self, @_root, @_is_le)
-          end
-          io.seek(_pos)
-        end
-        @dynsym
-      end
       def body
         return @body unless @body.nil?
         io = _root._io
         _pos = io.pos
-        io.seek(offset)
+        io.seek(ofs_body)
         if @_is_le
-          @body = io.read_bytes(size)
+          case type
+          when :sh_type_dynamic
+            @_raw_body = io.read_bytes(len_body)
+            io = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = DynamicSection.new(io, self, @_root, @_is_le)
+          when :sh_type_strtab
+            @_raw_body = io.read_bytes(len_body)
+            io = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = StringsStruct.new(io, self, @_root, @_is_le)
+          when :sh_type_dynstr
+            @_raw_body = io.read_bytes(len_body)
+            io = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = StringsStruct.new(io, self, @_root, @_is_le)
+          when :sh_type_dynsym
+            @_raw_body = io.read_bytes(len_body)
+            io = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = DynsymSection.new(io, self, @_root, @_is_le)
+          else
+            @body = io.read_bytes(len_body)
+          end
         else
-          @body = io.read_bytes(size)
+          case type
+          when :sh_type_dynamic
+            @_raw_body = io.read_bytes(len_body)
+            io = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = DynamicSection.new(io, self, @_root, @_is_le)
+          when :sh_type_strtab
+            @_raw_body = io.read_bytes(len_body)
+            io = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = StringsStruct.new(io, self, @_root, @_is_le)
+          when :sh_type_dynstr
+            @_raw_body = io.read_bytes(len_body)
+            io = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = StringsStruct.new(io, self, @_root, @_is_le)
+          when :sh_type_dynsym
+            @_raw_body = io.read_bytes(len_body)
+            io = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = DynsymSection.new(io, self, @_root, @_is_le)
+          else
+            @body = io.read_bytes(len_body)
+          end
         end
         io.seek(_pos)
         @body
+      end
+      def name
+        return @name unless @name.nil?
+        io = _root.header.strings._io
+        _pos = io.pos
+        io.seek(ofs_name)
+        if @_is_le
+          @name = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+        else
+          @name = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+        end
+        io.seek(_pos)
+        @name
       end
       def flags_obj
         return @flags_obj unless @flags_obj.nil?
@@ -1122,71 +1135,17 @@ class Elf < Kaitai::Struct::Struct
         end
         @flags_obj
       end
-      def strtab
-        return @strtab unless @strtab.nil?
-        if type == :sh_type_strtab
-          io = _root._io
-          _pos = io.pos
-          io.seek(offset)
-          if @_is_le
-            @_raw_strtab = io.read_bytes(size)
-            io = Kaitai::Struct::Stream.new(@_raw_strtab)
-            @strtab = StringsStruct.new(io, self, @_root, @_is_le)
-          else
-            @_raw_strtab = io.read_bytes(size)
-            io = Kaitai::Struct::Stream.new(@_raw_strtab)
-            @strtab = StringsStruct.new(io, self, @_root, @_is_le)
-          end
-          io.seek(_pos)
-        end
-        @strtab
-      end
-      def name
-        return @name unless @name.nil?
-        io = _root.header.strings._io
-        _pos = io.pos
-        io.seek(name_offset)
-        if @_is_le
-          @name = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
-        else
-          @name = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
-        end
-        io.seek(_pos)
-        @name
-      end
-      def dynamic
-        return @dynamic unless @dynamic.nil?
-        if type == :sh_type_dynamic
-          io = _root._io
-          _pos = io.pos
-          io.seek(offset)
-          if @_is_le
-            @_raw_dynamic = io.read_bytes(size)
-            io = Kaitai::Struct::Stream.new(@_raw_dynamic)
-            @dynamic = DynamicSection.new(io, self, @_root, @_is_le)
-          else
-            @_raw_dynamic = io.read_bytes(size)
-            io = Kaitai::Struct::Stream.new(@_raw_dynamic)
-            @dynamic = DynamicSection.new(io, self, @_root, @_is_le)
-          end
-          io.seek(_pos)
-        end
-        @dynamic
-      end
-      attr_reader :name_offset
+      attr_reader :ofs_name
       attr_reader :type
       attr_reader :flags
       attr_reader :addr
-      attr_reader :offset
-      attr_reader :size
+      attr_reader :ofs_body
+      attr_reader :len_body
       attr_reader :linked_section_idx
       attr_reader :info
       attr_reader :align
       attr_reader :entry_size
-      attr_reader :_raw_dynstr
-      attr_reader :_raw_dynsym
-      attr_reader :_raw_strtab
-      attr_reader :_raw_dynamic
+      attr_reader :_raw_body
     end
     class DynamicSection < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
@@ -1414,13 +1373,13 @@ class Elf < Kaitai::Struct::Struct
     def strings
       return @strings unless @strings.nil?
       _pos = @_io.pos
-      @_io.seek(section_headers[section_names_idx].offset)
+      @_io.seek(section_headers[section_names_idx].ofs_body)
       if @_is_le
-        @_raw_strings = @_io.read_bytes(section_headers[section_names_idx].size)
+        @_raw_strings = @_io.read_bytes(section_headers[section_names_idx].len_body)
         io = Kaitai::Struct::Stream.new(@_raw_strings)
         @strings = StringsStruct.new(io, self, @_root, @_is_le)
       else
-        @_raw_strings = @_io.read_bytes(section_headers[section_names_idx].size)
+        @_raw_strings = @_io.read_bytes(section_headers[section_names_idx].len_body)
         io = Kaitai::Struct::Stream.new(@_raw_strings)
         @strings = StringsStruct.new(io, self, @_root, @_is_le)
       end

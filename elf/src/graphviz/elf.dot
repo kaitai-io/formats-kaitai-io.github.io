@@ -256,7 +256,7 @@ digraph {
 			</TABLE>>];
 			endian_elf__inst__strings [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="strings_pos">section_headers[section_names_idx].offset</TD><TD PORT="strings_size">section_headers[section_names_idx].size</TD><TD>StringsStruct</TD><TD PORT="strings_type">strings</TD></TR>
+				<TR><TD PORT="strings_pos">section_headers[section_names_idx].ofs_body</TD><TD PORT="strings_size">section_headers[section_names_idx].len_body</TD><TD>StringsStruct</TD><TD PORT="strings_type">strings</TD></TR>
 			</TABLE>>];
 endian_elf__seq_entry_point_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
@@ -354,44 +354,28 @@ dynamic_section_entry__seq_value_or_ptr_switch [label=<<TABLE BORDER="0" CELLBOR
 
 				section_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="name_offset_pos">0</TD><TD PORT="name_offset_size">4</TD><TD>u4</TD><TD PORT="name_offset_type">name_offset</TD></TR>
+					<TR><TD PORT="ofs_name_pos">0</TD><TD PORT="ofs_name_size">4</TD><TD>u4</TD><TD PORT="ofs_name_type">ofs_name</TD></TR>
 					<TR><TD PORT="type_pos">4</TD><TD PORT="type_size">4</TD><TD>u4→ShType</TD><TD PORT="type_type">type</TD></TR>
 					<TR><TD PORT="flags_pos">8</TD><TD PORT="flags_size">...</TD><TD>switch (_root.bits)</TD><TD PORT="flags_type">flags</TD></TR>
 					<TR><TD PORT="addr_pos">...</TD><TD PORT="addr_size">...</TD><TD>switch (_root.bits)</TD><TD PORT="addr_type">addr</TD></TR>
-					<TR><TD PORT="offset_pos">...</TD><TD PORT="offset_size">...</TD><TD>switch (_root.bits)</TD><TD PORT="offset_type">offset</TD></TR>
-					<TR><TD PORT="size_pos">...</TD><TD PORT="size_size">...</TD><TD>switch (_root.bits)</TD><TD PORT="size_type">size</TD></TR>
+					<TR><TD PORT="ofs_body_pos">...</TD><TD PORT="ofs_body_size">...</TD><TD>switch (_root.bits)</TD><TD PORT="ofs_body_type">ofs_body</TD></TR>
+					<TR><TD PORT="len_body_pos">...</TD><TD PORT="len_body_size">...</TD><TD>switch (_root.bits)</TD><TD PORT="len_body_type">len_body</TD></TR>
 					<TR><TD PORT="linked_section_idx_pos">...</TD><TD PORT="linked_section_idx_size">4</TD><TD>u4</TD><TD PORT="linked_section_idx_type">linked_section_idx</TD></TR>
 					<TR><TD PORT="info_pos">...</TD><TD PORT="info_size">4</TD><TD></TD><TD PORT="info_type">info</TD></TR>
 					<TR><TD PORT="align_pos">...</TD><TD PORT="align_size">...</TD><TD>switch (_root.bits)</TD><TD PORT="align_type">align</TD></TR>
 					<TR><TD PORT="entry_size_pos">...</TD><TD PORT="entry_size_size">...</TD><TD>switch (_root.bits)</TD><TD PORT="entry_size_type">entry_size</TD></TR>
 				</TABLE>>];
-				section_header__inst__dynstr [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="dynstr_pos">offset</TD><TD PORT="dynstr_size">size</TD><TD>StringsStruct</TD><TD PORT="dynstr_type">dynstr</TD></TR>
-				</TABLE>>];
-				section_header__inst__dynsym [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="dynsym_pos">offset</TD><TD PORT="dynsym_size">size</TD><TD>DynsymSection</TD><TD PORT="dynsym_type">dynsym</TD></TR>
-				</TABLE>>];
 				section_header__inst__body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="body_pos">offset</TD><TD PORT="body_size">size</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+					<TR><TD PORT="body_pos">ofs_body</TD><TD PORT="body_size">...</TD><TD>switch (type)</TD><TD PORT="body_type">body</TD></TR>
+				</TABLE>>];
+				section_header__inst__name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="name_pos">ofs_name</TD><TD PORT="name_size">...</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
 				</TABLE>>];
 				section_header__inst__flags_obj [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="flags_obj_pos">...</TD><TD PORT="flags_obj_size">0</TD><TD>SectionHeaderFlags</TD><TD PORT="flags_obj_type">flags_obj</TD></TR>
-				</TABLE>>];
-				section_header__inst__strtab [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="strtab_pos">offset</TD><TD PORT="strtab_size">size</TD><TD>StringsStruct</TD><TD PORT="strtab_type">strtab</TD></TR>
-				</TABLE>>];
-				section_header__inst__name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="name_pos">name_offset</TD><TD PORT="name_size">...</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
-				</TABLE>>];
-				section_header__inst__dynamic [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="dynamic_pos">offset</TD><TD PORT="dynamic_size">size</TD><TD>DynamicSection</TD><TD PORT="dynamic_type">dynamic</TD></TR>
 				</TABLE>>];
 section_header__seq_flags_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
@@ -399,10 +383,10 @@ section_header__seq_flags_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSP
 section_header__seq_addr_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 </TABLE>>];
-section_header__seq_offset_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+section_header__seq_ofs_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 </TABLE>>];
-section_header__seq_size_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+section_header__seq_len_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 </TABLE>>];
 section_header__seq_align_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
@@ -410,6 +394,13 @@ section_header__seq_align_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSP
 </TABLE>>];
 section_header__seq_entry_size_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+</TABLE>>];
+section_header__inst__body_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:sh_type_dynamic</TD><TD PORT="case0">DynamicSection</TD></TR>
+	<TR><TD>:sh_type_strtab</TD><TD PORT="case1">StringsStruct</TD></TR>
+	<TR><TD>:sh_type_dynstr</TD><TD PORT="case2">StringsStruct</TD></TR>
+	<TR><TD>:sh_type_dynsym</TD><TD PORT="case3">DynsymSection</TD></TR>
 </TABLE>>];
 			}
 			subgraph cluster__dynamic_section {
@@ -524,8 +515,8 @@ dynsym_section__seq_entries_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELL
 	endian_elf__seq:section_header_entry_size_type -> endian_elf__inst__section_headers:section_headers_size [color="#404040"];
 	endian_elf__inst__section_headers:section_headers_type -> section_header__seq [style=bold];
 	endian_elf__seq:qty_section_header_type -> endian_elf__inst__section_headers:section_headers__repeat [color="#404040"];
-	section_header__seq:offset_type -> endian_elf__inst__strings:strings_pos [color="#404040"];
-	section_header__seq:size_type -> endian_elf__inst__strings:strings_size [color="#404040"];
+	section_header__seq:ofs_body_type -> endian_elf__inst__strings:strings_pos [color="#404040"];
+	section_header__seq:len_body_type -> endian_elf__inst__strings:strings_size [color="#404040"];
 	endian_elf__inst__strings:strings_type -> strings_struct__seq [style=bold];
 	program_header__seq:offset_type -> program_header__seq_offset_switch [style=bold];
 	elf__seq:bits_type -> program_header__seq:offset_type [color="#404040"];
@@ -553,30 +544,23 @@ dynsym_section__seq_entries_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELL
 	elf__seq:bits_type -> section_header__seq:flags_type [color="#404040"];
 	section_header__seq:addr_type -> section_header__seq_addr_switch [style=bold];
 	elf__seq:bits_type -> section_header__seq:addr_type [color="#404040"];
-	section_header__seq:offset_type -> section_header__seq_offset_switch [style=bold];
-	elf__seq:bits_type -> section_header__seq:offset_type [color="#404040"];
-	section_header__seq:size_type -> section_header__seq_size_switch [style=bold];
-	elf__seq:bits_type -> section_header__seq:size_type [color="#404040"];
+	section_header__seq:ofs_body_type -> section_header__seq_ofs_body_switch [style=bold];
+	elf__seq:bits_type -> section_header__seq:ofs_body_type [color="#404040"];
+	section_header__seq:len_body_type -> section_header__seq_len_body_switch [style=bold];
+	elf__seq:bits_type -> section_header__seq:len_body_type [color="#404040"];
 	section_header__seq:align_type -> section_header__seq_align_switch [style=bold];
 	elf__seq:bits_type -> section_header__seq:align_type [color="#404040"];
 	section_header__seq:entry_size_type -> section_header__seq_entry_size_switch [style=bold];
 	elf__seq:bits_type -> section_header__seq:entry_size_type [color="#404040"];
-	section_header__seq:offset_type -> section_header__inst__dynstr:dynstr_pos [color="#404040"];
-	section_header__seq:size_type -> section_header__inst__dynstr:dynstr_size [color="#404040"];
-	section_header__inst__dynstr:dynstr_type -> strings_struct__seq [style=bold];
-	section_header__seq:offset_type -> section_header__inst__dynsym:dynsym_pos [color="#404040"];
-	section_header__seq:size_type -> section_header__inst__dynsym:dynsym_size [color="#404040"];
-	section_header__inst__dynsym:dynsym_type -> dynsym_section__seq [style=bold];
-	section_header__seq:offset_type -> section_header__inst__body:body_pos [color="#404040"];
-	section_header__seq:size_type -> section_header__inst__body:body_size [color="#404040"];
+	section_header__seq:ofs_body_type -> section_header__inst__body:body_pos [color="#404040"];
+	section_header__inst__body:body_type -> section_header__inst__body_body_switch [style=bold];
+	section_header__inst__body_body_switch:case0 -> dynamic_section__seq [style=bold];
+	section_header__inst__body_body_switch:case1 -> strings_struct__seq [style=bold];
+	section_header__inst__body_body_switch:case2 -> strings_struct__seq [style=bold];
+	section_header__inst__body_body_switch:case3 -> dynsym_section__seq [style=bold];
+	section_header__seq:type_type -> section_header__inst__body:body_type [color="#404040"];
+	section_header__seq:ofs_name_type -> section_header__inst__name:name_pos [color="#404040"];
 	section_header__inst__flags_obj:flags_obj_type -> section_header_flags__seq [style=bold];
-	section_header__seq:offset_type -> section_header__inst__strtab:strtab_pos [color="#404040"];
-	section_header__seq:size_type -> section_header__inst__strtab:strtab_size [color="#404040"];
-	section_header__inst__strtab:strtab_type -> strings_struct__seq [style=bold];
-	section_header__seq:name_offset_type -> section_header__inst__name:name_pos [color="#404040"];
-	section_header__seq:offset_type -> section_header__inst__dynamic:dynamic_pos [color="#404040"];
-	section_header__seq:size_type -> section_header__inst__dynamic:dynamic_size [color="#404040"];
-	section_header__inst__dynamic:dynamic_type -> dynamic_section__seq [style=bold];
 	dynamic_section__seq:entries_type -> dynamic_section_entry__seq [style=bold];
 	dynsym_section__seq:entries_type -> dynsym_section__seq_entries_switch [style=bold];
 	dynsym_section__seq_entries_switch:case0 -> dynsym_section_entry32__seq [style=bold];
