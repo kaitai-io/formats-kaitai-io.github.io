@@ -52,8 +52,8 @@ public:
     private:
         std::string m_magic;
         uint16_t m_last_page_extra_bytes;
-        uint16_t m_qty_pages;
-        uint16_t m_qty_relocations;
+        uint16_t m_num_pages;
+        uint16_t m_num_relocations;
         uint16_t m_header_size;
         uint16_t m_min_allocation;
         uint16_t m_max_allocation;
@@ -62,7 +62,7 @@ public:
         uint16_t m_checksum;
         uint16_t m_initial_ip;
         uint16_t m_initial_cs;
-        uint16_t m_relocations_ofs;
+        uint16_t m_ofs_relocations;
         uint16_t m_overlay_id;
         dos_mz_t* m__root;
         dos_mz_t* m__parent;
@@ -70,8 +70,8 @@ public:
     public:
         std::string magic() const { return m_magic; }
         uint16_t last_page_extra_bytes() const { return m_last_page_extra_bytes; }
-        uint16_t qty_pages() const { return m_qty_pages; }
-        uint16_t qty_relocations() const { return m_qty_relocations; }
+        uint16_t num_pages() const { return m_num_pages; }
+        uint16_t num_relocations() const { return m_num_relocations; }
         uint16_t header_size() const { return m_header_size; }
         uint16_t min_allocation() const { return m_min_allocation; }
         uint16_t max_allocation() const { return m_max_allocation; }
@@ -80,7 +80,7 @@ public:
         uint16_t checksum() const { return m_checksum; }
         uint16_t initial_ip() const { return m_initial_ip; }
         uint16_t initial_cs() const { return m_initial_cs; }
-        uint16_t relocations_ofs() const { return m_relocations_ofs; }
+        uint16_t ofs_relocations() const { return m_ofs_relocations; }
         uint16_t overlay_id() const { return m_overlay_id; }
         dos_mz_t* _root() const { return m__root; }
         dos_mz_t* _parent() const { return m__parent; }

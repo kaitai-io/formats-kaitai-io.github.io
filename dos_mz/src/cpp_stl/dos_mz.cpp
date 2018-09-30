@@ -12,8 +12,8 @@ dos_mz_t::dos_mz_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dos_mz_t*
 
 void dos_mz_t::_read() {
     m_hdr = new mz_header_t(m__io, this, m__root);
-    m_mz_header2 = m__io->read_bytes((hdr()->relocations_ofs() - 28));
-    int l_relocations = hdr()->qty_relocations();
+    m_mz_header2 = m__io->read_bytes((hdr()->ofs_relocations() - 28));
+    int l_relocations = hdr()->num_relocations();
     m_relocations = new std::vector<relocation_t*>();
     m_relocations->reserve(l_relocations);
     for (int i = 0; i < l_relocations; i++) {
@@ -39,8 +39,8 @@ dos_mz_t::mz_header_t::mz_header_t(kaitai::kstream* p__io, dos_mz_t* p__parent, 
 void dos_mz_t::mz_header_t::_read() {
     m_magic = m__io->read_bytes(2);
     m_last_page_extra_bytes = m__io->read_u2le();
-    m_qty_pages = m__io->read_u2le();
-    m_qty_relocations = m__io->read_u2le();
+    m_num_pages = m__io->read_u2le();
+    m_num_relocations = m__io->read_u2le();
     m_header_size = m__io->read_u2le();
     m_min_allocation = m__io->read_u2le();
     m_max_allocation = m__io->read_u2le();
@@ -49,7 +49,7 @@ void dos_mz_t::mz_header_t::_read() {
     m_checksum = m__io->read_u2le();
     m_initial_ip = m__io->read_u2le();
     m_initial_cs = m__io->read_u2le();
-    m_relocations_ofs = m__io->read_u2le();
+    m_ofs_relocations = m__io->read_u2le();
     m_overlay_id = m__io->read_u2le();
 }
 

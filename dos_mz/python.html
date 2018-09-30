@@ -279,9 +279,9 @@ class DosMz(KaitaiStruct):
 
     def _read(self):
         self.hdr = self._root.MzHeader(self._io, self, self._root)
-        self.mz_header2 = self._io.read_bytes((self.hdr.relocations_ofs - 28))
-        self.relocations = [None] * (self.hdr.qty_relocations)
-        for i in range(self.hdr.qty_relocations):
+        self.mz_header2 = self._io.read_bytes((self.hdr.ofs_relocations - 28))
+        self.relocations = [None] * (self.hdr.num_relocations)
+        for i in range(self.hdr.num_relocations):
             self.relocations[i] = self._root.Relocation(self._io, self, self._root)
 
         self.body = self._io.read_bytes_full()
@@ -296,8 +296,8 @@ class DosMz(KaitaiStruct):
         def _read(self):
             self.magic = self._io.read_bytes(2)
             self.last_page_extra_bytes = self._io.read_u2le()
-            self.qty_pages = self._io.read_u2le()
-            self.qty_relocations = self._io.read_u2le()
+            self.num_pages = self._io.read_u2le()
+            self.num_relocations = self._io.read_u2le()
             self.header_size = self._io.read_u2le()
             self.min_allocation = self._io.read_u2le()
             self.max_allocation = self._io.read_u2le()
@@ -306,7 +306,7 @@ class DosMz(KaitaiStruct):
             self.checksum = self._io.read_u2le()
             self.initial_ip = self._io.read_u2le()
             self.initial_cs = self._io.read_u2le()
-            self.relocations_ofs = self._io.read_u2le()
+            self.ofs_relocations = self._io.read_u2le()
             self.overlay_id = self._io.read_u2le()
 
 

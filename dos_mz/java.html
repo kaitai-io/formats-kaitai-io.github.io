@@ -290,9 +290,9 @@ public class DosMz extends KaitaiStruct {
     }
     private void _read() {
         this.hdr = new MzHeader(this._io, this, _root);
-        this.mzHeader2 = this._io.readBytes((hdr().relocationsOfs() - 28));
-        relocations = new ArrayList&lt;Relocation&gt;((int) (hdr().qtyRelocations()));
-        for (int i = 0; i &lt; hdr().qtyRelocations(); i++) {
+        this.mzHeader2 = this._io.readBytes((hdr().ofsRelocations() - 28));
+        relocations = new ArrayList&lt;Relocation&gt;((int) (hdr().numRelocations()));
+        for (int i = 0; i &lt; hdr().numRelocations(); i++) {
             this.relocations.add(new Relocation(this._io, this, _root));
         }
         this.body = this._io.readBytesFull();
@@ -319,8 +319,8 @@ public class DosMz extends KaitaiStruct {
         private void _read() {
             this.magic = this._io.readBytes(2);
             this.lastPageExtraBytes = this._io.readU2le();
-            this.qtyPages = this._io.readU2le();
-            this.qtyRelocations = this._io.readU2le();
+            this.numPages = this._io.readU2le();
+            this.numRelocations = this._io.readU2le();
             this.headerSize = this._io.readU2le();
             this.minAllocation = this._io.readU2le();
             this.maxAllocation = this._io.readU2le();
@@ -329,13 +329,13 @@ public class DosMz extends KaitaiStruct {
             this.checksum = this._io.readU2le();
             this.initialIp = this._io.readU2le();
             this.initialCs = this._io.readU2le();
-            this.relocationsOfs = this._io.readU2le();
+            this.ofsRelocations = this._io.readU2le();
             this.overlayId = this._io.readU2le();
         }
         private byte[] magic;
         private int lastPageExtraBytes;
-        private int qtyPages;
-        private int qtyRelocations;
+        private int numPages;
+        private int numRelocations;
         private int headerSize;
         private int minAllocation;
         private int maxAllocation;
@@ -344,14 +344,14 @@ public class DosMz extends KaitaiStruct {
         private int checksum;
         private int initialIp;
         private int initialCs;
-        private int relocationsOfs;
+        private int ofsRelocations;
         private int overlayId;
         private DosMz _root;
         private DosMz _parent;
         public byte[] magic() { return magic; }
         public int lastPageExtraBytes() { return lastPageExtraBytes; }
-        public int qtyPages() { return qtyPages; }
-        public int qtyRelocations() { return qtyRelocations; }
+        public int numPages() { return numPages; }
+        public int numRelocations() { return numRelocations; }
         public int headerSize() { return headerSize; }
         public int minAllocation() { return minAllocation; }
         public int maxAllocation() { return maxAllocation; }
@@ -360,7 +360,7 @@ public class DosMz extends KaitaiStruct {
         public int checksum() { return checksum; }
         public int initialIp() { return initialIp; }
         public int initialCs() { return initialCs; }
-        public int relocationsOfs() { return relocationsOfs; }
+        public int ofsRelocations() { return ofsRelocations; }
         public int overlayId() { return overlayId; }
         public DosMz _root() { return _root; }
         public DosMz _parent() { return _parent; }

@@ -35,9 +35,9 @@ sub _read {
     my ($self) = @_;
 
     $self->{hdr} = DosMz::MzHeader->new($self->{_io}, $self, $self->{_root});
-    $self->{mz_header2} = $self->{_io}->read_bytes(($self->hdr()->relocations_ofs() - 28));
+    $self->{mz_header2} = $self->{_io}->read_bytes(($self->hdr()->ofs_relocations() - 28));
     $self->{relocations} = ();
-    my $n_relocations = $self->hdr()->qty_relocations();
+    my $n_relocations = $self->hdr()->num_relocations();
     for (my $i = 0; $i < $n_relocations; $i++) {
         $self->{relocations}[$i] = DosMz::Relocation->new($self->{_io}, $self, $self->{_root});
     }
@@ -96,8 +96,8 @@ sub _read {
 
     $self->{magic} = $self->{_io}->read_bytes(2);
     $self->{last_page_extra_bytes} = $self->{_io}->read_u2le();
-    $self->{qty_pages} = $self->{_io}->read_u2le();
-    $self->{qty_relocations} = $self->{_io}->read_u2le();
+    $self->{num_pages} = $self->{_io}->read_u2le();
+    $self->{num_relocations} = $self->{_io}->read_u2le();
     $self->{header_size} = $self->{_io}->read_u2le();
     $self->{min_allocation} = $self->{_io}->read_u2le();
     $self->{max_allocation} = $self->{_io}->read_u2le();
@@ -106,7 +106,7 @@ sub _read {
     $self->{checksum} = $self->{_io}->read_u2le();
     $self->{initial_ip} = $self->{_io}->read_u2le();
     $self->{initial_cs} = $self->{_io}->read_u2le();
-    $self->{relocations_ofs} = $self->{_io}->read_u2le();
+    $self->{ofs_relocations} = $self->{_io}->read_u2le();
     $self->{overlay_id} = $self->{_io}->read_u2le();
 }
 
@@ -120,14 +120,14 @@ sub last_page_extra_bytes {
     return $self->{last_page_extra_bytes};
 }
 
-sub qty_pages {
+sub num_pages {
     my ($self) = @_;
-    return $self->{qty_pages};
+    return $self->{num_pages};
 }
 
-sub qty_relocations {
+sub num_relocations {
     my ($self) = @_;
-    return $self->{qty_relocations};
+    return $self->{num_relocations};
 }
 
 sub header_size {
@@ -170,9 +170,9 @@ sub initial_cs {
     return $self->{initial_cs};
 }
 
-sub relocations_ofs {
+sub ofs_relocations {
     my ($self) = @_;
-    return $self->{relocations_ofs};
+    return $self->{ofs_relocations};
 }
 
 sub overlay_id {

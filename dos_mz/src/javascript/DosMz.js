@@ -30,9 +30,9 @@ var DosMz = (function() {
   }
   DosMz.prototype._read = function() {
     this.hdr = new MzHeader(this._io, this, this._root);
-    this.mzHeader2 = this._io.readBytes((this.hdr.relocationsOfs - 28));
-    this.relocations = new Array(this.hdr.qtyRelocations);
-    for (var i = 0; i < this.hdr.qtyRelocations; i++) {
+    this.mzHeader2 = this._io.readBytes((this.hdr.ofsRelocations - 28));
+    this.relocations = new Array(this.hdr.numRelocations);
+    for (var i = 0; i < this.hdr.numRelocations; i++) {
       this.relocations[i] = new Relocation(this._io, this, this._root);
     }
     this.body = this._io.readBytesFull();
@@ -49,8 +49,8 @@ var DosMz = (function() {
     MzHeader.prototype._read = function() {
       this.magic = this._io.readBytes(2);
       this.lastPageExtraBytes = this._io.readU2le();
-      this.qtyPages = this._io.readU2le();
-      this.qtyRelocations = this._io.readU2le();
+      this.numPages = this._io.readU2le();
+      this.numRelocations = this._io.readU2le();
       this.headerSize = this._io.readU2le();
       this.minAllocation = this._io.readU2le();
       this.maxAllocation = this._io.readU2le();
@@ -59,7 +59,7 @@ var DosMz = (function() {
       this.checksum = this._io.readU2le();
       this.initialIp = this._io.readU2le();
       this.initialCs = this._io.readU2le();
-      this.relocationsOfs = this._io.readU2le();
+      this.ofsRelocations = this._io.readU2le();
       this.overlayId = this._io.readU2le();
     }
 

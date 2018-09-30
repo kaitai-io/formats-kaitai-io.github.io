@@ -31,9 +31,9 @@ namespace Kaitai
         private void _read()
         {
             _hdr = new MzHeader(m_io, this, m_root);
-            _mzHeader2 = m_io.ReadBytes((Hdr.RelocationsOfs - 28));
-            _relocations = new List<Relocation>((int) (Hdr.QtyRelocations));
-            for (var i = 0; i < Hdr.QtyRelocations; i++)
+            _mzHeader2 = m_io.ReadBytes((Hdr.OfsRelocations - 28));
+            _relocations = new List<Relocation>((int) (Hdr.NumRelocations));
+            for (var i = 0; i < Hdr.NumRelocations; i++)
             {
                 _relocations.Add(new Relocation(m_io, this, m_root));
             }
@@ -56,8 +56,8 @@ namespace Kaitai
             {
                 _magic = m_io.ReadBytes(2);
                 _lastPageExtraBytes = m_io.ReadU2le();
-                _qtyPages = m_io.ReadU2le();
-                _qtyRelocations = m_io.ReadU2le();
+                _numPages = m_io.ReadU2le();
+                _numRelocations = m_io.ReadU2le();
                 _headerSize = m_io.ReadU2le();
                 _minAllocation = m_io.ReadU2le();
                 _maxAllocation = m_io.ReadU2le();
@@ -66,13 +66,13 @@ namespace Kaitai
                 _checksum = m_io.ReadU2le();
                 _initialIp = m_io.ReadU2le();
                 _initialCs = m_io.ReadU2le();
-                _relocationsOfs = m_io.ReadU2le();
+                _ofsRelocations = m_io.ReadU2le();
                 _overlayId = m_io.ReadU2le();
             }
             private byte[] _magic;
             private ushort _lastPageExtraBytes;
-            private ushort _qtyPages;
-            private ushort _qtyRelocations;
+            private ushort _numPages;
+            private ushort _numRelocations;
             private ushort _headerSize;
             private ushort _minAllocation;
             private ushort _maxAllocation;
@@ -81,14 +81,14 @@ namespace Kaitai
             private ushort _checksum;
             private ushort _initialIp;
             private ushort _initialCs;
-            private ushort _relocationsOfs;
+            private ushort _ofsRelocations;
             private ushort _overlayId;
             private DosMz m_root;
             private DosMz m_parent;
             public byte[] Magic { get { return _magic; } }
             public ushort LastPageExtraBytes { get { return _lastPageExtraBytes; } }
-            public ushort QtyPages { get { return _qtyPages; } }
-            public ushort QtyRelocations { get { return _qtyRelocations; } }
+            public ushort NumPages { get { return _numPages; } }
+            public ushort NumRelocations { get { return _numRelocations; } }
             public ushort HeaderSize { get { return _headerSize; } }
             public ushort MinAllocation { get { return _minAllocation; } }
             public ushort MaxAllocation { get { return _maxAllocation; } }
@@ -97,7 +97,7 @@ namespace Kaitai
             public ushort Checksum { get { return _checksum; } }
             public ushort InitialIp { get { return _initialIp; } }
             public ushort InitialCs { get { return _initialCs; } }
-            public ushort RelocationsOfs { get { return _relocationsOfs; } }
+            public ushort OfsRelocations { get { return _ofsRelocations; } }
             public ushort OverlayId { get { return _overlayId; } }
             public DosMz M_Root { get { return m_root; } }
             public DosMz M_Parent { get { return m_parent; } }

@@ -24,9 +24,9 @@ class DosMz < Kaitai::Struct::Struct
 
   def _read
     @hdr = MzHeader.new(@_io, self, @_root)
-    @mz_header2 = @_io.read_bytes((hdr.relocations_ofs - 28))
-    @relocations = Array.new(hdr.qty_relocations)
-    (hdr.qty_relocations).times { |i|
+    @mz_header2 = @_io.read_bytes((hdr.ofs_relocations - 28))
+    @relocations = Array.new(hdr.num_relocations)
+    (hdr.num_relocations).times { |i|
       @relocations[i] = Relocation.new(@_io, self, @_root)
     }
     @body = @_io.read_bytes_full
@@ -41,8 +41,8 @@ class DosMz < Kaitai::Struct::Struct
     def _read
       @magic = @_io.read_bytes(2)
       @last_page_extra_bytes = @_io.read_u2le
-      @qty_pages = @_io.read_u2le
-      @qty_relocations = @_io.read_u2le
+      @num_pages = @_io.read_u2le
+      @num_relocations = @_io.read_u2le
       @header_size = @_io.read_u2le
       @min_allocation = @_io.read_u2le
       @max_allocation = @_io.read_u2le
@@ -51,14 +51,14 @@ class DosMz < Kaitai::Struct::Struct
       @checksum = @_io.read_u2le
       @initial_ip = @_io.read_u2le
       @initial_cs = @_io.read_u2le
-      @relocations_ofs = @_io.read_u2le
+      @ofs_relocations = @_io.read_u2le
       @overlay_id = @_io.read_u2le
       self
     end
     attr_reader :magic
     attr_reader :last_page_extra_bytes
-    attr_reader :qty_pages
-    attr_reader :qty_relocations
+    attr_reader :num_pages
+    attr_reader :num_relocations
     attr_reader :header_size
     attr_reader :min_allocation
     attr_reader :max_allocation
@@ -67,7 +67,7 @@ class DosMz < Kaitai::Struct::Struct
     attr_reader :checksum
     attr_reader :initial_ip
     attr_reader :initial_cs
-    attr_reader :relocations_ofs
+    attr_reader :ofs_relocations
     attr_reader :overlay_id
   end
   class Relocation < Kaitai::Struct::Struct

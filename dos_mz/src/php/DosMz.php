@@ -20,9 +20,9 @@ class DosMz extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m_hdr = new \DosMz\MzHeader($this->_io, $this, $this->_root);
-        $this->_m_mzHeader2 = $this->_io->readBytes(($this->hdr()->relocationsOfs() - 28));
+        $this->_m_mzHeader2 = $this->_io->readBytes(($this->hdr()->ofsRelocations() - 28));
         $this->_m_relocations = [];
-        $n = $this->hdr()->qtyRelocations();
+        $n = $this->hdr()->numRelocations();
         for ($i = 0; $i < $n; $i++) {
             $this->_m_relocations[] = new \DosMz\Relocation($this->_io, $this, $this->_root);
         }
@@ -49,8 +49,8 @@ class MzHeader extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_magic = $this->_io->readBytes(2);
         $this->_m_lastPageExtraBytes = $this->_io->readU2le();
-        $this->_m_qtyPages = $this->_io->readU2le();
-        $this->_m_qtyRelocations = $this->_io->readU2le();
+        $this->_m_numPages = $this->_io->readU2le();
+        $this->_m_numRelocations = $this->_io->readU2le();
         $this->_m_headerSize = $this->_io->readU2le();
         $this->_m_minAllocation = $this->_io->readU2le();
         $this->_m_maxAllocation = $this->_io->readU2le();
@@ -59,13 +59,13 @@ class MzHeader extends \Kaitai\Struct\Struct {
         $this->_m_checksum = $this->_io->readU2le();
         $this->_m_initialIp = $this->_io->readU2le();
         $this->_m_initialCs = $this->_io->readU2le();
-        $this->_m_relocationsOfs = $this->_io->readU2le();
+        $this->_m_ofsRelocations = $this->_io->readU2le();
         $this->_m_overlayId = $this->_io->readU2le();
     }
     protected $_m_magic;
     protected $_m_lastPageExtraBytes;
-    protected $_m_qtyPages;
-    protected $_m_qtyRelocations;
+    protected $_m_numPages;
+    protected $_m_numRelocations;
     protected $_m_headerSize;
     protected $_m_minAllocation;
     protected $_m_maxAllocation;
@@ -74,12 +74,12 @@ class MzHeader extends \Kaitai\Struct\Struct {
     protected $_m_checksum;
     protected $_m_initialIp;
     protected $_m_initialCs;
-    protected $_m_relocationsOfs;
+    protected $_m_ofsRelocations;
     protected $_m_overlayId;
     public function magic() { return $this->_m_magic; }
     public function lastPageExtraBytes() { return $this->_m_lastPageExtraBytes; }
-    public function qtyPages() { return $this->_m_qtyPages; }
-    public function qtyRelocations() { return $this->_m_qtyRelocations; }
+    public function numPages() { return $this->_m_numPages; }
+    public function numRelocations() { return $this->_m_numRelocations; }
     public function headerSize() { return $this->_m_headerSize; }
     public function minAllocation() { return $this->_m_minAllocation; }
     public function maxAllocation() { return $this->_m_maxAllocation; }
@@ -88,7 +88,7 @@ class MzHeader extends \Kaitai\Struct\Struct {
     public function checksum() { return $this->_m_checksum; }
     public function initialIp() { return $this->_m_initialIp; }
     public function initialCs() { return $this->_m_initialCs; }
-    public function relocationsOfs() { return $this->_m_relocationsOfs; }
+    public function ofsRelocations() { return $this->_m_ofsRelocations; }
     public function overlayId() { return $this->_m_overlayId; }
 }
 

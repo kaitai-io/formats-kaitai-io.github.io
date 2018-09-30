@@ -238,9 +238,9 @@ added support for relocations.</p>
 		dos_mz__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;hdr_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;hdr_size&quot;&gt;28&lt;/TD&gt;&lt;TD&gt;MzHeader&lt;/TD&gt;&lt;TD PORT=&quot;hdr_type&quot;&gt;hdr&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;mz_header2_pos&quot;&gt;28&lt;/TD&gt;&lt;TD PORT=&quot;mz_header2_size&quot;&gt;(hdr.relocations_ofs - 28)&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;mz_header2_type&quot;&gt;mz_header2&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;mz_header2_pos&quot;&gt;28&lt;/TD&gt;&lt;TD PORT=&quot;mz_header2_size&quot;&gt;(hdr.ofs_relocations - 28)&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;mz_header2_type&quot;&gt;mz_header2&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;relocations_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;relocations_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;Relocation&lt;/TD&gt;&lt;TD PORT=&quot;relocations_type&quot;&gt;relocations&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;relocations__repeat&quot;&gt;repeat hdr.qty_relocations times&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;relocations__repeat&quot;&gt;repeat hdr.num_relocations times&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;⇲&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
 		subgraph cluster__mz_header {
@@ -251,8 +251,8 @@ added support for relocations.</p>
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;magic_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;magic_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;magic_type&quot;&gt;magic&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;last_page_extra_bytes_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;last_page_extra_bytes_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;last_page_extra_bytes_type&quot;&gt;last_page_extra_bytes&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;qty_pages_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;qty_pages_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;qty_pages_type&quot;&gt;qty_pages&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;qty_relocations_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;qty_relocations_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;qty_relocations_type&quot;&gt;qty_relocations&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;num_pages_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;num_pages_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;num_pages_type&quot;&gt;num_pages&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;num_relocations_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;num_relocations_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;num_relocations_type&quot;&gt;num_relocations&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;header_size_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;header_size_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;header_size_type&quot;&gt;header_size&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;min_allocation_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;min_allocation_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;min_allocation_type&quot;&gt;min_allocation&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;max_allocation_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;max_allocation_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;max_allocation_type&quot;&gt;max_allocation&lt;/TD&gt;&lt;/TR&gt;
@@ -261,7 +261,7 @@ added support for relocations.</p>
 				&lt;TR&gt;&lt;TD PORT=&quot;checksum_pos&quot;&gt;18&lt;/TD&gt;&lt;TD PORT=&quot;checksum_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;checksum_type&quot;&gt;checksum&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;initial_ip_pos&quot;&gt;20&lt;/TD&gt;&lt;TD PORT=&quot;initial_ip_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;initial_ip_type&quot;&gt;initial_ip&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;initial_cs_pos&quot;&gt;22&lt;/TD&gt;&lt;TD PORT=&quot;initial_cs_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;initial_cs_type&quot;&gt;initial_cs&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;relocations_ofs_pos&quot;&gt;24&lt;/TD&gt;&lt;TD PORT=&quot;relocations_ofs_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;relocations_ofs_type&quot;&gt;relocations_ofs&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;ofs_relocations_pos&quot;&gt;24&lt;/TD&gt;&lt;TD PORT=&quot;ofs_relocations_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;ofs_relocations_type&quot;&gt;ofs_relocations&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;overlay_id_pos&quot;&gt;26&lt;/TD&gt;&lt;TD PORT=&quot;overlay_id_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;overlay_id_type&quot;&gt;overlay_id&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
@@ -277,9 +277,9 @@ added support for relocations.</p>
 		}
 	}
 	dos_mz__seq:hdr_type -&gt; mz_header__seq [style=bold];
-	mz_header__seq:relocations_ofs_type -&gt; dos_mz__seq:mz_header2_size [color=&quot;#404040&quot;];
+	mz_header__seq:ofs_relocations_type -&gt; dos_mz__seq:mz_header2_size [color=&quot;#404040&quot;];
 	dos_mz__seq:relocations_type -&gt; relocation__seq [style=bold];
-	mz_header__seq:qty_relocations_type -&gt; dos_mz__seq:relocations__repeat [color=&quot;#404040&quot;];
+	mz_header__seq:num_relocations_type -&gt; dos_mz__seq:relocations__repeat [color=&quot;#404040&quot;];
 }
 </code></pre>
             

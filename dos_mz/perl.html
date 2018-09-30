@@ -265,9 +265,9 @@ sub _read {
     my ($self) = @_;
 
     $self-&gt;{hdr} = DosMz::MzHeader-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{mz_header2} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;hdr()-&gt;relocations_ofs() - 28));
+    $self-&gt;{mz_header2} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;hdr()-&gt;ofs_relocations() - 28));
     $self-&gt;{relocations} = ();
-    my $n_relocations = $self-&gt;hdr()-&gt;qty_relocations();
+    my $n_relocations = $self-&gt;hdr()-&gt;num_relocations();
     for (my $i = 0; $i &lt; $n_relocations; $i++) {
         $self-&gt;{relocations}[$i] = DosMz::Relocation-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
     }
@@ -326,8 +326,8 @@ sub _read {
 
     $self-&gt;{magic} = $self-&gt;{_io}-&gt;read_bytes(2);
     $self-&gt;{last_page_extra_bytes} = $self-&gt;{_io}-&gt;read_u2le();
-    $self-&gt;{qty_pages} = $self-&gt;{_io}-&gt;read_u2le();
-    $self-&gt;{qty_relocations} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{num_pages} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{num_relocations} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{header_size} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{min_allocation} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{max_allocation} = $self-&gt;{_io}-&gt;read_u2le();
@@ -336,7 +336,7 @@ sub _read {
     $self-&gt;{checksum} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{initial_ip} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{initial_cs} = $self-&gt;{_io}-&gt;read_u2le();
-    $self-&gt;{relocations_ofs} = $self-&gt;{_io}-&gt;read_u2le();
+    $self-&gt;{ofs_relocations} = $self-&gt;{_io}-&gt;read_u2le();
     $self-&gt;{overlay_id} = $self-&gt;{_io}-&gt;read_u2le();
 }
 
@@ -350,14 +350,14 @@ sub last_page_extra_bytes {
     return $self-&gt;{last_page_extra_bytes};
 }
 
-sub qty_pages {
+sub num_pages {
     my ($self) = @_;
-    return $self-&gt;{qty_pages};
+    return $self-&gt;{num_pages};
 }
 
-sub qty_relocations {
+sub num_relocations {
     my ($self) = @_;
-    return $self-&gt;{qty_relocations};
+    return $self-&gt;{num_relocations};
 }
 
 sub header_size {
@@ -400,9 +400,9 @@ sub initial_cs {
     return $self-&gt;{initial_cs};
 }
 
-sub relocations_ofs {
+sub ofs_relocations {
     my ($self) = @_;
-    return $self-&gt;{relocations_ofs};
+    return $self-&gt;{ofs_relocations};
 }
 
 sub overlay_id {
