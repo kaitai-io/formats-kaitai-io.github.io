@@ -690,11 +690,13 @@ class MicrosoftPe(KaitaiStruct):
             if hasattr(self, &#39;_m_name_from_offset&#39;):
                 return self._m_name_from_offset if hasattr(self, &#39;_m_name_from_offset&#39;) else None
 
-            io = self._root._io
-            _pos = io.pos()
-            io.seek(((self._parent._parent.symbol_name_table_offset + self.name_offset) if self.name_zeroes == 0 else 0))
-            self._m_name_from_offset = (io.read_bytes_term(0, False, True, False)).decode(u&quot;ascii&quot;)
-            io.seek(_pos)
+            if self.name_zeroes == 0:
+                io = self._root._io
+                _pos = io.pos()
+                io.seek(((self._parent._parent.symbol_name_table_offset + self.name_offset) if self.name_zeroes == 0 else 0))
+                self._m_name_from_offset = (io.read_bytes_term(0, False, True, False)).decode(u&quot;ascii&quot;)
+                io.seek(_pos)
+
             return self._m_name_from_offset if hasattr(self, &#39;_m_name_from_offset&#39;) else None
 
         @property
@@ -732,10 +734,12 @@ class MicrosoftPe(KaitaiStruct):
             if hasattr(self, &#39;_m_name_from_short&#39;):
                 return self._m_name_from_short if hasattr(self, &#39;_m_name_from_short&#39;) else None
 
-            _pos = self._io.pos()
-            self._io.seek(0)
-            self._m_name_from_short = (self._io.read_bytes_term(0, False, True, False)).decode(u&quot;ascii&quot;)
-            self._io.seek(_pos)
+            if self.name_zeroes != 0:
+                _pos = self._io.pos()
+                self._io.seek(0)
+                self._m_name_from_short = (self._io.read_bytes_term(0, False, True, False)).decode(u&quot;ascii&quot;)
+                self._io.seek(_pos)
+
             return self._m_name_from_short if hasattr(self, &#39;_m_name_from_short&#39;) else None
 
 

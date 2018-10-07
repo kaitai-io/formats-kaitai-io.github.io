@@ -1191,11 +1191,13 @@ sub _read {
 sub name_from_offset {
     my ($self) = @_;
     return $self->{name_from_offset} if ($self->{name_from_offset});
-    my $io = $self->_root()->_io();
-    my $_pos = $io->pos();
-    $io->seek(($self->name_zeroes() == 0 ? ($self->_parent()->_parent()->symbol_name_table_offset() + $self->name_offset()) : 0));
-    $self->{name_from_offset} = Encode::decode("ascii", $io->read_bytes_term(0, 0, 1, 0));
-    $io->seek($_pos);
+    if ($self->name_zeroes() == 0) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek(($self->name_zeroes() == 0 ? ($self->_parent()->_parent()->symbol_name_table_offset() + $self->name_offset()) : 0));
+        $self->{name_from_offset} = Encode::decode("ascii", $io->read_bytes_term(0, 0, 1, 0));
+        $io->seek($_pos);
+    }
     return $self->{name_from_offset};
 }
 
@@ -1229,10 +1231,12 @@ sub name_zeroes {
 sub name_from_short {
     my ($self) = @_;
     return $self->{name_from_short} if ($self->{name_from_short});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(0);
-    $self->{name_from_short} = Encode::decode("ascii", $self->{_io}->read_bytes_term(0, 0, 1, 0));
-    $self->{_io}->seek($_pos);
+    if ($self->name_zeroes() != 0) {
+        my $_pos = $self->{_io}->pos();
+        $self->{_io}->seek(0);
+        $self->{name_from_short} = Encode::decode("ascii", $self->{_io}->read_bytes_term(0, 0, 1, 0));
+        $self->{_io}->seek($_pos);
+    }
     return $self->{name_from_short};
 }
 

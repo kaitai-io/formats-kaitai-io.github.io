@@ -718,6 +718,12 @@ public:
     private:
         bool f_name_from_offset;
         std::string m_name_from_offset;
+        bool n_name_from_offset;
+
+    public:
+        bool _is_null_name_from_offset() { name_from_offset(); return n_name_from_offset; };
+
+    private:
 
     public:
         std::string name_from_offset();
@@ -746,6 +752,12 @@ public:
     private:
         bool f_name_from_short;
         std::string m_name_from_short;
+        bool n_name_from_short;
+
+    public:
+        bool _is_null_name_from_short() { name_from_short(); return n_name_from_short; };
+
+    private:
 
     public:
         std::string name_from_short();

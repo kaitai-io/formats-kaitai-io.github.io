@@ -850,11 +850,13 @@ namespace Kaitai
                 {
                     if (f_nameFromOffset)
                         return _nameFromOffset;
-                    KaitaiStream io = M_Root.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek((NameZeroes == 0 ? (M_Parent.M_Parent.SymbolNameTableOffset + NameOffset) : 0));
-                    _nameFromOffset = System.Text.Encoding.GetEncoding("ascii").GetString(io.ReadBytesTerm(0, false, true, false));
-                    io.Seek(_pos);
+                    if (NameZeroes == 0) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek((NameZeroes == 0 ? (M_Parent.M_Parent.SymbolNameTableOffset + NameOffset) : 0));
+                        _nameFromOffset = System.Text.Encoding.GetEncoding("ascii").GetString(io.ReadBytesTerm(0, false, true, false));
+                        io.Seek(_pos);
+                    }
                     f_nameFromOffset = true;
                     return _nameFromOffset;
                 }
@@ -912,10 +914,12 @@ namespace Kaitai
                 {
                     if (f_nameFromShort)
                         return _nameFromShort;
-                    long _pos = m_io.Pos;
-                    m_io.Seek(0);
-                    _nameFromShort = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(0, false, true, false));
-                    m_io.Seek(_pos);
+                    if (NameZeroes != 0) {
+                        long _pos = m_io.Pos;
+                        m_io.Seek(0);
+                        _nameFromShort = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(0, false, true, false));
+                        m_io.Seek(_pos);
+                    }
                     f_nameFromShort = true;
                     return _nameFromShort;
                 }

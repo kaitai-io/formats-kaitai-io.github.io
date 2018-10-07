@@ -683,11 +683,13 @@ class Annoyingstring extends \Kaitai\Struct\Struct {
     public function nameFromOffset() {
         if ($this->_m_nameFromOffset !== null)
             return $this->_m_nameFromOffset;
-        $io = $this->_root()->_io();
-        $_pos = $io->pos();
-        $io->seek(($this->nameZeroes() == 0 ? ($this->_parent()->_parent()->symbolNameTableOffset() + $this->nameOffset()) : 0));
-        $this->_m_nameFromOffset = \Kaitai\Struct\Stream::bytesToStr($io->readBytesTerm(0, false, true, false), "ascii");
-        $io->seek($_pos);
+        if ($this->nameZeroes() == 0) {
+            $io = $this->_root()->_io();
+            $_pos = $io->pos();
+            $io->seek(($this->nameZeroes() == 0 ? ($this->_parent()->_parent()->symbolNameTableOffset() + $this->nameOffset()) : 0));
+            $this->_m_nameFromOffset = \Kaitai\Struct\Stream::bytesToStr($io->readBytesTerm(0, false, true, false), "ascii");
+            $io->seek($_pos);
+        }
         return $this->_m_nameFromOffset;
     }
     protected $_m_nameOffset;
@@ -721,10 +723,12 @@ class Annoyingstring extends \Kaitai\Struct\Struct {
     public function nameFromShort() {
         if ($this->_m_nameFromShort !== null)
             return $this->_m_nameFromShort;
-        $_pos = $this->_io->pos();
-        $this->_io->seek(0);
-        $this->_m_nameFromShort = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, false), "ascii");
-        $this->_io->seek($_pos);
+        if ($this->nameZeroes() != 0) {
+            $_pos = $this->_io->pos();
+            $this->_io->seek(0);
+            $this->_m_nameFromShort = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, false), "ascii");
+            $this->_io->seek($_pos);
+        }
         return $this->_m_nameFromShort;
     }
 }

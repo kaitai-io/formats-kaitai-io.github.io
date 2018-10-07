@@ -773,11 +773,13 @@ class MicrosoftPe &lt; Kaitai::Struct::Struct
     end
     def name_from_offset
       return @name_from_offset unless @name_from_offset.nil?
-      io = _root._io
-      _pos = io.pos
-      io.seek((name_zeroes == 0 ? (_parent._parent.symbol_name_table_offset + name_offset) : 0))
-      @name_from_offset = (io.read_bytes_term(0, false, true, false)).force_encoding(&quot;ascii&quot;)
-      io.seek(_pos)
+      if name_zeroes == 0
+        io = _root._io
+        _pos = io.pos
+        io.seek((name_zeroes == 0 ? (_parent._parent.symbol_name_table_offset + name_offset) : 0))
+        @name_from_offset = (io.read_bytes_term(0, false, true, false)).force_encoding(&quot;ascii&quot;)
+        io.seek(_pos)
+      end
       @name_from_offset
     end
     def name_offset
@@ -803,10 +805,12 @@ class MicrosoftPe &lt; Kaitai::Struct::Struct
     end
     def name_from_short
       return @name_from_short unless @name_from_short.nil?
-      _pos = @_io.pos
-      @_io.seek(0)
-      @name_from_short = (@_io.read_bytes_term(0, false, true, false)).force_encoding(&quot;ascii&quot;)
-      @_io.seek(_pos)
+      if name_zeroes != 0
+        _pos = @_io.pos
+        @_io.seek(0)
+        @name_from_short = (@_io.read_bytes_term(0, false, true, false)).force_encoding(&quot;ascii&quot;)
+        @_io.seek(_pos)
+      end
       @name_from_short
     end
   end

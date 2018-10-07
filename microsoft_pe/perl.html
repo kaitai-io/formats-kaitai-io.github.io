@@ -1425,11 +1425,13 @@ sub _read {
 sub name_from_offset {
     my ($self) = @_;
     return $self-&gt;{name_from_offset} if ($self-&gt;{name_from_offset});
-    my $io = $self-&gt;_root()-&gt;_io();
-    my $_pos = $io-&gt;pos();
-    $io-&gt;seek(($self-&gt;name_zeroes() == 0 ? ($self-&gt;_parent()-&gt;_parent()-&gt;symbol_name_table_offset() + $self-&gt;name_offset()) : 0));
-    $self-&gt;{name_from_offset} = Encode::decode(&quot;ascii&quot;, $io-&gt;read_bytes_term(0, 0, 1, 0));
-    $io-&gt;seek($_pos);
+    if ($self-&gt;name_zeroes() == 0) {
+        my $io = $self-&gt;_root()-&gt;_io();
+        my $_pos = $io-&gt;pos();
+        $io-&gt;seek(($self-&gt;name_zeroes() == 0 ? ($self-&gt;_parent()-&gt;_parent()-&gt;symbol_name_table_offset() + $self-&gt;name_offset()) : 0));
+        $self-&gt;{name_from_offset} = Encode::decode(&quot;ascii&quot;, $io-&gt;read_bytes_term(0, 0, 1, 0));
+        $io-&gt;seek($_pos);
+    }
     return $self-&gt;{name_from_offset};
 }
 
@@ -1463,10 +1465,12 @@ sub name_zeroes {
 sub name_from_short {
     my ($self) = @_;
     return $self-&gt;{name_from_short} if ($self-&gt;{name_from_short});
-    my $_pos = $self-&gt;{_io}-&gt;pos();
-    $self-&gt;{_io}-&gt;seek(0);
-    $self-&gt;{name_from_short} = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes_term(0, 0, 1, 0));
-    $self-&gt;{_io}-&gt;seek($_pos);
+    if ($self-&gt;name_zeroes() != 0) {
+        my $_pos = $self-&gt;{_io}-&gt;pos();
+        $self-&gt;{_io}-&gt;seek(0);
+        $self-&gt;{name_from_short} = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes_term(0, 0, 1, 0));
+        $self-&gt;{_io}-&gt;seek($_pos);
+    }
     return $self-&gt;{name_from_short};
 }
 

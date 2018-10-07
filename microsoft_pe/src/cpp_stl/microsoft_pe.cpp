@@ -498,24 +498,28 @@ void microsoft_pe_t::annoyingstring_t::_read() {
 }
 
 microsoft_pe_t::annoyingstring_t::~annoyingstring_t() {
-    if (f_name_from_offset) {
+    if (f_name_from_offset && !n_name_from_offset) {
     }
     if (f_name_offset) {
     }
     if (f_name_zeroes) {
     }
-    if (f_name_from_short) {
+    if (f_name_from_short && !n_name_from_short) {
     }
 }
 
 std::string microsoft_pe_t::annoyingstring_t::name_from_offset() {
     if (f_name_from_offset)
         return m_name_from_offset;
-    kaitai::kstream *io = _root()->_io();
-    std::streampos _pos = io->pos();
-    io->seek(((name_zeroes() == 0) ? ((_parent()->_parent()->symbol_name_table_offset() + name_offset())) : (0)));
-    m_name_from_offset = kaitai::kstream::bytes_to_str(io->read_bytes_term(0, false, true, false), std::string("ascii"));
-    io->seek(_pos);
+    n_name_from_offset = true;
+    if (name_zeroes() == 0) {
+        n_name_from_offset = false;
+        kaitai::kstream *io = _root()->_io();
+        std::streampos _pos = io->pos();
+        io->seek(((name_zeroes() == 0) ? ((_parent()->_parent()->symbol_name_table_offset() + name_offset())) : (0)));
+        m_name_from_offset = kaitai::kstream::bytes_to_str(io->read_bytes_term(0, false, true, false), std::string("ascii"));
+        io->seek(_pos);
+    }
     f_name_from_offset = true;
     return m_name_from_offset;
 }
@@ -553,10 +557,14 @@ uint32_t microsoft_pe_t::annoyingstring_t::name_zeroes() {
 std::string microsoft_pe_t::annoyingstring_t::name_from_short() {
     if (f_name_from_short)
         return m_name_from_short;
-    std::streampos _pos = m__io->pos();
-    m__io->seek(0);
-    m_name_from_short = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, false), std::string("ascii"));
-    m__io->seek(_pos);
+    n_name_from_short = true;
+    if (name_zeroes() != 0) {
+        n_name_from_short = false;
+        std::streampos _pos = m__io->pos();
+        m__io->seek(0);
+        m_name_from_short = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, false), std::string("ascii"));
+        m__io->seek(_pos);
+    }
     f_name_from_short = true;
     return m_name_from_short;
 }

@@ -559,11 +559,13 @@ var MicrosoftPe = (function() {
       get: function() {
         if (this._m_nameFromOffset !== undefined)
           return this._m_nameFromOffset;
-        var io = this._root._io;
-        var _pos = io.pos;
-        io.seek((this.nameZeroes == 0 ? (this._parent._parent.symbolNameTableOffset + this.nameOffset) : 0));
-        this._m_nameFromOffset = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, false), "ascii");
-        io.seek(_pos);
+        if (this.nameZeroes == 0) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek((this.nameZeroes == 0 ? (this._parent._parent.symbolNameTableOffset + this.nameOffset) : 0));
+          this._m_nameFromOffset = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, false), "ascii");
+          io.seek(_pos);
+        }
         return this._m_nameFromOffset;
       }
     });
@@ -601,10 +603,12 @@ var MicrosoftPe = (function() {
       get: function() {
         if (this._m_nameFromShort !== undefined)
           return this._m_nameFromShort;
-        var _pos = this._io.pos;
-        this._io.seek(0);
-        this._m_nameFromShort = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, false), "ascii");
-        this._io.seek(_pos);
+        if (this.nameZeroes != 0) {
+          var _pos = this._io.pos;
+          this._io.seek(0);
+          this._m_nameFromShort = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, false), "ascii");
+          this._io.seek(_pos);
+        }
         return this._m_nameFromShort;
       }
     });

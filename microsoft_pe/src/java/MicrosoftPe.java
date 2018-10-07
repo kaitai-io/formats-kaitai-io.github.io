@@ -904,11 +904,13 @@ public class MicrosoftPe extends KaitaiStruct {
         public String nameFromOffset() {
             if (this.nameFromOffset != null)
                 return this.nameFromOffset;
-            KaitaiStream io = _root._io();
-            long _pos = io.pos();
-            io.seek((nameZeroes() == 0 ? (_parent()._parent().symbolNameTableOffset() + nameOffset()) : 0));
-            this.nameFromOffset = new String(io.readBytesTerm(0, false, true, false), Charset.forName("ascii"));
-            io.seek(_pos);
+            if (nameZeroes() == 0) {
+                KaitaiStream io = _root._io();
+                long _pos = io.pos();
+                io.seek((nameZeroes() == 0 ? (_parent()._parent().symbolNameTableOffset() + nameOffset()) : 0));
+                this.nameFromOffset = new String(io.readBytesTerm(0, false, true, false), Charset.forName("ascii"));
+                io.seek(_pos);
+            }
             return this.nameFromOffset;
         }
         private Long nameOffset;
@@ -942,10 +944,12 @@ public class MicrosoftPe extends KaitaiStruct {
         public String nameFromShort() {
             if (this.nameFromShort != null)
                 return this.nameFromShort;
-            long _pos = this._io.pos();
-            this._io.seek(0);
-            this.nameFromShort = new String(this._io.readBytesTerm(0, false, true, false), Charset.forName("ascii"));
-            this._io.seek(_pos);
+            if (nameZeroes() != 0) {
+                long _pos = this._io.pos();
+                this._io.seek(0);
+                this.nameFromShort = new String(this._io.readBytesTerm(0, false, true, false), Charset.forName("ascii"));
+                this._io.seek(_pos);
+            }
             return this.nameFromShort;
         }
         private MicrosoftPe _root;

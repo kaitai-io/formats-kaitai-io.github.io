@@ -917,11 +917,13 @@ class Annoyingstring extends \Kaitai\Struct\Struct {
     public function nameFromOffset() {
         if ($this-&gt;_m_nameFromOffset !== null)
             return $this-&gt;_m_nameFromOffset;
-        $io = $this-&gt;_root()-&gt;_io();
-        $_pos = $io-&gt;pos();
-        $io-&gt;seek(($this-&gt;nameZeroes() == 0 ? ($this-&gt;_parent()-&gt;_parent()-&gt;symbolNameTableOffset() + $this-&gt;nameOffset()) : 0));
-        $this-&gt;_m_nameFromOffset = \Kaitai\Struct\Stream::bytesToStr($io-&gt;readBytesTerm(0, false, true, false), &quot;ascii&quot;);
-        $io-&gt;seek($_pos);
+        if ($this-&gt;nameZeroes() == 0) {
+            $io = $this-&gt;_root()-&gt;_io();
+            $_pos = $io-&gt;pos();
+            $io-&gt;seek(($this-&gt;nameZeroes() == 0 ? ($this-&gt;_parent()-&gt;_parent()-&gt;symbolNameTableOffset() + $this-&gt;nameOffset()) : 0));
+            $this-&gt;_m_nameFromOffset = \Kaitai\Struct\Stream::bytesToStr($io-&gt;readBytesTerm(0, false, true, false), &quot;ascii&quot;);
+            $io-&gt;seek($_pos);
+        }
         return $this-&gt;_m_nameFromOffset;
     }
     protected $_m_nameOffset;
@@ -955,10 +957,12 @@ class Annoyingstring extends \Kaitai\Struct\Struct {
     public function nameFromShort() {
         if ($this-&gt;_m_nameFromShort !== null)
             return $this-&gt;_m_nameFromShort;
-        $_pos = $this-&gt;_io-&gt;pos();
-        $this-&gt;_io-&gt;seek(0);
-        $this-&gt;_m_nameFromShort = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytesTerm(0, false, true, false), &quot;ascii&quot;);
-        $this-&gt;_io-&gt;seek($_pos);
+        if ($this-&gt;nameZeroes() != 0) {
+            $_pos = $this-&gt;_io-&gt;pos();
+            $this-&gt;_io-&gt;seek(0);
+            $this-&gt;_m_nameFromShort = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytesTerm(0, false, true, false), &quot;ascii&quot;);
+            $this-&gt;_io-&gt;seek($_pos);
+        }
         return $this-&gt;_m_nameFromShort;
     }
 }
