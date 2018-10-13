@@ -9,6 +9,33 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
+
+/**
+ * ASN.1 (Abstract Syntax Notation One) DER (Distinguished Encoding
+ * Rules) is a standard-backed serialization scheme used in many
+ * different use-cases. Particularly popular usage scenarios are X.509
+ * certificates and some telecommunication / networking protocols.
+ * 
+ * DER is self-describing encoding scheme which allows representation
+ * of simple, atomic data elements, such as strings and numbers, and
+ * complex objects, such as sequences of other elements.
+ * 
+ * DER is a subset of BER (Basic Encoding Rules), with an emphasis on
+ * being non-ambiguous: there's always exactly one canonical way to
+ * encode a data structure defined in terms of ASN.1 using DER.
+ * 
+ * This spec allows full parsing of format syntax, but to understand
+ * the semantics, one would typically require a dictionary of Object
+ * Identifiers (OIDs), to match OID bodies against some human-readable
+ * list of constants. OIDs are covered by many different standards,
+ * so typically it's simpler to use a pre-compiled list of them, such
+ * as:
+ * 
+ * * https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg
+ * * http://oid-info.com/
+ * * https://www.alvestrand.no/objectid/top.html
+ * @see <a href="https://www.itu.int/rec/T-REC-X.690-201508-I/en">Source</a>
+ */
 public class Asn1Der extends KaitaiStruct {
     public static Asn1Der fromFile(String fileName) throws IOException {
         return new Asn1Der(new ByteBufferKaitaiStream(fileName));
@@ -88,6 +115,12 @@ public class Asn1Der extends KaitaiStruct {
             this.body = new BodyPrintableString(_io__raw_body, this, _root);
             break;
         }
+        case OBJECT_ID: {
+            this._raw_body = this._io.readBytes(len().result());
+            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+            this.body = new BodyObjectId(_io__raw_body, this, _root);
+            break;
+        }
         case SET: {
             this._raw_body = this._io.readBytes(len().result());
             KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
@@ -99,48 +132,6 @@ public class Asn1Der extends KaitaiStruct {
             break;
         }
         }
-    }
-    public static class LenEncoded extends KaitaiStruct {
-        public static LenEncoded fromFile(String fileName) throws IOException {
-            return new LenEncoded(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public LenEncoded(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public LenEncoded(KaitaiStream _io, Asn1Der _parent) {
-            this(_io, _parent, null);
-        }
-
-        public LenEncoded(KaitaiStream _io, Asn1Der _parent, Asn1Der _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.b1 = this._io.readU1();
-            if (b1() == 130) {
-                this.int2 = this._io.readU2be();
-            }
-        }
-        private Integer result;
-        public Integer result() {
-            if (this.result != null)
-                return this.result;
-            int _tmp = (int) (((b1() & 128) == 0 ? b1() : int2()));
-            this.result = _tmp;
-            return this.result;
-        }
-        private int b1;
-        private Integer int2;
-        private Asn1Der _root;
-        private Asn1Der _parent;
-        public int b1() { return b1; }
-        public Integer int2() { return int2; }
-        public Asn1Der _root() { return _root; }
-        public Asn1Der _parent() { return _parent; }
     }
     public static class BodySequence extends KaitaiStruct {
         public static BodySequence fromFile(String fileName) throws IOException {
@@ -204,6 +195,100 @@ public class Asn1Der extends KaitaiStruct {
         private Asn1Der _root;
         private Asn1Der _parent;
         public String str() { return str; }
+        public Asn1Der _root() { return _root; }
+        public Asn1Der _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier">Source</a>
+     */
+    public static class BodyObjectId extends KaitaiStruct {
+        public static BodyObjectId fromFile(String fileName) throws IOException {
+            return new BodyObjectId(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BodyObjectId(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BodyObjectId(KaitaiStream _io, Asn1Der _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BodyObjectId(KaitaiStream _io, Asn1Der _parent, Asn1Der _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.firstAndSecond = this._io.readU1();
+            this.rest = this._io.readBytesFull();
+        }
+        private Integer first;
+        public Integer first() {
+            if (this.first != null)
+                return this.first;
+            int _tmp = (int) ((firstAndSecond() / 40));
+            this.first = _tmp;
+            return this.first;
+        }
+        private Integer second;
+        public Integer second() {
+            if (this.second != null)
+                return this.second;
+            int _tmp = (int) (KaitaiStream.mod(firstAndSecond(), 40));
+            this.second = _tmp;
+            return this.second;
+        }
+        private int firstAndSecond;
+        private byte[] rest;
+        private Asn1Der _root;
+        private Asn1Der _parent;
+        public int firstAndSecond() { return firstAndSecond; }
+        public byte[] rest() { return rest; }
+        public Asn1Der _root() { return _root; }
+        public Asn1Der _parent() { return _parent; }
+    }
+    public static class LenEncoded extends KaitaiStruct {
+        public static LenEncoded fromFile(String fileName) throws IOException {
+            return new LenEncoded(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public LenEncoded(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public LenEncoded(KaitaiStream _io, Asn1Der _parent) {
+            this(_io, _parent, null);
+        }
+
+        public LenEncoded(KaitaiStream _io, Asn1Der _parent, Asn1Der _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.b1 = this._io.readU1();
+            if (b1() == 130) {
+                this.int2 = this._io.readU2be();
+            }
+        }
+        private Integer result;
+        public Integer result() {
+            if (this.result != null)
+                return this.result;
+            int _tmp = (int) (((b1() & 128) == 0 ? b1() : int2()));
+            this.result = _tmp;
+            return this.result;
+        }
+        private int b1;
+        private Integer int2;
+        private Asn1Der _root;
+        private Asn1Der _parent;
+        public int b1() { return b1; }
+        public Integer int2() { return int2; }
         public Asn1Der _root() { return _root; }
         public Asn1Der _parent() { return _parent; }
     }

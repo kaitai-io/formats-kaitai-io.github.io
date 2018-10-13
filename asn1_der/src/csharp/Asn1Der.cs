@@ -4,6 +4,35 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// ASN.1 (Abstract Syntax Notation One) DER (Distinguished Encoding
+    /// Rules) is a standard-backed serialization scheme used in many
+    /// different use-cases. Particularly popular usage scenarios are X.509
+    /// certificates and some telecommunication / networking protocols.
+    /// 
+    /// DER is self-describing encoding scheme which allows representation
+    /// of simple, atomic data elements, such as strings and numbers, and
+    /// complex objects, such as sequences of other elements.
+    /// 
+    /// DER is a subset of BER (Basic Encoding Rules), with an emphasis on
+    /// being non-ambiguous: there's always exactly one canonical way to
+    /// encode a data structure defined in terms of ASN.1 using DER.
+    /// 
+    /// This spec allows full parsing of format syntax, but to understand
+    /// the semantics, one would typically require a dictionary of Object
+    /// Identifiers (OIDs), to match OID bodies against some human-readable
+    /// list of constants. OIDs are covered by many different standards,
+    /// so typically it's simpler to use a pre-compiled list of them, such
+    /// as:
+    /// 
+    /// * https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg
+    /// * http://oid-info.com/
+    /// * https://www.alvestrand.no/objectid/top.html
+    /// </summary>
+    /// <remarks>
+    /// Reference: <a href="https://www.itu.int/rec/T-REC-X.690-201508-I/en">Source</a>
+    /// </remarks>
     public partial class Asn1Der : KaitaiStruct
     {
         public static Asn1Der FromFile(string fileName)
@@ -69,6 +98,12 @@ namespace Kaitai
                 _body = new BodyPrintableString(io___raw_body, this, m_root);
                 break;
             }
+            case TypeTag.ObjectId: {
+                __raw_body = m_io.ReadBytes(Len.Result);
+                var io___raw_body = new KaitaiStream(__raw_body);
+                _body = new BodyObjectId(io___raw_body, this, m_root);
+                break;
+            }
             case TypeTag.Set: {
                 __raw_body = m_io.ReadBytes(Len.Result);
                 var io___raw_body = new KaitaiStream(__raw_body);
@@ -80,49 +115,6 @@ namespace Kaitai
                 break;
             }
             }
-        }
-        public partial class LenEncoded : KaitaiStruct
-        {
-            public static LenEncoded FromFile(string fileName)
-            {
-                return new LenEncoded(new KaitaiStream(fileName));
-            }
-
-            public LenEncoded(KaitaiStream p__io, Asn1Der p__parent = null, Asn1Der p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_result = false;
-                _read();
-            }
-            private void _read()
-            {
-                _b1 = m_io.ReadU1();
-                if (B1 == 130) {
-                    _int2 = m_io.ReadU2be();
-                }
-            }
-            private bool f_result;
-            private ushort _result;
-            public ushort Result
-            {
-                get
-                {
-                    if (f_result)
-                        return _result;
-                    _result = (ushort) (((B1 & 128) == 0 ? B1 : Int2));
-                    f_result = true;
-                    return _result;
-                }
-            }
-            private byte _b1;
-            private ushort? _int2;
-            private Asn1Der m_root;
-            private Asn1Der m_parent;
-            public byte B1 { get { return _b1; } }
-            public ushort? Int2 { get { return _int2; } }
-            public Asn1Der M_Root { get { return m_root; } }
-            public Asn1Der M_Parent { get { return m_parent; } }
         }
         public partial class BodySequence : KaitaiStruct
         {
@@ -176,6 +168,108 @@ namespace Kaitai
             private Asn1Der m_root;
             private Asn1Der m_parent;
             public string Str { get { return _str; } }
+            public Asn1Der M_Root { get { return m_root; } }
+            public Asn1Der M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier">Source</a>
+        /// </remarks>
+        public partial class BodyObjectId : KaitaiStruct
+        {
+            public static BodyObjectId FromFile(string fileName)
+            {
+                return new BodyObjectId(new KaitaiStream(fileName));
+            }
+
+            public BodyObjectId(KaitaiStream p__io, Asn1Der p__parent = null, Asn1Der p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_first = false;
+                f_second = false;
+                _read();
+            }
+            private void _read()
+            {
+                _firstAndSecond = m_io.ReadU1();
+                _rest = m_io.ReadBytesFull();
+            }
+            private bool f_first;
+            private int _first;
+            public int First
+            {
+                get
+                {
+                    if (f_first)
+                        return _first;
+                    _first = (int) ((FirstAndSecond / 40));
+                    f_first = true;
+                    return _first;
+                }
+            }
+            private bool f_second;
+            private int _second;
+            public int Second
+            {
+                get
+                {
+                    if (f_second)
+                        return _second;
+                    _second = (int) (KaitaiStream.Mod(FirstAndSecond, 40));
+                    f_second = true;
+                    return _second;
+                }
+            }
+            private byte _firstAndSecond;
+            private byte[] _rest;
+            private Asn1Der m_root;
+            private Asn1Der m_parent;
+            public byte FirstAndSecond { get { return _firstAndSecond; } }
+            public byte[] Rest { get { return _rest; } }
+            public Asn1Der M_Root { get { return m_root; } }
+            public Asn1Der M_Parent { get { return m_parent; } }
+        }
+        public partial class LenEncoded : KaitaiStruct
+        {
+            public static LenEncoded FromFile(string fileName)
+            {
+                return new LenEncoded(new KaitaiStream(fileName));
+            }
+
+            public LenEncoded(KaitaiStream p__io, Asn1Der p__parent = null, Asn1Der p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_result = false;
+                _read();
+            }
+            private void _read()
+            {
+                _b1 = m_io.ReadU1();
+                if (B1 == 130) {
+                    _int2 = m_io.ReadU2be();
+                }
+            }
+            private bool f_result;
+            private ushort _result;
+            public ushort Result
+            {
+                get
+                {
+                    if (f_result)
+                        return _result;
+                    _result = (ushort) (((B1 & 128) == 0 ? B1 : Int2));
+                    f_result = true;
+                    return _result;
+                }
+            }
+            private byte _b1;
+            private ushort? _int2;
+            private Asn1Der m_root;
+            private Asn1Der m_parent;
+            public byte B1 { get { return _b1; } }
+            public ushort? Int2 { get { return _int2; } }
             public Asn1Der M_Root { get { return m_root; } }
             public Asn1Der M_Parent { get { return m_parent; } }
         }

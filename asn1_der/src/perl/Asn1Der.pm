@@ -78,6 +78,11 @@ sub _read {
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Asn1Der::BodyPrintableString->new($io__raw_body, $self, $self->{_root});
     }
+    elsif ($_on == $TYPE_TAG_OBJECT_ID) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Asn1Der::BodyObjectId->new($io__raw_body, $self, $self->{_root});
+    }
     elsif ($_on == $TYPE_TAG_SET) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
@@ -106,59 +111,6 @@ sub body {
 sub _raw_body {
     my ($self) = @_;
     return $self->{_raw_body};
-}
-
-########################################################################
-package Asn1Der::LenEncoded;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{b1} = $self->{_io}->read_u1();
-    if ($self->b1() == 130) {
-        $self->{int2} = $self->{_io}->read_u2be();
-    }
-}
-
-sub result {
-    my ($self) = @_;
-    return $self->{result} if ($self->{result});
-    $self->{result} = (($self->b1() & 128) == 0 ? $self->b1() : $self->int2());
-    return $self->{result};
-}
-
-sub b1 {
-    my ($self) = @_;
-    return $self->{b1};
-}
-
-sub int2 {
-    my ($self) = @_;
-    return $self->{int2};
 }
 
 ########################################################################
@@ -238,6 +190,117 @@ sub _read {
 sub str {
     my ($self) = @_;
     return $self->{str};
+}
+
+########################################################################
+package Asn1Der::BodyObjectId;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{first_and_second} = $self->{_io}->read_u1();
+    $self->{rest} = $self->{_io}->read_bytes_full();
+}
+
+sub first {
+    my ($self) = @_;
+    return $self->{first} if ($self->{first});
+    $self->{first} = int($self->first_and_second() / 40);
+    return $self->{first};
+}
+
+sub second {
+    my ($self) = @_;
+    return $self->{second} if ($self->{second});
+    $self->{second} = ($self->first_and_second() % 40);
+    return $self->{second};
+}
+
+sub first_and_second {
+    my ($self) = @_;
+    return $self->{first_and_second};
+}
+
+sub rest {
+    my ($self) = @_;
+    return $self->{rest};
+}
+
+########################################################################
+package Asn1Der::LenEncoded;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{b1} = $self->{_io}->read_u1();
+    if ($self->b1() == 130) {
+        $self->{int2} = $self->{_io}->read_u2be();
+    }
+}
+
+sub result {
+    my ($self) = @_;
+    return $self->{result} if ($self->{result});
+    $self->{result} = (($self->b1() & 128) == 0 ? $self->b1() : $self->int2());
+    return $self->{result};
+}
+
+sub b1 {
+    my ($self) = @_;
+    return $self->{b1};
+}
+
+sub int2 {
+    my ($self) = @_;
+    return $self->{int2};
 }
 
 ########################################################################

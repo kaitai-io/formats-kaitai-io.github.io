@@ -6,6 +6,32 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# ASN.1 (Abstract Syntax Notation One) DER (Distinguished Encoding
+# Rules) is a standard-backed serialization scheme used in many
+# different use-cases. Particularly popular usage scenarios are X.509
+# certificates and some telecommunication / networking protocols.
+# 
+# DER is self-describing encoding scheme which allows representation
+# of simple, atomic data elements, such as strings and numbers, and
+# complex objects, such as sequences of other elements.
+# 
+# DER is a subset of BER (Basic Encoding Rules), with an emphasis on
+# being non-ambiguous: there's always exactly one canonical way to
+# encode a data structure defined in terms of ASN.1 using DER.
+# 
+# This spec allows full parsing of format syntax, but to understand
+# the semantics, one would typically require a dictionary of Object
+# Identifiers (OIDs), to match OID bodies against some human-readable
+# list of constants. OIDs are covered by many different standards,
+# so typically it's simpler to use a pre-compiled list of them, such
+# as:
+# 
+# * https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg
+# * http://oid-info.com/
+# * https://www.alvestrand.no/objectid/top.html
+# @see https://www.itu.int/rec/T-REC-X.690-201508-I/en Source
 class Asn1Der < Kaitai::Struct::Struct
 
   TYPE_TAG = {
@@ -55,6 +81,10 @@ class Asn1Der < Kaitai::Struct::Struct
       @_raw_body = @_io.read_bytes(len.result)
       io = Kaitai::Struct::Stream.new(@_raw_body)
       @body = BodyPrintableString.new(io, self, @_root)
+    when :type_tag_object_id
+      @_raw_body = @_io.read_bytes(len.result)
+      io = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = BodyObjectId.new(io, self, @_root)
     when :type_tag_set
       @_raw_body = @_io.read_bytes(len.result)
       io = Kaitai::Struct::Stream.new(@_raw_body)
@@ -63,27 +93,6 @@ class Asn1Der < Kaitai::Struct::Struct
       @body = @_io.read_bytes(len.result)
     end
     self
-  end
-  class LenEncoded < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @b1 = @_io.read_u1
-      if b1 == 130
-        @int2 = @_io.read_u2be
-      end
-      self
-    end
-    def result
-      return @result unless @result.nil?
-      @result = ((b1 & 128) == 0 ? b1 : int2)
-      @result
-    end
-    attr_reader :b1
-    attr_reader :int2
   end
   class BodySequence < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -113,6 +122,54 @@ class Asn1Der < Kaitai::Struct::Struct
       self
     end
     attr_reader :str
+  end
+
+  ##
+  # @see https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier Source
+  class BodyObjectId < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @first_and_second = @_io.read_u1
+      @rest = @_io.read_bytes_full
+      self
+    end
+    def first
+      return @first unless @first.nil?
+      @first = (first_and_second / 40)
+      @first
+    end
+    def second
+      return @second unless @second.nil?
+      @second = (first_and_second % 40)
+      @second
+    end
+    attr_reader :first_and_second
+    attr_reader :rest
+  end
+  class LenEncoded < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @b1 = @_io.read_u1
+      if b1 == 130
+        @int2 = @_io.read_u2be
+      end
+      self
+    end
+    def result
+      return @result unless @result.nil?
+      @result = ((b1 & 128) == 0 ? b1 : int2)
+      @result
+    end
+    attr_reader :b1
+    attr_reader :int2
   end
   class BodyPrintableString < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)

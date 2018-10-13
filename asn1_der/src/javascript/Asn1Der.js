@@ -9,6 +9,33 @@
     root.Asn1Der = factory(root.KaitaiStream);
   }
 }(this, function (KaitaiStream) {
+/**
+ * ASN.1 (Abstract Syntax Notation One) DER (Distinguished Encoding
+ * Rules) is a standard-backed serialization scheme used in many
+ * different use-cases. Particularly popular usage scenarios are X.509
+ * certificates and some telecommunication / networking protocols.
+ * 
+ * DER is self-describing encoding scheme which allows representation
+ * of simple, atomic data elements, such as strings and numbers, and
+ * complex objects, such as sequences of other elements.
+ * 
+ * DER is a subset of BER (Basic Encoding Rules), with an emphasis on
+ * being non-ambiguous: there's always exactly one canonical way to
+ * encode a data structure defined in terms of ASN.1 using DER.
+ * 
+ * This spec allows full parsing of format syntax, but to understand
+ * the semantics, one would typically require a dictionary of Object
+ * Identifiers (OIDs), to match OID bodies against some human-readable
+ * list of constants. OIDs are covered by many different standards,
+ * so typically it's simpler to use a pre-compiled list of them, such
+ * as:
+ * 
+ * * https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg
+ * * http://oid-info.com/
+ * * https://www.alvestrand.no/objectid/top.html
+ * @see {@link https://www.itu.int/rec/T-REC-X.690-201508-I/en|Source}
+ */
+
 var Asn1Der = (function() {
   Asn1Der.TypeTag = Object.freeze({
     END_OF_CONTENT: 0,
@@ -83,6 +110,11 @@ var Asn1Der = (function() {
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new BodyPrintableString(_io__raw_body, this, this._root);
       break;
+    case Asn1Der.TypeTag.OBJECT_ID:
+      this._raw_body = this._io.readBytes(this.len.result);
+      var _io__raw_body = new KaitaiStream(this._raw_body);
+      this.body = new BodyObjectId(_io__raw_body, this, this._root);
+      break;
     case Asn1Der.TypeTag.SET:
       this._raw_body = this._io.readBytes(this.len.result);
       var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -93,32 +125,6 @@ var Asn1Der = (function() {
       break;
     }
   }
-
-  var LenEncoded = Asn1Der.LenEncoded = (function() {
-    function LenEncoded(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    LenEncoded.prototype._read = function() {
-      this.b1 = this._io.readU1();
-      if (this.b1 == 130) {
-        this.int2 = this._io.readU2be();
-      }
-    }
-    Object.defineProperty(LenEncoded.prototype, 'result', {
-      get: function() {
-        if (this._m_result !== undefined)
-          return this._m_result;
-        this._m_result = ((this.b1 & 128) == 0 ? this.b1 : this.int2);
-        return this._m_result;
-      }
-    });
-
-    return LenEncoded;
-  })();
 
   var BodySequence = Asn1Der.BodySequence = (function() {
     function BodySequence(_io, _parent, _root) {
@@ -153,6 +159,68 @@ var Asn1Der = (function() {
     }
 
     return BodyUtf8string;
+  })();
+
+  /**
+   * @see {@link https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier|Source}
+   */
+
+  var BodyObjectId = Asn1Der.BodyObjectId = (function() {
+    function BodyObjectId(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    BodyObjectId.prototype._read = function() {
+      this.firstAndSecond = this._io.readU1();
+      this.rest = this._io.readBytesFull();
+    }
+    Object.defineProperty(BodyObjectId.prototype, 'first', {
+      get: function() {
+        if (this._m_first !== undefined)
+          return this._m_first;
+        this._m_first = Math.floor(this.firstAndSecond / 40);
+        return this._m_first;
+      }
+    });
+    Object.defineProperty(BodyObjectId.prototype, 'second', {
+      get: function() {
+        if (this._m_second !== undefined)
+          return this._m_second;
+        this._m_second = KaitaiStream.mod(this.firstAndSecond, 40);
+        return this._m_second;
+      }
+    });
+
+    return BodyObjectId;
+  })();
+
+  var LenEncoded = Asn1Der.LenEncoded = (function() {
+    function LenEncoded(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    LenEncoded.prototype._read = function() {
+      this.b1 = this._io.readU1();
+      if (this.b1 == 130) {
+        this.int2 = this._io.readU2be();
+      }
+    }
+    Object.defineProperty(LenEncoded.prototype, 'result', {
+      get: function() {
+        if (this._m_result !== undefined)
+          return this._m_result;
+        this._m_result = ((this.b1 & 128) == 0 ? this.b1 : this.int2);
+        return this._m_result;
+      }
+    });
+
+    return LenEncoded;
   })();
 
   var BodyPrintableString = Asn1Der.BodyPrintableString = (function() {
