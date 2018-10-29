@@ -1634,6 +1634,8 @@ class Machine {
     const IA_64 = 50;
     const X86_64 = 62;
     const AARCH64 = 183;
+    const RISCV = 243;
+    const BPF = 247;
 }
 
 namespace \Elf;

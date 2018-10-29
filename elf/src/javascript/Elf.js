@@ -151,6 +151,8 @@ var Elf = (function() {
     IA_64: 50,
     X86_64: 62,
     AARCH64: 183,
+    RISCV: 243,
+    BPF: 247,
 
     0: "NOT_SET",
     2: "SPARC",
@@ -162,6 +164,8 @@ var Elf = (function() {
     50: "IA_64",
     62: "X86_64",
     183: "AARCH64",
+    243: "RISCV",
+    247: "BPF",
   });
 
   Elf.DynamicArrayTags = Object.freeze({

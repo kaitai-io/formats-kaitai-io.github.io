@@ -98,6 +98,8 @@ namespace Kaitai
             Ia64 = 50,
             X8664 = 62,
             Aarch64 = 183,
+            Riscv = 243,
+            Bpf = 247,
         }
 
         public enum DynamicArrayTags

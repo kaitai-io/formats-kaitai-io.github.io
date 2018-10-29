@@ -124,12 +124,14 @@ public class Elf extends KaitaiStruct {
         SUPERH(42),
         IA_64(50),
         X86_64(62),
-        AARCH64(183);
+        AARCH64(183),
+        RISCV(243),
+        BPF(247);
 
         private final long id;
         Machine(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Machine> byId = new HashMap<Long, Machine>(10);
+        private static final Map<Long, Machine> byId = new HashMap<Long, Machine>(12);
         static {
             for (Machine e : Machine.values())
                 byId.put(e.id(), e);

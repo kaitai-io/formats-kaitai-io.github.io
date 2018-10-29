@@ -91,6 +91,8 @@ class Elf < Kaitai::Struct::Struct
     50 => :machine_ia_64,
     62 => :machine_x86_64,
     183 => :machine_aarch64,
+    243 => :machine_riscv,
+    247 => :machine_bpf,
   }
   I__MACHINE = MACHINE.invert
 

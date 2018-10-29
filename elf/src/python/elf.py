@@ -88,6 +88,8 @@ class Elf(KaitaiStruct):
         ia_64 = 50
         x86_64 = 62
         aarch64 = 183
+        riscv = 243
+        bpf = 247
 
     class DynamicArrayTags(Enum):
         null = 0
