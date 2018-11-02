@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SQLite3 database file: C++/STL parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Databases</li>
+        <li class="active">SQLite3 database file</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>SQLite3 database file:
+            
+            C++/STL parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>SQLite3 is a popular serverless SQL engine, implemented as a library
+to be used within other applications. It keeps its databases as
+regular disk files.</p>
+<p>Every database file is segmented into pages. First page (starting at
+the very beginning) is special: it contains a file-global header
+which specifies some data relevant to proper parsing (i.e. format
+versions, size of page, etc). After the header, normal contents of
+the first page follow.</p>
+<p>Each page would be of some type, and generally, they would be
+reached via the links starting from the first page. First page type
+(<code>root_page</code>) is always &quot;btree_page&quot;.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of SQLite3 database file
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="SQLite3 database file parsing Overview library">Overview</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="cpp_stl.html" title="SQLite3 database file parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="SQLite3 database file parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="SQLite3 database file parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="SQLite3 database file parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="SQLite3 database file parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="SQLite3 database file parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="SQLite3 database file parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="SQLite3 database file parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="SQLite3 database file parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+
+<p>Using Kaitai Struct in C++/STL usually consists of 3 steps.</p>
+
+<ol>
+    <li>We need to create an STL input stream (<code>std::istream</code>).
+        <ul>
+            <li>One can open a stream for reading from a local file:
+
+<pre><code class="cpp">#include &lt;fstream&gt;
+
+std::ifstream is("path/to/local/file.sqlite3", std::ifstream::binary);</code></pre></li>
+
+            <li>Or one can prepare a stream for reading from existing <code>std::string str</code>:
+
+<pre><code class="cpp">#include &lt;sstream&gt;
+
+std::istringstream is(str);</code></pre></li>
+
+            <li>Or one can parse arbitrary <code>char*</code> buffer in memory, given that we know its size:
+
+<pre><code class="cpp">#include &lt;sstream&gt;
+
+const char buf[] = { ... };
+std::string str(buf, sizeof buf);
+std::istringstream is(str);</code></pre></li>
+
+    </ul></li>
+
+    <li>We need to wrap our input stream into Kaitai stream:
+
+<pre><code class="cpp">#include &lt;kaitai/kaitaistream.h&gt;
+
+kaitai::kstream ks(&amp;is);</code></pre></li>
+
+    <li>And finally, we can invoke the parsing:
+
+<pre><code class="cpp">sqlite3_t data(&amp;ks);</code></pre></li>
+</ol>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="cpp">data.len_page_mod() // => The database page size in bytes. Must be a power of two between
+512 and 32768 inclusive, or the value 1 representing a page size
+of 65536.
+</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C++/STL source code to parse SQLite3 database file
+            
+        </h2>
+
+        
+
+        <h3>sqlite3.h</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl/sqlite3.h" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="cpp_stl">#ifndef SQLITE3_H_
+#define SQLITE3_H_
+
+// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include &quot;kaitai/kaitaistruct.h&quot;
+
+#include &lt;stdint.h&gt;
+#include &lt;vector&gt;
+
+#if KAITAI_STRUCT_VERSION &lt; 7000L
+#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
+#endif
+class vlq_base128_be_t;
+
+/**
+ * SQLite3 is a popular serverless SQL engine, implemented as a library
+ * to be used within other applications. It keeps its databases as
+ * regular disk files.
+ * 
+ * Every database file is segmented into pages. First page (starting at
+ * the very beginning) is special: it contains a file-global header
+ * which specifies some data relevant to proper parsing (i.e. format
+ * versions, size of page, etc). After the header, normal contents of
+ * the first page follow.
+ * 
+ * Each page would be of some type, and generally, they would be
+ * reached via the links starting from the first page. First page type
+ * (`root_page`) is always &quot;btree_page&quot;.
+ * \sa Source
+ */
+
+class sqlite3_t : public kaitai::kstruct {
+
+public:
+    class serial_t;
+    class btree_page_t;
+    class cell_index_leaf_t;
+    class serials_t;
+    class cell_table_leaf_t;
+    class cell_payload_t;
+    class cell_table_interior_t;
+    class cell_index_interior_t;
+    class column_content_t;
+    class ref_cell_t;
+
+    enum versions_t {
+        VERSIONS_LEGACY = 1,
+        VERSIONS_WAL = 2
+    };
+
+    enum encodings_t {
+        ENCODINGS_UTF_8 = 1,
+        ENCODINGS_UTF_16LE = 2,
+        ENCODINGS_UTF_16BE = 3
+    };
+
+    sqlite3_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, sqlite3_t* p__root = 0);
+
+private:
+    void _read();
+
+public:
+    ~sqlite3_t();
+
+    class serial_t : public kaitai::kstruct {
+
+    public:
+
+        serial_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, sqlite3_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~serial_t();
+
+    private:
+        bool f_is_blob;
+        bool m_is_blob;
+
+    public:
+        bool is_blob();
+
+    private:
+        bool f_is_string;
+        bool m_is_string;
+
+    public:
+        bool is_string();
+
+    private:
+        bool f_len_content;
+        int32_t m_len_content;
+        bool n_len_content;
+
+    public:
+        bool _is_null_len_content() { len_content(); return n_len_content; };
+
+    private:
+
+    public:
+        int32_t len_content();
+
+    private:
+        vlq_base128_be_t* m_code;
+        sqlite3_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        vlq_base128_be_t* code() const { return m_code; }
+        sqlite3_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
+    class btree_page_t : public kaitai::kstruct {
+
+    public:
+
+        btree_page_t(kaitai::kstream* p__io, sqlite3_t* p__parent = 0, sqlite3_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~btree_page_t();
+
+    private:
+        uint8_t m_page_type;
+        uint16_t m_first_freeblock;
+        uint16_t m_num_cells;
+        uint16_t m_ofs_cells;
+        uint8_t m_num_frag_free_bytes;
+        uint32_t m_right_ptr;
+        bool n_right_ptr;
+
+    public:
+        bool _is_null_right_ptr() { right_ptr(); return n_right_ptr; };
+
+    private:
+        std::vector&lt;ref_cell_t*&gt;* m_cells;
+        sqlite3_t* m__root;
+        sqlite3_t* m__parent;
+
+    public:
+        uint8_t page_type() const { return m_page_type; }
+        uint16_t first_freeblock() const { return m_first_freeblock; }
+        uint16_t num_cells() const { return m_num_cells; }
+        uint16_t ofs_cells() const { return m_ofs_cells; }
+        uint8_t num_frag_free_bytes() const { return m_num_frag_free_bytes; }
+        uint32_t right_ptr() const { return m_right_ptr; }
+        std::vector&lt;ref_cell_t*&gt;* cells() const { return m_cells; }
+        sqlite3_t* _root() const { return m__root; }
+        sqlite3_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa Source
+     */
+
+    class cell_index_leaf_t : public kaitai::kstruct {
+
+    public:
+
+        cell_index_leaf_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent = 0, sqlite3_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~cell_index_leaf_t();
+
+    private:
+        vlq_base128_be_t* m_len_payload;
+        cell_payload_t* m_payload;
+        sqlite3_t* m__root;
+        sqlite3_t::ref_cell_t* m__parent;
+        std::string m__raw_payload;
+        kaitai::kstream* m__io__raw_payload;
+
+    public:
+        vlq_base128_be_t* len_payload() const { return m_len_payload; }
+        cell_payload_t* payload() const { return m_payload; }
+        sqlite3_t* _root() const { return m__root; }
+        sqlite3_t::ref_cell_t* _parent() const { return m__parent; }
+        std::string _raw_payload() const { return m__raw_payload; }
+        kaitai::kstream* _io__raw_payload() const { return m__io__raw_payload; }
+    };
+
+    class serials_t : public kaitai::kstruct {
+
+    public:
+
+        serials_t(kaitai::kstream* p__io, sqlite3_t::cell_payload_t* p__parent = 0, sqlite3_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~serials_t();
+
+    private:
+        std::vector&lt;vlq_base128_be_t*&gt;* m_entries;
+        sqlite3_t* m__root;
+        sqlite3_t::cell_payload_t* m__parent;
+
+    public:
+        std::vector&lt;vlq_base128_be_t*&gt;* entries() const { return m_entries; }
+        sqlite3_t* _root() const { return m__root; }
+        sqlite3_t::cell_payload_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa Source
+     */
+
+    class cell_table_leaf_t : public kaitai::kstruct {
+
+    public:
+
+        cell_table_leaf_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent = 0, sqlite3_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~cell_table_leaf_t();
+
+    private:
+        vlq_base128_be_t* m_len_payload;
+        vlq_base128_be_t* m_row_id;
+        cell_payload_t* m_payload;
+        sqlite3_t* m__root;
+        sqlite3_t::ref_cell_t* m__parent;
+        std::string m__raw_payload;
+        kaitai::kstream* m__io__raw_payload;
+
+    public:
+        vlq_base128_be_t* len_payload() const { return m_len_payload; }
+        vlq_base128_be_t* row_id() const { return m_row_id; }
+        cell_payload_t* payload() const { return m_payload; }
+        sqlite3_t* _root() const { return m__root; }
+        sqlite3_t::ref_cell_t* _parent() const { return m__parent; }
+        std::string _raw_payload() const { return m__raw_payload; }
+        kaitai::kstream* _io__raw_payload() const { return m__io__raw_payload; }
+    };
+
+    /**
+     * \sa Source
+     */
+
+    class cell_payload_t : public kaitai::kstruct {
+
+    public:
+
+        cell_payload_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, sqlite3_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~cell_payload_t();
+
+    private:
+        vlq_base128_be_t* m_len_header_and_len;
+        serials_t* m_column_serials;
+        std::vector&lt;column_content_t*&gt;* m_column_contents;
+        sqlite3_t* m__root;
+        kaitai::kstruct* m__parent;
+        std::string m__raw_column_serials;
+        kaitai::kstream* m__io__raw_column_serials;
+
+    public:
+        vlq_base128_be_t* len_header_and_len() const { return m_len_header_and_len; }
+        serials_t* column_serials() const { return m_column_serials; }
+        std::vector&lt;column_content_t*&gt;* column_contents() const { return m_column_contents; }
+        sqlite3_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+        std::string _raw_column_serials() const { return m__raw_column_serials; }
+        kaitai::kstream* _io__raw_column_serials() const { return m__io__raw_column_serials; }
+    };
+
+    /**
+     * \sa Source
+     */
+
+    class cell_table_interior_t : public kaitai::kstruct {
+
+    public:
+
+        cell_table_interior_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent = 0, sqlite3_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~cell_table_interior_t();
+
+    private:
+        uint32_t m_left_child_page;
+        vlq_base128_be_t* m_row_id;
+        sqlite3_t* m__root;
+        sqlite3_t::ref_cell_t* m__parent;
+
+    public:
+        uint32_t left_child_page() const { return m_left_child_page; }
+        vlq_base128_be_t* row_id() const { return m_row_id; }
+        sqlite3_t* _root() const { return m__root; }
+        sqlite3_t::ref_cell_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa Source
+     */
+
+    class cell_index_interior_t : public kaitai::kstruct {
+
+    public:
+
+        cell_index_interior_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent = 0, sqlite3_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~cell_index_interior_t();
+
+    private:
+        uint32_t m_left_child_page;
+        vlq_base128_be_t* m_len_payload;
+        cell_payload_t* m_payload;
+        sqlite3_t* m__root;
+        sqlite3_t::ref_cell_t* m__parent;
+        std::string m__raw_payload;
+        kaitai::kstream* m__io__raw_payload;
+
+    public:
+        uint32_t left_child_page() const { return m_left_child_page; }
+        vlq_base128_be_t* len_payload() const { return m_len_payload; }
+        cell_payload_t* payload() const { return m_payload; }
+        sqlite3_t* _root() const { return m__root; }
+        sqlite3_t::ref_cell_t* _parent() const { return m__parent; }
+        std::string _raw_payload() const { return m__raw_payload; }
+        kaitai::kstream* _io__raw_payload() const { return m__io__raw_payload; }
+    };
+
+    class column_content_t : public kaitai::kstruct {
+
+    public:
+
+        column_content_t(kaitai::kstruct* p_ser, kaitai::kstream* p__io, sqlite3_t::cell_payload_t* p__parent = 0, sqlite3_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~column_content_t();
+
+    private:
+        bool f_serial_type;
+        sqlite3_t::serial_t* m_serial_type;
+
+    public:
+        sqlite3_t::serial_t* serial_type();
+
+    private:
+        int32_t m_as_int;
+        bool n_as_int;
+
+    public:
+        bool _is_null_as_int() { as_int(); return n_as_int; };
+
+    private:
+        double m_as_float;
+        bool n_as_float;
+
+    public:
+        bool _is_null_as_float() { as_float(); return n_as_float; };
+
+    private:
+        std::string m_as_blob;
+        bool n_as_blob;
+
+    public:
+        bool _is_null_as_blob() { as_blob(); return n_as_blob; };
+
+    private:
+        std::string m_as_str;
+        kaitai::kstruct* m_ser;
+        sqlite3_t* m__root;
+        sqlite3_t::cell_payload_t* m__parent;
+
+    public:
+        int32_t as_int() const { return m_as_int; }
+        double as_float() const { return m_as_float; }
+        std::string as_blob() const { return m_as_blob; }
+        std::string as_str() const { return m_as_str; }
+        kaitai::kstruct* ser() const { return m_ser; }
+        sqlite3_t* _root() const { return m__root; }
+        sqlite3_t::cell_payload_t* _parent() const { return m__parent; }
+    };
+
+    class ref_cell_t : public kaitai::kstruct {
+
+    public:
+
+        ref_cell_t(kaitai::kstream* p__io, sqlite3_t::btree_page_t* p__parent = 0, sqlite3_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~ref_cell_t();
+
+    private:
+        bool f_body;
+        kaitai::kstruct* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
+
+    public:
+        kaitai::kstruct* body();
+
+    private:
+        uint16_t m_ofs_body;
+        sqlite3_t* m__root;
+        sqlite3_t::btree_page_t* m__parent;
+
+    public:
+        uint16_t ofs_body() const { return m_ofs_body; }
+        sqlite3_t* _root() const { return m__root; }
+        sqlite3_t::btree_page_t* _parent() const { return m__parent; }
+    };
+
+private:
+    bool f_len_page;
+    int32_t m_len_page;
+
+public:
+    int32_t len_page();
+
+private:
+    std::string m_magic;
+    uint16_t m_len_page_mod;
+    versions_t m_write_version;
+    versions_t m_read_version;
+    uint8_t m_reserved_space;
+    uint8_t m_max_payload_frac;
+    uint8_t m_min_payload_frac;
+    uint8_t m_leaf_payload_frac;
+    uint32_t m_file_change_counter;
+    uint32_t m_num_pages;
+    uint32_t m_first_freelist_trunk_page;
+    uint32_t m_num_freelist_pages;
+    uint32_t m_schema_cookie;
+    uint32_t m_schema_format;
+    uint32_t m_def_page_cache_size;
+    uint32_t m_largest_root_page;
+    encodings_t m_text_encoding;
+    uint32_t m_user_version;
+    uint32_t m_is_incremental_vacuum;
+    uint32_t m_application_id;
+    std::string m_reserved;
+    uint32_t m_version_valid_for;
+    uint32_t m_sqlite_version_number;
+    btree_page_t* m_root_page;
+    sqlite3_t* m__root;
+    kaitai::kstruct* m__parent;
+
+public:
+    std::string magic() const { return m_magic; }
+
+    /**
+     * The database page size in bytes. Must be a power of two between
+     * 512 and 32768 inclusive, or the value 1 representing a page size
+     * of 65536.
+     */
+    uint16_t len_page_mod() const { return m_len_page_mod; }
+    versions_t write_version() const { return m_write_version; }
+    versions_t read_version() const { return m_read_version; }
+
+    /**
+     * Bytes of unused &quot;reserved&quot; space at the end of each page. Usually 0.
+     */
+    uint8_t reserved_space() const { return m_reserved_space; }
+
+    /**
+     * Maximum embedded payload fraction. Must be 64.
+     */
+    uint8_t max_payload_frac() const { return m_max_payload_frac; }
+
+    /**
+     * Minimum embedded payload fraction. Must be 32.
+     */
+    uint8_t min_payload_frac() const { return m_min_payload_frac; }
+
+    /**
+     * Leaf payload fraction. Must be 32.
+     */
+    uint8_t leaf_payload_frac() const { return m_leaf_payload_frac; }
+    uint32_t file_change_counter() const { return m_file_change_counter; }
+
+    /**
+     * Size of the database file in pages. The &quot;in-header database size&quot;.
+     */
+    uint32_t num_pages() const { return m_num_pages; }
+
+    /**
+     * Page number of the first freelist trunk page.
+     */
+    uint32_t first_freelist_trunk_page() const { return m_first_freelist_trunk_page; }
+
+    /**
+     * Total number of freelist pages.
+     */
+    uint32_t num_freelist_pages() const { return m_num_freelist_pages; }
+    uint32_t schema_cookie() const { return m_schema_cookie; }
+
+    /**
+     * The schema format number. Supported schema formats are 1, 2, 3, and 4.
+     */
+    uint32_t schema_format() const { return m_schema_format; }
+
+    /**
+     * Default page cache size.
+     */
+    uint32_t def_page_cache_size() const { return m_def_page_cache_size; }
+
+    /**
+     * The page number of the largest root b-tree page when in auto-vacuum or incremental-vacuum modes, or zero otherwise.
+     */
+    uint32_t largest_root_page() const { return m_largest_root_page; }
+
+    /**
+     * The database text encoding. A value of 1 means UTF-8. A value of 2 means UTF-16le. A value of 3 means UTF-16be.
+     */
+    encodings_t text_encoding() const { return m_text_encoding; }
+
+    /**
+     * The &quot;user version&quot; as read and set by the user_version pragma.
+     */
+    uint32_t user_version() const { return m_user_version; }
+
+    /**
+     * True (non-zero) for incremental-vacuum mode. False (zero) otherwise.
+     */
+    uint32_t is_incremental_vacuum() const { return m_is_incremental_vacuum; }
+
+    /**
+     * The &quot;Application ID&quot; set by PRAGMA application_id.
+     */
+    uint32_t application_id() const { return m_application_id; }
+    std::string reserved() const { return m_reserved; }
+    uint32_t version_valid_for() const { return m_version_valid_for; }
+    uint32_t sqlite_version_number() const { return m_sqlite_version_number; }
+    btree_page_t* root_page() const { return m_root_page; }
+    sqlite3_t* _root() const { return m__root; }
+    kaitai::kstruct* _parent() const { return m__parent; }
+};
+
+#endif  // SQLITE3_H_
+</code></pre>
+            
+        </div>
+        
+
+        <h3>sqlite3.cpp</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl/sqlite3.cpp" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include &quot;sqlite3.h&quot;
+
+
+#include &quot;vlq_base128_be.h&quot;
+
+sqlite3_t::sqlite3_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = this;
+    f_len_page = false;
+    _read();
+}
+
+void sqlite3_t::_read() {
+    m_magic = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00&quot;, 16));
+    m_len_page_mod = m__io-&gt;read_u2be();
+    m_write_version = static_cast&lt;sqlite3_t::versions_t&gt;(m__io-&gt;read_u1());
+    m_read_version = static_cast&lt;sqlite3_t::versions_t&gt;(m__io-&gt;read_u1());
+    m_reserved_space = m__io-&gt;read_u1();
+    m_max_payload_frac = m__io-&gt;read_u1();
+    m_min_payload_frac = m__io-&gt;read_u1();
+    m_leaf_payload_frac = m__io-&gt;read_u1();
+    m_file_change_counter = m__io-&gt;read_u4be();
+    m_num_pages = m__io-&gt;read_u4be();
+    m_first_freelist_trunk_page = m__io-&gt;read_u4be();
+    m_num_freelist_pages = m__io-&gt;read_u4be();
+    m_schema_cookie = m__io-&gt;read_u4be();
+    m_schema_format = m__io-&gt;read_u4be();
+    m_def_page_cache_size = m__io-&gt;read_u4be();
+    m_largest_root_page = m__io-&gt;read_u4be();
+    m_text_encoding = static_cast&lt;sqlite3_t::encodings_t&gt;(m__io-&gt;read_u4be());
+    m_user_version = m__io-&gt;read_u4be();
+    m_is_incremental_vacuum = m__io-&gt;read_u4be();
+    m_application_id = m__io-&gt;read_u4be();
+    m_reserved = m__io-&gt;read_bytes(20);
+    m_version_valid_for = m__io-&gt;read_u4be();
+    m_sqlite_version_number = m__io-&gt;read_u4be();
+    m_root_page = new btree_page_t(m__io, this, m__root);
+}
+
+sqlite3_t::~sqlite3_t() {
+    delete m_root_page;
+}
+
+sqlite3_t::serial_t::serial_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_is_blob = false;
+    f_is_string = false;
+    f_len_content = false;
+    _read();
+}
+
+void sqlite3_t::serial_t::_read() {
+    m_code = new vlq_base128_be_t(m__io);
+}
+
+sqlite3_t::serial_t::~serial_t() {
+    delete m_code;
+}
+
+bool sqlite3_t::serial_t::is_blob() {
+    if (f_is_blob)
+        return m_is_blob;
+    m_is_blob =  ((code()-&gt;value() &gt;= 12) &amp;&amp; (kaitai::kstream::mod(code()-&gt;value(), 2) == 0)) ;
+    f_is_blob = true;
+    return m_is_blob;
+}
+
+bool sqlite3_t::serial_t::is_string() {
+    if (f_is_string)
+        return m_is_string;
+    m_is_string =  ((code()-&gt;value() &gt;= 13) &amp;&amp; (kaitai::kstream::mod(code()-&gt;value(), 2) == 1)) ;
+    f_is_string = true;
+    return m_is_string;
+}
+
+int32_t sqlite3_t::serial_t::len_content() {
+    if (f_len_content)
+        return m_len_content;
+    n_len_content = true;
+    if (code()-&gt;value() &gt;= 12) {
+        n_len_content = false;
+        m_len_content = ((code()-&gt;value() - 12) / 2);
+    }
+    f_len_content = true;
+    return m_len_content;
+}
+
+sqlite3_t::btree_page_t::btree_page_t(kaitai::kstream* p__io, sqlite3_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void sqlite3_t::btree_page_t::_read() {
+    m_page_type = m__io-&gt;read_u1();
+    m_first_freeblock = m__io-&gt;read_u2be();
+    m_num_cells = m__io-&gt;read_u2be();
+    m_ofs_cells = m__io-&gt;read_u2be();
+    m_num_frag_free_bytes = m__io-&gt;read_u1();
+    n_right_ptr = true;
+    if ( ((page_type() == 2) || (page_type() == 5)) ) {
+        n_right_ptr = false;
+        m_right_ptr = m__io-&gt;read_u4be();
+    }
+    int l_cells = num_cells();
+    m_cells = new std::vector&lt;ref_cell_t*&gt;();
+    m_cells-&gt;reserve(l_cells);
+    for (int i = 0; i &lt; l_cells; i++) {
+        m_cells-&gt;push_back(new ref_cell_t(m__io, this, m__root));
+    }
+}
+
+sqlite3_t::btree_page_t::~btree_page_t() {
+    if (!n_right_ptr) {
+    }
+    for (std::vector&lt;ref_cell_t*&gt;::iterator it = m_cells-&gt;begin(); it != m_cells-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_cells;
+}
+
+sqlite3_t::cell_index_leaf_t::cell_index_leaf_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void sqlite3_t::cell_index_leaf_t::_read() {
+    m_len_payload = new vlq_base128_be_t(m__io);
+    m__raw_payload = m__io-&gt;read_bytes(len_payload()-&gt;value());
+    m__io__raw_payload = new kaitai::kstream(m__raw_payload);
+    m_payload = new cell_payload_t(m__io__raw_payload, this, m__root);
+}
+
+sqlite3_t::cell_index_leaf_t::~cell_index_leaf_t() {
+    delete m_len_payload;
+    delete m__io__raw_payload;
+    delete m_payload;
+}
+
+sqlite3_t::serials_t::serials_t(kaitai::kstream* p__io, sqlite3_t::cell_payload_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void sqlite3_t::serials_t::_read() {
+    m_entries = new std::vector&lt;vlq_base128_be_t*&gt;();
+    {
+        int i = 0;
+        while (!m__io-&gt;is_eof()) {
+            m_entries-&gt;push_back(new vlq_base128_be_t(m__io));
+            i++;
+        }
+    }
+}
+
+sqlite3_t::serials_t::~serials_t() {
+    for (std::vector&lt;vlq_base128_be_t*&gt;::iterator it = m_entries-&gt;begin(); it != m_entries-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_entries;
+}
+
+sqlite3_t::cell_table_leaf_t::cell_table_leaf_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void sqlite3_t::cell_table_leaf_t::_read() {
+    m_len_payload = new vlq_base128_be_t(m__io);
+    m_row_id = new vlq_base128_be_t(m__io);
+    m__raw_payload = m__io-&gt;read_bytes(len_payload()-&gt;value());
+    m__io__raw_payload = new kaitai::kstream(m__raw_payload);
+    m_payload = new cell_payload_t(m__io__raw_payload, this, m__root);
+}
+
+sqlite3_t::cell_table_leaf_t::~cell_table_leaf_t() {
+    delete m_len_payload;
+    delete m_row_id;
+    delete m__io__raw_payload;
+    delete m_payload;
+}
+
+sqlite3_t::cell_payload_t::cell_payload_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void sqlite3_t::cell_payload_t::_read() {
+    m_len_header_and_len = new vlq_base128_be_t(m__io);
+    m__raw_column_serials = m__io-&gt;read_bytes((len_header_and_len()-&gt;value() - 1));
+    m__io__raw_column_serials = new kaitai::kstream(m__raw_column_serials);
+    m_column_serials = new serials_t(m__io__raw_column_serials, this, m__root);
+    int l_column_contents = column_serials()-&gt;entries()-&gt;size();
+    m_column_contents = new std::vector&lt;column_content_t*&gt;();
+    m_column_contents-&gt;reserve(l_column_contents);
+    for (int i = 0; i &lt; l_column_contents; i++) {
+        m_column_contents-&gt;push_back(new column_content_t(column_serials()-&gt;entries()-&gt;at(i), m__io, this, m__root));
+    }
+}
+
+sqlite3_t::cell_payload_t::~cell_payload_t() {
+    delete m_len_header_and_len;
+    delete m__io__raw_column_serials;
+    delete m_column_serials;
+    for (std::vector&lt;column_content_t*&gt;::iterator it = m_column_contents-&gt;begin(); it != m_column_contents-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_column_contents;
+}
+
+sqlite3_t::cell_table_interior_t::cell_table_interior_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void sqlite3_t::cell_table_interior_t::_read() {
+    m_left_child_page = m__io-&gt;read_u4be();
+    m_row_id = new vlq_base128_be_t(m__io);
+}
+
+sqlite3_t::cell_table_interior_t::~cell_table_interior_t() {
+    delete m_row_id;
+}
+
+sqlite3_t::cell_index_interior_t::cell_index_interior_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void sqlite3_t::cell_index_interior_t::_read() {
+    m_left_child_page = m__io-&gt;read_u4be();
+    m_len_payload = new vlq_base128_be_t(m__io);
+    m__raw_payload = m__io-&gt;read_bytes(len_payload()-&gt;value());
+    m__io__raw_payload = new kaitai::kstream(m__raw_payload);
+    m_payload = new cell_payload_t(m__io__raw_payload, this, m__root);
+}
+
+sqlite3_t::cell_index_interior_t::~cell_index_interior_t() {
+    delete m_len_payload;
+    delete m__io__raw_payload;
+    delete m_payload;
+}
+
+sqlite3_t::column_content_t::column_content_t(kaitai::kstruct* p_ser, kaitai::kstream* p__io, sqlite3_t::cell_payload_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_ser = p_ser;
+    f_serial_type = false;
+    _read();
+}
+
+void sqlite3_t::column_content_t::_read() {
+    n_as_int = true;
+    if ( ((serial_type()-&gt;code()-&gt;value() &gt;= 1) &amp;&amp; (serial_type()-&gt;code()-&gt;value() &lt;= 6)) ) {
+        n_as_int = false;
+        n_as_int = true;
+        switch (serial_type()-&gt;code()-&gt;value()) {
+        case 4: {
+            n_as_int = false;
+            m_as_int = m__io-&gt;read_u4be();
+            break;
+        }
+        case 6: {
+            n_as_int = false;
+            m_as_int = m__io-&gt;read_u8be();
+            break;
+        }
+        case 1: {
+            n_as_int = false;
+            m_as_int = m__io-&gt;read_u1();
+            break;
+        }
+        case 3: {
+            n_as_int = false;
+            m_as_int = m__io-&gt;read_bits_int(24);
+            break;
+        }
+        case 5: {
+            n_as_int = false;
+            m_as_int = m__io-&gt;read_bits_int(48);
+            break;
+        }
+        case 2: {
+            n_as_int = false;
+            m_as_int = m__io-&gt;read_u2be();
+            break;
+        }
+        }
+    }
+    n_as_float = true;
+    if (serial_type()-&gt;code()-&gt;value() == 7) {
+        n_as_float = false;
+        m_as_float = m__io-&gt;read_f8be();
+    }
+    n_as_blob = true;
+    if (serial_type()-&gt;is_blob()) {
+        n_as_blob = false;
+        m_as_blob = m__io-&gt;read_bytes(serial_type()-&gt;len_content());
+    }
+    m_as_str = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(serial_type()-&gt;len_content()), std::string(&quot;UTF-8&quot;));
+}
+
+sqlite3_t::column_content_t::~column_content_t() {
+    if (!n_as_int) {
+    }
+    if (!n_as_float) {
+    }
+    if (!n_as_blob) {
+    }
+}
+
+sqlite3_t::serial_t* sqlite3_t::column_content_t::serial_type() {
+    if (f_serial_type)
+        return m_serial_type;
+    m_serial_type = static_cast&lt;serial_t*&gt;(ser());
+    f_serial_type = true;
+    return m_serial_type;
+}
+
+sqlite3_t::ref_cell_t::ref_cell_t(kaitai::kstream* p__io, sqlite3_t::btree_page_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_body = false;
+    _read();
+}
+
+void sqlite3_t::ref_cell_t::_read() {
+    m_ofs_body = m__io-&gt;read_u2be();
+}
+
+sqlite3_t::ref_cell_t::~ref_cell_t() {
+    if (f_body &amp;&amp; !n_body) {
+        delete m_body;
+    }
+}
+
+kaitai::kstruct* sqlite3_t::ref_cell_t::body() {
+    if (f_body)
+        return m_body;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(ofs_body());
+    n_body = true;
+    switch (_parent()-&gt;page_type()) {
+    case 13: {
+        n_body = false;
+        m_body = new cell_table_leaf_t(m__io, this, m__root);
+        break;
+    }
+    case 5: {
+        n_body = false;
+        m_body = new cell_table_interior_t(m__io, this, m__root);
+        break;
+    }
+    case 10: {
+        n_body = false;
+        m_body = new cell_index_leaf_t(m__io, this, m__root);
+        break;
+    }
+    case 2: {
+        n_body = false;
+        m_body = new cell_index_interior_t(m__io, this, m__root);
+        break;
+    }
+    }
+    m__io-&gt;seek(_pos);
+    f_body = true;
+    return m_body;
+}
+
+int32_t sqlite3_t::len_page() {
+    if (f_len_page)
+        return m_len_page;
+    m_len_page = ((len_page_mod() == 1) ? (65536) : (len_page_mod()));
+    f_len_page = true;
+    return m_len_page;
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2018 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

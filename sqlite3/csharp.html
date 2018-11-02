@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SQLite3 database file: C# parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Databases</li>
+        <li class="active">SQLite3 database file</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>SQLite3 database file:
+            
+            C# parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>SQLite3 is a popular serverless SQL engine, implemented as a library
+to be used within other applications. It keeps its databases as
+regular disk files.</p>
+<p>Every database file is segmented into pages. First page (starting at
+the very beginning) is special: it contains a file-global header
+which specifies some data relevant to proper parsing (i.e. format
+versions, size of page, etc). After the header, normal contents of
+the first page follow.</p>
+<p>Each page would be of some type, and generally, they would be
+reached via the links starting from the first page. First page type
+(<code>root_page</code>) is always &quot;btree_page&quot;.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of SQLite3 database file
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="SQLite3 database file parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="SQLite3 database file parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="csharp.html" title="SQLite3 database file parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="SQLite3 database file parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="SQLite3 database file parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="SQLite3 database file parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="SQLite3 database file parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="SQLite3 database file parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="SQLite3 database file parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="SQLite3 database file parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="csharp">var data = Sqlite3.FromFile("path/to/local/file.sqlite3");</code></pre>
+
+<p>Or parse structure from a byte array:</p>
+
+<pre><code class="csharp">byte[] someArray = new byte[] { ... };
+var data = new Sqlite3(new KaitaiStream(someArray));</code></pre>
+
+<p>After that, one can get various attributes from the structure by accessing properties like:</p>
+
+<pre><code class="csharp">data.LenPageMod // => The database page size in bytes. Must be a power of two between
+512 and 32768 inclusive, or the value 1 representing a page size
+of 65536.
+</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C# source code to parse SQLite3 database file
+            
+        </h2>
+
+        
+
+        <h3>Sqlite3.cs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/csharp/Sqlite3.cs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+using System.Collections.Generic;
+
+namespace Kaitai
+{
+
+    /// &lt;summary&gt;
+    /// SQLite3 is a popular serverless SQL engine, implemented as a library
+    /// to be used within other applications. It keeps its databases as
+    /// regular disk files.
+    /// 
+    /// Every database file is segmented into pages. First page (starting at
+    /// the very beginning) is special: it contains a file-global header
+    /// which specifies some data relevant to proper parsing (i.e. format
+    /// versions, size of page, etc). After the header, normal contents of
+    /// the first page follow.
+    /// 
+    /// Each page would be of some type, and generally, they would be
+    /// reached via the links starting from the first page. First page type
+    /// (`root_page`) is always &amp;quot;btree_page&amp;quot;.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;
+    /// Reference: &lt;a href=&quot;https://www.sqlite.org/fileformat.html&quot;&gt;Source&lt;/a&gt;
+    /// &lt;/remarks&gt;
+    public partial class Sqlite3 : KaitaiStruct
+    {
+        public static Sqlite3 FromFile(string fileName)
+        {
+            return new Sqlite3(new KaitaiStream(fileName));
+        }
+
+
+        public enum Versions
+        {
+            Legacy = 1,
+            Wal = 2,
+        }
+
+        public enum Encodings
+        {
+            Utf8 = 1,
+            Utf16le = 2,
+            Utf16be = 3,
+        }
+        public Sqlite3(KaitaiStream p__io, KaitaiStruct p__parent = null, Sqlite3 p__root = null) : base(p__io)
+        {
+            m_parent = p__parent;
+            m_root = p__root ?? this;
+            f_lenPage = false;
+            _read();
+        }
+        private void _read()
+        {
+            _magic = m_io.EnsureFixedContents(new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 });
+            _lenPageMod = m_io.ReadU2be();
+            _writeVersion = ((Versions) m_io.ReadU1());
+            _readVersion = ((Versions) m_io.ReadU1());
+            _reservedSpace = m_io.ReadU1();
+            _maxPayloadFrac = m_io.ReadU1();
+            _minPayloadFrac = m_io.ReadU1();
+            _leafPayloadFrac = m_io.ReadU1();
+            _fileChangeCounter = m_io.ReadU4be();
+            _numPages = m_io.ReadU4be();
+            _firstFreelistTrunkPage = m_io.ReadU4be();
+            _numFreelistPages = m_io.ReadU4be();
+            _schemaCookie = m_io.ReadU4be();
+            _schemaFormat = m_io.ReadU4be();
+            _defPageCacheSize = m_io.ReadU4be();
+            _largestRootPage = m_io.ReadU4be();
+            _textEncoding = ((Encodings) m_io.ReadU4be());
+            _userVersion = m_io.ReadU4be();
+            _isIncrementalVacuum = m_io.ReadU4be();
+            _applicationId = m_io.ReadU4be();
+            _reserved = m_io.ReadBytes(20);
+            _versionValidFor = m_io.ReadU4be();
+            _sqliteVersionNumber = m_io.ReadU4be();
+            _rootPage = new BtreePage(m_io, this, m_root);
+        }
+        public partial class Serial : KaitaiStruct
+        {
+            public static Serial FromFile(string fileName)
+            {
+                return new Serial(new KaitaiStream(fileName));
+            }
+
+            public Serial(KaitaiStream p__io, KaitaiStruct p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_isBlob = false;
+                f_isString = false;
+                f_lenContent = false;
+                _read();
+            }
+            private void _read()
+            {
+                _code = new VlqBase128Be(m_io);
+            }
+            private bool f_isBlob;
+            private bool _isBlob;
+            public bool IsBlob
+            {
+                get
+                {
+                    if (f_isBlob)
+                        return _isBlob;
+                    _isBlob = (bool) ( ((Code.Value &gt;= 12) &amp;&amp; (KaitaiStream.Mod(Code.Value, 2) == 0)) );
+                    f_isBlob = true;
+                    return _isBlob;
+                }
+            }
+            private bool f_isString;
+            private bool _isString;
+            public bool IsString
+            {
+                get
+                {
+                    if (f_isString)
+                        return _isString;
+                    _isString = (bool) ( ((Code.Value &gt;= 13) &amp;&amp; (KaitaiStream.Mod(Code.Value, 2) == 1)) );
+                    f_isString = true;
+                    return _isString;
+                }
+            }
+            private bool f_lenContent;
+            private int? _lenContent;
+            public int? LenContent
+            {
+                get
+                {
+                    if (f_lenContent)
+                        return _lenContent;
+                    if (Code.Value &gt;= 12) {
+                        _lenContent = (int) (((Code.Value - 12) / 2));
+                    }
+                    f_lenContent = true;
+                    return _lenContent;
+                }
+            }
+            private VlqBase128Be _code;
+            private Sqlite3 m_root;
+            private KaitaiStruct m_parent;
+            public VlqBase128Be Code { get { return _code; } }
+            public Sqlite3 M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class BtreePage : KaitaiStruct
+        {
+            public static BtreePage FromFile(string fileName)
+            {
+                return new BtreePage(new KaitaiStream(fileName));
+            }
+
+            public BtreePage(KaitaiStream p__io, Sqlite3 p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _pageType = m_io.ReadU1();
+                _firstFreeblock = m_io.ReadU2be();
+                _numCells = m_io.ReadU2be();
+                _ofsCells = m_io.ReadU2be();
+                _numFragFreeBytes = m_io.ReadU1();
+                if ( ((PageType == 2) || (PageType == 5)) ) {
+                    _rightPtr = m_io.ReadU4be();
+                }
+                _cells = new List&lt;RefCell&gt;((int) (NumCells));
+                for (var i = 0; i &lt; NumCells; i++)
+                {
+                    _cells.Add(new RefCell(m_io, this, m_root));
+                }
+            }
+            private byte _pageType;
+            private ushort _firstFreeblock;
+            private ushort _numCells;
+            private ushort _ofsCells;
+            private byte _numFragFreeBytes;
+            private uint? _rightPtr;
+            private List&lt;RefCell&gt; _cells;
+            private Sqlite3 m_root;
+            private Sqlite3 m_parent;
+            public byte PageType { get { return _pageType; } }
+            public ushort FirstFreeblock { get { return _firstFreeblock; } }
+            public ushort NumCells { get { return _numCells; } }
+            public ushort OfsCells { get { return _ofsCells; } }
+            public byte NumFragFreeBytes { get { return _numFragFreeBytes; } }
+            public uint? RightPtr { get { return _rightPtr; } }
+            public List&lt;RefCell&gt; Cells { get { return _cells; } }
+            public Sqlite3 M_Root { get { return m_root; } }
+            public Sqlite3 M_Parent { get { return m_parent; } }
+        }
+
+        /// &lt;remarks&gt;
+        /// Reference: &lt;a href=&quot;https://www.sqlite.org/fileformat.html#b_tree_pages&quot;&gt;Source&lt;/a&gt;
+        /// &lt;/remarks&gt;
+        public partial class CellIndexLeaf : KaitaiStruct
+        {
+            public static CellIndexLeaf FromFile(string fileName)
+            {
+                return new CellIndexLeaf(new KaitaiStream(fileName));
+            }
+
+            public CellIndexLeaf(KaitaiStream p__io, Sqlite3.RefCell p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _lenPayload = new VlqBase128Be(m_io);
+                __raw_payload = m_io.ReadBytes(LenPayload.Value);
+                var io___raw_payload = new KaitaiStream(__raw_payload);
+                _payload = new CellPayload(io___raw_payload, this, m_root);
+            }
+            private VlqBase128Be _lenPayload;
+            private CellPayload _payload;
+            private Sqlite3 m_root;
+            private Sqlite3.RefCell m_parent;
+            private byte[] __raw_payload;
+            public VlqBase128Be LenPayload { get { return _lenPayload; } }
+            public CellPayload Payload { get { return _payload; } }
+            public Sqlite3 M_Root { get { return m_root; } }
+            public Sqlite3.RefCell M_Parent { get { return m_parent; } }
+            public byte[] M_RawPayload { get { return __raw_payload; } }
+        }
+        public partial class Serials : KaitaiStruct
+        {
+            public static Serials FromFile(string fileName)
+            {
+                return new Serials(new KaitaiStream(fileName));
+            }
+
+            public Serials(KaitaiStream p__io, Sqlite3.CellPayload p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _entries = new List&lt;VlqBase128Be&gt;();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new VlqBase128Be(m_io));
+                        i++;
+                    }
+                }
+            }
+            private List&lt;VlqBase128Be&gt; _entries;
+            private Sqlite3 m_root;
+            private Sqlite3.CellPayload m_parent;
+            public List&lt;VlqBase128Be&gt; Entries { get { return _entries; } }
+            public Sqlite3 M_Root { get { return m_root; } }
+            public Sqlite3.CellPayload M_Parent { get { return m_parent; } }
+        }
+
+        /// &lt;remarks&gt;
+        /// Reference: &lt;a href=&quot;https://www.sqlite.org/fileformat.html#b_tree_pages&quot;&gt;Source&lt;/a&gt;
+        /// &lt;/remarks&gt;
+        public partial class CellTableLeaf : KaitaiStruct
+        {
+            public static CellTableLeaf FromFile(string fileName)
+            {
+                return new CellTableLeaf(new KaitaiStream(fileName));
+            }
+
+            public CellTableLeaf(KaitaiStream p__io, Sqlite3.RefCell p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _lenPayload = new VlqBase128Be(m_io);
+                _rowId = new VlqBase128Be(m_io);
+                __raw_payload = m_io.ReadBytes(LenPayload.Value);
+                var io___raw_payload = new KaitaiStream(__raw_payload);
+                _payload = new CellPayload(io___raw_payload, this, m_root);
+            }
+            private VlqBase128Be _lenPayload;
+            private VlqBase128Be _rowId;
+            private CellPayload _payload;
+            private Sqlite3 m_root;
+            private Sqlite3.RefCell m_parent;
+            private byte[] __raw_payload;
+            public VlqBase128Be LenPayload { get { return _lenPayload; } }
+            public VlqBase128Be RowId { get { return _rowId; } }
+            public CellPayload Payload { get { return _payload; } }
+            public Sqlite3 M_Root { get { return m_root; } }
+            public Sqlite3.RefCell M_Parent { get { return m_parent; } }
+            public byte[] M_RawPayload { get { return __raw_payload; } }
+        }
+
+        /// &lt;remarks&gt;
+        /// Reference: &lt;a href=&quot;https://sqlite.org/fileformat2.html#record_format&quot;&gt;Source&lt;/a&gt;
+        /// &lt;/remarks&gt;
+        public partial class CellPayload : KaitaiStruct
+        {
+            public static CellPayload FromFile(string fileName)
+            {
+                return new CellPayload(new KaitaiStream(fileName));
+            }
+
+            public CellPayload(KaitaiStream p__io, KaitaiStruct p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _lenHeaderAndLen = new VlqBase128Be(m_io);
+                __raw_columnSerials = m_io.ReadBytes((LenHeaderAndLen.Value - 1));
+                var io___raw_columnSerials = new KaitaiStream(__raw_columnSerials);
+                _columnSerials = new Serials(io___raw_columnSerials, this, m_root);
+                _columnContents = new List&lt;ColumnContent&gt;((int) (ColumnSerials.Entries.Count));
+                for (var i = 0; i &lt; ColumnSerials.Entries.Count; i++)
+                {
+                    _columnContents.Add(new ColumnContent(ColumnSerials.Entries[i], m_io, this, m_root));
+                }
+            }
+            private VlqBase128Be _lenHeaderAndLen;
+            private Serials _columnSerials;
+            private List&lt;ColumnContent&gt; _columnContents;
+            private Sqlite3 m_root;
+            private KaitaiStruct m_parent;
+            private byte[] __raw_columnSerials;
+            public VlqBase128Be LenHeaderAndLen { get { return _lenHeaderAndLen; } }
+            public Serials ColumnSerials { get { return _columnSerials; } }
+            public List&lt;ColumnContent&gt; ColumnContents { get { return _columnContents; } }
+            public Sqlite3 M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+            public byte[] M_RawColumnSerials { get { return __raw_columnSerials; } }
+        }
+
+        /// &lt;remarks&gt;
+        /// Reference: &lt;a href=&quot;https://www.sqlite.org/fileformat.html#b_tree_pages&quot;&gt;Source&lt;/a&gt;
+        /// &lt;/remarks&gt;
+        public partial class CellTableInterior : KaitaiStruct
+        {
+            public static CellTableInterior FromFile(string fileName)
+            {
+                return new CellTableInterior(new KaitaiStream(fileName));
+            }
+
+            public CellTableInterior(KaitaiStream p__io, Sqlite3.RefCell p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _leftChildPage = m_io.ReadU4be();
+                _rowId = new VlqBase128Be(m_io);
+            }
+            private uint _leftChildPage;
+            private VlqBase128Be _rowId;
+            private Sqlite3 m_root;
+            private Sqlite3.RefCell m_parent;
+            public uint LeftChildPage { get { return _leftChildPage; } }
+            public VlqBase128Be RowId { get { return _rowId; } }
+            public Sqlite3 M_Root { get { return m_root; } }
+            public Sqlite3.RefCell M_Parent { get { return m_parent; } }
+        }
+
+        /// &lt;remarks&gt;
+        /// Reference: &lt;a href=&quot;https://www.sqlite.org/fileformat.html#b_tree_pages&quot;&gt;Source&lt;/a&gt;
+        /// &lt;/remarks&gt;
+        public partial class CellIndexInterior : KaitaiStruct
+        {
+            public static CellIndexInterior FromFile(string fileName)
+            {
+                return new CellIndexInterior(new KaitaiStream(fileName));
+            }
+
+            public CellIndexInterior(KaitaiStream p__io, Sqlite3.RefCell p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _leftChildPage = m_io.ReadU4be();
+                _lenPayload = new VlqBase128Be(m_io);
+                __raw_payload = m_io.ReadBytes(LenPayload.Value);
+                var io___raw_payload = new KaitaiStream(__raw_payload);
+                _payload = new CellPayload(io___raw_payload, this, m_root);
+            }
+            private uint _leftChildPage;
+            private VlqBase128Be _lenPayload;
+            private CellPayload _payload;
+            private Sqlite3 m_root;
+            private Sqlite3.RefCell m_parent;
+            private byte[] __raw_payload;
+            public uint LeftChildPage { get { return _leftChildPage; } }
+            public VlqBase128Be LenPayload { get { return _lenPayload; } }
+            public CellPayload Payload { get { return _payload; } }
+            public Sqlite3 M_Root { get { return m_root; } }
+            public Sqlite3.RefCell M_Parent { get { return m_parent; } }
+            public byte[] M_RawPayload { get { return __raw_payload; } }
+        }
+        public partial class ColumnContent : KaitaiStruct
+        {
+            public ColumnContent(KaitaiStruct p_ser, KaitaiStream p__io, Sqlite3.CellPayload p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _ser = p_ser;
+                f_serialType = false;
+                _read();
+            }
+            private void _read()
+            {
+                if ( ((SerialType.Code.Value &gt;= 1) &amp;&amp; (SerialType.Code.Value &lt;= 6)) ) {
+                    switch (SerialType.Code.Value) {
+                    case 4: {
+                        _asInt = m_io.ReadU4be();
+                        break;
+                    }
+                    case 6: {
+                        _asInt = m_io.ReadU8be();
+                        break;
+                    }
+                    case 1: {
+                        _asInt = m_io.ReadU1();
+                        break;
+                    }
+                    case 3: {
+                        _asInt = m_io.ReadBitsInt(24);
+                        break;
+                    }
+                    case 5: {
+                        _asInt = m_io.ReadBitsInt(48);
+                        break;
+                    }
+                    case 2: {
+                        _asInt = m_io.ReadU2be();
+                        break;
+                    }
+                    }
+                }
+                if (SerialType.Code.Value == 7) {
+                    _asFloat = m_io.ReadF8be();
+                }
+                if (SerialType.IsBlob) {
+                    _asBlob = m_io.ReadBytes(SerialType.LenContent);
+                }
+                _asStr = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(SerialType.LenContent));
+            }
+            private bool f_serialType;
+            private Sqlite3.Serial _serialType;
+            public Sqlite3.Serial SerialType
+            {
+                get
+                {
+                    if (f_serialType)
+                        return _serialType;
+                    _serialType = (Sqlite3.Serial) (((Serial) (Ser)));
+                    f_serialType = true;
+                    return _serialType;
+                }
+            }
+            private int _asInt;
+            private double? _asFloat;
+            private byte[] _asBlob;
+            private string _asStr;
+            private KaitaiStruct _ser;
+            private Sqlite3 m_root;
+            private Sqlite3.CellPayload m_parent;
+            public int AsInt { get { return _asInt; } }
+            public double? AsFloat { get { return _asFloat; } }
+            public byte[] AsBlob { get { return _asBlob; } }
+            public string AsStr { get { return _asStr; } }
+            public KaitaiStruct Ser { get { return _ser; } }
+            public Sqlite3 M_Root { get { return m_root; } }
+            public Sqlite3.CellPayload M_Parent { get { return m_parent; } }
+        }
+        public partial class RefCell : KaitaiStruct
+        {
+            public static RefCell FromFile(string fileName)
+            {
+                return new RefCell(new KaitaiStream(fileName));
+            }
+
+            public RefCell(KaitaiStream p__io, Sqlite3.BtreePage p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_body = false;
+                _read();
+            }
+            private void _read()
+            {
+                _ofsBody = m_io.ReadU2be();
+            }
+            private bool f_body;
+            private KaitaiStruct _body;
+            public KaitaiStruct Body
+            {
+                get
+                {
+                    if (f_body)
+                        return _body;
+                    long _pos = m_io.Pos;
+                    m_io.Seek(OfsBody);
+                    switch (M_Parent.PageType) {
+                    case 13: {
+                        _body = new CellTableLeaf(m_io, this, m_root);
+                        break;
+                    }
+                    case 5: {
+                        _body = new CellTableInterior(m_io, this, m_root);
+                        break;
+                    }
+                    case 10: {
+                        _body = new CellIndexLeaf(m_io, this, m_root);
+                        break;
+                    }
+                    case 2: {
+                        _body = new CellIndexInterior(m_io, this, m_root);
+                        break;
+                    }
+                    }
+                    m_io.Seek(_pos);
+                    f_body = true;
+                    return _body;
+                }
+            }
+            private ushort _ofsBody;
+            private Sqlite3 m_root;
+            private Sqlite3.BtreePage m_parent;
+            public ushort OfsBody { get { return _ofsBody; } }
+            public Sqlite3 M_Root { get { return m_root; } }
+            public Sqlite3.BtreePage M_Parent { get { return m_parent; } }
+        }
+        private bool f_lenPage;
+        private int _lenPage;
+        public int LenPage
+        {
+            get
+            {
+                if (f_lenPage)
+                    return _lenPage;
+                _lenPage = (int) ((LenPageMod == 1 ? 65536 : LenPageMod));
+                f_lenPage = true;
+                return _lenPage;
+            }
+        }
+        private byte[] _magic;
+        private ushort _lenPageMod;
+        private Versions _writeVersion;
+        private Versions _readVersion;
+        private byte _reservedSpace;
+        private byte _maxPayloadFrac;
+        private byte _minPayloadFrac;
+        private byte _leafPayloadFrac;
+        private uint _fileChangeCounter;
+        private uint _numPages;
+        private uint _firstFreelistTrunkPage;
+        private uint _numFreelistPages;
+        private uint _schemaCookie;
+        private uint _schemaFormat;
+        private uint _defPageCacheSize;
+        private uint _largestRootPage;
+        private Encodings _textEncoding;
+        private uint _userVersion;
+        private uint _isIncrementalVacuum;
+        private uint _applicationId;
+        private byte[] _reserved;
+        private uint _versionValidFor;
+        private uint _sqliteVersionNumber;
+        private BtreePage _rootPage;
+        private Sqlite3 m_root;
+        private KaitaiStruct m_parent;
+        public byte[] Magic { get { return _magic; } }
+
+        /// &lt;summary&gt;
+        /// The database page size in bytes. Must be a power of two between
+        /// 512 and 32768 inclusive, or the value 1 representing a page size
+        /// of 65536.
+        /// &lt;/summary&gt;
+        public ushort LenPageMod { get { return _lenPageMod; } }
+        public Versions WriteVersion { get { return _writeVersion; } }
+        public Versions ReadVersion { get { return _readVersion; } }
+
+        /// &lt;summary&gt;
+        /// Bytes of unused &amp;quot;reserved&amp;quot; space at the end of each page. Usually 0.
+        /// &lt;/summary&gt;
+        public byte ReservedSpace { get { return _reservedSpace; } }
+
+        /// &lt;summary&gt;
+        /// Maximum embedded payload fraction. Must be 64.
+        /// &lt;/summary&gt;
+        public byte MaxPayloadFrac { get { return _maxPayloadFrac; } }
+
+        /// &lt;summary&gt;
+        /// Minimum embedded payload fraction. Must be 32.
+        /// &lt;/summary&gt;
+        public byte MinPayloadFrac { get { return _minPayloadFrac; } }
+
+        /// &lt;summary&gt;
+        /// Leaf payload fraction. Must be 32.
+        /// &lt;/summary&gt;
+        public byte LeafPayloadFrac { get { return _leafPayloadFrac; } }
+        public uint FileChangeCounter { get { return _fileChangeCounter; } }
+
+        /// &lt;summary&gt;
+        /// Size of the database file in pages. The &amp;quot;in-header database size&amp;quot;.
+        /// &lt;/summary&gt;
+        public uint NumPages { get { return _numPages; } }
+
+        /// &lt;summary&gt;
+        /// Page number of the first freelist trunk page.
+        /// &lt;/summary&gt;
+        public uint FirstFreelistTrunkPage { get { return _firstFreelistTrunkPage; } }
+
+        /// &lt;summary&gt;
+        /// Total number of freelist pages.
+        /// &lt;/summary&gt;
+        public uint NumFreelistPages { get { return _numFreelistPages; } }
+        public uint SchemaCookie { get { return _schemaCookie; } }
+
+        /// &lt;summary&gt;
+        /// The schema format number. Supported schema formats are 1, 2, 3, and 4.
+        /// &lt;/summary&gt;
+        public uint SchemaFormat { get { return _schemaFormat; } }
+
+        /// &lt;summary&gt;
+        /// Default page cache size.
+        /// &lt;/summary&gt;
+        public uint DefPageCacheSize { get { return _defPageCacheSize; } }
+
+        /// &lt;summary&gt;
+        /// The page number of the largest root b-tree page when in auto-vacuum or incremental-vacuum modes, or zero otherwise.
+        /// &lt;/summary&gt;
+        public uint LargestRootPage { get { return _largestRootPage; } }
+
+        /// &lt;summary&gt;
+        /// The database text encoding. A value of 1 means UTF-8. A value of 2 means UTF-16le. A value of 3 means UTF-16be.
+        /// &lt;/summary&gt;
+        public Encodings TextEncoding { get { return _textEncoding; } }
+
+        /// &lt;summary&gt;
+        /// The &amp;quot;user version&amp;quot; as read and set by the user_version pragma.
+        /// &lt;/summary&gt;
+        public uint UserVersion { get { return _userVersion; } }
+
+        /// &lt;summary&gt;
+        /// True (non-zero) for incremental-vacuum mode. False (zero) otherwise.
+        /// &lt;/summary&gt;
+        public uint IsIncrementalVacuum { get { return _isIncrementalVacuum; } }
+
+        /// &lt;summary&gt;
+        /// The &amp;quot;Application ID&amp;quot; set by PRAGMA application_id.
+        /// &lt;/summary&gt;
+        public uint ApplicationId { get { return _applicationId; } }
+        public byte[] Reserved { get { return _reserved; } }
+        public uint VersionValidFor { get { return _versionValidFor; } }
+        public uint SqliteVersionNumber { get { return _sqliteVersionNumber; } }
+        public BtreePage RootPage { get { return _rootPage; } }
+        public Sqlite3 M_Root { get { return m_root; } }
+        public KaitaiStruct M_Parent { get { return m_parent; } }
+    }
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2018 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
