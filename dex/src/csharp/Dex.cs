@@ -5,6 +5,15 @@ using System.Collections.Generic;
 namespace Kaitai
 {
 
+    /// <summary>
+    /// Android OS applications executables are typically stored in its own
+    /// format, optimized for more efficient execution in Dalvik virtual
+    /// machine.
+    /// 
+    /// This format is loosely similar to Java .class file format and
+    /// generally holds the similar set of data: i.e. classes, methods,
+    /// fields, annotations, etc.
+    /// </summary>
     /// <remarks>
     /// Reference: <a href="https://source.android.com/devices/tech/dalvik/dex-format">Source</a>
     /// </remarks>
@@ -124,12 +133,14 @@ namespace Kaitai
             public string VersionStr { get { return _versionStr; } }
 
             /// <summary>
-            /// adler32 checksum of the rest of the file (everything but magic and this field);  used to detect file corruption
+            /// adler32 checksum of the rest of the file (everything but magic and this field); 
+            /// used to detect file corruption
             /// </summary>
             public uint Checksum { get { return _checksum; } }
 
             /// <summary>
-            /// SHA-1 signature (hash) of the rest of the file (everything but magic, checksum,  and this field); used to uniquely identify files
+            /// SHA-1 signature (hash) of the rest of the file (everything but magic, checksum, 
+            /// and this field); used to uniquely identify files
             /// </summary>
             public byte[] Signature { get { return _signature; } }
 
@@ -139,7 +150,9 @@ namespace Kaitai
             public uint FileSize { get { return _fileSize; } }
 
             /// <summary>
-            /// size of the header (this entire section), in bytes. This allows for at  least a limited amount of backwards/forwards compatibility without  invalidating the format.
+            /// size of the header (this entire section), in bytes. This allows for at 
+            /// least a limited amount of backwards/forwards compatibility without 
+            /// invalidating the format.
             /// </summary>
             public uint HeaderSize { get { return _headerSize; } }
             public EndianConstant EndianTag { get { return _endianTag; } }
@@ -150,12 +163,17 @@ namespace Kaitai
             public uint LinkSize { get { return _linkSize; } }
 
             /// <summary>
-            /// offset from the start of the file to the link section, or 0 if link_size == 0.  The offset, if non-zero, should be to an offset into the link_data section. The format of the data pointed at is left unspecified by this document;  this header field (and the previous) are left as hooks for use by runtime implementations.
+            /// offset from the start of the file to the link section, or 0 if link_size == 0. 
+            /// The offset, if non-zero, should be to an offset into the link_data section.
+            /// The format of the data pointed at is left unspecified by this document; 
+            /// this header field (and the previous) are left as hooks for use by runtime implementations.
             /// </summary>
             public uint LinkOff { get { return _linkOff; } }
 
             /// <summary>
-            /// offset from the start of the file to the map item. The offset, which must be non-zero, should be to an offset into the data  section, and the data should be in the format specified by &quot;map_list&quot; below.    
+            /// offset from the start of the file to the map item.
+            /// The offset, which must be non-zero, should be to an offset into the data 
+            /// section, and the data should be in the format specified by &quot;map_list&quot; below.    
             /// </summary>
             public uint MapOff { get { return _mapOff; } }
 
@@ -165,7 +183,9 @@ namespace Kaitai
             public uint StringIdsSize { get { return _stringIdsSize; } }
 
             /// <summary>
-            /// offset from the start of the file to the string identifiers list, or 0 if string_ids_size == 0 (admittedly a strange edge case).  The offset, if non-zero, should be to the start of the string_ids section.
+            /// offset from the start of the file to the string identifiers list,
+            /// or 0 if string_ids_size == 0 (admittedly a strange edge case). 
+            /// The offset, if non-zero, should be to the start of the string_ids section.
             /// </summary>
             public uint StringIdsOff { get { return _stringIdsOff; } }
 
@@ -175,7 +195,9 @@ namespace Kaitai
             public uint TypeIdsSize { get { return _typeIdsSize; } }
 
             /// <summary>
-            /// offset from the start of the file to the type identifiers list,  or 0 if type_ids_size == 0 (admittedly a strange edge case).  The offset, if non-zero, should be to the start of the type_ids section.
+            /// offset from the start of the file to the type identifiers list, 
+            /// or 0 if type_ids_size == 0 (admittedly a strange edge case). 
+            /// The offset, if non-zero, should be to the start of the type_ids section.
             /// </summary>
             public uint TypeIdsOff { get { return _typeIdsOff; } }
 
@@ -185,7 +207,9 @@ namespace Kaitai
             public uint ProtoIdsSize { get { return _protoIdsSize; } }
 
             /// <summary>
-            /// offset from the start of the file to the prototype identifiers list,  or 0 if proto_ids_size == 0 (admittedly a strange edge case). The offset, if non-zero, should be to the start of the proto_ids section.
+            /// offset from the start of the file to the prototype identifiers list, 
+            /// or 0 if proto_ids_size == 0 (admittedly a strange edge case).
+            /// The offset, if non-zero, should be to the start of the proto_ids section.
             /// </summary>
             public uint ProtoIdsOff { get { return _protoIdsOff; } }
 
@@ -195,7 +219,9 @@ namespace Kaitai
             public uint FieldIdsSize { get { return _fieldIdsSize; } }
 
             /// <summary>
-            /// offset from the start of the file to the field identifiers list, or 0 if field_ids_size == 0. The offset, if non-zero, should be to the start of the field_ids section.    
+            /// offset from the start of the file to the field identifiers list,
+            /// or 0 if field_ids_size == 0.
+            /// The offset, if non-zero, should be to the start of the field_ids section.    
             /// </summary>
             public uint FieldIdsOff { get { return _fieldIdsOff; } }
 
@@ -205,7 +231,9 @@ namespace Kaitai
             public uint MethodIdsSize { get { return _methodIdsSize; } }
 
             /// <summary>
-            /// offset from the start of the file to the method identifiers list,  or 0 if method_ids_size == 0. The offset, if non-zero, should be to the start of the method_ids section.
+            /// offset from the start of the file to the method identifiers list, 
+            /// or 0 if method_ids_size == 0.
+            /// The offset, if non-zero, should be to the start of the method_ids section.
             /// </summary>
             public uint MethodIdsOff { get { return _methodIdsOff; } }
 
@@ -215,7 +243,9 @@ namespace Kaitai
             public uint ClassDefsSize { get { return _classDefsSize; } }
 
             /// <summary>
-            /// offset from the start of the file to the class definitions list,  or 0 if class_defs_size == 0 (admittedly a strange edge case). The offset, if non-zero, should be to the start of the class_defs section.
+            /// offset from the start of the file to the class definitions list, 
+            /// or 0 if class_defs_size == 0 (admittedly a strange edge case).
+            /// The offset, if non-zero, should be to the start of the class_defs section.
             /// </summary>
             public uint ClassDefsOff { get { return _classDefsOff; } }
 
@@ -403,7 +433,9 @@ namespace Kaitai
 
             /// <summary>
             /// offset from the start of the file to call site definition.
-            /// The offset should be in the data section, and the data there should be in the format specified by &quot;call_site_item&quot; below.
+            /// 
+            /// The offset should be in the data section, and the data there should
+            /// be in the format specified by &quot;call_site_item&quot; below.
             /// </summary>
             public uint CallSiteOff { get { return _callSiteOff; } }
             public Dex M_Root { get { return m_root; } }
@@ -489,7 +521,8 @@ namespace Kaitai
             private Dex m_parent;
 
             /// <summary>
-            /// index into the type_ids list for the definer of this method. This must be a class or array type, and not a primitive type.
+            /// index into the type_ids list for the definer of this method.
+            /// This must be a class or array type, and not a primitive type.
             /// </summary>
             public ushort ClassIdx { get { return _classIdx; } }
 
@@ -499,7 +532,8 @@ namespace Kaitai
             public ushort ProtoIdx { get { return _protoIdx; } }
 
             /// <summary>
-            /// index into the string_ids list for the name of this method. The string must conform to the syntax for MemberName, defined above.
+            /// index into the string_ids list for the name of this method.
+            /// The string must conform to the syntax for MemberName, defined above.
             /// </summary>
             public uint NameIdx { get { return _nameIdx; } }
             public Dex M_Root { get { return m_root; } }
@@ -579,7 +613,8 @@ namespace Kaitai
             private Dex m_parent;
 
             /// <summary>
-            /// index into the string_ids list for the descriptor string of this type. The string must conform to the syntax for TypeDescriptor, defined above.
+            /// index into the string_ids list for the descriptor string of this type.
+            /// The string must conform to the syntax for TypeDescriptor, defined above.
             /// </summary>
             public uint DescriptorIdx { get { return _descriptorIdx; } }
             public Dex M_Root { get { return m_root; } }
@@ -610,6 +645,7 @@ namespace Kaitai
 
             /// <summary>
             /// element name, represented as an index into the string_ids section.
+            /// 
             /// The string must conform to the syntax for MemberName, defined above.
             /// </summary>
             public VlqBase128Le NameIdx { get { return _nameIdx; } }
@@ -645,13 +681,17 @@ namespace Kaitai
             private Dex.ClassDataItem m_parent;
 
             /// <summary>
-            /// index into the field_ids list for the identity of this field (includes the name and descriptor), represented as a difference from the index of previous element in the list.
+            /// index into the field_ids list for the identity of this field
+            /// (includes the name and descriptor), represented as a difference
+            /// from the index of previous element in the list.
+            /// 
             /// The index of the first element in a list is represented directly.
             /// </summary>
             public VlqBase128Le FieldIdxDiff { get { return _fieldIdxDiff; } }
 
             /// <summary>
             /// access flags for the field (public, final, etc.).
+            /// 
             /// See &quot;access_flags Definitions&quot; for details.
             /// </summary>
             public VlqBase128Le AccessFlags { get { return _accessFlags; } }
@@ -755,26 +795,35 @@ namespace Kaitai
 
             /// <summary>
             /// the defined static fields, represented as a sequence of encoded elements.
+            /// 
             /// The fields must be sorted by field_idx in increasing order.
             /// </summary>
             public List<EncodedField> StaticFields { get { return _staticFields; } }
 
             /// <summary>
             /// the defined instance fields, represented as a sequence of encoded elements.
+            /// 
             /// The fields must be sorted by field_idx in increasing order.        
             /// </summary>
             public List<EncodedField> InstanceFields { get { return _instanceFields; } }
 
             /// <summary>
-            /// the defined direct (any of static, private, or constructor) methods, represented as a sequence of encoded elements.
+            /// the defined direct (any of static, private, or constructor) methods,
+            /// represented as a sequence of encoded elements.
+            /// 
             /// The methods must be sorted by method_idx in increasing order.
             /// </summary>
             public List<EncodedMethod> DirectMethods { get { return _directMethods; } }
 
             /// <summary>
-            /// the defined virtual (none of static, private, or constructor) methods, represented as a sequence of encoded elements.
-            /// This list should not include inherited methods unless overridden by the class that this item represents.
+            /// the defined virtual (none of static, private, or constructor) methods,
+            /// represented as a sequence of encoded elements.
+            /// 
+            /// This list should not include inherited methods unless overridden by
+            /// the class that this item represents.
+            /// 
             /// The methods must be sorted by method_idx in increasing order.
+            /// 
             /// The method_idx of a virtual method must not be the same as any direct method.        
             /// </summary>
             public List<EncodedMethod> VirtualMethods { get { return _virtualMethods; } }
@@ -861,7 +910,8 @@ namespace Kaitai
             private Dex m_parent;
 
             /// <summary>
-            /// index into the type_ids list for the definer of this field. This must be a class type, and not an array or primitive type.
+            /// index into the type_ids list for the definer of this field.
+            /// This must be a class type, and not an array or primitive type.
             /// </summary>
             public ushort ClassIdx { get { return _classIdx; } }
 
@@ -871,7 +921,8 @@ namespace Kaitai
             public ushort TypeIdx { get { return _typeIdx; } }
 
             /// <summary>
-            /// index into the string_ids list for the name of this field. The string must conform to the syntax for MemberName, defined above.
+            /// index into the string_ids list for the name of this field.
+            /// The string must conform to the syntax for MemberName, defined above.
             /// </summary>
             public uint NameIdx { get { return _nameIdx; } }
             public Dex M_Root { get { return m_root; } }
@@ -908,6 +959,7 @@ namespace Kaitai
 
             /// <summary>
             /// type of the annotation.
+            /// 
             /// This must be a class (not array or primitive) type.
             /// </summary>
             public VlqBase128Le TypeIdx { get { return _typeIdx; } }
@@ -919,6 +971,7 @@ namespace Kaitai
 
             /// <summary>
             /// elements of the annotation, represented directly in-line (not as offsets).
+            /// 
             /// Elements must be sorted in increasing order by string_id index.
             /// </summary>
             public List<AnnotationElement> Elements { get { return _elements; } }
@@ -1014,53 +1067,86 @@ namespace Kaitai
 
             /// <summary>
             /// index into the type_ids list for this class.
+            /// 
             /// This must be a class type, and not an array or primitive type.
             /// </summary>
             public uint ClassIdx { get { return _classIdx; } }
 
             /// <summary>
             /// access flags for the class (public, final, etc.).
+            /// 
             /// See &quot;access_flags Definitions&quot; for details.
             /// </summary>
             public ClassAccessFlags AccessFlags { get { return _accessFlags; } }
 
             /// <summary>
-            /// index into the type_ids list for the superclass,  or the constant value NO_INDEX if this class has no superclass  (i.e., it is a root class such as Object). 
+            /// index into the type_ids list for the superclass, 
+            /// or the constant value NO_INDEX if this class has no superclass 
+            /// (i.e., it is a root class such as Object). 
+            /// 
             /// If present, this must be a class type, and not an array or primitive type.
             /// </summary>
             public uint SuperclassIdx { get { return _superclassIdx; } }
 
             /// <summary>
             /// offset from the start of the file to the list of interfaces, or 0 if there are none.
-            /// This offset should be in the data section, and the data there should  be in the format specified by &quot;type_list&quot; below. Each of the elements  of the list must be a class type (not an array or primitive type),  and there must not be any duplicates.        
+            /// 
+            /// This offset should be in the data section, and the data there should 
+            /// be in the format specified by &quot;type_list&quot; below. Each of the elements 
+            /// of the list must be a class type (not an array or primitive type), 
+            /// and there must not be any duplicates.        
             /// </summary>
             public uint InterfacesOff { get { return _interfacesOff; } }
 
             /// <summary>
-            /// index into the string_ids list for the name of the file containing  the original source for (at least most of) this class, or the  special value NO_INDEX to represent a lack of this information.
-            /// The debug_info_item of any given method may override this source file, but the expectation is that most classes will only come from one source file.
+            /// index into the string_ids list for the name of the file containing 
+            /// the original source for (at least most of) this class, or the 
+            /// special value NO_INDEX to represent a lack of this information.
+            /// 
+            /// The debug_info_item of any given method may override this source file,
+            /// but the expectation is that most classes will only come from one source file.
             /// </summary>
             public uint SourceFileIdx { get { return _sourceFileIdx; } }
 
             /// <summary>
-            /// offset from the start of the file to the annotations structure for  this class, or 0 if there are no annotations on this class.
-            /// This offset, if non-zero, should be in the data section, and the data  there should be in the format specified by &quot;annotations_directory_item&quot; below,with all items referring to this class as the definer.        
+            /// offset from the start of the file to the annotations structure for 
+            /// this class, or 0 if there are no annotations on this class.
+            /// 
+            /// This offset, if non-zero, should be in the data section, and the data 
+            /// there should be in the format specified by &quot;annotations_directory_item&quot;
+            /// below,with all items referring to this class as the definer.        
             /// </summary>
             public uint AnnotationsOff { get { return _annotationsOff; } }
 
             /// <summary>
-            /// offset from the start of the file to the associated class data for this item, or 0 if there is no class data for this class.
+            /// offset from the start of the file to the associated class data for this
+            /// item, or 0 if there is no class data for this class.
+            /// 
             /// (This may be the case, for example, if this class is a marker interface.)
-            /// The offset, if non-zero, should be in the data section, and the data there should be in the format specified by &quot;class_data_item&quot; below, with all items referring to this class as the definer.        
+            /// 
+            /// The offset, if non-zero, should be in the data section, and the data
+            /// there should be in the format specified by &quot;class_data_item&quot; below,
+            /// with all items referring to this class as the definer.        
             /// </summary>
             public uint ClassDataOff { get { return _classDataOff; } }
 
             /// <summary>
-            /// offset from the start of the file to the list of initial values for  static fields, or 0 if there are none (and all static fields are to be  initialized with 0 or null).
-            /// This offset should be in the data section, and the data there should  be in the format specified by &quot;encoded_array_item&quot; below.
-            /// The size of the array must be no larger than the number of static fields  declared by this class, and the elements correspond to the static fields  in the same order as declared in the corresponding field_list.
-            /// The type of each array element must match the declared type of its corresponding field.
-            /// If there are fewer elements in the array than there are static fields, then the leftover fields are initialized with a type-appropriate 0 or null.
+            /// offset from the start of the file to the list of initial values for 
+            /// static fields, or 0 if there are none (and all static fields are to be 
+            /// initialized with 0 or null).
+            /// 
+            /// This offset should be in the data section, and the data there should 
+            /// be in the format specified by &quot;encoded_array_item&quot; below.
+            /// 
+            /// The size of the array must be no larger than the number of static fields 
+            /// declared by this class, and the elements correspond to the static fields 
+            /// in the same order as declared in the corresponding field_list.
+            /// 
+            /// The type of each array element must match the declared type of its
+            /// corresponding field.
+            /// 
+            /// If there are fewer elements in the array than there are static fields,
+            /// then the leftover fields are initialized with a type-appropriate 0 or null.
             /// </summary>
             public uint StaticValuesOff { get { return _staticValuesOff; } }
             public Dex M_Root { get { return m_root; } }
@@ -1163,7 +1249,10 @@ namespace Kaitai
             private Dex m_parent;
 
             /// <summary>
-            /// offset from the start of the file to the string data for this item. The offset should be to a location in the data section, and the data should be in the format specified by &quot;string_data_item&quot; below. There is no alignment requirement for the offset.
+            /// offset from the start of the file to the string data for this item.
+            /// The offset should be to a location in the data section, and the data
+            /// should be in the format specified by &quot;string_data_item&quot; below.
+            /// There is no alignment requirement for the offset.
             /// </summary>
             public uint StringDataOff { get { return _stringDataOff; } }
             public Dex M_Root { get { return m_root; } }
@@ -1255,7 +1344,9 @@ namespace Kaitai
             private Dex m_parent;
 
             /// <summary>
-            /// index into the string_ids list for the short-form descriptor string of this prototype. The string must conform to the syntax for ShortyDescriptor, defined above,  and must correspond to the return type and parameters of this item.
+            /// index into the string_ids list for the short-form descriptor string of this prototype.
+            /// The string must conform to the syntax for ShortyDescriptor, defined above, 
+            /// and must correspond to the return type and parameters of this item.
             /// </summary>
             public uint ShortyIdx { get { return _shortyIdx; } }
 
@@ -1265,7 +1356,11 @@ namespace Kaitai
             public uint ReturnTypeIdx { get { return _returnTypeIdx; } }
 
             /// <summary>
-            /// offset from the start of the file to the list of parameter types for this prototype,  or 0 if this prototype has no parameters. This offset, if non-zero, should be in the data section, and the data there should be in the format specified by &quot;type_list&quot; below. Additionally, there should be no reference to the type void in the list.
+            /// offset from the start of the file to the list of parameter types for this prototype, 
+            /// or 0 if this prototype has no parameters.
+            /// This offset, if non-zero, should be in the data section, and the data
+            /// there should be in the format specified by &quot;type_list&quot; below.
+            /// Additionally, there should be no reference to the type void in the list.
             /// </summary>
             public uint ParametersOff { get { return _parametersOff; } }
             public Dex M_Root { get { return m_root; } }
@@ -1297,20 +1392,27 @@ namespace Kaitai
             private Dex.ClassDataItem m_parent;
 
             /// <summary>
-            /// index into the method_ids list for the identity of this method (includes the name and descriptor), represented as a difference from the index of previous element in the list.
+            /// index into the method_ids list for the identity of this method
+            /// (includes the name and descriptor), represented as a difference
+            /// from the index of previous element in the list.
+            /// 
             /// The index of the first element in a list is represented directly.
             /// </summary>
             public VlqBase128Le MethodIdxDiff { get { return _methodIdxDiff; } }
 
             /// <summary>
             /// access flags for the field (public, final, etc.).
+            /// 
             /// See &quot;access_flags Definitions&quot; for details.
             /// </summary>
             public VlqBase128Le AccessFlags { get { return _accessFlags; } }
 
             /// <summary>
-            /// offset from the start of the file to the code structure for this method, or 0 if this method is either abstract or native.
+            /// offset from the start of the file to the code structure for this method,
+            /// or 0 if this method is either abstract or native.
+            /// 
             /// The offset should be to a location in the data section.
+            /// 
             /// The format of the data is specified by &quot;code_item&quot; below.
             /// </summary>
             public VlqBase128Le CodeOff { get { return _codeOff; } }
@@ -1426,8 +1528,12 @@ namespace Kaitai
 
         /// <summary>
         /// string identifiers list.
-        /// These are identifiers for all the strings used by this file, either for  internal naming (e.g., type descriptors) or as constant objects referred to by code.
-        /// This list must be sorted by string contents, using UTF-16 code point values (not in a locale-sensitive manner), and it must not contain any duplicate entries.    
+        /// 
+        /// These are identifiers for all the strings used by this file, either for 
+        /// internal naming (e.g., type descriptors) or as constant objects referred to by code.
+        /// 
+        /// This list must be sorted by string contents, using UTF-16 code point values
+        /// (not in a locale-sensitive manner), and it must not contain any duplicate entries.    
         /// </summary>
         public List<StringIdItem> StringIds
         {
@@ -1452,8 +1558,14 @@ namespace Kaitai
 
         /// <summary>
         /// method identifiers list.
-        /// These are identifiers for all methods referred to by this file, whether defined in the file or not.
-        /// This list must be sorted, where the defining type (by type_id index  is the major order, method name (by string_id index) is the intermediate order, and method prototype (by proto_id index) is the minor order.
+        /// 
+        /// These are identifiers for all methods referred to by this file,
+        /// whether defined in the file or not.
+        /// 
+        /// This list must be sorted, where the defining type (by type_id index 
+        /// is the major order, method name (by string_id index) is the intermediate
+        /// order, and method prototype (by proto_id index) is the minor order.
+        /// 
         /// The list must not contain any duplicate entries.
         /// </summary>
         public List<MethodIdItem> MethodIds
@@ -1479,8 +1591,11 @@ namespace Kaitai
 
         /// <summary>
         /// data used in statically linked files.
+        /// 
         /// The format of the data in this section is left unspecified by this document.
-        /// This section is empty in unlinked files, and runtime implementations may use it as they see fit.
+        /// 
+        /// This section is empty in unlinked files, and runtime implementations may
+        /// use it as they see fit.
         /// </summary>
         public byte[] LinkData
         {
@@ -1517,8 +1632,12 @@ namespace Kaitai
 
         /// <summary>
         /// class definitions list.
-        /// The classes must be ordered such that a given class's superclass and implemented interfaces appear in the list earlier than the referring class.
-        /// Furthermore, it is invalid for a definition for the same-named class to appear more than once in the list.
+        /// 
+        /// The classes must be ordered such that a given class's superclass and
+        /// implemented interfaces appear in the list earlier than the referring class.
+        /// 
+        /// Furthermore, it is invalid for a definition for the same-named class to
+        /// appear more than once in the list.
         /// </summary>
         public List<ClassDefItem> ClassDefs
         {
@@ -1543,7 +1662,9 @@ namespace Kaitai
 
         /// <summary>
         /// data area, containing all the support data for the tables listed above.
-        /// Different items have different alignment requirements, and padding bytes are inserted before each item if necessary to achieve proper alignment.
+        /// 
+        /// Different items have different alignment requirements, and padding bytes
+        /// are inserted before each item if necessary to achieve proper alignment.
         /// </summary>
         public byte[] Data
         {
@@ -1564,7 +1685,10 @@ namespace Kaitai
 
         /// <summary>
         /// type identifiers list. 
-        /// These are identifiers for all types (classes, arrays, or primitive types)  referred to by this file, whether defined in the file or not.
+        /// 
+        /// These are identifiers for all types (classes, arrays, or primitive types) 
+        /// referred to by this file, whether defined in the file or not.
+        /// 
         /// This list must be sorted by string_id index, and it must not contain any duplicate entries.
         /// </summary>
         public List<TypeIdItem> TypeIds
@@ -1590,8 +1714,12 @@ namespace Kaitai
 
         /// <summary>
         /// method prototype identifiers list.
+        /// 
         /// These are identifiers for all prototypes referred to by this file.
-        /// This list must be sorted in return-type (by type_id index) major order, and then by argument list (lexicographic ordering, individual arguments ordered by type_id index). The list must not contain any duplicate entries.
+        /// 
+        /// This list must be sorted in return-type (by type_id index) major order,
+        /// and then by argument list (lexicographic ordering, individual arguments
+        /// ordered by type_id index). The list must not contain any duplicate entries.
         /// </summary>
         public List<ProtoIdItem> ProtoIds
         {
@@ -1616,8 +1744,13 @@ namespace Kaitai
 
         /// <summary>
         /// field identifiers list.
+        /// 
         /// These are identifiers for all fields referred to by this file, whether defined in the file or not. 
-        /// This list must be sorted, where the defining type (by type_id index)  is the major order, field name (by string_id index) is the intermediate  order, and type (by type_id index) is the minor order.
+        /// 
+        /// This list must be sorted, where the defining type (by type_id index) 
+        /// is the major order, field name (by string_id index) is the intermediate 
+        /// order, and type (by type_id index) is the minor order.
+        /// 
         /// The list must not contain any duplicate entries.
         /// </summary>
         public List<FieldIdItem> FieldIds

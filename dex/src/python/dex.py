@@ -10,7 +10,14 @@ if parse_version(ks_version) < parse_version('0.7'):
 
 from vlq_base128_le import VlqBase128Le
 class Dex(KaitaiStruct):
-    """
+    """Android OS applications executables are typically stored in its own
+    format, optimized for more efficient execution in Dalvik virtual
+    machine.
+    
+    This format is loosely similar to Java .class file format and
+    generally holds the similar set of data: i.e. classes, methods,
+    fields, annotations, etc.
+    
     .. seealso::
        Source - https://source.android.com/devices/tech/dalvik/dex-format
     """
@@ -578,8 +585,12 @@ class Dex(KaitaiStruct):
     @property
     def string_ids(self):
         """string identifiers list.
-        These are identifiers for all the strings used by this file, either for  internal naming (e.g., type descriptors) or as constant objects referred to by code.
-        This list must be sorted by string contents, using UTF-16 code point values (not in a locale-sensitive manner), and it must not contain any duplicate entries.    
+        
+        These are identifiers for all the strings used by this file, either for 
+        internal naming (e.g., type descriptors) or as constant objects referred to by code.
+        
+        This list must be sorted by string contents, using UTF-16 code point values
+        (not in a locale-sensitive manner), and it must not contain any duplicate entries.    
         """
         if hasattr(self, '_m_string_ids'):
             return self._m_string_ids if hasattr(self, '_m_string_ids') else None
@@ -596,8 +607,14 @@ class Dex(KaitaiStruct):
     @property
     def method_ids(self):
         """method identifiers list.
-        These are identifiers for all methods referred to by this file, whether defined in the file or not.
-        This list must be sorted, where the defining type (by type_id index  is the major order, method name (by string_id index) is the intermediate order, and method prototype (by proto_id index) is the minor order.
+        
+        These are identifiers for all methods referred to by this file,
+        whether defined in the file or not.
+        
+        This list must be sorted, where the defining type (by type_id index 
+        is the major order, method name (by string_id index) is the intermediate
+        order, and method prototype (by proto_id index) is the minor order.
+        
         The list must not contain any duplicate entries.
         """
         if hasattr(self, '_m_method_ids'):
@@ -615,8 +632,11 @@ class Dex(KaitaiStruct):
     @property
     def link_data(self):
         """data used in statically linked files.
+        
         The format of the data in this section is left unspecified by this document.
-        This section is empty in unlinked files, and runtime implementations may use it as they see fit.
+        
+        This section is empty in unlinked files, and runtime implementations may
+        use it as they see fit.
         """
         if hasattr(self, '_m_link_data'):
             return self._m_link_data if hasattr(self, '_m_link_data') else None
@@ -641,8 +661,12 @@ class Dex(KaitaiStruct):
     @property
     def class_defs(self):
         """class definitions list.
-        The classes must be ordered such that a given class's superclass and implemented interfaces appear in the list earlier than the referring class.
-        Furthermore, it is invalid for a definition for the same-named class to appear more than once in the list.
+        
+        The classes must be ordered such that a given class's superclass and
+        implemented interfaces appear in the list earlier than the referring class.
+        
+        Furthermore, it is invalid for a definition for the same-named class to
+        appear more than once in the list.
         """
         if hasattr(self, '_m_class_defs'):
             return self._m_class_defs if hasattr(self, '_m_class_defs') else None
@@ -659,7 +683,9 @@ class Dex(KaitaiStruct):
     @property
     def data(self):
         """data area, containing all the support data for the tables listed above.
-        Different items have different alignment requirements, and padding bytes are inserted before each item if necessary to achieve proper alignment.
+        
+        Different items have different alignment requirements, and padding bytes
+        are inserted before each item if necessary to achieve proper alignment.
         """
         if hasattr(self, '_m_data'):
             return self._m_data if hasattr(self, '_m_data') else None
@@ -673,7 +699,10 @@ class Dex(KaitaiStruct):
     @property
     def type_ids(self):
         """type identifiers list. 
-        These are identifiers for all types (classes, arrays, or primitive types)  referred to by this file, whether defined in the file or not.
+        
+        These are identifiers for all types (classes, arrays, or primitive types) 
+        referred to by this file, whether defined in the file or not.
+        
         This list must be sorted by string_id index, and it must not contain any duplicate entries.
         """
         if hasattr(self, '_m_type_ids'):
@@ -691,8 +720,12 @@ class Dex(KaitaiStruct):
     @property
     def proto_ids(self):
         """method prototype identifiers list.
+        
         These are identifiers for all prototypes referred to by this file.
-        This list must be sorted in return-type (by type_id index) major order, and then by argument list (lexicographic ordering, individual arguments ordered by type_id index). The list must not contain any duplicate entries.
+        
+        This list must be sorted in return-type (by type_id index) major order,
+        and then by argument list (lexicographic ordering, individual arguments
+        ordered by type_id index). The list must not contain any duplicate entries.
         """
         if hasattr(self, '_m_proto_ids'):
             return self._m_proto_ids if hasattr(self, '_m_proto_ids') else None
@@ -709,8 +742,13 @@ class Dex(KaitaiStruct):
     @property
     def field_ids(self):
         """field identifiers list.
+        
         These are identifiers for all fields referred to by this file, whether defined in the file or not. 
-        This list must be sorted, where the defining type (by type_id index)  is the major order, field name (by string_id index) is the intermediate  order, and type (by type_id index) is the minor order.
+        
+        This list must be sorted, where the defining type (by type_id index) 
+        is the major order, field name (by string_id index) is the intermediate 
+        order, and type (by type_id index) is the minor order.
+        
         The list must not contain any duplicate entries.
         """
         if hasattr(self, '_m_field_ids'):

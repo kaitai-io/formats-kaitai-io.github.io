@@ -11,6 +11,13 @@ import java.util.ArrayList;
 
 
 /**
+ * Android OS applications executables are typically stored in its own
+ * format, optimized for more efficient execution in Dalvik virtual
+ * machine.
+ * 
+ * This format is loosely similar to Java .class file format and
+ * generally holds the similar set of data: i.e. classes, methods,
+ * fields, annotations, etc.
  * @see <a href="https://source.android.com/devices/tech/dalvik/dex-format">Source</a>
  */
 public class Dex extends KaitaiStruct {
@@ -148,12 +155,14 @@ public class Dex extends KaitaiStruct {
         public String versionStr() { return versionStr; }
 
         /**
-         * adler32 checksum of the rest of the file (everything but magic and this field);  used to detect file corruption
+         * adler32 checksum of the rest of the file (everything but magic and this field); 
+         * used to detect file corruption
          */
         public long checksum() { return checksum; }
 
         /**
-         * SHA-1 signature (hash) of the rest of the file (everything but magic, checksum,  and this field); used to uniquely identify files
+         * SHA-1 signature (hash) of the rest of the file (everything but magic, checksum, 
+         * and this field); used to uniquely identify files
          */
         public byte[] signature() { return signature; }
 
@@ -163,7 +172,9 @@ public class Dex extends KaitaiStruct {
         public long fileSize() { return fileSize; }
 
         /**
-         * size of the header (this entire section), in bytes. This allows for at  least a limited amount of backwards/forwards compatibility without  invalidating the format.
+         * size of the header (this entire section), in bytes. This allows for at 
+         * least a limited amount of backwards/forwards compatibility without 
+         * invalidating the format.
          */
         public long headerSize() { return headerSize; }
         public EndianConstant endianTag() { return endianTag; }
@@ -174,12 +185,17 @@ public class Dex extends KaitaiStruct {
         public long linkSize() { return linkSize; }
 
         /**
-         * offset from the start of the file to the link section, or 0 if link_size == 0.  The offset, if non-zero, should be to an offset into the link_data section. The format of the data pointed at is left unspecified by this document;  this header field (and the previous) are left as hooks for use by runtime implementations.
+         * offset from the start of the file to the link section, or 0 if link_size == 0. 
+         * The offset, if non-zero, should be to an offset into the link_data section.
+         * The format of the data pointed at is left unspecified by this document; 
+         * this header field (and the previous) are left as hooks for use by runtime implementations.
          */
         public long linkOff() { return linkOff; }
 
         /**
-         * offset from the start of the file to the map item. The offset, which must be non-zero, should be to an offset into the data  section, and the data should be in the format specified by "map_list" below.    
+         * offset from the start of the file to the map item.
+         * The offset, which must be non-zero, should be to an offset into the data 
+         * section, and the data should be in the format specified by "map_list" below.    
          */
         public long mapOff() { return mapOff; }
 
@@ -189,7 +205,9 @@ public class Dex extends KaitaiStruct {
         public long stringIdsSize() { return stringIdsSize; }
 
         /**
-         * offset from the start of the file to the string identifiers list, or 0 if string_ids_size == 0 (admittedly a strange edge case).  The offset, if non-zero, should be to the start of the string_ids section.
+         * offset from the start of the file to the string identifiers list,
+         * or 0 if string_ids_size == 0 (admittedly a strange edge case). 
+         * The offset, if non-zero, should be to the start of the string_ids section.
          */
         public long stringIdsOff() { return stringIdsOff; }
 
@@ -199,7 +217,9 @@ public class Dex extends KaitaiStruct {
         public long typeIdsSize() { return typeIdsSize; }
 
         /**
-         * offset from the start of the file to the type identifiers list,  or 0 if type_ids_size == 0 (admittedly a strange edge case).  The offset, if non-zero, should be to the start of the type_ids section.
+         * offset from the start of the file to the type identifiers list, 
+         * or 0 if type_ids_size == 0 (admittedly a strange edge case). 
+         * The offset, if non-zero, should be to the start of the type_ids section.
          */
         public long typeIdsOff() { return typeIdsOff; }
 
@@ -209,7 +229,9 @@ public class Dex extends KaitaiStruct {
         public long protoIdsSize() { return protoIdsSize; }
 
         /**
-         * offset from the start of the file to the prototype identifiers list,  or 0 if proto_ids_size == 0 (admittedly a strange edge case). The offset, if non-zero, should be to the start of the proto_ids section.
+         * offset from the start of the file to the prototype identifiers list, 
+         * or 0 if proto_ids_size == 0 (admittedly a strange edge case).
+         * The offset, if non-zero, should be to the start of the proto_ids section.
          */
         public long protoIdsOff() { return protoIdsOff; }
 
@@ -219,7 +241,9 @@ public class Dex extends KaitaiStruct {
         public long fieldIdsSize() { return fieldIdsSize; }
 
         /**
-         * offset from the start of the file to the field identifiers list, or 0 if field_ids_size == 0. The offset, if non-zero, should be to the start of the field_ids section.    
+         * offset from the start of the file to the field identifiers list,
+         * or 0 if field_ids_size == 0.
+         * The offset, if non-zero, should be to the start of the field_ids section.    
          */
         public long fieldIdsOff() { return fieldIdsOff; }
 
@@ -229,7 +253,9 @@ public class Dex extends KaitaiStruct {
         public long methodIdsSize() { return methodIdsSize; }
 
         /**
-         * offset from the start of the file to the method identifiers list,  or 0 if method_ids_size == 0. The offset, if non-zero, should be to the start of the method_ids section.
+         * offset from the start of the file to the method identifiers list, 
+         * or 0 if method_ids_size == 0.
+         * The offset, if non-zero, should be to the start of the method_ids section.
          */
         public long methodIdsOff() { return methodIdsOff; }
 
@@ -239,7 +265,9 @@ public class Dex extends KaitaiStruct {
         public long classDefsSize() { return classDefsSize; }
 
         /**
-         * offset from the start of the file to the class definitions list,  or 0 if class_defs_size == 0 (admittedly a strange edge case). The offset, if non-zero, should be to the start of the class_defs section.
+         * offset from the start of the file to the class definitions list, 
+         * or 0 if class_defs_size == 0 (admittedly a strange edge case).
+         * The offset, if non-zero, should be to the start of the class_defs section.
          */
         public long classDefsOff() { return classDefsOff; }
 
@@ -450,7 +478,9 @@ public class Dex extends KaitaiStruct {
 
         /**
          * offset from the start of the file to call site definition.
-         * The offset should be in the data section, and the data there should be in the format specified by "call_site_item" below.
+         * 
+         * The offset should be in the data section, and the data there should
+         * be in the format specified by "call_site_item" below.
          */
         public long callSiteOff() { return callSiteOff; }
         public Dex _root() { return _root; }
@@ -520,7 +550,8 @@ public class Dex extends KaitaiStruct {
         private Dex _parent;
 
         /**
-         * index into the type_ids list for the definer of this method. This must be a class or array type, and not a primitive type.
+         * index into the type_ids list for the definer of this method.
+         * This must be a class or array type, and not a primitive type.
          */
         public int classIdx() { return classIdx; }
 
@@ -530,7 +561,8 @@ public class Dex extends KaitaiStruct {
         public int protoIdx() { return protoIdx; }
 
         /**
-         * index into the string_ids list for the name of this method. The string must conform to the syntax for MemberName, defined above.
+         * index into the string_ids list for the name of this method.
+         * The string must conform to the syntax for MemberName, defined above.
          */
         public long nameIdx() { return nameIdx; }
         public Dex _root() { return _root; }
@@ -606,7 +638,8 @@ public class Dex extends KaitaiStruct {
         private Dex _parent;
 
         /**
-         * index into the string_ids list for the descriptor string of this type. The string must conform to the syntax for TypeDescriptor, defined above.
+         * index into the string_ids list for the descriptor string of this type.
+         * The string must conform to the syntax for TypeDescriptor, defined above.
          */
         public long descriptorIdx() { return descriptorIdx; }
         public Dex _root() { return _root; }
@@ -642,6 +675,7 @@ public class Dex extends KaitaiStruct {
 
         /**
          * element name, represented as an index into the string_ids section.
+         * 
          * The string must conform to the syntax for MemberName, defined above.
          */
         public VlqBase128Le nameIdx() { return nameIdx; }
@@ -682,13 +716,17 @@ public class Dex extends KaitaiStruct {
         private Dex.ClassDataItem _parent;
 
         /**
-         * index into the field_ids list for the identity of this field (includes the name and descriptor), represented as a difference from the index of previous element in the list.
+         * index into the field_ids list for the identity of this field
+         * (includes the name and descriptor), represented as a difference
+         * from the index of previous element in the list.
+         * 
          * The index of the first element in a list is represented directly.
          */
         public VlqBase128Le fieldIdxDiff() { return fieldIdxDiff; }
 
         /**
          * access flags for the field (public, final, etc.).
+         * 
          * See "access_flags Definitions" for details.
          */
         public VlqBase128Le accessFlags() { return accessFlags; }
@@ -798,26 +836,35 @@ public class Dex extends KaitaiStruct {
 
         /**
          * the defined static fields, represented as a sequence of encoded elements.
+         * 
          * The fields must be sorted by field_idx in increasing order.
          */
         public ArrayList<EncodedField> staticFields() { return staticFields; }
 
         /**
          * the defined instance fields, represented as a sequence of encoded elements.
+         * 
          * The fields must be sorted by field_idx in increasing order.        
          */
         public ArrayList<EncodedField> instanceFields() { return instanceFields; }
 
         /**
-         * the defined direct (any of static, private, or constructor) methods, represented as a sequence of encoded elements.
+         * the defined direct (any of static, private, or constructor) methods,
+         * represented as a sequence of encoded elements.
+         * 
          * The methods must be sorted by method_idx in increasing order.
          */
         public ArrayList<EncodedMethod> directMethods() { return directMethods; }
 
         /**
-         * the defined virtual (none of static, private, or constructor) methods, represented as a sequence of encoded elements.
-         * This list should not include inherited methods unless overridden by the class that this item represents.
+         * the defined virtual (none of static, private, or constructor) methods,
+         * represented as a sequence of encoded elements.
+         * 
+         * This list should not include inherited methods unless overridden by
+         * the class that this item represents.
+         * 
          * The methods must be sorted by method_idx in increasing order.
+         * 
          * The method_idx of a virtual method must not be the same as any direct method.        
          */
         public ArrayList<EncodedMethod> virtualMethods() { return virtualMethods; }
@@ -888,7 +935,8 @@ public class Dex extends KaitaiStruct {
         private Dex _parent;
 
         /**
-         * index into the type_ids list for the definer of this field. This must be a class type, and not an array or primitive type.
+         * index into the type_ids list for the definer of this field.
+         * This must be a class type, and not an array or primitive type.
          */
         public int classIdx() { return classIdx; }
 
@@ -898,7 +946,8 @@ public class Dex extends KaitaiStruct {
         public int typeIdx() { return typeIdx; }
 
         /**
-         * index into the string_ids list for the name of this field. The string must conform to the syntax for MemberName, defined above.
+         * index into the string_ids list for the name of this field.
+         * The string must conform to the syntax for MemberName, defined above.
          */
         public long nameIdx() { return nameIdx; }
         public Dex _root() { return _root; }
@@ -939,6 +988,7 @@ public class Dex extends KaitaiStruct {
 
         /**
          * type of the annotation.
+         * 
          * This must be a class (not array or primitive) type.
          */
         public VlqBase128Le typeIdx() { return typeIdx; }
@@ -950,6 +1000,7 @@ public class Dex extends KaitaiStruct {
 
         /**
          * elements of the annotation, represented directly in-line (not as offsets).
+         * 
          * Elements must be sorted in increasing order by string_id index.
          */
         public ArrayList<AnnotationElement> elements() { return elements; }
@@ -1029,53 +1080,86 @@ public class Dex extends KaitaiStruct {
 
         /**
          * index into the type_ids list for this class.
+         * 
          * This must be a class type, and not an array or primitive type.
          */
         public long classIdx() { return classIdx; }
 
         /**
          * access flags for the class (public, final, etc.).
+         * 
          * See "access_flags Definitions" for details.
          */
         public ClassAccessFlags accessFlags() { return accessFlags; }
 
         /**
-         * index into the type_ids list for the superclass,  or the constant value NO_INDEX if this class has no superclass  (i.e., it is a root class such as Object). 
+         * index into the type_ids list for the superclass, 
+         * or the constant value NO_INDEX if this class has no superclass 
+         * (i.e., it is a root class such as Object). 
+         * 
          * If present, this must be a class type, and not an array or primitive type.
          */
         public long superclassIdx() { return superclassIdx; }
 
         /**
          * offset from the start of the file to the list of interfaces, or 0 if there are none.
-         * This offset should be in the data section, and the data there should  be in the format specified by "type_list" below. Each of the elements  of the list must be a class type (not an array or primitive type),  and there must not be any duplicates.        
+         * 
+         * This offset should be in the data section, and the data there should 
+         * be in the format specified by "type_list" below. Each of the elements 
+         * of the list must be a class type (not an array or primitive type), 
+         * and there must not be any duplicates.        
          */
         public long interfacesOff() { return interfacesOff; }
 
         /**
-         * index into the string_ids list for the name of the file containing  the original source for (at least most of) this class, or the  special value NO_INDEX to represent a lack of this information.
-         * The debug_info_item of any given method may override this source file, but the expectation is that most classes will only come from one source file.
+         * index into the string_ids list for the name of the file containing 
+         * the original source for (at least most of) this class, or the 
+         * special value NO_INDEX to represent a lack of this information.
+         * 
+         * The debug_info_item of any given method may override this source file,
+         * but the expectation is that most classes will only come from one source file.
          */
         public long sourceFileIdx() { return sourceFileIdx; }
 
         /**
-         * offset from the start of the file to the annotations structure for  this class, or 0 if there are no annotations on this class.
-         * This offset, if non-zero, should be in the data section, and the data  there should be in the format specified by "annotations_directory_item" below,with all items referring to this class as the definer.        
+         * offset from the start of the file to the annotations structure for 
+         * this class, or 0 if there are no annotations on this class.
+         * 
+         * This offset, if non-zero, should be in the data section, and the data 
+         * there should be in the format specified by "annotations_directory_item"
+         * below,with all items referring to this class as the definer.        
          */
         public long annotationsOff() { return annotationsOff; }
 
         /**
-         * offset from the start of the file to the associated class data for this item, or 0 if there is no class data for this class.
+         * offset from the start of the file to the associated class data for this
+         * item, or 0 if there is no class data for this class.
+         * 
          * (This may be the case, for example, if this class is a marker interface.)
-         * The offset, if non-zero, should be in the data section, and the data there should be in the format specified by "class_data_item" below, with all items referring to this class as the definer.        
+         * 
+         * The offset, if non-zero, should be in the data section, and the data
+         * there should be in the format specified by "class_data_item" below,
+         * with all items referring to this class as the definer.        
          */
         public long classDataOff() { return classDataOff; }
 
         /**
-         * offset from the start of the file to the list of initial values for  static fields, or 0 if there are none (and all static fields are to be  initialized with 0 or null).
-         * This offset should be in the data section, and the data there should  be in the format specified by "encoded_array_item" below.
-         * The size of the array must be no larger than the number of static fields  declared by this class, and the elements correspond to the static fields  in the same order as declared in the corresponding field_list.
-         * The type of each array element must match the declared type of its corresponding field.
-         * If there are fewer elements in the array than there are static fields, then the leftover fields are initialized with a type-appropriate 0 or null.
+         * offset from the start of the file to the list of initial values for 
+         * static fields, or 0 if there are none (and all static fields are to be 
+         * initialized with 0 or null).
+         * 
+         * This offset should be in the data section, and the data there should 
+         * be in the format specified by "encoded_array_item" below.
+         * 
+         * The size of the array must be no larger than the number of static fields 
+         * declared by this class, and the elements correspond to the static fields 
+         * in the same order as declared in the corresponding field_list.
+         * 
+         * The type of each array element must match the declared type of its
+         * corresponding field.
+         * 
+         * If there are fewer elements in the array than there are static fields,
+         * then the leftover fields are initialized with a type-appropriate 0 or null.
          */
         public long staticValuesOff() { return staticValuesOff; }
         public Dex _root() { return _root; }
@@ -1185,7 +1269,10 @@ public class Dex extends KaitaiStruct {
         private Dex _parent;
 
         /**
-         * offset from the start of the file to the string data for this item. The offset should be to a location in the data section, and the data should be in the format specified by "string_data_item" below. There is no alignment requirement for the offset.
+         * offset from the start of the file to the string data for this item.
+         * The offset should be to a location in the data section, and the data
+         * should be in the format specified by "string_data_item" below.
+         * There is no alignment requirement for the offset.
          */
         public long stringDataOff() { return stringDataOff; }
         public Dex _root() { return _root; }
@@ -1261,7 +1348,9 @@ public class Dex extends KaitaiStruct {
         private Dex _parent;
 
         /**
-         * index into the string_ids list for the short-form descriptor string of this prototype. The string must conform to the syntax for ShortyDescriptor, defined above,  and must correspond to the return type and parameters of this item.
+         * index into the string_ids list for the short-form descriptor string of this prototype.
+         * The string must conform to the syntax for ShortyDescriptor, defined above, 
+         * and must correspond to the return type and parameters of this item.
          */
         public long shortyIdx() { return shortyIdx; }
 
@@ -1271,7 +1360,11 @@ public class Dex extends KaitaiStruct {
         public long returnTypeIdx() { return returnTypeIdx; }
 
         /**
-         * offset from the start of the file to the list of parameter types for this prototype,  or 0 if this prototype has no parameters. This offset, if non-zero, should be in the data section, and the data there should be in the format specified by "type_list" below. Additionally, there should be no reference to the type void in the list.
+         * offset from the start of the file to the list of parameter types for this prototype, 
+         * or 0 if this prototype has no parameters.
+         * This offset, if non-zero, should be in the data section, and the data
+         * there should be in the format specified by "type_list" below.
+         * Additionally, there should be no reference to the type void in the list.
          */
         public long parametersOff() { return parametersOff; }
         public Dex _root() { return _root; }
@@ -1308,20 +1401,27 @@ public class Dex extends KaitaiStruct {
         private Dex.ClassDataItem _parent;
 
         /**
-         * index into the method_ids list for the identity of this method (includes the name and descriptor), represented as a difference from the index of previous element in the list.
+         * index into the method_ids list for the identity of this method
+         * (includes the name and descriptor), represented as a difference
+         * from the index of previous element in the list.
+         * 
          * The index of the first element in a list is represented directly.
          */
         public VlqBase128Le methodIdxDiff() { return methodIdxDiff; }
 
         /**
          * access flags for the field (public, final, etc.).
+         * 
          * See "access_flags Definitions" for details.
          */
         public VlqBase128Le accessFlags() { return accessFlags; }
 
         /**
-         * offset from the start of the file to the code structure for this method, or 0 if this method is either abstract or native.
+         * offset from the start of the file to the code structure for this method,
+         * or 0 if this method is either abstract or native.
+         * 
          * The offset should be to a location in the data section.
+         * 
          * The format of the data is specified by "code_item" below.
          */
         public VlqBase128Le codeOff() { return codeOff; }
@@ -1454,8 +1554,12 @@ public class Dex extends KaitaiStruct {
 
     /**
      * string identifiers list.
-     * These are identifiers for all the strings used by this file, either for  internal naming (e.g., type descriptors) or as constant objects referred to by code.
-     * This list must be sorted by string contents, using UTF-16 code point values (not in a locale-sensitive manner), and it must not contain any duplicate entries.    
+     * 
+     * These are identifiers for all the strings used by this file, either for 
+     * internal naming (e.g., type descriptors) or as constant objects referred to by code.
+     * 
+     * This list must be sorted by string contents, using UTF-16 code point values
+     * (not in a locale-sensitive manner), and it must not contain any duplicate entries.    
      */
     public ArrayList<StringIdItem> stringIds() {
         if (this.stringIds != null)
@@ -1473,8 +1577,14 @@ public class Dex extends KaitaiStruct {
 
     /**
      * method identifiers list.
-     * These are identifiers for all methods referred to by this file, whether defined in the file or not.
-     * This list must be sorted, where the defining type (by type_id index  is the major order, method name (by string_id index) is the intermediate order, and method prototype (by proto_id index) is the minor order.
+     * 
+     * These are identifiers for all methods referred to by this file,
+     * whether defined in the file or not.
+     * 
+     * This list must be sorted, where the defining type (by type_id index 
+     * is the major order, method name (by string_id index) is the intermediate
+     * order, and method prototype (by proto_id index) is the minor order.
+     * 
      * The list must not contain any duplicate entries.
      */
     public ArrayList<MethodIdItem> methodIds() {
@@ -1493,8 +1603,11 @@ public class Dex extends KaitaiStruct {
 
     /**
      * data used in statically linked files.
+     * 
      * The format of the data in this section is left unspecified by this document.
-     * This section is empty in unlinked files, and runtime implementations may use it as they see fit.
+     * 
+     * This section is empty in unlinked files, and runtime implementations may
+     * use it as they see fit.
      */
     public byte[] linkData() {
         if (this.linkData != null)
@@ -1519,8 +1632,12 @@ public class Dex extends KaitaiStruct {
 
     /**
      * class definitions list.
-     * The classes must be ordered such that a given class's superclass and implemented interfaces appear in the list earlier than the referring class.
-     * Furthermore, it is invalid for a definition for the same-named class to appear more than once in the list.
+     * 
+     * The classes must be ordered such that a given class's superclass and
+     * implemented interfaces appear in the list earlier than the referring class.
+     * 
+     * Furthermore, it is invalid for a definition for the same-named class to
+     * appear more than once in the list.
      */
     public ArrayList<ClassDefItem> classDefs() {
         if (this.classDefs != null)
@@ -1538,7 +1655,9 @@ public class Dex extends KaitaiStruct {
 
     /**
      * data area, containing all the support data for the tables listed above.
-     * Different items have different alignment requirements, and padding bytes are inserted before each item if necessary to achieve proper alignment.
+     * 
+     * Different items have different alignment requirements, and padding bytes
+     * are inserted before each item if necessary to achieve proper alignment.
      */
     public byte[] data() {
         if (this.data != null)
@@ -1553,7 +1672,10 @@ public class Dex extends KaitaiStruct {
 
     /**
      * type identifiers list. 
-     * These are identifiers for all types (classes, arrays, or primitive types)  referred to by this file, whether defined in the file or not.
+     * 
+     * These are identifiers for all types (classes, arrays, or primitive types) 
+     * referred to by this file, whether defined in the file or not.
+     * 
      * This list must be sorted by string_id index, and it must not contain any duplicate entries.
      */
     public ArrayList<TypeIdItem> typeIds() {
@@ -1572,8 +1694,12 @@ public class Dex extends KaitaiStruct {
 
     /**
      * method prototype identifiers list.
+     * 
      * These are identifiers for all prototypes referred to by this file.
-     * This list must be sorted in return-type (by type_id index) major order, and then by argument list (lexicographic ordering, individual arguments ordered by type_id index). The list must not contain any duplicate entries.
+     * 
+     * This list must be sorted in return-type (by type_id index) major order,
+     * and then by argument list (lexicographic ordering, individual arguments
+     * ordered by type_id index). The list must not contain any duplicate entries.
      */
     public ArrayList<ProtoIdItem> protoIds() {
         if (this.protoIds != null)
@@ -1591,8 +1717,13 @@ public class Dex extends KaitaiStruct {
 
     /**
      * field identifiers list.
+     * 
      * These are identifiers for all fields referred to by this file, whether defined in the file or not. 
-     * This list must be sorted, where the defining type (by type_id index)  is the major order, field name (by string_id index) is the intermediate  order, and type (by type_id index) is the minor order.
+     * 
+     * This list must be sorted, where the defining type (by type_id index) 
+     * is the major order, field name (by string_id index) is the intermediate 
+     * order, and type (by type_id index) is the minor order.
+     * 
      * The list must not contain any duplicate entries.
      */
     public ArrayList<FieldIdItem> fieldIds() {
