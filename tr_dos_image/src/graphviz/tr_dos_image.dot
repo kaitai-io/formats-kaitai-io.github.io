@@ -1,0 +1,152 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__tr_dos_image {
+		label="TrDosImage";
+		graph[style=dotted];
+
+		tr_dos_image__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="files_pos">0</TD><TD PORT="files_size">...</TD><TD>File</TD><TD PORT="files_type">files</TD></TR>
+			<TR><TD COLSPAN="4" PORT="files__repeat">repeat until _.is_terminator</TD></TR>
+		</TABLE>>];
+		tr_dos_image__inst__volume_info [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="volume_info_pos">2048</TD><TD PORT="volume_info_size">256</TD><TD>VolumeInfo</TD><TD PORT="volume_info_type">volume_info</TD></TR>
+		</TABLE>>];
+		subgraph cluster__volume_info {
+			label="TrDosImage::VolumeInfo";
+			graph[style=dotted];
+
+			volume_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="catalog_end_pos">0</TD><TD PORT="catalog_end_size">1</TD><TD>00</TD><TD PORT="catalog_end_type">catalog_end</TD></TR>
+				<TR><TD PORT="unused_pos">1</TD><TD PORT="unused_size">224</TD><TD></TD><TD PORT="unused_type">unused</TD></TR>
+				<TR><TD PORT="first_free_sector_sector_pos">225</TD><TD PORT="first_free_sector_sector_size">1</TD><TD>u1</TD><TD PORT="first_free_sector_sector_type">first_free_sector_sector</TD></TR>
+				<TR><TD PORT="first_free_sector_track_pos">226</TD><TD PORT="first_free_sector_track_size">1</TD><TD>u1</TD><TD PORT="first_free_sector_track_type">first_free_sector_track</TD></TR>
+				<TR><TD PORT="disk_type_pos">227</TD><TD PORT="disk_type_size">1</TD><TD>u1→DiskType</TD><TD PORT="disk_type_type">disk_type</TD></TR>
+				<TR><TD PORT="num_files_pos">228</TD><TD PORT="num_files_size">1</TD><TD>u1</TD><TD PORT="num_files_type">num_files</TD></TR>
+				<TR><TD PORT="num_free_sectors_pos">229</TD><TD PORT="num_free_sectors_size">2</TD><TD>u2le</TD><TD PORT="num_free_sectors_type">num_free_sectors</TD></TR>
+				<TR><TD PORT="tr_dos_id_pos">231</TD><TD PORT="tr_dos_id_size">1</TD><TD>10</TD><TD PORT="tr_dos_id_type">tr_dos_id</TD></TR>
+				<TR><TD PORT="unused_2_pos">232</TD><TD PORT="unused_2_size">2</TD><TD></TD><TD PORT="unused_2_type">unused_2</TD></TR>
+				<TR><TD PORT="password_pos">234</TD><TD PORT="password_size">9</TD><TD></TD><TD PORT="password_type">password</TD></TR>
+				<TR><TD PORT="unused_3_pos">243</TD><TD PORT="unused_3_size">1</TD><TD></TD><TD PORT="unused_3_type">unused_3</TD></TR>
+				<TR><TD PORT="num_deleted_files_pos">244</TD><TD PORT="num_deleted_files_size">1</TD><TD>u1</TD><TD PORT="num_deleted_files_type">num_deleted_files</TD></TR>
+				<TR><TD PORT="label_pos">245</TD><TD PORT="label_size">8</TD><TD></TD><TD PORT="label_type">label</TD></TR>
+				<TR><TD PORT="unused_4_pos">253</TD><TD PORT="unused_4_size">3</TD><TD></TD><TD PORT="unused_4_type">unused_4</TD></TR>
+			</TABLE>>];
+			volume_info__inst__num_tracks [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>num_tracks</TD><TD>((I__DISK_TYPE[disk_type] &amp; 1) != 0 ? 40 : 80)</TD></TR>
+			</TABLE>>];
+			volume_info__inst__num_sides [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>num_sides</TD><TD>((I__DISK_TYPE[disk_type] &amp; 8) != 0 ? 1 : 2)</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__position_and_length_code {
+			label="TrDosImage::PositionAndLengthCode";
+			graph[style=dotted];
+
+			position_and_length_code__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="start_address_pos">0</TD><TD PORT="start_address_size">2</TD><TD>u2le</TD><TD PORT="start_address_type">start_address</TD></TR>
+				<TR><TD PORT="length_pos">2</TD><TD PORT="length_size">2</TD><TD>u2le</TD><TD PORT="length_type">length</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__filename {
+			label="TrDosImage::Filename";
+			graph[style=dotted];
+
+			filename__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">8</TD><TD></TD><TD PORT="name_type">name</TD></TR>
+			</TABLE>>];
+			filename__inst__first_byte [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="first_byte_pos">0</TD><TD PORT="first_byte_size">1</TD><TD>u1</TD><TD PORT="first_byte_type">first_byte</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__position_and_length_print {
+			label="TrDosImage::PositionAndLengthPrint";
+			graph[style=dotted];
+
+			position_and_length_print__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="extent_no_pos">0</TD><TD PORT="extent_no_size">1</TD><TD>u1</TD><TD PORT="extent_no_type">extent_no</TD></TR>
+				<TR><TD PORT="reserved_pos">1</TD><TD PORT="reserved_size">1</TD><TD>u1</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="length_pos">2</TD><TD PORT="length_size">2</TD><TD>u2le</TD><TD PORT="length_type">length</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__position_and_length_generic {
+			label="TrDosImage::PositionAndLengthGeneric";
+			graph[style=dotted];
+
+			position_and_length_generic__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">2</TD><TD>u2le</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="length_pos">2</TD><TD PORT="length_size">2</TD><TD>u2le</TD><TD PORT="length_type">length</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__position_and_length_basic {
+			label="TrDosImage::PositionAndLengthBasic";
+			graph[style=dotted];
+
+			position_and_length_basic__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="program_and_data_length_pos">0</TD><TD PORT="program_and_data_length_size">2</TD><TD>u2le</TD><TD PORT="program_and_data_length_type">program_and_data_length</TD></TR>
+				<TR><TD PORT="program_length_pos">2</TD><TD PORT="program_length_size">2</TD><TD>u2le</TD><TD PORT="program_length_type">program_length</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__file {
+			label="TrDosImage::File";
+			graph[style=dotted];
+
+			file__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">8</TD><TD>Filename</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="extension_pos">8</TD><TD PORT="extension_size">1</TD><TD>u1</TD><TD PORT="extension_type">extension</TD></TR>
+				<TR><TD PORT="position_and_length_pos">9</TD><TD PORT="position_and_length_size">...</TD><TD>switch (extension)</TD><TD PORT="position_and_length_type">position_and_length</TD></TR>
+				<TR><TD PORT="length_sectors_pos">...</TD><TD PORT="length_sectors_size">1</TD><TD>u1</TD><TD PORT="length_sectors_type">length_sectors</TD></TR>
+				<TR><TD PORT="starting_sector_pos">...</TD><TD PORT="starting_sector_size">1</TD><TD>u1</TD><TD PORT="starting_sector_type">starting_sector</TD></TR>
+				<TR><TD PORT="starting_track_pos">...</TD><TD PORT="starting_track_size">1</TD><TD>u1</TD><TD PORT="starting_track_type">starting_track</TD></TR>
+			</TABLE>>];
+			file__inst__is_deleted [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_deleted</TD><TD>name.first_byte == 1</TD></TR>
+			</TABLE>>];
+			file__inst__is_terminator [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_terminator</TD><TD>name.first_byte == 0</TD></TR>
+			</TABLE>>];
+			file__inst__contents [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="contents_pos">(((starting_track * 256) * 16) + (starting_sector * 256))</TD><TD PORT="contents_size">(length_sectors * 256)</TD><TD></TD><TD PORT="contents_type">contents</TD></TR>
+			</TABLE>>];
+file__seq_position_and_length_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>66</TD><TD PORT="case0">PositionAndLengthBasic</TD></TR>
+	<TR><TD>67</TD><TD PORT="case1">PositionAndLengthCode</TD></TR>
+	<TR><TD>35</TD><TD PORT="case2">PositionAndLengthPrint</TD></TR>
+	<TR><TD>_</TD><TD PORT="case3">PositionAndLengthGeneric</TD></TR>
+</TABLE>>];
+		}
+	}
+	tr_dos_image__seq:files_type -> file__seq [style=bold];
+	file__inst__is_terminator:is_terminator_type -> tr_dos_image__seq:files__repeat [color="#404040"];
+	tr_dos_image__inst__volume_info:volume_info_type -> volume_info__seq [style=bold];
+	volume_info__seq:disk_type_type -> volume_info__inst__num_tracks [color="#404040"];
+	volume_info__seq:disk_type_type -> volume_info__inst__num_sides [color="#404040"];
+	file__seq:name_type -> filename__seq [style=bold];
+	file__seq:position_and_length_type -> file__seq_position_and_length_switch [style=bold];
+	file__seq_position_and_length_switch:case0 -> position_and_length_basic__seq [style=bold];
+	file__seq_position_and_length_switch:case1 -> position_and_length_code__seq [style=bold];
+	file__seq_position_and_length_switch:case2 -> position_and_length_print__seq [style=bold];
+	file__seq_position_and_length_switch:case3 -> position_and_length_generic__seq [style=bold];
+	file__seq:extension_type -> file__seq:position_and_length_type [color="#404040"];
+	filename__inst__first_byte:first_byte_type -> file__inst__is_deleted [color="#404040"];
+	filename__inst__first_byte:first_byte_type -> file__inst__is_terminator [color="#404040"];
+	file__seq:starting_track_type -> file__inst__contents:contents_pos [color="#404040"];
+	file__seq:starting_sector_type -> file__inst__contents:contents_pos [color="#404040"];
+	file__seq:length_sectors_type -> file__inst__contents:contents_size [color="#404040"];
+}

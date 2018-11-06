@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>TR-DOS flat-file disk image: C++/STL parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">TR-DOS flat-file disk image</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>TR-DOS flat-file disk image:
+            
+            C++/STL parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>.trd file is a raw dump of TR-DOS (ZX-Spectrum) floppy. .trd files are
+headerless and contain consequent &quot;logical tracks&quot;, each logical track
+consists of 16 256-byte sectors.</p>
+<p>Logical tracks are defined the same way as used by TR-DOS: for single-side
+floppies it's just a physical track number, for two-side floppies sides are
+interleaved, i.e. logical_track_num = (physical_track_num &lt;&lt; 1) | side</p>
+<p>So, this format definition is more for TR-DOS filesystem than for .trd files,
+which are formatless.</p>
+<p>Strings (file names, disk label, disk password) are padded with spaces and use
+ZX Spectrum character set, including UDGs, block drawing chars and Basic
+tokens. ASCII range is mostly standard ASCII, with few characters (^, `, DEL)
+replaced with (up arrow, pound, copyright symbol).</p>
+<p>.trd file can be smaller than actual floppy disk, if last logical tracks are
+empty (contain no file data) they can be omitted.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        trd
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of TR-DOS flat-file disk image
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="TR-DOS flat-file disk image parsing Overview library">Overview</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="cpp_stl.html" title="TR-DOS flat-file disk image parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="TR-DOS flat-file disk image parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="TR-DOS flat-file disk image parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="TR-DOS flat-file disk image parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="TR-DOS flat-file disk image parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="TR-DOS flat-file disk image parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="TR-DOS flat-file disk image parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="TR-DOS flat-file disk image parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="TR-DOS flat-file disk image parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="TR-DOS flat-file disk image parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+
+<p>Using Kaitai Struct in C++/STL usually consists of 3 steps.</p>
+
+<ol>
+    <li>We need to create an STL input stream (<code>std::istream</code>).
+        <ul>
+            <li>One can open a stream for reading from a local file:
+
+<pre><code class="cpp">#include &lt;fstream&gt;
+
+std::ifstream is("path/to/local/file.trd", std::ifstream::binary);</code></pre></li>
+
+            <li>Or one can prepare a stream for reading from existing <code>std::string str</code>:
+
+<pre><code class="cpp">#include &lt;sstream&gt;
+
+std::istringstream is(str);</code></pre></li>
+
+            <li>Or one can parse arbitrary <code>char*</code> buffer in memory, given that we know its size:
+
+<pre><code class="cpp">#include &lt;sstream&gt;
+
+const char buf[] = { ... };
+std::string str(buf, sizeof buf);
+std::istringstream is(str);</code></pre></li>
+
+    </ul></li>
+
+    <li>We need to wrap our input stream into Kaitai stream:
+
+<pre><code class="cpp">#include &lt;kaitai/kaitaistream.h&gt;
+
+kaitai::kstream ks(&amp;is);</code></pre></li>
+
+    <li>And finally, we can invoke the parsing:
+
+<pre><code class="cpp">tr_dos_image_t data(&amp;ks);</code></pre></li>
+</ol>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="cpp">data.files() // => get files</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C++/STL source code to parse TR-DOS flat-file disk image
+            
+        </h2>
+
+        
+
+        <h3>tr_dos_image.h</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl/tr_dos_image.h" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="cpp_stl">#ifndef TR_DOS_IMAGE_H_
+#define TR_DOS_IMAGE_H_
+
+// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include &quot;kaitai/kaitaistruct.h&quot;
+
+#include &lt;stdint.h&gt;
+#include &lt;vector&gt;
+
+#if KAITAI_STRUCT_VERSION &lt; 7000L
+#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
+#endif
+
+/**
+ * .trd file is a raw dump of TR-DOS (ZX-Spectrum) floppy. .trd files are
+ * headerless and contain consequent &quot;logical tracks&quot;, each logical track
+ * consists of 16 256-byte sectors.
+ * 
+ * Logical tracks are defined the same way as used by TR-DOS: for single-side
+ * floppies it&#39;s just a physical track number, for two-side floppies sides are
+ * interleaved, i.e. logical_track_num = (physical_track_num &lt;&lt; 1) | side
+ * 
+ * So, this format definition is more for TR-DOS filesystem than for .trd files,
+ * which are formatless.
+ * 
+ * Strings (file names, disk label, disk password) are padded with spaces and use
+ * ZX Spectrum character set, including UDGs, block drawing chars and Basic
+ * tokens. ASCII range is mostly standard ASCII, with few characters (^, `, DEL)
+ * replaced with (up arrow, pound, copyright symbol).
+ * 
+ * .trd file can be smaller than actual floppy disk, if last logical tracks are
+ * empty (contain no file data) they can be omitted.
+ */
+
+class tr_dos_image_t : public kaitai::kstruct {
+
+public:
+    class volume_info_t;
+    class position_and_length_code_t;
+    class filename_t;
+    class position_and_length_print_t;
+    class position_and_length_generic_t;
+    class position_and_length_basic_t;
+    class file_t;
+
+    enum disk_type_t {
+        DISK_TYPE_TYPE_80_TRACKS_DOUBLE_SIDE = 22,
+        DISK_TYPE_TYPE_40_TRACKS_DOUBLE_SIDE = 23,
+        DISK_TYPE_TYPE_80_TRACKS_SINGLE_SIDE = 24,
+        DISK_TYPE_TYPE_40_TRACKS_SINGLE_SIDE = 25
+    };
+
+    tr_dos_image_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, tr_dos_image_t* p__root = 0);
+
+private:
+    void _read();
+
+public:
+    ~tr_dos_image_t();
+
+    class volume_info_t : public kaitai::kstruct {
+
+    public:
+
+        volume_info_t(kaitai::kstream* p__io, tr_dos_image_t* p__parent = 0, tr_dos_image_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~volume_info_t();
+
+    private:
+        bool f_num_tracks;
+        int8_t m_num_tracks;
+
+    public:
+        int8_t num_tracks();
+
+    private:
+        bool f_num_sides;
+        int8_t m_num_sides;
+
+    public:
+        int8_t num_sides();
+
+    private:
+        std::string m_catalog_end;
+        std::string m_unused;
+        uint8_t m_first_free_sector_sector;
+        uint8_t m_first_free_sector_track;
+        disk_type_t m_disk_type;
+        uint8_t m_num_files;
+        uint16_t m_num_free_sectors;
+        std::string m_tr_dos_id;
+        std::string m_unused_2;
+        std::string m_password;
+        std::string m_unused_3;
+        uint8_t m_num_deleted_files;
+        std::string m_label;
+        std::string m_unused_4;
+        tr_dos_image_t* m__root;
+        tr_dos_image_t* m__parent;
+
+    public:
+        std::string catalog_end() const { return m_catalog_end; }
+        std::string unused() const { return m_unused; }
+        uint8_t first_free_sector_sector() const { return m_first_free_sector_sector; }
+
+        /**
+         * track number is logical, for double-sided disks it&#39;s
+         * (physical_track &lt;&lt; 1) | side, the same way that tracks are stored
+         * sequentially in .trd file
+         */
+        uint8_t first_free_sector_track() const { return m_first_free_sector_track; }
+        disk_type_t disk_type() const { return m_disk_type; }
+
+        /**
+         * Number of non-deleted files. Directory can have more than
+         * number_of_files entries due to deleted files
+         */
+        uint8_t num_files() const { return m_num_files; }
+        uint16_t num_free_sectors() const { return m_num_free_sectors; }
+        std::string tr_dos_id() const { return m_tr_dos_id; }
+        std::string unused_2() const { return m_unused_2; }
+        std::string password() const { return m_password; }
+        std::string unused_3() const { return m_unused_3; }
+        uint8_t num_deleted_files() const { return m_num_deleted_files; }
+        std::string label() const { return m_label; }
+        std::string unused_4() const { return m_unused_4; }
+        tr_dos_image_t* _root() const { return m__root; }
+        tr_dos_image_t* _parent() const { return m__parent; }
+    };
+
+    class position_and_length_code_t : public kaitai::kstruct {
+
+    public:
+
+        position_and_length_code_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent = 0, tr_dos_image_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~position_and_length_code_t();
+
+    private:
+        uint16_t m_start_address;
+        uint16_t m_length;
+        tr_dos_image_t* m__root;
+        tr_dos_image_t::file_t* m__parent;
+
+    public:
+
+        /**
+         * Default memory address to load this byte array into
+         */
+        uint16_t start_address() const { return m_start_address; }
+        uint16_t length() const { return m_length; }
+        tr_dos_image_t* _root() const { return m__root; }
+        tr_dos_image_t::file_t* _parent() const { return m__parent; }
+    };
+
+    class filename_t : public kaitai::kstruct {
+
+    public:
+
+        filename_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent = 0, tr_dos_image_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~filename_t();
+
+    private:
+        bool f_first_byte;
+        uint8_t m_first_byte;
+
+    public:
+        uint8_t first_byte();
+
+    private:
+        std::string m_name;
+        tr_dos_image_t* m__root;
+        tr_dos_image_t::file_t* m__parent;
+
+    public:
+        std::string name() const { return m_name; }
+        tr_dos_image_t* _root() const { return m__root; }
+        tr_dos_image_t::file_t* _parent() const { return m__parent; }
+    };
+
+    class position_and_length_print_t : public kaitai::kstruct {
+
+    public:
+
+        position_and_length_print_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent = 0, tr_dos_image_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~position_and_length_print_t();
+
+    private:
+        uint8_t m_extent_no;
+        uint8_t m_reserved;
+        uint16_t m_length;
+        tr_dos_image_t* m__root;
+        tr_dos_image_t::file_t* m__parent;
+
+    public:
+        uint8_t extent_no() const { return m_extent_no; }
+        uint8_t reserved() const { return m_reserved; }
+        uint16_t length() const { return m_length; }
+        tr_dos_image_t* _root() const { return m__root; }
+        tr_dos_image_t::file_t* _parent() const { return m__parent; }
+    };
+
+    class position_and_length_generic_t : public kaitai::kstruct {
+
+    public:
+
+        position_and_length_generic_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent = 0, tr_dos_image_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~position_and_length_generic_t();
+
+    private:
+        uint16_t m_reserved;
+        uint16_t m_length;
+        tr_dos_image_t* m__root;
+        tr_dos_image_t::file_t* m__parent;
+
+    public:
+        uint16_t reserved() const { return m_reserved; }
+        uint16_t length() const { return m_length; }
+        tr_dos_image_t* _root() const { return m__root; }
+        tr_dos_image_t::file_t* _parent() const { return m__parent; }
+    };
+
+    class position_and_length_basic_t : public kaitai::kstruct {
+
+    public:
+
+        position_and_length_basic_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent = 0, tr_dos_image_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~position_and_length_basic_t();
+
+    private:
+        uint16_t m_program_and_data_length;
+        uint16_t m_program_length;
+        tr_dos_image_t* m__root;
+        tr_dos_image_t::file_t* m__parent;
+
+    public:
+        uint16_t program_and_data_length() const { return m_program_and_data_length; }
+        uint16_t program_length() const { return m_program_length; }
+        tr_dos_image_t* _root() const { return m__root; }
+        tr_dos_image_t::file_t* _parent() const { return m__parent; }
+    };
+
+    class file_t : public kaitai::kstruct {
+
+    public:
+
+        file_t(kaitai::kstream* p__io, tr_dos_image_t* p__parent = 0, tr_dos_image_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~file_t();
+
+    private:
+        bool f_is_deleted;
+        bool m_is_deleted;
+
+    public:
+        bool is_deleted();
+
+    private:
+        bool f_is_terminator;
+        bool m_is_terminator;
+
+    public:
+        bool is_terminator();
+
+    private:
+        bool f_contents;
+        std::string m_contents;
+
+    public:
+        std::string contents();
+
+    private:
+        filename_t* m_name;
+        uint8_t m_extension;
+        kaitai::kstruct* m_position_and_length;
+        uint8_t m_length_sectors;
+        uint8_t m_starting_sector;
+        uint8_t m_starting_track;
+        tr_dos_image_t* m__root;
+        tr_dos_image_t* m__parent;
+        std::string m__raw_name;
+        kaitai::kstream* m__io__raw_name;
+
+    public:
+        filename_t* name() const { return m_name; }
+        uint8_t extension() const { return m_extension; }
+        kaitai::kstruct* position_and_length() const { return m_position_and_length; }
+        uint8_t length_sectors() const { return m_length_sectors; }
+        uint8_t starting_sector() const { return m_starting_sector; }
+        uint8_t starting_track() const { return m_starting_track; }
+        tr_dos_image_t* _root() const { return m__root; }
+        tr_dos_image_t* _parent() const { return m__parent; }
+        std::string _raw_name() const { return m__raw_name; }
+        kaitai::kstream* _io__raw_name() const { return m__io__raw_name; }
+    };
+
+private:
+    bool f_volume_info;
+    volume_info_t* m_volume_info;
+
+public:
+    volume_info_t* volume_info();
+
+private:
+    std::vector&lt;file_t*&gt;* m_files;
+    tr_dos_image_t* m__root;
+    kaitai::kstruct* m__parent;
+
+public:
+    std::vector&lt;file_t*&gt;* files() const { return m_files; }
+    tr_dos_image_t* _root() const { return m__root; }
+    kaitai::kstruct* _parent() const { return m__parent; }
+};
+
+#endif  // TR_DOS_IMAGE_H_
+</code></pre>
+            
+        </div>
+        
+
+        <h3>tr_dos_image.cpp</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl/tr_dos_image.cpp" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include &quot;tr_dos_image.h&quot;
+
+
+
+tr_dos_image_t::tr_dos_image_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = this;
+    f_volume_info = false;
+    _read();
+}
+
+void tr_dos_image_t::_read() {
+    m_files = new std::vector&lt;file_t*&gt;();
+    {
+        int i = 0;
+        file_t* _;
+        do {
+            _ = new file_t(m__io, this, m__root);
+            m_files-&gt;push_back(_);
+            i++;
+        } while (!(_-&gt;is_terminator()));
+    }
+}
+
+tr_dos_image_t::~tr_dos_image_t() {
+    for (std::vector&lt;file_t*&gt;::iterator it = m_files-&gt;begin(); it != m_files-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_files;
+    if (f_volume_info) {
+        delete m_volume_info;
+    }
+}
+
+tr_dos_image_t::volume_info_t::volume_info_t(kaitai::kstream* p__io, tr_dos_image_t* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_num_tracks = false;
+    f_num_sides = false;
+    _read();
+}
+
+void tr_dos_image_t::volume_info_t::_read() {
+    m_catalog_end = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x00&quot;, 1));
+    m_unused = m__io-&gt;read_bytes(224);
+    m_first_free_sector_sector = m__io-&gt;read_u1();
+    m_first_free_sector_track = m__io-&gt;read_u1();
+    m_disk_type = static_cast&lt;tr_dos_image_t::disk_type_t&gt;(m__io-&gt;read_u1());
+    m_num_files = m__io-&gt;read_u1();
+    m_num_free_sectors = m__io-&gt;read_u2le();
+    m_tr_dos_id = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x10&quot;, 1));
+    m_unused_2 = m__io-&gt;read_bytes(2);
+    m_password = m__io-&gt;read_bytes(9);
+    m_unused_3 = m__io-&gt;read_bytes(1);
+    m_num_deleted_files = m__io-&gt;read_u1();
+    m_label = m__io-&gt;read_bytes(8);
+    m_unused_4 = m__io-&gt;read_bytes(3);
+}
+
+tr_dos_image_t::volume_info_t::~volume_info_t() {
+}
+
+int8_t tr_dos_image_t::volume_info_t::num_tracks() {
+    if (f_num_tracks)
+        return m_num_tracks;
+    m_num_tracks = (((disk_type() &amp; 1) != 0) ? (40) : (80));
+    f_num_tracks = true;
+    return m_num_tracks;
+}
+
+int8_t tr_dos_image_t::volume_info_t::num_sides() {
+    if (f_num_sides)
+        return m_num_sides;
+    m_num_sides = (((disk_type() &amp; 8) != 0) ? (1) : (2));
+    f_num_sides = true;
+    return m_num_sides;
+}
+
+tr_dos_image_t::position_and_length_code_t::position_and_length_code_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void tr_dos_image_t::position_and_length_code_t::_read() {
+    m_start_address = m__io-&gt;read_u2le();
+    m_length = m__io-&gt;read_u2le();
+}
+
+tr_dos_image_t::position_and_length_code_t::~position_and_length_code_t() {
+}
+
+tr_dos_image_t::filename_t::filename_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_first_byte = false;
+    _read();
+}
+
+void tr_dos_image_t::filename_t::_read() {
+    m_name = m__io-&gt;read_bytes(8);
+}
+
+tr_dos_image_t::filename_t::~filename_t() {
+    if (f_first_byte) {
+    }
+}
+
+uint8_t tr_dos_image_t::filename_t::first_byte() {
+    if (f_first_byte)
+        return m_first_byte;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(0);
+    m_first_byte = m__io-&gt;read_u1();
+    m__io-&gt;seek(_pos);
+    f_first_byte = true;
+    return m_first_byte;
+}
+
+tr_dos_image_t::position_and_length_print_t::position_and_length_print_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void tr_dos_image_t::position_and_length_print_t::_read() {
+    m_extent_no = m__io-&gt;read_u1();
+    m_reserved = m__io-&gt;read_u1();
+    m_length = m__io-&gt;read_u2le();
+}
+
+tr_dos_image_t::position_and_length_print_t::~position_and_length_print_t() {
+}
+
+tr_dos_image_t::position_and_length_generic_t::position_and_length_generic_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void tr_dos_image_t::position_and_length_generic_t::_read() {
+    m_reserved = m__io-&gt;read_u2le();
+    m_length = m__io-&gt;read_u2le();
+}
+
+tr_dos_image_t::position_and_length_generic_t::~position_and_length_generic_t() {
+}
+
+tr_dos_image_t::position_and_length_basic_t::position_and_length_basic_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void tr_dos_image_t::position_and_length_basic_t::_read() {
+    m_program_and_data_length = m__io-&gt;read_u2le();
+    m_program_length = m__io-&gt;read_u2le();
+}
+
+tr_dos_image_t::position_and_length_basic_t::~position_and_length_basic_t() {
+}
+
+tr_dos_image_t::file_t::file_t(kaitai::kstream* p__io, tr_dos_image_t* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_is_deleted = false;
+    f_is_terminator = false;
+    f_contents = false;
+    _read();
+}
+
+void tr_dos_image_t::file_t::_read() {
+    m__raw_name = m__io-&gt;read_bytes(8);
+    m__io__raw_name = new kaitai::kstream(m__raw_name);
+    m_name = new filename_t(m__io__raw_name, this, m__root);
+    m_extension = m__io-&gt;read_u1();
+    switch (extension()) {
+    case 66: {
+        m_position_and_length = new position_and_length_basic_t(m__io, this, m__root);
+        break;
+    }
+    case 67: {
+        m_position_and_length = new position_and_length_code_t(m__io, this, m__root);
+        break;
+    }
+    case 35: {
+        m_position_and_length = new position_and_length_print_t(m__io, this, m__root);
+        break;
+    }
+    default: {
+        m_position_and_length = new position_and_length_generic_t(m__io, this, m__root);
+        break;
+    }
+    }
+    m_length_sectors = m__io-&gt;read_u1();
+    m_starting_sector = m__io-&gt;read_u1();
+    m_starting_track = m__io-&gt;read_u1();
+}
+
+tr_dos_image_t::file_t::~file_t() {
+    delete m__io__raw_name;
+    delete m_name;
+    delete m_position_and_length;
+    if (f_contents) {
+    }
+}
+
+bool tr_dos_image_t::file_t::is_deleted() {
+    if (f_is_deleted)
+        return m_is_deleted;
+    m_is_deleted = name()-&gt;first_byte() == 1;
+    f_is_deleted = true;
+    return m_is_deleted;
+}
+
+bool tr_dos_image_t::file_t::is_terminator() {
+    if (f_is_terminator)
+        return m_is_terminator;
+    m_is_terminator = name()-&gt;first_byte() == 0;
+    f_is_terminator = true;
+    return m_is_terminator;
+}
+
+std::string tr_dos_image_t::file_t::contents() {
+    if (f_contents)
+        return m_contents;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek((((starting_track() * 256) * 16) + (starting_sector() * 256)));
+    m_contents = m__io-&gt;read_bytes((length_sectors() * 256));
+    m__io-&gt;seek(_pos);
+    f_contents = true;
+    return m_contents;
+}
+
+tr_dos_image_t::volume_info_t* tr_dos_image_t::volume_info() {
+    if (f_volume_info)
+        return m_volume_info;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(2048);
+    m_volume_info = new volume_info_t(m__io, this, m__root);
+    m__io-&gt;seek(_pos);
+    f_volume_info = true;
+    return m_volume_info;
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2018 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

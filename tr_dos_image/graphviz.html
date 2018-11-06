@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>TR-DOS flat-file disk image: GraphViz block diagram (.dot) source: Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">TR-DOS flat-file disk image</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>TR-DOS flat-file disk image:
+            
+            GraphViz block diagram (.dot) source
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>.trd file is a raw dump of TR-DOS (ZX-Spectrum) floppy. .trd files are
+headerless and contain consequent &quot;logical tracks&quot;, each logical track
+consists of 16 256-byte sectors.</p>
+<p>Logical tracks are defined the same way as used by TR-DOS: for single-side
+floppies it's just a physical track number, for two-side floppies sides are
+interleaved, i.e. logical_track_num = (physical_track_num &lt;&lt; 1) | side</p>
+<p>So, this format definition is more for TR-DOS filesystem than for .trd files,
+which are formatless.</p>
+<p>Strings (file names, disk label, disk password) are padded with spaces and use
+ZX Spectrum character set, including UDGs, block drawing chars and Basic
+tokens. ASCII range is mostly standard ASCII, with few characters (^, `, DEL)
+replaced with (up arrow, pound, copyright symbol).</p>
+<p>.trd file can be smaller than actual floppy disk, if last logical tracks are
+empty (contain no file data) they can be omitted.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        trd
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of TR-DOS flat-file disk image
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="TR-DOS flat-file disk image parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="TR-DOS flat-file disk image parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="TR-DOS flat-file disk image parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="graphviz.html" title="TR-DOS flat-file disk image parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="TR-DOS flat-file disk image parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="TR-DOS flat-file disk image parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="TR-DOS flat-file disk image parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="TR-DOS flat-file disk image parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="TR-DOS flat-file disk image parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="TR-DOS flat-file disk image parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="TR-DOS flat-file disk image parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            GraphViz block diagram source
+            
+        </h2>
+
+        
+
+        <h3>tr_dos_image.dot</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/graphviz/tr_dos_image.dot" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="graphviz">digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__tr_dos_image {
+		label=&quot;TrDosImage&quot;;
+		graph[style=dotted];
+
+		tr_dos_image__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;files_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;files_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;File&lt;/TD&gt;&lt;TD PORT=&quot;files_type&quot;&gt;files&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;files__repeat&quot;&gt;repeat until _.is_terminator&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		tr_dos_image__inst__volume_info [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;volume_info_pos&quot;&gt;2048&lt;/TD&gt;&lt;TD PORT=&quot;volume_info_size&quot;&gt;256&lt;/TD&gt;&lt;TD&gt;VolumeInfo&lt;/TD&gt;&lt;TD PORT=&quot;volume_info_type&quot;&gt;volume_info&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		subgraph cluster__volume_info {
+			label=&quot;TrDosImage::VolumeInfo&quot;;
+			graph[style=dotted];
+
+			volume_info__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;catalog_end_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;catalog_end_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;00&lt;/TD&gt;&lt;TD PORT=&quot;catalog_end_type&quot;&gt;catalog_end&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;unused_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;unused_size&quot;&gt;224&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;unused_type&quot;&gt;unused&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;first_free_sector_sector_pos&quot;&gt;225&lt;/TD&gt;&lt;TD PORT=&quot;first_free_sector_sector_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;first_free_sector_sector_type&quot;&gt;first_free_sector_sector&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;first_free_sector_track_pos&quot;&gt;226&lt;/TD&gt;&lt;TD PORT=&quot;first_free_sector_track_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;first_free_sector_track_type&quot;&gt;first_free_sector_track&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;disk_type_pos&quot;&gt;227&lt;/TD&gt;&lt;TD PORT=&quot;disk_type_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1→DiskType&lt;/TD&gt;&lt;TD PORT=&quot;disk_type_type&quot;&gt;disk_type&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;num_files_pos&quot;&gt;228&lt;/TD&gt;&lt;TD PORT=&quot;num_files_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;num_files_type&quot;&gt;num_files&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;num_free_sectors_pos&quot;&gt;229&lt;/TD&gt;&lt;TD PORT=&quot;num_free_sectors_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;num_free_sectors_type&quot;&gt;num_free_sectors&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;tr_dos_id_pos&quot;&gt;231&lt;/TD&gt;&lt;TD PORT=&quot;tr_dos_id_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;tr_dos_id_type&quot;&gt;tr_dos_id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;unused_2_pos&quot;&gt;232&lt;/TD&gt;&lt;TD PORT=&quot;unused_2_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;unused_2_type&quot;&gt;unused_2&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;password_pos&quot;&gt;234&lt;/TD&gt;&lt;TD PORT=&quot;password_size&quot;&gt;9&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;password_type&quot;&gt;password&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;unused_3_pos&quot;&gt;243&lt;/TD&gt;&lt;TD PORT=&quot;unused_3_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;unused_3_type&quot;&gt;unused_3&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;num_deleted_files_pos&quot;&gt;244&lt;/TD&gt;&lt;TD PORT=&quot;num_deleted_files_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;num_deleted_files_type&quot;&gt;num_deleted_files&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;label_pos&quot;&gt;245&lt;/TD&gt;&lt;TD PORT=&quot;label_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;label_type&quot;&gt;label&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;unused_4_pos&quot;&gt;253&lt;/TD&gt;&lt;TD PORT=&quot;unused_4_size&quot;&gt;3&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;unused_4_type&quot;&gt;unused_4&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			volume_info__inst__num_tracks [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD&gt;num_tracks&lt;/TD&gt;&lt;TD&gt;((I__DISK_TYPE[disk_type] &amp;amp; 1) != 0 ? 40 : 80)&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			volume_info__inst__num_sides [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD&gt;num_sides&lt;/TD&gt;&lt;TD&gt;((I__DISK_TYPE[disk_type] &amp;amp; 8) != 0 ? 1 : 2)&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__position_and_length_code {
+			label=&quot;TrDosImage::PositionAndLengthCode&quot;;
+			graph[style=dotted];
+
+			position_and_length_code__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;start_address_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;start_address_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;start_address_type&quot;&gt;start_address&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;length_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;length_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;length_type&quot;&gt;length&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__filename {
+			label=&quot;TrDosImage::Filename&quot;;
+			graph[style=dotted];
+
+			filename__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;name_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;name_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;name_type&quot;&gt;name&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			filename__inst__first_byte [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;first_byte_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;first_byte_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;first_byte_type&quot;&gt;first_byte&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__position_and_length_print {
+			label=&quot;TrDosImage::PositionAndLengthPrint&quot;;
+			graph[style=dotted];
+
+			position_and_length_print__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;extent_no_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;extent_no_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;extent_no_type&quot;&gt;extent_no&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;reserved_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;reserved_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;reserved_type&quot;&gt;reserved&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;length_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;length_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;length_type&quot;&gt;length&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__position_and_length_generic {
+			label=&quot;TrDosImage::PositionAndLengthGeneric&quot;;
+			graph[style=dotted];
+
+			position_and_length_generic__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;reserved_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;reserved_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;reserved_type&quot;&gt;reserved&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;length_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;length_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;length_type&quot;&gt;length&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__position_and_length_basic {
+			label=&quot;TrDosImage::PositionAndLengthBasic&quot;;
+			graph[style=dotted];
+
+			position_and_length_basic__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;program_and_data_length_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;program_and_data_length_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;program_and_data_length_type&quot;&gt;program_and_data_length&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;program_length_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;program_length_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;program_length_type&quot;&gt;program_length&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__file {
+			label=&quot;TrDosImage::File&quot;;
+			graph[style=dotted];
+
+			file__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;name_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;name_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;Filename&lt;/TD&gt;&lt;TD PORT=&quot;name_type&quot;&gt;name&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;extension_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;extension_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;extension_type&quot;&gt;extension&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;position_and_length_pos&quot;&gt;9&lt;/TD&gt;&lt;TD PORT=&quot;position_and_length_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (extension)&lt;/TD&gt;&lt;TD PORT=&quot;position_and_length_type&quot;&gt;position_and_length&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;length_sectors_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;length_sectors_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;length_sectors_type&quot;&gt;length_sectors&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;starting_sector_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;starting_sector_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;starting_sector_type&quot;&gt;starting_sector&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;starting_track_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;starting_track_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;starting_track_type&quot;&gt;starting_track&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			file__inst__is_deleted [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD&gt;is_deleted&lt;/TD&gt;&lt;TD&gt;name.first_byte == 1&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			file__inst__is_terminator [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD&gt;is_terminator&lt;/TD&gt;&lt;TD&gt;name.first_byte == 0&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			file__inst__contents [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;contents_pos&quot;&gt;(((starting_track * 256) * 16) + (starting_sector * 256))&lt;/TD&gt;&lt;TD PORT=&quot;contents_size&quot;&gt;(length_sectors * 256)&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;contents_type&quot;&gt;contents&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+file__seq_position_and_length_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;66&lt;/TD&gt;&lt;TD PORT=&quot;case0&quot;&gt;PositionAndLengthBasic&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;67&lt;/TD&gt;&lt;TD PORT=&quot;case1&quot;&gt;PositionAndLengthCode&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;35&lt;/TD&gt;&lt;TD PORT=&quot;case2&quot;&gt;PositionAndLengthPrint&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;_&lt;/TD&gt;&lt;TD PORT=&quot;case3&quot;&gt;PositionAndLengthGeneric&lt;/TD&gt;&lt;/TR&gt;
+&lt;/TABLE&gt;&gt;];
+		}
+	}
+	tr_dos_image__seq:files_type -&gt; file__seq [style=bold];
+	file__inst__is_terminator:is_terminator_type -&gt; tr_dos_image__seq:files__repeat [color=&quot;#404040&quot;];
+	tr_dos_image__inst__volume_info:volume_info_type -&gt; volume_info__seq [style=bold];
+	volume_info__seq:disk_type_type -&gt; volume_info__inst__num_tracks [color=&quot;#404040&quot;];
+	volume_info__seq:disk_type_type -&gt; volume_info__inst__num_sides [color=&quot;#404040&quot;];
+	file__seq:name_type -&gt; filename__seq [style=bold];
+	file__seq:position_and_length_type -&gt; file__seq_position_and_length_switch [style=bold];
+	file__seq_position_and_length_switch:case0 -&gt; position_and_length_basic__seq [style=bold];
+	file__seq_position_and_length_switch:case1 -&gt; position_and_length_code__seq [style=bold];
+	file__seq_position_and_length_switch:case2 -&gt; position_and_length_print__seq [style=bold];
+	file__seq_position_and_length_switch:case3 -&gt; position_and_length_generic__seq [style=bold];
+	file__seq:extension_type -&gt; file__seq:position_and_length_type [color=&quot;#404040&quot;];
+	filename__inst__first_byte:first_byte_type -&gt; file__inst__is_deleted [color=&quot;#404040&quot;];
+	filename__inst__first_byte:first_byte_type -&gt; file__inst__is_terminator [color=&quot;#404040&quot;];
+	file__seq:starting_track_type -&gt; file__inst__contents:contents_pos [color=&quot;#404040&quot;];
+	file__seq:starting_sector_type -&gt; file__inst__contents:contents_pos [color=&quot;#404040&quot;];
+	file__seq:length_sectors_type -&gt; file__inst__contents:contents_size [color=&quot;#404040&quot;];
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2018 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
