@@ -239,13 +239,13 @@ class Dbf extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this-&gt;_m_header1 = new \Dbf\Header1($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m__raw_header2 = $this-&gt;_io-&gt;readBytes(($this-&gt;header1()-&gt;headerSize() - 12));
+        $this-&gt;_m__raw_header2 = $this-&gt;_io-&gt;readBytes(($this-&gt;header1()-&gt;lenHeader() - 12));
         $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_header2);
         $this-&gt;_m_header2 = new \Dbf\Header2($io, $this, $this-&gt;_root);
         $this-&gt;_m_records = [];
         $n = $this-&gt;header1()-&gt;numRecords();
         for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_records[] = $this-&gt;_io-&gt;readBytes($this-&gt;header1()-&gt;recordSize());
+            $this-&gt;_m_records[] = $this-&gt;_io-&gt;readBytes($this-&gt;header1()-&gt;lenRecord());
         }
     }
     protected $_m_header1;
@@ -343,8 +343,8 @@ class Header1 extends \Kaitai\Struct\Struct {
         $this-&gt;_m_lastUpdateM = $this-&gt;_io-&gt;readU1();
         $this-&gt;_m_lastUpdateD = $this-&gt;_io-&gt;readU1();
         $this-&gt;_m_numRecords = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_headerSize = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_recordSize = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_lenHeader = $this-&gt;_io-&gt;readU2le();
+        $this-&gt;_m_lenRecord = $this-&gt;_io-&gt;readU2le();
     }
     protected $_m_dbaseLevel;
     public function dbaseLevel() {
@@ -358,15 +358,15 @@ class Header1 extends \Kaitai\Struct\Struct {
     protected $_m_lastUpdateM;
     protected $_m_lastUpdateD;
     protected $_m_numRecords;
-    protected $_m_headerSize;
-    protected $_m_recordSize;
+    protected $_m_lenHeader;
+    protected $_m_lenRecord;
     public function version() { return $this-&gt;_m_version; }
     public function lastUpdateY() { return $this-&gt;_m_lastUpdateY; }
     public function lastUpdateM() { return $this-&gt;_m_lastUpdateM; }
     public function lastUpdateD() { return $this-&gt;_m_lastUpdateD; }
     public function numRecords() { return $this-&gt;_m_numRecords; }
-    public function headerSize() { return $this-&gt;_m_headerSize; }
-    public function recordSize() { return $this-&gt;_m_recordSize; }
+    public function lenHeader() { return $this-&gt;_m_lenHeader; }
+    public function lenRecord() { return $this-&gt;_m_lenRecord; }
 }
 
 namespace \Dbf;

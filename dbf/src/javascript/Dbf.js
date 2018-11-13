@@ -19,12 +19,12 @@ var Dbf = (function() {
   }
   Dbf.prototype._read = function() {
     this.header1 = new Header1(this._io, this, this._root);
-    this._raw_header2 = this._io.readBytes((this.header1.headerSize - 12));
+    this._raw_header2 = this._io.readBytes((this.header1.lenHeader - 12));
     var _io__raw_header2 = new KaitaiStream(this._raw_header2);
     this.header2 = new Header2(_io__raw_header2, this, this._root);
     this.records = new Array(this.header1.numRecords);
     for (var i = 0; i < this.header1.numRecords; i++) {
-      this.records[i] = this._io.readBytes(this.header1.recordSize);
+      this.records[i] = this._io.readBytes(this.header1.lenRecord);
     }
   }
 
@@ -76,6 +76,10 @@ var Dbf = (function() {
     return Field;
   })();
 
+  /**
+   * @see {@link http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm|- section 1.1}
+   */
+
   var Header1 = Dbf.Header1 = (function() {
     function Header1(_io, _parent, _root) {
       this._io = _io;
@@ -90,8 +94,8 @@ var Dbf = (function() {
       this.lastUpdateM = this._io.readU1();
       this.lastUpdateD = this._io.readU1();
       this.numRecords = this._io.readU4le();
-      this.headerSize = this._io.readU2le();
-      this.recordSize = this._io.readU2le();
+      this.lenHeader = this._io.readU2le();
+      this.lenRecord = this._io.readU2le();
     }
     Object.defineProperty(Header1.prototype, 'dbaseLevel', {
       get: function() {

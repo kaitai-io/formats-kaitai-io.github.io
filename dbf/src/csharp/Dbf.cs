@@ -20,13 +20,13 @@ namespace Kaitai
         private void _read()
         {
             _header1 = new Header1(m_io, this, m_root);
-            __raw_header2 = m_io.ReadBytes((Header1.HeaderSize - 12));
+            __raw_header2 = m_io.ReadBytes((Header1.LenHeader - 12));
             var io___raw_header2 = new KaitaiStream(__raw_header2);
             _header2 = new Header2(io___raw_header2, this, m_root);
             _records = new List<byte[]>((int) (Header1.NumRecords));
             for (var i = 0; i < Header1.NumRecords; i++)
             {
-                _records.Add(m_io.ReadBytes(Header1.RecordSize));
+                _records.Add(m_io.ReadBytes(Header1.LenRecord));
             }
         }
         public partial class Header2 : KaitaiStruct
@@ -118,6 +118,10 @@ namespace Kaitai
             public Dbf M_Root { get { return m_root; } }
             public Dbf.Header2 M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm">- section 1.1</a>
+        /// </remarks>
         public partial class Header1 : KaitaiStruct
         {
             public static Header1 FromFile(string fileName)
@@ -139,8 +143,8 @@ namespace Kaitai
                 _lastUpdateM = m_io.ReadU1();
                 _lastUpdateD = m_io.ReadU1();
                 _numRecords = m_io.ReadU4le();
-                _headerSize = m_io.ReadU2le();
-                _recordSize = m_io.ReadU2le();
+                _lenHeader = m_io.ReadU2le();
+                _lenRecord = m_io.ReadU2le();
             }
             private bool f_dbaseLevel;
             private int _dbaseLevel;
@@ -160,8 +164,8 @@ namespace Kaitai
             private byte _lastUpdateM;
             private byte _lastUpdateD;
             private uint _numRecords;
-            private ushort _headerSize;
-            private ushort _recordSize;
+            private ushort _lenHeader;
+            private ushort _lenRecord;
             private Dbf m_root;
             private Dbf m_parent;
             public byte Version { get { return _version; } }
@@ -169,8 +173,8 @@ namespace Kaitai
             public byte LastUpdateM { get { return _lastUpdateM; } }
             public byte LastUpdateD { get { return _lastUpdateD; } }
             public uint NumRecords { get { return _numRecords; } }
-            public ushort HeaderSize { get { return _headerSize; } }
-            public ushort RecordSize { get { return _recordSize; } }
+            public ushort LenHeader { get { return _lenHeader; } }
+            public ushort LenRecord { get { return _lenRecord; } }
             public Dbf M_Root { get { return m_root; } }
             public Dbf M_Parent { get { return m_parent; } }
         }

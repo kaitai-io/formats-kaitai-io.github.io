@@ -16,12 +16,12 @@ class Dbf(KaitaiStruct):
 
     def _read(self):
         self.header1 = self._root.Header1(self._io, self, self._root)
-        self._raw_header2 = self._io.read_bytes((self.header1.header_size - 12))
+        self._raw_header2 = self._io.read_bytes((self.header1.len_header - 12))
         io = KaitaiStream(BytesIO(self._raw_header2))
         self.header2 = self._root.Header2(io, self, self._root)
         self.records = [None] * (self.header1.num_records)
         for i in range(self.header1.num_records):
-            self.records[i] = self._io.read_bytes(self.header1.record_size)
+            self.records[i] = self._io.read_bytes(self.header1.len_record)
 
 
     class Header2(KaitaiStruct):
@@ -65,6 +65,10 @@ class Dbf(KaitaiStruct):
 
 
     class Header1(KaitaiStruct):
+        """
+        .. seealso::
+           - section 1.1 - http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -77,8 +81,8 @@ class Dbf(KaitaiStruct):
             self.last_update_m = self._io.read_u1()
             self.last_update_d = self._io.read_u1()
             self.num_records = self._io.read_u4le()
-            self.header_size = self._io.read_u2le()
-            self.record_size = self._io.read_u2le()
+            self.len_header = self._io.read_u2le()
+            self.len_record = self._io.read_u2le()
 
         @property
         def dbase_level(self):

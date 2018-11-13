@@ -12,14 +12,14 @@ dbf_t::dbf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dbf_t* p__root)
 
 void dbf_t::_read() {
     m_header1 = new header1_t(m__io, this, m__root);
-    m__raw_header2 = m__io->read_bytes((header1()->header_size() - 12));
+    m__raw_header2 = m__io->read_bytes((header1()->len_header() - 12));
     m__io__raw_header2 = new kaitai::kstream(m__raw_header2);
     m_header2 = new header2_t(m__io__raw_header2, this, m__root);
     int l_records = header1()->num_records();
     m_records = new std::vector<std::string>();
     m_records->reserve(l_records);
     for (int i = 0; i < l_records; i++) {
-        m_records->push_back(m__io->read_bytes(header1()->record_size()));
+        m_records->push_back(m__io->read_bytes(header1()->len_record()));
     }
 }
 
@@ -103,8 +103,8 @@ void dbf_t::header1_t::_read() {
     m_last_update_m = m__io->read_u1();
     m_last_update_d = m__io->read_u1();
     m_num_records = m__io->read_u4le();
-    m_header_size = m__io->read_u2le();
-    m_record_size = m__io->read_u2le();
+    m_len_header = m__io->read_u2le();
+    m_len_record = m__io->read_u2le();
 }
 
 dbf_t::header1_t::~header1_t() {

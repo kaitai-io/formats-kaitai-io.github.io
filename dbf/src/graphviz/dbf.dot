@@ -8,8 +8,8 @@ digraph {
 		dbf__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="header1_pos">0</TD><TD PORT="header1_size">12</TD><TD>Header1</TD><TD PORT="header1_type">header1</TD></TR>
-			<TR><TD PORT="header2_pos">12</TD><TD PORT="header2_size">(header1.header_size - 12)</TD><TD>Header2</TD><TD PORT="header2_type">header2</TD></TR>
-			<TR><TD PORT="records_pos">...</TD><TD PORT="records_size">header1.record_size</TD><TD></TD><TD PORT="records_type">records</TD></TR>
+			<TR><TD PORT="header2_pos">12</TD><TD PORT="header2_size">(header1.len_header - 12)</TD><TD>Header2</TD><TD PORT="header2_type">header2</TD></TR>
+			<TR><TD PORT="records_pos">...</TD><TD PORT="records_size">header1.len_record</TD><TD></TD><TD PORT="records_type">records</TD></TR>
 			<TR><TD COLSPAN="4" PORT="records__repeat">repeat header1.num_records times</TD></TR>
 		</TABLE>>];
 		subgraph cluster__header2 {
@@ -53,8 +53,8 @@ digraph {
 				<TR><TD PORT="last_update_m_pos">2</TD><TD PORT="last_update_m_size">1</TD><TD>u1</TD><TD PORT="last_update_m_type">last_update_m</TD></TR>
 				<TR><TD PORT="last_update_d_pos">3</TD><TD PORT="last_update_d_size">1</TD><TD>u1</TD><TD PORT="last_update_d_type">last_update_d</TD></TR>
 				<TR><TD PORT="num_records_pos">4</TD><TD PORT="num_records_size">4</TD><TD>u4le</TD><TD PORT="num_records_type">num_records</TD></TR>
-				<TR><TD PORT="header_size_pos">8</TD><TD PORT="header_size_size">2</TD><TD>u2le</TD><TD PORT="header_size_type">header_size</TD></TR>
-				<TR><TD PORT="record_size_pos">10</TD><TD PORT="record_size_size">2</TD><TD>u2le</TD><TD PORT="record_size_type">record_size</TD></TR>
+				<TR><TD PORT="len_header_pos">8</TD><TD PORT="len_header_size">2</TD><TD>u2le</TD><TD PORT="len_header_type">len_header</TD></TR>
+				<TR><TD PORT="len_record_pos">10</TD><TD PORT="len_record_size">2</TD><TD>u2le</TD><TD PORT="len_record_type">len_record</TD></TR>
 			</TABLE>>];
 			header1__inst__dbase_level [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
@@ -91,9 +91,9 @@ digraph {
 		}
 	}
 	dbf__seq:header1_type -> header1__seq [style=bold];
-	header1__seq:header_size_type -> dbf__seq:header2_size [color="#404040"];
+	header1__seq:len_header_type -> dbf__seq:header2_size [color="#404040"];
 	dbf__seq:header2_type -> header2__seq [style=bold];
-	header1__seq:record_size_type -> dbf__seq:records_size [color="#404040"];
+	header1__seq:len_record_type -> dbf__seq:records_size [color="#404040"];
 	header1__seq:num_records_type -> dbf__seq:records__repeat [color="#404040"];
 	header2__seq:header_dbase_3_type -> header_dbase_3__seq [style=bold];
 	header2__seq:header_dbase_7_type -> header_dbase_7__seq [style=bold];

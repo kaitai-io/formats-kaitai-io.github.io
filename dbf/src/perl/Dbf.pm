@@ -36,13 +36,13 @@ sub _read {
     my ($self) = @_;
 
     $self->{header1} = Dbf::Header1->new($self->{_io}, $self, $self->{_root});
-    $self->{_raw_header2} = $self->{_io}->read_bytes(($self->header1()->header_size() - 12));
+    $self->{_raw_header2} = $self->{_io}->read_bytes(($self->header1()->len_header() - 12));
     my $io__raw_header2 = IO::KaitaiStruct::Stream->new($self->{_raw_header2});
     $self->{header2} = Dbf::Header2->new($io__raw_header2, $self, $self->{_root});
     $self->{records} = ();
     my $n_records = $self->header1()->num_records();
     for (my $i = 0; $i < $n_records; $i++) {
-        $self->{records}[$i] = $self->{_io}->read_bytes($self->header1()->record_size());
+        $self->{records}[$i] = $self->{_io}->read_bytes($self->header1()->len_record());
     }
 }
 
@@ -251,8 +251,8 @@ sub _read {
     $self->{last_update_m} = $self->{_io}->read_u1();
     $self->{last_update_d} = $self->{_io}->read_u1();
     $self->{num_records} = $self->{_io}->read_u4le();
-    $self->{header_size} = $self->{_io}->read_u2le();
-    $self->{record_size} = $self->{_io}->read_u2le();
+    $self->{len_header} = $self->{_io}->read_u2le();
+    $self->{len_record} = $self->{_io}->read_u2le();
 }
 
 sub dbase_level {
@@ -287,14 +287,14 @@ sub num_records {
     return $self->{num_records};
 }
 
-sub header_size {
+sub len_header {
     my ($self) = @_;
-    return $self->{header_size};
+    return $self->{len_header};
 }
 
-sub record_size {
+sub len_record {
     my ($self) = @_;
-    return $self->{record_size};
+    return $self->{len_record};
 }
 
 ########################################################################

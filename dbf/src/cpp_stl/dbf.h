@@ -109,6 +109,10 @@ public:
         dbf_t::header2_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa - section 1.1
+     */
+
     class header1_t : public kaitai::kstruct {
 
     public:
@@ -134,8 +138,8 @@ public:
         uint8_t m_last_update_m;
         uint8_t m_last_update_d;
         uint32_t m_num_records;
-        uint16_t m_header_size;
-        uint16_t m_record_size;
+        uint16_t m_len_header;
+        uint16_t m_len_record;
         dbf_t* m__root;
         dbf_t* m__parent;
 
@@ -145,8 +149,8 @@ public:
         uint8_t last_update_m() const { return m_last_update_m; }
         uint8_t last_update_d() const { return m_last_update_d; }
         uint32_t num_records() const { return m_num_records; }
-        uint16_t header_size() const { return m_header_size; }
-        uint16_t record_size() const { return m_record_size; }
+        uint16_t len_header() const { return m_len_header; }
+        uint16_t len_record() const { return m_len_record; }
         dbf_t* _root() const { return m__root; }
         dbf_t* _parent() const { return m__parent; }
     };

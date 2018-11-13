@@ -238,8 +238,8 @@ section#format-index .row {
 		dbf__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;header1_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;header1_size&quot;&gt;12&lt;/TD&gt;&lt;TD&gt;Header1&lt;/TD&gt;&lt;TD PORT=&quot;header1_type&quot;&gt;header1&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;header2_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;header2_size&quot;&gt;(header1.header_size - 12)&lt;/TD&gt;&lt;TD&gt;Header2&lt;/TD&gt;&lt;TD PORT=&quot;header2_type&quot;&gt;header2&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;records_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;records_size&quot;&gt;header1.record_size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;records_type&quot;&gt;records&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;header2_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;header2_size&quot;&gt;(header1.len_header - 12)&lt;/TD&gt;&lt;TD&gt;Header2&lt;/TD&gt;&lt;TD PORT=&quot;header2_type&quot;&gt;header2&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;records_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;records_size&quot;&gt;header1.len_record&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;records_type&quot;&gt;records&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;records__repeat&quot;&gt;repeat header1.num_records times&lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
 		subgraph cluster__header2 {
@@ -283,8 +283,8 @@ section#format-index .row {
 				&lt;TR&gt;&lt;TD PORT=&quot;last_update_m_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;last_update_m_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;last_update_m_type&quot;&gt;last_update_m&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;last_update_d_pos&quot;&gt;3&lt;/TD&gt;&lt;TD PORT=&quot;last_update_d_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;last_update_d_type&quot;&gt;last_update_d&lt;/TD&gt;&lt;/TR&gt;
 				&lt;TR&gt;&lt;TD PORT=&quot;num_records_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;num_records_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;num_records_type&quot;&gt;num_records&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;header_size_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;header_size_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;header_size_type&quot;&gt;header_size&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;record_size_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;record_size_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;record_size_type&quot;&gt;record_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_header_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;len_header_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;len_header_type&quot;&gt;len_header&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_record_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;len_record_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;len_record_type&quot;&gt;len_record&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 			header1__inst__dbase_level [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
@@ -321,9 +321,9 @@ section#format-index .row {
 		}
 	}
 	dbf__seq:header1_type -&gt; header1__seq [style=bold];
-	header1__seq:header_size_type -&gt; dbf__seq:header2_size [color=&quot;#404040&quot;];
+	header1__seq:len_header_type -&gt; dbf__seq:header2_size [color=&quot;#404040&quot;];
 	dbf__seq:header2_type -&gt; header2__seq [style=bold];
-	header1__seq:record_size_type -&gt; dbf__seq:records_size [color=&quot;#404040&quot;];
+	header1__seq:len_record_type -&gt; dbf__seq:records_size [color=&quot;#404040&quot;];
 	header1__seq:num_records_type -&gt; dbf__seq:records__repeat [color=&quot;#404040&quot;];
 	header2__seq:header_dbase_3_type -&gt; header_dbase_3__seq [style=bold];
 	header2__seq:header_dbase_7_type -&gt; header_dbase_7__seq [style=bold];

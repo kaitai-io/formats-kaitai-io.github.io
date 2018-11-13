@@ -28,12 +28,12 @@ public class Dbf extends KaitaiStruct {
     }
     private void _read() {
         this.header1 = new Header1(this._io, this, _root);
-        this._raw_header2 = this._io.readBytes((header1().headerSize() - 12));
+        this._raw_header2 = this._io.readBytes((header1().lenHeader() - 12));
         KaitaiStream _io__raw_header2 = new ByteBufferKaitaiStream(_raw_header2);
         this.header2 = new Header2(_io__raw_header2, this, _root);
         records = new ArrayList<byte[]>((int) (header1().numRecords()));
         for (int i = 0; i < header1().numRecords(); i++) {
-            this.records.add(this._io.readBytes(header1().recordSize()));
+            this.records.add(this._io.readBytes(header1().lenRecord()));
         }
     }
     public static class Header2 extends KaitaiStruct {
@@ -134,6 +134,10 @@ public class Dbf extends KaitaiStruct {
         public Dbf _root() { return _root; }
         public Dbf.Header2 _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm">- section 1.1</a>
+     */
     public static class Header1 extends KaitaiStruct {
         public static Header1 fromFile(String fileName) throws IOException {
             return new Header1(new ByteBufferKaitaiStream(fileName));
@@ -159,8 +163,8 @@ public class Dbf extends KaitaiStruct {
             this.lastUpdateM = this._io.readU1();
             this.lastUpdateD = this._io.readU1();
             this.numRecords = this._io.readU4le();
-            this.headerSize = this._io.readU2le();
-            this.recordSize = this._io.readU2le();
+            this.lenHeader = this._io.readU2le();
+            this.lenRecord = this._io.readU2le();
         }
         private Integer dbaseLevel;
         public Integer dbaseLevel() {
@@ -175,8 +179,8 @@ public class Dbf extends KaitaiStruct {
         private int lastUpdateM;
         private int lastUpdateD;
         private long numRecords;
-        private int headerSize;
-        private int recordSize;
+        private int lenHeader;
+        private int lenRecord;
         private Dbf _root;
         private Dbf _parent;
         public int version() { return version; }
@@ -184,8 +188,8 @@ public class Dbf extends KaitaiStruct {
         public int lastUpdateM() { return lastUpdateM; }
         public int lastUpdateD() { return lastUpdateD; }
         public long numRecords() { return numRecords; }
-        public int headerSize() { return headerSize; }
-        public int recordSize() { return recordSize; }
+        public int lenHeader() { return lenHeader; }
+        public int lenRecord() { return lenRecord; }
         public Dbf _root() { return _root; }
         public Dbf _parent() { return _parent; }
     }

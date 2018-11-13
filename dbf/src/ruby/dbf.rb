@@ -14,12 +14,12 @@ class Dbf < Kaitai::Struct::Struct
 
   def _read
     @header1 = Header1.new(@_io, self, @_root)
-    @_raw_header2 = @_io.read_bytes((header1.header_size - 12))
+    @_raw_header2 = @_io.read_bytes((header1.len_header - 12))
     io = Kaitai::Struct::Stream.new(@_raw_header2)
     @header2 = Header2.new(io, self, @_root)
     @records = Array.new(header1.num_records)
     (header1.num_records).times { |i|
-      @records[i] = @_io.read_bytes(header1.record_size)
+      @records[i] = @_io.read_bytes(header1.len_record)
     }
     self
   end
@@ -76,6 +76,9 @@ class Dbf < Kaitai::Struct::Struct
     attr_reader :set_fields_flag
     attr_reader :reserved3
   end
+
+  ##
+  # @see http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm - section 1.1
   class Header1 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -88,8 +91,8 @@ class Dbf < Kaitai::Struct::Struct
       @last_update_m = @_io.read_u1
       @last_update_d = @_io.read_u1
       @num_records = @_io.read_u4le
-      @header_size = @_io.read_u2le
-      @record_size = @_io.read_u2le
+      @len_header = @_io.read_u2le
+      @len_record = @_io.read_u2le
       self
     end
     def dbase_level
@@ -102,8 +105,8 @@ class Dbf < Kaitai::Struct::Struct
     attr_reader :last_update_m
     attr_reader :last_update_d
     attr_reader :num_records
-    attr_reader :header_size
-    attr_reader :record_size
+    attr_reader :len_header
+    attr_reader :len_record
   end
   class HeaderDbase3 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
