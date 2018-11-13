@@ -8,6 +8,11 @@ end
 
 
 ##
+# IVF is a simple container format for raw VP8 data, which is an open
+# and royalty-free video compression format, currently developed by
+# Google.
+# 
+# Test .ivf files are available at https://chromium.googlesource.com/webm/vp8-test-vectors
 # @see https://wiki.multimedia.cx/index.php/IVF Source
 class Vp8Ivf < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)

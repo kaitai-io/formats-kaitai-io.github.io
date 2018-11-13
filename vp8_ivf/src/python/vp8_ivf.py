@@ -8,7 +8,12 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 class Vp8Ivf(KaitaiStruct):
-    """
+    """IVF is a simple container format for raw VP8 data, which is an open
+    and royalty-free video compression format, currently developed by
+    Google.
+    
+    Test .ivf files are available at https://chromium.googlesource.com/webm/vp8-test-vectors
+    
     .. seealso::
        Source - https://wiki.multimedia.cx/index.php/IVF
     """

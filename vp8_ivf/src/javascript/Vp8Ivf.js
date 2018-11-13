@@ -10,6 +10,11 @@
   }
 }(this, function (KaitaiStream) {
 /**
+ * IVF is a simple container format for raw VP8 data, which is an open
+ * and royalty-free video compression format, currently developed by
+ * Google.
+ * 
+ * Test .ivf files are available at https://chromium.googlesource.com/webm/vp8-test-vectors
  * @see {@link https://wiki.multimedia.cx/index.php/IVF|Source}
  */
 
