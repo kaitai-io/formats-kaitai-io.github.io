@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SSH public key format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Security</li>
+        <li class="active">SSH public key</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>SSH public key:
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>SSH public keys are encoded in a special binary format, typically represented
+to end users as either one-liner OpenSSH format or multi-line PEM format
+(commerical SSH). Text wrapper carries extra information about user who
+created the key, comment, etc, but the inner binary is always base64-encoded
+and follows the same internal format.</p>
+<p>This format spec deals with this internal binary format (called &quot;blob&quot; in
+openssh sources) only. Buffer is expected to be raw binary and not base64-d.
+Implementation closely follows code in OpenSSH.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of SSH public key
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="SSH public key parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="SSH public key parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="SSH public key parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="SSH public key parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="SSH public key parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="SSH public key parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="SSH public key parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="SSH public key parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="SSH public key parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="SSH public key parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="SSH public key parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="ssh_public_key.svg">
+            <img class="diagram-img" src="ssh_public_key.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+        
+        <pre><code class="yaml">meta:
+  id: ssh_public_key
+  title: SSH public key
+  license: CC0-1.0
+  endian: be
+doc: |
+  SSH public keys are encoded in a special binary format, typically represented
+  to end users as either one-liner OpenSSH format or multi-line PEM format
+  (commerical SSH). Text wrapper carries extra information about user who
+  created the key, comment, etc, but the inner binary is always base64-encoded
+  and follows the same internal format.
+
+  This format spec deals with this internal binary format (called "blob" in
+  openssh sources) only. Buffer is expected to be raw binary and not base64-d.
+  Implementation closely follows code in OpenSSH.
+doc-ref: 'https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970'
+seq:
+  - id: key_name
+    type: cstring
+  - id: body
+    type:
+      switch-on: key_name.value
+      cases:
+        '"ssh-rsa"': key_rsa
+        '"ecdsa-sha2-nistp256"': key_ecdsa
+        '"ssh-ed25519"': key_ed25519
+        '"ssh-dss"': key_dsa
+types:
+  key_rsa:
+    doc-ref: 'https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028'
+    seq:
+      - id: rsa_e
+        type: bignum2
+        doc: Public key exponent, designated `e` in RSA documentation.
+      - id: rsa_n
+        type: bignum2
+        doc: |
+          Modulus of both public and private keys, designated `n` in RSA
+          documentation. Its length in bits is designated as "key length".
+    instances:
+      key_length:
+        -webide-parse-mode: eager
+        value: rsa_n.length_in_bits
+        doc: Key length in bits
+  key_ecdsa:
+    doc-ref: 'https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103'
+    seq:
+      - id: curve_name
+        type: cstring
+      - id: ec
+        type: elliptic_curve
+  key_ed25519:
+    doc-ref: 'https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124'
+    seq:
+      - id: len_pk
+        type: u4
+        # must be 0x20
+      - id: pk
+        size: len_pk
+  key_dsa:
+    doc-ref: 'https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051'
+    seq:
+      - id: dsa_p
+        type: bignum2
+      - id: dsa_q
+        type: bignum2
+      - id: dsa_g
+        type: bignum2
+      - id: dsa_pub_key
+        type: bignum2
+  cstring:
+    doc: |
+      A integer-prefixed string designed to be read using `sshbuf_get_cstring`
+      and written by `sshbuf_put_cstring` routines in ssh sources. Name is an
+      obscure misnomer, as typically "C string" means a null-terminated string.
+    doc-ref: 'https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181'
+    -webide-representation: '{value}'
+    seq:
+      - id: len
+        type: u4
+      - id: value
+        type: str
+        size: len
+        encoding: ASCII
+  bignum2:
+    doc: |
+      Big integers serialization format used by ssh, v2. In the code, the following
+      routines are used to read/write it:
+
+      * sshbuf_get_bignum2
+      * sshbuf_get_bignum2_bytes_direct
+      * sshbuf_put_bignum2
+      * sshbuf_get_bignum2_bytes_direct
+    doc-ref: |
+      https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L35
+      https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L431
+    seq:
+      - id: len
+        type: u4
+      - id: body
+        size: len
+    instances:
+      length_in_bits:
+        value: (len - 1) * 8
+        doc: |
+          Length of big integer in bits. In OpenSSH sources, this corresponds to
+          `BN_num_bits` function.
+  elliptic_curve:
+    doc: |
+      Elliptic curve dump format used by ssh. In OpenSSH code, the following
+      routines are used to read/write it:
+
+      * sshbuf_get_ec
+      * get_ec
+    doc-ref: |
+      https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L90
+      https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L76
+    seq:
+      - id: len
+        type: u4
+      - id: body
+        size: len
+</code></pre>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2018 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

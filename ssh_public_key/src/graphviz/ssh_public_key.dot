@@ -1,0 +1,122 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__ssh_public_key {
+		label="SshPublicKey";
+		graph[style=dotted];
+
+		ssh_public_key__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="key_name_pos">0</TD><TD PORT="key_name_size">...</TD><TD>Cstring</TD><TD PORT="key_name_type">key_name</TD></TR>
+			<TR><TD PORT="body_pos">...</TD><TD PORT="body_size">...</TD><TD>switch (key_name.value)</TD><TD PORT="body_type">body</TD></TR>
+		</TABLE>>];
+ssh_public_key__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>&quot;ssh-rsa&quot;</TD><TD PORT="case0">KeyRsa</TD></TR>
+	<TR><TD>&quot;ecdsa-sha2-nistp256&quot;</TD><TD PORT="case1">KeyEcdsa</TD></TR>
+	<TR><TD>&quot;ssh-ed25519&quot;</TD><TD PORT="case2">KeyEd25519</TD></TR>
+	<TR><TD>&quot;ssh-dss&quot;</TD><TD PORT="case3">KeyDsa</TD></TR>
+</TABLE>>];
+		subgraph cluster__key_rsa {
+			label="SshPublicKey::KeyRsa";
+			graph[style=dotted];
+
+			key_rsa__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="rsa_e_pos">0</TD><TD PORT="rsa_e_size">...</TD><TD>Bignum2</TD><TD PORT="rsa_e_type">rsa_e</TD></TR>
+				<TR><TD PORT="rsa_n_pos">...</TD><TD PORT="rsa_n_size">...</TD><TD>Bignum2</TD><TD PORT="rsa_n_type">rsa_n</TD></TR>
+			</TABLE>>];
+			key_rsa__inst__key_length [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>key_length</TD><TD>rsa_n.length_in_bits</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__key_ed25519 {
+			label="SshPublicKey::KeyEd25519";
+			graph[style=dotted];
+
+			key_ed25519__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_pk_pos">0</TD><TD PORT="len_pk_size">4</TD><TD>u4be</TD><TD PORT="len_pk_type">len_pk</TD></TR>
+				<TR><TD PORT="pk_pos">4</TD><TD PORT="pk_size">len_pk</TD><TD></TD><TD PORT="pk_type">pk</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__key_ecdsa {
+			label="SshPublicKey::KeyEcdsa";
+			graph[style=dotted];
+
+			key_ecdsa__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="curve_name_pos">0</TD><TD PORT="curve_name_size">...</TD><TD>Cstring</TD><TD PORT="curve_name_type">curve_name</TD></TR>
+				<TR><TD PORT="ec_pos">...</TD><TD PORT="ec_size">...</TD><TD>EllipticCurve</TD><TD PORT="ec_type">ec</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__cstring {
+			label="SshPublicKey::Cstring";
+			graph[style=dotted];
+
+			cstring__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">4</TD><TD>u4be</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="value_pos">4</TD><TD PORT="value_size">len</TD><TD>str(ASCII)</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__key_dsa {
+			label="SshPublicKey::KeyDsa";
+			graph[style=dotted];
+
+			key_dsa__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="dsa_p_pos">0</TD><TD PORT="dsa_p_size">...</TD><TD>Bignum2</TD><TD PORT="dsa_p_type">dsa_p</TD></TR>
+				<TR><TD PORT="dsa_q_pos">...</TD><TD PORT="dsa_q_size">...</TD><TD>Bignum2</TD><TD PORT="dsa_q_type">dsa_q</TD></TR>
+				<TR><TD PORT="dsa_g_pos">...</TD><TD PORT="dsa_g_size">...</TD><TD>Bignum2</TD><TD PORT="dsa_g_type">dsa_g</TD></TR>
+				<TR><TD PORT="dsa_pub_key_pos">...</TD><TD PORT="dsa_pub_key_size">...</TD><TD>Bignum2</TD><TD PORT="dsa_pub_key_type">dsa_pub_key</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__elliptic_curve {
+			label="SshPublicKey::EllipticCurve";
+			graph[style=dotted];
+
+			elliptic_curve__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">4</TD><TD>u4be</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="body_pos">4</TD><TD PORT="body_size">len</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bignum2 {
+			label="SshPublicKey::Bignum2";
+			graph[style=dotted];
+
+			bignum2__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">4</TD><TD>u4be</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="body_pos">4</TD><TD PORT="body_size">len</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+			bignum2__inst__length_in_bits [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>length_in_bits</TD><TD>((len - 1) * 8)</TD></TR>
+			</TABLE>>];
+		}
+	}
+	ssh_public_key__seq:key_name_type -> cstring__seq [style=bold];
+	ssh_public_key__seq:body_type -> ssh_public_key__seq_body_switch [style=bold];
+	ssh_public_key__seq_body_switch:case0 -> key_rsa__seq [style=bold];
+	ssh_public_key__seq_body_switch:case1 -> key_ecdsa__seq [style=bold];
+	ssh_public_key__seq_body_switch:case2 -> key_ed25519__seq [style=bold];
+	ssh_public_key__seq_body_switch:case3 -> key_dsa__seq [style=bold];
+	cstring__seq:value_type -> ssh_public_key__seq:body_type [color="#404040"];
+	key_rsa__seq:rsa_e_type -> bignum2__seq [style=bold];
+	key_rsa__seq:rsa_n_type -> bignum2__seq [style=bold];
+	bignum2__inst__length_in_bits:length_in_bits_type -> key_rsa__inst__key_length [color="#404040"];
+	key_ed25519__seq:len_pk_type -> key_ed25519__seq:pk_size [color="#404040"];
+	key_ecdsa__seq:curve_name_type -> cstring__seq [style=bold];
+	key_ecdsa__seq:ec_type -> elliptic_curve__seq [style=bold];
+	cstring__seq:len_type -> cstring__seq:value_size [color="#404040"];
+	key_dsa__seq:dsa_p_type -> bignum2__seq [style=bold];
+	key_dsa__seq:dsa_q_type -> bignum2__seq [style=bold];
+	key_dsa__seq:dsa_g_type -> bignum2__seq [style=bold];
+	key_dsa__seq:dsa_pub_key_type -> bignum2__seq [style=bold];
+	elliptic_curve__seq:len_type -> elliptic_curve__seq:body_size [color="#404040"];
+	bignum2__seq:len_type -> bignum2__seq:body_size [color="#404040"];
+	bignum2__seq:len_type -> bignum2__inst__length_in_bits [color="#404040"];
+}
