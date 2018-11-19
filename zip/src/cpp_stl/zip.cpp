@@ -43,6 +43,21 @@ zip_t::local_file_t::~local_file_t() {
     delete m_header;
 }
 
+zip_t::data_descriptor_t::data_descriptor_t(kaitai::kstream* p__io, zip_t::pk_section_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void zip_t::data_descriptor_t::_read() {
+    m_crc32 = m__io->read_u4le();
+    m_compressed_size = m__io->read_u4le();
+    m_uncompressed_size = m__io->read_u4le();
+}
+
+zip_t::data_descriptor_t::~data_descriptor_t() {
+}
+
 zip_t::extra_field_t::extra_field_t(kaitai::kstream* p__io, zip_t::extras_t* p__parent, zip_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -280,6 +295,11 @@ void zip_t::pk_section_t::_read() {
     case 1541: {
         n_body = false;
         m_body = new end_of_central_dir_t(m__io, this, m__root);
+        break;
+    }
+    case 2055: {
+        n_body = false;
+        m_body = new data_descriptor_t(m__io, this, m__root);
         break;
     }
     }

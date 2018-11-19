@@ -102,6 +102,36 @@ namespace Kaitai
             public Zip M_Root { get { return m_root; } }
             public Zip.PkSection M_Parent { get { return m_parent; } }
         }
+        public partial class DataDescriptor : KaitaiStruct
+        {
+            public static DataDescriptor FromFile(string fileName)
+            {
+                return new DataDescriptor(new KaitaiStream(fileName));
+            }
+
+            public DataDescriptor(KaitaiStream p__io, Zip.PkSection p__parent = null, Zip p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _crc32 = m_io.ReadU4le();
+                _compressedSize = m_io.ReadU4le();
+                _uncompressedSize = m_io.ReadU4le();
+            }
+            private uint _crc32;
+            private uint _compressedSize;
+            private uint _uncompressedSize;
+            private Zip m_root;
+            private Zip.PkSection m_parent;
+            public uint Crc32 { get { return _crc32; } }
+            public uint CompressedSize { get { return _compressedSize; } }
+            public uint UncompressedSize { get { return _uncompressedSize; } }
+            public Zip M_Root { get { return m_root; } }
+            public Zip.PkSection M_Parent { get { return m_parent; } }
+        }
         public partial class ExtraField : KaitaiStruct
         {
             public static ExtraField FromFile(string fileName)
@@ -500,6 +530,10 @@ namespace Kaitai
                 }
                 case 1541: {
                     _body = new EndOfCentralDir(m_io, this, m_root);
+                    break;
+                }
+                case 2055: {
+                    _body = new DataDescriptor(m_io, this, m_root);
                     break;
                 }
                 }

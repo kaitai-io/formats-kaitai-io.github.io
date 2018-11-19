@@ -81,6 +81,22 @@ class Zip < Kaitai::Struct::Struct
     attr_reader :header
     attr_reader :body
   end
+  class DataDescriptor < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @crc32 = @_io.read_u4le
+      @compressed_size = @_io.read_u4le
+      @uncompressed_size = @_io.read_u4le
+      self
+    end
+    attr_reader :crc32
+    attr_reader :compressed_size
+    attr_reader :uncompressed_size
+  end
   class ExtraField < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -316,6 +332,8 @@ class Zip < Kaitai::Struct::Struct
         @body = LocalFile.new(@_io, self, @_root)
       when 1541
         @body = EndOfCentralDir.new(@_io, self, @_root)
+      when 2055
+        @body = DataDescriptor.new(@_io, self, @_root)
       end
       self
     end

@@ -5,8 +5,8 @@
 
 #include "udp_datagram.h"
 #include "tcp_segment.h"
-#include "icmp_packet.h"
 #include "ipv6_packet.h"
+#include "icmp_packet.h"
 
 ipv4_packet_t::ipv4_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ipv4_packet_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
