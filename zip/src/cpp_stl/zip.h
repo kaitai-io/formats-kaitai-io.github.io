@@ -20,7 +20,6 @@ class zip_t : public kaitai::kstruct {
 
 public:
     class local_file_t;
-    class data_descriptor_t;
     class extra_field_t;
     class central_dir_entry_t;
     class pk_section_t;
@@ -98,33 +97,6 @@ public:
     public:
         local_file_header_t* header() const { return m_header; }
         std::string body() const { return m_body; }
-        zip_t* _root() const { return m__root; }
-        zip_t::pk_section_t* _parent() const { return m__parent; }
-    };
-
-    class data_descriptor_t : public kaitai::kstruct {
-
-    public:
-
-        data_descriptor_t(kaitai::kstream* p__io, zip_t::pk_section_t* p__parent = 0, zip_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~data_descriptor_t();
-
-    private:
-        uint32_t m_crc32;
-        uint32_t m_compressed_size;
-        uint32_t m_uncompressed_size;
-        zip_t* m__root;
-        zip_t::pk_section_t* m__parent;
-
-    public:
-        uint32_t crc32() const { return m_crc32; }
-        uint32_t compressed_size() const { return m_compressed_size; }
-        uint32_t uncompressed_size() const { return m_uncompressed_size; }
         zip_t* _root() const { return m__root; }
         zip_t::pk_section_t* _parent() const { return m__parent; }
     };

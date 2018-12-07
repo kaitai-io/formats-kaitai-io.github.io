@@ -380,41 +380,6 @@ public class Zip extends KaitaiStruct {
         public Zip _root() { return _root; }
         public Zip.PkSection _parent() { return _parent; }
     }
-    public static class DataDescriptor extends KaitaiStruct {
-        public static DataDescriptor fromFile(String fileName) throws IOException {
-            return new DataDescriptor(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public DataDescriptor(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public DataDescriptor(KaitaiStream _io, Zip.PkSection _parent) {
-            this(_io, _parent, null);
-        }
-
-        public DataDescriptor(KaitaiStream _io, Zip.PkSection _parent, Zip _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.crc32 = this._io.readU4le();
-            this.compressedSize = this._io.readU4le();
-            this.uncompressedSize = this._io.readU4le();
-        }
-        private long crc32;
-        private long compressedSize;
-        private long uncompressedSize;
-        private Zip _root;
-        private Zip.PkSection _parent;
-        public long crc32() { return crc32; }
-        public long compressedSize() { return compressedSize; }
-        public long uncompressedSize() { return uncompressedSize; }
-        public Zip _root() { return _root; }
-        public Zip.PkSection _parent() { return _parent; }
-    }
     public static class ExtraField extends KaitaiStruct {
         public static ExtraField fromFile(String fileName) throws IOException {
             return new ExtraField(new ByteBufferKaitaiStream(fileName));
@@ -846,10 +811,6 @@ public class Zip extends KaitaiStruct {
             }
             case 1541: {
                 this.body = new EndOfCentralDir(this._io, this, _root);
-                break;
-            }
-            case 2055: {
-                this.body = new DataDescriptor(this._io, this, _root);
                 break;
             }
             }

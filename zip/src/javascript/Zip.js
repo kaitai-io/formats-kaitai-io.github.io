@@ -124,23 +124,6 @@ var Zip = (function() {
     return LocalFile;
   })();
 
-  var DataDescriptor = Zip.DataDescriptor = (function() {
-    function DataDescriptor(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DataDescriptor.prototype._read = function() {
-      this.crc32 = this._io.readU4le();
-      this.compressedSize = this._io.readU4le();
-      this.uncompressedSize = this._io.readU4le();
-    }
-
-    return DataDescriptor;
-  })();
-
   var ExtraField = Zip.ExtraField = (function() {
     function ExtraField(_io, _parent, _root) {
       this._io = _io;
@@ -384,9 +367,6 @@ var Zip = (function() {
         break;
       case 1541:
         this.body = new EndOfCentralDir(this._io, this, this._root);
-        break;
-      case 2055:
-        this.body = new DataDescriptor(this._io, this, this._root);
         break;
       }
     }

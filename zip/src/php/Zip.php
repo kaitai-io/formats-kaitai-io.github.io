@@ -39,27 +39,6 @@ class LocalFile extends \Kaitai\Struct\Struct {
 
 namespace \Zip;
 
-class DataDescriptor extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Zip\PkSection $_parent = null, \Zip $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this->_read();
-    }
-
-    private function _read() {
-        $this->_m_crc32 = $this->_io->readU4le();
-        $this->_m_compressedSize = $this->_io->readU4le();
-        $this->_m_uncompressedSize = $this->_io->readU4le();
-    }
-    protected $_m_crc32;
-    protected $_m_compressedSize;
-    protected $_m_uncompressedSize;
-    public function crc32() { return $this->_m_crc32; }
-    public function compressedSize() { return $this->_m_compressedSize; }
-    public function uncompressedSize() { return $this->_m_uncompressedSize; }
-}
-
-namespace \Zip;
-
 class ExtraField extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \Zip\Extras $_parent = null, \Zip $_root = null) {
         parent::__construct($_io, $_parent, $_root);
@@ -354,9 +333,6 @@ class PkSection extends \Kaitai\Struct\Struct {
                 break;
             case 1541:
                 $this->_m_body = new \Zip\EndOfCentralDir($this->_io, $this, $this->_root);
-                break;
-            case 2055:
-                $this->_m_body = new \Zip\DataDescriptor($this->_io, $this, $this->_root);
                 break;
         }
     }

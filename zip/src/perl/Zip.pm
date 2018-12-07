@@ -128,56 +128,6 @@ sub body {
 }
 
 ########################################################################
-package Zip::DataDescriptor;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{crc32} = $self->{_io}->read_u4le();
-    $self->{compressed_size} = $self->{_io}->read_u4le();
-    $self->{uncompressed_size} = $self->{_io}->read_u4le();
-}
-
-sub crc32 {
-    my ($self) = @_;
-    return $self->{crc32};
-}
-
-sub compressed_size {
-    my ($self) = @_;
-    return $self->{compressed_size};
-}
-
-sub uncompressed_size {
-    my ($self) = @_;
-    return $self->{uncompressed_size};
-}
-
-########################################################################
 package Zip::ExtraField;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -736,9 +686,6 @@ sub _read {
     }
     elsif ($_on == 1541) {
         $self->{body} = Zip::EndOfCentralDir->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == 2055) {
-        $self->{body} = Zip::DataDescriptor->new($self->{_io}, $self, $self->{_root});
     }
 }
 
