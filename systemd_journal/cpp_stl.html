@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>systemd journal file: C++/STL parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Logs</li>
+        <li class="active">systemd journal file</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>systemd journal file:
+            
+            C++/STL parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>systemd, a popular user-space system/service management suite on Linux,
+offers logging functionality, storing incoming logs in a binary journal
+format.</p>
+<p>On live Linux system running systemd, these journals are typically located at:</p>
+<ul>
+<li>/run/log/journal/machine-id/*.journal (volatile, lost after reboot)</li>
+<li>/var/log/journal/machine-id/*.journal (persistent, but disabled by default on Debian / Ubuntu)</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        journal
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of systemd journal file
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="systemd journal file parsing Overview library">Overview</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="cpp_stl.html" title="systemd journal file parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="systemd journal file parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="systemd journal file parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="systemd journal file parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="systemd journal file parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="systemd journal file parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="systemd journal file parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="systemd journal file parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="systemd journal file parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="systemd journal file parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+
+<p>Using Kaitai Struct in C++/STL usually consists of 3 steps.</p>
+
+<ol>
+    <li>We need to create an STL input stream (<code>std::istream</code>).
+        <ul>
+            <li>One can open a stream for reading from a local file:
+
+<pre><code class="cpp">#include &lt;fstream&gt;
+
+std::ifstream is("path/to/local/file.journal", std::ifstream::binary);</code></pre></li>
+
+            <li>Or one can prepare a stream for reading from existing <code>std::string str</code>:
+
+<pre><code class="cpp">#include &lt;sstream&gt;
+
+std::istringstream is(str);</code></pre></li>
+
+            <li>Or one can parse arbitrary <code>char*</code> buffer in memory, given that we know its size:
+
+<pre><code class="cpp">#include &lt;sstream&gt;
+
+const char buf[] = { ... };
+std::string str(buf, sizeof buf);
+std::istringstream is(str);</code></pre></li>
+
+    </ul></li>
+
+    <li>We need to wrap our input stream into Kaitai stream:
+
+<pre><code class="cpp">#include &lt;kaitai/kaitaistream.h&gt;
+
+kaitai::kstream ks(&amp;is);</code></pre></li>
+
+    <li>And finally, we can invoke the parsing:
+
+<pre><code class="cpp">systemd_journal_t data(&amp;ks);</code></pre></li>
+</ol>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="cpp">data.len_header() // => Header length is used to set substream size, as it thus required
+prior to declaration of header.
+</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C++/STL source code to parse systemd journal file
+            
+        </h2>
+
+        
+
+        <h3>systemd_journal.h</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl/systemd_journal.h" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="cpp_stl">#ifndef SYSTEMD_JOURNAL_H_
+#define SYSTEMD_JOURNAL_H_
+
+// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include &quot;kaitai/kaitaistruct.h&quot;
+
+#include &lt;stdint.h&gt;
+#include &lt;vector&gt;
+
+#if KAITAI_STRUCT_VERSION &lt; 7000L
+#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
+#endif
+
+/**
+ * systemd, a popular user-space system/service management suite on Linux,
+ * offers logging functionality, storing incoming logs in a binary journal
+ * format.
+ * 
+ * On live Linux system running systemd, these journals are typically located at:
+ * 
+ * * /run/log/journal/machine-id/*.journal (volatile, lost after reboot)
+ * * /var/log/journal/machine-id/*.journal (persistent, but disabled by default on Debian / Ubuntu)
+ * \sa Source
+ */
+
+class systemd_journal_t : public kaitai::kstruct {
+
+public:
+    class header_t;
+    class journal_object_t;
+    class data_object_t;
+
+    enum state_t {
+        STATE_OFFLINE = 0,
+        STATE_ONLINE = 1,
+        STATE_ARCHIVED = 2
+    };
+
+    systemd_journal_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, systemd_journal_t* p__root = 0);
+
+private:
+    void _read();
+
+public:
+    ~systemd_journal_t();
+
+    class header_t : public kaitai::kstruct {
+
+    public:
+
+        header_t(kaitai::kstream* p__io, systemd_journal_t* p__parent = 0, systemd_journal_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~header_t();
+
+    private:
+        std::string m_signature;
+        uint32_t m_compatible_flags;
+        uint32_t m_incompatible_flags;
+        state_t m_state;
+        std::string m_reserved;
+        std::string m_file_id;
+        std::string m_machine_id;
+        std::string m_boot_id;
+        std::string m_seqnum_id;
+        uint64_t m_len_header;
+        uint64_t m_len_arena;
+        uint64_t m_ofs_data_hash_table;
+        uint64_t m_len_data_hash_table;
+        uint64_t m_ofs_field_hash_table;
+        uint64_t m_len_field_hash_table;
+        uint64_t m_ofs_tail_object;
+        uint64_t m_num_objects;
+        uint64_t m_num_entries;
+        uint64_t m_tail_entry_seqnum;
+        uint64_t m_head_entry_seqnum;
+        uint64_t m_ofs_entry_array;
+        uint64_t m_head_entry_realtime;
+        uint64_t m_tail_entry_realtime;
+        uint64_t m_tail_entry_monotonic;
+        uint64_t m_num_data;
+        bool n_num_data;
+
+    public:
+        bool _is_null_num_data() { num_data(); return n_num_data; };
+
+    private:
+        uint64_t m_num_fields;
+        bool n_num_fields;
+
+    public:
+        bool _is_null_num_fields() { num_fields(); return n_num_fields; };
+
+    private:
+        uint64_t m_num_tags;
+        bool n_num_tags;
+
+    public:
+        bool _is_null_num_tags() { num_tags(); return n_num_tags; };
+
+    private:
+        uint64_t m_num_entry_arrays;
+        bool n_num_entry_arrays;
+
+    public:
+        bool _is_null_num_entry_arrays() { num_entry_arrays(); return n_num_entry_arrays; };
+
+    private:
+        systemd_journal_t* m__root;
+        systemd_journal_t* m__parent;
+
+    public:
+        std::string signature() const { return m_signature; }
+        uint32_t compatible_flags() const { return m_compatible_flags; }
+        uint32_t incompatible_flags() const { return m_incompatible_flags; }
+        state_t state() const { return m_state; }
+        std::string reserved() const { return m_reserved; }
+        std::string file_id() const { return m_file_id; }
+        std::string machine_id() const { return m_machine_id; }
+        std::string boot_id() const { return m_boot_id; }
+        std::string seqnum_id() const { return m_seqnum_id; }
+        uint64_t len_header() const { return m_len_header; }
+        uint64_t len_arena() const { return m_len_arena; }
+        uint64_t ofs_data_hash_table() const { return m_ofs_data_hash_table; }
+        uint64_t len_data_hash_table() const { return m_len_data_hash_table; }
+        uint64_t ofs_field_hash_table() const { return m_ofs_field_hash_table; }
+        uint64_t len_field_hash_table() const { return m_len_field_hash_table; }
+        uint64_t ofs_tail_object() const { return m_ofs_tail_object; }
+        uint64_t num_objects() const { return m_num_objects; }
+        uint64_t num_entries() const { return m_num_entries; }
+        uint64_t tail_entry_seqnum() const { return m_tail_entry_seqnum; }
+        uint64_t head_entry_seqnum() const { return m_head_entry_seqnum; }
+        uint64_t ofs_entry_array() const { return m_ofs_entry_array; }
+        uint64_t head_entry_realtime() const { return m_head_entry_realtime; }
+        uint64_t tail_entry_realtime() const { return m_tail_entry_realtime; }
+        uint64_t tail_entry_monotonic() const { return m_tail_entry_monotonic; }
+        uint64_t num_data() const { return m_num_data; }
+        uint64_t num_fields() const { return m_num_fields; }
+        uint64_t num_tags() const { return m_num_tags; }
+        uint64_t num_entry_arrays() const { return m_num_entry_arrays; }
+        systemd_journal_t* _root() const { return m__root; }
+        systemd_journal_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa Source
+     */
+
+    class journal_object_t : public kaitai::kstruct {
+
+    public:
+
+        enum object_types_t {
+            OBJECT_TYPES_UNUSED = 0,
+            OBJECT_TYPES_DATA = 1,
+            OBJECT_TYPES_FIELD = 2,
+            OBJECT_TYPES_ENTRY = 3,
+            OBJECT_TYPES_DATA_HASH_TABLE = 4,
+            OBJECT_TYPES_FIELD_HASH_TABLE = 5,
+            OBJECT_TYPES_ENTRY_ARRAY = 6,
+            OBJECT_TYPES_TAG = 7
+        };
+
+        journal_object_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, systemd_journal_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~journal_object_t();
+
+    private:
+        std::string m_padding;
+        object_types_t m_object_type;
+        uint8_t m_flags;
+        std::string m_reserved;
+        uint64_t m_len_object;
+        data_object_t* m_payload;
+        bool n_payload;
+
+    public:
+        bool _is_null_payload() { payload(); return n_payload; };
+
+    private:
+        systemd_journal_t* m__root;
+        kaitai::kstruct* m__parent;
+        std::string m__raw_payload;
+        kaitai::kstream* m__io__raw_payload;
+
+    public:
+        std::string padding() const { return m_padding; }
+        object_types_t object_type() const { return m_object_type; }
+        uint8_t flags() const { return m_flags; }
+        std::string reserved() const { return m_reserved; }
+        uint64_t len_object() const { return m_len_object; }
+        data_object_t* payload() const { return m_payload; }
+        systemd_journal_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+        std::string _raw_payload() const { return m__raw_payload; }
+        kaitai::kstream* _io__raw_payload() const { return m__io__raw_payload; }
+    };
+
+    /**
+     * Data objects are designed to carry log payload, typically in
+     * form of a &quot;key=value&quot; string in `payload` attribute.
+     * \sa Source
+     */
+
+    class data_object_t : public kaitai::kstruct {
+
+    public:
+
+        data_object_t(kaitai::kstream* p__io, systemd_journal_t::journal_object_t* p__parent = 0, systemd_journal_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~data_object_t();
+
+    private:
+        bool f_next_hash;
+        journal_object_t* m_next_hash;
+        bool n_next_hash;
+
+    public:
+        bool _is_null_next_hash() { next_hash(); return n_next_hash; };
+
+    private:
+
+    public:
+        journal_object_t* next_hash();
+
+    private:
+        bool f_head_field;
+        journal_object_t* m_head_field;
+        bool n_head_field;
+
+    public:
+        bool _is_null_head_field() { head_field(); return n_head_field; };
+
+    private:
+
+    public:
+        journal_object_t* head_field();
+
+    private:
+        bool f_entry;
+        journal_object_t* m_entry;
+        bool n_entry;
+
+    public:
+        bool _is_null_entry() { entry(); return n_entry; };
+
+    private:
+
+    public:
+        journal_object_t* entry();
+
+    private:
+        bool f_entry_array;
+        journal_object_t* m_entry_array;
+        bool n_entry_array;
+
+    public:
+        bool _is_null_entry_array() { entry_array(); return n_entry_array; };
+
+    private:
+
+    public:
+        journal_object_t* entry_array();
+
+    private:
+        uint64_t m_hash;
+        uint64_t m_ofs_next_hash;
+        uint64_t m_ofs_head_field;
+        uint64_t m_ofs_entry;
+        uint64_t m_ofs_entry_array;
+        uint64_t m_num_entries;
+        std::string m_payload;
+        systemd_journal_t* m__root;
+        systemd_journal_t::journal_object_t* m__parent;
+
+    public:
+        uint64_t hash() const { return m_hash; }
+        uint64_t ofs_next_hash() const { return m_ofs_next_hash; }
+        uint64_t ofs_head_field() const { return m_ofs_head_field; }
+        uint64_t ofs_entry() const { return m_ofs_entry; }
+        uint64_t ofs_entry_array() const { return m_ofs_entry_array; }
+        uint64_t num_entries() const { return m_num_entries; }
+        std::string payload() const { return m_payload; }
+        systemd_journal_t* _root() const { return m__root; }
+        systemd_journal_t::journal_object_t* _parent() const { return m__parent; }
+    };
+
+private:
+    bool f_len_header;
+    uint64_t m_len_header;
+
+public:
+
+    /**
+     * Header length is used to set substream size, as it thus required
+     * prior to declaration of header.
+     */
+    uint64_t len_header();
+
+private:
+    bool f_data_hash_table;
+    std::string m_data_hash_table;
+
+public:
+    std::string data_hash_table();
+
+private:
+    bool f_field_hash_table;
+    std::string m_field_hash_table;
+
+public:
+    std::string field_hash_table();
+
+private:
+    header_t* m_header;
+    std::vector&lt;journal_object_t*&gt;* m_objects;
+    systemd_journal_t* m__root;
+    kaitai::kstruct* m__parent;
+    std::string m__raw_header;
+    kaitai::kstream* m__io__raw_header;
+
+public:
+    header_t* header() const { return m_header; }
+    std::vector&lt;journal_object_t*&gt;* objects() const { return m_objects; }
+    systemd_journal_t* _root() const { return m__root; }
+    kaitai::kstruct* _parent() const { return m__parent; }
+    std::string _raw_header() const { return m__raw_header; }
+    kaitai::kstream* _io__raw_header() const { return m__io__raw_header; }
+};
+
+#endif  // SYSTEMD_JOURNAL_H_
+</code></pre>
+            
+        </div>
+        
+
+        <h3>systemd_journal.cpp</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl/systemd_journal.cpp" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include &quot;systemd_journal.h&quot;
+
+
+
+systemd_journal_t::systemd_journal_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, systemd_journal_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = this;
+    f_len_header = false;
+    f_data_hash_table = false;
+    f_field_hash_table = false;
+    _read();
+}
+
+void systemd_journal_t::_read() {
+    m__raw_header = m__io-&gt;read_bytes(len_header());
+    m__io__raw_header = new kaitai::kstream(m__raw_header);
+    m_header = new header_t(m__io__raw_header, this, m__root);
+    int l_objects = header()-&gt;num_objects();
+    m_objects = new std::vector&lt;journal_object_t*&gt;();
+    m_objects-&gt;reserve(l_objects);
+    for (int i = 0; i &lt; l_objects; i++) {
+        m_objects-&gt;push_back(new journal_object_t(m__io, this, m__root));
+    }
+}
+
+systemd_journal_t::~systemd_journal_t() {
+    delete m__io__raw_header;
+    delete m_header;
+    for (std::vector&lt;journal_object_t*&gt;::iterator it = m_objects-&gt;begin(); it != m_objects-&gt;end(); ++it) {
+        delete *it;
+    }
+    delete m_objects;
+    if (f_len_header) {
+    }
+    if (f_data_hash_table) {
+    }
+    if (f_field_hash_table) {
+    }
+}
+
+systemd_journal_t::header_t::header_t(kaitai::kstream* p__io, systemd_journal_t* p__parent, systemd_journal_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void systemd_journal_t::header_t::_read() {
+    m_signature = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x4C\x50\x4B\x53\x48\x48\x52\x48&quot;, 8));
+    m_compatible_flags = m__io-&gt;read_u4le();
+    m_incompatible_flags = m__io-&gt;read_u4le();
+    m_state = static_cast&lt;systemd_journal_t::state_t&gt;(m__io-&gt;read_u1());
+    m_reserved = m__io-&gt;read_bytes(7);
+    m_file_id = m__io-&gt;read_bytes(16);
+    m_machine_id = m__io-&gt;read_bytes(16);
+    m_boot_id = m__io-&gt;read_bytes(16);
+    m_seqnum_id = m__io-&gt;read_bytes(16);
+    m_len_header = m__io-&gt;read_u8le();
+    m_len_arena = m__io-&gt;read_u8le();
+    m_ofs_data_hash_table = m__io-&gt;read_u8le();
+    m_len_data_hash_table = m__io-&gt;read_u8le();
+    m_ofs_field_hash_table = m__io-&gt;read_u8le();
+    m_len_field_hash_table = m__io-&gt;read_u8le();
+    m_ofs_tail_object = m__io-&gt;read_u8le();
+    m_num_objects = m__io-&gt;read_u8le();
+    m_num_entries = m__io-&gt;read_u8le();
+    m_tail_entry_seqnum = m__io-&gt;read_u8le();
+    m_head_entry_seqnum = m__io-&gt;read_u8le();
+    m_ofs_entry_array = m__io-&gt;read_u8le();
+    m_head_entry_realtime = m__io-&gt;read_u8le();
+    m_tail_entry_realtime = m__io-&gt;read_u8le();
+    m_tail_entry_monotonic = m__io-&gt;read_u8le();
+    n_num_data = true;
+    if (!(_io()-&gt;is_eof())) {
+        n_num_data = false;
+        m_num_data = m__io-&gt;read_u8le();
+    }
+    n_num_fields = true;
+    if (!(_io()-&gt;is_eof())) {
+        n_num_fields = false;
+        m_num_fields = m__io-&gt;read_u8le();
+    }
+    n_num_tags = true;
+    if (!(_io()-&gt;is_eof())) {
+        n_num_tags = false;
+        m_num_tags = m__io-&gt;read_u8le();
+    }
+    n_num_entry_arrays = true;
+    if (!(_io()-&gt;is_eof())) {
+        n_num_entry_arrays = false;
+        m_num_entry_arrays = m__io-&gt;read_u8le();
+    }
+}
+
+systemd_journal_t::header_t::~header_t() {
+    if (!n_num_data) {
+    }
+    if (!n_num_fields) {
+    }
+    if (!n_num_tags) {
+    }
+    if (!n_num_entry_arrays) {
+    }
+}
+
+systemd_journal_t::journal_object_t::journal_object_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, systemd_journal_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void systemd_journal_t::journal_object_t::_read() {
+    m_padding = m__io-&gt;read_bytes(kaitai::kstream::mod((8 - _io()-&gt;pos()), 8));
+    m_object_type = static_cast&lt;systemd_journal_t::journal_object_t::object_types_t&gt;(m__io-&gt;read_u1());
+    m_flags = m__io-&gt;read_u1();
+    m_reserved = m__io-&gt;read_bytes(6);
+    m_len_object = m__io-&gt;read_u8le();
+    n_payload = true;
+    switch (object_type()) {
+    case OBJECT_TYPES_DATA: {
+        n_payload = false;
+        m__raw_payload = m__io-&gt;read_bytes((len_object() - 16));
+        m__io__raw_payload = new kaitai::kstream(m__raw_payload);
+        m_payload = new data_object_t(m__io__raw_payload, this, m__root);
+        break;
+    }
+    default: {
+        m__raw_payload = m__io-&gt;read_bytes((len_object() - 16));
+        break;
+    }
+    }
+}
+
+systemd_journal_t::journal_object_t::~journal_object_t() {
+    if (!n_payload) {
+        delete m__io__raw_payload;
+        delete m_payload;
+    }
+}
+
+systemd_journal_t::data_object_t::data_object_t(kaitai::kstream* p__io, systemd_journal_t::journal_object_t* p__parent, systemd_journal_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_next_hash = false;
+    f_head_field = false;
+    f_entry = false;
+    f_entry_array = false;
+    _read();
+}
+
+void systemd_journal_t::data_object_t::_read() {
+    m_hash = m__io-&gt;read_u8le();
+    m_ofs_next_hash = m__io-&gt;read_u8le();
+    m_ofs_head_field = m__io-&gt;read_u8le();
+    m_ofs_entry = m__io-&gt;read_u8le();
+    m_ofs_entry_array = m__io-&gt;read_u8le();
+    m_num_entries = m__io-&gt;read_u8le();
+    m_payload = m__io-&gt;read_bytes_full();
+}
+
+systemd_journal_t::data_object_t::~data_object_t() {
+    if (f_next_hash &amp;&amp; !n_next_hash) {
+        delete m_next_hash;
+    }
+    if (f_head_field &amp;&amp; !n_head_field) {
+        delete m_head_field;
+    }
+    if (f_entry &amp;&amp; !n_entry) {
+        delete m_entry;
+    }
+    if (f_entry_array &amp;&amp; !n_entry_array) {
+        delete m_entry_array;
+    }
+}
+
+systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::next_hash() {
+    if (f_next_hash)
+        return m_next_hash;
+    n_next_hash = true;
+    if (ofs_next_hash() != 0) {
+        n_next_hash = false;
+        kaitai::kstream *io = _root()-&gt;_io();
+        std::streampos _pos = io-&gt;pos();
+        io-&gt;seek(ofs_next_hash());
+        m_next_hash = new journal_object_t(io, this, m__root);
+        io-&gt;seek(_pos);
+    }
+    f_next_hash = true;
+    return m_next_hash;
+}
+
+systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::head_field() {
+    if (f_head_field)
+        return m_head_field;
+    n_head_field = true;
+    if (ofs_head_field() != 0) {
+        n_head_field = false;
+        kaitai::kstream *io = _root()-&gt;_io();
+        std::streampos _pos = io-&gt;pos();
+        io-&gt;seek(ofs_head_field());
+        m_head_field = new journal_object_t(io, this, m__root);
+        io-&gt;seek(_pos);
+    }
+    f_head_field = true;
+    return m_head_field;
+}
+
+systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::entry() {
+    if (f_entry)
+        return m_entry;
+    n_entry = true;
+    if (ofs_entry() != 0) {
+        n_entry = false;
+        kaitai::kstream *io = _root()-&gt;_io();
+        std::streampos _pos = io-&gt;pos();
+        io-&gt;seek(ofs_entry());
+        m_entry = new journal_object_t(io, this, m__root);
+        io-&gt;seek(_pos);
+    }
+    f_entry = true;
+    return m_entry;
+}
+
+systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::entry_array() {
+    if (f_entry_array)
+        return m_entry_array;
+    n_entry_array = true;
+    if (ofs_entry_array() != 0) {
+        n_entry_array = false;
+        kaitai::kstream *io = _root()-&gt;_io();
+        std::streampos _pos = io-&gt;pos();
+        io-&gt;seek(ofs_entry_array());
+        m_entry_array = new journal_object_t(io, this, m__root);
+        io-&gt;seek(_pos);
+    }
+    f_entry_array = true;
+    return m_entry_array;
+}
+
+uint64_t systemd_journal_t::len_header() {
+    if (f_len_header)
+        return m_len_header;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(88);
+    m_len_header = m__io-&gt;read_u8le();
+    m__io-&gt;seek(_pos);
+    f_len_header = true;
+    return m_len_header;
+}
+
+std::string systemd_journal_t::data_hash_table() {
+    if (f_data_hash_table)
+        return m_data_hash_table;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(header()-&gt;ofs_data_hash_table());
+    m_data_hash_table = m__io-&gt;read_bytes(header()-&gt;len_data_hash_table());
+    m__io-&gt;seek(_pos);
+    f_data_hash_table = true;
+    return m_data_hash_table;
+}
+
+std::string systemd_journal_t::field_hash_table() {
+    if (f_field_hash_table)
+        return m_field_hash_table;
+    std::streampos _pos = m__io-&gt;pos();
+    m__io-&gt;seek(header()-&gt;ofs_field_hash_table());
+    m_field_hash_table = m__io-&gt;read_bytes(header()-&gt;len_field_hash_table());
+    m__io-&gt;seek(_pos);
+    f_field_hash_table = true;
+    return m_field_hash_table;
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2018 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>systemd journal file: Perl parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Logs</li>
+        <li class="active">systemd journal file</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>systemd journal file:
+            
+            Perl parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>systemd, a popular user-space system/service management suite on Linux,
+offers logging functionality, storing incoming logs in a binary journal
+format.</p>
+<p>On live Linux system running systemd, these journals are typically located at:</p>
+<ul>
+<li>/run/log/journal/machine-id/*.journal (volatile, lost after reboot)</li>
+<li>/var/log/journal/machine-id/*.journal (persistent, but disabled by default on Debian / Ubuntu)</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        journal
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of systemd journal file
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="systemd journal file parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="systemd journal file parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="systemd journal file parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="systemd journal file parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="systemd journal file parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="systemd journal file parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="systemd journal file parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="perl.html" title="systemd journal file parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="systemd journal file parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="systemd journal file parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="systemd journal file parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Perl source code to parse systemd journal file
+            
+        </h2>
+
+        
+
+        <h3>SystemdJournal.pm</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/perl/SystemdJournal.pm" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="perl"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+use strict;
+use warnings;
+use IO::KaitaiStruct 0.007_000;
+
+########################################################################
+package SystemdJournal;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $STATE_OFFLINE = 0;
+our $STATE_ONLINE = 1;
+our $STATE_ARCHIVED = 2;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{_raw_header} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_header());
+    my $io__raw_header = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_header});
+    $self-&gt;{header} = SystemdJournal::Header-&gt;new($io__raw_header, $self, $self-&gt;{_root});
+    $self-&gt;{objects} = ();
+    my $n_objects = $self-&gt;header()-&gt;num_objects();
+    for (my $i = 0; $i &lt; $n_objects; $i++) {
+        $self-&gt;{objects}[$i] = SystemdJournal::JournalObject-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub len_header {
+    my ($self) = @_;
+    return $self-&gt;{len_header} if ($self-&gt;{len_header});
+    my $_pos = $self-&gt;{_io}-&gt;pos();
+    $self-&gt;{_io}-&gt;seek(88);
+    $self-&gt;{len_header} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{_io}-&gt;seek($_pos);
+    return $self-&gt;{len_header};
+}
+
+sub data_hash_table {
+    my ($self) = @_;
+    return $self-&gt;{data_hash_table} if ($self-&gt;{data_hash_table});
+    my $_pos = $self-&gt;{_io}-&gt;pos();
+    $self-&gt;{_io}-&gt;seek($self-&gt;header()-&gt;ofs_data_hash_table());
+    $self-&gt;{data_hash_table} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;header()-&gt;len_data_hash_table());
+    $self-&gt;{_io}-&gt;seek($_pos);
+    return $self-&gt;{data_hash_table};
+}
+
+sub field_hash_table {
+    my ($self) = @_;
+    return $self-&gt;{field_hash_table} if ($self-&gt;{field_hash_table});
+    my $_pos = $self-&gt;{_io}-&gt;pos();
+    $self-&gt;{_io}-&gt;seek($self-&gt;header()-&gt;ofs_field_hash_table());
+    $self-&gt;{field_hash_table} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;header()-&gt;len_field_hash_table());
+    $self-&gt;{_io}-&gt;seek($_pos);
+    return $self-&gt;{field_hash_table};
+}
+
+sub header {
+    my ($self) = @_;
+    return $self-&gt;{header};
+}
+
+sub objects {
+    my ($self) = @_;
+    return $self-&gt;{objects};
+}
+
+sub _raw_header {
+    my ($self) = @_;
+    return $self-&gt;{_raw_header};
+}
+
+########################################################################
+package SystemdJournal::Header;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{signature} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (76, 80, 75, 83, 72, 72, 82, 72)));
+    $self-&gt;{compatible_flags} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{incompatible_flags} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{state} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{reserved} = $self-&gt;{_io}-&gt;read_bytes(7);
+    $self-&gt;{file_id} = $self-&gt;{_io}-&gt;read_bytes(16);
+    $self-&gt;{machine_id} = $self-&gt;{_io}-&gt;read_bytes(16);
+    $self-&gt;{boot_id} = $self-&gt;{_io}-&gt;read_bytes(16);
+    $self-&gt;{seqnum_id} = $self-&gt;{_io}-&gt;read_bytes(16);
+    $self-&gt;{len_header} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{len_arena} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{ofs_data_hash_table} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{len_data_hash_table} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{ofs_field_hash_table} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{len_field_hash_table} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{ofs_tail_object} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{num_objects} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{num_entries} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{tail_entry_seqnum} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{head_entry_seqnum} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{ofs_entry_array} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{head_entry_realtime} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{tail_entry_realtime} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{tail_entry_monotonic} = $self-&gt;{_io}-&gt;read_u8le();
+    if (!($self-&gt;_io()-&gt;is_eof())) {
+        $self-&gt;{num_data} = $self-&gt;{_io}-&gt;read_u8le();
+    }
+    if (!($self-&gt;_io()-&gt;is_eof())) {
+        $self-&gt;{num_fields} = $self-&gt;{_io}-&gt;read_u8le();
+    }
+    if (!($self-&gt;_io()-&gt;is_eof())) {
+        $self-&gt;{num_tags} = $self-&gt;{_io}-&gt;read_u8le();
+    }
+    if (!($self-&gt;_io()-&gt;is_eof())) {
+        $self-&gt;{num_entry_arrays} = $self-&gt;{_io}-&gt;read_u8le();
+    }
+}
+
+sub signature {
+    my ($self) = @_;
+    return $self-&gt;{signature};
+}
+
+sub compatible_flags {
+    my ($self) = @_;
+    return $self-&gt;{compatible_flags};
+}
+
+sub incompatible_flags {
+    my ($self) = @_;
+    return $self-&gt;{incompatible_flags};
+}
+
+sub state {
+    my ($self) = @_;
+    return $self-&gt;{state};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self-&gt;{reserved};
+}
+
+sub file_id {
+    my ($self) = @_;
+    return $self-&gt;{file_id};
+}
+
+sub machine_id {
+    my ($self) = @_;
+    return $self-&gt;{machine_id};
+}
+
+sub boot_id {
+    my ($self) = @_;
+    return $self-&gt;{boot_id};
+}
+
+sub seqnum_id {
+    my ($self) = @_;
+    return $self-&gt;{seqnum_id};
+}
+
+sub len_header {
+    my ($self) = @_;
+    return $self-&gt;{len_header};
+}
+
+sub len_arena {
+    my ($self) = @_;
+    return $self-&gt;{len_arena};
+}
+
+sub ofs_data_hash_table {
+    my ($self) = @_;
+    return $self-&gt;{ofs_data_hash_table};
+}
+
+sub len_data_hash_table {
+    my ($self) = @_;
+    return $self-&gt;{len_data_hash_table};
+}
+
+sub ofs_field_hash_table {
+    my ($self) = @_;
+    return $self-&gt;{ofs_field_hash_table};
+}
+
+sub len_field_hash_table {
+    my ($self) = @_;
+    return $self-&gt;{len_field_hash_table};
+}
+
+sub ofs_tail_object {
+    my ($self) = @_;
+    return $self-&gt;{ofs_tail_object};
+}
+
+sub num_objects {
+    my ($self) = @_;
+    return $self-&gt;{num_objects};
+}
+
+sub num_entries {
+    my ($self) = @_;
+    return $self-&gt;{num_entries};
+}
+
+sub tail_entry_seqnum {
+    my ($self) = @_;
+    return $self-&gt;{tail_entry_seqnum};
+}
+
+sub head_entry_seqnum {
+    my ($self) = @_;
+    return $self-&gt;{head_entry_seqnum};
+}
+
+sub ofs_entry_array {
+    my ($self) = @_;
+    return $self-&gt;{ofs_entry_array};
+}
+
+sub head_entry_realtime {
+    my ($self) = @_;
+    return $self-&gt;{head_entry_realtime};
+}
+
+sub tail_entry_realtime {
+    my ($self) = @_;
+    return $self-&gt;{tail_entry_realtime};
+}
+
+sub tail_entry_monotonic {
+    my ($self) = @_;
+    return $self-&gt;{tail_entry_monotonic};
+}
+
+sub num_data {
+    my ($self) = @_;
+    return $self-&gt;{num_data};
+}
+
+sub num_fields {
+    my ($self) = @_;
+    return $self-&gt;{num_fields};
+}
+
+sub num_tags {
+    my ($self) = @_;
+    return $self-&gt;{num_tags};
+}
+
+sub num_entry_arrays {
+    my ($self) = @_;
+    return $self-&gt;{num_entry_arrays};
+}
+
+########################################################################
+package SystemdJournal::JournalObject;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $OBJECT_TYPES_UNUSED = 0;
+our $OBJECT_TYPES_DATA = 1;
+our $OBJECT_TYPES_FIELD = 2;
+our $OBJECT_TYPES_ENTRY = 3;
+our $OBJECT_TYPES_DATA_HASH_TABLE = 4;
+our $OBJECT_TYPES_FIELD_HASH_TABLE = 5;
+our $OBJECT_TYPES_ENTRY_ARRAY = 6;
+our $OBJECT_TYPES_TAG = 7;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{padding} = $self-&gt;{_io}-&gt;read_bytes(((8 - $self-&gt;_io()-&gt;pos()) % 8));
+    $self-&gt;{object_type} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{flags} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{reserved} = $self-&gt;{_io}-&gt;read_bytes(6);
+    $self-&gt;{len_object} = $self-&gt;{_io}-&gt;read_u8le();
+    my $_on = $self-&gt;object_type();
+    if ($_on == $OBJECT_TYPES_DATA) {
+        $self-&gt;{_raw_payload} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;len_object() - 16));
+        my $io__raw_payload = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_payload});
+        $self-&gt;{payload} = SystemdJournal::DataObject-&gt;new($io__raw_payload, $self, $self-&gt;{_root});
+    }
+    else {
+        $self-&gt;{payload} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;len_object() - 16));
+    }
+}
+
+sub padding {
+    my ($self) = @_;
+    return $self-&gt;{padding};
+}
+
+sub object_type {
+    my ($self) = @_;
+    return $self-&gt;{object_type};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self-&gt;{flags};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self-&gt;{reserved};
+}
+
+sub len_object {
+    my ($self) = @_;
+    return $self-&gt;{len_object};
+}
+
+sub payload {
+    my ($self) = @_;
+    return $self-&gt;{payload};
+}
+
+sub _raw_payload {
+    my ($self) = @_;
+    return $self-&gt;{_raw_payload};
+}
+
+########################################################################
+package SystemdJournal::DataObject;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{hash} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{ofs_next_hash} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{ofs_head_field} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{ofs_entry} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{ofs_entry_array} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{num_entries} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{payload} = $self-&gt;{_io}-&gt;read_bytes_full();
+}
+
+sub next_hash {
+    my ($self) = @_;
+    return $self-&gt;{next_hash} if ($self-&gt;{next_hash});
+    if ($self-&gt;ofs_next_hash() != 0) {
+        my $io = $self-&gt;_root()-&gt;_io();
+        my $_pos = $io-&gt;pos();
+        $io-&gt;seek($self-&gt;ofs_next_hash());
+        $self-&gt;{next_hash} = SystemdJournal::JournalObject-&gt;new($io, $self, $self-&gt;{_root});
+        $io-&gt;seek($_pos);
+    }
+    return $self-&gt;{next_hash};
+}
+
+sub head_field {
+    my ($self) = @_;
+    return $self-&gt;{head_field} if ($self-&gt;{head_field});
+    if ($self-&gt;ofs_head_field() != 0) {
+        my $io = $self-&gt;_root()-&gt;_io();
+        my $_pos = $io-&gt;pos();
+        $io-&gt;seek($self-&gt;ofs_head_field());
+        $self-&gt;{head_field} = SystemdJournal::JournalObject-&gt;new($io, $self, $self-&gt;{_root});
+        $io-&gt;seek($_pos);
+    }
+    return $self-&gt;{head_field};
+}
+
+sub entry {
+    my ($self) = @_;
+    return $self-&gt;{entry} if ($self-&gt;{entry});
+    if ($self-&gt;ofs_entry() != 0) {
+        my $io = $self-&gt;_root()-&gt;_io();
+        my $_pos = $io-&gt;pos();
+        $io-&gt;seek($self-&gt;ofs_entry());
+        $self-&gt;{entry} = SystemdJournal::JournalObject-&gt;new($io, $self, $self-&gt;{_root});
+        $io-&gt;seek($_pos);
+    }
+    return $self-&gt;{entry};
+}
+
+sub entry_array {
+    my ($self) = @_;
+    return $self-&gt;{entry_array} if ($self-&gt;{entry_array});
+    if ($self-&gt;ofs_entry_array() != 0) {
+        my $io = $self-&gt;_root()-&gt;_io();
+        my $_pos = $io-&gt;pos();
+        $io-&gt;seek($self-&gt;ofs_entry_array());
+        $self-&gt;{entry_array} = SystemdJournal::JournalObject-&gt;new($io, $self, $self-&gt;{_root});
+        $io-&gt;seek($_pos);
+    }
+    return $self-&gt;{entry_array};
+}
+
+sub hash {
+    my ($self) = @_;
+    return $self-&gt;{hash};
+}
+
+sub ofs_next_hash {
+    my ($self) = @_;
+    return $self-&gt;{ofs_next_hash};
+}
+
+sub ofs_head_field {
+    my ($self) = @_;
+    return $self-&gt;{ofs_head_field};
+}
+
+sub ofs_entry {
+    my ($self) = @_;
+    return $self-&gt;{ofs_entry};
+}
+
+sub ofs_entry_array {
+    my ($self) = @_;
+    return $self-&gt;{ofs_entry_array};
+}
+
+sub num_entries {
+    my ($self) = @_;
+    return $self-&gt;{num_entries};
+}
+
+sub payload {
+    my ($self) = @_;
+    return $self-&gt;{payload};
+}
+
+1;
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2018 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
