@@ -161,15 +161,19 @@ class Asn1Der < Kaitai::Struct::Struct
       if b1 == 130
         @int2 = @_io.read_u2be
       end
+      if b1 == 129
+        @int1 = @_io.read_u1
+      end
       self
     end
     def result
       return @result unless @result.nil?
-      @result = ((b1 & 128) == 0 ? b1 : int2)
+      @result = (b1 == 129 ? int1 : (b1 == 130 ? int2 : b1))
       @result
     end
     attr_reader :b1
     attr_reader :int2
+    attr_reader :int1
   end
   class BodyPrintableString < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)

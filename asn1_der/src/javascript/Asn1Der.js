@@ -210,12 +210,15 @@ var Asn1Der = (function() {
       if (this.b1 == 130) {
         this.int2 = this._io.readU2be();
       }
+      if (this.b1 == 129) {
+        this.int1 = this._io.readU1();
+      }
     }
     Object.defineProperty(LenEncoded.prototype, 'result', {
       get: function() {
         if (this._m_result !== undefined)
           return this._m_result;
-        this._m_result = ((this.b1 & 128) == 0 ? this.b1 : this.int2);
+        this._m_result = (this.b1 == 129 ? this.int1 : (this.b1 == 130 ? this.int2 : this.b1));
         return this._m_result;
       }
     });

@@ -8,8 +8,8 @@ digraph {
 		asn1_der__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="type_tag_pos">0</TD><TD PORT="type_tag_size">1</TD><TD>u1→TypeTag</TD><TD PORT="type_tag_type">type_tag</TD></TR>
-			<TR><TD PORT="len_pos">1</TD><TD PORT="len_size">3</TD><TD>LenEncoded</TD><TD PORT="len_type">len</TD></TR>
-			<TR><TD PORT="body_pos">4</TD><TD PORT="body_size">...</TD><TD>switch (type_tag)</TD><TD PORT="body_type">body</TD></TR>
+			<TR><TD PORT="len_pos">1</TD><TD PORT="len_size">4</TD><TD>LenEncoded</TD><TD PORT="len_type">len</TD></TR>
+			<TR><TD PORT="body_pos">5</TD><TD PORT="body_size">...</TD><TD>switch (type_tag)</TD><TD PORT="body_type">body</TD></TR>
 		</TABLE>>];
 asn1_der__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
@@ -65,10 +65,11 @@ asn1_der__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="b1_pos">0</TD><TD PORT="b1_size">1</TD><TD>u1</TD><TD PORT="b1_type">b1</TD></TR>
 				<TR><TD PORT="int2_pos">1</TD><TD PORT="int2_size">2</TD><TD>u2be</TD><TD PORT="int2_type">int2</TD></TR>
+				<TR><TD PORT="int1_pos">3</TD><TD PORT="int1_size">1</TD><TD>u1</TD><TD PORT="int1_type">int1</TD></TR>
 			</TABLE>>];
 			len_encoded__inst__result [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>result</TD><TD>((b1 &amp; 128) == 0 ? b1 : int2)</TD></TR>
+				<TR><TD>result</TD><TD>(b1 == 129 ? int1 : (b1 == 130 ? int2 : b1))</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__body_printable_string {
@@ -94,6 +95,8 @@ asn1_der__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="
 	body_object_id__seq:first_and_second_type -> body_object_id__inst__first [color="#404040"];
 	body_object_id__seq:first_and_second_type -> body_object_id__inst__second [color="#404040"];
 	len_encoded__seq:b1_type -> len_encoded__inst__result [color="#404040"];
+	len_encoded__seq:int1_type -> len_encoded__inst__result [color="#404040"];
 	len_encoded__seq:b1_type -> len_encoded__inst__result [color="#404040"];
 	len_encoded__seq:int2_type -> len_encoded__inst__result [color="#404040"];
+	len_encoded__seq:b1_type -> len_encoded__inst__result [color="#404040"];
 }

@@ -155,17 +155,24 @@ void asn1_der_t::len_encoded_t::_read() {
         n_int2 = false;
         m_int2 = m__io->read_u2be();
     }
+    n_int1 = true;
+    if (b1() == 129) {
+        n_int1 = false;
+        m_int1 = m__io->read_u1();
+    }
 }
 
 asn1_der_t::len_encoded_t::~len_encoded_t() {
     if (!n_int2) {
+    }
+    if (!n_int1) {
     }
 }
 
 uint16_t asn1_der_t::len_encoded_t::result() {
     if (f_result)
         return m_result;
-    m_result = (((b1() & 128) == 0) ? (b1()) : (int2()));
+    m_result = ((b1() == 129) ? (int1()) : (((b1() == 130) ? (int2()) : (b1()))));
     f_result = true;
     return m_result;
 }

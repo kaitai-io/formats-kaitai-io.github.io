@@ -195,12 +195,20 @@ public:
         bool _is_null_int2() { int2(); return n_int2; };
 
     private:
+        uint8_t m_int1;
+        bool n_int1;
+
+    public:
+        bool _is_null_int1() { int1(); return n_int1; };
+
+    private:
         asn1_der_t* m__root;
         asn1_der_t* m__parent;
 
     public:
         uint8_t b1() const { return m_b1; }
         uint16_t int2() const { return m_int2; }
+        uint8_t int1() const { return m_int1; }
         asn1_der_t* _root() const { return m__root; }
         asn1_der_t* _parent() const { return m__parent; }
     };

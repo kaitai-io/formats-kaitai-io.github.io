@@ -483,12 +483,20 @@ public:
         bool _is_null_int2() { int2(); return n_int2; };
 
     private:
+        uint8_t m_int1;
+        bool n_int1;
+
+    public:
+        bool _is_null_int1() { int1(); return n_int1; };
+
+    private:
         asn1_der_t* m__root;
         asn1_der_t* m__parent;
 
     public:
         uint8_t b1() const { return m_b1; }
         uint16_t int2() const { return m_int2; }
+        uint8_t int1() const { return m_int1; }
         asn1_der_t* _root() const { return m__root; }
         asn1_der_t* _parent() const { return m__parent; }
     };
@@ -715,17 +723,24 @@ void asn1_der_t::len_encoded_t::_read() {
         n_int2 = false;
         m_int2 = m__io-&gt;read_u2be();
     }
+    n_int1 = true;
+    if (b1() == 129) {
+        n_int1 = false;
+        m_int1 = m__io-&gt;read_u1();
+    }
 }
 
 asn1_der_t::len_encoded_t::~len_encoded_t() {
     if (!n_int2) {
+    }
+    if (!n_int1) {
     }
 }
 
 uint16_t asn1_der_t::len_encoded_t::result() {
     if (f_result)
         return m_result;
-    m_result = (((b1() &amp; 128) == 0) ? (b1()) : (int2()));
+    m_result = ((b1() == 129) ? (int1()) : (((b1() == 130) ? (int2()) : (b1()))));
     f_result = true;
     return m_result;
 }

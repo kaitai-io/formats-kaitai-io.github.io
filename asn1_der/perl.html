@@ -521,12 +521,15 @@ sub _read {
     if ($self-&gt;b1() == 130) {
         $self-&gt;{int2} = $self-&gt;{_io}-&gt;read_u2be();
     }
+    if ($self-&gt;b1() == 129) {
+        $self-&gt;{int1} = $self-&gt;{_io}-&gt;read_u1();
+    }
 }
 
 sub result {
     my ($self) = @_;
     return $self-&gt;{result} if ($self-&gt;{result});
-    $self-&gt;{result} = (($self-&gt;b1() &amp; 128) == 0 ? $self-&gt;b1() : $self-&gt;int2());
+    $self-&gt;{result} = ($self-&gt;b1() == 129 ? $self-&gt;int1() : ($self-&gt;b1() == 130 ? $self-&gt;int2() : $self-&gt;b1()));
     return $self-&gt;{result};
 }
 
@@ -538,6 +541,11 @@ sub b1 {
 sub int2 {
     my ($self) = @_;
     return $self-&gt;{int2};
+}
+
+sub int1 {
+    my ($self) = @_;
+    return $self-&gt;{int1};
 }
 
 ########################################################################

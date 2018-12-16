@@ -274,21 +274,26 @@ public class Asn1Der extends KaitaiStruct {
             if (b1() == 130) {
                 this.int2 = this._io.readU2be();
             }
+            if (b1() == 129) {
+                this.int1 = this._io.readU1();
+            }
         }
         private Integer result;
         public Integer result() {
             if (this.result != null)
                 return this.result;
-            int _tmp = (int) (((b1() & 128) == 0 ? b1() : int2()));
+            int _tmp = (int) ((b1() == 129 ? int1() : (b1() == 130 ? int2() : b1())));
             this.result = _tmp;
             return this.result;
         }
         private int b1;
         private Integer int2;
+        private Integer int1;
         private Asn1Der _root;
         private Asn1Der _parent;
         public int b1() { return b1; }
         public Integer int2() { return int2; }
+        public Integer int1() { return int1; }
         public Asn1Der _root() { return _root; }
         public Asn1Der _parent() { return _parent; }
     }

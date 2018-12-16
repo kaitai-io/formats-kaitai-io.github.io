@@ -284,12 +284,15 @@ sub _read {
     if ($self->b1() == 130) {
         $self->{int2} = $self->{_io}->read_u2be();
     }
+    if ($self->b1() == 129) {
+        $self->{int1} = $self->{_io}->read_u1();
+    }
 }
 
 sub result {
     my ($self) = @_;
     return $self->{result} if ($self->{result});
-    $self->{result} = (($self->b1() & 128) == 0 ? $self->b1() : $self->int2());
+    $self->{result} = ($self->b1() == 129 ? $self->int1() : ($self->b1() == 130 ? $self->int2() : $self->b1()));
     return $self->{result};
 }
 
@@ -301,6 +304,11 @@ sub b1 {
 sub int2 {
     my ($self) = @_;
     return $self->{int2};
+}
+
+sub int1 {
+    my ($self) = @_;
+    return $self->{int1};
 }
 
 ########################################################################

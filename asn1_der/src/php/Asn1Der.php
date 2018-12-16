@@ -162,18 +162,23 @@ class LenEncoded extends \Kaitai\Struct\Struct {
         if ($this->b1() == 130) {
             $this->_m_int2 = $this->_io->readU2be();
         }
+        if ($this->b1() == 129) {
+            $this->_m_int1 = $this->_io->readU1();
+        }
     }
     protected $_m_result;
     public function result() {
         if ($this->_m_result !== null)
             return $this->_m_result;
-        $this->_m_result = (($this->b1() & 128) == 0 ? $this->b1() : $this->int2());
+        $this->_m_result = ($this->b1() == 129 ? $this->int1() : ($this->b1() == 130 ? $this->int2() : $this->b1()));
         return $this->_m_result;
     }
     protected $_m_b1;
     protected $_m_int2;
+    protected $_m_int1;
     public function b1() { return $this->_m_b1; }
     public function int2() { return $this->_m_int2; }
+    public function int1() { return $this->_m_int1; }
 }
 
 namespace \Asn1Der;

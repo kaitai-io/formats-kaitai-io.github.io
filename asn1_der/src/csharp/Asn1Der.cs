@@ -250,6 +250,9 @@ namespace Kaitai
                 if (B1 == 130) {
                     _int2 = m_io.ReadU2be();
                 }
+                if (B1 == 129) {
+                    _int1 = m_io.ReadU1();
+                }
             }
             private bool f_result;
             private ushort _result;
@@ -259,17 +262,19 @@ namespace Kaitai
                 {
                     if (f_result)
                         return _result;
-                    _result = (ushort) (((B1 & 128) == 0 ? B1 : Int2));
+                    _result = (ushort) ((B1 == 129 ? Int1 : (B1 == 130 ? Int2 : B1)));
                     f_result = true;
                     return _result;
                 }
             }
             private byte _b1;
             private ushort? _int2;
+            private byte? _int1;
             private Asn1Der m_root;
             private Asn1Der m_parent;
             public byte B1 { get { return _b1; } }
             public ushort? Int2 { get { return _int2; } }
+            public byte? Int1 { get { return _int1; } }
             public Asn1Der M_Root { get { return m_root; } }
             public Asn1Der M_Parent { get { return m_parent; } }
         }

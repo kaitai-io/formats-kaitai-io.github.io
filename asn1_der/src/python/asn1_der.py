@@ -165,13 +165,16 @@ class Asn1Der(KaitaiStruct):
             if self.b1 == 130:
                 self.int2 = self._io.read_u2be()
 
+            if self.b1 == 129:
+                self.int1 = self._io.read_u1()
+
 
         @property
         def result(self):
             if hasattr(self, '_m_result'):
                 return self._m_result if hasattr(self, '_m_result') else None
 
-            self._m_result = (self.b1 if (self.b1 & 128) == 0 else self.int2)
+            self._m_result = (self.int1 if self.b1 == 129 else (self.int2 if self.b1 == 130 else self.b1))
             return self._m_result if hasattr(self, '_m_result') else None
 
 
