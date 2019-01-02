@@ -15,6 +15,9 @@ namespace Kaitai
     /// block type), so it's possible to skip block even if one doesn't know
     /// how to process a certain block type.
     /// </summary>
+    /// <remarks>
+    /// Reference: <a href="http://acritum.com/winrar/rar-format"></a>
+    /// </remarks>
     public partial class Rar : KaitaiStruct
     {
         public static Rar FromFile(string fileName)

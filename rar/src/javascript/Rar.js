@@ -18,6 +18,7 @@
  * blocks. Each block has fixed header and custom body (that depends on
  * block type), so it's possible to skip block even if one doesn't know
  * how to process a certain block type.
+ * @see {@link http://acritum.com/winrar/rar-format|}
  */
 
 var Rar = (function() {
