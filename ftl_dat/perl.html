@@ -119,6 +119,16 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
                     
                 </div>
             </div>
@@ -303,24 +313,24 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{meta_ofs} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{ofs_meta} = $self-&gt;{_io}-&gt;read_u4le();
 }
 
 sub meta {
     my ($self) = @_;
     return $self-&gt;{meta} if ($self-&gt;{meta});
-    if ($self-&gt;meta_ofs() != 0) {
+    if ($self-&gt;ofs_meta() != 0) {
         my $_pos = $self-&gt;{_io}-&gt;pos();
-        $self-&gt;{_io}-&gt;seek($self-&gt;meta_ofs());
+        $self-&gt;{_io}-&gt;seek($self-&gt;ofs_meta());
         $self-&gt;{meta} = FtlDat::Meta-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
         $self-&gt;{_io}-&gt;seek($_pos);
     }
     return $self-&gt;{meta};
 }
 
-sub meta_ofs {
+sub ofs_meta {
     my ($self) = @_;
-    return $self-&gt;{meta_ofs};
+    return $self-&gt;{ofs_meta};
 }
 
 ########################################################################
@@ -353,20 +363,20 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{file_size} = $self-&gt;{_io}-&gt;read_u4le();
-    $self-&gt;{filename_size} = $self-&gt;{_io}-&gt;read_u4le();
-    $self-&gt;{filename} = Encode::decode(&quot;UTF-8&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;filename_size()));
-    $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;file_size());
+    $self-&gt;{len_file} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{len_filename} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{filename} = Encode::decode(&quot;UTF-8&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_filename()));
+    $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_file());
 }
 
-sub file_size {
+sub len_file {
     my ($self) = @_;
-    return $self-&gt;{file_size};
+    return $self-&gt;{len_file};
 }
 
-sub filename_size {
+sub len_filename {
     my ($self) = @_;
-    return $self-&gt;{filename_size};
+    return $self-&gt;{len_filename};
 }
 
 sub filename {

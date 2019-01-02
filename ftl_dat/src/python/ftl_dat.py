@@ -29,16 +29,16 @@ class FtlDat(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.meta_ofs = self._io.read_u4le()
+            self.ofs_meta = self._io.read_u4le()
 
         @property
         def meta(self):
             if hasattr(self, '_m_meta'):
                 return self._m_meta if hasattr(self, '_m_meta') else None
 
-            if self.meta_ofs != 0:
+            if self.ofs_meta != 0:
                 _pos = self._io.pos()
-                self._io.seek(self.meta_ofs)
+                self._io.seek(self.ofs_meta)
                 self._m_meta = self._root.Meta(self._io, self, self._root)
                 self._io.seek(_pos)
 
@@ -53,10 +53,10 @@ class FtlDat(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.file_size = self._io.read_u4le()
-            self.filename_size = self._io.read_u4le()
-            self.filename = (self._io.read_bytes(self.filename_size)).decode(u"UTF-8")
-            self.body = self._io.read_bytes(self.file_size)
+            self.len_file = self._io.read_u4le()
+            self.len_filename = self._io.read_u4le()
+            self.filename = (self._io.read_bytes(self.len_filename)).decode(u"UTF-8")
+            self.body = self._io.read_bytes(self.len_file)
 
 
 

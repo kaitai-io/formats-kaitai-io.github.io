@@ -27,20 +27,20 @@ class FtlDat < Kaitai::Struct::Struct
     end
 
     def _read
-      @meta_ofs = @_io.read_u4le
+      @ofs_meta = @_io.read_u4le
       self
     end
     def meta
       return @meta unless @meta.nil?
-      if meta_ofs != 0
+      if ofs_meta != 0
         _pos = @_io.pos
-        @_io.seek(meta_ofs)
+        @_io.seek(ofs_meta)
         @meta = Meta.new(@_io, self, @_root)
         @_io.seek(_pos)
       end
       @meta
     end
-    attr_reader :meta_ofs
+    attr_reader :ofs_meta
   end
   class Meta < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -49,14 +49,14 @@ class FtlDat < Kaitai::Struct::Struct
     end
 
     def _read
-      @file_size = @_io.read_u4le
-      @filename_size = @_io.read_u4le
-      @filename = (@_io.read_bytes(filename_size)).force_encoding("UTF-8")
-      @body = @_io.read_bytes(file_size)
+      @len_file = @_io.read_u4le
+      @len_filename = @_io.read_u4le
+      @filename = (@_io.read_bytes(len_filename)).force_encoding("UTF-8")
+      @body = @_io.read_bytes(len_file)
       self
     end
-    attr_reader :file_size
-    attr_reader :filename_size
+    attr_reader :len_file
+    attr_reader :len_filename
     attr_reader :filename
     attr_reader :body
   end

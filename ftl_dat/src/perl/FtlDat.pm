@@ -83,24 +83,24 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{meta_ofs} = $self->{_io}->read_u4le();
+    $self->{ofs_meta} = $self->{_io}->read_u4le();
 }
 
 sub meta {
     my ($self) = @_;
     return $self->{meta} if ($self->{meta});
-    if ($self->meta_ofs() != 0) {
+    if ($self->ofs_meta() != 0) {
         my $_pos = $self->{_io}->pos();
-        $self->{_io}->seek($self->meta_ofs());
+        $self->{_io}->seek($self->ofs_meta());
         $self->{meta} = FtlDat::Meta->new($self->{_io}, $self, $self->{_root});
         $self->{_io}->seek($_pos);
     }
     return $self->{meta};
 }
 
-sub meta_ofs {
+sub ofs_meta {
     my ($self) = @_;
-    return $self->{meta_ofs};
+    return $self->{ofs_meta};
 }
 
 ########################################################################
@@ -133,20 +133,20 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{file_size} = $self->{_io}->read_u4le();
-    $self->{filename_size} = $self->{_io}->read_u4le();
-    $self->{filename} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->filename_size()));
-    $self->{body} = $self->{_io}->read_bytes($self->file_size());
+    $self->{len_file} = $self->{_io}->read_u4le();
+    $self->{len_filename} = $self->{_io}->read_u4le();
+    $self->{filename} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->len_filename()));
+    $self->{body} = $self->{_io}->read_bytes($self->len_file());
 }
 
-sub file_size {
+sub len_file {
     my ($self) = @_;
-    return $self->{file_size};
+    return $self->{len_file};
 }
 
-sub filename_size {
+sub len_filename {
     my ($self) = @_;
-    return $self->{filename_size};
+    return $self->{len_filename};
 }
 
 sub filename {

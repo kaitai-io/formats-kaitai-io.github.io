@@ -119,6 +119,16 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
                     
                 </div>
             </div>
@@ -254,22 +264,22 @@ class File extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this-&gt;_m_metaOfs = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_ofsMeta = $this-&gt;_io-&gt;readU4le();
     }
     protected $_m_meta;
     public function meta() {
         if ($this-&gt;_m_meta !== null)
             return $this-&gt;_m_meta;
-        if ($this-&gt;metaOfs() != 0) {
+        if ($this-&gt;ofsMeta() != 0) {
             $_pos = $this-&gt;_io-&gt;pos();
-            $this-&gt;_io-&gt;seek($this-&gt;metaOfs());
+            $this-&gt;_io-&gt;seek($this-&gt;ofsMeta());
             $this-&gt;_m_meta = new \FtlDat\Meta($this-&gt;_io, $this, $this-&gt;_root);
             $this-&gt;_io-&gt;seek($_pos);
         }
         return $this-&gt;_m_meta;
     }
-    protected $_m_metaOfs;
-    public function metaOfs() { return $this-&gt;_m_metaOfs; }
+    protected $_m_ofsMeta;
+    public function ofsMeta() { return $this-&gt;_m_ofsMeta; }
 }
 
 namespace \FtlDat;
@@ -281,17 +291,17 @@ class Meta extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this-&gt;_m_fileSize = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_filenameSize = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_filename = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;filenameSize()), &quot;UTF-8&quot;);
-        $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;fileSize());
+        $this-&gt;_m_lenFile = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_lenFilename = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_filename = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;lenFilename()), &quot;UTF-8&quot;);
+        $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;lenFile());
     }
-    protected $_m_fileSize;
-    protected $_m_filenameSize;
+    protected $_m_lenFile;
+    protected $_m_lenFilename;
     protected $_m_filename;
     protected $_m_body;
-    public function fileSize() { return $this-&gt;_m_fileSize; }
-    public function filenameSize() { return $this-&gt;_m_filenameSize; }
+    public function lenFile() { return $this-&gt;_m_lenFile; }
+    public function lenFilename() { return $this-&gt;_m_lenFilename; }
     public function filename() { return $this-&gt;_m_filename; }
     public function body() { return $this-&gt;_m_body; }
 }

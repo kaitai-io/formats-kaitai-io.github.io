@@ -42,7 +42,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _metaOfs = m_io.ReadU4le();
+                _ofsMeta = m_io.ReadU4le();
             }
             private bool f_meta;
             private Meta _meta;
@@ -52,9 +52,9 @@ namespace Kaitai
                 {
                     if (f_meta)
                         return _meta;
-                    if (MetaOfs != 0) {
+                    if (OfsMeta != 0) {
                         long _pos = m_io.Pos;
-                        m_io.Seek(MetaOfs);
+                        m_io.Seek(OfsMeta);
                         _meta = new Meta(m_io, this, m_root);
                         m_io.Seek(_pos);
                     }
@@ -62,10 +62,10 @@ namespace Kaitai
                     return _meta;
                 }
             }
-            private uint _metaOfs;
+            private uint _ofsMeta;
             private FtlDat m_root;
             private FtlDat m_parent;
-            public uint MetaOfs { get { return _metaOfs; } }
+            public uint OfsMeta { get { return _ofsMeta; } }
             public FtlDat M_Root { get { return m_root; } }
             public FtlDat M_Parent { get { return m_parent; } }
         }
@@ -84,19 +84,19 @@ namespace Kaitai
             }
             private void _read()
             {
-                _fileSize = m_io.ReadU4le();
-                _filenameSize = m_io.ReadU4le();
-                _filename = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(FilenameSize));
-                _body = m_io.ReadBytes(FileSize);
+                _lenFile = m_io.ReadU4le();
+                _lenFilename = m_io.ReadU4le();
+                _filename = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(LenFilename));
+                _body = m_io.ReadBytes(LenFile);
             }
-            private uint _fileSize;
-            private uint _filenameSize;
+            private uint _lenFile;
+            private uint _lenFilename;
             private string _filename;
             private byte[] _body;
             private FtlDat m_root;
             private FtlDat.File m_parent;
-            public uint FileSize { get { return _fileSize; } }
-            public uint FilenameSize { get { return _filenameSize; } }
+            public uint LenFile { get { return _lenFile; } }
+            public uint LenFilename { get { return _lenFilename; } }
             public string Filename { get { return _filename; } }
             public byte[] Body { get { return _body; } }
             public FtlDat M_Root { get { return m_root; } }

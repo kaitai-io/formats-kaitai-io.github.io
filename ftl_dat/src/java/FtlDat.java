@@ -53,24 +53,24 @@ public class FtlDat extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.metaOfs = this._io.readU4le();
+            this.ofsMeta = this._io.readU4le();
         }
         private Meta meta;
         public Meta meta() {
             if (this.meta != null)
                 return this.meta;
-            if (metaOfs() != 0) {
+            if (ofsMeta() != 0) {
                 long _pos = this._io.pos();
-                this._io.seek(metaOfs());
+                this._io.seek(ofsMeta());
                 this.meta = new Meta(this._io, this, _root);
                 this._io.seek(_pos);
             }
             return this.meta;
         }
-        private long metaOfs;
+        private long ofsMeta;
         private FtlDat _root;
         private FtlDat _parent;
-        public long metaOfs() { return metaOfs; }
+        public long ofsMeta() { return ofsMeta; }
         public FtlDat _root() { return _root; }
         public FtlDat _parent() { return _parent; }
     }
@@ -94,19 +94,19 @@ public class FtlDat extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.fileSize = this._io.readU4le();
-            this.filenameSize = this._io.readU4le();
-            this.filename = new String(this._io.readBytes(filenameSize()), Charset.forName("UTF-8"));
-            this.body = this._io.readBytes(fileSize());
+            this.lenFile = this._io.readU4le();
+            this.lenFilename = this._io.readU4le();
+            this.filename = new String(this._io.readBytes(lenFilename()), Charset.forName("UTF-8"));
+            this.body = this._io.readBytes(lenFile());
         }
-        private long fileSize;
-        private long filenameSize;
+        private long lenFile;
+        private long lenFilename;
         private String filename;
         private byte[] body;
         private FtlDat _root;
         private FtlDat.File _parent;
-        public long fileSize() { return fileSize; }
-        public long filenameSize() { return filenameSize; }
+        public long lenFile() { return lenFile; }
+        public long lenFilename() { return lenFilename; }
         public String filename() { return filename; }
         public byte[] body() { return body; }
         public FtlDat _root() { return _root; }

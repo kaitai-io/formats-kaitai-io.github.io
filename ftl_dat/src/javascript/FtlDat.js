@@ -34,15 +34,15 @@ var FtlDat = (function() {
       this._read();
     }
     File.prototype._read = function() {
-      this.metaOfs = this._io.readU4le();
+      this.ofsMeta = this._io.readU4le();
     }
     Object.defineProperty(File.prototype, 'meta', {
       get: function() {
         if (this._m_meta !== undefined)
           return this._m_meta;
-        if (this.metaOfs != 0) {
+        if (this.ofsMeta != 0) {
           var _pos = this._io.pos;
-          this._io.seek(this.metaOfs);
+          this._io.seek(this.ofsMeta);
           this._m_meta = new Meta(this._io, this, this._root);
           this._io.seek(_pos);
         }
@@ -62,10 +62,10 @@ var FtlDat = (function() {
       this._read();
     }
     Meta.prototype._read = function() {
-      this.fileSize = this._io.readU4le();
-      this.filenameSize = this._io.readU4le();
-      this.filename = KaitaiStream.bytesToStr(this._io.readBytes(this.filenameSize), "UTF-8");
-      this.body = this._io.readBytes(this.fileSize);
+      this.lenFile = this._io.readU4le();
+      this.lenFilename = this._io.readU4le();
+      this.filename = KaitaiStream.bytesToStr(this._io.readBytes(this.lenFilename), "UTF-8");
+      this.body = this._io.readBytes(this.lenFile);
     }
 
     return Meta;

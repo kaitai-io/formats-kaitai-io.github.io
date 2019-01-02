@@ -52,12 +52,12 @@ public:
         meta_t* meta();
 
     private:
-        uint32_t m_meta_ofs;
+        uint32_t m_ofs_meta;
         ftl_dat_t* m__root;
         ftl_dat_t* m__parent;
 
     public:
-        uint32_t meta_ofs() const { return m_meta_ofs; }
+        uint32_t ofs_meta() const { return m_ofs_meta; }
         ftl_dat_t* _root() const { return m__root; }
         ftl_dat_t* _parent() const { return m__parent; }
     };
@@ -75,16 +75,16 @@ public:
         ~meta_t();
 
     private:
-        uint32_t m_file_size;
-        uint32_t m_filename_size;
+        uint32_t m_len_file;
+        uint32_t m_len_filename;
         std::string m_filename;
         std::string m_body;
         ftl_dat_t* m__root;
         ftl_dat_t::file_t* m__parent;
 
     public:
-        uint32_t file_size() const { return m_file_size; }
-        uint32_t filename_size() const { return m_filename_size; }
+        uint32_t len_file() const { return m_len_file; }
+        uint32_t len_filename() const { return m_len_filename; }
         std::string filename() const { return m_filename; }
         std::string body() const { return m_body; }
         ftl_dat_t* _root() const { return m__root; }

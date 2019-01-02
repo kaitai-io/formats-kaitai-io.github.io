@@ -119,6 +119,16 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
                     
                 </div>
             </div>
@@ -237,11 +247,11 @@ section#format-index .row {
 
 			file__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;meta_ofs_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;meta_ofs_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;meta_ofs_type&quot;&gt;meta_ofs&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;ofs_meta_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;ofs_meta_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;ofs_meta_type&quot;&gt;ofs_meta&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 			file__inst__meta [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;meta_pos&quot;&gt;meta_ofs&lt;/TD&gt;&lt;TD PORT=&quot;meta_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Meta&lt;/TD&gt;&lt;TD PORT=&quot;meta_type&quot;&gt;meta&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;meta_pos&quot;&gt;ofs_meta&lt;/TD&gt;&lt;TD PORT=&quot;meta_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Meta&lt;/TD&gt;&lt;TD PORT=&quot;meta_type&quot;&gt;meta&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
 		subgraph cluster__meta {
@@ -250,19 +260,19 @@ section#format-index .row {
 
 			meta__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;file_size_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;file_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;file_size_type&quot;&gt;file_size&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;filename_size_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;filename_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;filename_size_type&quot;&gt;filename_size&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;filename_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;filename_size&quot;&gt;filename_size&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;filename_type&quot;&gt;filename&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;file_size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_file_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_file_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_file_type&quot;&gt;len_file&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_filename_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;len_filename_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_filename_type&quot;&gt;len_filename&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;filename_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;filename_size&quot;&gt;len_filename&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;filename_type&quot;&gt;filename&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;len_file&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
 	}
 	ftl_dat__seq:files_type -&gt; file__seq [style=bold];
 	ftl_dat__seq:num_files_type -&gt; ftl_dat__seq:files__repeat [color=&quot;#404040&quot;];
-	file__seq:meta_ofs_type -&gt; file__inst__meta:meta_pos [color=&quot;#404040&quot;];
+	file__seq:ofs_meta_type -&gt; file__inst__meta:meta_pos [color=&quot;#404040&quot;];
 	file__inst__meta:meta_type -&gt; meta__seq [style=bold];
-	meta__seq:filename_size_type -&gt; meta__seq:filename_size [color=&quot;#404040&quot;];
-	meta__seq:file_size_type -&gt; meta__seq:body_size [color=&quot;#404040&quot;];
+	meta__seq:len_filename_type -&gt; meta__seq:filename_size [color=&quot;#404040&quot;];
+	meta__seq:len_file_type -&gt; meta__seq:body_size [color=&quot;#404040&quot;];
 }
 </code></pre>
             

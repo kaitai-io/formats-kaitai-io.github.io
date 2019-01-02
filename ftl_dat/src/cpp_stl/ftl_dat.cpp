@@ -35,7 +35,7 @@ ftl_dat_t::file_t::file_t(kaitai::kstream* p__io, ftl_dat_t* p__parent, ftl_dat_
 }
 
 void ftl_dat_t::file_t::_read() {
-    m_meta_ofs = m__io->read_u4le();
+    m_ofs_meta = m__io->read_u4le();
 }
 
 ftl_dat_t::file_t::~file_t() {
@@ -48,10 +48,10 @@ ftl_dat_t::meta_t* ftl_dat_t::file_t::meta() {
     if (f_meta)
         return m_meta;
     n_meta = true;
-    if (meta_ofs() != 0) {
+    if (ofs_meta() != 0) {
         n_meta = false;
         std::streampos _pos = m__io->pos();
-        m__io->seek(meta_ofs());
+        m__io->seek(ofs_meta());
         m_meta = new meta_t(m__io, this, m__root);
         m__io->seek(_pos);
     }
@@ -66,10 +66,10 @@ ftl_dat_t::meta_t::meta_t(kaitai::kstream* p__io, ftl_dat_t::file_t* p__parent, 
 }
 
 void ftl_dat_t::meta_t::_read() {
-    m_file_size = m__io->read_u4le();
-    m_filename_size = m__io->read_u4le();
-    m_filename = kaitai::kstream::bytes_to_str(m__io->read_bytes(filename_size()), std::string("UTF-8"));
-    m_body = m__io->read_bytes(file_size());
+    m_len_file = m__io->read_u4le();
+    m_len_filename = m__io->read_u4le();
+    m_filename = kaitai::kstream::bytes_to_str(m__io->read_bytes(len_filename()), std::string("UTF-8"));
+    m_body = m__io->read_bytes(len_file());
 }
 
 ftl_dat_t::meta_t::~meta_t() {
