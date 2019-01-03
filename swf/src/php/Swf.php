@@ -1,6 +1,21 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * SWF files are used by Adobe Flash (AKA Shockwave Flash, Macromedia
+ * Flash) to encode rich interactive multimedia content and are,
+ * essentially, a container for special bytecode instructions to play
+ * back that content. In early 2000s, it was dominant rich multimedia
+ * web format (.swf files were integrated into web pages and played
+ * back with a browser plugin), but its usage largely declined in
+ * 2010s, as HTML5 and performant browser-native solutions
+ * (i.e. JavaScript engines and graphical approaches, such as WebGL)
+ * emerged.
+ * 
+ * There are a lot of versions of SWF (~36), format is somewhat
+ * documented by Adobe.
+ */
+
 class Swf extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Swf $_root = null) {
         parent::__construct($_io, $_parent, $_root);
@@ -8,23 +23,82 @@ class Swf extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this->_m_junk = $this->_io->readBytes(4);
-        $this->_m_fileSize = $this->_io->readU4le();
-        $this->_m__raw__raw_body = $this->_io->readBytesFull();
-        $this->_m__raw_body = \Kaitai\Struct\Stream::processZlib($this->_m__raw__raw_body);
-        $io = new \Kaitai\Struct\Stream($this->_m__raw_body);
-        $this->_m_body = new \Swf\SwfBody($io, $this, $this->_root);
+        $this->_m_compression = $this->_io->readU1();
+        $this->_m_signature = $this->_io->ensureFixedContents("\x57\x53");
+        $this->_m_version = $this->_io->readU1();
+        $this->_m_lenFile = $this->_io->readU4le();
+        if ($this->compression() == \Swf\Compressions::NONE) {
+            $this->_m__raw_plainBody = $this->_io->readBytesFull();
+            $io = new \Kaitai\Struct\Stream($this->_m__raw_plainBody);
+            $this->_m_plainBody = new \Swf\SwfBody($io, $this, $this->_root);
+        }
+        if ($this->compression() == \Swf\Compressions::ZLIB) {
+            $this->_m__raw__raw_zlibBody = $this->_io->readBytesFull();
+            $this->_m__raw_zlibBody = \Kaitai\Struct\Stream::processZlib($this->_m__raw__raw_zlibBody);
+            $io = new \Kaitai\Struct\Stream($this->_m__raw_zlibBody);
+            $this->_m_zlibBody = new \Swf\SwfBody($io, $this, $this->_root);
+        }
     }
-    protected $_m_junk;
-    protected $_m_fileSize;
-    protected $_m_body;
-    protected $_m__raw__raw_body;
-    protected $_m__raw_body;
-    public function junk() { return $this->_m_junk; }
-    public function fileSize() { return $this->_m_fileSize; }
-    public function body() { return $this->_m_body; }
-    public function _raw__raw_body() { return $this->_m__raw__raw_body; }
-    public function _raw_body() { return $this->_m__raw_body; }
+    protected $_m_compression;
+    protected $_m_signature;
+    protected $_m_version;
+    protected $_m_lenFile;
+    protected $_m_plainBody;
+    protected $_m_zlibBody;
+    protected $_m__raw_plainBody;
+    protected $_m__raw__raw_zlibBody;
+    protected $_m__raw_zlibBody;
+    public function compression() { return $this->_m_compression; }
+    public function signature() { return $this->_m_signature; }
+    public function version() { return $this->_m_version; }
+    public function lenFile() { return $this->_m_lenFile; }
+    public function plainBody() { return $this->_m_plainBody; }
+    public function zlibBody() { return $this->_m_zlibBody; }
+    public function _raw_plainBody() { return $this->_m__raw_plainBody; }
+    public function _raw__raw_zlibBody() { return $this->_m__raw__raw_zlibBody; }
+    public function _raw_zlibBody() { return $this->_m__raw_zlibBody; }
+}
+
+namespace \Swf;
+
+class Rgb extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\Tag $_parent = null, \Swf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_r = $this->_io->readU1();
+        $this->_m_g = $this->_io->readU1();
+        $this->_m_b = $this->_io->readU1();
+    }
+    protected $_m_r;
+    protected $_m_g;
+    protected $_m_b;
+    public function r() { return $this->_m_r; }
+    public function g() { return $this->_m_g; }
+    public function b() { return $this->_m_b; }
+}
+
+namespace \Swf;
+
+class DoAbcBody extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\Tag $_parent = null, \Swf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_flags = $this->_io->readU4le();
+        $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
+        $this->_m_abcdata = $this->_io->readBytesFull();
+    }
+    protected $_m_flags;
+    protected $_m_name;
+    protected $_m_abcdata;
+    public function flags() { return $this->_m_flags; }
+    public function name() { return $this->_m_name; }
+    public function abcdata() { return $this->_m_abcdata; }
 }
 
 namespace \Swf;
@@ -39,6 +113,9 @@ class SwfBody extends \Kaitai\Struct\Struct {
         $this->_m_rect = new \Swf\Rect($this->_io, $this, $this->_root);
         $this->_m_frameRate = $this->_io->readU2le();
         $this->_m_frameCount = $this->_io->readU2le();
+        if ($this->_root()->version() >= 8) {
+            $this->_m_fileAttributesTag = new \Swf\Tag($this->_io, $this, $this->_root);
+        }
         $this->_m_tags = [];
         $i = 0;
         while (!$this->_io->isEof()) {
@@ -49,10 +126,12 @@ class SwfBody extends \Kaitai\Struct\Struct {
     protected $_m_rect;
     protected $_m_frameRate;
     protected $_m_frameCount;
+    protected $_m_fileAttributesTag;
     protected $_m_tags;
     public function rect() { return $this->_m_rect; }
     public function frameRate() { return $this->_m_frameRate; }
     public function frameCount() { return $this->_m_frameCount; }
+    public function fileAttributesTag() { return $this->_m_fileAttributesTag; }
     public function tags() { return $this->_m_tags; }
 }
 
@@ -99,10 +178,35 @@ class Tag extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_recordHeader = new \Swf\RecordHeader($this->_io, $this, $this->_root);
         switch ($this->recordHeader()->tagType()) {
-            case \Swf\TagType::ABC_TAG:
+            case \Swf\TagType::SET_BACKGROUND_COLOR:
                 $this->_m__raw_tagBody = $this->_io->readBytes($this->recordHeader()->len());
                 $io = new \Kaitai\Struct\Stream($this->_m__raw_tagBody);
-                $this->_m_tagBody = new \Swf\AbcTagBody($io, $this, $this->_root);
+                $this->_m_tagBody = new \Swf\Rgb($io, $this, $this->_root);
+                break;
+            case \Swf\TagType::SCRIPT_LIMITS:
+                $this->_m__raw_tagBody = $this->_io->readBytes($this->recordHeader()->len());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagBody);
+                $this->_m_tagBody = new \Swf\ScriptLimitsBody($io, $this, $this->_root);
+                break;
+            case \Swf\TagType::DEFINE_SOUND:
+                $this->_m__raw_tagBody = $this->_io->readBytes($this->recordHeader()->len());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagBody);
+                $this->_m_tagBody = new \Swf\DefineSoundBody($io, $this, $this->_root);
+                break;
+            case \Swf\TagType::EXPORT_ASSETS:
+                $this->_m__raw_tagBody = $this->_io->readBytes($this->recordHeader()->len());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagBody);
+                $this->_m_tagBody = new \Swf\SymbolClassBody($io, $this, $this->_root);
+                break;
+            case \Swf\TagType::SYMBOL_CLASS:
+                $this->_m__raw_tagBody = $this->_io->readBytes($this->recordHeader()->len());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagBody);
+                $this->_m_tagBody = new \Swf\SymbolClassBody($io, $this, $this->_root);
+                break;
+            case \Swf\TagType::DO_ABC:
+                $this->_m__raw_tagBody = $this->_io->readBytes($this->recordHeader()->len());
+                $io = new \Kaitai\Struct\Stream($this->_m__raw_tagBody);
+                $this->_m_tagBody = new \Swf\DoAbcBody($io, $this, $this->_root);
                 break;
             default:
                 $this->_m_tagBody = $this->_io->readBytes($this->recordHeader()->len());
@@ -119,23 +223,100 @@ class Tag extends \Kaitai\Struct\Struct {
 
 namespace \Swf;
 
-class AbcTagBody extends \Kaitai\Struct\Struct {
+class SymbolClassBody extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \Swf\Tag $_parent = null, \Swf $_root = null) {
         parent::__construct($_io, $_parent, $_root);
         $this->_read();
     }
 
     private function _read() {
-        $this->_m_flags = $this->_io->readU4le();
-        $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
-        $this->_m_abcdata = $this->_io->readBytesFull();
+        $this->_m_numSymbols = $this->_io->readU2le();
+        $this->_m_symbols = [];
+        $n = $this->numSymbols();
+        for ($i = 0; $i < $n; $i++) {
+            $this->_m_symbols[] = new \Swf\SymbolClassBody\Symbol($this->_io, $this, $this->_root);
+        }
     }
-    protected $_m_flags;
+    protected $_m_numSymbols;
+    protected $_m_symbols;
+    public function numSymbols() { return $this->_m_numSymbols; }
+    public function symbols() { return $this->_m_symbols; }
+}
+
+namespace \Swf\SymbolClassBody;
+
+class Symbol extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\SymbolClassBody $_parent = null, \Swf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_tag = $this->_io->readU2le();
+        $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
+    }
+    protected $_m_tag;
     protected $_m_name;
-    protected $_m_abcdata;
-    public function flags() { return $this->_m_flags; }
+    public function tag() { return $this->_m_tag; }
     public function name() { return $this->_m_name; }
-    public function abcdata() { return $this->_m_abcdata; }
+}
+
+namespace \Swf;
+
+class DefineSoundBody extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\Tag $_parent = null, \Swf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_id = $this->_io->readU2le();
+        $this->_m_format = $this->_io->readBitsInt(4);
+        $this->_m_samplingRate = $this->_io->readBitsInt(2);
+        $this->_m_bitsPerSample = $this->_io->readBitsInt(1);
+        $this->_m_numChannels = $this->_io->readBitsInt(1);
+        $this->_io->alignToByte();
+        $this->_m_numSamples = $this->_io->readU4le();
+    }
+    protected $_m_id;
+    protected $_m_format;
+    protected $_m_samplingRate;
+    protected $_m_bitsPerSample;
+    protected $_m_numChannels;
+    protected $_m_numSamples;
+    public function id() { return $this->_m_id; }
+    public function format() { return $this->_m_format; }
+
+    /**
+     * Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.
+     */
+    public function samplingRate() { return $this->_m_samplingRate; }
+    public function bitsPerSample() { return $this->_m_bitsPerSample; }
+    public function numChannels() { return $this->_m_numChannels; }
+    public function numSamples() { return $this->_m_numSamples; }
+}
+
+namespace \Swf\DefineSoundBody;
+
+class SamplingRates {
+    const RATE_5_5_KHZ = 0;
+    const RATE_11_KHZ = 1;
+    const RATE_22_KHZ = 2;
+    const RATE_44_KHZ = 3;
+}
+
+namespace \Swf\DefineSoundBody;
+
+class Bps {
+    const SOUND_8_BIT = 0;
+    const SOUND_16_BIT = 1;
+}
+
+namespace \Swf\DefineSoundBody;
+
+class Channels {
+    const MONO = 0;
+    const STEREO = 1;
 }
 
 namespace \Swf;
@@ -181,7 +362,48 @@ class RecordHeader extends \Kaitai\Struct\Struct {
 
 namespace \Swf;
 
+class ScriptLimitsBody extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\Tag $_parent = null, \Swf $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_maxRecursionDepth = $this->_io->readU2le();
+        $this->_m_scriptTimeoutSeconds = $this->_io->readU2le();
+    }
+    protected $_m_maxRecursionDepth;
+    protected $_m_scriptTimeoutSeconds;
+    public function maxRecursionDepth() { return $this->_m_maxRecursionDepth; }
+    public function scriptTimeoutSeconds() { return $this->_m_scriptTimeoutSeconds; }
+}
+
+namespace \Swf;
+
+class Compressions {
+    const ZLIB = 67;
+    const NONE = 70;
+    const LZMA = 90;
+}
+
+namespace \Swf;
+
 class TagType {
+    const END_OF_FILE = 0;
+    const PLACE_OBJECT = 4;
+    const REMOVE_OBJECT = 5;
+    const SET_BACKGROUND_COLOR = 9;
+    const DEFINE_SOUND = 14;
+    const PLACE_OBJECT2 = 26;
+    const REMOVE_OBJECT2 = 28;
+    const FRAME_LABEL = 43;
+    const EXPORT_ASSETS = 56;
+    const SCRIPT_LIMITS = 65;
     const FILE_ATTRIBUTES = 69;
-    const ABC_TAG = 82;
+    const PLACE_OBJECT3 = 70;
+    const SYMBOL_CLASS = 76;
+    const METADATA = 77;
+    const DEFINE_SCALING_GRID = 78;
+    const DO_ABC = 82;
+    const DEFINE_SCENE_AND_FRAME_LABEL_DATA = 86;
 }

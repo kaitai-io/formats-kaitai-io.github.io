@@ -20,8 +20,27 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
+our $COMPRESSIONS_ZLIB = 67;
+our $COMPRESSIONS_NONE = 70;
+our $COMPRESSIONS_LZMA = 90;
+
+our $TAG_TYPE_END_OF_FILE = 0;
+our $TAG_TYPE_PLACE_OBJECT = 4;
+our $TAG_TYPE_REMOVE_OBJECT = 5;
+our $TAG_TYPE_SET_BACKGROUND_COLOR = 9;
+our $TAG_TYPE_DEFINE_SOUND = 14;
+our $TAG_TYPE_PLACE_OBJECT2 = 26;
+our $TAG_TYPE_REMOVE_OBJECT2 = 28;
+our $TAG_TYPE_FRAME_LABEL = 43;
+our $TAG_TYPE_EXPORT_ASSETS = 56;
+our $TAG_TYPE_SCRIPT_LIMITS = 65;
 our $TAG_TYPE_FILE_ATTRIBUTES = 69;
-our $TAG_TYPE_ABC_TAG = 82;
+our $TAG_TYPE_PLACE_OBJECT3 = 70;
+our $TAG_TYPE_SYMBOL_CLASS = 76;
+our $TAG_TYPE_METADATA = 77;
+our $TAG_TYPE_DEFINE_SCALING_GRID = 78;
+our $TAG_TYPE_DO_ABC = 82;
+our $TAG_TYPE_DEFINE_SCENE_AND_FRAME_LABEL_DATA = 86;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
@@ -39,37 +58,166 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{junk} = $self->{_io}->read_bytes(4);
-    $self->{file_size} = $self->{_io}->read_u4le();
-    $self->{_raw__raw_body} = $self->{_io}->read_bytes_full();
-    $self->{_raw_body} = Compress::Zlib::uncompress($self->{_raw__raw_body});
-    my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-    $self->{body} = Swf::SwfBody->new($io__raw_body, $self, $self->{_root});
+    $self->{compression} = $self->{_io}->read_u1();
+    $self->{signature} = $self->{_io}->ensure_fixed_contents(pack('C*', (87, 83)));
+    $self->{version} = $self->{_io}->read_u1();
+    $self->{len_file} = $self->{_io}->read_u4le();
+    if ($self->compression() == $COMPRESSIONS_NONE) {
+        $self->{_raw_plain_body} = $self->{_io}->read_bytes_full();
+        my $io__raw_plain_body = IO::KaitaiStruct::Stream->new($self->{_raw_plain_body});
+        $self->{plain_body} = Swf::SwfBody->new($io__raw_plain_body, $self, $self->{_root});
+    }
+    if ($self->compression() == $COMPRESSIONS_ZLIB) {
+        $self->{_raw__raw_zlib_body} = $self->{_io}->read_bytes_full();
+        $self->{_raw_zlib_body} = Compress::Zlib::uncompress($self->{_raw__raw_zlib_body});
+        my $io__raw_zlib_body = IO::KaitaiStruct::Stream->new($self->{_raw_zlib_body});
+        $self->{zlib_body} = Swf::SwfBody->new($io__raw_zlib_body, $self, $self->{_root});
+    }
 }
 
-sub junk {
+sub compression {
     my ($self) = @_;
-    return $self->{junk};
+    return $self->{compression};
 }
 
-sub file_size {
+sub signature {
     my ($self) = @_;
-    return $self->{file_size};
+    return $self->{signature};
 }
 
-sub body {
+sub version {
     my ($self) = @_;
-    return $self->{body};
+    return $self->{version};
 }
 
-sub _raw__raw_body {
+sub len_file {
     my ($self) = @_;
-    return $self->{_raw__raw_body};
+    return $self->{len_file};
 }
 
-sub _raw_body {
+sub plain_body {
     my ($self) = @_;
-    return $self->{_raw_body};
+    return $self->{plain_body};
+}
+
+sub zlib_body {
+    my ($self) = @_;
+    return $self->{zlib_body};
+}
+
+sub _raw_plain_body {
+    my ($self) = @_;
+    return $self->{_raw_plain_body};
+}
+
+sub _raw__raw_zlib_body {
+    my ($self) = @_;
+    return $self->{_raw__raw_zlib_body};
+}
+
+sub _raw_zlib_body {
+    my ($self) = @_;
+    return $self->{_raw_zlib_body};
+}
+
+########################################################################
+package Swf::Rgb;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{r} = $self->{_io}->read_u1();
+    $self->{g} = $self->{_io}->read_u1();
+    $self->{b} = $self->{_io}->read_u1();
+}
+
+sub r {
+    my ($self) = @_;
+    return $self->{r};
+}
+
+sub g {
+    my ($self) = @_;
+    return $self->{g};
+}
+
+sub b {
+    my ($self) = @_;
+    return $self->{b};
+}
+
+########################################################################
+package Swf::DoAbcBody;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{flags} = $self->{_io}->read_u4le();
+    $self->{name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+    $self->{abcdata} = $self->{_io}->read_bytes_full();
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self->{flags};
+}
+
+sub name {
+    my ($self) = @_;
+    return $self->{name};
+}
+
+sub abcdata {
+    my ($self) = @_;
+    return $self->{abcdata};
 }
 
 ########################################################################
@@ -105,6 +253,9 @@ sub _read {
     $self->{rect} = Swf::Rect->new($self->{_io}, $self, $self->{_root});
     $self->{frame_rate} = $self->{_io}->read_u2le();
     $self->{frame_count} = $self->{_io}->read_u2le();
+    if ($self->_root()->version() >= 8) {
+        $self->{file_attributes_tag} = Swf::Tag->new($self->{_io}, $self, $self->{_root});
+    }
     $self->{tags} = ();
     while (!$self->{_io}->is_eof()) {
         push @{$self->{tags}}, Swf::Tag->new($self->{_io}, $self, $self->{_root});
@@ -124,6 +275,11 @@ sub frame_rate {
 sub frame_count {
     my ($self) = @_;
     return $self->{frame_count};
+}
+
+sub file_attributes_tag {
+    my ($self) = @_;
+    return $self->{file_attributes_tag};
 }
 
 sub tags {
@@ -221,10 +377,35 @@ sub _read {
 
     $self->{record_header} = Swf::RecordHeader->new($self->{_io}, $self, $self->{_root});
     my $_on = $self->record_header()->tag_type();
-    if ($_on == $TAG_TYPE_ABC_TAG) {
+    if ($_on == $TAG_TYPE_SET_BACKGROUND_COLOR) {
         $self->{_raw_tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
         my $io__raw_tag_body = IO::KaitaiStruct::Stream->new($self->{_raw_tag_body});
-        $self->{tag_body} = Swf::AbcTagBody->new($io__raw_tag_body, $self, $self->{_root});
+        $self->{tag_body} = Swf::Rgb->new($io__raw_tag_body, $self, $self->{_root});
+    }
+    elsif ($_on == $TAG_TYPE_SCRIPT_LIMITS) {
+        $self->{_raw_tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
+        my $io__raw_tag_body = IO::KaitaiStruct::Stream->new($self->{_raw_tag_body});
+        $self->{tag_body} = Swf::ScriptLimitsBody->new($io__raw_tag_body, $self, $self->{_root});
+    }
+    elsif ($_on == $TAG_TYPE_DEFINE_SOUND) {
+        $self->{_raw_tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
+        my $io__raw_tag_body = IO::KaitaiStruct::Stream->new($self->{_raw_tag_body});
+        $self->{tag_body} = Swf::DefineSoundBody->new($io__raw_tag_body, $self, $self->{_root});
+    }
+    elsif ($_on == $TAG_TYPE_EXPORT_ASSETS) {
+        $self->{_raw_tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
+        my $io__raw_tag_body = IO::KaitaiStruct::Stream->new($self->{_raw_tag_body});
+        $self->{tag_body} = Swf::SymbolClassBody->new($io__raw_tag_body, $self, $self->{_root});
+    }
+    elsif ($_on == $TAG_TYPE_SYMBOL_CLASS) {
+        $self->{_raw_tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
+        my $io__raw_tag_body = IO::KaitaiStruct::Stream->new($self->{_raw_tag_body});
+        $self->{tag_body} = Swf::SymbolClassBody->new($io__raw_tag_body, $self, $self->{_root});
+    }
+    elsif ($_on == $TAG_TYPE_DO_ABC) {
+        $self->{_raw_tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
+        my $io__raw_tag_body = IO::KaitaiStruct::Stream->new($self->{_raw_tag_body});
+        $self->{tag_body} = Swf::DoAbcBody->new($io__raw_tag_body, $self, $self->{_root});
     }
     else {
         $self->{tag_body} = $self->{_io}->read_bytes($self->record_header()->len());
@@ -247,7 +428,7 @@ sub _raw_tag_body {
 }
 
 ########################################################################
-package Swf::AbcTagBody;
+package Swf::SymbolClassBody;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -276,14 +457,61 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{flags} = $self->{_io}->read_u4le();
-    $self->{name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
-    $self->{abcdata} = $self->{_io}->read_bytes_full();
+    $self->{num_symbols} = $self->{_io}->read_u2le();
+    $self->{symbols} = ();
+    my $n_symbols = $self->num_symbols();
+    for (my $i = 0; $i < $n_symbols; $i++) {
+        $self->{symbols}[$i] = Swf::SymbolClassBody::Symbol->new($self->{_io}, $self, $self->{_root});
+    }
 }
 
-sub flags {
+sub num_symbols {
     my ($self) = @_;
-    return $self->{flags};
+    return $self->{num_symbols};
+}
+
+sub symbols {
+    my ($self) = @_;
+    return $self->{symbols};
+}
+
+########################################################################
+package Swf::SymbolClassBody::Symbol;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag} = $self->{_io}->read_u2le();
+    $self->{name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+}
+
+sub tag {
+    my ($self) = @_;
+    return $self->{tag};
 }
 
 sub name {
@@ -291,9 +519,84 @@ sub name {
     return $self->{name};
 }
 
-sub abcdata {
+########################################################################
+package Swf::DefineSoundBody;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+our $SAMPLING_RATES_RATE_5_5_KHZ = 0;
+our $SAMPLING_RATES_RATE_11_KHZ = 1;
+our $SAMPLING_RATES_RATE_22_KHZ = 2;
+our $SAMPLING_RATES_RATE_44_KHZ = 3;
+
+our $BPS_SOUND_8_BIT = 0;
+our $BPS_SOUND_16_BIT = 1;
+
+our $CHANNELS_MONO = 0;
+our $CHANNELS_STEREO = 1;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
     my ($self) = @_;
-    return $self->{abcdata};
+
+    $self->{id} = $self->{_io}->read_u2le();
+    $self->{format} = $self->{_io}->read_bits_int(4);
+    $self->{sampling_rate} = $self->{_io}->read_bits_int(2);
+    $self->{bits_per_sample} = $self->{_io}->read_bits_int(1);
+    $self->{num_channels} = $self->{_io}->read_bits_int(1);
+    $self->{_io}->align_to_byte();
+    $self->{num_samples} = $self->{_io}->read_u4le();
+}
+
+sub id {
+    my ($self) = @_;
+    return $self->{id};
+}
+
+sub format {
+    my ($self) = @_;
+    return $self->{format};
+}
+
+sub sampling_rate {
+    my ($self) = @_;
+    return $self->{sampling_rate};
+}
+
+sub bits_per_sample {
+    my ($self) = @_;
+    return $self->{bits_per_sample};
+}
+
+sub num_channels {
+    my ($self) = @_;
+    return $self->{num_channels};
+}
+
+sub num_samples {
+    my ($self) = @_;
+    return $self->{num_samples};
 }
 
 ########################################################################
@@ -361,6 +664,50 @@ sub tag_code_and_length {
 sub big_len {
     my ($self) = @_;
     return $self->{big_len};
+}
+
+########################################################################
+package Swf::ScriptLimitsBody;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{max_recursion_depth} = $self->{_io}->read_u2le();
+    $self->{script_timeout_seconds} = $self->{_io}->read_u2le();
+}
+
+sub max_recursion_depth {
+    my ($self) = @_;
+    return $self->{max_recursion_depth};
+}
+
+sub script_timeout_seconds {
+    my ($self) = @_;
+    return $self->{script_timeout_seconds};
 }
 
 1;

@@ -9,13 +9,69 @@
     root.Swf = factory(root.KaitaiStream);
   }
 }(this, function (KaitaiStream) {
-var Swf = (function() {
-  Swf.TagType = Object.freeze({
-    FILE_ATTRIBUTES: 69,
-    ABC_TAG: 82,
+/**
+ * SWF files are used by Adobe Flash (AKA Shockwave Flash, Macromedia
+ * Flash) to encode rich interactive multimedia content and are,
+ * essentially, a container for special bytecode instructions to play
+ * back that content. In early 2000s, it was dominant rich multimedia
+ * web format (.swf files were integrated into web pages and played
+ * back with a browser plugin), but its usage largely declined in
+ * 2010s, as HTML5 and performant browser-native solutions
+ * (i.e. JavaScript engines and graphical approaches, such as WebGL)
+ * emerged.
+ * 
+ * There are a lot of versions of SWF (~36), format is somewhat
+ * documented by Adobe.
+ * @see {@link https://www.adobe.com/content/dam/acom/en/devnet/pdf/swf-file-format-spec.pdf|Source}
+ */
 
+var Swf = (function() {
+  Swf.Compressions = Object.freeze({
+    ZLIB: 67,
+    NONE: 70,
+    LZMA: 90,
+
+    67: "ZLIB",
+    70: "NONE",
+    90: "LZMA",
+  });
+
+  Swf.TagType = Object.freeze({
+    END_OF_FILE: 0,
+    PLACE_OBJECT: 4,
+    REMOVE_OBJECT: 5,
+    SET_BACKGROUND_COLOR: 9,
+    DEFINE_SOUND: 14,
+    PLACE_OBJECT2: 26,
+    REMOVE_OBJECT2: 28,
+    FRAME_LABEL: 43,
+    EXPORT_ASSETS: 56,
+    SCRIPT_LIMITS: 65,
+    FILE_ATTRIBUTES: 69,
+    PLACE_OBJECT3: 70,
+    SYMBOL_CLASS: 76,
+    METADATA: 77,
+    DEFINE_SCALING_GRID: 78,
+    DO_ABC: 82,
+    DEFINE_SCENE_AND_FRAME_LABEL_DATA: 86,
+
+    0: "END_OF_FILE",
+    4: "PLACE_OBJECT",
+    5: "REMOVE_OBJECT",
+    9: "SET_BACKGROUND_COLOR",
+    14: "DEFINE_SOUND",
+    26: "PLACE_OBJECT2",
+    28: "REMOVE_OBJECT2",
+    43: "FRAME_LABEL",
+    56: "EXPORT_ASSETS",
+    65: "SCRIPT_LIMITS",
     69: "FILE_ATTRIBUTES",
-    82: "ABC_TAG",
+    70: "PLACE_OBJECT3",
+    76: "SYMBOL_CLASS",
+    77: "METADATA",
+    78: "DEFINE_SCALING_GRID",
+    82: "DO_ABC",
+    86: "DEFINE_SCENE_AND_FRAME_LABEL_DATA",
   });
 
   function Swf(_io, _parent, _root) {
@@ -26,13 +82,56 @@ var Swf = (function() {
     this._read();
   }
   Swf.prototype._read = function() {
-    this.junk = this._io.readBytes(4);
-    this.fileSize = this._io.readU4le();
-    this._raw__raw_body = this._io.readBytesFull();
-    this._raw_body = KaitaiStream.processZlib(this._raw__raw_body);
-    var _io__raw_body = new KaitaiStream(this._raw_body);
-    this.body = new SwfBody(_io__raw_body, this, this._root);
+    this.compression = this._io.readU1();
+    this.signature = this._io.ensureFixedContents([87, 83]);
+    this.version = this._io.readU1();
+    this.lenFile = this._io.readU4le();
+    if (this.compression == Swf.Compressions.NONE) {
+      this._raw_plainBody = this._io.readBytesFull();
+      var _io__raw_plainBody = new KaitaiStream(this._raw_plainBody);
+      this.plainBody = new SwfBody(_io__raw_plainBody, this, this._root);
+    }
+    if (this.compression == Swf.Compressions.ZLIB) {
+      this._raw__raw_zlibBody = this._io.readBytesFull();
+      this._raw_zlibBody = KaitaiStream.processZlib(this._raw__raw_zlibBody);
+      var _io__raw_zlibBody = new KaitaiStream(this._raw_zlibBody);
+      this.zlibBody = new SwfBody(_io__raw_zlibBody, this, this._root);
+    }
   }
+
+  var Rgb = Swf.Rgb = (function() {
+    function Rgb(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Rgb.prototype._read = function() {
+      this.r = this._io.readU1();
+      this.g = this._io.readU1();
+      this.b = this._io.readU1();
+    }
+
+    return Rgb;
+  })();
+
+  var DoAbcBody = Swf.DoAbcBody = (function() {
+    function DoAbcBody(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    DoAbcBody.prototype._read = function() {
+      this.flags = this._io.readU4le();
+      this.name = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII");
+      this.abcdata = this._io.readBytesFull();
+    }
+
+    return DoAbcBody;
+  })();
 
   var SwfBody = Swf.SwfBody = (function() {
     function SwfBody(_io, _parent, _root) {
@@ -46,6 +145,9 @@ var Swf = (function() {
       this.rect = new Rect(this._io, this, this._root);
       this.frameRate = this._io.readU2le();
       this.frameCount = this._io.readU2le();
+      if (this._root.version >= 8) {
+        this.fileAttributesTag = new Tag(this._io, this, this._root);
+      }
       this.tags = [];
       var i = 0;
       while (!this._io.isEof()) {
@@ -100,10 +202,35 @@ var Swf = (function() {
     Tag.prototype._read = function() {
       this.recordHeader = new RecordHeader(this._io, this, this._root);
       switch (this.recordHeader.tagType) {
-      case Swf.TagType.ABC_TAG:
+      case Swf.TagType.SET_BACKGROUND_COLOR:
         this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
         var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
-        this.tagBody = new AbcTagBody(_io__raw_tagBody, this, this._root);
+        this.tagBody = new Rgb(_io__raw_tagBody, this, this._root);
+        break;
+      case Swf.TagType.SCRIPT_LIMITS:
+        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
+        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
+        this.tagBody = new ScriptLimitsBody(_io__raw_tagBody, this, this._root);
+        break;
+      case Swf.TagType.DEFINE_SOUND:
+        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
+        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
+        this.tagBody = new DefineSoundBody(_io__raw_tagBody, this, this._root);
+        break;
+      case Swf.TagType.EXPORT_ASSETS:
+        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
+        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
+        this.tagBody = new SymbolClassBody(_io__raw_tagBody, this, this._root);
+        break;
+      case Swf.TagType.SYMBOL_CLASS:
+        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
+        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
+        this.tagBody = new SymbolClassBody(_io__raw_tagBody, this, this._root);
+        break;
+      case Swf.TagType.DO_ABC:
+        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
+        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
+        this.tagBody = new DoAbcBody(_io__raw_tagBody, this, this._root);
         break;
       default:
         this.tagBody = this._io.readBytes(this.recordHeader.len);
@@ -114,21 +241,92 @@ var Swf = (function() {
     return Tag;
   })();
 
-  var AbcTagBody = Swf.AbcTagBody = (function() {
-    function AbcTagBody(_io, _parent, _root) {
+  var SymbolClassBody = Swf.SymbolClassBody = (function() {
+    function SymbolClassBody(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
       this._root = _root || this;
 
       this._read();
     }
-    AbcTagBody.prototype._read = function() {
-      this.flags = this._io.readU4le();
-      this.name = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII");
-      this.abcdata = this._io.readBytesFull();
+    SymbolClassBody.prototype._read = function() {
+      this.numSymbols = this._io.readU2le();
+      this.symbols = new Array(this.numSymbols);
+      for (var i = 0; i < this.numSymbols; i++) {
+        this.symbols[i] = new Symbol(this._io, this, this._root);
+      }
     }
 
-    return AbcTagBody;
+    var Symbol = SymbolClassBody.Symbol = (function() {
+      function Symbol(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      Symbol.prototype._read = function() {
+        this.tag = this._io.readU2le();
+        this.name = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII");
+      }
+
+      return Symbol;
+    })();
+
+    return SymbolClassBody;
+  })();
+
+  var DefineSoundBody = Swf.DefineSoundBody = (function() {
+    DefineSoundBody.SamplingRates = Object.freeze({
+      RATE_5_5_KHZ: 0,
+      RATE_11_KHZ: 1,
+      RATE_22_KHZ: 2,
+      RATE_44_KHZ: 3,
+
+      0: "RATE_5_5_KHZ",
+      1: "RATE_11_KHZ",
+      2: "RATE_22_KHZ",
+      3: "RATE_44_KHZ",
+    });
+
+    DefineSoundBody.Bps = Object.freeze({
+      SOUND_8_BIT: 0,
+      SOUND_16_BIT: 1,
+
+      0: "SOUND_8_BIT",
+      1: "SOUND_16_BIT",
+    });
+
+    DefineSoundBody.Channels = Object.freeze({
+      MONO: 0,
+      STEREO: 1,
+
+      0: "MONO",
+      1: "STEREO",
+    });
+
+    function DefineSoundBody(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    DefineSoundBody.prototype._read = function() {
+      this.id = this._io.readU2le();
+      this.format = this._io.readBitsInt(4);
+      this.samplingRate = this._io.readBitsInt(2);
+      this.bitsPerSample = this._io.readBitsInt(1);
+      this.numChannels = this._io.readBitsInt(1);
+      this._io.alignToByte();
+      this.numSamples = this._io.readU4le();
+    }
+
+    /**
+     * Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.
+     */
+
+    return DefineSoundBody;
   })();
 
   var RecordHeader = Swf.RecordHeader = (function() {
@@ -171,6 +369,22 @@ var Swf = (function() {
     });
 
     return RecordHeader;
+  })();
+
+  var ScriptLimitsBody = Swf.ScriptLimitsBody = (function() {
+    function ScriptLimitsBody(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    ScriptLimitsBody.prototype._read = function() {
+      this.maxRecursionDepth = this._io.readU2le();
+      this.scriptTimeoutSeconds = this._io.readU2le();
+    }
+
+    return ScriptLimitsBody;
   })();
 
   return Swf;

@@ -10,10 +10,46 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 class Swf(KaitaiStruct):
+    """SWF files are used by Adobe Flash (AKA Shockwave Flash, Macromedia
+    Flash) to encode rich interactive multimedia content and are,
+    essentially, a container for special bytecode instructions to play
+    back that content. In early 2000s, it was dominant rich multimedia
+    web format (.swf files were integrated into web pages and played
+    back with a browser plugin), but its usage largely declined in
+    2010s, as HTML5 and performant browser-native solutions
+    (i.e. JavaScript engines and graphical approaches, such as WebGL)
+    emerged.
+    
+    There are a lot of versions of SWF (~36), format is somewhat
+    documented by Adobe.
+    
+    .. seealso::
+       Source - https://www.adobe.com/content/dam/acom/en/devnet/pdf/swf-file-format-spec.pdf
+    """
+
+    class Compressions(Enum):
+        zlib = 67
+        none = 70
+        lzma = 90
 
     class TagType(Enum):
+        end_of_file = 0
+        place_object = 4
+        remove_object = 5
+        set_background_color = 9
+        define_sound = 14
+        place_object2 = 26
+        remove_object2 = 28
+        frame_label = 43
+        export_assets = 56
+        script_limits = 65
         file_attributes = 69
-        abc_tag = 82
+        place_object3 = 70
+        symbol_class = 76
+        metadata = 77
+        define_scaling_grid = 78
+        do_abc = 82
+        define_scene_and_frame_label_data = 86
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -21,12 +57,47 @@ class Swf(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.junk = self._io.read_bytes(4)
-        self.file_size = self._io.read_u4le()
-        self._raw__raw_body = self._io.read_bytes_full()
-        self._raw_body = zlib.decompress(self._raw__raw_body)
-        io = KaitaiStream(BytesIO(self._raw_body))
-        self.body = self._root.SwfBody(io, self, self._root)
+        self.compression = self._root.Compressions(self._io.read_u1())
+        self.signature = self._io.ensure_fixed_contents(b"\x57\x53")
+        self.version = self._io.read_u1()
+        self.len_file = self._io.read_u4le()
+        if self.compression == self._root.Compressions.none:
+            self._raw_plain_body = self._io.read_bytes_full()
+            io = KaitaiStream(BytesIO(self._raw_plain_body))
+            self.plain_body = self._root.SwfBody(io, self, self._root)
+
+        if self.compression == self._root.Compressions.zlib:
+            self._raw__raw_zlib_body = self._io.read_bytes_full()
+            self._raw_zlib_body = zlib.decompress(self._raw__raw_zlib_body)
+            io = KaitaiStream(BytesIO(self._raw_zlib_body))
+            self.zlib_body = self._root.SwfBody(io, self, self._root)
+
+
+    class Rgb(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.r = self._io.read_u1()
+            self.g = self._io.read_u1()
+            self.b = self._io.read_u1()
+
+
+    class DoAbcBody(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.flags = self._io.read_u4le()
+            self.name = (self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
+            self.abcdata = self._io.read_bytes_full()
+
 
     class SwfBody(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -39,6 +110,9 @@ class Swf(KaitaiStruct):
             self.rect = self._root.Rect(self._io, self, self._root)
             self.frame_rate = self._io.read_u2le()
             self.frame_count = self._io.read_u2le()
+            if self._root.version >= 8:
+                self.file_attributes_tag = self._root.Tag(self._io, self, self._root)
+
             self.tags = []
             i = 0
             while not self._io.is_eof():
@@ -85,15 +159,35 @@ class Swf(KaitaiStruct):
         def _read(self):
             self.record_header = self._root.RecordHeader(self._io, self, self._root)
             _on = self.record_header.tag_type
-            if _on == self._root.TagType.abc_tag:
+            if _on == self._root.TagType.set_background_color:
                 self._raw_tag_body = self._io.read_bytes(self.record_header.len)
                 io = KaitaiStream(BytesIO(self._raw_tag_body))
-                self.tag_body = self._root.AbcTagBody(io, self, self._root)
+                self.tag_body = self._root.Rgb(io, self, self._root)
+            elif _on == self._root.TagType.script_limits:
+                self._raw_tag_body = self._io.read_bytes(self.record_header.len)
+                io = KaitaiStream(BytesIO(self._raw_tag_body))
+                self.tag_body = self._root.ScriptLimitsBody(io, self, self._root)
+            elif _on == self._root.TagType.define_sound:
+                self._raw_tag_body = self._io.read_bytes(self.record_header.len)
+                io = KaitaiStream(BytesIO(self._raw_tag_body))
+                self.tag_body = self._root.DefineSoundBody(io, self, self._root)
+            elif _on == self._root.TagType.export_assets:
+                self._raw_tag_body = self._io.read_bytes(self.record_header.len)
+                io = KaitaiStream(BytesIO(self._raw_tag_body))
+                self.tag_body = self._root.SymbolClassBody(io, self, self._root)
+            elif _on == self._root.TagType.symbol_class:
+                self._raw_tag_body = self._io.read_bytes(self.record_header.len)
+                io = KaitaiStream(BytesIO(self._raw_tag_body))
+                self.tag_body = self._root.SymbolClassBody(io, self, self._root)
+            elif _on == self._root.TagType.do_abc:
+                self._raw_tag_body = self._io.read_bytes(self.record_header.len)
+                io = KaitaiStream(BytesIO(self._raw_tag_body))
+                self.tag_body = self._root.DoAbcBody(io, self, self._root)
             else:
                 self.tag_body = self._io.read_bytes(self.record_header.len)
 
 
-    class AbcTagBody(KaitaiStruct):
+    class SymbolClassBody(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -101,9 +195,54 @@ class Swf(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.flags = self._io.read_u4le()
-            self.name = (self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
-            self.abcdata = self._io.read_bytes_full()
+            self.num_symbols = self._io.read_u2le()
+            self.symbols = [None] * (self.num_symbols)
+            for i in range(self.num_symbols):
+                self.symbols[i] = self._root.SymbolClassBody.Symbol(self._io, self, self._root)
+
+
+        class Symbol(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.tag = self._io.read_u2le()
+                self.name = (self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
+
+
+
+    class DefineSoundBody(KaitaiStruct):
+
+        class SamplingRates(Enum):
+            rate_5_5_khz = 0
+            rate_11_khz = 1
+            rate_22_khz = 2
+            rate_44_khz = 3
+
+        class Bps(Enum):
+            sound_8_bit = 0
+            sound_16_bit = 1
+
+        class Channels(Enum):
+            mono = 0
+            stereo = 1
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.id = self._io.read_u2le()
+            self.format = self._io.read_bits_int(4)
+            self.sampling_rate = self._root.DefineSoundBody.SamplingRates(self._io.read_bits_int(2))
+            self.bits_per_sample = self._root.DefineSoundBody.Bps(self._io.read_bits_int(1))
+            self.num_channels = self._root.DefineSoundBody.Channels(self._io.read_bits_int(1))
+            self._io.align_to_byte()
+            self.num_samples = self._io.read_u4le()
 
 
     class RecordHeader(KaitaiStruct):
@@ -142,6 +281,18 @@ class Swf(KaitaiStruct):
 
             self._m_len = (self.big_len if self.small_len == 63 else self.small_len)
             return self._m_len if hasattr(self, '_m_len') else None
+
+
+    class ScriptLimitsBody(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.max_recursion_depth = self._io.read_u2le()
+            self.script_timeout_seconds = self._io.read_u2le()
 
 
 
