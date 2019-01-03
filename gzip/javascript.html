@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.gz file format: JavaScript parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Archive Files</li>
+        <li class="active">.gz file format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.gz file format:
+            
+            JavaScript parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Gzip is a popular and standard single-file archiving format. It
+essentially provides a container that stores original file name,
+timestamp and a few other things (like optional comment), basic
+CRCs, etc, and a file compressed by a chosen compression algorithm.</p>
+<p>As of 2019, there is actually only one working solution for
+compression algorithms, so it's typically raw DEFLATE stream
+(without zlib header) in all gzipped files.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        gz
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            <li><a href="https://tools.ietf.org/html/rfc1952">RFC 1952</a></li>
+                            
+                            
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/x-fmt/266">PRONOM x-fmt/266</a></li>
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q10287816">Wikidata Q10287816</a></li>
+                            
+                            <li><a href="http://forensicswiki.org/wiki/Gzip">Gzip in ForensicsWiki</a></li>
+                            
+                            
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .gz file format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".gz file format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title=".gz file format parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".gz file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title=".gz file format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".gz file format parsing Java library">Java</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="javascript.html" title=".gz file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title=".gz file format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".gz file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".gz file format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".gz file format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".gz file format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+<p>See the usage examples in the <a href="http://doc.kaitai.io/lang_javascript.html" target="_blank">JavaScript notes</a>.</p>
+
+<p>Parse structure from an ArrayBuffer:</p>
+
+<pre><code class="javascript">var arrayBuffer = ...;
+var data = new Gzip(new KaitaiStream(arrayBuffer));</code></pre>
+
+<p>After that, one can get various attributes from the structure by accessing fields or properties like:</p>
+
+<pre><code class="javascript">data.compressionMethod // => Compression method used to compress file body. In practice, only
+one method is widely used: 8 = deflate.
+</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            JavaScript source code to parse .gz file format
+            
+        </h2>
+
+        
+
+        <h3>Gzip.js</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/javascript/Gzip.js" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+(function (root, factory) {
+  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
+  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
+  } else {
+    root.Gzip = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
+/**
+ * Gzip is a popular and standard single-file archiving format. It
+ * essentially provides a container that stores original file name,
+ * timestamp and a few other things (like optional comment), basic
+ * CRCs, etc, and a file compressed by a chosen compression algorithm.
+ * 
+ * As of 2019, there is actually only one working solution for
+ * compression algorithms, so it&#39;s typically raw DEFLATE stream
+ * (without zlib header) in all gzipped files.
+ * @see {@link https://tools.ietf.org/html/rfc1952|Source}
+ */
+
+var Gzip = (function() {
+  Gzip.CompressionMethods = Object.freeze({
+    DEFLATE: 8,
+
+    8: &quot;DEFLATE&quot;,
+  });
+
+  Gzip.Oses = Object.freeze({
+    FAT: 0,
+    AMIGA: 1,
+    VMS: 2,
+    UNIX: 3,
+    VM_CMS: 4,
+    ATARI_TOS: 5,
+    HPFS: 6,
+    MACINTOSH: 7,
+    Z_SYSTEM: 8,
+    CP_M: 9,
+    TOPS_20: 10,
+    NTFS: 11,
+    QDOS: 12,
+    ACORN_RISCOS: 13,
+    UNKNOWN: 255,
+
+    0: &quot;FAT&quot;,
+    1: &quot;AMIGA&quot;,
+    2: &quot;VMS&quot;,
+    3: &quot;UNIX&quot;,
+    4: &quot;VM_CMS&quot;,
+    5: &quot;ATARI_TOS&quot;,
+    6: &quot;HPFS&quot;,
+    7: &quot;MACINTOSH&quot;,
+    8: &quot;Z_SYSTEM&quot;,
+    9: &quot;CP_M&quot;,
+    10: &quot;TOPS_20&quot;,
+    11: &quot;NTFS&quot;,
+    12: &quot;QDOS&quot;,
+    13: &quot;ACORN_RISCOS&quot;,
+    255: &quot;UNKNOWN&quot;,
+  });
+
+  function Gzip(_io, _parent, _root) {
+    this._io = _io;
+    this._parent = _parent;
+    this._root = _root || this;
+
+    this._read();
+  }
+  Gzip.prototype._read = function() {
+    this.magic = this._io.ensureFixedContents([31, 139]);
+    this.compressionMethod = this._io.readU1();
+    this.flags = new Flags(this._io, this, this._root);
+    this.modTime = this._io.readU4le();
+    switch (this.compressionMethod) {
+    case Gzip.CompressionMethods.DEFLATE:
+      this.extraFlags = new ExtraFlagsDeflate(this._io, this, this._root);
+      break;
+    }
+    this.os = this._io.readU1();
+    if (this.flags.hasExtra) {
+      this.extras = new Extras(this._io, this, this._root);
+    }
+    if (this.flags.hasName) {
+      this.name = this._io.readBytesTerm(0, false, true, true);
+    }
+    if (this.flags.hasComment) {
+      this.comment = this._io.readBytesTerm(0, false, true, true);
+    }
+    if (this.flags.hasHeaderCrc) {
+      this.headerCrc16 = this._io.readU2le();
+    }
+    this.body = this._io.readBytes(((this._io.size - this._io.pos) - 8));
+    this.bodyCrc32 = this._io.readU4le();
+    this.lenUncompressed = this._io.readU4le();
+  }
+
+  var Flags = Gzip.Flags = (function() {
+    function Flags(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Flags.prototype._read = function() {
+      this.reserved1 = this._io.readBitsInt(3);
+      this.hasComment = this._io.readBitsInt(1) != 0;
+      this.hasName = this._io.readBitsInt(1) != 0;
+      this.hasExtra = this._io.readBitsInt(1) != 0;
+      this.hasHeaderCrc = this._io.readBitsInt(1) != 0;
+      this.isText = this._io.readBitsInt(1) != 0;
+    }
+
+    /**
+     * If true, optional extra fields are present in the archive.
+     */
+
+    /**
+     * If true, this archive includes a CRC16 checksum for the header.
+     */
+
+    /**
+     * If true, file inside this archive is a text file from
+     * compressor&#39;s point of view.
+     */
+
+    return Flags;
+  })();
+
+  var ExtraFlagsDeflate = Gzip.ExtraFlagsDeflate = (function() {
+    ExtraFlagsDeflate.CompressionStrengths = Object.freeze({
+      BEST: 2,
+      FAST: 4,
+
+      2: &quot;BEST&quot;,
+      4: &quot;FAST&quot;,
+    });
+
+    function ExtraFlagsDeflate(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    ExtraFlagsDeflate.prototype._read = function() {
+      this.compressionStrength = this._io.readU1();
+    }
+
+    return ExtraFlagsDeflate;
+  })();
+
+  /**
+   * Container for many subfields, constrained by size of stream.
+   */
+
+  var Subfields = Gzip.Subfields = (function() {
+    function Subfields(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Subfields.prototype._read = function() {
+      this.entries = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.entries.push(new Subfield(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return Subfields;
+  })();
+
+  /**
+   * Every subfield follows typical [TLV scheme](https://en.wikipedia.org/wiki/Type-length-value):
+   * 
+   * * `id` serves role of &quot;T&quot;ype
+   * * `len_data` serves role of &quot;L&quot;ength
+   * * `data` serves role of &quot;V&quot;alue
+   * 
+   * This way it&#39;s possible to for arbitrary parser to skip over
+   * subfields it does not support.
+   */
+
+  var Subfield = Gzip.Subfield = (function() {
+    function Subfield(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Subfield.prototype._read = function() {
+      this.id = this._io.readU2le();
+      this.lenData = this._io.readU2le();
+      this.data = this._io.readBytes(this.lenData);
+    }
+
+    /**
+     * Subfield ID, typically two ASCII letters.
+     */
+
+    return Subfield;
+  })();
+
+  var Extras = Gzip.Extras = (function() {
+    function Extras(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Extras.prototype._read = function() {
+      this.lenSubfields = this._io.readU2le();
+      this._raw_subfields = this._io.readBytes(this.lenSubfields);
+      var _io__raw_subfields = new KaitaiStream(this._raw_subfields);
+      this.subfields = new Subfields(_io__raw_subfields, this, this._root);
+    }
+
+    return Extras;
+  })();
+
+  /**
+   * Compression method used to compress file body. In practice, only
+   * one method is widely used: 8 = deflate.
+   */
+
+  /**
+   * Last modification time of a file archived in UNIX timestamp format.
+   */
+
+  /**
+   * Extra flags, specific to compression method chosen.
+   */
+
+  /**
+   * OS used to compress this file.
+   */
+
+  /**
+   * Compressed body of a file archived. Note that we don&#39;t make an
+   * attempt to decompress it here.
+   */
+
+  /**
+   * CRC32 checksum of an uncompressed file body
+   */
+
+  /**
+   * Size of original uncompressed data in bytes (truncated to 32
+   * bits).
+   */
+
+  return Gzip;
+})();
+return Gzip;
+}));
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2018 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
