@@ -10,6 +10,21 @@ if parse_version(ks_version) < parse_version('0.7'):
 
 from vlq_base128_be import VlqBase128Be
 class StandardMidiFile(KaitaiStruct):
+    """Standard MIDI file, typically knows just as "MID", is a standard way
+    to serialize series of MIDI events, which is a protocol used in many
+    music synthesizers to transfer music data: notes being played,
+    effects being applied, etc.
+    
+    Internally, file consists of a header and series of tracks, every
+    track listing MIDI events with certain header designating time these
+    events are happening.
+    
+    NOTE: Rarely, MIDI files employ certain stateful compression scheme
+    to avoid storing certain elements of further elements, instead
+    reusing them from events which happened earlier in the
+    stream. Kaitai Struct (as of v0.9) is currently unable to parse
+    these, but files employing this mechanism are relatively rare.
+    """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -18,8 +33,8 @@ class StandardMidiFile(KaitaiStruct):
 
     def _read(self):
         self.hdr = self._root.Header(self._io, self, self._root)
-        self.tracks = [None] * (self.hdr.qty_tracks)
-        for i in range(self.hdr.qty_tracks):
+        self.tracks = [None] * (self.hdr.num_tracks)
+        for i in range(self.hdr.num_tracks):
             self.tracks[i] = self._root.Track(self._io, self, self._root)
 
 
@@ -162,8 +177,8 @@ class StandardMidiFile(KaitaiStruct):
 
         def _read(self):
             self.magic = self._io.ensure_fixed_contents(b"\x4D\x54\x72\x6B")
-            self.track_length = self._io.read_u4be()
-            self._raw_events = self._io.read_bytes(self.track_length)
+            self.len_events = self._io.read_u4be()
+            self._raw_events = self._io.read_bytes(self.len_events)
             io = KaitaiStream(BytesIO(self._raw_events))
             self.events = self._root.TrackEvents(io, self, self._root)
 
@@ -219,9 +234,9 @@ class StandardMidiFile(KaitaiStruct):
 
         def _read(self):
             self.magic = self._io.ensure_fixed_contents(b"\x4D\x54\x68\x64")
-            self.header_length = self._io.read_u4be()
+            self.len_header = self._io.read_u4be()
             self.format = self._io.read_u2be()
-            self.qty_tracks = self._io.read_u2be()
+            self.num_tracks = self._io.read_u2be()
             self.division = self._io.read_s2be()
 
 

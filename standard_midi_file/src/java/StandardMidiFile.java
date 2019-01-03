@@ -8,6 +8,23 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
+
+/**
+ * Standard MIDI file, typically knows just as "MID", is a standard way
+ * to serialize series of MIDI events, which is a protocol used in many
+ * music synthesizers to transfer music data: notes being played,
+ * effects being applied, etc.
+ * 
+ * Internally, file consists of a header and series of tracks, every
+ * track listing MIDI events with certain header designating time these
+ * events are happening.
+ * 
+ * NOTE: Rarely, MIDI files employ certain stateful compression scheme
+ * to avoid storing certain elements of further elements, instead
+ * reusing them from events which happened earlier in the
+ * stream. Kaitai Struct (as of v0.9) is currently unable to parse
+ * these, but files employing this mechanism are relatively rare.
+ */
 public class StandardMidiFile extends KaitaiStruct {
     public static StandardMidiFile fromFile(String fileName) throws IOException {
         return new StandardMidiFile(new ByteBufferKaitaiStream(fileName));
@@ -29,8 +46,8 @@ public class StandardMidiFile extends KaitaiStruct {
     }
     private void _read() {
         this.hdr = new Header(this._io, this, _root);
-        tracks = new ArrayList<Track>((int) (hdr().qtyTracks()));
-        for (int i = 0; i < hdr().qtyTracks(); i++) {
+        tracks = new ArrayList<Track>((int) (hdr().numTracks()));
+        for (int i = 0; i < hdr().numTracks(); i++) {
             this.tracks.add(new Track(this._io, this, _root));
         }
     }
@@ -324,19 +341,19 @@ public class StandardMidiFile extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.ensureFixedContents(new byte[] { 77, 84, 114, 107 });
-            this.trackLength = this._io.readU4be();
-            this._raw_events = this._io.readBytes(trackLength());
+            this.lenEvents = this._io.readU4be();
+            this._raw_events = this._io.readBytes(lenEvents());
             KaitaiStream _io__raw_events = new ByteBufferKaitaiStream(_raw_events);
             this.events = new TrackEvents(_io__raw_events, this, _root);
         }
         private byte[] magic;
-        private long trackLength;
+        private long lenEvents;
         private TrackEvents events;
         private StandardMidiFile _root;
         private StandardMidiFile _parent;
         private byte[] _raw_events;
         public byte[] magic() { return magic; }
-        public long trackLength() { return trackLength; }
+        public long lenEvents() { return lenEvents; }
         public TrackEvents events() { return events; }
         public StandardMidiFile _root() { return _root; }
         public StandardMidiFile _parent() { return _parent; }
@@ -458,22 +475,22 @@ public class StandardMidiFile extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.ensureFixedContents(new byte[] { 77, 84, 104, 100 });
-            this.headerLength = this._io.readU4be();
+            this.lenHeader = this._io.readU4be();
             this.format = this._io.readU2be();
-            this.qtyTracks = this._io.readU2be();
+            this.numTracks = this._io.readU2be();
             this.division = this._io.readS2be();
         }
         private byte[] magic;
-        private long headerLength;
+        private long lenHeader;
         private int format;
-        private int qtyTracks;
+        private int numTracks;
         private short division;
         private StandardMidiFile _root;
         private StandardMidiFile _parent;
         public byte[] magic() { return magic; }
-        public long headerLength() { return headerLength; }
+        public long lenHeader() { return lenHeader; }
         public int format() { return format; }
-        public int qtyTracks() { return qtyTracks; }
+        public int numTracks() { return numTracks; }
         public short division() { return division; }
         public StandardMidiFile _root() { return _root; }
         public StandardMidiFile _parent() { return _parent; }

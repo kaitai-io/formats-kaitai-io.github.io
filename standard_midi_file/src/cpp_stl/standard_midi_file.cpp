@@ -13,7 +13,7 @@ standard_midi_file_t::standard_midi_file_t(kaitai::kstream* p__io, kaitai::kstru
 
 void standard_midi_file_t::_read() {
     m_hdr = new header_t(m__io, this, m__root);
-    int l_tracks = hdr()->qty_tracks();
+    int l_tracks = hdr()->num_tracks();
     m_tracks = new std::vector<track_t*>();
     m_tracks->reserve(l_tracks);
     for (int i = 0; i < l_tracks; i++) {
@@ -228,8 +228,8 @@ standard_midi_file_t::track_t::track_t(kaitai::kstream* p__io, standard_midi_fil
 
 void standard_midi_file_t::track_t::_read() {
     m_magic = m__io->ensure_fixed_contents(std::string("\x4D\x54\x72\x6B", 4));
-    m_track_length = m__io->read_u4be();
-    m__raw_events = m__io->read_bytes(track_length());
+    m_len_events = m__io->read_u4be();
+    m__raw_events = m__io->read_bytes(len_events());
     m__io__raw_events = new kaitai::kstream(m__raw_events);
     m_events = new track_events_t(m__io__raw_events, this, m__root);
 }
@@ -277,9 +277,9 @@ standard_midi_file_t::header_t::header_t(kaitai::kstream* p__io, standard_midi_f
 
 void standard_midi_file_t::header_t::_read() {
     m_magic = m__io->ensure_fixed_contents(std::string("\x4D\x54\x68\x64", 4));
-    m_header_length = m__io->read_u4be();
+    m_len_header = m__io->read_u4be();
     m_format = m__io->read_u2be();
-    m_qty_tracks = m__io->read_u2be();
+    m_num_tracks = m__io->read_u2be();
     m_division = m__io->read_s2be();
 }
 

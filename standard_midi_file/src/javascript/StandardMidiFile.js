@@ -9,6 +9,23 @@
     root.StandardMidiFile = factory(root.KaitaiStream, root.VlqBase128Be);
   }
 }(this, function (KaitaiStream, VlqBase128Be) {
+/**
+ * Standard MIDI file, typically knows just as "MID", is a standard way
+ * to serialize series of MIDI events, which is a protocol used in many
+ * music synthesizers to transfer music data: notes being played,
+ * effects being applied, etc.
+ * 
+ * Internally, file consists of a header and series of tracks, every
+ * track listing MIDI events with certain header designating time these
+ * events are happening.
+ * 
+ * NOTE: Rarely, MIDI files employ certain stateful compression scheme
+ * to avoid storing certain elements of further elements, instead
+ * reusing them from events which happened earlier in the
+ * stream. Kaitai Struct (as of v0.9) is currently unable to parse
+ * these, but files employing this mechanism are relatively rare.
+ */
+
 var StandardMidiFile = (function() {
   function StandardMidiFile(_io, _parent, _root) {
     this._io = _io;
@@ -19,8 +36,8 @@ var StandardMidiFile = (function() {
   }
   StandardMidiFile.prototype._read = function() {
     this.hdr = new Header(this._io, this, this._root);
-    this.tracks = new Array(this.hdr.qtyTracks);
-    for (var i = 0; i < this.hdr.qtyTracks; i++) {
+    this.tracks = new Array(this.hdr.numTracks);
+    for (var i = 0; i < this.hdr.numTracks; i++) {
       this.tracks[i] = new Track(this._io, this, this._root);
     }
   }
@@ -197,8 +214,8 @@ var StandardMidiFile = (function() {
     }
     Track.prototype._read = function() {
       this.magic = this._io.ensureFixedContents([77, 84, 114, 107]);
-      this.trackLength = this._io.readU4be();
-      this._raw_events = this._io.readBytes(this.trackLength);
+      this.lenEvents = this._io.readU4be();
+      this._raw_events = this._io.readBytes(this.lenEvents);
       var _io__raw_events = new KaitaiStream(this._raw_events);
       this.events = new TrackEvents(_io__raw_events, this, this._root);
     }
@@ -283,9 +300,9 @@ var StandardMidiFile = (function() {
     }
     Header.prototype._read = function() {
       this.magic = this._io.ensureFixedContents([77, 84, 104, 100]);
-      this.headerLength = this._io.readU4be();
+      this.lenHeader = this._io.readU4be();
       this.format = this._io.readU2be();
-      this.qtyTracks = this._io.readU2be();
+      this.numTracks = this._io.readU2be();
       this.division = this._io.readS2be();
     }
 

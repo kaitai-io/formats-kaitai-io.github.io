@@ -6,6 +6,22 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# Standard MIDI file, typically knows just as "MID", is a standard way
+# to serialize series of MIDI events, which is a protocol used in many
+# music synthesizers to transfer music data: notes being played,
+# effects being applied, etc.
+# 
+# Internally, file consists of a header and series of tracks, every
+# track listing MIDI events with certain header designating time these
+# events are happening.
+# 
+# NOTE: Rarely, MIDI files employ certain stateful compression scheme
+# to avoid storing certain elements of further elements, instead
+# reusing them from events which happened earlier in the
+# stream. Kaitai Struct (as of v0.9) is currently unable to parse
+# these, but files employing this mechanism are relatively rare.
 class StandardMidiFile < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -14,8 +30,8 @@ class StandardMidiFile < Kaitai::Struct::Struct
 
   def _read
     @hdr = Header.new(@_io, self, @_root)
-    @tracks = Array.new(hdr.qty_tracks)
-    (hdr.qty_tracks).times { |i|
+    @tracks = Array.new(hdr.num_tracks)
+    (hdr.num_tracks).times { |i|
       @tracks[i] = Track.new(@_io, self, @_root)
     }
     self
@@ -160,14 +176,14 @@ class StandardMidiFile < Kaitai::Struct::Struct
 
     def _read
       @magic = @_io.ensure_fixed_contents([77, 84, 114, 107].pack('C*'))
-      @track_length = @_io.read_u4be
-      @_raw_events = @_io.read_bytes(track_length)
+      @len_events = @_io.read_u4be
+      @_raw_events = @_io.read_bytes(len_events)
       io = Kaitai::Struct::Stream.new(@_raw_events)
       @events = TrackEvents.new(io, self, @_root)
       self
     end
     attr_reader :magic
-    attr_reader :track_length
+    attr_reader :len_events
     attr_reader :events
     attr_reader :_raw_events
   end
@@ -228,16 +244,16 @@ class StandardMidiFile < Kaitai::Struct::Struct
 
     def _read
       @magic = @_io.ensure_fixed_contents([77, 84, 104, 100].pack('C*'))
-      @header_length = @_io.read_u4be
+      @len_header = @_io.read_u4be
       @format = @_io.read_u2be
-      @qty_tracks = @_io.read_u2be
+      @num_tracks = @_io.read_u2be
       @division = @_io.read_s2be
       self
     end
     attr_reader :magic
-    attr_reader :header_length
+    attr_reader :len_header
     attr_reader :format
-    attr_reader :qty_tracks
+    attr_reader :num_tracks
     attr_reader :division
   end
   class SysexEventBody < Kaitai::Struct::Struct

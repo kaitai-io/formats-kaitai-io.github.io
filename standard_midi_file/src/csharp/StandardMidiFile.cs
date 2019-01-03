@@ -4,6 +4,23 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// Standard MIDI file, typically knows just as &quot;MID&quot;, is a standard way
+    /// to serialize series of MIDI events, which is a protocol used in many
+    /// music synthesizers to transfer music data: notes being played,
+    /// effects being applied, etc.
+    /// 
+    /// Internally, file consists of a header and series of tracks, every
+    /// track listing MIDI events with certain header designating time these
+    /// events are happening.
+    /// 
+    /// NOTE: Rarely, MIDI files employ certain stateful compression scheme
+    /// to avoid storing certain elements of further elements, instead
+    /// reusing them from events which happened earlier in the
+    /// stream. Kaitai Struct (as of v0.9) is currently unable to parse
+    /// these, but files employing this mechanism are relatively rare.
+    /// </summary>
     public partial class StandardMidiFile : KaitaiStruct
     {
         public static StandardMidiFile FromFile(string fileName)
@@ -20,8 +37,8 @@ namespace Kaitai
         private void _read()
         {
             _hdr = new Header(m_io, this, m_root);
-            _tracks = new List<Track>((int) (Hdr.QtyTracks));
-            for (var i = 0; i < Hdr.QtyTracks; i++)
+            _tracks = new List<Track>((int) (Hdr.NumTracks));
+            for (var i = 0; i < Hdr.NumTracks; i++)
             {
                 _tracks.Add(new Track(m_io, this, m_root));
             }
@@ -305,19 +322,19 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.EnsureFixedContents(new byte[] { 77, 84, 114, 107 });
-                _trackLength = m_io.ReadU4be();
-                __raw_events = m_io.ReadBytes(TrackLength);
+                _lenEvents = m_io.ReadU4be();
+                __raw_events = m_io.ReadBytes(LenEvents);
                 var io___raw_events = new KaitaiStream(__raw_events);
                 _events = new TrackEvents(io___raw_events, this, m_root);
             }
             private byte[] _magic;
-            private uint _trackLength;
+            private uint _lenEvents;
             private TrackEvents _events;
             private StandardMidiFile m_root;
             private StandardMidiFile m_parent;
             private byte[] __raw_events;
             public byte[] Magic { get { return _magic; } }
-            public uint TrackLength { get { return _trackLength; } }
+            public uint LenEvents { get { return _lenEvents; } }
             public TrackEvents Events { get { return _events; } }
             public StandardMidiFile M_Root { get { return m_root; } }
             public StandardMidiFile M_Parent { get { return m_parent; } }
@@ -415,22 +432,22 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.EnsureFixedContents(new byte[] { 77, 84, 104, 100 });
-                _headerLength = m_io.ReadU4be();
+                _lenHeader = m_io.ReadU4be();
                 _format = m_io.ReadU2be();
-                _qtyTracks = m_io.ReadU2be();
+                _numTracks = m_io.ReadU2be();
                 _division = m_io.ReadS2be();
             }
             private byte[] _magic;
-            private uint _headerLength;
+            private uint _lenHeader;
             private ushort _format;
-            private ushort _qtyTracks;
+            private ushort _numTracks;
             private short _division;
             private StandardMidiFile m_root;
             private StandardMidiFile m_parent;
             public byte[] Magic { get { return _magic; } }
-            public uint HeaderLength { get { return _headerLength; } }
+            public uint LenHeader { get { return _lenHeader; } }
             public ushort Format { get { return _format; } }
-            public ushort QtyTracks { get { return _qtyTracks; } }
+            public ushort NumTracks { get { return _numTracks; } }
             public short Division { get { return _division; } }
             public StandardMidiFile M_Root { get { return m_root; } }
             public StandardMidiFile M_Parent { get { return m_parent; } }

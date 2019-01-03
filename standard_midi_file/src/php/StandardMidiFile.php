@@ -1,6 +1,23 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * Standard MIDI file, typically knows just as "MID", is a standard way
+ * to serialize series of MIDI events, which is a protocol used in many
+ * music synthesizers to transfer music data: notes being played,
+ * effects being applied, etc.
+ * 
+ * Internally, file consists of a header and series of tracks, every
+ * track listing MIDI events with certain header designating time these
+ * events are happening.
+ * 
+ * NOTE: Rarely, MIDI files employ certain stateful compression scheme
+ * to avoid storing certain elements of further elements, instead
+ * reusing them from events which happened earlier in the
+ * stream. Kaitai Struct (as of v0.9) is currently unable to parse
+ * these, but files employing this mechanism are relatively rare.
+ */
+
 class StandardMidiFile extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \StandardMidiFile $_root = null) {
         parent::__construct($_io, $_parent, $_root);
@@ -10,7 +27,7 @@ class StandardMidiFile extends \Kaitai\Struct\Struct {
     private function _read() {
         $this->_m_hdr = new \StandardMidiFile\Header($this->_io, $this, $this->_root);
         $this->_m_tracks = [];
-        $n = $this->hdr()->qtyTracks();
+        $n = $this->hdr()->numTracks();
         for ($i = 0; $i < $n; $i++) {
             $this->_m_tracks[] = new \StandardMidiFile\Track($this->_io, $this, $this->_root);
         }
@@ -203,17 +220,17 @@ class Track extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m_magic = $this->_io->ensureFixedContents("\x4D\x54\x72\x6B");
-        $this->_m_trackLength = $this->_io->readU4be();
-        $this->_m__raw_events = $this->_io->readBytes($this->trackLength());
+        $this->_m_lenEvents = $this->_io->readU4be();
+        $this->_m__raw_events = $this->_io->readBytes($this->lenEvents());
         $io = new \Kaitai\Struct\Stream($this->_m__raw_events);
         $this->_m_events = new \StandardMidiFile\TrackEvents($io, $this, $this->_root);
     }
     protected $_m_magic;
-    protected $_m_trackLength;
+    protected $_m_lenEvents;
     protected $_m_events;
     protected $_m__raw_events;
     public function magic() { return $this->_m_magic; }
-    public function trackLength() { return $this->_m_trackLength; }
+    public function lenEvents() { return $this->_m_lenEvents; }
     public function events() { return $this->_m_events; }
     public function _raw_events() { return $this->_m__raw_events; }
 }
@@ -287,20 +304,20 @@ class Header extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m_magic = $this->_io->ensureFixedContents("\x4D\x54\x68\x64");
-        $this->_m_headerLength = $this->_io->readU4be();
+        $this->_m_lenHeader = $this->_io->readU4be();
         $this->_m_format = $this->_io->readU2be();
-        $this->_m_qtyTracks = $this->_io->readU2be();
+        $this->_m_numTracks = $this->_io->readU2be();
         $this->_m_division = $this->_io->readS2be();
     }
     protected $_m_magic;
-    protected $_m_headerLength;
+    protected $_m_lenHeader;
     protected $_m_format;
-    protected $_m_qtyTracks;
+    protected $_m_numTracks;
     protected $_m_division;
     public function magic() { return $this->_m_magic; }
-    public function headerLength() { return $this->_m_headerLength; }
+    public function lenHeader() { return $this->_m_lenHeader; }
     public function format() { return $this->_m_format; }
-    public function qtyTracks() { return $this->_m_qtyTracks; }
+    public function numTracks() { return $this->_m_numTracks; }
     public function division() { return $this->_m_division; }
 }
 

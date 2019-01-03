@@ -9,7 +9,7 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="hdr_pos">0</TD><TD PORT="hdr_size">14</TD><TD>Header</TD><TD PORT="hdr_type">hdr</TD></TR>
 			<TR><TD PORT="tracks_pos">14</TD><TD PORT="tracks_size">...</TD><TD>Track</TD><TD PORT="tracks_type">tracks</TD></TR>
-			<TR><TD COLSPAN="4" PORT="tracks__repeat">repeat hdr.qty_tracks times</TD></TR>
+			<TR><TD COLSPAN="4" PORT="tracks__repeat">repeat hdr.num_tracks times</TD></TR>
 		</TABLE>>];
 		subgraph cluster__track_events {
 			label="StandardMidiFile::TrackEvents";
@@ -106,8 +106,8 @@ track_event__seq_event_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELL
 			track__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>4D 54 72 6B</TD><TD PORT="magic_type">magic</TD></TR>
-				<TR><TD PORT="track_length_pos">4</TD><TD PORT="track_length_size">4</TD><TD>u4be</TD><TD PORT="track_length_type">track_length</TD></TR>
-				<TR><TD PORT="events_pos">8</TD><TD PORT="events_size">track_length</TD><TD>TrackEvents</TD><TD PORT="events_type">events</TD></TR>
+				<TR><TD PORT="len_events_pos">4</TD><TD PORT="len_events_size">4</TD><TD>u4be</TD><TD PORT="len_events_type">len_events</TD></TR>
+				<TR><TD PORT="events_pos">8</TD><TD PORT="events_size">len_events</TD><TD>TrackEvents</TD><TD PORT="events_type">events</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__meta_event_body {
@@ -138,9 +138,9 @@ track_event__seq_event_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELL
 			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>4D 54 68 64</TD><TD PORT="magic_type">magic</TD></TR>
-				<TR><TD PORT="header_length_pos">4</TD><TD PORT="header_length_size">4</TD><TD>u4be</TD><TD PORT="header_length_type">header_length</TD></TR>
+				<TR><TD PORT="len_header_pos">4</TD><TD PORT="len_header_size">4</TD><TD>u4be</TD><TD PORT="len_header_type">len_header</TD></TR>
 				<TR><TD PORT="format_pos">8</TD><TD PORT="format_size">2</TD><TD>u2be</TD><TD PORT="format_type">format</TD></TR>
-				<TR><TD PORT="qty_tracks_pos">10</TD><TD PORT="qty_tracks_size">2</TD><TD>u2be</TD><TD PORT="qty_tracks_type">qty_tracks</TD></TR>
+				<TR><TD PORT="num_tracks_pos">10</TD><TD PORT="num_tracks_size">2</TD><TD>u2be</TD><TD PORT="num_tracks_type">num_tracks</TD></TR>
 				<TR><TD PORT="division_pos">12</TD><TD PORT="division_size">2</TD><TD>s2be</TD><TD PORT="division_type">division</TD></TR>
 			</TABLE>>];
 		}
@@ -176,7 +176,7 @@ track_event__seq_event_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELL
 	}
 	standard_midi_file__seq:hdr_type -> header__seq [style=bold];
 	standard_midi_file__seq:tracks_type -> track__seq [style=bold];
-	header__seq:qty_tracks_type -> standard_midi_file__seq:tracks__repeat [color="#404040"];
+	header__seq:num_tracks_type -> standard_midi_file__seq:tracks__repeat [color="#404040"];
 	track_events__seq:event_type -> track_event__seq [style=bold];
 	track_event__seq:v_time_type -> vlq_base128_be__seq [style=bold];
 	track_event__seq:meta_event_body_type -> meta_event_body__seq [style=bold];
@@ -195,7 +195,7 @@ track_event__seq_event_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELL
 	pitch_bend_event__seq:b2_type -> pitch_bend_event__inst__bend_value [color="#404040"];
 	pitch_bend_event__seq:b1_type -> pitch_bend_event__inst__bend_value [color="#404040"];
 	pitch_bend_event__inst__bend_value:bend_value_type -> pitch_bend_event__inst__adj_bend_value [color="#404040"];
-	track__seq:track_length_type -> track__seq:events_size [color="#404040"];
+	track__seq:len_events_type -> track__seq:events_size [color="#404040"];
 	track__seq:events_type -> track_events__seq [style=bold];
 	meta_event_body__seq:len_type -> vlq_base128_be__seq [style=bold];
 	vlq_base128_be__inst__value:value_type -> meta_event_body__seq:body_size [color="#404040"];

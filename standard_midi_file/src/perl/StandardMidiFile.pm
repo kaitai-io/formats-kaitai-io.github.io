@@ -37,7 +37,7 @@ sub _read {
 
     $self->{hdr} = StandardMidiFile::Header->new($self->{_io}, $self, $self->{_root});
     $self->{tracks} = ();
-    my $n_tracks = $self->hdr()->qty_tracks();
+    my $n_tracks = $self->hdr()->num_tracks();
     for (my $i = 0; $i < $n_tracks; $i++) {
         $self->{tracks}[$i] = StandardMidiFile::Track->new($self->{_io}, $self, $self->{_root});
     }
@@ -412,8 +412,8 @@ sub _read {
     my ($self) = @_;
 
     $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (77, 84, 114, 107)));
-    $self->{track_length} = $self->{_io}->read_u4be();
-    $self->{_raw_events} = $self->{_io}->read_bytes($self->track_length());
+    $self->{len_events} = $self->{_io}->read_u4be();
+    $self->{_raw_events} = $self->{_io}->read_bytes($self->len_events());
     my $io__raw_events = IO::KaitaiStruct::Stream->new($self->{_raw_events});
     $self->{events} = StandardMidiFile::TrackEvents->new($io__raw_events, $self, $self->{_root});
 }
@@ -423,9 +423,9 @@ sub magic {
     return $self->{magic};
 }
 
-sub track_length {
+sub len_events {
     my ($self) = @_;
-    return $self->{track_length};
+    return $self->{len_events};
 }
 
 sub events {
@@ -579,9 +579,9 @@ sub _read {
     my ($self) = @_;
 
     $self->{magic} = $self->{_io}->ensure_fixed_contents(pack('C*', (77, 84, 104, 100)));
-    $self->{header_length} = $self->{_io}->read_u4be();
+    $self->{len_header} = $self->{_io}->read_u4be();
     $self->{format} = $self->{_io}->read_u2be();
-    $self->{qty_tracks} = $self->{_io}->read_u2be();
+    $self->{num_tracks} = $self->{_io}->read_u2be();
     $self->{division} = $self->{_io}->read_s2be();
 }
 
@@ -590,9 +590,9 @@ sub magic {
     return $self->{magic};
 }
 
-sub header_length {
+sub len_header {
     my ($self) = @_;
-    return $self->{header_length};
+    return $self->{len_header};
 }
 
 sub format {
@@ -600,9 +600,9 @@ sub format {
     return $self->{format};
 }
 
-sub qty_tracks {
+sub num_tracks {
     my ($self) = @_;
-    return $self->{qty_tracks};
+    return $self->{num_tracks};
 }
 
 sub division {

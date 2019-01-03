@@ -13,6 +13,23 @@
 #endif
 class vlq_base128_be_t;
 
+/**
+ * Standard MIDI file, typically knows just as "MID", is a standard way
+ * to serialize series of MIDI events, which is a protocol used in many
+ * music synthesizers to transfer music data: notes being played,
+ * effects being applied, etc.
+ * 
+ * Internally, file consists of a header and series of tracks, every
+ * track listing MIDI events with certain header designating time these
+ * events are happening.
+ * 
+ * NOTE: Rarely, MIDI files employ certain stateful compression scheme
+ * to avoid storing certain elements of further elements, instead
+ * reusing them from events which happened earlier in the
+ * stream. Kaitai Struct (as of v0.9) is currently unable to parse
+ * these, but files employing this mechanism are relatively rare.
+ */
+
 class standard_midi_file_t : public kaitai::kstruct {
 
 public:
@@ -256,7 +273,7 @@ public:
 
     private:
         std::string m_magic;
-        uint32_t m_track_length;
+        uint32_t m_len_events;
         track_events_t* m_events;
         standard_midi_file_t* m__root;
         standard_midi_file_t* m__parent;
@@ -265,7 +282,7 @@ public:
 
     public:
         std::string magic() const { return m_magic; }
-        uint32_t track_length() const { return m_track_length; }
+        uint32_t len_events() const { return m_len_events; }
         track_events_t* events() const { return m_events; }
         standard_midi_file_t* _root() const { return m__root; }
         standard_midi_file_t* _parent() const { return m__parent; }
@@ -357,18 +374,18 @@ public:
 
     private:
         std::string m_magic;
-        uint32_t m_header_length;
+        uint32_t m_len_header;
         uint16_t m_format;
-        uint16_t m_qty_tracks;
+        uint16_t m_num_tracks;
         int16_t m_division;
         standard_midi_file_t* m__root;
         standard_midi_file_t* m__parent;
 
     public:
         std::string magic() const { return m_magic; }
-        uint32_t header_length() const { return m_header_length; }
+        uint32_t len_header() const { return m_len_header; }
         uint16_t format() const { return m_format; }
-        uint16_t qty_tracks() const { return m_qty_tracks; }
+        uint16_t num_tracks() const { return m_num_tracks; }
         int16_t division() const { return m_division; }
         standard_midi_file_t* _root() const { return m__root; }
         standard_midi_file_t* _parent() const { return m__parent; }
