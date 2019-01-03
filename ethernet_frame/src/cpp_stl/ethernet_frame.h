@@ -13,6 +13,13 @@
 class ipv6_packet_t;
 class ipv4_packet_t;
 
+/**
+ * Ethernet frame is a OSI data link layer (layer 2) protocol data unit
+ * for Ethernet networks. In practice, many other networks and/or
+ * in-file dumps adopted the same format for encapsulation purposes.
+ * \sa Source
+ */
+
 class ethernet_frame_t : public kaitai::kstruct {
 
 public:
@@ -53,7 +60,15 @@ private:
     kaitai::kstream* m__io__raw_body;
 
 public:
+
+    /**
+     * Destination MAC address.
+     */
     std::string dst_mac() const { return m_dst_mac; }
+
+    /**
+     * Source MAC address.
+     */
     std::string src_mac() const { return m_src_mac; }
     ether_type_enum_t ether_type() const { return m_ether_type; }
     kaitai::kstruct* body() const { return m_body; }

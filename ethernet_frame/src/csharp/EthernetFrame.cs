@@ -4,6 +4,15 @@
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// Ethernet frame is a OSI data link layer (layer 2) protocol data unit
+    /// for Ethernet networks. In practice, many other networks and/or
+    /// in-file dumps adopted the same format for encapsulation purposes.
+    /// </summary>
+    /// <remarks>
+    /// Reference: <a href="https://ieeexplore.ieee.org/document/7428776">Source</a>
+    /// </remarks>
     public partial class EthernetFrame : KaitaiStruct
     {
         public static EthernetFrame FromFile(string fileName)
@@ -60,7 +69,15 @@ namespace Kaitai
         private EthernetFrame m_root;
         private KaitaiStruct m_parent;
         private byte[] __raw_body;
+
+        /// <summary>
+        /// Destination MAC address.
+        /// </summary>
         public byte[] DstMac { get { return _dstMac; } }
+
+        /// <summary>
+        /// Source MAC address.
+        /// </summary>
         public byte[] SrcMac { get { return _srcMac; } }
         public EtherTypeEnum EtherType { get { return _etherType; } }
         public object Body { get { return _body; } }

@@ -7,6 +7,13 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 
+
+/**
+ * Ethernet frame is a OSI data link layer (layer 2) protocol data unit
+ * for Ethernet networks. In practice, many other networks and/or
+ * in-file dumps adopted the same format for encapsulation purposes.
+ * @see <a href="https://ieeexplore.ieee.org/document/7428776">Source</a>
+ */
 public class EthernetFrame extends KaitaiStruct {
     public static EthernetFrame fromFile(String fileName) throws IOException {
         return new EthernetFrame(new ByteBufferKaitaiStream(fileName));
@@ -77,7 +84,15 @@ public class EthernetFrame extends KaitaiStruct {
     private EthernetFrame _root;
     private KaitaiStruct _parent;
     private byte[] _raw_body;
+
+    /**
+     * Destination MAC address.
+     */
     public byte[] dstMac() { return dstMac; }
+
+    /**
+     * Source MAC address.
+     */
     public byte[] srcMac() { return srcMac; }
     public EtherTypeEnum etherType() { return etherType; }
     public Object body() { return body; }

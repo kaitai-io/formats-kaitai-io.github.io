@@ -10,6 +10,10 @@ import java.util.ArrayList;
 
 
 /**
+ * PCAP (named after libpcap / winpcap) is a popular format for saving
+ * network traffic grabbed by network sniffers. It is typically
+ * produced by tools like [tcpdump](https://www.tcpdump.org/) or
+ * [Wireshark](https://www.wireshark.org/).
  * @see <a href="http://wiki.wireshark.org/Development/LibpcapFileFormat">Source</a>
  */
 public class Pcap extends KaitaiStruct {

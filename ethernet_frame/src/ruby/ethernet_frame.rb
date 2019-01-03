@@ -6,6 +6,12 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# Ethernet frame is a OSI data link layer (layer 2) protocol data unit
+# for Ethernet networks. In practice, many other networks and/or
+# in-file dumps adopted the same format for encapsulation purposes.
+# @see https://ieeexplore.ieee.org/document/7428776 Source
 class EthernetFrame < Kaitai::Struct::Struct
 
   ETHER_TYPE_ENUM = {
@@ -42,7 +48,13 @@ class EthernetFrame < Kaitai::Struct::Struct
     end
     self
   end
+
+  ##
+  # Destination MAC address.
   attr_reader :dst_mac
+
+  ##
+  # Source MAC address.
   attr_reader :src_mac
   attr_reader :ether_type
   attr_reader :body

@@ -1,6 +1,12 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * Ethernet frame is a OSI data link layer (layer 2) protocol data unit
+ * for Ethernet networks. In practice, many other networks and/or
+ * in-file dumps adopted the same format for encapsulation purposes.
+ */
+
 class EthernetFrame extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \EthernetFrame $_root = null) {
         parent::__construct($_io, $_parent, $_root);
@@ -32,7 +38,15 @@ class EthernetFrame extends \Kaitai\Struct\Struct {
     protected $_m_etherType;
     protected $_m_body;
     protected $_m__raw_body;
+
+    /**
+     * Destination MAC address.
+     */
     public function dstMac() { return $this->_m_dstMac; }
+
+    /**
+     * Source MAC address.
+     */
     public function srcMac() { return $this->_m_srcMac; }
     public function etherType() { return $this->_m_etherType; }
     public function body() { return $this->_m_body; }

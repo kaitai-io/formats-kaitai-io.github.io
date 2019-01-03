@@ -11,6 +11,13 @@ if parse_version(ks_version) < parse_version('0.7'):
 from ipv6_packet import Ipv6Packet
 from ipv4_packet import Ipv4Packet
 class EthernetFrame(KaitaiStruct):
+    """Ethernet frame is a OSI data link layer (layer 2) protocol data unit
+    for Ethernet networks. In practice, many other networks and/or
+    in-file dumps adopted the same format for encapsulation purposes.
+    
+    .. seealso::
+       Source - https://ieeexplore.ieee.org/document/7428776
+    """
 
     class EtherTypeEnum(Enum):
         ipv4 = 2048

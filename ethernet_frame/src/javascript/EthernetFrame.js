@@ -9,6 +9,13 @@
     root.EthernetFrame = factory(root.KaitaiStream, root.Ipv6Packet, root.Ipv4Packet);
   }
 }(this, function (KaitaiStream, Ipv6Packet, Ipv4Packet) {
+/**
+ * Ethernet frame is a OSI data link layer (layer 2) protocol data unit
+ * for Ethernet networks. In practice, many other networks and/or
+ * in-file dumps adopted the same format for encapsulation purposes.
+ * @see {@link https://ieeexplore.ieee.org/document/7428776|Source}
+ */
+
 var EthernetFrame = (function() {
   EthernetFrame.EtherTypeEnum = Object.freeze({
     IPV4: 2048,
@@ -57,6 +64,14 @@ var EthernetFrame = (function() {
       break;
     }
   }
+
+  /**
+   * Destination MAC address.
+   */
+
+  /**
+   * Source MAC address.
+   */
 
   return EthernetFrame;
 })();
