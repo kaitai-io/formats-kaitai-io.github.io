@@ -6,6 +6,12 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# TCP is one of the core Internet protocols on transport layer (AKA
+# OSI layer 4), providing stateful connections with error checking,
+# guarantees of delivery, order of segments and avoidance of duplicate
+# delivery.
 class TcpSegment < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

@@ -8,6 +8,11 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 class TcpSegment(KaitaiStruct):
+    """TCP is one of the core Internet protocols on transport layer (AKA
+    OSI layer 4), providing stateful connections with error checking,
+    guarantees of delivery, order of segments and avoidance of duplicate
+    delivery.
+    """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent

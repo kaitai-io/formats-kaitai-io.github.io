@@ -1,6 +1,13 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * TCP is one of the core Internet protocols on transport layer (AKA
+ * OSI layer 4), providing stateful connections with error checking,
+ * guarantees of delivery, order of segments and avoidance of duplicate
+ * delivery.
+ */
+
 class TcpSegment extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \TcpSegment $_root = null) {
         parent::__construct($_io, $_parent, $_root);

@@ -4,6 +4,13 @@
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// TCP is one of the core Internet protocols on transport layer (AKA
+    /// OSI layer 4), providing stateful connections with error checking,
+    /// guarantees of delivery, order of segments and avoidance of duplicate
+    /// delivery.
+    /// </summary>
     public partial class TcpSegment : KaitaiStruct
     {
         public static TcpSegment FromFile(string fileName)

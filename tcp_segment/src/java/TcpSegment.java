@@ -5,6 +5,13 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 
+
+/**
+ * TCP is one of the core Internet protocols on transport layer (AKA
+ * OSI layer 4), providing stateful connections with error checking,
+ * guarantees of delivery, order of segments and avoidance of duplicate
+ * delivery.
+ */
 public class TcpSegment extends KaitaiStruct {
     public static TcpSegment fromFile(String fileName) throws IOException {
         return new TcpSegment(new ByteBufferKaitaiStream(fileName));

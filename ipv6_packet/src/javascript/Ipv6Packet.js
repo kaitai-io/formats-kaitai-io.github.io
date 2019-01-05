@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './UdpDatagram', './TcpSegment', './Ipv4Packet'], factory);
+    define(['kaitai-struct/KaitaiStream', './UdpDatagram', './Ipv4Packet', './TcpSegment'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./UdpDatagram'), require('./TcpSegment'), require('./Ipv4Packet'));
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./UdpDatagram'), require('./Ipv4Packet'), require('./TcpSegment'));
   } else {
-    root.Ipv6Packet = factory(root.KaitaiStream, root.UdpDatagram, root.TcpSegment, root.Ipv4Packet);
+    root.Ipv6Packet = factory(root.KaitaiStream, root.UdpDatagram, root.Ipv4Packet, root.TcpSegment);
   }
-}(this, function (KaitaiStream, UdpDatagram, TcpSegment, Ipv4Packet) {
+}(this, function (KaitaiStream, UdpDatagram, Ipv4Packet, TcpSegment) {
 var Ipv6Packet = (function() {
   function Ipv6Packet(_io, _parent, _root) {
     this._io = _io;

@@ -11,6 +11,13 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 
+/**
+ * TCP is one of the core Internet protocols on transport layer (AKA
+ * OSI layer 4), providing stateful connections with error checking,
+ * guarantees of delivery, order of segments and avoidance of duplicate
+ * delivery.
+ */
+
 class tcp_segment_t : public kaitai::kstruct {
 
 public:

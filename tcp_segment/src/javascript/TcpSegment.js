@@ -9,6 +9,13 @@
     root.TcpSegment = factory(root.KaitaiStream);
   }
 }(this, function (KaitaiStream) {
+/**
+ * TCP is one of the core Internet protocols on transport layer (AKA
+ * OSI layer 4), providing stateful connections with error checking,
+ * guarantees of delivery, order of segments and avoidance of duplicate
+ * delivery.
+ */
+
 var TcpSegment = (function() {
   function TcpSegment(_io, _parent, _root) {
     this._io = _io;

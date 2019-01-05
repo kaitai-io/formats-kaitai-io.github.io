@@ -4,8 +4,8 @@ use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
 use UdpDatagram;
-use TcpSegment;
 use Ipv4Packet;
+use TcpSegment;
 
 ########################################################################
 package Ipv6Packet;
