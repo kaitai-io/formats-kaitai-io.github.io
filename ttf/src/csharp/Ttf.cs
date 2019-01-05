@@ -5,6 +5,14 @@ using System.Linq;
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// A TrueType font file contains data, in table format, that comprises
+    /// an outline font.
+    /// </summary>
+    /// <remarks>
+    /// Reference: <a href="https://www.microsoft.com/typography/tt/ttf_spec/ttch02.doc">Source</a>
+    /// </remarks>
     public partial class Ttf : KaitaiStruct
     {
         public static Ttf FromFile(string fileName)

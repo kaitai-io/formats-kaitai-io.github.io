@@ -9,6 +9,12 @@
     root.Ttf = factory(root.KaitaiStream);
   }
 }(this, function (KaitaiStream) {
+/**
+ * A TrueType font file contains data, in table format, that comprises
+ * an outline font.
+ * @see {@link https://www.microsoft.com/typography/tt/ttf_spec/ttch02.doc|Source}
+ */
+
 var Ttf = (function() {
   function Ttf(_io, _parent, _root) {
     this._io = _io;

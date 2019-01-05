@@ -6,6 +6,11 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.7')
   raise "Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# A TrueType font file contains data, in table format, that comprises
+# an outline font.
+# @see https://www.microsoft.com/typography/tt/ttf_spec/ttch02.doc Source
 class Ttf < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

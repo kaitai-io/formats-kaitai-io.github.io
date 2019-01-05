@@ -12,6 +12,12 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 
+/**
+ * A TrueType font file contains data, in table format, that comprises
+ * an outline font.
+ * \sa Source
+ */
+
 class ttf_t : public kaitai::kstruct {
 
 public:

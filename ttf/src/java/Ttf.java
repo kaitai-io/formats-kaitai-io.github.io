@@ -10,6 +10,12 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Collections;
 
+
+/**
+ * A TrueType font file contains data, in table format, that comprises
+ * an outline font.
+ * @see <a href="https://www.microsoft.com/typography/tt/ttf_spec/ttch02.doc">Source</a>
+ */
 public class Ttf extends KaitaiStruct {
     public static Ttf fromFile(String fileName) throws IOException {
         return new Ttf(new ByteBufferKaitaiStream(fileName));

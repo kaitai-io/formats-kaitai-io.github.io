@@ -9,6 +9,12 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 class Ttf(KaitaiStruct):
+    """A TrueType font file contains data, in table format, that comprises
+    an outline font.
+    
+    .. seealso::
+       Source - https://www.microsoft.com/typography/tt/ttf_spec/ttch02.doc
+    """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
