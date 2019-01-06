@@ -9,6 +9,21 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
+
+/**
+ * Blender is an open source suite for 3D modelling, sculpting,
+ * animation, compositing, rendering, preparation of assets for its own
+ * game engine and exporting to others, etc. `.blend` is its own binary
+ * format that saves whole state of suite: current scene, animations,
+ * all software settings, extensions, etc.
+ * 
+ * Internally, .blend format is a hybrid semi-self-descriptive
+ * format. On top level, it contains a simple header and a sequence of
+ * file blocks, which more or less follow typical [TLV
+ * pattern](https://en.wikipedia.org/wiki/Type-length-value). Pre-last
+ * block would be a structure with code `DNA1`, which is a essentially
+ * a machine-readable schema of all other structures used in this file.
+ */
 public class BlenderBlend extends KaitaiStruct {
     public static BlenderBlend fromFile(String fileName) throws IOException {
         return new BlenderBlend(new ByteBufferKaitaiStream(fileName));
@@ -69,6 +84,11 @@ public class BlenderBlend extends KaitaiStruct {
             }
         }
     }
+
+    /**
+     * DNA struct contains a `type` (type name), which is specified as
+     * an index in types table, and sequence of fields.
+     */
     public static class DnaStruct extends KaitaiStruct {
         public static DnaStruct fromFile(String fileName) throws IOException {
             return new DnaStruct(new ByteBufferKaitaiStream(fileName));
@@ -202,6 +222,17 @@ public class BlenderBlend extends KaitaiStruct {
     }
 
     /**
+     * DNA1, also known as "Structure DNA", is a special block in
+     * .blend file, which contains machine-readable specifications of
+     * all other structures used in this .blend file.
+     * 
+     * Effectively, this block contains:
+     * 
+     * * a sequence of "names" (strings which represent field names)
+     * * a sequence of "types" (strings which represent type name)
+     * * a sequence of "type lengths"
+     * * a sequence of "structs" (which describe contents of every
+     *   structure, referring to types and names by index)
      * @see <a href="https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA">Source</a>
      */
     public static class Dna1Body extends KaitaiStruct {

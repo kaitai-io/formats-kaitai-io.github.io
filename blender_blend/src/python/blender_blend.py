@@ -9,6 +9,19 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 class BlenderBlend(KaitaiStruct):
+    """Blender is an open source suite for 3D modelling, sculpting,
+    animation, compositing, rendering, preparation of assets for its own
+    game engine and exporting to others, etc. `.blend` is its own binary
+    format that saves whole state of suite: current scene, animations,
+    all software settings, extensions, etc.
+    
+    Internally, .blend format is a hybrid semi-self-descriptive
+    format. On top level, it contains a simple header and a sequence of
+    file blocks, which more or less follow typical [TLV
+    pattern](https://en.wikipedia.org/wiki/Type-length-value). Pre-last
+    block would be a structure with code `DNA1`, which is a essentially
+    a machine-readable schema of all other structures used in this file.
+    """
 
     class PtrSize(Enum):
         bits_64 = 45
@@ -33,6 +46,9 @@ class BlenderBlend(KaitaiStruct):
 
 
     class DnaStruct(KaitaiStruct):
+        """DNA struct contains a `type` (type name), which is specified as
+        an index in types table, and sequence of fields.
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -89,7 +105,18 @@ class BlenderBlend(KaitaiStruct):
 
 
     class Dna1Body(KaitaiStruct):
-        """
+        """DNA1, also known as "Structure DNA", is a special block in
+        .blend file, which contains machine-readable specifications of
+        all other structures used in this .blend file.
+        
+        Effectively, this block contains:
+        
+        * a sequence of "names" (strings which represent field names)
+        * a sequence of "types" (strings which represent type name)
+        * a sequence of "type lengths"
+        * a sequence of "structs" (which describe contents of every
+          structure, referring to types and names by index)
+        
         .. seealso::
            Source - https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA
         """

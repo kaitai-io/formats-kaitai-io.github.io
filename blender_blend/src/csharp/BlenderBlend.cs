@@ -4,6 +4,21 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// Blender is an open source suite for 3D modelling, sculpting,
+    /// animation, compositing, rendering, preparation of assets for its own
+    /// game engine and exporting to others, etc. `.blend` is its own binary
+    /// format that saves whole state of suite: current scene, animations,
+    /// all software settings, extensions, etc.
+    /// 
+    /// Internally, .blend format is a hybrid semi-self-descriptive
+    /// format. On top level, it contains a simple header and a sequence of
+    /// file blocks, which more or less follow typical [TLV
+    /// pattern](https://en.wikipedia.org/wiki/Type-length-value). Pre-last
+    /// block would be a structure with code `DNA1`, which is a essentially
+    /// a machine-readable schema of all other structures used in this file.
+    /// </summary>
     public partial class BlenderBlend : KaitaiStruct
     {
         public static BlenderBlend FromFile(string fileName)
@@ -42,6 +57,11 @@ namespace Kaitai
                 }
             }
         }
+
+        /// <summary>
+        /// DNA struct contains a `type` (type name), which is specified as
+        /// an index in types table, and sequence of fields.
+        /// </summary>
         public partial class DnaStruct : KaitaiStruct
         {
             public static DnaStruct FromFile(string fileName)
@@ -179,6 +199,19 @@ namespace Kaitai
             public byte[] M_RawBody { get { return __raw_body; } }
         }
 
+        /// <summary>
+        /// DNA1, also known as &quot;Structure DNA&quot;, is a special block in
+        /// .blend file, which contains machine-readable specifications of
+        /// all other structures used in this .blend file.
+        /// 
+        /// Effectively, this block contains:
+        /// 
+        /// * a sequence of &quot;names&quot; (strings which represent field names)
+        /// * a sequence of &quot;types&quot; (strings which represent type name)
+        /// * a sequence of &quot;type lengths&quot;
+        /// * a sequence of &quot;structs&quot; (which describe contents of every
+        ///   structure, referring to types and names by index)
+        /// </summary>
         /// <remarks>
         /// Reference: <a href="https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA">Source</a>
         /// </remarks>
