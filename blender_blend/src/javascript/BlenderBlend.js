@@ -43,6 +43,138 @@ var BlenderBlend = (function() {
     }
   }
 
+  var DnaStruct = BlenderBlend.DnaStruct = (function() {
+    function DnaStruct(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    DnaStruct.prototype._read = function() {
+      this.idxType = this._io.readU2le();
+      this.numFields = this._io.readU2le();
+      this.fields = new Array(this.numFields);
+      for (var i = 0; i < this.numFields; i++) {
+        this.fields[i] = new DnaField(this._io, this, this._root);
+      }
+    }
+    Object.defineProperty(DnaStruct.prototype, 'type', {
+      get: function() {
+        if (this._m_type !== undefined)
+          return this._m_type;
+        this._m_type = this._parent.types[this.idxType];
+        return this._m_type;
+      }
+    });
+
+    return DnaStruct;
+  })();
+
+  var FileBlock = BlenderBlend.FileBlock = (function() {
+    function FileBlock(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    FileBlock.prototype._read = function() {
+      this.code = KaitaiStream.bytesToStr(this._io.readBytes(4), "ASCII");
+      this.lenBody = this._io.readU4le();
+      this.memAddr = this._io.readBytes(this._root.hdr.psize);
+      this.sdnaIndex = this._io.readU4le();
+      this.count = this._io.readU4le();
+      switch (this.code) {
+      case "DNA1":
+        this._raw_body = this._io.readBytes(this.lenBody);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new Dna1Body(_io__raw_body, this, this._root);
+        break;
+      default:
+        this.body = this._io.readBytes(this.lenBody);
+        break;
+      }
+    }
+    Object.defineProperty(FileBlock.prototype, 'sdnaStruct', {
+      get: function() {
+        if (this._m_sdnaStruct !== undefined)
+          return this._m_sdnaStruct;
+        if (this.sdnaIndex != 0) {
+          this._m_sdnaStruct = this._root.sdnaStructs[this.sdnaIndex];
+        }
+        return this._m_sdnaStruct;
+      }
+    });
+
+    /**
+     * Identifier of the file block
+     */
+
+    /**
+     * Total length of the data after the header of file block
+     */
+
+    /**
+     * Memory address the structure was located when written to disk
+     */
+
+    /**
+     * Index of the SDNA structure
+     */
+
+    /**
+     * Number of structure located in this file-block
+     */
+
+    return FileBlock;
+  })();
+
+  /**
+   * @see {@link https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA|Source}
+   */
+
+  var Dna1Body = BlenderBlend.Dna1Body = (function() {
+    function Dna1Body(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Dna1Body.prototype._read = function() {
+      this.id = this._io.ensureFixedContents([83, 68, 78, 65]);
+      this.nameMagic = this._io.ensureFixedContents([78, 65, 77, 69]);
+      this.numNames = this._io.readU4le();
+      this.names = new Array(this.numNames);
+      for (var i = 0; i < this.numNames; i++) {
+        this.names[i] = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8");
+      }
+      this.padding1 = this._io.readBytes(KaitaiStream.mod((4 - this._io.pos), 4));
+      this.typeMagic = this._io.ensureFixedContents([84, 89, 80, 69]);
+      this.numTypes = this._io.readU4le();
+      this.types = new Array(this.numTypes);
+      for (var i = 0; i < this.numTypes; i++) {
+        this.types[i] = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8");
+      }
+      this.padding2 = this._io.readBytes(KaitaiStream.mod((4 - this._io.pos), 4));
+      this.tlenMagic = this._io.ensureFixedContents([84, 76, 69, 78]);
+      this.lengths = new Array(this.numTypes);
+      for (var i = 0; i < this.numTypes; i++) {
+        this.lengths[i] = this._io.readU2le();
+      }
+      this.padding3 = this._io.readBytes(KaitaiStream.mod((4 - this._io.pos), 4));
+      this.strcMagic = this._io.ensureFixedContents([83, 84, 82, 67]);
+      this.numStructs = this._io.readU4le();
+      this.structs = new Array(this.numStructs);
+      for (var i = 0; i < this.numStructs; i++) {
+        this.structs[i] = new DnaStruct(this._io, this, this._root);
+      }
+    }
+
+    return Dna1Body;
+  })();
+
   var Header = BlenderBlend.Header = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
@@ -85,45 +217,45 @@ var BlenderBlend = (function() {
     return Header;
   })();
 
-  var FileBlock = BlenderBlend.FileBlock = (function() {
-    function FileBlock(_io, _parent, _root) {
+  var DnaField = BlenderBlend.DnaField = (function() {
+    function DnaField(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
       this._root = _root || this;
 
       this._read();
     }
-    FileBlock.prototype._read = function() {
-      this.code = KaitaiStream.bytesToStr(this._io.readBytes(4), "ASCII");
-      this.size = this._io.readU4le();
-      this.memAddr = this._io.readBytes(this._root.hdr.psize);
-      this.sdnaIndex = this._io.readU4le();
-      this.count = this._io.readU4le();
-      this.body = this._io.readBytes(this.size);
+    DnaField.prototype._read = function() {
+      this.idxType = this._io.readU2le();
+      this.idxName = this._io.readU2le();
     }
+    Object.defineProperty(DnaField.prototype, 'type', {
+      get: function() {
+        if (this._m_type !== undefined)
+          return this._m_type;
+        this._m_type = this._parent._parent.types[this.idxType];
+        return this._m_type;
+      }
+    });
+    Object.defineProperty(DnaField.prototype, 'name', {
+      get: function() {
+        if (this._m_name !== undefined)
+          return this._m_name;
+        this._m_name = this._parent._parent.names[this.idxName];
+        return this._m_name;
+      }
+    });
 
-    /**
-     * Identifier of the file block
-     */
-
-    /**
-     * Total length of the data after the header of file block
-     */
-
-    /**
-     * Memory address the structure was located when written to disk
-     */
-
-    /**
-     * Index of the SDNA structure
-     */
-
-    /**
-     * Number of structure located in this file-block
-     */
-
-    return FileBlock;
+    return DnaField;
   })();
+  Object.defineProperty(BlenderBlend.prototype, 'sdnaStructs', {
+    get: function() {
+      if (this._m_sdnaStructs !== undefined)
+        return this._m_sdnaStructs;
+      this._m_sdnaStructs = this.blocks[(this.blocks.length - 2)].body.structs;
+      return this._m_sdnaStructs;
+    }
+  });
 
   return BlenderBlend;
 })();

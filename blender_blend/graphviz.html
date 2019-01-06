@@ -241,6 +241,75 @@ section#format-index .row {
 			&lt;TR&gt;&lt;TD PORT=&quot;blocks_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;blocks_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;FileBlock&lt;/TD&gt;&lt;TD PORT=&quot;blocks_type&quot;&gt;blocks&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;blocks__repeat&quot;&gt;repeat to end of stream&lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
+		blender_blend__inst__sdna_structs [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD&gt;sdna_structs&lt;/TD&gt;&lt;TD&gt;blocks[(blocks.length - 2)].body.structs&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		subgraph cluster__dna_struct {
+			label=&quot;BlenderBlend::DnaStruct&quot;;
+			graph[style=dotted];
+
+			dna_struct__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;idx_type_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;idx_type_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;idx_type_type&quot;&gt;idx_type&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;num_fields_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;num_fields_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;num_fields_type&quot;&gt;num_fields&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;fields_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;fields_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;DnaField&lt;/TD&gt;&lt;TD PORT=&quot;fields_type&quot;&gt;fields&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;fields__repeat&quot;&gt;repeat num_fields times&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			dna_struct__inst__type [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD&gt;type&lt;/TD&gt;&lt;TD&gt;_parent.types[idx_type]&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__file_block {
+			label=&quot;BlenderBlend::FileBlock&quot;;
+			graph[style=dotted];
+
+			file_block__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;code_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;code_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;str(ASCII)&lt;/TD&gt;&lt;TD PORT=&quot;code_type&quot;&gt;code&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_body_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;len_body_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_body_type&quot;&gt;len_body&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;mem_addr_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;mem_addr_size&quot;&gt;_root.hdr.psize&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;mem_addr_type&quot;&gt;mem_addr&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;sdna_index_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;sdna_index_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;sdna_index_type&quot;&gt;sdna_index&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;count_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;count_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;count_type&quot;&gt;count&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (code)&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			file_block__inst__sdna_struct [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD&gt;sdna_struct&lt;/TD&gt;&lt;TD&gt;_root.sdna_structs[sdna_index]&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+file_block__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;&amp;quot;DNA1&amp;quot;&lt;/TD&gt;&lt;TD PORT=&quot;case0&quot;&gt;Dna1Body&lt;/TD&gt;&lt;/TR&gt;
+&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__dna1_body {
+			label=&quot;BlenderBlend::Dna1Body&quot;;
+			graph[style=dotted];
+
+			dna1_body__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;id_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;id_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;53 44 4E 41&lt;/TD&gt;&lt;TD PORT=&quot;id_type&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;name_magic_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;name_magic_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;4E 41 4D 45&lt;/TD&gt;&lt;TD PORT=&quot;name_magic_type&quot;&gt;name_magic&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;num_names_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;num_names_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;num_names_type&quot;&gt;num_names&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;names_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;names_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;names_type&quot;&gt;names&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;names__repeat&quot;&gt;repeat num_names times&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;padding_1_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;padding_1_size&quot;&gt;((4 - _io.pos) % 4)&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;padding_1_type&quot;&gt;padding_1&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;type_magic_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;type_magic_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;54 59 50 45&lt;/TD&gt;&lt;TD PORT=&quot;type_magic_type&quot;&gt;type_magic&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;num_types_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;num_types_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;num_types_type&quot;&gt;num_types&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;types_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;types_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;types_type&quot;&gt;types&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;types__repeat&quot;&gt;repeat num_types times&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;padding_2_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;padding_2_size&quot;&gt;((4 - _io.pos) % 4)&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;padding_2_type&quot;&gt;padding_2&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;tlen_magic_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;tlen_magic_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;54 4C 45 4E&lt;/TD&gt;&lt;TD PORT=&quot;tlen_magic_type&quot;&gt;tlen_magic&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;lengths_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;lengths_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;lengths_type&quot;&gt;lengths&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;lengths__repeat&quot;&gt;repeat num_types times&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;padding_3_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;padding_3_size&quot;&gt;((4 - _io.pos) % 4)&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;padding_3_type&quot;&gt;padding_3&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;strc_magic_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;strc_magic_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;53 54 52 43&lt;/TD&gt;&lt;TD PORT=&quot;strc_magic_type&quot;&gt;strc_magic&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;num_structs_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;num_structs_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;num_structs_type&quot;&gt;num_structs&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;structs_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;structs_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;DnaStruct&lt;/TD&gt;&lt;TD PORT=&quot;structs_type&quot;&gt;structs&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;structs__repeat&quot;&gt;repeat num_structs times&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
 		subgraph cluster__header {
 			label=&quot;BlenderBlend::Header&quot;;
 			graph[style=dotted];
@@ -257,26 +326,48 @@ section#format-index .row {
 				&lt;TR&gt;&lt;TD&gt;psize&lt;/TD&gt;&lt;TD&gt;(ptr_size_id == :ptr_size_bits_64 ? 8 : 4)&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
-		subgraph cluster__file_block {
-			label=&quot;BlenderBlend::FileBlock&quot;;
+		subgraph cluster__dna_field {
+			label=&quot;BlenderBlend::DnaField&quot;;
 			graph[style=dotted];
 
-			file_block__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			dna_field__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;code_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;code_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;str(ASCII)&lt;/TD&gt;&lt;TD PORT=&quot;code_type&quot;&gt;code&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;size_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;size_type&quot;&gt;size&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;mem_addr_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;mem_addr_size&quot;&gt;_root.hdr.psize&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;mem_addr_type&quot;&gt;mem_addr&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;sdna_index_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;sdna_index_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;sdna_index_type&quot;&gt;sdna_index&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;count_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;count_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;count_type&quot;&gt;count&lt;/TD&gt;&lt;/TR&gt;
-				&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;idx_type_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;idx_type_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;idx_type_type&quot;&gt;idx_type&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;idx_name_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;idx_name_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2le&lt;/TD&gt;&lt;TD PORT=&quot;idx_name_type&quot;&gt;idx_name&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			dna_field__inst__type [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD&gt;type&lt;/TD&gt;&lt;TD&gt;_parent._parent.types[idx_type]&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			dna_field__inst__name [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD&gt;name&lt;/TD&gt;&lt;TD&gt;_parent._parent.names[idx_name]&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
 	}
 	blender_blend__seq:hdr_type -&gt; header__seq [style=bold];
 	blender_blend__seq:blocks_type -&gt; file_block__seq [style=bold];
-	header__seq:ptr_size_id_type -&gt; header__inst__psize [color=&quot;#404040&quot;];
+	dna1_body__seq:structs_type -&gt; blender_blend__inst__sdna_structs [color=&quot;#404040&quot;];
+	dna_struct__seq:fields_type -&gt; dna_field__seq [style=bold];
+	dna_struct__seq:num_fields_type -&gt; dna_struct__seq:fields__repeat [color=&quot;#404040&quot;];
+	dna1_body__seq:types_type -&gt; dna_struct__inst__type [color=&quot;#404040&quot;];
+	dna_struct__seq:idx_type_type -&gt; dna_struct__inst__type [color=&quot;#404040&quot;];
 	header__inst__psize:psize_type -&gt; file_block__seq:mem_addr_size [color=&quot;#404040&quot;];
-	file_block__seq:size_type -&gt; file_block__seq:body_size [color=&quot;#404040&quot;];
+	file_block__seq:body_type -&gt; file_block__seq_body_switch [style=bold];
+	file_block__seq_body_switch:case0 -&gt; dna1_body__seq [style=bold];
+	file_block__seq:code_type -&gt; file_block__seq:body_type [color=&quot;#404040&quot;];
+	blender_blend__inst__sdna_structs:sdna_structs_type -&gt; file_block__inst__sdna_struct [color=&quot;#404040&quot;];
+	file_block__seq:sdna_index_type -&gt; file_block__inst__sdna_struct [color=&quot;#404040&quot;];
+	dna1_body__seq:num_names_type -&gt; dna1_body__seq:names__repeat [color=&quot;#404040&quot;];
+	dna1_body__seq:num_types_type -&gt; dna1_body__seq:types__repeat [color=&quot;#404040&quot;];
+	dna1_body__seq:num_types_type -&gt; dna1_body__seq:lengths__repeat [color=&quot;#404040&quot;];
+	dna1_body__seq:structs_type -&gt; dna_struct__seq [style=bold];
+	dna1_body__seq:num_structs_type -&gt; dna1_body__seq:structs__repeat [color=&quot;#404040&quot;];
+	header__seq:ptr_size_id_type -&gt; header__inst__psize [color=&quot;#404040&quot;];
+	dna1_body__seq:types_type -&gt; dna_field__inst__type [color=&quot;#404040&quot;];
+	dna_field__seq:idx_type_type -&gt; dna_field__inst__type [color=&quot;#404040&quot;];
+	dna1_body__seq:names_type -&gt; dna_field__inst__name [color=&quot;#404040&quot;];
+	dna_field__seq:idx_name_type -&gt; dna_field__inst__name [color=&quot;#404040&quot;];
 }
 </code></pre>
             

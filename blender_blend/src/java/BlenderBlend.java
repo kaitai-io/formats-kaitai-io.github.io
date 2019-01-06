@@ -69,6 +69,224 @@ public class BlenderBlend extends KaitaiStruct {
             }
         }
     }
+    public static class DnaStruct extends KaitaiStruct {
+        public static DnaStruct fromFile(String fileName) throws IOException {
+            return new DnaStruct(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public DnaStruct(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public DnaStruct(KaitaiStream _io, BlenderBlend.Dna1Body _parent) {
+            this(_io, _parent, null);
+        }
+
+        public DnaStruct(KaitaiStream _io, BlenderBlend.Dna1Body _parent, BlenderBlend _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.idxType = this._io.readU2le();
+            this.numFields = this._io.readU2le();
+            fields = new ArrayList<DnaField>((int) (numFields()));
+            for (int i = 0; i < numFields(); i++) {
+                this.fields.add(new DnaField(this._io, this, _root));
+            }
+        }
+        private String type;
+        public String type() {
+            if (this.type != null)
+                return this.type;
+            this.type = _parent().types().get((int) idxType());
+            return this.type;
+        }
+        private int idxType;
+        private int numFields;
+        private ArrayList<DnaField> fields;
+        private BlenderBlend _root;
+        private BlenderBlend.Dna1Body _parent;
+        public int idxType() { return idxType; }
+        public int numFields() { return numFields; }
+        public ArrayList<DnaField> fields() { return fields; }
+        public BlenderBlend _root() { return _root; }
+        public BlenderBlend.Dna1Body _parent() { return _parent; }
+    }
+    public static class FileBlock extends KaitaiStruct {
+        public static FileBlock fromFile(String fileName) throws IOException {
+            return new FileBlock(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FileBlock(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FileBlock(KaitaiStream _io, BlenderBlend _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FileBlock(KaitaiStream _io, BlenderBlend _parent, BlenderBlend _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.code = new String(this._io.readBytes(4), Charset.forName("ASCII"));
+            this.lenBody = this._io.readU4le();
+            this.memAddr = this._io.readBytes(_root.hdr().psize());
+            this.sdnaIndex = this._io.readU4le();
+            this.count = this._io.readU4le();
+            switch (code()) {
+            case "DNA1": {
+                this._raw_body = this._io.readBytes(lenBody());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new Dna1Body(_io__raw_body, this, _root);
+                break;
+            }
+            default: {
+                this.body = this._io.readBytes(lenBody());
+                break;
+            }
+            }
+        }
+        private DnaStruct sdnaStruct;
+        public DnaStruct sdnaStruct() {
+            if (this.sdnaStruct != null)
+                return this.sdnaStruct;
+            if (sdnaIndex() != 0) {
+                this.sdnaStruct = _root.sdnaStructs().get((int) sdnaIndex());
+            }
+            return this.sdnaStruct;
+        }
+        private String code;
+        private long lenBody;
+        private byte[] memAddr;
+        private long sdnaIndex;
+        private long count;
+        private Object body;
+        private BlenderBlend _root;
+        private BlenderBlend _parent;
+        private byte[] _raw_body;
+
+        /**
+         * Identifier of the file block
+         */
+        public String code() { return code; }
+
+        /**
+         * Total length of the data after the header of file block
+         */
+        public long lenBody() { return lenBody; }
+
+        /**
+         * Memory address the structure was located when written to disk
+         */
+        public byte[] memAddr() { return memAddr; }
+
+        /**
+         * Index of the SDNA structure
+         */
+        public long sdnaIndex() { return sdnaIndex; }
+
+        /**
+         * Number of structure located in this file-block
+         */
+        public long count() { return count; }
+        public Object body() { return body; }
+        public BlenderBlend _root() { return _root; }
+        public BlenderBlend _parent() { return _parent; }
+        public byte[] _raw_body() { return _raw_body; }
+    }
+
+    /**
+     * @see <a href="https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA">Source</a>
+     */
+    public static class Dna1Body extends KaitaiStruct {
+        public static Dna1Body fromFile(String fileName) throws IOException {
+            return new Dna1Body(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Dna1Body(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Dna1Body(KaitaiStream _io, BlenderBlend.FileBlock _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Dna1Body(KaitaiStream _io, BlenderBlend.FileBlock _parent, BlenderBlend _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.id = this._io.ensureFixedContents(new byte[] { 83, 68, 78, 65 });
+            this.nameMagic = this._io.ensureFixedContents(new byte[] { 78, 65, 77, 69 });
+            this.numNames = this._io.readU4le();
+            names = new ArrayList<String>((int) (numNames()));
+            for (int i = 0; i < numNames(); i++) {
+                this.names.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8")));
+            }
+            this.padding1 = this._io.readBytes(KaitaiStream.mod((4 - _io().pos()), 4));
+            this.typeMagic = this._io.ensureFixedContents(new byte[] { 84, 89, 80, 69 });
+            this.numTypes = this._io.readU4le();
+            types = new ArrayList<String>((int) (numTypes()));
+            for (int i = 0; i < numTypes(); i++) {
+                this.types.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8")));
+            }
+            this.padding2 = this._io.readBytes(KaitaiStream.mod((4 - _io().pos()), 4));
+            this.tlenMagic = this._io.ensureFixedContents(new byte[] { 84, 76, 69, 78 });
+            lengths = new ArrayList<Integer>((int) (numTypes()));
+            for (int i = 0; i < numTypes(); i++) {
+                this.lengths.add(this._io.readU2le());
+            }
+            this.padding3 = this._io.readBytes(KaitaiStream.mod((4 - _io().pos()), 4));
+            this.strcMagic = this._io.ensureFixedContents(new byte[] { 83, 84, 82, 67 });
+            this.numStructs = this._io.readU4le();
+            structs = new ArrayList<DnaStruct>((int) (numStructs()));
+            for (int i = 0; i < numStructs(); i++) {
+                this.structs.add(new DnaStruct(this._io, this, _root));
+            }
+        }
+        private byte[] id;
+        private byte[] nameMagic;
+        private long numNames;
+        private ArrayList<String> names;
+        private byte[] padding1;
+        private byte[] typeMagic;
+        private long numTypes;
+        private ArrayList<String> types;
+        private byte[] padding2;
+        private byte[] tlenMagic;
+        private ArrayList<Integer> lengths;
+        private byte[] padding3;
+        private byte[] strcMagic;
+        private long numStructs;
+        private ArrayList<DnaStruct> structs;
+        private BlenderBlend _root;
+        private BlenderBlend.FileBlock _parent;
+        public byte[] id() { return id; }
+        public byte[] nameMagic() { return nameMagic; }
+        public long numNames() { return numNames; }
+        public ArrayList<String> names() { return names; }
+        public byte[] padding1() { return padding1; }
+        public byte[] typeMagic() { return typeMagic; }
+        public long numTypes() { return numTypes; }
+        public ArrayList<String> types() { return types; }
+        public byte[] padding2() { return padding2; }
+        public byte[] tlenMagic() { return tlenMagic; }
+        public ArrayList<Integer> lengths() { return lengths; }
+        public byte[] padding3() { return padding3; }
+        public byte[] strcMagic() { return strcMagic; }
+        public long numStructs() { return numStructs; }
+        public ArrayList<DnaStruct> structs() { return structs; }
+        public BlenderBlend _root() { return _root; }
+        public BlenderBlend.FileBlock _parent() { return _parent; }
+    }
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
             return new Header(new ByteBufferKaitaiStream(fileName));
@@ -131,69 +349,58 @@ public class BlenderBlend extends KaitaiStruct {
         public BlenderBlend _root() { return _root; }
         public BlenderBlend _parent() { return _parent; }
     }
-    public static class FileBlock extends KaitaiStruct {
-        public static FileBlock fromFile(String fileName) throws IOException {
-            return new FileBlock(new ByteBufferKaitaiStream(fileName));
+    public static class DnaField extends KaitaiStruct {
+        public static DnaField fromFile(String fileName) throws IOException {
+            return new DnaField(new ByteBufferKaitaiStream(fileName));
         }
 
-        public FileBlock(KaitaiStream _io) {
+        public DnaField(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public FileBlock(KaitaiStream _io, BlenderBlend _parent) {
+        public DnaField(KaitaiStream _io, BlenderBlend.DnaStruct _parent) {
             this(_io, _parent, null);
         }
 
-        public FileBlock(KaitaiStream _io, BlenderBlend _parent, BlenderBlend _root) {
+        public DnaField(KaitaiStream _io, BlenderBlend.DnaStruct _parent, BlenderBlend _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.code = new String(this._io.readBytes(4), Charset.forName("ASCII"));
-            this.size = this._io.readU4le();
-            this.memAddr = this._io.readBytes(_root.hdr().psize());
-            this.sdnaIndex = this._io.readU4le();
-            this.count = this._io.readU4le();
-            this.body = this._io.readBytes(size());
+            this.idxType = this._io.readU2le();
+            this.idxName = this._io.readU2le();
         }
-        private String code;
-        private long size;
-        private byte[] memAddr;
-        private long sdnaIndex;
-        private long count;
-        private byte[] body;
+        private String type;
+        public String type() {
+            if (this.type != null)
+                return this.type;
+            this.type = _parent()._parent().types().get((int) idxType());
+            return this.type;
+        }
+        private String name;
+        public String name() {
+            if (this.name != null)
+                return this.name;
+            this.name = _parent()._parent().names().get((int) idxName());
+            return this.name;
+        }
+        private int idxType;
+        private int idxName;
         private BlenderBlend _root;
-        private BlenderBlend _parent;
-
-        /**
-         * Identifier of the file block
-         */
-        public String code() { return code; }
-
-        /**
-         * Total length of the data after the header of file block
-         */
-        public long size() { return size; }
-
-        /**
-         * Memory address the structure was located when written to disk
-         */
-        public byte[] memAddr() { return memAddr; }
-
-        /**
-         * Index of the SDNA structure
-         */
-        public long sdnaIndex() { return sdnaIndex; }
-
-        /**
-         * Number of structure located in this file-block
-         */
-        public long count() { return count; }
-        public byte[] body() { return body; }
+        private BlenderBlend.DnaStruct _parent;
+        public int idxType() { return idxType; }
+        public int idxName() { return idxName; }
         public BlenderBlend _root() { return _root; }
-        public BlenderBlend _parent() { return _parent; }
+        public BlenderBlend.DnaStruct _parent() { return _parent; }
+    }
+    private ArrayList<DnaStruct> sdnaStructs;
+    public ArrayList<DnaStruct> sdnaStructs() {
+        if (this.sdnaStructs != null)
+            return this.sdnaStructs;
+        this.sdnaStructs = ((Dna1Body) (blocks().get((int) (blocks().size() - 2)).body())).structs();
+        return this.sdnaStructs;
     }
     private Header hdr;
     private ArrayList<FileBlock> blocks;
