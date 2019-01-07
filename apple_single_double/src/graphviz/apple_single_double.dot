@@ -1,0 +1,67 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__apple_single_double {
+		label="AppleSingleDouble";
+		graph[style=dotted];
+
+		apple_single_double__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>u4be→FileType</TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="version_pos">4</TD><TD PORT="version_size">4</TD><TD>u4be</TD><TD PORT="version_type">version</TD></TR>
+			<TR><TD PORT="reserved_pos">8</TD><TD PORT="reserved_size">16</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+			<TR><TD PORT="num_entries_pos">24</TD><TD PORT="num_entries_size">2</TD><TD>u2be</TD><TD PORT="num_entries_type">num_entries</TD></TR>
+			<TR><TD PORT="entries_pos">26</TD><TD PORT="entries_size">12</TD><TD>Entry</TD><TD PORT="entries_type">entries</TD></TR>
+			<TR><TD COLSPAN="4" PORT="entries__repeat">repeat num_entries times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__entry {
+			label="AppleSingleDouble::Entry";
+			graph[style=dotted];
+
+			entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4be→Types</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="ofs_body_pos">4</TD><TD PORT="ofs_body_size">4</TD><TD>u4be</TD><TD PORT="ofs_body_type">ofs_body</TD></TR>
+				<TR><TD PORT="len_body_pos">8</TD><TD PORT="len_body_size">4</TD><TD>u4be</TD><TD PORT="len_body_type">len_body</TD></TR>
+			</TABLE>>];
+			entry__inst__body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="body_pos">ofs_body</TD><TD PORT="body_size">...</TD><TD>switch (type)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+entry__inst__body_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:types_finder_info</TD><TD PORT="case0">FinderInfo</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__finder_info {
+			label="AppleSingleDouble::FinderInfo";
+			graph[style=dotted];
+
+			finder_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="file_type_pos">0</TD><TD PORT="file_type_size">4</TD><TD></TD><TD PORT="file_type_type">file_type</TD></TR>
+				<TR><TD PORT="file_creator_pos">4</TD><TD PORT="file_creator_size">4</TD><TD></TD><TD PORT="file_creator_type">file_creator</TD></TR>
+				<TR><TD PORT="flags_pos">8</TD><TD PORT="flags_size">2</TD><TD>u2be</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="location_pos">10</TD><TD PORT="location_size">4</TD><TD>Point</TD><TD PORT="location_type">location</TD></TR>
+				<TR><TD PORT="folder_id_pos">14</TD><TD PORT="folder_id_size">2</TD><TD>u2be</TD><TD PORT="folder_id_type">folder_id</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__point {
+			label="AppleSingleDouble::Point";
+			graph[style=dotted];
+
+			point__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="x_pos">0</TD><TD PORT="x_size">2</TD><TD>u2be</TD><TD PORT="x_type">x</TD></TR>
+				<TR><TD PORT="y_pos">2</TD><TD PORT="y_size">2</TD><TD>u2be</TD><TD PORT="y_type">y</TD></TR>
+			</TABLE>>];
+		}
+	}
+	apple_single_double__seq:entries_type -> entry__seq [style=bold];
+	apple_single_double__seq:num_entries_type -> apple_single_double__seq:entries__repeat [color="#404040"];
+	entry__seq:ofs_body_type -> entry__inst__body:body_pos [color="#404040"];
+	entry__inst__body:body_type -> entry__inst__body_body_switch [style=bold];
+	entry__inst__body_body_switch:case0 -> finder_info__seq [style=bold];
+	entry__seq:type_type -> entry__inst__body:body_type [color="#404040"];
+	finder_info__seq:location_type -> point__seq [style=bold];
+}
