@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './UdpDatagram', './Ipv6Packet', './IcmpPacket', './TcpSegment'], factory);
+    define(['kaitai-struct/KaitaiStream', './IcmpPacket', './UdpDatagram', './Ipv6Packet', './TcpSegment'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./UdpDatagram'), require('./Ipv6Packet'), require('./IcmpPacket'), require('./TcpSegment'));
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./IcmpPacket'), require('./UdpDatagram'), require('./Ipv6Packet'), require('./TcpSegment'));
   } else {
-    root.Ipv4Packet = factory(root.KaitaiStream, root.UdpDatagram, root.Ipv6Packet, root.IcmpPacket, root.TcpSegment);
+    root.Ipv4Packet = factory(root.KaitaiStream, root.IcmpPacket, root.UdpDatagram, root.Ipv6Packet, root.TcpSegment);
   }
-}(this, function (KaitaiStream, UdpDatagram, Ipv6Packet, IcmpPacket, TcpSegment) {
+}(this, function (KaitaiStream, IcmpPacket, UdpDatagram, Ipv6Packet, TcpSegment) {
 var Ipv4Packet = (function() {
   Ipv4Packet.ProtocolEnum = Object.freeze({
     HOPOPT: 0,

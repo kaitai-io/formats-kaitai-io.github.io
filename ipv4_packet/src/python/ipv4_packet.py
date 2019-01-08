@@ -8,9 +8,9 @@ from enum import Enum
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
+from icmp_packet import IcmpPacket
 from udp_datagram import UdpDatagram
 from ipv6_packet import Ipv6Packet
-from icmp_packet import IcmpPacket
 from tcp_segment import TcpSegment
 class Ipv4Packet(KaitaiStruct):
 
