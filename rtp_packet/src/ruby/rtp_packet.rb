@@ -8,9 +8,10 @@ end
 
 
 ##
-# The Real-time Transport Protocol (RTP) is a widely used network protocol for transmitting audio or video. 
-# It usually works with the RTP Control Protocol (RTCP). 
-# The transmission can be based on Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
+# The Real-time Transport Protocol (RTP) is a widely used network
+# protocol for transmitting audio or video. It usually works with the
+# RTP Control Protocol (RTCP). The transmission can be based on
+# Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
 class RtpPacket < Kaitai::Struct::Struct
 
   PAYLOAD_TYPE_ENUM = {
@@ -71,7 +72,8 @@ class RtpPacket < Kaitai::Struct::Struct
     if has_extension
       @header_extension = HeaderExtention.new(@_io, self, @_root)
     end
-    @data = @_io.read_bytes_full
+    @data = @_io.read_bytes(((_io.size - _io.pos) - len_padding))
+    @padding = @_io.read_bytes(len_padding)
     self
   end
   class HeaderExtention < Kaitai::Struct::Struct
@@ -88,6 +90,28 @@ class RtpPacket < Kaitai::Struct::Struct
     attr_reader :id
     attr_reader :length
   end
+
+  ##
+  # If padding bit is enabled, last byte of data contains number of
+  # bytes appended to the payload as padding.
+  def len_padding_if_exists
+    return @len_padding_if_exists unless @len_padding_if_exists.nil?
+    if has_padding
+      _pos = @_io.pos
+      @_io.seek((_io.size - 1))
+      @len_padding_if_exists = @_io.read_u1
+      @_io.seek(_pos)
+    end
+    @len_padding_if_exists
+  end
+
+  ##
+  # Always returns number of padding bytes to in the payload.
+  def len_padding
+    return @len_padding unless @len_padding.nil?
+    @len_padding = (has_padding ? len_padding_if_exists : 0)
+    @len_padding
+  end
   attr_reader :version
   attr_reader :has_padding
   attr_reader :has_extension
@@ -100,6 +124,7 @@ class RtpPacket < Kaitai::Struct::Struct
   attr_reader :header_extension
 
   ##
-  # may contain padding data(depending on `has_padding` field)
+  # Payload without padding.
   attr_reader :data
+  attr_reader :padding
 end

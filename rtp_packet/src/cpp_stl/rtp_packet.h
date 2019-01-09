@@ -12,9 +12,10 @@
 #endif
 
 /**
- * The Real-time Transport Protocol (RTP) is a widely used network protocol for transmitting audio or video. 
- * It usually works with the RTP Control Protocol (RTCP). 
- * The transmission can be based on Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
+ * The Real-time Transport Protocol (RTP) is a widely used network
+ * protocol for transmitting audio or video. It usually works with the
+ * RTP Control Protocol (RTCP). The transmission can be based on
+ * Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
  */
 
 class rtp_packet_t : public kaitai::kstruct {
@@ -95,6 +96,35 @@ public:
     };
 
 private:
+    bool f_len_padding_if_exists;
+    uint8_t m_len_padding_if_exists;
+    bool n_len_padding_if_exists;
+
+public:
+    bool _is_null_len_padding_if_exists() { len_padding_if_exists(); return n_len_padding_if_exists; };
+
+private:
+
+public:
+
+    /**
+     * If padding bit is enabled, last byte of data contains number of
+     * bytes appended to the payload as padding.
+     */
+    uint8_t len_padding_if_exists();
+
+private:
+    bool f_len_padding;
+    uint8_t m_len_padding;
+
+public:
+
+    /**
+     * Always returns number of padding bytes to in the payload.
+     */
+    uint8_t len_padding();
+
+private:
     uint64_t m_version;
     bool m_has_padding;
     bool m_has_extension;
@@ -112,6 +142,7 @@ public:
 
 private:
     std::string m_data;
+    std::string m_padding;
     rtp_packet_t* m__root;
     kaitai::kstruct* m__parent;
 
@@ -128,9 +159,10 @@ public:
     header_extention_t* header_extension() const { return m_header_extension; }
 
     /**
-     * may contain padding data(depending on `has_padding` field)
+     * Payload without padding.
      */
     std::string data() const { return m_data; }
+    std::string padding() const { return m_padding; }
     rtp_packet_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
 };

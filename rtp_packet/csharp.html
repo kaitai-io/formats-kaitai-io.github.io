@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>rtp protocol: C# parsing library</title>
+  <title>RTP (Real-time Transport Protocol): C# parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Networking Protocols</li>
-        <li class="active">rtp protocol</li>
+        <li class="active">RTP (Real-time Transport Protocol)</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>rtp protocol:
+        <h1>RTP (Real-time Transport Protocol):
             
             C# parsing library
             
@@ -98,9 +98,10 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>The Real-time Transport Protocol (RTP) is a widely used network protocol for transmitting audio or video.
-It usually works with the RTP Control Protocol (RTCP).
-The transmission can be based on Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</p>
+                <p><p>The Real-time Transport Protocol (RTP) is a widely used network
+protocol for transmitting audio or video. It usually works with the
+RTP Control Protocol (RTCP). The transmission can be based on
+Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -134,7 +135,7 @@ The transmission can be based on Transmission Control Protocol (TCP) or User Dat
                             
                             
                             
-                            <li><a href="https://www.wikidata.org/wiki/https://en.wikipedia.org/wiki/Real-time_Transport_Protocol">Wikidata https://en.wikipedia.org/wiki/Real-time_Transport_Protocol</a></li>
+                            <li><a href="https://www.wikidata.org/wiki/Q321213">Wikidata Q321213</a></li>
                             
                             
                             
@@ -150,7 +151,7 @@ The transmission can be based on Transmission Control Protocol (TCP) or User Dat
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of rtp protocol
+            This page hosts a formal specification of RTP (Real-time Transport Protocol)
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -161,57 +162,57 @@ The transmission can be based on Transmission Control Protocol (TCP) or User Dat
                 
                 <li>
                 
-                <a href="index.html" title="rtp protocol parsing Overview library">Overview</a></li>
+                <a href="index.html" title="RTP (Real-time Transport Protocol) parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="rtp protocol parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title="RTP (Real-time Transport Protocol) parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="csharp.html" title="rtp protocol parsing C# library">C#</a></li>
+                <a href="csharp.html" title="RTP (Real-time Transport Protocol) parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="rtp protocol parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title="RTP (Real-time Transport Protocol) parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="rtp protocol parsing Java library">Java</a></li>
+                <a href="java.html" title="RTP (Real-time Transport Protocol) parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title="rtp protocol parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title="RTP (Real-time Transport Protocol) parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="lua.html" title="rtp protocol parsing Lua library">Lua</a></li>
+                <a href="lua.html" title="RTP (Real-time Transport Protocol) parsing Lua library">Lua</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title="rtp protocol parsing Perl library">Perl</a></li>
+                <a href="perl.html" title="RTP (Real-time Transport Protocol) parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="rtp protocol parsing PHP library">PHP</a></li>
+                <a href="php.html" title="RTP (Real-time Transport Protocol) parsing PHP library">PHP</a></li>
                 
                 
                 <li>
                 
-                <a href="python.html" title="rtp protocol parsing Python library">Python</a></li>
+                <a href="python.html" title="RTP (Real-time Transport Protocol) parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title="rtp protocol parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title="RTP (Real-time Transport Protocol) parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -236,7 +237,9 @@ var data = new RtpPacket(new KaitaiStream(someArray));</code></pre>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
-<pre><code class="csharp">data.Data // => may contain padding data(depending on `has_padding` field)</code></pre>
+<pre><code class="csharp">data.Data // => Payload without padding.data.LenPaddingIfExists // => If padding bit is enabled, last byte of data contains number of
+bytes appended to the payload as padding.
+</code></pre>
 
     </div>
 </section>
@@ -246,7 +249,7 @@ var data = new RtpPacket(new KaitaiStream(someArray));</code></pre>
     <div class="container">
         <h2>
             
-            C# source code to parse rtp protocol
+            C# source code to parse RTP (Real-time Transport Protocol)
             
         </h2>
 
@@ -271,9 +274,10 @@ namespace Kaitai
 {
 
     /// &lt;summary&gt;
-    /// The Real-time Transport Protocol (RTP) is a widely used network protocol for transmitting audio or video. 
-    /// It usually works with the RTP Control Protocol (RTCP). 
-    /// The transmission can be based on Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
+    /// The Real-time Transport Protocol (RTP) is a widely used network
+    /// protocol for transmitting audio or video. It usually works with the
+    /// RTP Control Protocol (RTCP). The transmission can be based on
+    /// Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
     /// &lt;/summary&gt;
     public partial class RtpPacket : KaitaiStruct
     {
@@ -326,6 +330,8 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
+            f_lenPaddingIfExists = false;
+            f_lenPadding = false;
             _read();
         }
         private void _read()
@@ -343,7 +349,8 @@ namespace Kaitai
             if (HasExtension) {
                 _headerExtension = new HeaderExtention(m_io, this, m_root);
             }
-            _data = m_io.ReadBytesFull();
+            _data = m_io.ReadBytes(((M_Io.Size - M_Io.Pos) - LenPadding));
+            _padding = m_io.ReadBytes(LenPadding);
         }
         public partial class HeaderExtention : KaitaiStruct
         {
@@ -372,6 +379,46 @@ namespace Kaitai
             public RtpPacket M_Root { get { return m_root; } }
             public RtpPacket M_Parent { get { return m_parent; } }
         }
+        private bool f_lenPaddingIfExists;
+        private byte? _lenPaddingIfExists;
+
+        /// &lt;summary&gt;
+        /// If padding bit is enabled, last byte of data contains number of
+        /// bytes appended to the payload as padding.
+        /// &lt;/summary&gt;
+        public byte? LenPaddingIfExists
+        {
+            get
+            {
+                if (f_lenPaddingIfExists)
+                    return _lenPaddingIfExists;
+                if (HasPadding) {
+                    long _pos = m_io.Pos;
+                    m_io.Seek((M_Io.Size - 1));
+                    _lenPaddingIfExists = m_io.ReadU1();
+                    m_io.Seek(_pos);
+                }
+                f_lenPaddingIfExists = true;
+                return _lenPaddingIfExists;
+            }
+        }
+        private bool f_lenPadding;
+        private byte _lenPadding;
+
+        /// &lt;summary&gt;
+        /// Always returns number of padding bytes to in the payload.
+        /// &lt;/summary&gt;
+        public byte LenPadding
+        {
+            get
+            {
+                if (f_lenPadding)
+                    return _lenPadding;
+                _lenPadding = (byte) ((HasPadding ? LenPaddingIfExists : 0));
+                f_lenPadding = true;
+                return _lenPadding;
+            }
+        }
         private ulong _version;
         private bool _hasPadding;
         private bool _hasExtension;
@@ -383,6 +430,7 @@ namespace Kaitai
         private uint _ssrc;
         private HeaderExtention _headerExtension;
         private byte[] _data;
+        private byte[] _padding;
         private RtpPacket m_root;
         private KaitaiStruct m_parent;
         public ulong Version { get { return _version; } }
@@ -397,9 +445,10 @@ namespace Kaitai
         public HeaderExtention HeaderExtension { get { return _headerExtension; } }
 
         /// &lt;summary&gt;
-        /// may contain padding data(depending on `has_padding` field)
+        /// Payload without padding.
         /// &lt;/summary&gt;
         public byte[] Data { get { return _data; } }
+        public byte[] Padding { get { return _padding; } }
         public RtpPacket M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
     }

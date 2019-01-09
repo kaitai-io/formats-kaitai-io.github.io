@@ -84,7 +84,27 @@ sub _read {
     if ($self->has_extension()) {
         $self->{header_extension} = RtpPacket::HeaderExtention->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{data} = $self->{_io}->read_bytes_full();
+    $self->{data} = $self->{_io}->read_bytes((($self->_io()->size() - $self->_io()->pos()) - $self->len_padding()));
+    $self->{padding} = $self->{_io}->read_bytes($self->len_padding());
+}
+
+sub len_padding_if_exists {
+    my ($self) = @_;
+    return $self->{len_padding_if_exists} if ($self->{len_padding_if_exists});
+    if ($self->has_padding()) {
+        my $_pos = $self->{_io}->pos();
+        $self->{_io}->seek(($self->_io()->size() - 1));
+        $self->{len_padding_if_exists} = $self->{_io}->read_u1();
+        $self->{_io}->seek($_pos);
+    }
+    return $self->{len_padding_if_exists};
+}
+
+sub len_padding {
+    my ($self) = @_;
+    return $self->{len_padding} if ($self->{len_padding});
+    $self->{len_padding} = ($self->has_padding() ? $self->len_padding_if_exists() : 0);
+    return $self->{len_padding};
 }
 
 sub version {
@@ -140,6 +160,11 @@ sub header_extension {
 sub data {
     my ($self) = @_;
     return $self->{data};
+}
+
+sub padding {
+    my ($self) = @_;
+    return $self->{padding};
 }
 
 ########################################################################

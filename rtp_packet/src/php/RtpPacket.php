@@ -2,9 +2,10 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 /**
- * The Real-time Transport Protocol (RTP) is a widely used network protocol for transmitting audio or video. 
- * It usually works with the RTP Control Protocol (RTCP). 
- * The transmission can be based on Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
+ * The Real-time Transport Protocol (RTP) is a widely used network
+ * protocol for transmitting audio or video. It usually works with the
+ * RTP Control Protocol (RTCP). The transmission can be based on
+ * Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
  */
 
 class RtpPacket extends \Kaitai\Struct\Struct {
@@ -27,7 +28,36 @@ class RtpPacket extends \Kaitai\Struct\Struct {
         if ($this->hasExtension()) {
             $this->_m_headerExtension = new \RtpPacket\HeaderExtention($this->_io, $this, $this->_root);
         }
-        $this->_m_data = $this->_io->readBytesFull();
+        $this->_m_data = $this->_io->readBytes((($this->_io()->size() - $this->_io()->pos()) - $this->lenPadding()));
+        $this->_m_padding = $this->_io->readBytes($this->lenPadding());
+    }
+    protected $_m_lenPaddingIfExists;
+
+    /**
+     * If padding bit is enabled, last byte of data contains number of
+     * bytes appended to the payload as padding.
+     */
+    public function lenPaddingIfExists() {
+        if ($this->_m_lenPaddingIfExists !== null)
+            return $this->_m_lenPaddingIfExists;
+        if ($this->hasPadding()) {
+            $_pos = $this->_io->pos();
+            $this->_io->seek(($this->_io()->size() - 1));
+            $this->_m_lenPaddingIfExists = $this->_io->readU1();
+            $this->_io->seek($_pos);
+        }
+        return $this->_m_lenPaddingIfExists;
+    }
+    protected $_m_lenPadding;
+
+    /**
+     * Always returns number of padding bytes to in the payload.
+     */
+    public function lenPadding() {
+        if ($this->_m_lenPadding !== null)
+            return $this->_m_lenPadding;
+        $this->_m_lenPadding = ($this->hasPadding() ? $this->lenPaddingIfExists() : 0);
+        return $this->_m_lenPadding;
     }
     protected $_m_version;
     protected $_m_hasPadding;
@@ -40,6 +70,7 @@ class RtpPacket extends \Kaitai\Struct\Struct {
     protected $_m_ssrc;
     protected $_m_headerExtension;
     protected $_m_data;
+    protected $_m_padding;
     public function version() { return $this->_m_version; }
     public function hasPadding() { return $this->_m_hasPadding; }
     public function hasExtension() { return $this->_m_hasExtension; }
@@ -52,9 +83,10 @@ class RtpPacket extends \Kaitai\Struct\Struct {
     public function headerExtension() { return $this->_m_headerExtension; }
 
     /**
-     * may contain padding data(depending on `has_padding` field)
+     * Payload without padding.
      */
     public function data() { return $this->_m_data; }
+    public function padding() { return $this->_m_padding; }
 }
 
 namespace \RtpPacket;

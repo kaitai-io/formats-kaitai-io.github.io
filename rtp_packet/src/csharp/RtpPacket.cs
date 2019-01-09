@@ -6,9 +6,10 @@ namespace Kaitai
 {
 
     /// <summary>
-    /// The Real-time Transport Protocol (RTP) is a widely used network protocol for transmitting audio or video. 
-    /// It usually works with the RTP Control Protocol (RTCP). 
-    /// The transmission can be based on Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
+    /// The Real-time Transport Protocol (RTP) is a widely used network
+    /// protocol for transmitting audio or video. It usually works with the
+    /// RTP Control Protocol (RTCP). The transmission can be based on
+    /// Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
     /// </summary>
     public partial class RtpPacket : KaitaiStruct
     {
@@ -61,6 +62,8 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
+            f_lenPaddingIfExists = false;
+            f_lenPadding = false;
             _read();
         }
         private void _read()
@@ -78,7 +81,8 @@ namespace Kaitai
             if (HasExtension) {
                 _headerExtension = new HeaderExtention(m_io, this, m_root);
             }
-            _data = m_io.ReadBytesFull();
+            _data = m_io.ReadBytes(((M_Io.Size - M_Io.Pos) - LenPadding));
+            _padding = m_io.ReadBytes(LenPadding);
         }
         public partial class HeaderExtention : KaitaiStruct
         {
@@ -107,6 +111,46 @@ namespace Kaitai
             public RtpPacket M_Root { get { return m_root; } }
             public RtpPacket M_Parent { get { return m_parent; } }
         }
+        private bool f_lenPaddingIfExists;
+        private byte? _lenPaddingIfExists;
+
+        /// <summary>
+        /// If padding bit is enabled, last byte of data contains number of
+        /// bytes appended to the payload as padding.
+        /// </summary>
+        public byte? LenPaddingIfExists
+        {
+            get
+            {
+                if (f_lenPaddingIfExists)
+                    return _lenPaddingIfExists;
+                if (HasPadding) {
+                    long _pos = m_io.Pos;
+                    m_io.Seek((M_Io.Size - 1));
+                    _lenPaddingIfExists = m_io.ReadU1();
+                    m_io.Seek(_pos);
+                }
+                f_lenPaddingIfExists = true;
+                return _lenPaddingIfExists;
+            }
+        }
+        private bool f_lenPadding;
+        private byte _lenPadding;
+
+        /// <summary>
+        /// Always returns number of padding bytes to in the payload.
+        /// </summary>
+        public byte LenPadding
+        {
+            get
+            {
+                if (f_lenPadding)
+                    return _lenPadding;
+                _lenPadding = (byte) ((HasPadding ? LenPaddingIfExists : 0));
+                f_lenPadding = true;
+                return _lenPadding;
+            }
+        }
         private ulong _version;
         private bool _hasPadding;
         private bool _hasExtension;
@@ -118,6 +162,7 @@ namespace Kaitai
         private uint _ssrc;
         private HeaderExtention _headerExtension;
         private byte[] _data;
+        private byte[] _padding;
         private RtpPacket m_root;
         private KaitaiStruct m_parent;
         public ulong Version { get { return _version; } }
@@ -132,9 +177,10 @@ namespace Kaitai
         public HeaderExtention HeaderExtension { get { return _headerExtension; } }
 
         /// <summary>
-        /// may contain padding data(depending on `has_padding` field)
+        /// Payload without padding.
         /// </summary>
         public byte[] Data { get { return _data; } }
+        public byte[] Padding { get { return _padding; } }
         public RtpPacket M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
     }

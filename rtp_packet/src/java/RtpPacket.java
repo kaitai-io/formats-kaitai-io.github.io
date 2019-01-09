@@ -9,9 +9,10 @@ import java.util.HashMap;
 
 
 /**
- * The Real-time Transport Protocol (RTP) is a widely used network protocol for transmitting audio or video. 
- * It usually works with the RTP Control Protocol (RTCP). 
- * The transmission can be based on Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
+ * The Real-time Transport Protocol (RTP) is a widely used network
+ * protocol for transmitting audio or video. It usually works with the
+ * RTP Control Protocol (RTCP). The transmission can be based on
+ * Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
  */
 public class RtpPacket extends KaitaiStruct {
     public static RtpPacket fromFile(String fileName) throws IOException {
@@ -95,7 +96,8 @@ public class RtpPacket extends KaitaiStruct {
         if (hasExtension()) {
             this.headerExtension = new HeaderExtention(this._io, this, _root);
         }
-        this.data = this._io.readBytesFull();
+        this.data = this._io.readBytes(((_io().size() - _io().pos()) - lenPadding()));
+        this.padding = this._io.readBytes(lenPadding());
     }
     public static class HeaderExtention extends KaitaiStruct {
         public static HeaderExtention fromFile(String fileName) throws IOException {
@@ -129,6 +131,35 @@ public class RtpPacket extends KaitaiStruct {
         public RtpPacket _root() { return _root; }
         public RtpPacket _parent() { return _parent; }
     }
+    private Integer lenPaddingIfExists;
+
+    /**
+     * If padding bit is enabled, last byte of data contains number of
+     * bytes appended to the payload as padding.
+     */
+    public Integer lenPaddingIfExists() {
+        if (this.lenPaddingIfExists != null)
+            return this.lenPaddingIfExists;
+        if (hasPadding()) {
+            long _pos = this._io.pos();
+            this._io.seek((_io().size() - 1));
+            this.lenPaddingIfExists = this._io.readU1();
+            this._io.seek(_pos);
+        }
+        return this.lenPaddingIfExists;
+    }
+    private Integer lenPadding;
+
+    /**
+     * Always returns number of padding bytes to in the payload.
+     */
+    public Integer lenPadding() {
+        if (this.lenPadding != null)
+            return this.lenPadding;
+        int _tmp = (int) ((hasPadding() ? lenPaddingIfExists() : 0));
+        this.lenPadding = _tmp;
+        return this.lenPadding;
+    }
     private long version;
     private boolean hasPadding;
     private boolean hasExtension;
@@ -140,6 +171,7 @@ public class RtpPacket extends KaitaiStruct {
     private long ssrc;
     private HeaderExtention headerExtension;
     private byte[] data;
+    private byte[] padding;
     private RtpPacket _root;
     private KaitaiStruct _parent;
     public long version() { return version; }
@@ -154,9 +186,10 @@ public class RtpPacket extends KaitaiStruct {
     public HeaderExtention headerExtension() { return headerExtension; }
 
     /**
-     * may contain padding data(depending on `has_padding` field)
+     * Payload without padding.
      */
     public byte[] data() { return data; }
+    public byte[] padding() { return padding; }
     public RtpPacket _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

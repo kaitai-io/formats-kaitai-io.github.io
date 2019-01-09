@@ -10,9 +10,10 @@
   }
 }(this, function (KaitaiStream) {
 /**
- * The Real-time Transport Protocol (RTP) is a widely used network protocol for transmitting audio or video. 
- * It usually works with the RTP Control Protocol (RTCP). 
- * The transmission can be based on Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
+ * The Real-time Transport Protocol (RTP) is a widely used network
+ * protocol for transmitting audio or video. It usually works with the
+ * RTP Control Protocol (RTCP). The transmission can be based on
+ * Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
  */
 
 var RtpPacket = (function() {
@@ -113,7 +114,8 @@ var RtpPacket = (function() {
     if (this.hasExtension) {
       this.headerExtension = new HeaderExtention(this._io, this, this._root);
     }
-    this.data = this._io.readBytesFull();
+    this.data = this._io.readBytes(((this._io.size - this._io.pos) - this.lenPadding));
+    this.padding = this._io.readBytes(this.lenPadding);
   }
 
   var HeaderExtention = RtpPacket.HeaderExtention = (function() {
@@ -133,7 +135,37 @@ var RtpPacket = (function() {
   })();
 
   /**
-   * may contain padding data(depending on `has_padding` field)
+   * If padding bit is enabled, last byte of data contains number of
+   * bytes appended to the payload as padding.
+   */
+  Object.defineProperty(RtpPacket.prototype, 'lenPaddingIfExists', {
+    get: function() {
+      if (this._m_lenPaddingIfExists !== undefined)
+        return this._m_lenPaddingIfExists;
+      if (this.hasPadding) {
+        var _pos = this._io.pos;
+        this._io.seek((this._io.size - 1));
+        this._m_lenPaddingIfExists = this._io.readU1();
+        this._io.seek(_pos);
+      }
+      return this._m_lenPaddingIfExists;
+    }
+  });
+
+  /**
+   * Always returns number of padding bytes to in the payload.
+   */
+  Object.defineProperty(RtpPacket.prototype, 'lenPadding', {
+    get: function() {
+      if (this._m_lenPadding !== undefined)
+        return this._m_lenPadding;
+      this._m_lenPadding = (this.hasPadding ? this.lenPaddingIfExists : 0);
+      return this._m_lenPadding;
+    }
+  });
+
+  /**
+   * Payload without padding.
    */
 
   return RtpPacket;

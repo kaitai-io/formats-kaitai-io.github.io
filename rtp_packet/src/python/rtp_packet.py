@@ -9,9 +9,10 @@ if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
 class RtpPacket(KaitaiStruct):
-    """The Real-time Transport Protocol (RTP) is a widely used network protocol for transmitting audio or video. 
-    It usually works with the RTP Control Protocol (RTCP). 
-    The transmission can be based on Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
+    """The Real-time Transport Protocol (RTP) is a widely used network
+    protocol for transmitting audio or video. It usually works with the
+    RTP Control Protocol (RTCP). The transmission can be based on
+    Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
     """
 
     class PayloadTypeEnum(Enum):
@@ -71,7 +72,8 @@ class RtpPacket(KaitaiStruct):
         if self.has_extension:
             self.header_extension = self._root.HeaderExtention(self._io, self, self._root)
 
-        self.data = self._io.read_bytes_full()
+        self.data = self._io.read_bytes(((self._io.size() - self._io.pos()) - self.len_padding))
+        self.padding = self._io.read_bytes(self.len_padding)
 
     class HeaderExtention(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -84,5 +86,30 @@ class RtpPacket(KaitaiStruct):
             self.id = self._io.read_u2be()
             self.length = self._io.read_u2be()
 
+
+    @property
+    def len_padding_if_exists(self):
+        """If padding bit is enabled, last byte of data contains number of
+        bytes appended to the payload as padding.
+        """
+        if hasattr(self, '_m_len_padding_if_exists'):
+            return self._m_len_padding_if_exists if hasattr(self, '_m_len_padding_if_exists') else None
+
+        if self.has_padding:
+            _pos = self._io.pos()
+            self._io.seek((self._io.size() - 1))
+            self._m_len_padding_if_exists = self._io.read_u1()
+            self._io.seek(_pos)
+
+        return self._m_len_padding_if_exists if hasattr(self, '_m_len_padding_if_exists') else None
+
+    @property
+    def len_padding(self):
+        """Always returns number of padding bytes to in the payload."""
+        if hasattr(self, '_m_len_padding'):
+            return self._m_len_padding if hasattr(self, '_m_len_padding') else None
+
+        self._m_len_padding = (self.len_padding_if_exists if self.has_padding else 0)
+        return self._m_len_padding if hasattr(self, '_m_len_padding') else None
 
 
