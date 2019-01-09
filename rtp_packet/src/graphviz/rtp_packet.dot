@@ -1,0 +1,34 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__rtp_packet {
+		label="RtpPacket";
+		graph[style=dotted];
+
+		rtp_packet__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">2b</TD><TD>b2</TD><TD PORT="version_type">version</TD></TR>
+			<TR><TD PORT="has_padding_pos">0:2</TD><TD PORT="has_padding_size">1b</TD><TD>BitsType1</TD><TD PORT="has_padding_type">has_padding</TD></TR>
+			<TR><TD PORT="has_extension_pos">0:3</TD><TD PORT="has_extension_size">1b</TD><TD>BitsType1</TD><TD PORT="has_extension_type">has_extension</TD></TR>
+			<TR><TD PORT="csrc_count_pos">0:4</TD><TD PORT="csrc_count_size">4b</TD><TD>b4</TD><TD PORT="csrc_count_type">csrc_count</TD></TR>
+			<TR><TD PORT="marker_pos">1</TD><TD PORT="marker_size">1b</TD><TD>BitsType1</TD><TD PORT="marker_type">marker</TD></TR>
+			<TR><TD PORT="payload_type_pos">1:1</TD><TD PORT="payload_type_size">7b</TD><TD>b7→PayloadTypeEnum</TD><TD PORT="payload_type_type">payload_type</TD></TR>
+			<TR><TD PORT="sequence_number_pos">2</TD><TD PORT="sequence_number_size">2</TD><TD>u2be</TD><TD PORT="sequence_number_type">sequence_number</TD></TR>
+			<TR><TD PORT="timestamp_pos">4</TD><TD PORT="timestamp_size">4</TD><TD>u4be</TD><TD PORT="timestamp_type">timestamp</TD></TR>
+			<TR><TD PORT="ssrc_pos">8</TD><TD PORT="ssrc_size">4</TD><TD>u4be</TD><TD PORT="ssrc_type">ssrc</TD></TR>
+			<TR><TD PORT="header_extension_pos">12</TD><TD PORT="header_extension_size">4</TD><TD>HeaderExtention</TD><TD PORT="header_extension_type">header_extension</TD></TR>
+			<TR><TD PORT="data_pos">16</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+		</TABLE>>];
+		subgraph cluster__header_extention {
+			label="RtpPacket::HeaderExtention";
+			graph[style=dotted];
+
+			header_extention__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">2</TD><TD>u2be</TD><TD PORT="id_type">id</TD></TR>
+				<TR><TD PORT="length_pos">2</TD><TD PORT="length_size">2</TD><TD>u2be</TD><TD PORT="length_type">length</TD></TR>
+			</TABLE>>];
+		}
+	}
+	rtp_packet__seq:header_extension_type -> header_extention__seq [style=bold];
+}
