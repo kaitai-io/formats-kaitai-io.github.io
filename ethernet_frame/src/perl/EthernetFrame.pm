@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
-use Ipv6Packet;
 use Ipv4Packet;
+use Ipv6Packet;
 
 ########################################################################
 package EthernetFrame;

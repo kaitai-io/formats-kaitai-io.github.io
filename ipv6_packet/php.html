@@ -115,7 +115,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.7
+                        Minimal Kaitai Struct required: 0.8
                     </div>
                     
                     
@@ -237,23 +237,7 @@ class Ipv6Packet extends \Kaitai\Struct\Struct {
         $this-&gt;_m_hopLimit = $this-&gt;_io-&gt;readU1();
         $this-&gt;_m_srcIpv6Addr = $this-&gt;_io-&gt;readBytes(16);
         $this-&gt;_m_dstIpv6Addr = $this-&gt;_io-&gt;readBytes(16);
-        switch ($this-&gt;nextHeaderType()) {
-            case 17:
-                $this-&gt;_m_nextHeader = new \UdpDatagram($this-&gt;_io);
-                break;
-            case 0:
-                $this-&gt;_m_nextHeader = new \Ipv6Packet\OptionHopByHop($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case 4:
-                $this-&gt;_m_nextHeader = new \Ipv4Packet($this-&gt;_io);
-                break;
-            case 6:
-                $this-&gt;_m_nextHeader = new \TcpSegment($this-&gt;_io);
-                break;
-            case 59:
-                $this-&gt;_m_nextHeader = new \Ipv6Packet\NoNextHeader($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-        }
+        $this-&gt;_m_nextHeader = new \ProtocolBody($this-&gt;nextHeaderType(), $this-&gt;_io);
         $this-&gt;_m_rest = $this-&gt;_io-&gt;readBytesFull();
     }
     protected $_m_version;
@@ -276,52 +260,6 @@ class Ipv6Packet extends \Kaitai\Struct\Struct {
     public function dstIpv6Addr() { return $this-&gt;_m_dstIpv6Addr; }
     public function nextHeader() { return $this-&gt;_m_nextHeader; }
     public function rest() { return $this-&gt;_m_rest; }
-}
-
-namespace \Ipv6Packet;
-
-class NoNextHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Ipv6Packet $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-    }
-}
-
-namespace \Ipv6Packet;
-
-class OptionHopByHop extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Ipv6Packet $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_nextHeaderType = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_hdrExtLen = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes(($this-&gt;hdrExtLen() - 1));
-        switch ($this-&gt;nextHeaderType()) {
-            case 0:
-                $this-&gt;_m_nextHeader = new \Ipv6Packet\OptionHopByHop($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case 6:
-                $this-&gt;_m_nextHeader = new \TcpSegment($this-&gt;_io);
-                break;
-            case 59:
-                $this-&gt;_m_nextHeader = new \Ipv6Packet\NoNextHeader($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-        }
-    }
-    protected $_m_nextHeaderType;
-    protected $_m_hdrExtLen;
-    protected $_m_body;
-    protected $_m_nextHeader;
-    public function nextHeaderType() { return $this-&gt;_m_nextHeaderType; }
-    public function hdrExtLen() { return $this-&gt;_m_hdrExtLen; }
-    public function body() { return $this-&gt;_m_body; }
-    public function nextHeader() { return $this-&gt;_m_nextHeader; }
 }
 </code></pre>
             

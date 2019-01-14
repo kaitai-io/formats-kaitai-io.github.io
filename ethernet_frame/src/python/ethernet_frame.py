@@ -8,8 +8,8 @@ from enum import Enum
 if parse_version(ks_version) < parse_version('0.7'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s" % (ks_version))
 
-from ipv6_packet import Ipv6Packet
 from ipv4_packet import Ipv4Packet
+from ipv6_packet import Ipv6Packet
 class EthernetFrame(KaitaiStruct):
     """Ethernet frame is a OSI data link layer (layer 2) protocol data unit
     for Ethernet networks. In practice, many other networks and/or

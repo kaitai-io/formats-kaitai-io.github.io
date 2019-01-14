@@ -115,7 +115,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.7
+                        Minimal Kaitai Struct required: 0.8
                     </div>
                     
                     
@@ -273,154 +273,6 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7
 end
 
 class Ipv4Packet &lt; Kaitai::Struct::Struct
-
-  PROTOCOL_ENUM = {
-    0 =&gt; :protocol_enum_hopopt,
-    1 =&gt; :protocol_enum_icmp,
-    2 =&gt; :protocol_enum_igmp,
-    3 =&gt; :protocol_enum_ggp,
-    4 =&gt; :protocol_enum_ipv4,
-    5 =&gt; :protocol_enum_st,
-    6 =&gt; :protocol_enum_tcp,
-    7 =&gt; :protocol_enum_cbt,
-    8 =&gt; :protocol_enum_egp,
-    9 =&gt; :protocol_enum_igp,
-    10 =&gt; :protocol_enum_bbn_rcc_mon,
-    11 =&gt; :protocol_enum_nvp_ii,
-    12 =&gt; :protocol_enum_pup,
-    13 =&gt; :protocol_enum_argus,
-    14 =&gt; :protocol_enum_emcon,
-    15 =&gt; :protocol_enum_xnet,
-    16 =&gt; :protocol_enum_chaos,
-    17 =&gt; :protocol_enum_udp,
-    18 =&gt; :protocol_enum_mux,
-    19 =&gt; :protocol_enum_dcn_meas,
-    20 =&gt; :protocol_enum_hmp,
-    21 =&gt; :protocol_enum_prm,
-    22 =&gt; :protocol_enum_xns_idp,
-    23 =&gt; :protocol_enum_trunk_1,
-    24 =&gt; :protocol_enum_trunk_2,
-    25 =&gt; :protocol_enum_leaf_1,
-    26 =&gt; :protocol_enum_leaf_2,
-    27 =&gt; :protocol_enum_rdp,
-    28 =&gt; :protocol_enum_irtp,
-    29 =&gt; :protocol_enum_iso_tp4,
-    30 =&gt; :protocol_enum_netblt,
-    31 =&gt; :protocol_enum_mfe_nsp,
-    32 =&gt; :protocol_enum_merit_inp,
-    33 =&gt; :protocol_enum_dccp,
-    34 =&gt; :protocol_enum_x_3pc,
-    35 =&gt; :protocol_enum_idpr,
-    36 =&gt; :protocol_enum_xtp,
-    37 =&gt; :protocol_enum_ddp,
-    38 =&gt; :protocol_enum_idpr_cmtp,
-    39 =&gt; :protocol_enum_tp_plus_plus,
-    40 =&gt; :protocol_enum_il,
-    41 =&gt; :protocol_enum_ipv6,
-    42 =&gt; :protocol_enum_sdrp,
-    43 =&gt; :protocol_enum_ipv6_route,
-    44 =&gt; :protocol_enum_ipv6_frag,
-    45 =&gt; :protocol_enum_idrp,
-    46 =&gt; :protocol_enum_rsvp,
-    47 =&gt; :protocol_enum_gre,
-    48 =&gt; :protocol_enum_dsr,
-    49 =&gt; :protocol_enum_bna,
-    50 =&gt; :protocol_enum_esp,
-    51 =&gt; :protocol_enum_ah,
-    52 =&gt; :protocol_enum_i_nlsp,
-    53 =&gt; :protocol_enum_swipe,
-    54 =&gt; :protocol_enum_narp,
-    55 =&gt; :protocol_enum_mobile,
-    56 =&gt; :protocol_enum_tlsp,
-    57 =&gt; :protocol_enum_skip,
-    58 =&gt; :protocol_enum_ipv6_icmp,
-    59 =&gt; :protocol_enum_ipv6_nonxt,
-    60 =&gt; :protocol_enum_ipv6_opts,
-    61 =&gt; :protocol_enum_any_host_internal_protocol,
-    62 =&gt; :protocol_enum_cftp,
-    63 =&gt; :protocol_enum_any_local_network,
-    64 =&gt; :protocol_enum_sat_expak,
-    65 =&gt; :protocol_enum_kryptolan,
-    66 =&gt; :protocol_enum_rvd,
-    67 =&gt; :protocol_enum_ippc,
-    68 =&gt; :protocol_enum_any_distributed_file_system,
-    69 =&gt; :protocol_enum_sat_mon,
-    70 =&gt; :protocol_enum_visa,
-    71 =&gt; :protocol_enum_ipcv,
-    72 =&gt; :protocol_enum_cpnx,
-    73 =&gt; :protocol_enum_cphb,
-    74 =&gt; :protocol_enum_wsn,
-    75 =&gt; :protocol_enum_pvp,
-    76 =&gt; :protocol_enum_br_sat_mon,
-    77 =&gt; :protocol_enum_sun_nd,
-    78 =&gt; :protocol_enum_wb_mon,
-    79 =&gt; :protocol_enum_wb_expak,
-    80 =&gt; :protocol_enum_iso_ip,
-    81 =&gt; :protocol_enum_vmtp,
-    82 =&gt; :protocol_enum_secure_vmtp,
-    83 =&gt; :protocol_enum_vines,
-    84 =&gt; :protocol_enum_iptm,
-    85 =&gt; :protocol_enum_nsfnet_igp,
-    86 =&gt; :protocol_enum_dgp,
-    87 =&gt; :protocol_enum_tcf,
-    88 =&gt; :protocol_enum_eigrp,
-    89 =&gt; :protocol_enum_ospfigp,
-    90 =&gt; :protocol_enum_sprite_rpc,
-    91 =&gt; :protocol_enum_larp,
-    92 =&gt; :protocol_enum_mtp,
-    93 =&gt; :protocol_enum_ax_25,
-    94 =&gt; :protocol_enum_ipip,
-    95 =&gt; :protocol_enum_micp,
-    96 =&gt; :protocol_enum_scc_sp,
-    97 =&gt; :protocol_enum_etherip,
-    98 =&gt; :protocol_enum_encap,
-    99 =&gt; :protocol_enum_any_private_encryption_scheme,
-    100 =&gt; :protocol_enum_gmtp,
-    101 =&gt; :protocol_enum_ifmp,
-    102 =&gt; :protocol_enum_pnni,
-    103 =&gt; :protocol_enum_pim,
-    104 =&gt; :protocol_enum_aris,
-    105 =&gt; :protocol_enum_scps,
-    106 =&gt; :protocol_enum_qnx,
-    107 =&gt; :protocol_enum_a_n,
-    108 =&gt; :protocol_enum_ipcomp,
-    109 =&gt; :protocol_enum_snp,
-    110 =&gt; :protocol_enum_compaq_peer,
-    111 =&gt; :protocol_enum_ipx_in_ip,
-    112 =&gt; :protocol_enum_vrrp,
-    113 =&gt; :protocol_enum_pgm,
-    114 =&gt; :protocol_enum_any_0_hop,
-    115 =&gt; :protocol_enum_l2tp,
-    116 =&gt; :protocol_enum_ddx,
-    117 =&gt; :protocol_enum_iatp,
-    118 =&gt; :protocol_enum_stp,
-    119 =&gt; :protocol_enum_srp,
-    120 =&gt; :protocol_enum_uti,
-    121 =&gt; :protocol_enum_smp,
-    122 =&gt; :protocol_enum_sm,
-    123 =&gt; :protocol_enum_ptp,
-    124 =&gt; :protocol_enum_isis_over_ipv4,
-    125 =&gt; :protocol_enum_fire,
-    126 =&gt; :protocol_enum_crtp,
-    127 =&gt; :protocol_enum_crudp,
-    128 =&gt; :protocol_enum_sscopmce,
-    129 =&gt; :protocol_enum_iplt,
-    130 =&gt; :protocol_enum_sps,
-    131 =&gt; :protocol_enum_pipe,
-    132 =&gt; :protocol_enum_sctp,
-    133 =&gt; :protocol_enum_fc,
-    134 =&gt; :protocol_enum_rsvp_e2e_ignore,
-    135 =&gt; :protocol_enum_mobility_header,
-    136 =&gt; :protocol_enum_udplite,
-    137 =&gt; :protocol_enum_mpls_in_ip,
-    138 =&gt; :protocol_enum_manet,
-    139 =&gt; :protocol_enum_hip,
-    140 =&gt; :protocol_enum_shim6,
-    141 =&gt; :protocol_enum_wesp,
-    142 =&gt; :protocol_enum_rohc,
-    255 =&gt; :protocol_enum_reserved_255,
-  }
-  I__PROTOCOL_ENUM = PROTOCOL_ENUM.invert
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
     _read
@@ -433,33 +285,16 @@ class Ipv4Packet &lt; Kaitai::Struct::Struct
     @identification = @_io.read_u2be
     @b67 = @_io.read_u2be
     @ttl = @_io.read_u1
-    @protocol = Kaitai::Struct::Stream::resolve_enum(PROTOCOL_ENUM, @_io.read_u1)
+    @protocol = @_io.read_u1
     @header_checksum = @_io.read_u2be
     @src_ip_addr = @_io.read_bytes(4)
     @dst_ip_addr = @_io.read_bytes(4)
     @_raw_options = @_io.read_bytes((ihl_bytes - 20))
     io = Kaitai::Struct::Stream.new(@_raw_options)
     @options = Ipv4Options.new(io, self, @_root)
-    case protocol
-    when :protocol_enum_tcp
-      @_raw_body = @_io.read_bytes((total_length - ihl_bytes))
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = TcpSegment.new(io)
-    when :protocol_enum_icmp
-      @_raw_body = @_io.read_bytes((total_length - ihl_bytes))
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = IcmpPacket.new(io)
-    when :protocol_enum_udp
-      @_raw_body = @_io.read_bytes((total_length - ihl_bytes))
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = UdpDatagram.new(io)
-    when :protocol_enum_ipv6
-      @_raw_body = @_io.read_bytes((total_length - ihl_bytes))
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = Ipv6Packet.new(io)
-    else
-      @body = @_io.read_bytes((total_length - ihl_bytes))
-    end
+    @_raw_body = @_io.read_bytes((total_length - ihl_bytes))
+    io = Kaitai::Struct::Stream.new(@_raw_body)
+    @body = ProtocolBody.new(io, protocol)
     self
   end
   class Ipv4Options &lt; Kaitai::Struct::Struct

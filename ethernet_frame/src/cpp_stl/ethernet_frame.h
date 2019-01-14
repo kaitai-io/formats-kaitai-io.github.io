@@ -10,8 +10,8 @@
 #if KAITAI_STRUCT_VERSION < 7000L
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
-class ipv6_packet_t;
 class ipv4_packet_t;
+class ipv6_packet_t;
 
 /**
  * Ethernet frame is a OSI data link layer (layer 2) protocol data unit

@@ -115,7 +115,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.7
+                        Minimal Kaitai Struct required: 0.8
                     </div>
                     
                     
@@ -223,9 +223,7 @@ section#format-index .row {
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
-use UdpDatagram;
-use Ipv4Packet;
-use TcpSegment;
+use ProtocolBody;
 
 ########################################################################
 package Ipv6Packet;
@@ -266,22 +264,7 @@ sub _read {
     $self-&gt;{hop_limit} = $self-&gt;{_io}-&gt;read_u1();
     $self-&gt;{src_ipv6_addr} = $self-&gt;{_io}-&gt;read_bytes(16);
     $self-&gt;{dst_ipv6_addr} = $self-&gt;{_io}-&gt;read_bytes(16);
-    my $_on = $self-&gt;next_header_type();
-    if ($_on == 17) {
-        $self-&gt;{next_header} = UdpDatagram-&gt;new($self-&gt;{_io});
-    }
-    elsif ($_on == 0) {
-        $self-&gt;{next_header} = Ipv6Packet::OptionHopByHop-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == 4) {
-        $self-&gt;{next_header} = Ipv4Packet-&gt;new($self-&gt;{_io});
-    }
-    elsif ($_on == 6) {
-        $self-&gt;{next_header} = TcpSegment-&gt;new($self-&gt;{_io});
-    }
-    elsif ($_on == 59) {
-        $self-&gt;{next_header} = Ipv6Packet::NoNextHeader-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
+    $self-&gt;{next_header} = ProtocolBody-&gt;new($self-&gt;{_io});
     $self-&gt;{rest} = $self-&gt;{_io}-&gt;read_bytes_full();
 }
 
@@ -333,103 +316,6 @@ sub next_header {
 sub rest {
     my ($self) = @_;
     return $self-&gt;{rest};
-}
-
-########################################################################
-package Ipv6Packet::NoNextHeader;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-}
-
-########################################################################
-package Ipv6Packet::OptionHopByHop;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{next_header_type} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{hdr_ext_len} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes(($self-&gt;hdr_ext_len() - 1));
-    my $_on = $self-&gt;next_header_type();
-    if ($_on == 0) {
-        $self-&gt;{next_header} = Ipv6Packet::OptionHopByHop-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-    elsif ($_on == 6) {
-        $self-&gt;{next_header} = TcpSegment-&gt;new($self-&gt;{_io});
-    }
-    elsif ($_on == 59) {
-        $self-&gt;{next_header} = Ipv6Packet::NoNextHeader-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-}
-
-sub next_header_type {
-    my ($self) = @_;
-    return $self-&gt;{next_header_type};
-}
-
-sub hdr_ext_len {
-    my ($self) = @_;
-    return $self-&gt;{hdr_ext_len};
-}
-
-sub body {
-    my ($self) = @_;
-    return $self-&gt;{body};
-}
-
-sub next_header {
-    my ($self) = @_;
-    return $self-&gt;{next_header};
 }
 
 1;

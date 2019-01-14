@@ -3,8 +3,8 @@
 #include "ethernet_frame.h"
 
 
-#include "ipv6_packet.h"
 #include "ipv4_packet.h"
+#include "ipv6_packet.h"
 
 ethernet_frame_t::ethernet_frame_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ethernet_frame_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;

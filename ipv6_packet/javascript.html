@@ -115,7 +115,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.7
+                        Minimal Kaitai Struct required: 0.8
                     </div>
                     
                     
@@ -241,13 +241,13 @@ var data = new Ipv6Packet(new KaitaiStream(arrayBuffer));</code></pre>
 
 (function (root, factory) {
   if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;, &#39;./UdpDatagram&#39;, &#39;./Ipv4Packet&#39;, &#39;./TcpSegment&#39;], factory);
+    define([&#39;kaitai-struct/KaitaiStream&#39;, &#39;./ProtocolBody&#39;], factory);
   } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;), require(&#39;./UdpDatagram&#39;), require(&#39;./Ipv4Packet&#39;), require(&#39;./TcpSegment&#39;));
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;), require(&#39;./ProtocolBody&#39;));
   } else {
-    root.Ipv6Packet = factory(root.KaitaiStream, root.UdpDatagram, root.Ipv4Packet, root.TcpSegment);
+    root.Ipv6Packet = factory(root.KaitaiStream, root.ProtocolBody);
   }
-}(this, function (KaitaiStream, UdpDatagram, Ipv4Packet, TcpSegment) {
+}(this, function (KaitaiStream, ProtocolBody) {
 var Ipv6Packet = (function() {
   function Ipv6Packet(_io, _parent, _root) {
     this._io = _io;
@@ -266,67 +266,9 @@ var Ipv6Packet = (function() {
     this.hopLimit = this._io.readU1();
     this.srcIpv6Addr = this._io.readBytes(16);
     this.dstIpv6Addr = this._io.readBytes(16);
-    switch (this.nextHeaderType) {
-    case 17:
-      this.nextHeader = new UdpDatagram(this._io, this, null);
-      break;
-    case 0:
-      this.nextHeader = new OptionHopByHop(this._io, this, this._root);
-      break;
-    case 4:
-      this.nextHeader = new Ipv4Packet(this._io, this, null);
-      break;
-    case 6:
-      this.nextHeader = new TcpSegment(this._io, this, null);
-      break;
-    case 59:
-      this.nextHeader = new NoNextHeader(this._io, this, this._root);
-      break;
-    }
+    this.nextHeader = new ProtocolBody(this._io, this, null, this.nextHeaderType);
     this.rest = this._io.readBytesFull();
   }
-
-  var NoNextHeader = Ipv6Packet.NoNextHeader = (function() {
-    function NoNextHeader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    NoNextHeader.prototype._read = function() {
-    }
-
-    return NoNextHeader;
-  })();
-
-  var OptionHopByHop = Ipv6Packet.OptionHopByHop = (function() {
-    function OptionHopByHop(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    OptionHopByHop.prototype._read = function() {
-      this.nextHeaderType = this._io.readU1();
-      this.hdrExtLen = this._io.readU1();
-      this.body = this._io.readBytes((this.hdrExtLen - 1));
-      switch (this.nextHeaderType) {
-      case 0:
-        this.nextHeader = new OptionHopByHop(this._io, this, this._root);
-        break;
-      case 6:
-        this.nextHeader = new TcpSegment(this._io, this, null);
-        break;
-      case 59:
-        this.nextHeader = new NoNextHeader(this._io, this, this._root);
-        break;
-      }
-    }
-
-    return OptionHopByHop;
-  })();
 
   return Ipv6Packet;
 })();

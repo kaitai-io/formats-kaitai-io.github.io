@@ -13,12 +13,12 @@ digraph {
 			<TR><TD PORT="identification_pos">4</TD><TD PORT="identification_size">2</TD><TD>u2be</TD><TD PORT="identification_type">identification</TD></TR>
 			<TR><TD PORT="b67_pos">6</TD><TD PORT="b67_size">2</TD><TD>u2be</TD><TD PORT="b67_type">b67</TD></TR>
 			<TR><TD PORT="ttl_pos">8</TD><TD PORT="ttl_size">1</TD><TD>u1</TD><TD PORT="ttl_type">ttl</TD></TR>
-			<TR><TD PORT="protocol_pos">9</TD><TD PORT="protocol_size">1</TD><TD>u1→ProtocolEnum</TD><TD PORT="protocol_type">protocol</TD></TR>
+			<TR><TD PORT="protocol_pos">9</TD><TD PORT="protocol_size">1</TD><TD>u1</TD><TD PORT="protocol_type">protocol</TD></TR>
 			<TR><TD PORT="header_checksum_pos">10</TD><TD PORT="header_checksum_size">2</TD><TD>u2be</TD><TD PORT="header_checksum_type">header_checksum</TD></TR>
 			<TR><TD PORT="src_ip_addr_pos">12</TD><TD PORT="src_ip_addr_size">4</TD><TD></TD><TD PORT="src_ip_addr_type">src_ip_addr</TD></TR>
 			<TR><TD PORT="dst_ip_addr_pos">16</TD><TD PORT="dst_ip_addr_size">4</TD><TD></TD><TD PORT="dst_ip_addr_type">dst_ip_addr</TD></TR>
 			<TR><TD PORT="options_pos">20</TD><TD PORT="options_size">(ihl_bytes - 20)</TD><TD>Ipv4Options</TD><TD PORT="options_type">options</TD></TR>
-			<TR><TD PORT="body_pos">...</TD><TD PORT="body_size">...</TD><TD>switch (protocol)</TD><TD PORT="body_type">body</TD></TR>
+			<TR><TD PORT="body_pos">...</TD><TD PORT="body_size">(total_length - ihl_bytes)</TD><TD>ProtocolBody</TD><TD PORT="body_type">body</TD></TR>
 		</TABLE>>];
 		ipv4_packet__inst__version [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
@@ -32,13 +32,6 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 			<TR><TD>ihl_bytes</TD><TD>(ihl * 4)</TD></TR>
 		</TABLE>>];
-ipv4_packet__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:protocol_enum_tcp</TD><TD PORT="case0">TcpSegment</TD></TR>
-	<TR><TD>:protocol_enum_icmp</TD><TD PORT="case1">IcmpPacket</TD></TR>
-	<TR><TD>:protocol_enum_udp</TD><TD PORT="case2">UdpDatagram</TD></TR>
-	<TR><TD>:protocol_enum_ipv6</TD><TD PORT="case3">Ipv6Packet</TD></TR>
-</TABLE>>];
 		subgraph cluster__ipv4_options {
 			label="Ipv4Packet::Ipv4Options";
 			graph[style=dotted];
@@ -75,12 +68,9 @@ ipv4_packet__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACIN
 	}
 	ipv4_packet__inst__ihl_bytes:ihl_bytes_type -> ipv4_packet__seq:options_size [color="#404040"];
 	ipv4_packet__seq:options_type -> ipv4_options__seq [style=bold];
-	ipv4_packet__seq:body_type -> ipv4_packet__seq_body_switch [style=bold];
-	ipv4_packet__seq_body_switch:case0 -> tcp_segment__seq [style=bold];
-	ipv4_packet__seq_body_switch:case1 -> icmp_packet__seq [style=bold];
-	ipv4_packet__seq_body_switch:case2 -> udp_datagram__seq [style=bold];
-	ipv4_packet__seq_body_switch:case3 -> ipv6_packet__seq [style=bold];
-	ipv4_packet__seq:protocol_type -> ipv4_packet__seq:body_type [color="#404040"];
+	ipv4_packet__seq:total_length_type -> ipv4_packet__seq:body_size [color="#404040"];
+	ipv4_packet__inst__ihl_bytes:ihl_bytes_type -> ipv4_packet__seq:body_size [color="#404040"];
+	ipv4_packet__seq:body_type -> protocol_body__seq [style=bold];
 	ipv4_packet__seq:b1_type -> ipv4_packet__inst__version [color="#404040"];
 	ipv4_packet__seq:b1_type -> ipv4_packet__inst__ihl [color="#404040"];
 	ipv4_packet__inst__ihl:ihl_type -> ipv4_packet__inst__ihl_bytes [color="#404040"];

@@ -115,7 +115,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.7
+                        Minimal Kaitai Struct required: 0.8
                     </div>
                     
                     
@@ -281,15 +281,11 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
 #if KAITAI_STRUCT_VERSION &lt; 7000L
 #error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
 #endif
-class udp_datagram_t;
-class ipv4_packet_t;
-class tcp_segment_t;
+class protocol_body_t;
 
 class ipv6_packet_t : public kaitai::kstruct {
 
 public:
-    class no_next_header_t;
-    class option_hop_by_hop_t;
 
     ipv6_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, ipv6_packet_t* p__root = 0);
 
@@ -298,62 +294,6 @@ private:
 
 public:
     ~ipv6_packet_t();
-
-    class no_next_header_t : public kaitai::kstruct {
-
-    public:
-
-        no_next_header_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, ipv6_packet_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~no_next_header_t();
-
-    private:
-        ipv6_packet_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        ipv6_packet_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    class option_hop_by_hop_t : public kaitai::kstruct {
-
-    public:
-
-        option_hop_by_hop_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, ipv6_packet_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~option_hop_by_hop_t();
-
-    private:
-        uint8_t m_next_header_type;
-        uint8_t m_hdr_ext_len;
-        std::string m_body;
-        kaitai::kstruct* m_next_header;
-        bool n_next_header;
-
-    public:
-        bool _is_null_next_header() { next_header(); return n_next_header; };
-
-    private:
-        ipv6_packet_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        uint8_t next_header_type() const { return m_next_header_type; }
-        uint8_t hdr_ext_len() const { return m_hdr_ext_len; }
-        std::string body() const { return m_body; }
-        kaitai::kstruct* next_header() const { return m_next_header; }
-        ipv6_packet_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
 
 private:
     uint64_t m_version;
@@ -364,13 +304,7 @@ private:
     uint8_t m_hop_limit;
     std::string m_src_ipv6_addr;
     std::string m_dst_ipv6_addr;
-    kaitai::kstruct* m_next_header;
-    bool n_next_header;
-
-public:
-    bool _is_null_next_header() { next_header(); return n_next_header; };
-
-private:
+    protocol_body_t* m_next_header;
     std::string m_rest;
     ipv6_packet_t* m__root;
     kaitai::kstruct* m__parent;
@@ -384,7 +318,7 @@ public:
     uint8_t hop_limit() const { return m_hop_limit; }
     std::string src_ipv6_addr() const { return m_src_ipv6_addr; }
     std::string dst_ipv6_addr() const { return m_dst_ipv6_addr; }
-    kaitai::kstruct* next_header() const { return m_next_header; }
+    protocol_body_t* next_header() const { return m_next_header; }
     std::string rest() const { return m_rest; }
     ipv6_packet_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
@@ -412,9 +346,7 @@ public:
 #include &quot;ipv6_packet.h&quot;
 
 
-#include &quot;udp_datagram.h&quot;
-#include &quot;ipv4_packet.h&quot;
-#include &quot;tcp_segment.h&quot;
+#include &quot;protocol_body.h&quot;
 
 ipv6_packet_t::ipv6_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ipv6_packet_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
@@ -432,89 +364,12 @@ void ipv6_packet_t::_read() {
     m_hop_limit = m__io-&gt;read_u1();
     m_src_ipv6_addr = m__io-&gt;read_bytes(16);
     m_dst_ipv6_addr = m__io-&gt;read_bytes(16);
-    n_next_header = true;
-    switch (next_header_type()) {
-    case 17: {
-        n_next_header = false;
-        m_next_header = new udp_datagram_t(m__io);
-        break;
-    }
-    case 0: {
-        n_next_header = false;
-        m_next_header = new option_hop_by_hop_t(m__io, this, m__root);
-        break;
-    }
-    case 4: {
-        n_next_header = false;
-        m_next_header = new ipv4_packet_t(m__io);
-        break;
-    }
-    case 6: {
-        n_next_header = false;
-        m_next_header = new tcp_segment_t(m__io);
-        break;
-    }
-    case 59: {
-        n_next_header = false;
-        m_next_header = new no_next_header_t(m__io, this, m__root);
-        break;
-    }
-    }
+    m_next_header = new protocol_body_t(next_header_type(), m__io);
     m_rest = m__io-&gt;read_bytes_full();
 }
 
 ipv6_packet_t::~ipv6_packet_t() {
-    if (!n_next_header) {
-        delete m_next_header;
-    }
-}
-
-ipv6_packet_t::no_next_header_t::no_next_header_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ipv6_packet_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
-
-void ipv6_packet_t::no_next_header_t::_read() {
-}
-
-ipv6_packet_t::no_next_header_t::~no_next_header_t() {
-}
-
-ipv6_packet_t::option_hop_by_hop_t::option_hop_by_hop_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ipv6_packet_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
-
-void ipv6_packet_t::option_hop_by_hop_t::_read() {
-    m_next_header_type = m__io-&gt;read_u1();
-    m_hdr_ext_len = m__io-&gt;read_u1();
-    m_body = m__io-&gt;read_bytes((hdr_ext_len() - 1));
-    n_next_header = true;
-    switch (next_header_type()) {
-    case 0: {
-        n_next_header = false;
-        m_next_header = new option_hop_by_hop_t(m__io, this, m__root);
-        break;
-    }
-    case 6: {
-        n_next_header = false;
-        m_next_header = new tcp_segment_t(m__io);
-        break;
-    }
-    case 59: {
-        n_next_header = false;
-        m_next_header = new no_next_header_t(m__io, this, m__root);
-        break;
-    }
-    }
-}
-
-ipv6_packet_t::option_hop_by_hop_t::~option_hop_by_hop_t() {
-    if (!n_next_header) {
-        delete m_next_header;
-    }
+    delete m_next_header;
 }
 </code></pre>
             

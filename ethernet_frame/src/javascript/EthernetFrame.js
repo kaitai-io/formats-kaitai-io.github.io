@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './Ipv6Packet', './Ipv4Packet'], factory);
+    define(['kaitai-struct/KaitaiStream', './Ipv4Packet', './Ipv6Packet'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./Ipv6Packet'), require('./Ipv4Packet'));
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./Ipv4Packet'), require('./Ipv6Packet'));
   } else {
-    root.EthernetFrame = factory(root.KaitaiStream, root.Ipv6Packet, root.Ipv4Packet);
+    root.EthernetFrame = factory(root.KaitaiStream, root.Ipv4Packet, root.Ipv6Packet);
   }
-}(this, function (KaitaiStream, Ipv6Packet, Ipv4Packet) {
+}(this, function (KaitaiStream, Ipv4Packet, Ipv6Packet) {
 /**
  * Ethernet frame is a OSI data link layer (layer 2) protocol data unit
  * for Ethernet networks. In practice, many other networks and/or

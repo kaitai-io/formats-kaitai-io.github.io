@@ -22,55 +22,9 @@ class Ipv6Packet < Kaitai::Struct::Struct
     @hop_limit = @_io.read_u1
     @src_ipv6_addr = @_io.read_bytes(16)
     @dst_ipv6_addr = @_io.read_bytes(16)
-    case next_header_type
-    when 17
-      @next_header = UdpDatagram.new(@_io)
-    when 0
-      @next_header = OptionHopByHop.new(@_io, self, @_root)
-    when 4
-      @next_header = Ipv4Packet.new(@_io)
-    when 6
-      @next_header = TcpSegment.new(@_io)
-    when 59
-      @next_header = NoNextHeader.new(@_io, self, @_root)
-    end
+    @next_header = ProtocolBody.new(@_io, next_header_type)
     @rest = @_io.read_bytes_full
     self
-  end
-  class NoNextHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      self
-    end
-  end
-  class OptionHopByHop < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @next_header_type = @_io.read_u1
-      @hdr_ext_len = @_io.read_u1
-      @body = @_io.read_bytes((hdr_ext_len - 1))
-      case next_header_type
-      when 0
-        @next_header = OptionHopByHop.new(@_io, self, @_root)
-      when 6
-        @next_header = TcpSegment.new(@_io)
-      when 59
-        @next_header = NoNextHeader.new(@_io, self, @_root)
-      end
-      self
-    end
-    attr_reader :next_header_type
-    attr_reader :hdr_ext_len
-    attr_reader :body
-    attr_reader :next_header
   end
   attr_reader :version
   attr_reader :traffic_class

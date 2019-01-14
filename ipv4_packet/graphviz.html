@@ -115,7 +115,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.7
+                        Minimal Kaitai Struct required: 0.8
                     </div>
                     
                     
@@ -257,12 +257,12 @@ section#format-index .row {
 			&lt;TR&gt;&lt;TD PORT=&quot;identification_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;identification_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2be&lt;/TD&gt;&lt;TD PORT=&quot;identification_type&quot;&gt;identification&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;b67_pos&quot;&gt;6&lt;/TD&gt;&lt;TD PORT=&quot;b67_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2be&lt;/TD&gt;&lt;TD PORT=&quot;b67_type&quot;&gt;b67&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;ttl_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;ttl_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;ttl_type&quot;&gt;ttl&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;protocol_pos&quot;&gt;9&lt;/TD&gt;&lt;TD PORT=&quot;protocol_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1→ProtocolEnum&lt;/TD&gt;&lt;TD PORT=&quot;protocol_type&quot;&gt;protocol&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;protocol_pos&quot;&gt;9&lt;/TD&gt;&lt;TD PORT=&quot;protocol_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;protocol_type&quot;&gt;protocol&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;header_checksum_pos&quot;&gt;10&lt;/TD&gt;&lt;TD PORT=&quot;header_checksum_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2be&lt;/TD&gt;&lt;TD PORT=&quot;header_checksum_type&quot;&gt;header_checksum&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;src_ip_addr_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;src_ip_addr_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;src_ip_addr_type&quot;&gt;src_ip_addr&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;dst_ip_addr_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;dst_ip_addr_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;dst_ip_addr_type&quot;&gt;dst_ip_addr&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD PORT=&quot;options_pos&quot;&gt;20&lt;/TD&gt;&lt;TD PORT=&quot;options_size&quot;&gt;(ihl_bytes - 20)&lt;/TD&gt;&lt;TD&gt;Ipv4Options&lt;/TD&gt;&lt;TD PORT=&quot;options_type&quot;&gt;options&lt;/TD&gt;&lt;/TR&gt;
-			&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (protocol)&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;(total_length - ihl_bytes)&lt;/TD&gt;&lt;TD&gt;ProtocolBody&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
 		ipv4_packet__inst__version [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
 			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
@@ -276,13 +276,6 @@ section#format-index .row {
 			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
 			&lt;TR&gt;&lt;TD&gt;ihl_bytes&lt;/TD&gt;&lt;TD&gt;(ihl * 4)&lt;/TD&gt;&lt;/TR&gt;
 		&lt;/TABLE&gt;&gt;];
-ipv4_packet__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
-	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:protocol_enum_tcp&lt;/TD&gt;&lt;TD PORT=&quot;case0&quot;&gt;TcpSegment&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:protocol_enum_icmp&lt;/TD&gt;&lt;TD PORT=&quot;case1&quot;&gt;IcmpPacket&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:protocol_enum_udp&lt;/TD&gt;&lt;TD PORT=&quot;case2&quot;&gt;UdpDatagram&lt;/TD&gt;&lt;/TR&gt;
-	&lt;TR&gt;&lt;TD&gt;:protocol_enum_ipv6&lt;/TD&gt;&lt;TD PORT=&quot;case3&quot;&gt;Ipv6Packet&lt;/TD&gt;&lt;/TR&gt;
-&lt;/TABLE&gt;&gt;];
 		subgraph cluster__ipv4_options {
 			label=&quot;Ipv4Packet::Ipv4Options&quot;;
 			graph[style=dotted];
@@ -319,12 +312,9 @@ ipv4_packet__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDE
 	}
 	ipv4_packet__inst__ihl_bytes:ihl_bytes_type -&gt; ipv4_packet__seq:options_size [color=&quot;#404040&quot;];
 	ipv4_packet__seq:options_type -&gt; ipv4_options__seq [style=bold];
-	ipv4_packet__seq:body_type -&gt; ipv4_packet__seq_body_switch [style=bold];
-	ipv4_packet__seq_body_switch:case0 -&gt; tcp_segment__seq [style=bold];
-	ipv4_packet__seq_body_switch:case1 -&gt; icmp_packet__seq [style=bold];
-	ipv4_packet__seq_body_switch:case2 -&gt; udp_datagram__seq [style=bold];
-	ipv4_packet__seq_body_switch:case3 -&gt; ipv6_packet__seq [style=bold];
-	ipv4_packet__seq:protocol_type -&gt; ipv4_packet__seq:body_type [color=&quot;#404040&quot;];
+	ipv4_packet__seq:total_length_type -&gt; ipv4_packet__seq:body_size [color=&quot;#404040&quot;];
+	ipv4_packet__inst__ihl_bytes:ihl_bytes_type -&gt; ipv4_packet__seq:body_size [color=&quot;#404040&quot;];
+	ipv4_packet__seq:body_type -&gt; protocol_body__seq [style=bold];
 	ipv4_packet__seq:b1_type -&gt; ipv4_packet__inst__version [color=&quot;#404040&quot;];
 	ipv4_packet__seq:b1_type -&gt; ipv4_packet__inst__ihl [color=&quot;#404040&quot;];
 	ipv4_packet__inst__ihl:ihl_type -&gt; ipv4_packet__inst__ihl_bytes [color=&quot;#404040&quot;];

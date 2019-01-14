@@ -1,0 +1,59 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__protocol_body {
+		label="ProtocolBody";
+		graph[style=dotted];
+
+		protocol_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="body_pos">0</TD><TD PORT="body_size">...</TD><TD>switch (protocol)</TD><TD PORT="body_type">body</TD></TR>
+		</TABLE>>];
+		protocol_body__inst__protocol [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>protocol</TD><TD>Kaitai::Struct::Stream::resolve_enum(PROTOCOL_ENUM, protocol_num)</TD></TR>
+		</TABLE>>];
+protocol_body__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:protocol_enum_tcp</TD><TD PORT="case0">TcpSegment</TD></TR>
+	<TR><TD>:protocol_enum_ipv6_nonxt</TD><TD PORT="case1">NoNextHeader</TD></TR>
+	<TR><TD>:protocol_enum_icmp</TD><TD PORT="case2">IcmpPacket</TD></TR>
+	<TR><TD>:protocol_enum_udp</TD><TD PORT="case3">UdpDatagram</TD></TR>
+	<TR><TD>:protocol_enum_hopopt</TD><TD PORT="case4">OptionHopByHop</TD></TR>
+	<TR><TD>:protocol_enum_ipv6</TD><TD PORT="case5">Ipv6Packet</TD></TR>
+	<TR><TD>:protocol_enum_ipv4</TD><TD PORT="case6">Ipv4Packet</TD></TR>
+</TABLE>>];
+		subgraph cluster__no_next_header {
+			label="ProtocolBody::NoNextHeader";
+			graph[style=dotted];
+
+			no_next_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__option_hop_by_hop {
+			label="ProtocolBody::OptionHopByHop";
+			graph[style=dotted];
+
+			option_hop_by_hop__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="next_header_type_pos">0</TD><TD PORT="next_header_type_size">1</TD><TD>u1</TD><TD PORT="next_header_type_type">next_header_type</TD></TR>
+				<TR><TD PORT="hdr_ext_len_pos">1</TD><TD PORT="hdr_ext_len_size">1</TD><TD>u1</TD><TD PORT="hdr_ext_len_type">hdr_ext_len</TD></TR>
+				<TR><TD PORT="body_pos">2</TD><TD PORT="body_size">(hdr_ext_len - 1)</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+				<TR><TD PORT="next_header_pos">...</TD><TD PORT="next_header_size">...</TD><TD>ProtocolBody</TD><TD PORT="next_header_type">next_header</TD></TR>
+			</TABLE>>];
+		}
+	}
+	protocol_body__seq:body_type -> protocol_body__seq_body_switch [style=bold];
+	protocol_body__seq_body_switch:case0 -> tcp_segment__seq [style=bold];
+	protocol_body__seq_body_switch:case1 -> no_next_header__seq [style=bold];
+	protocol_body__seq_body_switch:case2 -> icmp_packet__seq [style=bold];
+	protocol_body__seq_body_switch:case3 -> udp_datagram__seq [style=bold];
+	protocol_body__seq_body_switch:case4 -> option_hop_by_hop__seq [style=bold];
+	protocol_body__seq_body_switch:case5 -> ipv6_packet__seq [style=bold];
+	protocol_body__seq_body_switch:case6 -> ipv4_packet__seq [style=bold];
+	protocol_body__inst__protocol:protocol_type -> protocol_body__seq:body_type [color="#404040"];
+	protocol_body__params:protocol_num_type -> protocol_body__inst__protocol [color="#404040"];
+	option_hop_by_hop__seq:hdr_ext_len_type -> option_hop_by_hop__seq:body_size [color="#404040"];
+	option_hop_by_hop__seq:next_header_type -> protocol_body__seq [style=bold];
+}
