@@ -263,7 +263,7 @@ sub bool_value {
     my ($self) = @_;
     return $self->{bool_value} if ($self->{bool_value});
     if ($self->is_bool()) {
-        $self->{bool_value} = $self->b1() == 194;
+        $self->{bool_value} = $self->b1() == 195;
     }
     return $self->{bool_value};
 }

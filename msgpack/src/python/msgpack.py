@@ -320,7 +320,7 @@ class Msgpack(KaitaiStruct):
             return self._m_bool_value if hasattr(self, '_m_bool_value') else None
 
         if self.is_bool:
-            self._m_bool_value = self.b1 == 194
+            self._m_bool_value = self.b1 == 195
 
         return self._m_bool_value if hasattr(self, '_m_bool_value') else None
 

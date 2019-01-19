@@ -242,7 +242,7 @@ class Msgpack extends \Kaitai\Struct\Struct {
         if ($this->_m_boolValue !== null)
             return $this->_m_boolValue;
         if ($this->isBool()) {
-            $this->_m_boolValue = $this->b1() == 194;
+            $this->_m_boolValue = $this->b1() == 195;
         }
         return $this->_m_boolValue;
     }

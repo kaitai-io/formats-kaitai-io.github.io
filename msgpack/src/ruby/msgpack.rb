@@ -246,7 +246,7 @@ class Msgpack < Kaitai::Struct::Struct
   def bool_value
     return @bool_value unless @bool_value.nil?
     if is_bool
-      @bool_value = b1 == 194
+      @bool_value = b1 == 195
     end
     @bool_value
   end

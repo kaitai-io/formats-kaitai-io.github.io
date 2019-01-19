@@ -368,7 +368,7 @@ public class Msgpack extends KaitaiStruct {
         if (this.boolValue != null)
             return this.boolValue;
         if (isBool()) {
-            boolean _tmp = (boolean) (b1() == 194);
+            boolean _tmp = (boolean) (b1() == 195);
             this.boolValue = _tmp;
         }
         return this.boolValue;
