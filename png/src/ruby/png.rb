@@ -169,6 +169,9 @@ class Png < Kaitai::Struct::Struct
     end
     attr_reader :value
   end
+
+  ##
+  # @see https://www.w3.org/TR/PNG/#11cHRM Source
   class ChrmChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -187,6 +190,9 @@ class Png < Kaitai::Struct::Struct
     attr_reader :green
     attr_reader :blue
   end
+
+  ##
+  # @see https://www.w3.org/TR/PNG/#11IHDR Source
   class IhdrChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -211,6 +217,9 @@ class Png < Kaitai::Struct::Struct
     attr_reader :filter_method
     attr_reader :interlace_method
   end
+
+  ##
+  # @see https://www.w3.org/TR/PNG/#11PLTE Source
   class PlteChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -228,6 +237,9 @@ class Png < Kaitai::Struct::Struct
     end
     attr_reader :entries
   end
+
+  ##
+  # @see https://www.w3.org/TR/PNG/#11sRGB Source
   class SrgbChunk < Kaitai::Struct::Struct
 
     INTENT = {
@@ -248,6 +260,9 @@ class Png < Kaitai::Struct::Struct
     end
     attr_reader :render_intent
   end
+
+  ##
+  # @see https://www.w3.org/TR/PNG/#11zTXt Source
   class CompressedTextChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -282,6 +297,9 @@ class Png < Kaitai::Struct::Struct
     attr_reader :green
     attr_reader :blue
   end
+
+  ##
+  # @see https://www.w3.org/TR/PNG/#11gAMA Source
   class GamaChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -299,6 +317,9 @@ class Png < Kaitai::Struct::Struct
     end
     attr_reader :gamma_int
   end
+
+  ##
+  # @see https://www.w3.org/TR/PNG/#11bKGD Source
   class BkgdChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -322,6 +343,9 @@ class Png < Kaitai::Struct::Struct
     end
     attr_reader :bkgd
   end
+
+  ##
+  # @see https://www.w3.org/TR/PNG/#11pHYs Source
   class PhysChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -338,6 +362,9 @@ class Png < Kaitai::Struct::Struct
     attr_reader :pixels_per_unit_y
     attr_reader :unit
   end
+
+  ##
+  # @see https://www.w3.org/TR/PNG/#11iTXt Source
   class InternationalTextChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -360,6 +387,9 @@ class Png < Kaitai::Struct::Struct
     attr_reader :translated_keyword
     attr_reader :text
   end
+
+  ##
+  # @see https://www.w3.org/TR/PNG/#11tEXt Source
   class TextChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -374,6 +404,9 @@ class Png < Kaitai::Struct::Struct
     attr_reader :keyword
     attr_reader :text
   end
+
+  ##
+  # @see https://www.w3.org/TR/PNG/#11tIME Source
   class TimeChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

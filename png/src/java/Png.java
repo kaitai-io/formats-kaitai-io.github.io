@@ -324,6 +324,10 @@ public class Png extends KaitaiStruct {
         public Png _root() { return _root; }
         public Png.BkgdChunk _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/PNG/#11cHRM">Source</a>
+     */
     public static class ChrmChunk extends KaitaiStruct {
         public static ChrmChunk fromFile(String fileName) throws IOException {
             return new ChrmChunk(new ByteBufferKaitaiStream(fileName));
@@ -362,6 +366,10 @@ public class Png extends KaitaiStruct {
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/PNG/#11IHDR">Source</a>
+     */
     public static class IhdrChunk extends KaitaiStruct {
         public static IhdrChunk fromFile(String fileName) throws IOException {
             return new IhdrChunk(new ByteBufferKaitaiStream(fileName));
@@ -409,6 +417,10 @@ public class Png extends KaitaiStruct {
         public Png _root() { return _root; }
         public Png _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/PNG/#11PLTE">Source</a>
+     */
     public static class PlteChunk extends KaitaiStruct {
         public static PlteChunk fromFile(String fileName) throws IOException {
             return new PlteChunk(new ByteBufferKaitaiStream(fileName));
@@ -445,6 +457,10 @@ public class Png extends KaitaiStruct {
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/PNG/#11sRGB">Source</a>
+     */
     public static class SrgbChunk extends KaitaiStruct {
         public static SrgbChunk fromFile(String fileName) throws IOException {
             return new SrgbChunk(new ByteBufferKaitaiStream(fileName));
@@ -491,6 +507,10 @@ public class Png extends KaitaiStruct {
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/PNG/#11zTXt">Source</a>
+     */
     public static class CompressedTextChunk extends KaitaiStruct {
         public static CompressedTextChunk fromFile(String fileName) throws IOException {
             return new CompressedTextChunk(new ByteBufferKaitaiStream(fileName));
@@ -564,6 +584,10 @@ public class Png extends KaitaiStruct {
         public Png _root() { return _root; }
         public Png.BkgdChunk _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/PNG/#11gAMA">Source</a>
+     */
     public static class GamaChunk extends KaitaiStruct {
         public static GamaChunk fromFile(String fileName) throws IOException {
             return new GamaChunk(new ByteBufferKaitaiStream(fileName));
@@ -601,6 +625,10 @@ public class Png extends KaitaiStruct {
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/PNG/#11bKGD">Source</a>
+     */
     public static class BkgdChunk extends KaitaiStruct {
         public static BkgdChunk fromFile(String fileName) throws IOException {
             return new BkgdChunk(new ByteBufferKaitaiStream(fileName));
@@ -651,6 +679,10 @@ public class Png extends KaitaiStruct {
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/PNG/#11pHYs">Source</a>
+     */
     public static class PhysChunk extends KaitaiStruct {
         public static PhysChunk fromFile(String fileName) throws IOException {
             return new PhysChunk(new ByteBufferKaitaiStream(fileName));
@@ -686,6 +718,10 @@ public class Png extends KaitaiStruct {
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/PNG/#11iTXt">Source</a>
+     */
     public static class InternationalTextChunk extends KaitaiStruct {
         public static InternationalTextChunk fromFile(String fileName) throws IOException {
             return new InternationalTextChunk(new ByteBufferKaitaiStream(fileName));
@@ -730,6 +766,10 @@ public class Png extends KaitaiStruct {
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/PNG/#11tEXt">Source</a>
+     */
     public static class TextChunk extends KaitaiStruct {
         public static TextChunk fromFile(String fileName) throws IOException {
             return new TextChunk(new ByteBufferKaitaiStream(fileName));
@@ -762,6 +802,10 @@ public class Png extends KaitaiStruct {
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/PNG/#11tIME">Source</a>
+     */
     public static class TimeChunk extends KaitaiStruct {
         public static TimeChunk fromFile(String fileName) throws IOException {
             return new TimeChunk(new ByteBufferKaitaiStream(fileName));

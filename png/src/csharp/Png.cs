@@ -283,6 +283,10 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png.BkgdChunk M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/PNG/#11cHRM">Source</a>
+        /// </remarks>
         public partial class ChrmChunk : KaitaiStruct
         {
             public static ChrmChunk FromFile(string fileName)
@@ -316,6 +320,10 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/PNG/#11IHDR">Source</a>
+        /// </remarks>
         public partial class IhdrChunk : KaitaiStruct
         {
             public static IhdrChunk FromFile(string fileName)
@@ -358,6 +366,10 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/PNG/#11PLTE">Source</a>
+        /// </remarks>
         public partial class PlteChunk : KaitaiStruct
         {
             public static PlteChunk FromFile(string fileName)
@@ -389,6 +401,10 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/PNG/#11sRGB">Source</a>
+        /// </remarks>
         public partial class SrgbChunk : KaitaiStruct
         {
             public static SrgbChunk FromFile(string fileName)
@@ -421,6 +437,10 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/PNG/#11zTXt">Source</a>
+        /// </remarks>
         public partial class CompressedTextChunk : KaitaiStruct
         {
             public static CompressedTextChunk FromFile(string fileName)
@@ -484,6 +504,10 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png.BkgdChunk M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/PNG/#11gAMA">Source</a>
+        /// </remarks>
         public partial class GamaChunk : KaitaiStruct
         {
             public static GamaChunk FromFile(string fileName)
@@ -522,6 +546,10 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/PNG/#11bKGD">Source</a>
+        /// </remarks>
         public partial class BkgdChunk : KaitaiStruct
         {
             public static BkgdChunk FromFile(string fileName)
@@ -567,6 +595,10 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/PNG/#11pHYs">Source</a>
+        /// </remarks>
         public partial class PhysChunk : KaitaiStruct
         {
             public static PhysChunk FromFile(string fileName)
@@ -597,6 +629,10 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/PNG/#11iTXt">Source</a>
+        /// </remarks>
         public partial class InternationalTextChunk : KaitaiStruct
         {
             public static InternationalTextChunk FromFile(string fileName)
@@ -636,6 +672,10 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/PNG/#11tEXt">Source</a>
+        /// </remarks>
         public partial class TextChunk : KaitaiStruct
         {
             public static TextChunk FromFile(string fileName)
@@ -663,6 +703,10 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/PNG/#11tIME">Source</a>
+        /// </remarks>
         public partial class TimeChunk : KaitaiStruct
         {
             public static TimeChunk FromFile(string fileName)

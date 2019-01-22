@@ -162,6 +162,10 @@ class Png(KaitaiStruct):
 
 
     class ChrmChunk(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://www.w3.org/TR/PNG/#11cHRM
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -176,6 +180,10 @@ class Png(KaitaiStruct):
 
 
     class IhdrChunk(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://www.w3.org/TR/PNG/#11IHDR
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -193,6 +201,10 @@ class Png(KaitaiStruct):
 
 
     class PlteChunk(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://www.w3.org/TR/PNG/#11PLTE
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -209,6 +221,10 @@ class Png(KaitaiStruct):
 
 
     class SrgbChunk(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://www.w3.org/TR/PNG/#11sRGB
+        """
 
         class Intent(Enum):
             perceptual = 0
@@ -226,6 +242,10 @@ class Png(KaitaiStruct):
 
 
     class CompressedTextChunk(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://www.w3.org/TR/PNG/#11zTXt
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -253,6 +273,10 @@ class Png(KaitaiStruct):
 
 
     class GamaChunk(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://www.w3.org/TR/PNG/#11gAMA
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -272,6 +296,10 @@ class Png(KaitaiStruct):
 
 
     class BkgdChunk(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://www.w3.org/TR/PNG/#11bKGD
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -293,6 +321,10 @@ class Png(KaitaiStruct):
 
 
     class PhysChunk(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://www.w3.org/TR/PNG/#11pHYs
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -306,6 +338,10 @@ class Png(KaitaiStruct):
 
 
     class InternationalTextChunk(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://www.w3.org/TR/PNG/#11iTXt
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -322,6 +358,10 @@ class Png(KaitaiStruct):
 
 
     class TextChunk(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://www.w3.org/TR/PNG/#11tEXt
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -334,6 +374,10 @@ class Png(KaitaiStruct):
 
 
     class TimeChunk(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://www.w3.org/TR/PNG/#11tIME
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent

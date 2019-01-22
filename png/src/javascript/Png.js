@@ -205,6 +205,10 @@ var Png = (function() {
     return BkgdGreyscale;
   })();
 
+  /**
+   * @see {@link https://www.w3.org/TR/PNG/#11cHRM|Source}
+   */
+
   var ChrmChunk = Png.ChrmChunk = (function() {
     function ChrmChunk(_io, _parent, _root) {
       this._io = _io;
@@ -222,6 +226,10 @@ var Png = (function() {
 
     return ChrmChunk;
   })();
+
+  /**
+   * @see {@link https://www.w3.org/TR/PNG/#11IHDR|Source}
+   */
 
   var IhdrChunk = Png.IhdrChunk = (function() {
     function IhdrChunk(_io, _parent, _root) {
@@ -244,6 +252,10 @@ var Png = (function() {
     return IhdrChunk;
   })();
 
+  /**
+   * @see {@link https://www.w3.org/TR/PNG/#11PLTE|Source}
+   */
+
   var PlteChunk = Png.PlteChunk = (function() {
     function PlteChunk(_io, _parent, _root) {
       this._io = _io;
@@ -263,6 +275,10 @@ var Png = (function() {
 
     return PlteChunk;
   })();
+
+  /**
+   * @see {@link https://www.w3.org/TR/PNG/#11sRGB|Source}
+   */
 
   var SrgbChunk = Png.SrgbChunk = (function() {
     SrgbChunk.Intent = Object.freeze({
@@ -290,6 +306,10 @@ var Png = (function() {
 
     return SrgbChunk;
   })();
+
+  /**
+   * @see {@link https://www.w3.org/TR/PNG/#11zTXt|Source}
+   */
 
   var CompressedTextChunk = Png.CompressedTextChunk = (function() {
     function CompressedTextChunk(_io, _parent, _root) {
@@ -326,6 +346,10 @@ var Png = (function() {
     return BkgdTruecolor;
   })();
 
+  /**
+   * @see {@link https://www.w3.org/TR/PNG/#11gAMA|Source}
+   */
+
   var GamaChunk = Png.GamaChunk = (function() {
     function GamaChunk(_io, _parent, _root) {
       this._io = _io;
@@ -348,6 +372,10 @@ var Png = (function() {
 
     return GamaChunk;
   })();
+
+  /**
+   * @see {@link https://www.w3.org/TR/PNG/#11bKGD|Source}
+   */
 
   var BkgdChunk = Png.BkgdChunk = (function() {
     function BkgdChunk(_io, _parent, _root) {
@@ -380,6 +408,10 @@ var Png = (function() {
     return BkgdChunk;
   })();
 
+  /**
+   * @see {@link https://www.w3.org/TR/PNG/#11pHYs|Source}
+   */
+
   var PhysChunk = Png.PhysChunk = (function() {
     function PhysChunk(_io, _parent, _root) {
       this._io = _io;
@@ -396,6 +428,10 @@ var Png = (function() {
 
     return PhysChunk;
   })();
+
+  /**
+   * @see {@link https://www.w3.org/TR/PNG/#11iTXt|Source}
+   */
 
   var InternationalTextChunk = Png.InternationalTextChunk = (function() {
     function InternationalTextChunk(_io, _parent, _root) {
@@ -417,6 +453,10 @@ var Png = (function() {
     return InternationalTextChunk;
   })();
 
+  /**
+   * @see {@link https://www.w3.org/TR/PNG/#11tEXt|Source}
+   */
+
   var TextChunk = Png.TextChunk = (function() {
     function TextChunk(_io, _parent, _root) {
       this._io = _io;
@@ -432,6 +472,10 @@ var Png = (function() {
 
     return TextChunk;
   })();
+
+  /**
+   * @see {@link https://www.w3.org/TR/PNG/#11tIME|Source}
+   */
 
   var TimeChunk = Png.TimeChunk = (function() {
     function TimeChunk(_io, _parent, _root) {

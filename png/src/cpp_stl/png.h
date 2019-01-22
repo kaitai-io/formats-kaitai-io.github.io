@@ -205,6 +205,10 @@ public:
         png_t::bkgd_chunk_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa Source
+     */
+
     class chrm_chunk_t : public kaitai::kstruct {
 
     public:
@@ -233,6 +237,10 @@ public:
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa Source
+     */
 
     class ihdr_chunk_t : public kaitai::kstruct {
 
@@ -269,6 +277,10 @@ public:
         png_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa Source
+     */
+
     class plte_chunk_t : public kaitai::kstruct {
 
     public:
@@ -291,6 +303,10 @@ public:
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa Source
+     */
 
     class srgb_chunk_t : public kaitai::kstruct {
 
@@ -321,6 +337,10 @@ public:
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa Source
+     */
 
     class compressed_text_chunk_t : public kaitai::kstruct {
 
@@ -378,6 +398,10 @@ public:
         png_t::bkgd_chunk_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa Source
+     */
+
     class gama_chunk_t : public kaitai::kstruct {
 
     public:
@@ -408,6 +432,10 @@ public:
         png_t::chunk_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa Source
+     */
+
     class bkgd_chunk_t : public kaitai::kstruct {
 
     public:
@@ -437,6 +465,10 @@ public:
         png_t::chunk_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa Source
+     */
+
     class phys_chunk_t : public kaitai::kstruct {
 
     public:
@@ -463,6 +495,10 @@ public:
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa Source
+     */
 
     class international_text_chunk_t : public kaitai::kstruct {
 
@@ -497,6 +533,10 @@ public:
         png_t::chunk_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa Source
+     */
+
     class text_chunk_t : public kaitai::kstruct {
 
     public:
@@ -521,6 +561,10 @@ public:
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa Source
+     */
 
     class time_chunk_t : public kaitai::kstruct {
 
