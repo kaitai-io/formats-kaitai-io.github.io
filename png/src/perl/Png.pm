@@ -29,6 +29,8 @@ our $COLOR_TYPE_TRUECOLOR_ALPHA = 6;
 our $PHYS_UNIT_UNKNOWN = 0;
 our $PHYS_UNIT_METER = 1;
 
+our $COMPRESSION_METHODS_ZLIB = 0;
+
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
     my $self = IO::KaitaiStruct::Struct->new($_io);

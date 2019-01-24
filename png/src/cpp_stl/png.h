@@ -46,6 +46,10 @@ public:
         PHYS_UNIT_METER = 1
     };
 
+    enum compression_methods_t {
+        COMPRESSION_METHODS_ZLIB = 0
+    };
+
     png_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, png_t* p__root = 0);
 
 private:
@@ -120,6 +124,10 @@ public:
         kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
     };
 
+    /**
+     * Background chunk for images with indexed palette.
+     */
+
     class bkgd_indexed_t : public kaitai::kstruct {
 
     public:
@@ -181,6 +189,10 @@ public:
         png_t* _root() const { return m__root; }
         png_t::chrm_chunk_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * Background chunk for greyscale images.
+     */
 
     class bkgd_greyscale_t : public kaitai::kstruct {
 
@@ -339,6 +351,9 @@ public:
     };
 
     /**
+     * Compressed text chunk effectively allows to store key-value
+     * string pairs in PNG container, compressing "value" part (which
+     * can be quite lengthy) with zlib compression.
      * \sa Source
      */
 
@@ -356,20 +371,28 @@ public:
 
     private:
         std::string m_keyword;
-        uint8_t m_compression_method;
+        compression_methods_t m_compression_method;
         std::string m_text_datastream;
         png_t* m__root;
         png_t::chunk_t* m__parent;
         std::string m__raw_text_datastream;
 
     public:
+
+        /**
+         * Indicates purpose of the following text data.
+         */
         std::string keyword() const { return m_keyword; }
-        uint8_t compression_method() const { return m_compression_method; }
+        compression_methods_t compression_method() const { return m_compression_method; }
         std::string text_datastream() const { return m_text_datastream; }
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
         std::string _raw_text_datastream() const { return m__raw_text_datastream; }
     };
+
+    /**
+     * Background chunk for truecolor images.
+     */
 
     class bkgd_truecolor_t : public kaitai::kstruct {
 
@@ -433,6 +456,8 @@ public:
     };
 
     /**
+     * Background chunk stores default background color to display this
+     * image against. Contents depend on `color_type` of the image.
      * \sa Source
      */
 
@@ -466,6 +491,8 @@ public:
     };
 
     /**
+     * "Physical size" chunk stores data that allows to translate
+     * logical pixels into physical units (meters, etc) and vice-versa.
      * \sa Source
      */
 
@@ -489,7 +516,17 @@ public:
         png_t::chunk_t* m__parent;
 
     public:
+
+        /**
+         * Number of pixels per physical unit (typically, 1 meter) by X
+         * axis.
+         */
         uint32_t pixels_per_unit_x() const { return m_pixels_per_unit_x; }
+
+        /**
+         * Number of pixels per physical unit (typically, 1 meter) by Y
+         * axis.
+         */
         uint32_t pixels_per_unit_y() const { return m_pixels_per_unit_y; }
         phys_unit_t unit() const { return m_unit; }
         png_t* _root() const { return m__root; }
@@ -497,6 +534,10 @@ public:
     };
 
     /**
+     * International text chunk effectively allows to store key-value string pairs in
+     * PNG container. Both "key" (keyword) and "value" (text) parts are
+     * given in pre-defined subset of iso8859-1 without control
+     * characters.
      * \sa Source
      */
 
@@ -515,7 +556,7 @@ public:
     private:
         std::string m_keyword;
         uint8_t m_compression_flag;
-        uint8_t m_compression_method;
+        compression_methods_t m_compression_method;
         std::string m_language_tag;
         std::string m_translated_keyword;
         std::string m_text;
@@ -523,17 +564,47 @@ public:
         png_t::chunk_t* m__parent;
 
     public:
+
+        /**
+         * Indicates purpose of the following text data.
+         */
         std::string keyword() const { return m_keyword; }
+
+        /**
+         * 0 = text is uncompressed, 1 = text is compressed with a
+         * method specified in `compression_method`.
+         */
         uint8_t compression_flag() const { return m_compression_flag; }
-        uint8_t compression_method() const { return m_compression_method; }
+        compression_methods_t compression_method() const { return m_compression_method; }
+
+        /**
+         * Human language used in `translated_keyword` and `text`
+         * attributes - should be a language code conforming to ISO
+         * 646.IRV:1991.
+         */
         std::string language_tag() const { return m_language_tag; }
+
+        /**
+         * Keyword translated into language specified in
+         * `language_tag`. Line breaks are not allowed.
+         */
         std::string translated_keyword() const { return m_translated_keyword; }
+
+        /**
+         * Text contents ("value" of this key-value pair), written in
+         * language specified in `language_tag`. Linke breaks are
+         * allowed.
+         */
         std::string text() const { return m_text; }
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
     };
 
     /**
+     * Text chunk effectively allows to store key-value string pairs in
+     * PNG container. Both "key" (keyword) and "value" (text) parts are
+     * given in pre-defined subset of iso8859-1 without control
+     * characters.
      * \sa Source
      */
 
@@ -556,6 +627,10 @@ public:
         png_t::chunk_t* m__parent;
 
     public:
+
+        /**
+         * Indicates purpose of the following text data.
+         */
         std::string keyword() const { return m_keyword; }
         std::string text() const { return m_text; }
         png_t* _root() const { return m__root; }
@@ -563,6 +638,8 @@ public:
     };
 
     /**
+     * Time chunk stores time stamp of last modification of this image,
+     * up to 1 second precision in UTC timezone.
      * \sa Source
      */
 

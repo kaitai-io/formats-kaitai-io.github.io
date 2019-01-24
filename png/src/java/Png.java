@@ -47,6 +47,20 @@ public class Png extends KaitaiStruct {
         public static PhysUnit byId(long id) { return byId.get(id); }
     }
 
+    public enum CompressionMethods {
+        ZLIB(0);
+
+        private final long id;
+        CompressionMethods(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, CompressionMethods> byId = new HashMap<Long, CompressionMethods>(1);
+        static {
+            for (CompressionMethods e : CompressionMethods.values())
+                byId.put(e.id(), e);
+        }
+        public static CompressionMethods byId(long id) { return byId.get(id); }
+    }
+
     public Png(KaitaiStream _io) {
         this(_io, null, null);
     }
@@ -218,6 +232,10 @@ public class Png extends KaitaiStruct {
         public Png _parent() { return _parent; }
         public byte[] _raw_body() { return _raw_body; }
     }
+
+    /**
+     * Background chunk for images with indexed palette.
+     */
     public static class BkgdIndexed extends KaitaiStruct {
         public static BkgdIndexed fromFile(String fileName) throws IOException {
             return new BkgdIndexed(new ByteBufferKaitaiStream(fileName));
@@ -295,6 +313,10 @@ public class Png extends KaitaiStruct {
         public Png _root() { return _root; }
         public Png.ChrmChunk _parent() { return _parent; }
     }
+
+    /**
+     * Background chunk for greyscale images.
+     */
     public static class BkgdGreyscale extends KaitaiStruct {
         public static BkgdGreyscale fromFile(String fileName) throws IOException {
             return new BkgdGreyscale(new ByteBufferKaitaiStream(fileName));
@@ -509,6 +531,9 @@ public class Png extends KaitaiStruct {
     }
 
     /**
+     * Compressed text chunk effectively allows to store key-value
+     * string pairs in PNG container, compressing "value" part (which
+     * can be quite lengthy) with zlib compression.
      * @see <a href="https://www.w3.org/TR/PNG/#11zTXt">Source</a>
      */
     public static class CompressedTextChunk extends KaitaiStruct {
@@ -532,23 +557,31 @@ public class Png extends KaitaiStruct {
         }
         private void _read() {
             this.keyword = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
-            this.compressionMethod = this._io.readU1();
+            this.compressionMethod = Png.CompressionMethods.byId(this._io.readU1());
             this._raw_textDatastream = this._io.readBytesFull();
             this.textDatastream = KaitaiStream.processZlib(this._raw_textDatastream);
         }
         private String keyword;
-        private int compressionMethod;
+        private CompressionMethods compressionMethod;
         private byte[] textDatastream;
         private Png _root;
         private Png.Chunk _parent;
         private byte[] _raw_textDatastream;
+
+        /**
+         * Indicates purpose of the following text data.
+         */
         public String keyword() { return keyword; }
-        public int compressionMethod() { return compressionMethod; }
+        public CompressionMethods compressionMethod() { return compressionMethod; }
         public byte[] textDatastream() { return textDatastream; }
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
         public byte[] _raw_textDatastream() { return _raw_textDatastream; }
     }
+
+    /**
+     * Background chunk for truecolor images.
+     */
     public static class BkgdTruecolor extends KaitaiStruct {
         public static BkgdTruecolor fromFile(String fileName) throws IOException {
             return new BkgdTruecolor(new ByteBufferKaitaiStream(fileName));
@@ -627,6 +660,8 @@ public class Png extends KaitaiStruct {
     }
 
     /**
+     * Background chunk stores default background color to display this
+     * image against. Contents depend on `color_type` of the image.
      * @see <a href="https://www.w3.org/TR/PNG/#11bKGD">Source</a>
      */
     public static class BkgdChunk extends KaitaiStruct {
@@ -681,6 +716,8 @@ public class Png extends KaitaiStruct {
     }
 
     /**
+     * "Physical size" chunk stores data that allows to translate
+     * logical pixels into physical units (meters, etc) and vice-versa.
      * @see <a href="https://www.w3.org/TR/PNG/#11pHYs">Source</a>
      */
     public static class PhysChunk extends KaitaiStruct {
@@ -712,7 +749,17 @@ public class Png extends KaitaiStruct {
         private PhysUnit unit;
         private Png _root;
         private Png.Chunk _parent;
+
+        /**
+         * Number of pixels per physical unit (typically, 1 meter) by X
+         * axis.
+         */
         public long pixelsPerUnitX() { return pixelsPerUnitX; }
+
+        /**
+         * Number of pixels per physical unit (typically, 1 meter) by Y
+         * axis.
+         */
         public long pixelsPerUnitY() { return pixelsPerUnitY; }
         public PhysUnit unit() { return unit; }
         public Png _root() { return _root; }
@@ -720,6 +767,10 @@ public class Png extends KaitaiStruct {
     }
 
     /**
+     * International text chunk effectively allows to store key-value string pairs in
+     * PNG container. Both "key" (keyword) and "value" (text) parts are
+     * given in pre-defined subset of iso8859-1 without control
+     * characters.
      * @see <a href="https://www.w3.org/TR/PNG/#11iTXt">Source</a>
      */
     public static class InternationalTextChunk extends KaitaiStruct {
@@ -744,30 +795,60 @@ public class Png extends KaitaiStruct {
         private void _read() {
             this.keyword = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
             this.compressionFlag = this._io.readU1();
-            this.compressionMethod = this._io.readU1();
+            this.compressionMethod = Png.CompressionMethods.byId(this._io.readU1());
             this.languageTag = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
             this.translatedKeyword = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
             this.text = new String(this._io.readBytesFull(), Charset.forName("UTF-8"));
         }
         private String keyword;
         private int compressionFlag;
-        private int compressionMethod;
+        private CompressionMethods compressionMethod;
         private String languageTag;
         private String translatedKeyword;
         private String text;
         private Png _root;
         private Png.Chunk _parent;
+
+        /**
+         * Indicates purpose of the following text data.
+         */
         public String keyword() { return keyword; }
+
+        /**
+         * 0 = text is uncompressed, 1 = text is compressed with a
+         * method specified in `compression_method`.
+         */
         public int compressionFlag() { return compressionFlag; }
-        public int compressionMethod() { return compressionMethod; }
+        public CompressionMethods compressionMethod() { return compressionMethod; }
+
+        /**
+         * Human language used in `translated_keyword` and `text`
+         * attributes - should be a language code conforming to ISO
+         * 646.IRV:1991.
+         */
         public String languageTag() { return languageTag; }
+
+        /**
+         * Keyword translated into language specified in
+         * `language_tag`. Line breaks are not allowed.
+         */
         public String translatedKeyword() { return translatedKeyword; }
+
+        /**
+         * Text contents ("value" of this key-value pair), written in
+         * language specified in `language_tag`. Linke breaks are
+         * allowed.
+         */
         public String text() { return text; }
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
     }
 
     /**
+     * Text chunk effectively allows to store key-value string pairs in
+     * PNG container. Both "key" (keyword) and "value" (text) parts are
+     * given in pre-defined subset of iso8859-1 without control
+     * characters.
      * @see <a href="https://www.w3.org/TR/PNG/#11tEXt">Source</a>
      */
     public static class TextChunk extends KaitaiStruct {
@@ -797,6 +878,10 @@ public class Png extends KaitaiStruct {
         private String text;
         private Png _root;
         private Png.Chunk _parent;
+
+        /**
+         * Indicates purpose of the following text data.
+         */
         public String keyword() { return keyword; }
         public String text() { return text; }
         public Png _root() { return _root; }
@@ -804,6 +889,8 @@ public class Png extends KaitaiStruct {
     }
 
     /**
+     * Time chunk stores time stamp of last modification of this image,
+     * up to 1 second precision in UTC timezone.
      * @see <a href="https://www.w3.org/TR/PNG/#11tIME">Source</a>
      */
     public static class TimeChunk extends KaitaiStruct {

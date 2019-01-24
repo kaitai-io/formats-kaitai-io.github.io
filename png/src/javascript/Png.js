@@ -32,6 +32,12 @@ var Png = (function() {
     1: "METER",
   });
 
+  Png.CompressionMethods = Object.freeze({
+    ZLIB: 0,
+
+    0: "ZLIB",
+  });
+
   function Png(_io, _parent, _root) {
     this._io = _io;
     this._parent = _parent;
@@ -143,6 +149,10 @@ var Png = (function() {
     return Chunk;
   })();
 
+  /**
+   * Background chunk for images with indexed palette.
+   */
+
   var BkgdIndexed = Png.BkgdIndexed = (function() {
     function BkgdIndexed(_io, _parent, _root) {
       this._io = _io;
@@ -189,6 +199,10 @@ var Png = (function() {
 
     return Point;
   })();
+
+  /**
+   * Background chunk for greyscale images.
+   */
 
   var BkgdGreyscale = Png.BkgdGreyscale = (function() {
     function BkgdGreyscale(_io, _parent, _root) {
@@ -308,6 +322,9 @@ var Png = (function() {
   })();
 
   /**
+   * Compressed text chunk effectively allows to store key-value
+   * string pairs in PNG container, compressing "value" part (which
+   * can be quite lengthy) with zlib compression.
    * @see {@link https://www.w3.org/TR/PNG/#11zTXt|Source}
    */
 
@@ -326,8 +343,16 @@ var Png = (function() {
       this.textDatastream = KaitaiStream.processZlib(this._raw_textDatastream);
     }
 
+    /**
+     * Indicates purpose of the following text data.
+     */
+
     return CompressedTextChunk;
   })();
+
+  /**
+   * Background chunk for truecolor images.
+   */
 
   var BkgdTruecolor = Png.BkgdTruecolor = (function() {
     function BkgdTruecolor(_io, _parent, _root) {
@@ -374,6 +399,8 @@ var Png = (function() {
   })();
 
   /**
+   * Background chunk stores default background color to display this
+   * image against. Contents depend on `color_type` of the image.
    * @see {@link https://www.w3.org/TR/PNG/#11bKGD|Source}
    */
 
@@ -409,6 +436,8 @@ var Png = (function() {
   })();
 
   /**
+   * "Physical size" chunk stores data that allows to translate
+   * logical pixels into physical units (meters, etc) and vice-versa.
    * @see {@link https://www.w3.org/TR/PNG/#11pHYs|Source}
    */
 
@@ -426,10 +455,24 @@ var Png = (function() {
       this.unit = this._io.readU1();
     }
 
+    /**
+     * Number of pixels per physical unit (typically, 1 meter) by X
+     * axis.
+     */
+
+    /**
+     * Number of pixels per physical unit (typically, 1 meter) by Y
+     * axis.
+     */
+
     return PhysChunk;
   })();
 
   /**
+   * International text chunk effectively allows to store key-value string pairs in
+   * PNG container. Both "key" (keyword) and "value" (text) parts are
+   * given in pre-defined subset of iso8859-1 without control
+   * characters.
    * @see {@link https://www.w3.org/TR/PNG/#11iTXt|Source}
    */
 
@@ -450,10 +493,40 @@ var Png = (function() {
       this.text = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
     }
 
+    /**
+     * Indicates purpose of the following text data.
+     */
+
+    /**
+     * 0 = text is uncompressed, 1 = text is compressed with a
+     * method specified in `compression_method`.
+     */
+
+    /**
+     * Human language used in `translated_keyword` and `text`
+     * attributes - should be a language code conforming to ISO
+     * 646.IRV:1991.
+     */
+
+    /**
+     * Keyword translated into language specified in
+     * `language_tag`. Line breaks are not allowed.
+     */
+
+    /**
+     * Text contents ("value" of this key-value pair), written in
+     * language specified in `language_tag`. Linke breaks are
+     * allowed.
+     */
+
     return InternationalTextChunk;
   })();
 
   /**
+   * Text chunk effectively allows to store key-value string pairs in
+   * PNG container. Both "key" (keyword) and "value" (text) parts are
+   * given in pre-defined subset of iso8859-1 without control
+   * characters.
    * @see {@link https://www.w3.org/TR/PNG/#11tEXt|Source}
    */
 
@@ -470,10 +543,16 @@ var Png = (function() {
       this.text = KaitaiStream.bytesToStr(this._io.readBytesFull(), "iso8859-1");
     }
 
+    /**
+     * Indicates purpose of the following text data.
+     */
+
     return TextChunk;
   })();
 
   /**
+   * Time chunk stores time stamp of last modification of this image,
+   * up to 1 second precision in UTC timezone.
    * @see {@link https://www.w3.org/TR/PNG/#11tIME|Source}
    */
 

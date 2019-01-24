@@ -136,6 +136,10 @@ class Chunk extends \Kaitai\Struct\Struct {
     public function _raw_body() { return $this->_m__raw_body; }
 }
 
+/**
+ * Background chunk for images with indexed palette.
+ */
+
 namespace \Png;
 
 class BkgdIndexed extends \Kaitai\Struct\Struct {
@@ -182,6 +186,10 @@ class Point extends \Kaitai\Struct\Struct {
     public function xInt() { return $this->_m_xInt; }
     public function yInt() { return $this->_m_yInt; }
 }
+
+/**
+ * Background chunk for greyscale images.
+ */
 
 namespace \Png;
 
@@ -299,6 +307,12 @@ class Intent {
     const ABSOLUTE_COLORIMETRIC = 3;
 }
 
+/**
+ * Compressed text chunk effectively allows to store key-value
+ * string pairs in PNG container, compressing "value" part (which
+ * can be quite lengthy) with zlib compression.
+ */
+
 namespace \Png;
 
 class CompressedTextChunk extends \Kaitai\Struct\Struct {
@@ -317,11 +331,19 @@ class CompressedTextChunk extends \Kaitai\Struct\Struct {
     protected $_m_compressionMethod;
     protected $_m_textDatastream;
     protected $_m__raw_textDatastream;
+
+    /**
+     * Indicates purpose of the following text data.
+     */
     public function keyword() { return $this->_m_keyword; }
     public function compressionMethod() { return $this->_m_compressionMethod; }
     public function textDatastream() { return $this->_m_textDatastream; }
     public function _raw_textDatastream() { return $this->_m__raw_textDatastream; }
 }
+
+/**
+ * Background chunk for truecolor images.
+ */
 
 namespace \Png;
 
@@ -366,6 +388,11 @@ class GamaChunk extends \Kaitai\Struct\Struct {
     public function gammaInt() { return $this->_m_gammaInt; }
 }
 
+/**
+ * Background chunk stores default background color to display this
+ * image against. Contents depend on `color_type` of the image.
+ */
+
 namespace \Png;
 
 class BkgdChunk extends \Kaitai\Struct\Struct {
@@ -397,6 +424,11 @@ class BkgdChunk extends \Kaitai\Struct\Struct {
     public function bkgd() { return $this->_m_bkgd; }
 }
 
+/**
+ * "Physical size" chunk stores data that allows to translate
+ * logical pixels into physical units (meters, etc) and vice-versa.
+ */
+
 namespace \Png;
 
 class PhysChunk extends \Kaitai\Struct\Struct {
@@ -413,10 +445,27 @@ class PhysChunk extends \Kaitai\Struct\Struct {
     protected $_m_pixelsPerUnitX;
     protected $_m_pixelsPerUnitY;
     protected $_m_unit;
+
+    /**
+     * Number of pixels per physical unit (typically, 1 meter) by X
+     * axis.
+     */
     public function pixelsPerUnitX() { return $this->_m_pixelsPerUnitX; }
+
+    /**
+     * Number of pixels per physical unit (typically, 1 meter) by Y
+     * axis.
+     */
     public function pixelsPerUnitY() { return $this->_m_pixelsPerUnitY; }
     public function unit() { return $this->_m_unit; }
 }
+
+/**
+ * International text chunk effectively allows to store key-value string pairs in
+ * PNG container. Both "key" (keyword) and "value" (text) parts are
+ * given in pre-defined subset of iso8859-1 without control
+ * characters.
+ */
 
 namespace \Png;
 
@@ -440,13 +489,46 @@ class InternationalTextChunk extends \Kaitai\Struct\Struct {
     protected $_m_languageTag;
     protected $_m_translatedKeyword;
     protected $_m_text;
+
+    /**
+     * Indicates purpose of the following text data.
+     */
     public function keyword() { return $this->_m_keyword; }
+
+    /**
+     * 0 = text is uncompressed, 1 = text is compressed with a
+     * method specified in `compression_method`.
+     */
     public function compressionFlag() { return $this->_m_compressionFlag; }
     public function compressionMethod() { return $this->_m_compressionMethod; }
+
+    /**
+     * Human language used in `translated_keyword` and `text`
+     * attributes - should be a language code conforming to ISO
+     * 646.IRV:1991.
+     */
     public function languageTag() { return $this->_m_languageTag; }
+
+    /**
+     * Keyword translated into language specified in
+     * `language_tag`. Line breaks are not allowed.
+     */
     public function translatedKeyword() { return $this->_m_translatedKeyword; }
+
+    /**
+     * Text contents ("value" of this key-value pair), written in
+     * language specified in `language_tag`. Linke breaks are
+     * allowed.
+     */
     public function text() { return $this->_m_text; }
 }
+
+/**
+ * Text chunk effectively allows to store key-value string pairs in
+ * PNG container. Both "key" (keyword) and "value" (text) parts are
+ * given in pre-defined subset of iso8859-1 without control
+ * characters.
+ */
 
 namespace \Png;
 
@@ -462,9 +544,18 @@ class TextChunk extends \Kaitai\Struct\Struct {
     }
     protected $_m_keyword;
     protected $_m_text;
+
+    /**
+     * Indicates purpose of the following text data.
+     */
     public function keyword() { return $this->_m_keyword; }
     public function text() { return $this->_m_text; }
 }
+
+/**
+ * Time chunk stores time stamp of last modification of this image,
+ * up to 1 second precision in UTC timezone.
+ */
 
 namespace \Png;
 
@@ -511,4 +602,10 @@ namespace \Png;
 class PhysUnit {
     const UNKNOWN = 0;
     const METER = 1;
+}
+
+namespace \Png;
+
+class CompressionMethods {
+    const ZLIB = 0;
 }

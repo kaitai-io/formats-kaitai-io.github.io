@@ -23,6 +23,11 @@ class Png < Kaitai::Struct::Struct
     1 => :phys_unit_meter,
   }
   I__PHYS_UNIT = PHYS_UNIT.invert
+
+  COMPRESSION_METHODS = {
+    0 => :compression_methods_zlib,
+  }
+  I__COMPRESSION_METHODS = COMPRESSION_METHODS.invert
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
     _read
@@ -121,6 +126,9 @@ class Png < Kaitai::Struct::Struct
     attr_reader :crc
     attr_reader :_raw_body
   end
+
+  ##
+  # Background chunk for images with indexed palette.
   class BkgdIndexed < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -157,6 +165,9 @@ class Png < Kaitai::Struct::Struct
     attr_reader :x_int
     attr_reader :y_int
   end
+
+  ##
+  # Background chunk for greyscale images.
   class BkgdGreyscale < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -262,6 +273,9 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
+  # Compressed text chunk effectively allows to store key-value
+  # string pairs in PNG container, compressing "value" part (which
+  # can be quite lengthy) with zlib compression.
   # @see https://www.w3.org/TR/PNG/#11zTXt Source
   class CompressedTextChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -271,16 +285,22 @@ class Png < Kaitai::Struct::Struct
 
     def _read
       @keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
-      @compression_method = @_io.read_u1
+      @compression_method = Kaitai::Struct::Stream::resolve_enum(COMPRESSION_METHODS, @_io.read_u1)
       @_raw_text_datastream = @_io.read_bytes_full
       @text_datastream = Zlib::Inflate.inflate(@_raw_text_datastream)
       self
     end
+
+    ##
+    # Indicates purpose of the following text data.
     attr_reader :keyword
     attr_reader :compression_method
     attr_reader :text_datastream
     attr_reader :_raw_text_datastream
   end
+
+  ##
+  # Background chunk for truecolor images.
   class BkgdTruecolor < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -319,6 +339,8 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
+  # Background chunk stores default background color to display this
+  # image against. Contents depend on `color_type` of the image.
   # @see https://www.w3.org/TR/PNG/#11bKGD Source
   class BkgdChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -345,6 +367,8 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
+  # "Physical size" chunk stores data that allows to translate
+  # logical pixels into physical units (meters, etc) and vice-versa.
   # @see https://www.w3.org/TR/PNG/#11pHYs Source
   class PhysChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -358,12 +382,24 @@ class Png < Kaitai::Struct::Struct
       @unit = Kaitai::Struct::Stream::resolve_enum(PHYS_UNIT, @_io.read_u1)
       self
     end
+
+    ##
+    # Number of pixels per physical unit (typically, 1 meter) by X
+    # axis.
     attr_reader :pixels_per_unit_x
+
+    ##
+    # Number of pixels per physical unit (typically, 1 meter) by Y
+    # axis.
     attr_reader :pixels_per_unit_y
     attr_reader :unit
   end
 
   ##
+  # International text chunk effectively allows to store key-value string pairs in
+  # PNG container. Both "key" (keyword) and "value" (text) parts are
+  # given in pre-defined subset of iso8859-1 without control
+  # characters.
   # @see https://www.w3.org/TR/PNG/#11iTXt Source
   class InternationalTextChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -374,21 +410,46 @@ class Png < Kaitai::Struct::Struct
     def _read
       @keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
       @compression_flag = @_io.read_u1
-      @compression_method = @_io.read_u1
+      @compression_method = Kaitai::Struct::Stream::resolve_enum(COMPRESSION_METHODS, @_io.read_u1)
       @language_tag = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
       @translated_keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
       @text = (@_io.read_bytes_full).force_encoding("UTF-8")
       self
     end
+
+    ##
+    # Indicates purpose of the following text data.
     attr_reader :keyword
+
+    ##
+    # 0 = text is uncompressed, 1 = text is compressed with a
+    # method specified in `compression_method`.
     attr_reader :compression_flag
     attr_reader :compression_method
+
+    ##
+    # Human language used in `translated_keyword` and `text`
+    # attributes - should be a language code conforming to ISO
+    # 646.IRV:1991.
     attr_reader :language_tag
+
+    ##
+    # Keyword translated into language specified in
+    # `language_tag`. Line breaks are not allowed.
     attr_reader :translated_keyword
+
+    ##
+    # Text contents ("value" of this key-value pair), written in
+    # language specified in `language_tag`. Linke breaks are
+    # allowed.
     attr_reader :text
   end
 
   ##
+  # Text chunk effectively allows to store key-value string pairs in
+  # PNG container. Both "key" (keyword) and "value" (text) parts are
+  # given in pre-defined subset of iso8859-1 without control
+  # characters.
   # @see https://www.w3.org/TR/PNG/#11tEXt Source
   class TextChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -401,11 +462,16 @@ class Png < Kaitai::Struct::Struct
       @text = (@_io.read_bytes_full).force_encoding("iso8859-1")
       self
     end
+
+    ##
+    # Indicates purpose of the following text data.
     attr_reader :keyword
     attr_reader :text
   end
 
   ##
+  # Time chunk stores time stamp of last modification of this image,
+  # up to 1 second precision in UTC timezone.
   # @see https://www.w3.org/TR/PNG/#11tIME Source
   class TimeChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)

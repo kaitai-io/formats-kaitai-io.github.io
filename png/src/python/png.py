@@ -21,6 +21,9 @@ class Png(KaitaiStruct):
     class PhysUnit(Enum):
         unknown = 0
         meter = 1
+
+    class CompressionMethods(Enum):
+        zlib = 0
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -112,6 +115,7 @@ class Png(KaitaiStruct):
 
 
     class BkgdIndexed(KaitaiStruct):
+        """Background chunk for images with indexed palette."""
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -151,6 +155,7 @@ class Png(KaitaiStruct):
 
 
     class BkgdGreyscale(KaitaiStruct):
+        """Background chunk for greyscale images."""
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -242,7 +247,10 @@ class Png(KaitaiStruct):
 
 
     class CompressedTextChunk(KaitaiStruct):
-        """
+        """Compressed text chunk effectively allows to store key-value
+        string pairs in PNG container, compressing "value" part (which
+        can be quite lengthy) with zlib compression.
+        
         .. seealso::
            Source - https://www.w3.org/TR/PNG/#11zTXt
         """
@@ -254,12 +262,13 @@ class Png(KaitaiStruct):
 
         def _read(self):
             self.keyword = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
-            self.compression_method = self._io.read_u1()
+            self.compression_method = self._root.CompressionMethods(self._io.read_u1())
             self._raw_text_datastream = self._io.read_bytes_full()
             self.text_datastream = zlib.decompress(self._raw_text_datastream)
 
 
     class BkgdTruecolor(KaitaiStruct):
+        """Background chunk for truecolor images."""
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -296,7 +305,9 @@ class Png(KaitaiStruct):
 
 
     class BkgdChunk(KaitaiStruct):
-        """
+        """Background chunk stores default background color to display this
+        image against. Contents depend on `color_type` of the image.
+        
         .. seealso::
            Source - https://www.w3.org/TR/PNG/#11bKGD
         """
@@ -321,7 +332,9 @@ class Png(KaitaiStruct):
 
 
     class PhysChunk(KaitaiStruct):
-        """
+        """"Physical size" chunk stores data that allows to translate
+        logical pixels into physical units (meters, etc) and vice-versa.
+        
         .. seealso::
            Source - https://www.w3.org/TR/PNG/#11pHYs
         """
@@ -338,7 +351,11 @@ class Png(KaitaiStruct):
 
 
     class InternationalTextChunk(KaitaiStruct):
-        """
+        """International text chunk effectively allows to store key-value string pairs in
+        PNG container. Both "key" (keyword) and "value" (text) parts are
+        given in pre-defined subset of iso8859-1 without control
+        characters.
+        
         .. seealso::
            Source - https://www.w3.org/TR/PNG/#11iTXt
         """
@@ -351,14 +368,18 @@ class Png(KaitaiStruct):
         def _read(self):
             self.keyword = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
             self.compression_flag = self._io.read_u1()
-            self.compression_method = self._io.read_u1()
+            self.compression_method = self._root.CompressionMethods(self._io.read_u1())
             self.language_tag = (self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
             self.translated_keyword = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
             self.text = (self._io.read_bytes_full()).decode(u"UTF-8")
 
 
     class TextChunk(KaitaiStruct):
-        """
+        """Text chunk effectively allows to store key-value string pairs in
+        PNG container. Both "key" (keyword) and "value" (text) parts are
+        given in pre-defined subset of iso8859-1 without control
+        characters.
+        
         .. seealso::
            Source - https://www.w3.org/TR/PNG/#11tEXt
         """
@@ -374,7 +395,9 @@ class Png(KaitaiStruct):
 
 
     class TimeChunk(KaitaiStruct):
-        """
+        """Time chunk stores time stamp of last modification of this image,
+        up to 1 second precision in UTC timezone.
+        
         .. seealso::
            Source - https://www.w3.org/TR/PNG/#11tIME
         """

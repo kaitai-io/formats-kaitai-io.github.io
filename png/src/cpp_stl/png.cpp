@@ -279,7 +279,7 @@ png_t::compressed_text_chunk_t::compressed_text_chunk_t(kaitai::kstream* p__io, 
 
 void png_t::compressed_text_chunk_t::_read() {
     m_keyword = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("UTF-8"));
-    m_compression_method = m__io->read_u1();
+    m_compression_method = static_cast<png_t::compression_methods_t>(m__io->read_u1());
     m__raw_text_datastream = m__io->read_bytes_full();
     m_text_datastream = kaitai::kstream::process_zlib(m__raw_text_datastream);
 }
@@ -391,7 +391,7 @@ png_t::international_text_chunk_t::international_text_chunk_t(kaitai::kstream* p
 void png_t::international_text_chunk_t::_read() {
     m_keyword = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("UTF-8"));
     m_compression_flag = m__io->read_u1();
-    m_compression_method = m__io->read_u1();
+    m_compression_method = static_cast<png_t::compression_methods_t>(m__io->read_u1());
     m_language_tag = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("ASCII"));
     m_translated_keyword = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("UTF-8"));
     m_text = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), std::string("UTF-8"));

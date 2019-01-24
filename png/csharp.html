@@ -301,6 +301,11 @@ namespace Kaitai
             Unknown = 0,
             Meter = 1,
         }
+
+        public enum CompressionMethods
+        {
+            Zlib = 0,
+        }
         public Png(KaitaiStream p__io, KaitaiStruct p__parent = null, Png p__root = null) : base(p__io)
         {
             m_parent = p__parent;
@@ -455,6 +460,10 @@ namespace Kaitai
             public Png M_Parent { get { return m_parent; } }
             public byte[] M_RawBody { get { return __raw_body; } }
         }
+
+        /// &lt;summary&gt;
+        /// Background chunk for images with indexed palette.
+        /// &lt;/summary&gt;
         public partial class BkgdIndexed : KaitaiStruct
         {
             public static BkgdIndexed FromFile(string fileName)
@@ -534,6 +543,10 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png.ChrmChunk M_Parent { get { return m_parent; } }
         }
+
+        /// &lt;summary&gt;
+        /// Background chunk for greyscale images.
+        /// &lt;/summary&gt;
         public partial class BkgdGreyscale : KaitaiStruct
         {
             public static BkgdGreyscale FromFile(string fileName)
@@ -713,6 +726,11 @@ namespace Kaitai
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
 
+        /// &lt;summary&gt;
+        /// Compressed text chunk effectively allows to store key-value
+        /// string pairs in PNG container, compressing &amp;quot;value&amp;quot; part (which
+        /// can be quite lengthy) with zlib compression.
+        /// &lt;/summary&gt;
         /// &lt;remarks&gt;
         /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11zTXt&quot;&gt;Source&lt;/a&gt;
         /// &lt;/remarks&gt;
@@ -732,23 +750,31 @@ namespace Kaitai
             private void _read()
             {
                 _keyword = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true));
-                _compressionMethod = m_io.ReadU1();
+                _compressionMethod = ((Png.CompressionMethods) m_io.ReadU1());
                 __raw_textDatastream = m_io.ReadBytesFull();
                 _textDatastream = m_io.ProcessZlib(__raw_textDatastream);
             }
             private string _keyword;
-            private byte _compressionMethod;
+            private CompressionMethods _compressionMethod;
             private byte[] _textDatastream;
             private Png m_root;
             private Png.Chunk m_parent;
             private byte[] __raw_textDatastream;
+
+            /// &lt;summary&gt;
+            /// Indicates purpose of the following text data.
+            /// &lt;/summary&gt;
             public string Keyword { get { return _keyword; } }
-            public byte CompressionMethod { get { return _compressionMethod; } }
+            public CompressionMethods CompressionMethod { get { return _compressionMethod; } }
             public byte[] TextDatastream { get { return _textDatastream; } }
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
             public byte[] M_RawTextDatastream { get { return __raw_textDatastream; } }
         }
+
+        /// &lt;summary&gt;
+        /// Background chunk for truecolor images.
+        /// &lt;/summary&gt;
         public partial class BkgdTruecolor : KaitaiStruct
         {
             public static BkgdTruecolor FromFile(string fileName)
@@ -822,6 +848,10 @@ namespace Kaitai
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
 
+        /// &lt;summary&gt;
+        /// Background chunk stores default background color to display this
+        /// image against. Contents depend on `color_type` of the image.
+        /// &lt;/summary&gt;
         /// &lt;remarks&gt;
         /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11bKGD&quot;&gt;Source&lt;/a&gt;
         /// &lt;/remarks&gt;
@@ -871,6 +901,10 @@ namespace Kaitai
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
 
+        /// &lt;summary&gt;
+        /// &amp;quot;Physical size&amp;quot; chunk stores data that allows to translate
+        /// logical pixels into physical units (meters, etc) and vice-versa.
+        /// &lt;/summary&gt;
         /// &lt;remarks&gt;
         /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11pHYs&quot;&gt;Source&lt;/a&gt;
         /// &lt;/remarks&gt;
@@ -898,13 +932,29 @@ namespace Kaitai
             private PhysUnit _unit;
             private Png m_root;
             private Png.Chunk m_parent;
+
+            /// &lt;summary&gt;
+            /// Number of pixels per physical unit (typically, 1 meter) by X
+            /// axis.
+            /// &lt;/summary&gt;
             public uint PixelsPerUnitX { get { return _pixelsPerUnitX; } }
+
+            /// &lt;summary&gt;
+            /// Number of pixels per physical unit (typically, 1 meter) by Y
+            /// axis.
+            /// &lt;/summary&gt;
             public uint PixelsPerUnitY { get { return _pixelsPerUnitY; } }
             public PhysUnit Unit { get { return _unit; } }
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
 
+        /// &lt;summary&gt;
+        /// International text chunk effectively allows to store key-value string pairs in
+        /// PNG container. Both &amp;quot;key&amp;quot; (keyword) and &amp;quot;value&amp;quot; (text) parts are
+        /// given in pre-defined subset of iso8859-1 without control
+        /// characters.
+        /// &lt;/summary&gt;
         /// &lt;remarks&gt;
         /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11iTXt&quot;&gt;Source&lt;/a&gt;
         /// &lt;/remarks&gt;
@@ -925,29 +975,61 @@ namespace Kaitai
             {
                 _keyword = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true));
                 _compressionFlag = m_io.ReadU1();
-                _compressionMethod = m_io.ReadU1();
+                _compressionMethod = ((Png.CompressionMethods) m_io.ReadU1());
                 _languageTag = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true));
                 _translatedKeyword = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true));
                 _text = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytesFull());
             }
             private string _keyword;
             private byte _compressionFlag;
-            private byte _compressionMethod;
+            private CompressionMethods _compressionMethod;
             private string _languageTag;
             private string _translatedKeyword;
             private string _text;
             private Png m_root;
             private Png.Chunk m_parent;
+
+            /// &lt;summary&gt;
+            /// Indicates purpose of the following text data.
+            /// &lt;/summary&gt;
             public string Keyword { get { return _keyword; } }
+
+            /// &lt;summary&gt;
+            /// 0 = text is uncompressed, 1 = text is compressed with a
+            /// method specified in `compression_method`.
+            /// &lt;/summary&gt;
             public byte CompressionFlag { get { return _compressionFlag; } }
-            public byte CompressionMethod { get { return _compressionMethod; } }
+            public CompressionMethods CompressionMethod { get { return _compressionMethod; } }
+
+            /// &lt;summary&gt;
+            /// Human language used in `translated_keyword` and `text`
+            /// attributes - should be a language code conforming to ISO
+            /// 646.IRV:1991.
+            /// &lt;/summary&gt;
             public string LanguageTag { get { return _languageTag; } }
+
+            /// &lt;summary&gt;
+            /// Keyword translated into language specified in
+            /// `language_tag`. Line breaks are not allowed.
+            /// &lt;/summary&gt;
             public string TranslatedKeyword { get { return _translatedKeyword; } }
+
+            /// &lt;summary&gt;
+            /// Text contents (&amp;quot;value&amp;quot; of this key-value pair), written in
+            /// language specified in `language_tag`. Linke breaks are
+            /// allowed.
+            /// &lt;/summary&gt;
             public string Text { get { return _text; } }
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
 
+        /// &lt;summary&gt;
+        /// Text chunk effectively allows to store key-value string pairs in
+        /// PNG container. Both &amp;quot;key&amp;quot; (keyword) and &amp;quot;value&amp;quot; (text) parts are
+        /// given in pre-defined subset of iso8859-1 without control
+        /// characters.
+        /// &lt;/summary&gt;
         /// &lt;remarks&gt;
         /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11tEXt&quot;&gt;Source&lt;/a&gt;
         /// &lt;/remarks&gt;
@@ -973,12 +1055,20 @@ namespace Kaitai
             private string _text;
             private Png m_root;
             private Png.Chunk m_parent;
+
+            /// &lt;summary&gt;
+            /// Indicates purpose of the following text data.
+            /// &lt;/summary&gt;
             public string Keyword { get { return _keyword; } }
             public string Text { get { return _text; } }
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
 
+        /// &lt;summary&gt;
+        /// Time chunk stores time stamp of last modification of this image,
+        /// up to 1 second precision in UTC timezone.
+        /// &lt;/summary&gt;
         /// &lt;remarks&gt;
         /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11tIME&quot;&gt;Source&lt;/a&gt;
         /// &lt;/remarks&gt;
