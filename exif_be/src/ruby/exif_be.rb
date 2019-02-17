@@ -54,6 +54,9 @@ class ExifBe < Kaitai::Struct::Struct
       3 => :field_type_enum_word,
       4 => :field_type_enum_dword,
       5 => :field_type_enum_rational,
+      7 => :field_type_enum_undefined,
+      9 => :field_type_enum_slong,
+      10 => :field_type_enum_srational,
     }
     I__FIELD_TYPE_ENUM = FIELD_TYPE_ENUM.invert
 

@@ -62,12 +62,18 @@ var ExifLe = (function() {
       WORD: 3,
       DWORD: 4,
       RATIONAL: 5,
+      UNDEFINED: 7,
+      SLONG: 9,
+      SRATIONAL: 10,
 
       1: "BYTE",
       2: "ASCII_STRING",
       3: "WORD",
       4: "DWORD",
       5: "RATIONAL",
+      7: "UNDEFINED",
+      9: "SLONG",
+      10: "SRATIONAL",
     });
 
     IfdField.TagEnum = Object.freeze({

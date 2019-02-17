@@ -91,6 +91,9 @@ namespace Kaitai
                 Word = 3,
                 Dword = 4,
                 Rational = 5,
+                Undefined = 7,
+                Slong = 9,
+                Srational = 10,
             }
 
             public enum TagEnum

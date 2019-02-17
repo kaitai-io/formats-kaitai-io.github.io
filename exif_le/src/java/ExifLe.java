@@ -91,12 +91,15 @@ public class ExifLe extends KaitaiStruct {
             ASCII_STRING(2),
             WORD(3),
             DWORD(4),
-            RATIONAL(5);
+            RATIONAL(5),
+            UNDEFINED(7),
+            SLONG(9),
+            SRATIONAL(10);
 
             private final long id;
             FieldTypeEnum(long id) { this.id = id; }
             public long id() { return id; }
-            private static final Map<Long, FieldTypeEnum> byId = new HashMap<Long, FieldTypeEnum>(5);
+            private static final Map<Long, FieldTypeEnum> byId = new HashMap<Long, FieldTypeEnum>(8);
             static {
                 for (FieldTypeEnum e : FieldTypeEnum.values())
                     byId.put(e.id(), e);
