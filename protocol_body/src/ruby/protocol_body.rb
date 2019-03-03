@@ -108,7 +108,7 @@ class ProtocolBody < Kaitai::Struct::Struct
     81 => :protocol_enum_vmtp,
     82 => :protocol_enum_secure_vmtp,
     83 => :protocol_enum_vines,
-    84 => :protocol_enum_iptm,
+    84 => :protocol_enum_ttp_or_iptm,
     85 => :protocol_enum_nsfnet_igp,
     86 => :protocol_enum_dgp,
     87 => :protocol_enum_tcf,

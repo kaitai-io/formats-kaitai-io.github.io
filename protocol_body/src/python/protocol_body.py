@@ -116,7 +116,7 @@ class ProtocolBody(KaitaiStruct):
         vmtp = 81
         secure_vmtp = 82
         vines = 83
-        iptm = 84
+        ttp_or_iptm = 84
         nsfnet_igp = 85
         dgp = 86
         tcf = 87

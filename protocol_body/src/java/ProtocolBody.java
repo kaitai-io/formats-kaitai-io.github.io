@@ -110,7 +110,7 @@ public class ProtocolBody extends KaitaiStruct {
         VMTP(81),
         SECURE_VMTP(82),
         VINES(83),
-        IPTM(84),
+        TTP_OR_IPTM(84),
         NSFNET_IGP(85),
         DGP(86),
         TCF(87),

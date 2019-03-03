@@ -192,7 +192,7 @@ class ProtocolEnum {
     const VMTP = 81;
     const SECURE_VMTP = 82;
     const VINES = 83;
-    const IPTM = 84;
+    const TTP_OR_IPTM = 84;
     const NSFNET_IGP = 85;
     const DGP = 86;
     const TCF = 87;
