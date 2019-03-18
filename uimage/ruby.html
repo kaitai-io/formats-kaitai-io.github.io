@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>U-Boot Image wrapper: Lua parsing library</title>
+  <title>U-Boot Image wrapper: Ruby parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -92,7 +92,7 @@ section#format-index .row {
     <div class="container">
         <h1>U-Boot Image wrapper:
             
-            Lua parsing library
+            Ruby parsing library
             
         </h1>
 
@@ -165,7 +165,7 @@ with sha1 and md5 checksums.</p>
                 <a href="javascript.html" title="U-Boot Image wrapper parsing JavaScript library">JavaScript</a></li>
                 
                 
-                <li class="active">
+                <li>
                 
                 <a href="lua.html" title="U-Boot Image wrapper parsing Lua library">Lua</a></li>
                 
@@ -185,7 +185,7 @@ with sha1 and md5 checksums.</p>
                 <a href="python.html" title="U-Boot Image wrapper parsing Python library">Python</a></li>
                 
                 
-                <li>
+                <li class="active">
                 
                 <a href="ruby.html" title="U-Boot Image wrapper parsing Ruby library">Ruby</a></li>
                 
@@ -195,15 +195,188 @@ with sha1 and md5 checksums.</p>
     </div>
 </section>
 
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="ruby">data = Uimage.from_file("path/to/local/file.U-Boot Image wrapper")</code></pre>
+
+<p>Or parse structure from a string of bytes:</p>
+
+<pre><code class="ruby">bytes = "\x00\x01\x02..."
+data = Uimage.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="ruby">data.header # => get header</code></pre>
+
+    </div>
+</section>
+
 
 <section id="format-lang" class="format">
     <div class="container">
         <h2>
             
-            Lua source code to parse U-Boot Image wrapper
+            Ruby source code to parse U-Boot Image wrapper
             
         </h2>
 
+        
+
+        <h3>uimage.rb</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/ruby/uimage.rb" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+require &#39;kaitai/struct/struct&#39;
+
+unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
+  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
+end
+
+
+##
+# The new uImage format allows more flexibility in handling images of various
+# types (kernel, ramdisk, etc.), it also enhances integrity protection of images
+# with sha1 and md5 checksums.
+# @see https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h Source
+class Uimage &lt; Kaitai::Struct::Struct
+
+  UIMAGE_OS = {
+    0 =&gt; :uimage_os_invalid,
+    1 =&gt; :uimage_os_openbsd,
+    2 =&gt; :uimage_os_netbsd,
+    3 =&gt; :uimage_os_freebsd,
+    4 =&gt; :uimage_os_bsd4_4,
+    5 =&gt; :uimage_os_linux,
+    6 =&gt; :uimage_os_svr4,
+    7 =&gt; :uimage_os_esix,
+    8 =&gt; :uimage_os_solaris,
+    9 =&gt; :uimage_os_irix,
+    10 =&gt; :uimage_os_sco,
+    11 =&gt; :uimage_os_dell,
+    12 =&gt; :uimage_os_ncr,
+    13 =&gt; :uimage_os_lynxos,
+    14 =&gt; :uimage_os_vxworks,
+    15 =&gt; :uimage_os_psos,
+    16 =&gt; :uimage_os_qnx,
+    17 =&gt; :uimage_os_u_boot,
+    18 =&gt; :uimage_os_rtems,
+    19 =&gt; :uimage_os_artos,
+    20 =&gt; :uimage_os_unity,
+    21 =&gt; :uimage_os_integrity,
+  }
+  I__UIMAGE_OS = UIMAGE_OS.invert
+
+  UIMAGE_ARCH = {
+    0 =&gt; :uimage_arch_invalid,
+    1 =&gt; :uimage_arch_alpha,
+    2 =&gt; :uimage_arch_arm,
+    3 =&gt; :uimage_arch_i386,
+    4 =&gt; :uimage_arch_ia64,
+    5 =&gt; :uimage_arch_mips,
+    6 =&gt; :uimage_arch_mips64,
+    7 =&gt; :uimage_arch_ppc,
+    8 =&gt; :uimage_arch_s390,
+    9 =&gt; :uimage_arch_sh,
+    10 =&gt; :uimage_arch_sparc,
+    11 =&gt; :uimage_arch_sparc64,
+    12 =&gt; :uimage_arch_m68k,
+    13 =&gt; :uimage_arch_nios,
+    14 =&gt; :uimage_arch_microblaze,
+    15 =&gt; :uimage_arch_nios2,
+    16 =&gt; :uimage_arch_blackfin,
+    17 =&gt; :uimage_arch_avr32,
+    18 =&gt; :uimage_arch_st200,
+  }
+  I__UIMAGE_ARCH = UIMAGE_ARCH.invert
+
+  UIMAGE_COMP = {
+    0 =&gt; :uimage_comp_none,
+    1 =&gt; :uimage_comp_gzip,
+    2 =&gt; :uimage_comp_bzip2,
+    3 =&gt; :uimage_comp_lzma,
+    4 =&gt; :uimage_comp_lzo,
+  }
+  I__UIMAGE_COMP = UIMAGE_COMP.invert
+
+  UIMAGE_TYPE = {
+    0 =&gt; :uimage_type_invalid,
+    1 =&gt; :uimage_type_standalone,
+    2 =&gt; :uimage_type_kernel,
+    3 =&gt; :uimage_type_ramdisk,
+    4 =&gt; :uimage_type_multi,
+    5 =&gt; :uimage_type_firmware,
+    6 =&gt; :uimage_type_script,
+    7 =&gt; :uimage_type_filesystem,
+    8 =&gt; :uimage_type_flatdt,
+    9 =&gt; :uimage_type_kwbimage,
+    10 =&gt; :uimage_type_imximage,
+  }
+  I__UIMAGE_TYPE = UIMAGE_TYPE.invert
+  def initialize(_io, _parent = nil, _root = self)
+    super(_io, _parent, _root)
+    _read
+  end
+
+  def _read
+    @header = Uheader.new(@_io, self, @_root)
+    @data = @_io.read_bytes(header.len_image)
+    self
+  end
+  class Uheader &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @magic = @_io.ensure_fixed_contents([39, 5, 25, 86].pack(&#39;C*&#39;))
+      @header_crc = @_io.read_u4be
+      @timestamp = @_io.read_u4be
+      @len_image = @_io.read_u4be
+      @load_address = @_io.read_u4be
+      @entry_address = @_io.read_u4be
+      @data_crc = @_io.read_u4be
+      @os_type = Kaitai::Struct::Stream::resolve_enum(UIMAGE_OS, @_io.read_u1)
+      @architecture = Kaitai::Struct::Stream::resolve_enum(UIMAGE_ARCH, @_io.read_u1)
+      @image_type = Kaitai::Struct::Stream::resolve_enum(UIMAGE_TYPE, @_io.read_u1)
+      @compression_type = Kaitai::Struct::Stream::resolve_enum(UIMAGE_COMP, @_io.read_u1)
+      @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(32), 0, false)).force_encoding(&quot;UTF-8&quot;)
+      self
+    end
+    attr_reader :magic
+    attr_reader :header_crc
+    attr_reader :timestamp
+    attr_reader :len_image
+    attr_reader :load_address
+    attr_reader :entry_address
+    attr_reader :data_crc
+    attr_reader :os_type
+    attr_reader :architecture
+    attr_reader :image_type
+    attr_reader :compression_type
+    attr_reader :name
+  end
+  attr_reader :header
+  attr_reader :data
+end
+</code></pre>
+            
+        </div>
         
     </div>
 </section>

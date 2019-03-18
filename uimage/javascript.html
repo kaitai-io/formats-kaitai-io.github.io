@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>U-Boot Image wrapper: Lua parsing library</title>
+  <title>U-Boot Image wrapper: JavaScript parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -92,7 +92,7 @@ section#format-index .row {
     <div class="container">
         <h1>U-Boot Image wrapper:
             
-            Lua parsing library
+            JavaScript parsing library
             
         </h1>
 
@@ -160,12 +160,12 @@ with sha1 and md5 checksums.</p>
                 <a href="java.html" title="U-Boot Image wrapper parsing Java library">Java</a></li>
                 
                 
-                <li>
+                <li class="active">
                 
                 <a href="javascript.html" title="U-Boot Image wrapper parsing JavaScript library">JavaScript</a></li>
                 
                 
-                <li class="active">
+                <li>
                 
                 <a href="lua.html" title="U-Boot Image wrapper parsing Lua library">Lua</a></li>
                 
@@ -195,15 +195,241 @@ with sha1 and md5 checksums.</p>
     </div>
 </section>
 
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+<p>See the usage examples in the <a href="http://doc.kaitai.io/lang_javascript.html" target="_blank">JavaScript notes</a>.</p>
+
+<p>Parse structure from an ArrayBuffer:</p>
+
+<pre><code class="javascript">var arrayBuffer = ...;
+var data = new Uimage(new KaitaiStream(arrayBuffer));</code></pre>
+
+<p>After that, one can get various attributes from the structure by accessing fields or properties like:</p>
+
+<pre><code class="javascript">data.header // => get header</code></pre>
+
+    </div>
+</section>
+
 
 <section id="format-lang" class="format">
     <div class="container">
         <h2>
             
-            Lua source code to parse U-Boot Image wrapper
+            JavaScript source code to parse U-Boot Image wrapper
             
         </h2>
 
+        
+
+        <h3>Uimage.js</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/javascript/Uimage.js" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+(function (root, factory) {
+  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
+  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
+  } else {
+    root.Uimage = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
+/**
+ * The new uImage format allows more flexibility in handling images of various
+ * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
+ * with sha1 and md5 checksums.
+ * @see {@link https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h|Source}
+ */
+
+var Uimage = (function() {
+  Uimage.UimageOs = Object.freeze({
+    INVALID: 0,
+    OPENBSD: 1,
+    NETBSD: 2,
+    FREEBSD: 3,
+    BSD4_4: 4,
+    LINUX: 5,
+    SVR4: 6,
+    ESIX: 7,
+    SOLARIS: 8,
+    IRIX: 9,
+    SCO: 10,
+    DELL: 11,
+    NCR: 12,
+    LYNXOS: 13,
+    VXWORKS: 14,
+    PSOS: 15,
+    QNX: 16,
+    U_BOOT: 17,
+    RTEMS: 18,
+    ARTOS: 19,
+    UNITY: 20,
+    INTEGRITY: 21,
+
+    0: &quot;INVALID&quot;,
+    1: &quot;OPENBSD&quot;,
+    2: &quot;NETBSD&quot;,
+    3: &quot;FREEBSD&quot;,
+    4: &quot;BSD4_4&quot;,
+    5: &quot;LINUX&quot;,
+    6: &quot;SVR4&quot;,
+    7: &quot;ESIX&quot;,
+    8: &quot;SOLARIS&quot;,
+    9: &quot;IRIX&quot;,
+    10: &quot;SCO&quot;,
+    11: &quot;DELL&quot;,
+    12: &quot;NCR&quot;,
+    13: &quot;LYNXOS&quot;,
+    14: &quot;VXWORKS&quot;,
+    15: &quot;PSOS&quot;,
+    16: &quot;QNX&quot;,
+    17: &quot;U_BOOT&quot;,
+    18: &quot;RTEMS&quot;,
+    19: &quot;ARTOS&quot;,
+    20: &quot;UNITY&quot;,
+    21: &quot;INTEGRITY&quot;,
+  });
+
+  Uimage.UimageArch = Object.freeze({
+    INVALID: 0,
+    ALPHA: 1,
+    ARM: 2,
+    I386: 3,
+    IA64: 4,
+    MIPS: 5,
+    MIPS64: 6,
+    PPC: 7,
+    S390: 8,
+    SH: 9,
+    SPARC: 10,
+    SPARC64: 11,
+    M68K: 12,
+    NIOS: 13,
+    MICROBLAZE: 14,
+    NIOS2: 15,
+    BLACKFIN: 16,
+    AVR32: 17,
+    ST200: 18,
+
+    0: &quot;INVALID&quot;,
+    1: &quot;ALPHA&quot;,
+    2: &quot;ARM&quot;,
+    3: &quot;I386&quot;,
+    4: &quot;IA64&quot;,
+    5: &quot;MIPS&quot;,
+    6: &quot;MIPS64&quot;,
+    7: &quot;PPC&quot;,
+    8: &quot;S390&quot;,
+    9: &quot;SH&quot;,
+    10: &quot;SPARC&quot;,
+    11: &quot;SPARC64&quot;,
+    12: &quot;M68K&quot;,
+    13: &quot;NIOS&quot;,
+    14: &quot;MICROBLAZE&quot;,
+    15: &quot;NIOS2&quot;,
+    16: &quot;BLACKFIN&quot;,
+    17: &quot;AVR32&quot;,
+    18: &quot;ST200&quot;,
+  });
+
+  Uimage.UimageComp = Object.freeze({
+    NONE: 0,
+    GZIP: 1,
+    BZIP2: 2,
+    LZMA: 3,
+    LZO: 4,
+
+    0: &quot;NONE&quot;,
+    1: &quot;GZIP&quot;,
+    2: &quot;BZIP2&quot;,
+    3: &quot;LZMA&quot;,
+    4: &quot;LZO&quot;,
+  });
+
+  Uimage.UimageType = Object.freeze({
+    INVALID: 0,
+    STANDALONE: 1,
+    KERNEL: 2,
+    RAMDISK: 3,
+    MULTI: 4,
+    FIRMWARE: 5,
+    SCRIPT: 6,
+    FILESYSTEM: 7,
+    FLATDT: 8,
+    KWBIMAGE: 9,
+    IMXIMAGE: 10,
+
+    0: &quot;INVALID&quot;,
+    1: &quot;STANDALONE&quot;,
+    2: &quot;KERNEL&quot;,
+    3: &quot;RAMDISK&quot;,
+    4: &quot;MULTI&quot;,
+    5: &quot;FIRMWARE&quot;,
+    6: &quot;SCRIPT&quot;,
+    7: &quot;FILESYSTEM&quot;,
+    8: &quot;FLATDT&quot;,
+    9: &quot;KWBIMAGE&quot;,
+    10: &quot;IMXIMAGE&quot;,
+  });
+
+  function Uimage(_io, _parent, _root) {
+    this._io = _io;
+    this._parent = _parent;
+    this._root = _root || this;
+
+    this._read();
+  }
+  Uimage.prototype._read = function() {
+    this.header = new Uheader(this._io, this, this._root);
+    this.data = this._io.readBytes(this.header.lenImage);
+  }
+
+  var Uheader = Uimage.Uheader = (function() {
+    function Uheader(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Uheader.prototype._read = function() {
+      this.magic = this._io.ensureFixedContents([39, 5, 25, 86]);
+      this.headerCrc = this._io.readU4be();
+      this.timestamp = this._io.readU4be();
+      this.lenImage = this._io.readU4be();
+      this.loadAddress = this._io.readU4be();
+      this.entryAddress = this._io.readU4be();
+      this.dataCrc = this._io.readU4be();
+      this.osType = this._io.readU1();
+      this.architecture = this._io.readU1();
+      this.imageType = this._io.readU1();
+      this.compressionType = this._io.readU1();
+      this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(32), 0, false), &quot;UTF-8&quot;);
+    }
+
+    return Uheader;
+  })();
+
+  return Uimage;
+})();
+return Uimage;
+}));
+</code></pre>
+            
+        </div>
         
     </div>
 </section>

@@ -1,0 +1,36 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__uimage {
+		label="Uimage";
+		graph[style=dotted];
+
+		uimage__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">64</TD><TD>Uheader</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="data_pos">64</TD><TD PORT="data_size">header.len_image</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+		</TABLE>>];
+		subgraph cluster__uheader {
+			label="Uimage::Uheader";
+			graph[style=dotted];
+
+			uheader__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>27 05 19 56</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="header_crc_pos">4</TD><TD PORT="header_crc_size">4</TD><TD>u4be</TD><TD PORT="header_crc_type">header_crc</TD></TR>
+				<TR><TD PORT="timestamp_pos">8</TD><TD PORT="timestamp_size">4</TD><TD>u4be</TD><TD PORT="timestamp_type">timestamp</TD></TR>
+				<TR><TD PORT="len_image_pos">12</TD><TD PORT="len_image_size">4</TD><TD>u4be</TD><TD PORT="len_image_type">len_image</TD></TR>
+				<TR><TD PORT="load_address_pos">16</TD><TD PORT="load_address_size">4</TD><TD>u4be</TD><TD PORT="load_address_type">load_address</TD></TR>
+				<TR><TD PORT="entry_address_pos">20</TD><TD PORT="entry_address_size">4</TD><TD>u4be</TD><TD PORT="entry_address_type">entry_address</TD></TR>
+				<TR><TD PORT="data_crc_pos">24</TD><TD PORT="data_crc_size">4</TD><TD>u4be</TD><TD PORT="data_crc_type">data_crc</TD></TR>
+				<TR><TD PORT="os_type_pos">28</TD><TD PORT="os_type_size">1</TD><TD>u1→UimageOs</TD><TD PORT="os_type_type">os_type</TD></TR>
+				<TR><TD PORT="architecture_pos">29</TD><TD PORT="architecture_size">1</TD><TD>u1→UimageArch</TD><TD PORT="architecture_type">architecture</TD></TR>
+				<TR><TD PORT="image_type_pos">30</TD><TD PORT="image_type_size">1</TD><TD>u1→UimageType</TD><TD PORT="image_type_type">image_type</TD></TR>
+				<TR><TD PORT="compression_type_pos">31</TD><TD PORT="compression_type_size">1</TD><TD>u1→UimageComp</TD><TD PORT="compression_type_type">compression_type</TD></TR>
+				<TR><TD PORT="name_pos">32</TD><TD PORT="name_size">32</TD><TD>str(UTF-8)</TD><TD PORT="name_type">name</TD></TR>
+			</TABLE>>];
+		}
+	}
+	uimage__seq:header_type -> uheader__seq [style=bold];
+	uheader__seq:len_image_type -> uimage__seq:data_size [color="#404040"];
+}

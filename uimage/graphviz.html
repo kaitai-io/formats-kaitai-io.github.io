@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>U-Boot Image wrapper: Lua parsing library</title>
+  <title>U-Boot Image wrapper: GraphViz block diagram (.dot) source: Kaitai Struct</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -92,7 +92,7 @@ section#format-index .row {
     <div class="container">
         <h1>U-Boot Image wrapper:
             
-            Lua parsing library
+            GraphViz block diagram (.dot) source
             
         </h1>
 
@@ -150,7 +150,7 @@ with sha1 and md5 checksums.</p>
                 <a href="csharp.html" title="U-Boot Image wrapper parsing C# library">C#</a></li>
                 
                 
-                <li>
+                <li class="active">
                 
                 <a href="graphviz.html" title="U-Boot Image wrapper parsing GraphViz library">GraphViz</a></li>
                 
@@ -165,7 +165,7 @@ with sha1 and md5 checksums.</p>
                 <a href="javascript.html" title="U-Boot Image wrapper parsing JavaScript library">JavaScript</a></li>
                 
                 
-                <li class="active">
+                <li>
                 
                 <a href="lua.html" title="U-Boot Image wrapper parsing Lua library">Lua</a></li>
                 
@@ -200,10 +200,62 @@ with sha1 and md5 checksums.</p>
     <div class="container">
         <h2>
             
-            Lua source code to parse U-Boot Image wrapper
+            GraphViz block diagram source
             
         </h2>
 
+        
+
+        <h3>uimage.dot</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/graphviz/uimage.dot" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="graphviz">digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__uimage {
+		label=&quot;Uimage&quot;;
+		graph[style=dotted];
+
+		uimage__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;header_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;header_size&quot;&gt;64&lt;/TD&gt;&lt;TD&gt;Uheader&lt;/TD&gt;&lt;TD PORT=&quot;header_type&quot;&gt;header&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;data_pos&quot;&gt;64&lt;/TD&gt;&lt;TD PORT=&quot;data_size&quot;&gt;header.len_image&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;data_type&quot;&gt;data&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		subgraph cluster__uheader {
+			label=&quot;Uimage::Uheader&quot;;
+			graph[style=dotted];
+
+			uheader__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;magic_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;magic_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;27 05 19 56&lt;/TD&gt;&lt;TD PORT=&quot;magic_type&quot;&gt;magic&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;header_crc_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;header_crc_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;header_crc_type&quot;&gt;header_crc&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;timestamp_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;timestamp_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;timestamp_type&quot;&gt;timestamp&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_image_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;len_image_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;len_image_type&quot;&gt;len_image&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;load_address_pos&quot;&gt;16&lt;/TD&gt;&lt;TD PORT=&quot;load_address_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;load_address_type&quot;&gt;load_address&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;entry_address_pos&quot;&gt;20&lt;/TD&gt;&lt;TD PORT=&quot;entry_address_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;entry_address_type&quot;&gt;entry_address&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;data_crc_pos&quot;&gt;24&lt;/TD&gt;&lt;TD PORT=&quot;data_crc_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;data_crc_type&quot;&gt;data_crc&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;os_type_pos&quot;&gt;28&lt;/TD&gt;&lt;TD PORT=&quot;os_type_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1→UimageOs&lt;/TD&gt;&lt;TD PORT=&quot;os_type_type&quot;&gt;os_type&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;architecture_pos&quot;&gt;29&lt;/TD&gt;&lt;TD PORT=&quot;architecture_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1→UimageArch&lt;/TD&gt;&lt;TD PORT=&quot;architecture_type&quot;&gt;architecture&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;image_type_pos&quot;&gt;30&lt;/TD&gt;&lt;TD PORT=&quot;image_type_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1→UimageType&lt;/TD&gt;&lt;TD PORT=&quot;image_type_type&quot;&gt;image_type&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;compression_type_pos&quot;&gt;31&lt;/TD&gt;&lt;TD PORT=&quot;compression_type_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1→UimageComp&lt;/TD&gt;&lt;TD PORT=&quot;compression_type_type&quot;&gt;compression_type&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;name_pos&quot;&gt;32&lt;/TD&gt;&lt;TD PORT=&quot;name_size&quot;&gt;32&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;name_type&quot;&gt;name&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+	}
+	uimage__seq:header_type -&gt; uheader__seq [style=bold];
+	uheader__seq:len_image_type -&gt; uimage__seq:data_size [color=&quot;#404040&quot;];
+}
+</code></pre>
+            
+        </div>
         
     </div>
 </section>

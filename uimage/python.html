@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>U-Boot Image wrapper: Lua parsing library</title>
+  <title>U-Boot Image wrapper: Python parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -92,7 +92,7 @@ section#format-index .row {
     <div class="container">
         <h1>U-Boot Image wrapper:
             
-            Lua parsing library
+            Python parsing library
             
         </h1>
 
@@ -165,7 +165,7 @@ with sha1 and md5 checksums.</p>
                 <a href="javascript.html" title="U-Boot Image wrapper parsing JavaScript library">JavaScript</a></li>
                 
                 
-                <li class="active">
+                <li>
                 
                 <a href="lua.html" title="U-Boot Image wrapper parsing Lua library">Lua</a></li>
                 
@@ -180,7 +180,7 @@ with sha1 and md5 checksums.</p>
                 <a href="php.html" title="U-Boot Image wrapper parsing PHP library">PHP</a></li>
                 
                 
-                <li>
+                <li class="active">
                 
                 <a href="python.html" title="U-Boot Image wrapper parsing Python library">Python</a></li>
                 
@@ -195,15 +195,171 @@ with sha1 and md5 checksums.</p>
     </div>
 </section>
 
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="python">data = Uimage.from_file("path/to/local/file.U-Boot Image wrapper")</code></pre>
+
+<p>Or parse structure from a bytes:</p>
+
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
+
+raw = b"\x00\x01\x02..."
+data = Uimage(KaitaiStream(BytesIO(raw)))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="python">data.header # => get header</code></pre>
+
+    </div>
+</section>
+
 
 <section id="format-lang" class="format">
     <div class="container">
         <h2>
             
-            Lua source code to parse U-Boot Image wrapper
+            Python source code to parse U-Boot Image wrapper
             
         </h2>
 
+        
+
+        <h3>uimage.py</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/python/uimage.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+from pkg_resources import parse_version
+from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+from enum import Enum
+
+
+if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
+    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
+
+class Uimage(KaitaiStruct):
+    &quot;&quot;&quot;The new uImage format allows more flexibility in handling images of various
+    types (kernel, ramdisk, etc.), it also enhances integrity protection of images
+    with sha1 and md5 checksums.
+    
+    .. seealso::
+       Source - https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h
+    &quot;&quot;&quot;
+
+    class UimageOs(Enum):
+        invalid = 0
+        openbsd = 1
+        netbsd = 2
+        freebsd = 3
+        bsd4_4 = 4
+        linux = 5
+        svr4 = 6
+        esix = 7
+        solaris = 8
+        irix = 9
+        sco = 10
+        dell = 11
+        ncr = 12
+        lynxos = 13
+        vxworks = 14
+        psos = 15
+        qnx = 16
+        u_boot = 17
+        rtems = 18
+        artos = 19
+        unity = 20
+        integrity = 21
+
+    class UimageArch(Enum):
+        invalid = 0
+        alpha = 1
+        arm = 2
+        i386 = 3
+        ia64 = 4
+        mips = 5
+        mips64 = 6
+        ppc = 7
+        s390 = 8
+        sh = 9
+        sparc = 10
+        sparc64 = 11
+        m68k = 12
+        nios = 13
+        microblaze = 14
+        nios2 = 15
+        blackfin = 16
+        avr32 = 17
+        st200 = 18
+
+    class UimageComp(Enum):
+        none = 0
+        gzip = 1
+        bzip2 = 2
+        lzma = 3
+        lzo = 4
+
+    class UimageType(Enum):
+        invalid = 0
+        standalone = 1
+        kernel = 2
+        ramdisk = 3
+        multi = 4
+        firmware = 5
+        script = 6
+        filesystem = 7
+        flatdt = 8
+        kwbimage = 9
+        imximage = 10
+    def __init__(self, _io, _parent=None, _root=None):
+        self._io = _io
+        self._parent = _parent
+        self._root = _root if _root else self
+        self._read()
+
+    def _read(self):
+        self.header = self._root.Uheader(self._io, self, self._root)
+        self.data = self._io.read_bytes(self.header.len_image)
+
+    class Uheader(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.magic = self._io.ensure_fixed_contents(b&quot;\x27\x05\x19\x56&quot;)
+            self.header_crc = self._io.read_u4be()
+            self.timestamp = self._io.read_u4be()
+            self.len_image = self._io.read_u4be()
+            self.load_address = self._io.read_u4be()
+            self.entry_address = self._io.read_u4be()
+            self.data_crc = self._io.read_u4be()
+            self.os_type = self._root.UimageOs(self._io.read_u1())
+            self.architecture = self._root.UimageArch(self._io.read_u1())
+            self.image_type = self._root.UimageType(self._io.read_u1())
+            self.compression_type = self._root.UimageComp(self._io.read_u1())
+            self.name = (KaitaiStream.bytes_terminate(self._io.read_bytes(32), 0, False)).decode(u&quot;UTF-8&quot;)
+
+
+
+</code></pre>
+            
+        </div>
         
     </div>
 </section>

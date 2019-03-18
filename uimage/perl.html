@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>U-Boot Image wrapper: Lua parsing library</title>
+  <title>U-Boot Image wrapper: Perl parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -92,7 +92,7 @@ section#format-index .row {
     <div class="container">
         <h1>U-Boot Image wrapper:
             
-            Lua parsing library
+            Perl parsing library
             
         </h1>
 
@@ -165,12 +165,12 @@ with sha1 and md5 checksums.</p>
                 <a href="javascript.html" title="U-Boot Image wrapper parsing JavaScript library">JavaScript</a></li>
                 
                 
-                <li class="active">
+                <li>
                 
                 <a href="lua.html" title="U-Boot Image wrapper parsing Lua library">Lua</a></li>
                 
                 
-                <li>
+                <li class="active">
                 
                 <a href="perl.html" title="U-Boot Image wrapper parsing Perl library">Perl</a></li>
                 
@@ -200,10 +200,243 @@ with sha1 and md5 checksums.</p>
     <div class="container">
         <h2>
             
-            Lua source code to parse U-Boot Image wrapper
+            Perl source code to parse U-Boot Image wrapper
             
         </h2>
 
+        
+
+        <h3>Uimage.pm</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/perl/Uimage.pm" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="perl"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+use strict;
+use warnings;
+use IO::KaitaiStruct 0.007_000;
+use Encode;
+
+########################################################################
+package Uimage;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $UIMAGE_OS_INVALID = 0;
+our $UIMAGE_OS_OPENBSD = 1;
+our $UIMAGE_OS_NETBSD = 2;
+our $UIMAGE_OS_FREEBSD = 3;
+our $UIMAGE_OS_BSD4_4 = 4;
+our $UIMAGE_OS_LINUX = 5;
+our $UIMAGE_OS_SVR4 = 6;
+our $UIMAGE_OS_ESIX = 7;
+our $UIMAGE_OS_SOLARIS = 8;
+our $UIMAGE_OS_IRIX = 9;
+our $UIMAGE_OS_SCO = 10;
+our $UIMAGE_OS_DELL = 11;
+our $UIMAGE_OS_NCR = 12;
+our $UIMAGE_OS_LYNXOS = 13;
+our $UIMAGE_OS_VXWORKS = 14;
+our $UIMAGE_OS_PSOS = 15;
+our $UIMAGE_OS_QNX = 16;
+our $UIMAGE_OS_U_BOOT = 17;
+our $UIMAGE_OS_RTEMS = 18;
+our $UIMAGE_OS_ARTOS = 19;
+our $UIMAGE_OS_UNITY = 20;
+our $UIMAGE_OS_INTEGRITY = 21;
+
+our $UIMAGE_ARCH_INVALID = 0;
+our $UIMAGE_ARCH_ALPHA = 1;
+our $UIMAGE_ARCH_ARM = 2;
+our $UIMAGE_ARCH_I386 = 3;
+our $UIMAGE_ARCH_IA64 = 4;
+our $UIMAGE_ARCH_MIPS = 5;
+our $UIMAGE_ARCH_MIPS64 = 6;
+our $UIMAGE_ARCH_PPC = 7;
+our $UIMAGE_ARCH_S390 = 8;
+our $UIMAGE_ARCH_SH = 9;
+our $UIMAGE_ARCH_SPARC = 10;
+our $UIMAGE_ARCH_SPARC64 = 11;
+our $UIMAGE_ARCH_M68K = 12;
+our $UIMAGE_ARCH_NIOS = 13;
+our $UIMAGE_ARCH_MICROBLAZE = 14;
+our $UIMAGE_ARCH_NIOS2 = 15;
+our $UIMAGE_ARCH_BLACKFIN = 16;
+our $UIMAGE_ARCH_AVR32 = 17;
+our $UIMAGE_ARCH_ST200 = 18;
+
+our $UIMAGE_COMP_NONE = 0;
+our $UIMAGE_COMP_GZIP = 1;
+our $UIMAGE_COMP_BZIP2 = 2;
+our $UIMAGE_COMP_LZMA = 3;
+our $UIMAGE_COMP_LZO = 4;
+
+our $UIMAGE_TYPE_INVALID = 0;
+our $UIMAGE_TYPE_STANDALONE = 1;
+our $UIMAGE_TYPE_KERNEL = 2;
+our $UIMAGE_TYPE_RAMDISK = 3;
+our $UIMAGE_TYPE_MULTI = 4;
+our $UIMAGE_TYPE_FIRMWARE = 5;
+our $UIMAGE_TYPE_SCRIPT = 6;
+our $UIMAGE_TYPE_FILESYSTEM = 7;
+our $UIMAGE_TYPE_FLATDT = 8;
+our $UIMAGE_TYPE_KWBIMAGE = 9;
+our $UIMAGE_TYPE_IMXIMAGE = 10;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{header} = Uimage::Uheader-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{data} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;header()-&gt;len_image());
+}
+
+sub header {
+    my ($self) = @_;
+    return $self-&gt;{header};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self-&gt;{data};
+}
+
+########################################################################
+package Uimage::Uheader;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{magic} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (39, 5, 25, 86)));
+    $self-&gt;{header_crc} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{timestamp} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{len_image} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{load_address} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{entry_address} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{data_crc} = $self-&gt;{_io}-&gt;read_u4be();
+    $self-&gt;{os_type} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{architecture} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{image_type} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{compression_type} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{name} = Encode::decode(&quot;UTF-8&quot;, IO::KaitaiStruct::Stream::bytes_terminate($self-&gt;{_io}-&gt;read_bytes(32), 0, 0));
+}
+
+sub magic {
+    my ($self) = @_;
+    return $self-&gt;{magic};
+}
+
+sub header_crc {
+    my ($self) = @_;
+    return $self-&gt;{header_crc};
+}
+
+sub timestamp {
+    my ($self) = @_;
+    return $self-&gt;{timestamp};
+}
+
+sub len_image {
+    my ($self) = @_;
+    return $self-&gt;{len_image};
+}
+
+sub load_address {
+    my ($self) = @_;
+    return $self-&gt;{load_address};
+}
+
+sub entry_address {
+    my ($self) = @_;
+    return $self-&gt;{entry_address};
+}
+
+sub data_crc {
+    my ($self) = @_;
+    return $self-&gt;{data_crc};
+}
+
+sub os_type {
+    my ($self) = @_;
+    return $self-&gt;{os_type};
+}
+
+sub architecture {
+    my ($self) = @_;
+    return $self-&gt;{architecture};
+}
+
+sub image_type {
+    my ($self) = @_;
+    return $self-&gt;{image_type};
+}
+
+sub compression_type {
+    my ($self) = @_;
+    return $self-&gt;{compression_type};
+}
+
+sub name {
+    my ($self) = @_;
+    return $self-&gt;{name};
+}
+
+1;
+</code></pre>
+            
+        </div>
         
     </div>
 </section>
