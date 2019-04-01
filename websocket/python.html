@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>WebSocket: Lua parsing library</title>
+  <title>WebSocket: Python parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -92,7 +92,7 @@ section#format-index .row {
     <div class="container">
         <h1>WebSocket:
             
-            Lua parsing library
+            Python parsing library
             
         </h1>
 
@@ -189,7 +189,7 @@ frames with the <code>fin</code> bit set.</p>
                 <a href="javascript.html" title="WebSocket parsing JavaScript library">JavaScript</a></li>
                 
                 
-                <li class="active">
+                <li>
                 
                 <a href="lua.html" title="WebSocket parsing Lua library">Lua</a></li>
                 
@@ -204,7 +204,7 @@ frames with the <code>fin</code> bit set.</p>
                 <a href="php.html" title="WebSocket parsing PHP library">PHP</a></li>
                 
                 
-                <li>
+                <li class="active">
                 
                 <a href="python.html" title="WebSocket parsing Python library">Python</a></li>
                 
@@ -219,15 +219,144 @@ frames with the <code>fin</code> bit set.</p>
     </div>
 </section>
 
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="python">data = Websocket.from_file("path/to/local/file.WebSocket")</code></pre>
+
+<p>Or parse structure from a bytes:</p>
+
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
+
+raw = b"\x00\x01\x02..."
+data = Websocket(KaitaiStream(BytesIO(raw)))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="python">data.dataframes # => get dataframes</code></pre>
+
+    </div>
+</section>
+
 
 <section id="format-lang" class="format">
     <div class="container">
         <h2>
             
-            Lua source code to parse WebSocket
+            Python source code to parse WebSocket
             
         </h2>
 
+        
+
+        <h3>websocket.py</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/python/websocket.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+from pkg_resources import parse_version
+from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+from enum import Enum
+
+
+if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
+    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
+
+class Websocket(KaitaiStruct):
+    &quot;&quot;&quot;The WebSocket protocol establishes a two-way communication channel via TCP.
+    Messages are made up of one or more dataframes, and are delineated by
+    frames with the `fin` bit set.
+    &quot;&quot;&quot;
+
+    class Opcode(Enum):
+        continuation = 0
+        text = 1
+        binary = 2
+        reserved_3 = 3
+        reserved_4 = 4
+        reserved_5 = 5
+        reserved_6 = 6
+        reserved_7 = 7
+        close = 8
+        ping = 9
+        pong = 10
+        reserved_control_b = 11
+        reserved_control_c = 12
+        reserved_control_d = 13
+        reserved_control_e = 14
+        reserved_control_f = 15
+    def __init__(self, _io, _parent=None, _root=None):
+        self._io = _io
+        self._parent = _parent
+        self._root = _root if _root else self
+        self._read()
+
+    def _read(self):
+        self.dataframes = []
+        i = 0
+        while True:
+            _ = self._root.Dataframe(self._io, self, self._root)
+            self.dataframes.append(_)
+            if _.finished:
+                break
+            i += 1
+
+    class Dataframe(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.finished = self._io.read_bits_int(1) != 0
+            self.reserved = self._io.read_bits_int(3)
+            self.opcode = self._root.Opcode(self._io.read_bits_int(4))
+            self.is_masked = self._io.read_bits_int(1) != 0
+            self.len_payload_primary = self._io.read_bits_int(7)
+            self._io.align_to_byte()
+            if self.len_payload_primary == 126:
+                self.len_payload_extended_1 = self._io.read_u2be()
+
+            if self.len_payload_primary == 127:
+                self.len_payload_extended_2 = self._io.read_u4be()
+
+            if self.is_masked:
+                self.mask_key = self._io.read_u4be()
+
+            if self._root.dataframes[0].opcode != self._root.Opcode.text:
+                self.payload_bytes = self._io.read_bytes(self.len_payload)
+
+            if self._root.dataframes[0].opcode == self._root.Opcode.text:
+                self.payload_text = (self._io.read_bytes(self.len_payload)).decode(u&quot;UTF-8&quot;)
+
+
+        @property
+        def len_payload(self):
+            if hasattr(self, &#39;_m_len_payload&#39;):
+                return self._m_len_payload if hasattr(self, &#39;_m_len_payload&#39;) else None
+
+            self._m_len_payload = (self.len_payload_primary if self.len_payload_primary &lt;= 125 else (self.len_payload_extended_1 if self.len_payload_primary == 126 else self.len_payload_extended_2))
+            return self._m_len_payload if hasattr(self, &#39;_m_len_payload&#39;) else None
+
+
+
+</code></pre>
+            
+        </div>
         
     </div>
 </section>
