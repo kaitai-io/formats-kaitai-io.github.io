@@ -1,0 +1,93 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__sudoers_ts {
+		label="SudoersTs";
+		graph[style=dotted];
+
+		sudoers_ts__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="records_pos">0</TD><TD PORT="records_size">...</TD><TD>Record</TD><TD PORT="records_type">records</TD></TR>
+			<TR><TD COLSPAN="4" PORT="records__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__record_v2 {
+			label="SudoersTs::RecordV2";
+			graph[style=dotted];
+
+			record_v2__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">2</TD><TD>u2le→TsType</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="flags_pos">2</TD><TD PORT="flags_size">2</TD><TD>TsFlag</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="auth_uid_pos">4</TD><TD PORT="auth_uid_size">4</TD><TD>u4le</TD><TD PORT="auth_uid_type">auth_uid</TD></TR>
+				<TR><TD PORT="sid_pos">8</TD><TD PORT="sid_size">4</TD><TD>u4le</TD><TD PORT="sid_type">sid</TD></TR>
+				<TR><TD PORT="start_time_pos">12</TD><TD PORT="start_time_size">16</TD><TD>Timespec</TD><TD PORT="start_time_type">start_time</TD></TR>
+				<TR><TD PORT="ts_pos">28</TD><TD PORT="ts_size">16</TD><TD>Timespec</TD><TD PORT="ts_type">ts</TD></TR>
+				<TR><TD PORT="ttydev_pos">44</TD><TD PORT="ttydev_size">4</TD><TD>u4le</TD><TD PORT="ttydev_type">ttydev</TD></TR>
+				<TR><TD PORT="ppid_pos">48</TD><TD PORT="ppid_size">4</TD><TD>u4le</TD><TD PORT="ppid_type">ppid</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__ts_flag {
+			label="SudoersTs::TsFlag";
+			graph[style=dotted];
+
+			ts_flag__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="reserved0_pos">0</TD><TD PORT="reserved0_size">6b</TD><TD>b6</TD><TD PORT="reserved0_type">reserved0</TD></TR>
+				<TR><TD PORT="anyuid_pos">0:6</TD><TD PORT="anyuid_size">1b</TD><TD>BitsType1</TD><TD PORT="anyuid_type">anyuid</TD></TR>
+				<TR><TD PORT="disabled_pos">0:7</TD><TD PORT="disabled_size">1b</TD><TD>BitsType1</TD><TD PORT="disabled_type">disabled</TD></TR>
+				<TR><TD PORT="reserved1_pos">1</TD><TD PORT="reserved1_size">1</TD><TD>b8</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__record_v1 {
+			label="SudoersTs::RecordV1";
+			graph[style=dotted];
+
+			record_v1__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">2</TD><TD>u2le→TsType</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="flags_pos">2</TD><TD PORT="flags_size">2</TD><TD>TsFlag</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="auth_uid_pos">4</TD><TD PORT="auth_uid_size">4</TD><TD>u4le</TD><TD PORT="auth_uid_type">auth_uid</TD></TR>
+				<TR><TD PORT="sid_pos">8</TD><TD PORT="sid_size">4</TD><TD>u4le</TD><TD PORT="sid_type">sid</TD></TR>
+				<TR><TD PORT="ts_pos">12</TD><TD PORT="ts_size">16</TD><TD>Timespec</TD><TD PORT="ts_type">ts</TD></TR>
+				<TR><TD PORT="ttydev_pos">28</TD><TD PORT="ttydev_size">4</TD><TD>u4le</TD><TD PORT="ttydev_type">ttydev</TD></TR>
+				<TR><TD PORT="ppid_pos">32</TD><TD PORT="ppid_size">4</TD><TD>u4le</TD><TD PORT="ppid_type">ppid</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__timespec {
+			label="SudoersTs::Timespec";
+			graph[style=dotted];
+
+			timespec__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="sec_pos">0</TD><TD PORT="sec_size">8</TD><TD>s8le</TD><TD PORT="sec_type">sec</TD></TR>
+				<TR><TD PORT="nsec_pos">8</TD><TD PORT="nsec_size">8</TD><TD>s8le</TD><TD PORT="nsec_type">nsec</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__record {
+			label="SudoersTs::Record";
+			graph[style=dotted];
+
+			record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">2</TD><TD>u2le</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="len_record_pos">2</TD><TD PORT="len_record_size">2</TD><TD>u2le</TD><TD PORT="len_record_type">len_record</TD></TR>
+				<TR><TD PORT="payload_pos">4</TD><TD PORT="payload_size">...</TD><TD>switch (version)</TD><TD PORT="payload_type">payload</TD></TR>
+			</TABLE>>];
+record__seq_payload_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>1</TD><TD PORT="case0">RecordV1</TD></TR>
+	<TR><TD>2</TD><TD PORT="case1">RecordV2</TD></TR>
+</TABLE>>];
+		}
+	}
+	sudoers_ts__seq:records_type -> record__seq [style=bold];
+	record_v2__seq:flags_type -> ts_flag__seq [style=bold];
+	record_v2__seq:start_time_type -> timespec__seq [style=bold];
+	record_v2__seq:ts_type -> timespec__seq [style=bold];
+	record_v1__seq:flags_type -> ts_flag__seq [style=bold];
+	record_v1__seq:ts_type -> timespec__seq [style=bold];
+	record__seq:payload_type -> record__seq_payload_switch [style=bold];
+	record__seq_payload_switch:case0 -> record_v1__seq [style=bold];
+	record__seq_payload_switch:case1 -> record_v2__seq [style=bold];
+	record__seq:version_type -> record__seq:payload_type [color="#404040"];
+}
