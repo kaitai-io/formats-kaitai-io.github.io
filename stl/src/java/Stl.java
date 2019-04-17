@@ -116,15 +116,29 @@ public class Stl extends KaitaiStruct {
             this.x = this._io.readF4le();
             this.y = this._io.readF4le();
             this.z = this._io.readF4le();
+            this.abr = this._io.readU2le();
         }
         private float x;
         private float y;
         private float z;
+        private int abr;
         private Stl _root;
         private Stl.Triangle _parent;
         public float x() { return x; }
         public float y() { return y; }
         public float z() { return z; }
+
+        /**
+         * In theory (per standard), it's "attribute byte count" with
+         * no other details given on what "attribute" is and what
+         * should be stored in this field.
+         * 
+         * In practice, software dealing with STL either expected to
+         * see 0 here, or uses this 16-bit field per se to store
+         * additional attributes (such as RGB color of a vertex or
+         * color index).
+         */
+        public int abr() { return abr; }
         public Stl _root() { return _root; }
         public Stl.Triangle _parent() { return _parent; }
     }

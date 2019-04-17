@@ -71,11 +71,23 @@ class Stl < Kaitai::Struct::Struct
       @x = @_io.read_f4le
       @y = @_io.read_f4le
       @z = @_io.read_f4le
+      @abr = @_io.read_u2le
       self
     end
     attr_reader :x
     attr_reader :y
     attr_reader :z
+
+    ##
+    # In theory (per standard), it's "attribute byte count" with
+    # no other details given on what "attribute" is and what
+    # should be stored in this field.
+    # 
+    # In practice, software dealing with STL either expected to
+    # see 0 here, or uses this 16-bit field per se to store
+    # additional attributes (such as RGB color of a vertex or
+    # color index).
+    attr_reader :abr
   end
   attr_reader :header
   attr_reader :num_triangles

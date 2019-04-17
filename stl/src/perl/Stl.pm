@@ -139,6 +139,7 @@ sub _read {
     $self->{x} = $self->{_io}->read_f4le();
     $self->{y} = $self->{_io}->read_f4le();
     $self->{z} = $self->{_io}->read_f4le();
+    $self->{abr} = $self->{_io}->read_u2le();
 }
 
 sub x {
@@ -154,6 +155,11 @@ sub y {
 sub z {
     my ($self) = @_;
     return $self->{z};
+}
+
+sub abr {
+    my ($self) = @_;
+    return $self->{abr};
 }
 
 1;

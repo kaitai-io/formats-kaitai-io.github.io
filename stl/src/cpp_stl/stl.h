@@ -92,6 +92,7 @@ public:
         float m_x;
         float m_y;
         float m_z;
+        uint16_t m_abr;
         stl_t* m__root;
         stl_t::triangle_t* m__parent;
 
@@ -99,6 +100,18 @@ public:
         float x() const { return m_x; }
         float y() const { return m_y; }
         float z() const { return m_z; }
+
+        /**
+         * In theory (per standard), it's "attribute byte count" with
+         * no other details given on what "attribute" is and what
+         * should be stored in this field.
+         * 
+         * In practice, software dealing with STL either expected to
+         * see 0 here, or uses this 16-bit field per se to store
+         * additional attributes (such as RGB color of a vertex or
+         * color index).
+         */
+        uint16_t abr() const { return m_abr; }
         stl_t* _root() const { return m__root; }
         stl_t::triangle_t* _parent() const { return m__parent; }
     };

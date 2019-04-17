@@ -82,7 +82,19 @@ var Stl = (function() {
       this.x = this._io.readF4le();
       this.y = this._io.readF4le();
       this.z = this._io.readF4le();
+      this.abr = this._io.readU2le();
     }
+
+    /**
+     * In theory (per standard), it's "attribute byte count" with
+     * no other details given on what "attribute" is and what
+     * should be stored in this field.
+     * 
+     * In practice, software dealing with STL either expected to
+     * see 0 here, or uses this 16-bit field per se to store
+     * additional attributes (such as RGB color of a vertex or
+     * color index).
+     */
 
     return Vec3d;
   })();

@@ -83,11 +83,25 @@ class Vec3d extends \Kaitai\Struct\Struct {
         $this->_m_x = $this->_io->readF4le();
         $this->_m_y = $this->_io->readF4le();
         $this->_m_z = $this->_io->readF4le();
+        $this->_m_abr = $this->_io->readU2le();
     }
     protected $_m_x;
     protected $_m_y;
     protected $_m_z;
+    protected $_m_abr;
     public function x() { return $this->_m_x; }
     public function y() { return $this->_m_y; }
     public function z() { return $this->_m_z; }
+
+    /**
+     * In theory (per standard), it's "attribute byte count" with
+     * no other details given on what "attribute" is and what
+     * should be stored in this field.
+     * 
+     * In practice, software dealing with STL either expected to
+     * see 0 here, or uses this 16-bit field per se to store
+     * additional attributes (such as RGB color of a vertex or
+     * color index).
+     */
+    public function abr() { return $this->_m_abr; }
 }

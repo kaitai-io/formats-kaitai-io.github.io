@@ -62,6 +62,7 @@ void stl_t::vec3d_t::_read() {
     m_x = m__io->read_f4le();
     m_y = m__io->read_f4le();
     m_z = m__io->read_f4le();
+    m_abr = m__io->read_u2le();
 }
 
 stl_t::vec3d_t::~vec3d_t() {
