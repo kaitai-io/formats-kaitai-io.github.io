@@ -10,8 +10,8 @@ if parse_version(ks_version) < parse_version('0.7'):
 
 from udp_datagram import UdpDatagram
 from tcp_segment import TcpSegment
-from ipv4_packet import Ipv4Packet
 from icmp_packet import IcmpPacket
+from ipv4_packet import Ipv4Packet
 from ipv6_packet import Ipv6Packet
 class ProtocolBody(KaitaiStruct):
     """Protocol body represents particular payload on transport level (OSI
