@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>UEFI Variable with Signature List: PHP parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Security</li>
+        <li class="active">UEFI Variable with Signature List</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>UEFI Variable with Signature List:
+            
+            PHP parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Parse UEFI variables db and dbx that contain signatures, certificates and
+hashes. On a Linux system using UEFI, these variables are readable from
+/sys/firmware/efi/efivars/db-d719b2cb-3d3a-4596-a3bc-dad00e67656f,
+/sys/firmware/efi/efivars/dbDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c,
+/sys/firmware/efi/efivars/dbx-d719b2cb-3d3a-4596-a3bc-dad00e67656f and
+/sys/firmware/efi/efivars/dbxDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c.
+(&quot;d719b2cb-3d3a-4596-a3bc-dad00e67656f&quot; is defined as
+EFI_IMAGE_SECURITY_DATABASE_GUID and &quot;8be4df61-93ca-11d2-aa0d-00e098032b8c&quot;
+as EFI_GLOBAL_VARIABLE).
+Each file contains an EFI attribute (32-bit integer) followed by a list of
+EFI_SIGNATURE_LIST structures.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of UEFI Variable with Signature List
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="UEFI Variable with Signature List parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="UEFI Variable with Signature List parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="UEFI Variable with Signature List parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="UEFI Variable with Signature List parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="UEFI Variable with Signature List parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="UEFI Variable with Signature List parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="UEFI Variable with Signature List parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="UEFI Variable with Signature List parsing Perl library">Perl</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="php.html" title="UEFI Variable with Signature List parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="UEFI Variable with Signature List parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="UEFI Variable with Signature List parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            PHP source code to parse UEFI Variable with Signature List
+            
+        </h2>
+
+        
+
+        <h3>EfivarSignatureList.php</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/php/EfivarSignatureList.php" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="php">&lt;?php
+// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+/**
+ * Parse UEFI variables db and dbx that contain signatures, certificates and
+ * hashes. On a Linux system using UEFI, these variables are readable from
+ * /sys/firmware/efi/efivars/db-d719b2cb-3d3a-4596-a3bc-dad00e67656f,
+ * /sys/firmware/efi/efivars/dbDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c,
+ * /sys/firmware/efi/efivars/dbx-d719b2cb-3d3a-4596-a3bc-dad00e67656f and
+ * /sys/firmware/efi/efivars/dbxDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c.
+ * (&quot;d719b2cb-3d3a-4596-a3bc-dad00e67656f&quot; is defined as
+ * EFI_IMAGE_SECURITY_DATABASE_GUID and &quot;8be4df61-93ca-11d2-aa0d-00e098032b8c&quot;
+ * as EFI_GLOBAL_VARIABLE).
+ * Each file contains an EFI attribute (32-bit integer) followed by a list of
+ * EFI_SIGNATURE_LIST structures.
+ */
+
+class EfivarSignatureList extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \EfivarSignatureList $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_varAttributes = new \EfivarSignatureList\EfiVarAttr($this-&gt;_io, $this, $this-&gt;_root);
+        $this-&gt;_m_signatures = [];
+        $i = 0;
+        while (!$this-&gt;_io-&gt;isEof()) {
+            $this-&gt;_m_signatures[] = new \EfivarSignatureList\SignatureList($this-&gt;_io, $this, $this-&gt;_root);
+            $i++;
+        }
+    }
+    protected $_m_varAttributes;
+    protected $_m_signatures;
+
+    /**
+     * Attributes of the UEFI variable
+     */
+    public function varAttributes() { return $this-&gt;_m_varAttributes; }
+    public function signatures() { return $this-&gt;_m_signatures; }
+}
+
+namespace \EfivarSignatureList;
+
+class SignatureList extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \EfivarSignatureList $_parent = null, \EfivarSignatureList $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_signatureType = $this-&gt;_io-&gt;readBytes(16);
+        $this-&gt;_m_lenSignatureList = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_lenSignatureHeader = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_lenSignature = $this-&gt;_io-&gt;readU4le();
+        $this-&gt;_m_header = $this-&gt;_io-&gt;readBytes($this-&gt;lenSignatureHeader());
+        if ($this-&gt;lenSignature() &gt; 0) {
+            $this-&gt;_m__raw_signatures = [];
+            $this-&gt;_m_signatures = [];
+            $n = intval((($this-&gt;lenSignatureList() - $this-&gt;lenSignatureHeader()) - 28) / $this-&gt;lenSignature());
+            for ($i = 0; $i &lt; $n; $i++) {
+                $this-&gt;_m__raw_signatures[] = $this-&gt;_io-&gt;readBytes($this-&gt;lenSignature());
+                $io = new \Kaitai\Struct\Stream(end($this-&gt;_m__raw_signatures));
+                $this-&gt;_m_signatures[] = new \EfivarSignatureList\SignatureData($io, $this, $this-&gt;_root);
+            }
+        }
+    }
+    protected $_m_isCertSha512X509;
+
+    /**
+     * SHA512 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation
+     */
+    public function isCertSha512X509() {
+        if ($this-&gt;_m_isCertSha512X509 !== null)
+            return $this-&gt;_m_isCertSha512X509;
+        $this-&gt;_m_isCertSha512X509 = $this-&gt;signatureType() == &quot;\x63\xBF\x6D\x44\x02\x25\xDA\x4C\xBC\xFA\x24\x65\xD2\xB0\xFE\x9D&quot;;
+        return $this-&gt;_m_isCertSha512X509;
+    }
+    protected $_m_isCertSha224;
+
+    /**
+     * SHA-224 hash
+     */
+    public function isCertSha224() {
+        if ($this-&gt;_m_isCertSha224 !== null)
+            return $this-&gt;_m_isCertSha224;
+        $this-&gt;_m_isCertSha224 = $this-&gt;signatureType() == &quot;\x33\x52\x6E\x0B\x5C\xA6\xC9\x44\x94\x07\xD9\xAB\x83\xBF\xC8\xBD&quot;;
+        return $this-&gt;_m_isCertSha224;
+    }
+    protected $_m_isCertX509;
+
+    /**
+     * X.509 certificate
+     */
+    public function isCertX509() {
+        if ($this-&gt;_m_isCertX509 !== null)
+            return $this-&gt;_m_isCertX509;
+        $this-&gt;_m_isCertX509 = $this-&gt;signatureType() == &quot;\xA1\x59\xC0\xA5\xE4\x94\xA7\x4A\x87\xB5\xAB\x15\x5C\x2B\xF0\x72&quot;;
+        return $this-&gt;_m_isCertX509;
+    }
+    protected $_m_isCertSha256X509;
+
+    /**
+     * SHA256 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation
+     */
+    public function isCertSha256X509() {
+        if ($this-&gt;_m_isCertSha256X509 !== null)
+            return $this-&gt;_m_isCertSha256X509;
+        $this-&gt;_m_isCertSha256X509 = $this-&gt;signatureType() == &quot;\x92\xA4\xD2\x3B\xC0\x96\x79\x40\xB4\x20\xFC\xF9\x8E\xF1\x03\xED&quot;;
+        return $this-&gt;_m_isCertSha256X509;
+    }
+    protected $_m_isCertRsa2048Key;
+
+    /**
+     * RSA-2048 key (only the modulus since the public key exponent is known to be 0x10001)
+     */
+    public function isCertRsa2048Key() {
+        if ($this-&gt;_m_isCertRsa2048Key !== null)
+            return $this-&gt;_m_isCertRsa2048Key;
+        $this-&gt;_m_isCertRsa2048Key = $this-&gt;signatureType() == &quot;\xE8\x66\x57\x3C\x9C\x26\x34\x4E\xAA\x14\xED\x77\x6E\x85\xB3\xB6&quot;;
+        return $this-&gt;_m_isCertRsa2048Key;
+    }
+    protected $_m_isCertSha512;
+
+    /**
+     * SHA-512 hash
+     */
+    public function isCertSha512() {
+        if ($this-&gt;_m_isCertSha512 !== null)
+            return $this-&gt;_m_isCertSha512;
+        $this-&gt;_m_isCertSha512 = $this-&gt;signatureType() == &quot;\xAE\x0F\x3E\x09\xC4\xA6\x50\x4F\x9F\x1B\xD4\x1E\x2B\x89\xC1\x9A&quot;;
+        return $this-&gt;_m_isCertSha512;
+    }
+    protected $_m_isCertSha384;
+
+    /**
+     * SHA-384 hash
+     */
+    public function isCertSha384() {
+        if ($this-&gt;_m_isCertSha384 !== null)
+            return $this-&gt;_m_isCertSha384;
+        $this-&gt;_m_isCertSha384 = $this-&gt;signatureType() == &quot;\x07\x53\x3E\xFF\xD0\x9F\xC9\x48\x85\xF1\x8A\xD5\x6C\x70\x1E\x01&quot;;
+        return $this-&gt;_m_isCertSha384;
+    }
+    protected $_m_isCertSha1;
+
+    /**
+     * SHA-1 hash
+     */
+    public function isCertSha1() {
+        if ($this-&gt;_m_isCertSha1 !== null)
+            return $this-&gt;_m_isCertSha1;
+        $this-&gt;_m_isCertSha1 = $this-&gt;signatureType() == &quot;\x12\xA5\x6C\x82\x10\xCF\xC9\x4A\xB1\x87\xBE\x01\x49\x66\x31\xBD&quot;;
+        return $this-&gt;_m_isCertSha1;
+    }
+    protected $_m_isCertRsa2048Sha1;
+
+    /**
+     * RSA-2048 signature of a SHA-1 hash
+     */
+    public function isCertRsa2048Sha1() {
+        if ($this-&gt;_m_isCertRsa2048Sha1 !== null)
+            return $this-&gt;_m_isCertRsa2048Sha1;
+        $this-&gt;_m_isCertRsa2048Sha1 = $this-&gt;signatureType() == &quot;\x4F\x44\xF8\x67\x43\x87\xF1\x48\xA3\x28\x1E\xAA\xB8\x73\x60\x80&quot;;
+        return $this-&gt;_m_isCertRsa2048Sha1;
+    }
+    protected $_m_isCertSha256;
+
+    /**
+     * SHA-256 hash
+     */
+    public function isCertSha256() {
+        if ($this-&gt;_m_isCertSha256 !== null)
+            return $this-&gt;_m_isCertSha256;
+        $this-&gt;_m_isCertSha256 = $this-&gt;signatureType() == &quot;\x26\x16\xC4\xC1\x4C\x50\x92\x40\xAC\xA9\x41\xF9\x36\x93\x43\x28&quot;;
+        return $this-&gt;_m_isCertSha256;
+    }
+    protected $_m_isCertSha384X509;
+
+    /**
+     * SHA384 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation
+     */
+    public function isCertSha384X509() {
+        if ($this-&gt;_m_isCertSha384X509 !== null)
+            return $this-&gt;_m_isCertSha384X509;
+        $this-&gt;_m_isCertSha384X509 = $this-&gt;signatureType() == &quot;\x6E\x87\x76\x70\xC2\x80\xE6\x4E\xAA\xD2\x28\xB3\x49\xA6\x86\x5B&quot;;
+        return $this-&gt;_m_isCertSha384X509;
+    }
+    protected $_m_isCertRsa2048Sha256;
+
+    /**
+     * RSA-2048 signature of a SHA-256 hash
+     */
+    public function isCertRsa2048Sha256() {
+        if ($this-&gt;_m_isCertRsa2048Sha256 !== null)
+            return $this-&gt;_m_isCertRsa2048Sha256;
+        $this-&gt;_m_isCertRsa2048Sha256 = $this-&gt;signatureType() == &quot;\x90\x61\xB3\xE2\x9B\x87\x3D\x4A\xAD\x8D\xF2\xE7\xBB\xA3\x27\x84&quot;;
+        return $this-&gt;_m_isCertRsa2048Sha256;
+    }
+    protected $_m_isCertDerPkcs7;
+
+    /**
+     * DER-encoded PKCS #7 version 1.5 [RFC2315]
+     */
+    public function isCertDerPkcs7() {
+        if ($this-&gt;_m_isCertDerPkcs7 !== null)
+            return $this-&gt;_m_isCertDerPkcs7;
+        $this-&gt;_m_isCertDerPkcs7 = $this-&gt;signatureType() == &quot;\x9D\xD2\xAF\x4A\xDF\x68\xEE\x49\x8A\xA9\x34\x7D\x37\x56\x65\xA7&quot;;
+        return $this-&gt;_m_isCertDerPkcs7;
+    }
+    protected $_m_signatureType;
+    protected $_m_lenSignatureList;
+    protected $_m_lenSignatureHeader;
+    protected $_m_lenSignature;
+    protected $_m_header;
+    protected $_m_signatures;
+    protected $_m__raw_signatures;
+
+    /**
+     * Type of the signature as a GUID
+     */
+    public function signatureType() { return $this-&gt;_m_signatureType; }
+
+    /**
+     * Total size of the signature list, including this header
+     */
+    public function lenSignatureList() { return $this-&gt;_m_lenSignatureList; }
+
+    /**
+     * Size of the signature header which precedes the array of signatures
+     */
+    public function lenSignatureHeader() { return $this-&gt;_m_lenSignatureHeader; }
+
+    /**
+     * Size of each signature
+     */
+    public function lenSignature() { return $this-&gt;_m_lenSignature; }
+
+    /**
+     * Header before the array of signatures
+     */
+    public function header() { return $this-&gt;_m_header; }
+
+    /**
+     * An array of signatures
+     */
+    public function signatures() { return $this-&gt;_m_signatures; }
+    public function _raw_signatures() { return $this-&gt;_m__raw_signatures; }
+}
+
+namespace \EfivarSignatureList;
+
+class SignatureData extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \EfivarSignatureList\SignatureList $_parent = null, \EfivarSignatureList $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_owner = $this-&gt;_io-&gt;readBytes(16);
+        $this-&gt;_m_data = $this-&gt;_io-&gt;readBytesFull();
+    }
+    protected $_m_owner;
+    protected $_m_data;
+
+    /**
+     * An identifier which identifies the agent which added the signature to the list
+     */
+    public function owner() { return $this-&gt;_m_owner; }
+
+    /**
+     * The format of the signature is defined by the SignatureType.
+     */
+    public function data() { return $this-&gt;_m_data; }
+}
+
+/**
+ * Attributes of a UEFI variable
+ */
+
+namespace \EfivarSignatureList;
+
+class EfiVarAttr extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \EfivarSignatureList $_parent = null, \EfivarSignatureList $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this-&gt;_read();
+    }
+
+    private function _read() {
+        $this-&gt;_m_enhancedAuthenticatedAccess = $this-&gt;_io-&gt;readBitsInt(1) != 0;
+        $this-&gt;_m_appendWrite = $this-&gt;_io-&gt;readBitsInt(1) != 0;
+        $this-&gt;_m_timeBasedAuthenticatedWriteAccess = $this-&gt;_io-&gt;readBitsInt(1) != 0;
+        $this-&gt;_m_authenticatedWriteAccess = $this-&gt;_io-&gt;readBitsInt(1) != 0;
+        $this-&gt;_m_hardwareErrorRecord = $this-&gt;_io-&gt;readBitsInt(1) != 0;
+        $this-&gt;_m_runtimeAccess = $this-&gt;_io-&gt;readBitsInt(1) != 0;
+        $this-&gt;_m_bootserviceAccess = $this-&gt;_io-&gt;readBitsInt(1) != 0;
+        $this-&gt;_m_nonVolatile = $this-&gt;_io-&gt;readBitsInt(1) != 0;
+        $this-&gt;_m_reserved1 = $this-&gt;_io-&gt;readBitsInt(24);
+    }
+    protected $_m_enhancedAuthenticatedAccess;
+    protected $_m_appendWrite;
+    protected $_m_timeBasedAuthenticatedWriteAccess;
+    protected $_m_authenticatedWriteAccess;
+    protected $_m_hardwareErrorRecord;
+    protected $_m_runtimeAccess;
+    protected $_m_bootserviceAccess;
+    protected $_m_nonVolatile;
+    protected $_m_reserved1;
+    public function enhancedAuthenticatedAccess() { return $this-&gt;_m_enhancedAuthenticatedAccess; }
+    public function appendWrite() { return $this-&gt;_m_appendWrite; }
+    public function timeBasedAuthenticatedWriteAccess() { return $this-&gt;_m_timeBasedAuthenticatedWriteAccess; }
+    public function authenticatedWriteAccess() { return $this-&gt;_m_authenticatedWriteAccess; }
+    public function hardwareErrorRecord() { return $this-&gt;_m_hardwareErrorRecord; }
+    public function runtimeAccess() { return $this-&gt;_m_runtimeAccess; }
+    public function bootserviceAccess() { return $this-&gt;_m_bootserviceAccess; }
+    public function nonVolatile() { return $this-&gt;_m_nonVolatile; }
+
+    /**
+     * Reserved (unused) bits
+     */
+    public function reserved1() { return $this-&gt;_m_reserved1; }
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2019 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>UEFI Variable with Signature List: Ruby parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Security</li>
+        <li class="active">UEFI Variable with Signature List</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>UEFI Variable with Signature List:
+            
+            Ruby parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Parse UEFI variables db and dbx that contain signatures, certificates and
+hashes. On a Linux system using UEFI, these variables are readable from
+/sys/firmware/efi/efivars/db-d719b2cb-3d3a-4596-a3bc-dad00e67656f,
+/sys/firmware/efi/efivars/dbDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c,
+/sys/firmware/efi/efivars/dbx-d719b2cb-3d3a-4596-a3bc-dad00e67656f and
+/sys/firmware/efi/efivars/dbxDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c.
+(&quot;d719b2cb-3d3a-4596-a3bc-dad00e67656f&quot; is defined as
+EFI_IMAGE_SECURITY_DATABASE_GUID and &quot;8be4df61-93ca-11d2-aa0d-00e098032b8c&quot;
+as EFI_GLOBAL_VARIABLE).
+Each file contains an EFI attribute (32-bit integer) followed by a list of
+EFI_SIGNATURE_LIST structures.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of UEFI Variable with Signature List
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="UEFI Variable with Signature List parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="UEFI Variable with Signature List parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="UEFI Variable with Signature List parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="UEFI Variable with Signature List parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="UEFI Variable with Signature List parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="UEFI Variable with Signature List parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="UEFI Variable with Signature List parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="UEFI Variable with Signature List parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="UEFI Variable with Signature List parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="UEFI Variable with Signature List parsing Python library">Python</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="ruby.html" title="UEFI Variable with Signature List parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="ruby">data = EfivarSignatureList.from_file("path/to/local/file.UEFI Variable with Signature List")</code></pre>
+
+<p>Or parse structure from a string of bytes:</p>
+
+<pre><code class="ruby">bytes = "\x00\x01\x02..."
+data = EfivarSignatureList.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="ruby">data.var_attributes # => Attributes of the UEFI variable</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Ruby source code to parse UEFI Variable with Signature List
+            
+        </h2>
+
+        
+
+        <h3>efivar_signature_list.rb</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/ruby/efivar_signature_list.rb" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+require &#39;kaitai/struct/struct&#39;
+
+unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
+  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
+end
+
+
+##
+# Parse UEFI variables db and dbx that contain signatures, certificates and
+# hashes. On a Linux system using UEFI, these variables are readable from
+# /sys/firmware/efi/efivars/db-d719b2cb-3d3a-4596-a3bc-dad00e67656f,
+# /sys/firmware/efi/efivars/dbDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c,
+# /sys/firmware/efi/efivars/dbx-d719b2cb-3d3a-4596-a3bc-dad00e67656f and
+# /sys/firmware/efi/efivars/dbxDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c.
+# (&quot;d719b2cb-3d3a-4596-a3bc-dad00e67656f&quot; is defined as
+# EFI_IMAGE_SECURITY_DATABASE_GUID and &quot;8be4df61-93ca-11d2-aa0d-00e098032b8c&quot;
+# as EFI_GLOBAL_VARIABLE).
+# Each file contains an EFI attribute (32-bit integer) followed by a list of
+# EFI_SIGNATURE_LIST structures.
+# @see https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf Source
+class EfivarSignatureList &lt; Kaitai::Struct::Struct
+  def initialize(_io, _parent = nil, _root = self)
+    super(_io, _parent, _root)
+    _read
+  end
+
+  def _read
+    @var_attributes = EfiVarAttr.new(@_io, self, @_root)
+    @signatures = []
+    i = 0
+    while not @_io.eof?
+      @signatures &lt;&lt; SignatureList.new(@_io, self, @_root)
+      i += 1
+    end
+    self
+  end
+
+  ##
+  # @see &#39;&#39; EFI_SIGNATURE_LIST
+  class SignatureList &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @signature_type = @_io.read_bytes(16)
+      @len_signature_list = @_io.read_u4le
+      @len_signature_header = @_io.read_u4le
+      @len_signature = @_io.read_u4le
+      @header = @_io.read_bytes(len_signature_header)
+      if len_signature &gt; 0
+        @_raw_signatures = Array.new((((len_signature_list - len_signature_header) - 28) / len_signature))
+        @signatures = Array.new((((len_signature_list - len_signature_header) - 28) / len_signature))
+        ((((len_signature_list - len_signature_header) - 28) / len_signature)).times { |i|
+          @_raw_signatures[i] = @_io.read_bytes(len_signature)
+          io = Kaitai::Struct::Stream.new(@_raw_signatures[i])
+          @signatures[i] = SignatureData.new(io, self, @_root)
+        }
+      end
+      self
+    end
+
+    ##
+    # SHA512 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation
+    # @see &#39;&#39; EFI_CERT_X509_SHA512_GUID
+    def is_cert_sha512_x509
+      return @is_cert_sha512_x509 unless @is_cert_sha512_x509.nil?
+      @is_cert_sha512_x509 = signature_type == [99, 191, 109, 68, 2, 37, 218, 76, 188, 250, 36, 101, 210, 176, 254, 157].pack(&#39;C*&#39;)
+      @is_cert_sha512_x509
+    end
+
+    ##
+    # SHA-224 hash
+    # @see &#39;&#39; EFI_CERT_SHA224_GUID
+    def is_cert_sha224
+      return @is_cert_sha224 unless @is_cert_sha224.nil?
+      @is_cert_sha224 = signature_type == [51, 82, 110, 11, 92, 166, 201, 68, 148, 7, 217, 171, 131, 191, 200, 189].pack(&#39;C*&#39;)
+      @is_cert_sha224
+    end
+
+    ##
+    # X.509 certificate
+    # @see &#39;&#39; EFI_CERT_X509_GUID
+    def is_cert_x509
+      return @is_cert_x509 unless @is_cert_x509.nil?
+      @is_cert_x509 = signature_type == [161, 89, 192, 165, 228, 148, 167, 74, 135, 181, 171, 21, 92, 43, 240, 114].pack(&#39;C*&#39;)
+      @is_cert_x509
+    end
+
+    ##
+    # SHA256 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation
+    # @see &#39;&#39; EFI_CERT_X509_SHA256_GUID
+    def is_cert_sha256_x509
+      return @is_cert_sha256_x509 unless @is_cert_sha256_x509.nil?
+      @is_cert_sha256_x509 = signature_type == [146, 164, 210, 59, 192, 150, 121, 64, 180, 32, 252, 249, 142, 241, 3, 237].pack(&#39;C*&#39;)
+      @is_cert_sha256_x509
+    end
+
+    ##
+    # RSA-2048 key (only the modulus since the public key exponent is known to be 0x10001)
+    # @see &#39;&#39; EFI_CERT_RSA2048_GUID
+    def is_cert_rsa2048_key
+      return @is_cert_rsa2048_key unless @is_cert_rsa2048_key.nil?
+      @is_cert_rsa2048_key = signature_type == [232, 102, 87, 60, 156, 38, 52, 78, 170, 20, 237, 119, 110, 133, 179, 182].pack(&#39;C*&#39;)
+      @is_cert_rsa2048_key
+    end
+
+    ##
+    # SHA-512 hash
+    # @see &#39;&#39; EFI_CERT_SHA512_GUID
+    def is_cert_sha512
+      return @is_cert_sha512 unless @is_cert_sha512.nil?
+      @is_cert_sha512 = signature_type == [174, 15, 62, 9, 196, 166, 80, 79, 159, 27, 212, 30, 43, 137, 193, 154].pack(&#39;C*&#39;)
+      @is_cert_sha512
+    end
+
+    ##
+    # SHA-384 hash
+    # @see &#39;&#39; EFI_CERT_SHA384_GUID
+    def is_cert_sha384
+      return @is_cert_sha384 unless @is_cert_sha384.nil?
+      @is_cert_sha384 = signature_type == [7, 83, 62, 255, 208, 159, 201, 72, 133, 241, 138, 213, 108, 112, 30, 1].pack(&#39;C*&#39;)
+      @is_cert_sha384
+    end
+
+    ##
+    # SHA-1 hash
+    # @see &#39;&#39; EFI_CERT_SHA1_GUID
+    def is_cert_sha1
+      return @is_cert_sha1 unless @is_cert_sha1.nil?
+      @is_cert_sha1 = signature_type == [18, 165, 108, 130, 16, 207, 201, 74, 177, 135, 190, 1, 73, 102, 49, 189].pack(&#39;C*&#39;)
+      @is_cert_sha1
+    end
+
+    ##
+    # RSA-2048 signature of a SHA-1 hash
+    # @see &#39;&#39; EFI_CERT_RSA2048_SHA1_GUID
+    def is_cert_rsa2048_sha1
+      return @is_cert_rsa2048_sha1 unless @is_cert_rsa2048_sha1.nil?
+      @is_cert_rsa2048_sha1 = signature_type == [79, 68, 248, 103, 67, 135, 241, 72, 163, 40, 30, 170, 184, 115, 96, 128].pack(&#39;C*&#39;)
+      @is_cert_rsa2048_sha1
+    end
+
+    ##
+    # SHA-256 hash
+    # @see &#39;&#39; EFI_CERT_SHA256_GUID
+    def is_cert_sha256
+      return @is_cert_sha256 unless @is_cert_sha256.nil?
+      @is_cert_sha256 = signature_type == [38, 22, 196, 193, 76, 80, 146, 64, 172, 169, 65, 249, 54, 147, 67, 40].pack(&#39;C*&#39;)
+      @is_cert_sha256
+    end
+
+    ##
+    # SHA384 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation
+    # @see &#39;&#39; EFI_CERT_X509_SHA384_GUID
+    def is_cert_sha384_x509
+      return @is_cert_sha384_x509 unless @is_cert_sha384_x509.nil?
+      @is_cert_sha384_x509 = signature_type == [110, 135, 118, 112, 194, 128, 230, 78, 170, 210, 40, 179, 73, 166, 134, 91].pack(&#39;C*&#39;)
+      @is_cert_sha384_x509
+    end
+
+    ##
+    # RSA-2048 signature of a SHA-256 hash
+    # @see &#39;&#39; EFI_CERT_RSA2048_SHA256_GUID
+    def is_cert_rsa2048_sha256
+      return @is_cert_rsa2048_sha256 unless @is_cert_rsa2048_sha256.nil?
+      @is_cert_rsa2048_sha256 = signature_type == [144, 97, 179, 226, 155, 135, 61, 74, 173, 141, 242, 231, 187, 163, 39, 132].pack(&#39;C*&#39;)
+      @is_cert_rsa2048_sha256
+    end
+
+    ##
+    # DER-encoded PKCS #7 version 1.5 [RFC2315]
+    # @see &#39;&#39; EFI_CERT_TYPE_PKCS7_GUID
+    def is_cert_der_pkcs7
+      return @is_cert_der_pkcs7 unless @is_cert_der_pkcs7.nil?
+      @is_cert_der_pkcs7 = signature_type == [157, 210, 175, 74, 223, 104, 238, 73, 138, 169, 52, 125, 55, 86, 101, 167].pack(&#39;C*&#39;)
+      @is_cert_der_pkcs7
+    end
+
+    ##
+    # Type of the signature as a GUID
+    attr_reader :signature_type
+
+    ##
+    # Total size of the signature list, including this header
+    attr_reader :len_signature_list
+
+    ##
+    # Size of the signature header which precedes the array of signatures
+    attr_reader :len_signature_header
+
+    ##
+    # Size of each signature
+    attr_reader :len_signature
+
+    ##
+    # Header before the array of signatures
+    attr_reader :header
+
+    ##
+    # An array of signatures
+    attr_reader :signatures
+    attr_reader :_raw_signatures
+  end
+
+  ##
+  # @see &#39;&#39; EFI_SIGNATURE_DATA
+  class SignatureData &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @owner = @_io.read_bytes(16)
+      @data = @_io.read_bytes_full
+      self
+    end
+
+    ##
+    # An identifier which identifies the agent which added the signature to the list
+    attr_reader :owner
+
+    ##
+    # The format of the signature is defined by the SignatureType.
+    attr_reader :data
+  end
+
+  ##
+  # Attributes of a UEFI variable
+  class EfiVarAttr &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @enhanced_authenticated_access = @_io.read_bits_int(1) != 0
+      @append_write = @_io.read_bits_int(1) != 0
+      @time_based_authenticated_write_access = @_io.read_bits_int(1) != 0
+      @authenticated_write_access = @_io.read_bits_int(1) != 0
+      @hardware_error_record = @_io.read_bits_int(1) != 0
+      @runtime_access = @_io.read_bits_int(1) != 0
+      @bootservice_access = @_io.read_bits_int(1) != 0
+      @non_volatile = @_io.read_bits_int(1) != 0
+      @reserved1 = @_io.read_bits_int(24)
+      self
+    end
+    attr_reader :enhanced_authenticated_access
+    attr_reader :append_write
+    attr_reader :time_based_authenticated_write_access
+    attr_reader :authenticated_write_access
+    attr_reader :hardware_error_record
+    attr_reader :runtime_access
+    attr_reader :bootservice_access
+    attr_reader :non_volatile
+
+    ##
+    # Reserved (unused) bits
+    attr_reader :reserved1
+  end
+
+  ##
+  # Attributes of the UEFI variable
+  attr_reader :var_attributes
+  attr_reader :signatures
+end
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2019 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

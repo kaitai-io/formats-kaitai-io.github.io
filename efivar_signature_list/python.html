@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>UEFI Variable with Signature List: Python parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Security</li>
+        <li class="active">UEFI Variable with Signature List</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>UEFI Variable with Signature List:
+            
+            Python parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Parse UEFI variables db and dbx that contain signatures, certificates and
+hashes. On a Linux system using UEFI, these variables are readable from
+/sys/firmware/efi/efivars/db-d719b2cb-3d3a-4596-a3bc-dad00e67656f,
+/sys/firmware/efi/efivars/dbDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c,
+/sys/firmware/efi/efivars/dbx-d719b2cb-3d3a-4596-a3bc-dad00e67656f and
+/sys/firmware/efi/efivars/dbxDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c.
+(&quot;d719b2cb-3d3a-4596-a3bc-dad00e67656f&quot; is defined as
+EFI_IMAGE_SECURITY_DATABASE_GUID and &quot;8be4df61-93ca-11d2-aa0d-00e098032b8c&quot;
+as EFI_GLOBAL_VARIABLE).
+Each file contains an EFI attribute (32-bit integer) followed by a list of
+EFI_SIGNATURE_LIST structures.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of UEFI Variable with Signature List
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="UEFI Variable with Signature List parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl.html" title="UEFI Variable with Signature List parsing C++/STL library">C++/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="UEFI Variable with Signature List parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="UEFI Variable with Signature List parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="UEFI Variable with Signature List parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="UEFI Variable with Signature List parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="UEFI Variable with Signature List parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="UEFI Variable with Signature List parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="UEFI Variable with Signature List parsing PHP library">PHP</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="python.html" title="UEFI Variable with Signature List parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="UEFI Variable with Signature List parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="python">data = EfivarSignatureList.from_file("path/to/local/file.UEFI Variable with Signature List")</code></pre>
+
+<p>Or parse structure from a bytes:</p>
+
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
+
+raw = b"\x00\x01\x02..."
+data = EfivarSignatureList(KaitaiStream(BytesIO(raw)))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="python">data.var_attributes # => Attributes of the UEFI variable</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Python source code to parse UEFI Variable with Signature List
+            
+        </h2>
+
+        
+
+        <h3>efivar_signature_list.py</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/python/efivar_signature_list.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+from pkg_resources import parse_version
+from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+
+
+if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
+    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
+
+class EfivarSignatureList(KaitaiStruct):
+    &quot;&quot;&quot;Parse UEFI variables db and dbx that contain signatures, certificates and
+    hashes. On a Linux system using UEFI, these variables are readable from
+    /sys/firmware/efi/efivars/db-d719b2cb-3d3a-4596-a3bc-dad00e67656f,
+    /sys/firmware/efi/efivars/dbDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c,
+    /sys/firmware/efi/efivars/dbx-d719b2cb-3d3a-4596-a3bc-dad00e67656f and
+    /sys/firmware/efi/efivars/dbxDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c.
+    (&quot;d719b2cb-3d3a-4596-a3bc-dad00e67656f&quot; is defined as
+    EFI_IMAGE_SECURITY_DATABASE_GUID and &quot;8be4df61-93ca-11d2-aa0d-00e098032b8c&quot;
+    as EFI_GLOBAL_VARIABLE).
+    Each file contains an EFI attribute (32-bit integer) followed by a list of
+    EFI_SIGNATURE_LIST structures.
+    
+    .. seealso::
+       Source - https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf
+    &quot;&quot;&quot;
+    def __init__(self, _io, _parent=None, _root=None):
+        self._io = _io
+        self._parent = _parent
+        self._root = _root if _root else self
+        self._read()
+
+    def _read(self):
+        self.var_attributes = self._root.EfiVarAttr(self._io, self, self._root)
+        self.signatures = []
+        i = 0
+        while not self._io.is_eof():
+            self.signatures.append(self._root.SignatureList(self._io, self, self._root))
+            i += 1
+
+
+    class SignatureList(KaitaiStruct):
+        &quot;&quot;&quot;
+        .. seealso::
+           EFI_SIGNATURE_LIST
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.signature_type = self._io.read_bytes(16)
+            self.len_signature_list = self._io.read_u4le()
+            self.len_signature_header = self._io.read_u4le()
+            self.len_signature = self._io.read_u4le()
+            self.header = self._io.read_bytes(self.len_signature_header)
+            if self.len_signature &gt; 0:
+                self._raw_signatures = [None] * (((self.len_signature_list - self.len_signature_header) - 28) // self.len_signature)
+                self.signatures = [None] * (((self.len_signature_list - self.len_signature_header) - 28) // self.len_signature)
+                for i in range(((self.len_signature_list - self.len_signature_header) - 28) // self.len_signature):
+                    self._raw_signatures[i] = self._io.read_bytes(self.len_signature)
+                    io = KaitaiStream(BytesIO(self._raw_signatures[i]))
+                    self.signatures[i] = self._root.SignatureData(io, self, self._root)
+
+
+
+        @property
+        def is_cert_sha512_x509(self):
+            &quot;&quot;&quot;SHA512 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation.
+            
+            .. seealso::
+               EFI_CERT_X509_SHA512_GUID
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_is_cert_sha512_x509&#39;):
+                return self._m_is_cert_sha512_x509 if hasattr(self, &#39;_m_is_cert_sha512_x509&#39;) else None
+
+            self._m_is_cert_sha512_x509 = self.signature_type == b&quot;\x63\xBF\x6D\x44\x02\x25\xDA\x4C\xBC\xFA\x24\x65\xD2\xB0\xFE\x9D&quot;
+            return self._m_is_cert_sha512_x509 if hasattr(self, &#39;_m_is_cert_sha512_x509&#39;) else None
+
+        @property
+        def is_cert_sha224(self):
+            &quot;&quot;&quot;SHA-224 hash.
+            
+            .. seealso::
+               EFI_CERT_SHA224_GUID
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_is_cert_sha224&#39;):
+                return self._m_is_cert_sha224 if hasattr(self, &#39;_m_is_cert_sha224&#39;) else None
+
+            self._m_is_cert_sha224 = self.signature_type == b&quot;\x33\x52\x6E\x0B\x5C\xA6\xC9\x44\x94\x07\xD9\xAB\x83\xBF\xC8\xBD&quot;
+            return self._m_is_cert_sha224 if hasattr(self, &#39;_m_is_cert_sha224&#39;) else None
+
+        @property
+        def is_cert_x509(self):
+            &quot;&quot;&quot;X.509 certificate.
+            
+            .. seealso::
+               EFI_CERT_X509_GUID
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_is_cert_x509&#39;):
+                return self._m_is_cert_x509 if hasattr(self, &#39;_m_is_cert_x509&#39;) else None
+
+            self._m_is_cert_x509 = self.signature_type == b&quot;\xA1\x59\xC0\xA5\xE4\x94\xA7\x4A\x87\xB5\xAB\x15\x5C\x2B\xF0\x72&quot;
+            return self._m_is_cert_x509 if hasattr(self, &#39;_m_is_cert_x509&#39;) else None
+
+        @property
+        def is_cert_sha256_x509(self):
+            &quot;&quot;&quot;SHA256 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation.
+            
+            .. seealso::
+               EFI_CERT_X509_SHA256_GUID
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_is_cert_sha256_x509&#39;):
+                return self._m_is_cert_sha256_x509 if hasattr(self, &#39;_m_is_cert_sha256_x509&#39;) else None
+
+            self._m_is_cert_sha256_x509 = self.signature_type == b&quot;\x92\xA4\xD2\x3B\xC0\x96\x79\x40\xB4\x20\xFC\xF9\x8E\xF1\x03\xED&quot;
+            return self._m_is_cert_sha256_x509 if hasattr(self, &#39;_m_is_cert_sha256_x509&#39;) else None
+
+        @property
+        def is_cert_rsa2048_key(self):
+            &quot;&quot;&quot;RSA-2048 key (only the modulus since the public key exponent is known to be 0x10001).
+            
+            .. seealso::
+               EFI_CERT_RSA2048_GUID
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_is_cert_rsa2048_key&#39;):
+                return self._m_is_cert_rsa2048_key if hasattr(self, &#39;_m_is_cert_rsa2048_key&#39;) else None
+
+            self._m_is_cert_rsa2048_key = self.signature_type == b&quot;\xE8\x66\x57\x3C\x9C\x26\x34\x4E\xAA\x14\xED\x77\x6E\x85\xB3\xB6&quot;
+            return self._m_is_cert_rsa2048_key if hasattr(self, &#39;_m_is_cert_rsa2048_key&#39;) else None
+
+        @property
+        def is_cert_sha512(self):
+            &quot;&quot;&quot;SHA-512 hash.
+            
+            .. seealso::
+               EFI_CERT_SHA512_GUID
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_is_cert_sha512&#39;):
+                return self._m_is_cert_sha512 if hasattr(self, &#39;_m_is_cert_sha512&#39;) else None
+
+            self._m_is_cert_sha512 = self.signature_type == b&quot;\xAE\x0F\x3E\x09\xC4\xA6\x50\x4F\x9F\x1B\xD4\x1E\x2B\x89\xC1\x9A&quot;
+            return self._m_is_cert_sha512 if hasattr(self, &#39;_m_is_cert_sha512&#39;) else None
+
+        @property
+        def is_cert_sha384(self):
+            &quot;&quot;&quot;SHA-384 hash.
+            
+            .. seealso::
+               EFI_CERT_SHA384_GUID
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_is_cert_sha384&#39;):
+                return self._m_is_cert_sha384 if hasattr(self, &#39;_m_is_cert_sha384&#39;) else None
+
+            self._m_is_cert_sha384 = self.signature_type == b&quot;\x07\x53\x3E\xFF\xD0\x9F\xC9\x48\x85\xF1\x8A\xD5\x6C\x70\x1E\x01&quot;
+            return self._m_is_cert_sha384 if hasattr(self, &#39;_m_is_cert_sha384&#39;) else None
+
+        @property
+        def is_cert_sha1(self):
+            &quot;&quot;&quot;SHA-1 hash.
+            
+            .. seealso::
+               EFI_CERT_SHA1_GUID
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_is_cert_sha1&#39;):
+                return self._m_is_cert_sha1 if hasattr(self, &#39;_m_is_cert_sha1&#39;) else None
+
+            self._m_is_cert_sha1 = self.signature_type == b&quot;\x12\xA5\x6C\x82\x10\xCF\xC9\x4A\xB1\x87\xBE\x01\x49\x66\x31\xBD&quot;
+            return self._m_is_cert_sha1 if hasattr(self, &#39;_m_is_cert_sha1&#39;) else None
+
+        @property
+        def is_cert_rsa2048_sha1(self):
+            &quot;&quot;&quot;RSA-2048 signature of a SHA-1 hash.
+            
+            .. seealso::
+               EFI_CERT_RSA2048_SHA1_GUID
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_is_cert_rsa2048_sha1&#39;):
+                return self._m_is_cert_rsa2048_sha1 if hasattr(self, &#39;_m_is_cert_rsa2048_sha1&#39;) else None
+
+            self._m_is_cert_rsa2048_sha1 = self.signature_type == b&quot;\x4F\x44\xF8\x67\x43\x87\xF1\x48\xA3\x28\x1E\xAA\xB8\x73\x60\x80&quot;
+            return self._m_is_cert_rsa2048_sha1 if hasattr(self, &#39;_m_is_cert_rsa2048_sha1&#39;) else None
+
+        @property
+        def is_cert_sha256(self):
+            &quot;&quot;&quot;SHA-256 hash.
+            
+            .. seealso::
+               EFI_CERT_SHA256_GUID
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_is_cert_sha256&#39;):
+                return self._m_is_cert_sha256 if hasattr(self, &#39;_m_is_cert_sha256&#39;) else None
+
+            self._m_is_cert_sha256 = self.signature_type == b&quot;\x26\x16\xC4\xC1\x4C\x50\x92\x40\xAC\xA9\x41\xF9\x36\x93\x43\x28&quot;
+            return self._m_is_cert_sha256 if hasattr(self, &#39;_m_is_cert_sha256&#39;) else None
+
+        @property
+        def is_cert_sha384_x509(self):
+            &quot;&quot;&quot;SHA384 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation.
+            
+            .. seealso::
+               EFI_CERT_X509_SHA384_GUID
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_is_cert_sha384_x509&#39;):
+                return self._m_is_cert_sha384_x509 if hasattr(self, &#39;_m_is_cert_sha384_x509&#39;) else None
+
+            self._m_is_cert_sha384_x509 = self.signature_type == b&quot;\x6E\x87\x76\x70\xC2\x80\xE6\x4E\xAA\xD2\x28\xB3\x49\xA6\x86\x5B&quot;
+            return self._m_is_cert_sha384_x509 if hasattr(self, &#39;_m_is_cert_sha384_x509&#39;) else None
+
+        @property
+        def is_cert_rsa2048_sha256(self):
+            &quot;&quot;&quot;RSA-2048 signature of a SHA-256 hash.
+            
+            .. seealso::
+               EFI_CERT_RSA2048_SHA256_GUID
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_is_cert_rsa2048_sha256&#39;):
+                return self._m_is_cert_rsa2048_sha256 if hasattr(self, &#39;_m_is_cert_rsa2048_sha256&#39;) else None
+
+            self._m_is_cert_rsa2048_sha256 = self.signature_type == b&quot;\x90\x61\xB3\xE2\x9B\x87\x3D\x4A\xAD\x8D\xF2\xE7\xBB\xA3\x27\x84&quot;
+            return self._m_is_cert_rsa2048_sha256 if hasattr(self, &#39;_m_is_cert_rsa2048_sha256&#39;) else None
+
+        @property
+        def is_cert_der_pkcs7(self):
+            &quot;&quot;&quot;DER-encoded PKCS #7 version 1.5 [RFC2315].
+            
+            .. seealso::
+               EFI_CERT_TYPE_PKCS7_GUID
+            &quot;&quot;&quot;
+            if hasattr(self, &#39;_m_is_cert_der_pkcs7&#39;):
+                return self._m_is_cert_der_pkcs7 if hasattr(self, &#39;_m_is_cert_der_pkcs7&#39;) else None
+
+            self._m_is_cert_der_pkcs7 = self.signature_type == b&quot;\x9D\xD2\xAF\x4A\xDF\x68\xEE\x49\x8A\xA9\x34\x7D\x37\x56\x65\xA7&quot;
+            return self._m_is_cert_der_pkcs7 if hasattr(self, &#39;_m_is_cert_der_pkcs7&#39;) else None
+
+
+    class SignatureData(KaitaiStruct):
+        &quot;&quot;&quot;
+        .. seealso::
+           EFI_SIGNATURE_DATA
+        &quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.owner = self._io.read_bytes(16)
+            self.data = self._io.read_bytes_full()
+
+
+    class EfiVarAttr(KaitaiStruct):
+        &quot;&quot;&quot;Attributes of a UEFI variable.&quot;&quot;&quot;
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.enhanced_authenticated_access = self._io.read_bits_int(1) != 0
+            self.append_write = self._io.read_bits_int(1) != 0
+            self.time_based_authenticated_write_access = self._io.read_bits_int(1) != 0
+            self.authenticated_write_access = self._io.read_bits_int(1) != 0
+            self.hardware_error_record = self._io.read_bits_int(1) != 0
+            self.runtime_access = self._io.read_bits_int(1) != 0
+            self.bootservice_access = self._io.read_bits_int(1) != 0
+            self.non_volatile = self._io.read_bits_int(1) != 0
+            self.reserved1 = self._io.read_bits_int(24)
+
+
+
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2019 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
