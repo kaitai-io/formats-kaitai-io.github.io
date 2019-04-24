@@ -110,7 +110,7 @@ section#format-index .row {
                     </div>
                     
                     <div class="panel-body">
-                        License: <a href="https://spdx.org/licenses/CC-BY-SA-4.0.html">CC-BY-SA-4.0</a>
+                        License: <a href="https://spdx.org/licenses/MIT.html">MIT</a>
                     </div>
                     
                     
@@ -291,18 +291,8 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
 class bitcoin_transaction_t : public kaitai::kstruct {
 
 public:
-    class vout_t;
-    class public_key_t;
     class vin_t;
-    class script_signature_t;
-    class der_signature_t;
-
-    enum sighash_type_t {
-        SIGHASH_TYPE_SIGHASH_ALL = 1,
-        SIGHASH_TYPE_SIGHASH_NONE = 2,
-        SIGHASH_TYPE_SIGHASH_SINGLE = 3,
-        SIGHASH_TYPE_SIGHASH_ANYONECANPAY = 80
-    };
+    class vout_t;
 
     bitcoin_transaction_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, bitcoin_transaction_t* p__root = 0);
 
@@ -312,84 +302,10 @@ private:
 public:
     ~bitcoin_transaction_t();
 
-    class vout_t : public kaitai::kstruct {
-
-    public:
-
-        vout_t(kaitai::kstream* p__io, bitcoin_transaction_t* p__parent = 0, bitcoin_transaction_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~vout_t();
-
-    private:
-        uint64_t m_amount;
-        uint8_t m_script_len;
-        std::string m_script_pub_key;
-        bitcoin_transaction_t* m__root;
-        bitcoin_transaction_t* m__parent;
-
-    public:
-
-        /**
-         * Number of Satoshis to be transfered.
-         */
-        uint64_t amount() const { return m_amount; }
-
-        /**
-         * ScriptPubKey&#39;s length.
-         */
-        uint8_t script_len() const { return m_script_len; }
-
-        /**
-         * ScriptPubKey.
-         * \sa Source
-         */
-        std::string script_pub_key() const { return m_script_pub_key; }
-        bitcoin_transaction_t* _root() const { return m__root; }
-        bitcoin_transaction_t* _parent() const { return m__parent; }
-    };
-
-    class public_key_t : public kaitai::kstruct {
-
-    public:
-
-        public_key_t(kaitai::kstream* p__io, bitcoin_transaction_t::script_signature_t* p__parent = 0, bitcoin_transaction_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~public_key_t();
-
-    private:
-        uint8_t m_type;
-        std::string m_x;
-        std::string m_y;
-        bitcoin_transaction_t* m__root;
-        bitcoin_transaction_t::script_signature_t* m__parent;
-
-    public:
-        uint8_t type() const { return m_type; }
-
-        /**
-         * &#39;x&#39; coordinate of the public key on the elliptic curve.
-         */
-        std::string x() const { return m_x; }
-
-        /**
-         * &#39;y&#39; coordinate of the public key on the elliptic curve.
-         */
-        std::string y() const { return m_y; }
-        bitcoin_transaction_t* _root() const { return m__root; }
-        bitcoin_transaction_t::script_signature_t* _parent() const { return m__parent; }
-    };
-
     class vin_t : public kaitai::kstruct {
 
     public:
+        class script_signature_t;
 
         vin_t(kaitai::kstream* p__io, bitcoin_transaction_t* p__parent = 0, bitcoin_transaction_t* p__root = 0);
 
@@ -399,10 +315,153 @@ public:
     public:
         ~vin_t();
 
+        class script_signature_t : public kaitai::kstruct {
+
+        public:
+            class der_signature_t;
+            class public_key_t;
+
+            enum sighash_type_t {
+                SIGHASH_TYPE_SIGHASH_ALL = 1,
+                SIGHASH_TYPE_SIGHASH_NONE = 2,
+                SIGHASH_TYPE_SIGHASH_SINGLE = 3,
+                SIGHASH_TYPE_SIGHASH_ANYONECANPAY = 80
+            };
+
+            script_signature_t(kaitai::kstream* p__io, bitcoin_transaction_t::vin_t* p__parent = 0, bitcoin_transaction_t* p__root = 0);
+
+        private:
+            void _read();
+
+        public:
+            ~script_signature_t();
+
+            class der_signature_t : public kaitai::kstruct {
+
+            public:
+
+                der_signature_t(kaitai::kstream* p__io, bitcoin_transaction_t::vin_t::script_signature_t* p__parent = 0, bitcoin_transaction_t* p__root = 0);
+
+            private:
+                void _read();
+
+            public:
+                ~der_signature_t();
+
+            private:
+                std::string m_sequence;
+                uint8_t m_len_sig;
+                std::string m_sep_1;
+                uint8_t m_len_sig_r;
+                std::string m_sig_r;
+                std::string m_sep_2;
+                uint8_t m_len_sig_s;
+                std::string m_sig_s;
+                bitcoin_transaction_t* m__root;
+                bitcoin_transaction_t::vin_t::script_signature_t* m__parent;
+
+            public:
+                std::string sequence() const { return m_sequence; }
+                uint8_t len_sig() const { return m_len_sig; }
+                std::string sep_1() const { return m_sep_1; }
+
+                /**
+                 * &#39;r&#39; value&#39;s length.
+                 */
+                uint8_t len_sig_r() const { return m_len_sig_r; }
+
+                /**
+                 * &#39;r&#39; value of the ECDSA signature.
+                 * \sa Source
+                 */
+                std::string sig_r() const { return m_sig_r; }
+                std::string sep_2() const { return m_sep_2; }
+
+                /**
+                 * &#39;s&#39; value&#39;s length.
+                 */
+                uint8_t len_sig_s() const { return m_len_sig_s; }
+
+                /**
+                 * &#39;s&#39; value of the ECDSA signature.
+                 * \sa Source
+                 */
+                std::string sig_s() const { return m_sig_s; }
+                bitcoin_transaction_t* _root() const { return m__root; }
+                bitcoin_transaction_t::vin_t::script_signature_t* _parent() const { return m__parent; }
+            };
+
+            class public_key_t : public kaitai::kstruct {
+
+            public:
+
+                public_key_t(kaitai::kstream* p__io, bitcoin_transaction_t::vin_t::script_signature_t* p__parent = 0, bitcoin_transaction_t* p__root = 0);
+
+            private:
+                void _read();
+
+            public:
+                ~public_key_t();
+
+            private:
+                uint8_t m_type;
+                std::string m_x;
+                std::string m_y;
+                bitcoin_transaction_t* m__root;
+                bitcoin_transaction_t::vin_t::script_signature_t* m__parent;
+
+            public:
+                uint8_t type() const { return m_type; }
+
+                /**
+                 * &#39;x&#39; coordinate of the public key on the elliptic curve.
+                 */
+                std::string x() const { return m_x; }
+
+                /**
+                 * &#39;y&#39; coordinate of the public key on the elliptic curve.
+                 */
+                std::string y() const { return m_y; }
+                bitcoin_transaction_t* _root() const { return m__root; }
+                bitcoin_transaction_t::vin_t::script_signature_t* _parent() const { return m__parent; }
+            };
+
+        private:
+            uint8_t m_len_sig_stack;
+            der_signature_t* m_der_sig;
+            sighash_type_t m_sig_type;
+            uint8_t m_len_pubkey_stack;
+            public_key_t* m_pubkey;
+            bitcoin_transaction_t* m__root;
+            bitcoin_transaction_t::vin_t* m__parent;
+
+        public:
+            uint8_t len_sig_stack() const { return m_len_sig_stack; }
+
+            /**
+             * DER-encoded ECDSA signature.
+             * \sa Source
+             */
+            der_signature_t* der_sig() const { return m_der_sig; }
+
+            /**
+             * Type of signature.
+             */
+            sighash_type_t sig_type() const { return m_sig_type; }
+            uint8_t len_pubkey_stack() const { return m_len_pubkey_stack; }
+
+            /**
+             * Public key (bitcoin address of the recipient).
+             */
+            public_key_t* pubkey() const { return m_pubkey; }
+            bitcoin_transaction_t* _root() const { return m__root; }
+            bitcoin_transaction_t::vin_t* _parent() const { return m__parent; }
+        };
+
     private:
         std::string m_txid;
         uint32_t m_output_id;
-        uint8_t m_script_len;
+        uint8_t m_len_script;
         script_signature_t* m_script_sig;
         std::string m_end_of_vin;
         bitcoin_transaction_t* m__root;
@@ -426,7 +485,7 @@ public:
         /**
          * ScriptSig&#39;s length.
          */
-        uint8_t script_len() const { return m_script_len; }
+        uint8_t len_script() const { return m_len_script; }
 
         /**
          * ScriptSig.
@@ -444,103 +503,44 @@ public:
         kaitai::kstream* _io__raw_script_sig() const { return m__io__raw_script_sig; }
     };
 
-    class script_signature_t : public kaitai::kstruct {
+    class vout_t : public kaitai::kstruct {
 
     public:
 
-        script_signature_t(kaitai::kstream* p__io, bitcoin_transaction_t::vin_t* p__parent = 0, bitcoin_transaction_t* p__root = 0);
+        vout_t(kaitai::kstream* p__io, bitcoin_transaction_t* p__parent = 0, bitcoin_transaction_t* p__root = 0);
 
     private:
         void _read();
 
     public:
-        ~script_signature_t();
+        ~vout_t();
 
     private:
-        uint8_t m_sig_stack_len;
-        der_signature_t* m_der_sig;
-        sighash_type_t m_sig_type;
-        uint8_t m_pubkey_stack_len;
-        public_key_t* m_pubkey;
+        uint64_t m_amount;
+        uint8_t m_len_script;
+        std::string m_script_pub_key;
         bitcoin_transaction_t* m__root;
-        bitcoin_transaction_t::vin_t* m__parent;
+        bitcoin_transaction_t* m__parent;
 
     public:
-        uint8_t sig_stack_len() const { return m_sig_stack_len; }
 
         /**
-         * DER-encoded ECDSA signature.
+         * Number of Satoshis to be transfered.
+         */
+        uint64_t amount() const { return m_amount; }
+
+        /**
+         * ScriptPubKey&#39;s length.
+         */
+        uint8_t len_script() const { return m_len_script; }
+
+        /**
+         * ScriptPubKey.
          * \sa Source
          */
-        der_signature_t* der_sig() const { return m_der_sig; }
-
-        /**
-         * Type of signature.
-         */
-        sighash_type_t sig_type() const { return m_sig_type; }
-        uint8_t pubkey_stack_len() const { return m_pubkey_stack_len; }
-
-        /**
-         * Public key (bitcoin address of the recipient).
-         */
-        public_key_t* pubkey() const { return m_pubkey; }
+        std::string script_pub_key() const { return m_script_pub_key; }
         bitcoin_transaction_t* _root() const { return m__root; }
-        bitcoin_transaction_t::vin_t* _parent() const { return m__parent; }
-    };
-
-    class der_signature_t : public kaitai::kstruct {
-
-    public:
-
-        der_signature_t(kaitai::kstream* p__io, bitcoin_transaction_t::script_signature_t* p__parent = 0, bitcoin_transaction_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~der_signature_t();
-
-    private:
-        std::string m_sequence;
-        uint8_t m_sig_len;
-        std::string m_sep_1;
-        uint8_t m_sig_r_len;
-        std::string m_sig_r;
-        std::string m_sep_2;
-        uint8_t m_sig_s_len;
-        std::string m_sig_s;
-        bitcoin_transaction_t* m__root;
-        bitcoin_transaction_t::script_signature_t* m__parent;
-
-    public:
-        std::string sequence() const { return m_sequence; }
-        uint8_t sig_len() const { return m_sig_len; }
-        std::string sep_1() const { return m_sep_1; }
-
-        /**
-         * &#39;r&#39; value&#39;s length.
-         */
-        uint8_t sig_r_len() const { return m_sig_r_len; }
-
-        /**
-         * &#39;r&#39; value of the ECDSA signature.
-         * \sa Source
-         */
-        std::string sig_r() const { return m_sig_r; }
-        std::string sep_2() const { return m_sep_2; }
-
-        /**
-         * &#39;s&#39; value&#39;s length.
-         */
-        uint8_t sig_s_len() const { return m_sig_s_len; }
-
-        /**
-         * &#39;s&#39; value of the ECDSA signature.
-         * \sa Source
-         */
-        std::string sig_s() const { return m_sig_s; }
-        bitcoin_transaction_t* _root() const { return m__root; }
-        bitcoin_transaction_t::script_signature_t* _parent() const { return m__parent; }
+        bitcoin_transaction_t* _parent() const { return m__parent; }
     };
 
 private:
@@ -644,36 +644,6 @@ bitcoin_transaction_t::~bitcoin_transaction_t() {
     delete m_vouts;
 }
 
-bitcoin_transaction_t::vout_t::vout_t(kaitai::kstream* p__io, bitcoin_transaction_t* p__parent, bitcoin_transaction_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
-
-void bitcoin_transaction_t::vout_t::_read() {
-    m_amount = m__io-&gt;read_u8le();
-    m_script_len = m__io-&gt;read_u1();
-    m_script_pub_key = m__io-&gt;read_bytes(script_len());
-}
-
-bitcoin_transaction_t::vout_t::~vout_t() {
-}
-
-bitcoin_transaction_t::public_key_t::public_key_t(kaitai::kstream* p__io, bitcoin_transaction_t::script_signature_t* p__parent, bitcoin_transaction_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
-
-void bitcoin_transaction_t::public_key_t::_read() {
-    m_type = m__io-&gt;read_u1();
-    m_x = m__io-&gt;read_bytes(32);
-    m_y = m__io-&gt;read_bytes(32);
-}
-
-bitcoin_transaction_t::public_key_t::~public_key_t() {
-}
-
 bitcoin_transaction_t::vin_t::vin_t(kaitai::kstream* p__io, bitcoin_transaction_t* p__parent, bitcoin_transaction_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -683,8 +653,8 @@ bitcoin_transaction_t::vin_t::vin_t(kaitai::kstream* p__io, bitcoin_transaction_
 void bitcoin_transaction_t::vin_t::_read() {
     m_txid = m__io-&gt;read_bytes(32);
     m_output_id = m__io-&gt;read_u4le();
-    m_script_len = m__io-&gt;read_u1();
-    m__raw_script_sig = m__io-&gt;read_bytes(script_len());
+    m_len_script = m__io-&gt;read_u1();
+    m__raw_script_sig = m__io-&gt;read_bytes(len_script());
     m__io__raw_script_sig = new kaitai::kstream(m__raw_script_sig);
     m_script_sig = new script_signature_t(m__io__raw_script_sig, this, m__root);
     m_end_of_vin = m__io-&gt;ensure_fixed_contents(std::string(&quot;\xFF\xFF\xFF\xFF&quot;, 4));
@@ -695,43 +665,73 @@ bitcoin_transaction_t::vin_t::~vin_t() {
     delete m_script_sig;
 }
 
-bitcoin_transaction_t::script_signature_t::script_signature_t(kaitai::kstream* p__io, bitcoin_transaction_t::vin_t* p__parent, bitcoin_transaction_t* p__root) : kaitai::kstruct(p__io) {
+bitcoin_transaction_t::vin_t::script_signature_t::script_signature_t(kaitai::kstream* p__io, bitcoin_transaction_t::vin_t* p__parent, bitcoin_transaction_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
     _read();
 }
 
-void bitcoin_transaction_t::script_signature_t::_read() {
-    m_sig_stack_len = m__io-&gt;read_u1();
+void bitcoin_transaction_t::vin_t::script_signature_t::_read() {
+    m_len_sig_stack = m__io-&gt;read_u1();
     m_der_sig = new der_signature_t(m__io, this, m__root);
-    m_sig_type = static_cast&lt;bitcoin_transaction_t::sighash_type_t&gt;(m__io-&gt;read_u1());
-    m_pubkey_stack_len = m__io-&gt;read_u1();
+    m_sig_type = static_cast&lt;bitcoin_transaction_t::vin_t::script_signature_t::sighash_type_t&gt;(m__io-&gt;read_u1());
+    m_len_pubkey_stack = m__io-&gt;read_u1();
     m_pubkey = new public_key_t(m__io, this, m__root);
 }
 
-bitcoin_transaction_t::script_signature_t::~script_signature_t() {
+bitcoin_transaction_t::vin_t::script_signature_t::~script_signature_t() {
     delete m_der_sig;
     delete m_pubkey;
 }
 
-bitcoin_transaction_t::der_signature_t::der_signature_t(kaitai::kstream* p__io, bitcoin_transaction_t::script_signature_t* p__parent, bitcoin_transaction_t* p__root) : kaitai::kstruct(p__io) {
+bitcoin_transaction_t::vin_t::script_signature_t::der_signature_t::der_signature_t(kaitai::kstream* p__io, bitcoin_transaction_t::vin_t::script_signature_t* p__parent, bitcoin_transaction_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
     _read();
 }
 
-void bitcoin_transaction_t::der_signature_t::_read() {
+void bitcoin_transaction_t::vin_t::script_signature_t::der_signature_t::_read() {
     m_sequence = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x30&quot;, 1));
-    m_sig_len = m__io-&gt;read_u1();
+    m_len_sig = m__io-&gt;read_u1();
     m_sep_1 = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x02&quot;, 1));
-    m_sig_r_len = m__io-&gt;read_u1();
-    m_sig_r = m__io-&gt;read_bytes(sig_r_len());
+    m_len_sig_r = m__io-&gt;read_u1();
+    m_sig_r = m__io-&gt;read_bytes(len_sig_r());
     m_sep_2 = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x02&quot;, 1));
-    m_sig_s_len = m__io-&gt;read_u1();
-    m_sig_s = m__io-&gt;read_bytes(sig_s_len());
+    m_len_sig_s = m__io-&gt;read_u1();
+    m_sig_s = m__io-&gt;read_bytes(len_sig_s());
 }
 
-bitcoin_transaction_t::der_signature_t::~der_signature_t() {
+bitcoin_transaction_t::vin_t::script_signature_t::der_signature_t::~der_signature_t() {
+}
+
+bitcoin_transaction_t::vin_t::script_signature_t::public_key_t::public_key_t(kaitai::kstream* p__io, bitcoin_transaction_t::vin_t::script_signature_t* p__parent, bitcoin_transaction_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void bitcoin_transaction_t::vin_t::script_signature_t::public_key_t::_read() {
+    m_type = m__io-&gt;read_u1();
+    m_x = m__io-&gt;read_bytes(32);
+    m_y = m__io-&gt;read_bytes(32);
+}
+
+bitcoin_transaction_t::vin_t::script_signature_t::public_key_t::~public_key_t() {
+}
+
+bitcoin_transaction_t::vout_t::vout_t(kaitai::kstream* p__io, bitcoin_transaction_t* p__parent, bitcoin_transaction_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void bitcoin_transaction_t::vout_t::_read() {
+    m_amount = m__io-&gt;read_u8le();
+    m_len_script = m__io-&gt;read_u1();
+    m_script_pub_key = m__io-&gt;read_bytes(len_script());
+}
+
+bitcoin_transaction_t::vout_t::~vout_t() {
 }
 </code></pre>
             

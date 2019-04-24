@@ -110,7 +110,7 @@ section#format-index .row {
                     </div>
                     
                     <div class="panel-body">
-                        License: <a href="https://spdx.org/licenses/CC-BY-SA-4.0.html">CC-BY-SA-4.0</a>
+                        License: <a href="https://spdx.org/licenses/MIT.html">MIT</a>
                     </div>
                     
                     
@@ -234,11 +234,6 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
 }
 
-our $SIGHASH_TYPE_SIGHASH_ALL = 1;
-our $SIGHASH_TYPE_SIGHASH_NONE = 2;
-our $SIGHASH_TYPE_SIGHASH_SINGLE = 3;
-our $SIGHASH_TYPE_SIGHASH_ANYONECANPAY = 80;
-
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
     my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
@@ -302,7 +297,7 @@ sub locktime {
 }
 
 ########################################################################
-package BitcoinTransaction::Vout;
+package BitcoinTransaction::Vin;
 
 our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
 
@@ -331,28 +326,194 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{amount} = $self-&gt;{_io}-&gt;read_u8le();
-    $self-&gt;{script_len} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{script_pub_key} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;script_len());
+    $self-&gt;{txid} = $self-&gt;{_io}-&gt;read_bytes(32);
+    $self-&gt;{output_id} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{len_script} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{_raw_script_sig} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_script());
+    my $io__raw_script_sig = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_script_sig});
+    $self-&gt;{script_sig} = BitcoinTransaction::Vin::ScriptSignature-&gt;new($io__raw_script_sig, $self, $self-&gt;{_root});
+    $self-&gt;{end_of_vin} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (255, 255, 255, 255)));
 }
 
-sub amount {
+sub txid {
     my ($self) = @_;
-    return $self-&gt;{amount};
+    return $self-&gt;{txid};
 }
 
-sub script_len {
+sub output_id {
     my ($self) = @_;
-    return $self-&gt;{script_len};
+    return $self-&gt;{output_id};
 }
 
-sub script_pub_key {
+sub len_script {
     my ($self) = @_;
-    return $self-&gt;{script_pub_key};
+    return $self-&gt;{len_script};
+}
+
+sub script_sig {
+    my ($self) = @_;
+    return $self-&gt;{script_sig};
+}
+
+sub end_of_vin {
+    my ($self) = @_;
+    return $self-&gt;{end_of_vin};
+}
+
+sub _raw_script_sig {
+    my ($self) = @_;
+    return $self-&gt;{_raw_script_sig};
 }
 
 ########################################################################
-package BitcoinTransaction::PublicKey;
+package BitcoinTransaction::Vin::ScriptSignature;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $SIGHASH_TYPE_SIGHASH_ALL = 1;
+our $SIGHASH_TYPE_SIGHASH_NONE = 2;
+our $SIGHASH_TYPE_SIGHASH_SINGLE = 3;
+our $SIGHASH_TYPE_SIGHASH_ANYONECANPAY = 80;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len_sig_stack} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{der_sig} = BitcoinTransaction::Vin::ScriptSignature::DerSignature-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{sig_type} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{len_pubkey_stack} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{pubkey} = BitcoinTransaction::Vin::ScriptSignature::PublicKey-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub len_sig_stack {
+    my ($self) = @_;
+    return $self-&gt;{len_sig_stack};
+}
+
+sub der_sig {
+    my ($self) = @_;
+    return $self-&gt;{der_sig};
+}
+
+sub sig_type {
+    my ($self) = @_;
+    return $self-&gt;{sig_type};
+}
+
+sub len_pubkey_stack {
+    my ($self) = @_;
+    return $self-&gt;{len_pubkey_stack};
+}
+
+sub pubkey {
+    my ($self) = @_;
+    return $self-&gt;{pubkey};
+}
+
+########################################################################
+package BitcoinTransaction::Vin::ScriptSignature::DerSignature;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{sequence} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (48)));
+    $self-&gt;{len_sig} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{sep_1} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (2)));
+    $self-&gt;{len_sig_r} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{sig_r} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_sig_r());
+    $self-&gt;{sep_2} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (2)));
+    $self-&gt;{len_sig_s} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{sig_s} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_sig_s());
+}
+
+sub sequence {
+    my ($self) = @_;
+    return $self-&gt;{sequence};
+}
+
+sub len_sig {
+    my ($self) = @_;
+    return $self-&gt;{len_sig};
+}
+
+sub sep_1 {
+    my ($self) = @_;
+    return $self-&gt;{sep_1};
+}
+
+sub len_sig_r {
+    my ($self) = @_;
+    return $self-&gt;{len_sig_r};
+}
+
+sub sig_r {
+    my ($self) = @_;
+    return $self-&gt;{sig_r};
+}
+
+sub sep_2 {
+    my ($self) = @_;
+    return $self-&gt;{sep_2};
+}
+
+sub len_sig_s {
+    my ($self) = @_;
+    return $self-&gt;{len_sig_s};
+}
+
+sub sig_s {
+    my ($self) = @_;
+    return $self-&gt;{sig_s};
+}
+
+########################################################################
+package BitcoinTransaction::Vin::ScriptSignature::PublicKey;
 
 our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
 
@@ -402,7 +563,7 @@ sub y {
 }
 
 ########################################################################
-package BitcoinTransaction::Vin;
+package BitcoinTransaction::Vout;
 
 our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
 
@@ -431,185 +592,24 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{txid} = $self-&gt;{_io}-&gt;read_bytes(32);
-    $self-&gt;{output_id} = $self-&gt;{_io}-&gt;read_u4le();
-    $self-&gt;{script_len} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{_raw_script_sig} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;script_len());
-    my $io__raw_script_sig = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_script_sig});
-    $self-&gt;{script_sig} = BitcoinTransaction::ScriptSignature-&gt;new($io__raw_script_sig, $self, $self-&gt;{_root});
-    $self-&gt;{end_of_vin} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (255, 255, 255, 255)));
+    $self-&gt;{amount} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{len_script} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{script_pub_key} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_script());
 }
 
-sub txid {
+sub amount {
     my ($self) = @_;
-    return $self-&gt;{txid};
+    return $self-&gt;{amount};
 }
 
-sub output_id {
+sub len_script {
     my ($self) = @_;
-    return $self-&gt;{output_id};
+    return $self-&gt;{len_script};
 }
 
-sub script_len {
+sub script_pub_key {
     my ($self) = @_;
-    return $self-&gt;{script_len};
-}
-
-sub script_sig {
-    my ($self) = @_;
-    return $self-&gt;{script_sig};
-}
-
-sub end_of_vin {
-    my ($self) = @_;
-    return $self-&gt;{end_of_vin};
-}
-
-sub _raw_script_sig {
-    my ($self) = @_;
-    return $self-&gt;{_raw_script_sig};
-}
-
-########################################################################
-package BitcoinTransaction::ScriptSignature;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{sig_stack_len} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{der_sig} = BitcoinTransaction::DerSignature-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    $self-&gt;{sig_type} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{pubkey_stack_len} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{pubkey} = BitcoinTransaction::PublicKey-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-}
-
-sub sig_stack_len {
-    my ($self) = @_;
-    return $self-&gt;{sig_stack_len};
-}
-
-sub der_sig {
-    my ($self) = @_;
-    return $self-&gt;{der_sig};
-}
-
-sub sig_type {
-    my ($self) = @_;
-    return $self-&gt;{sig_type};
-}
-
-sub pubkey_stack_len {
-    my ($self) = @_;
-    return $self-&gt;{pubkey_stack_len};
-}
-
-sub pubkey {
-    my ($self) = @_;
-    return $self-&gt;{pubkey};
-}
-
-########################################################################
-package BitcoinTransaction::DerSignature;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{sequence} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (48)));
-    $self-&gt;{sig_len} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{sep_1} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (2)));
-    $self-&gt;{sig_r_len} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{sig_r} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;sig_r_len());
-    $self-&gt;{sep_2} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (2)));
-    $self-&gt;{sig_s_len} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{sig_s} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;sig_s_len());
-}
-
-sub sequence {
-    my ($self) = @_;
-    return $self-&gt;{sequence};
-}
-
-sub sig_len {
-    my ($self) = @_;
-    return $self-&gt;{sig_len};
-}
-
-sub sep_1 {
-    my ($self) = @_;
-    return $self-&gt;{sep_1};
-}
-
-sub sig_r_len {
-    my ($self) = @_;
-    return $self-&gt;{sig_r_len};
-}
-
-sub sig_r {
-    my ($self) = @_;
-    return $self-&gt;{sig_r};
-}
-
-sub sep_2 {
-    my ($self) = @_;
-    return $self-&gt;{sep_2};
-}
-
-sub sig_s_len {
-    my ($self) = @_;
-    return $self-&gt;{sig_s_len};
-}
-
-sub sig_s {
-    my ($self) = @_;
-    return $self-&gt;{sig_s};
+    return $self-&gt;{script_pub_key};
 }
 
 1;

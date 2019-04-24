@@ -16,28 +16,6 @@ digraph {
 			<TR><TD COLSPAN="4" PORT="vouts__repeat">repeat num_vouts times</TD></TR>
 			<TR><TD PORT="locktime_pos">...</TD><TD PORT="locktime_size">4</TD><TD>u4le</TD><TD PORT="locktime_type">locktime</TD></TR>
 		</TABLE>>];
-		subgraph cluster__vout {
-			label="BitcoinTransaction::Vout";
-			graph[style=dotted];
-
-			vout__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="amount_pos">0</TD><TD PORT="amount_size">8</TD><TD>u8le</TD><TD PORT="amount_type">amount</TD></TR>
-				<TR><TD PORT="script_len_pos">8</TD><TD PORT="script_len_size">1</TD><TD>u1</TD><TD PORT="script_len_type">script_len</TD></TR>
-				<TR><TD PORT="script_pub_key_pos">9</TD><TD PORT="script_pub_key_size">script_len</TD><TD></TD><TD PORT="script_pub_key_type">script_pub_key</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__public_key {
-			label="BitcoinTransaction::PublicKey";
-			graph[style=dotted];
-
-			public_key__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">1</TD><TD>u1</TD><TD PORT="type_type">type</TD></TR>
-				<TR><TD PORT="x_pos">1</TD><TD PORT="x_size">32</TD><TD></TD><TD PORT="x_type">x</TD></TR>
-				<TR><TD PORT="y_pos">33</TD><TD PORT="y_size">32</TD><TD></TD><TD PORT="y_type">y</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__vin {
 			label="BitcoinTransaction::Vin";
 			graph[style=dotted];
@@ -46,38 +24,60 @@ digraph {
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="txid_pos">0</TD><TD PORT="txid_size">32</TD><TD></TD><TD PORT="txid_type">txid</TD></TR>
 				<TR><TD PORT="output_id_pos">32</TD><TD PORT="output_id_size">4</TD><TD>u4le</TD><TD PORT="output_id_type">output_id</TD></TR>
-				<TR><TD PORT="script_len_pos">36</TD><TD PORT="script_len_size">1</TD><TD>u1</TD><TD PORT="script_len_type">script_len</TD></TR>
-				<TR><TD PORT="script_sig_pos">37</TD><TD PORT="script_sig_size">script_len</TD><TD>ScriptSignature</TD><TD PORT="script_sig_type">script_sig</TD></TR>
+				<TR><TD PORT="len_script_pos">36</TD><TD PORT="len_script_size">1</TD><TD>u1</TD><TD PORT="len_script_type">len_script</TD></TR>
+				<TR><TD PORT="script_sig_pos">37</TD><TD PORT="script_sig_size">len_script</TD><TD>ScriptSignature</TD><TD PORT="script_sig_type">script_sig</TD></TR>
 				<TR><TD PORT="end_of_vin_pos">...</TD><TD PORT="end_of_vin_size">4</TD><TD>FF FF FF FF</TD><TD PORT="end_of_vin_type">end_of_vin</TD></TR>
 			</TABLE>>];
+			subgraph cluster__script_signature {
+				label="BitcoinTransaction::Vin::ScriptSignature";
+				graph[style=dotted];
+
+				script_signature__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="len_sig_stack_pos">0</TD><TD PORT="len_sig_stack_size">1</TD><TD>u1</TD><TD PORT="len_sig_stack_type">len_sig_stack</TD></TR>
+					<TR><TD PORT="der_sig_pos">1</TD><TD PORT="der_sig_size">...</TD><TD>DerSignature</TD><TD PORT="der_sig_type">der_sig</TD></TR>
+					<TR><TD PORT="sig_type_pos">...</TD><TD PORT="sig_type_size">1</TD><TD>u1→SighashType</TD><TD PORT="sig_type_type">sig_type</TD></TR>
+					<TR><TD PORT="len_pubkey_stack_pos">...</TD><TD PORT="len_pubkey_stack_size">1</TD><TD>u1</TD><TD PORT="len_pubkey_stack_type">len_pubkey_stack</TD></TR>
+					<TR><TD PORT="pubkey_pos">...</TD><TD PORT="pubkey_size">65</TD><TD>PublicKey</TD><TD PORT="pubkey_type">pubkey</TD></TR>
+				</TABLE>>];
+				subgraph cluster__der_signature {
+					label="BitcoinTransaction::Vin::ScriptSignature::DerSignature";
+					graph[style=dotted];
+
+					der_signature__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="sequence_pos">0</TD><TD PORT="sequence_size">1</TD><TD>30</TD><TD PORT="sequence_type">sequence</TD></TR>
+						<TR><TD PORT="len_sig_pos">1</TD><TD PORT="len_sig_size">1</TD><TD>u1</TD><TD PORT="len_sig_type">len_sig</TD></TR>
+						<TR><TD PORT="sep_1_pos">2</TD><TD PORT="sep_1_size">1</TD><TD>02</TD><TD PORT="sep_1_type">sep_1</TD></TR>
+						<TR><TD PORT="len_sig_r_pos">3</TD><TD PORT="len_sig_r_size">1</TD><TD>u1</TD><TD PORT="len_sig_r_type">len_sig_r</TD></TR>
+						<TR><TD PORT="sig_r_pos">4</TD><TD PORT="sig_r_size">len_sig_r</TD><TD></TD><TD PORT="sig_r_type">sig_r</TD></TR>
+						<TR><TD PORT="sep_2_pos">...</TD><TD PORT="sep_2_size">1</TD><TD>02</TD><TD PORT="sep_2_type">sep_2</TD></TR>
+						<TR><TD PORT="len_sig_s_pos">...</TD><TD PORT="len_sig_s_size">1</TD><TD>u1</TD><TD PORT="len_sig_s_type">len_sig_s</TD></TR>
+						<TR><TD PORT="sig_s_pos">...</TD><TD PORT="sig_s_size">len_sig_s</TD><TD></TD><TD PORT="sig_s_type">sig_s</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__public_key {
+					label="BitcoinTransaction::Vin::ScriptSignature::PublicKey";
+					graph[style=dotted];
+
+					public_key__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">1</TD><TD>u1</TD><TD PORT="type_type">type</TD></TR>
+						<TR><TD PORT="x_pos">1</TD><TD PORT="x_size">32</TD><TD></TD><TD PORT="x_type">x</TD></TR>
+						<TR><TD PORT="y_pos">33</TD><TD PORT="y_size">32</TD><TD></TD><TD PORT="y_type">y</TD></TR>
+					</TABLE>>];
+				}
+			}
 		}
-		subgraph cluster__script_signature {
-			label="BitcoinTransaction::ScriptSignature";
+		subgraph cluster__vout {
+			label="BitcoinTransaction::Vout";
 			graph[style=dotted];
 
-			script_signature__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			vout__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="sig_stack_len_pos">0</TD><TD PORT="sig_stack_len_size">1</TD><TD>u1</TD><TD PORT="sig_stack_len_type">sig_stack_len</TD></TR>
-				<TR><TD PORT="der_sig_pos">1</TD><TD PORT="der_sig_size">...</TD><TD>DerSignature</TD><TD PORT="der_sig_type">der_sig</TD></TR>
-				<TR><TD PORT="sig_type_pos">...</TD><TD PORT="sig_type_size">1</TD><TD>u1→SighashType</TD><TD PORT="sig_type_type">sig_type</TD></TR>
-				<TR><TD PORT="pubkey_stack_len_pos">...</TD><TD PORT="pubkey_stack_len_size">1</TD><TD>u1</TD><TD PORT="pubkey_stack_len_type">pubkey_stack_len</TD></TR>
-				<TR><TD PORT="pubkey_pos">...</TD><TD PORT="pubkey_size">65</TD><TD>PublicKey</TD><TD PORT="pubkey_type">pubkey</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__der_signature {
-			label="BitcoinTransaction::DerSignature";
-			graph[style=dotted];
-
-			der_signature__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="sequence_pos">0</TD><TD PORT="sequence_size">1</TD><TD>30</TD><TD PORT="sequence_type">sequence</TD></TR>
-				<TR><TD PORT="sig_len_pos">1</TD><TD PORT="sig_len_size">1</TD><TD>u1</TD><TD PORT="sig_len_type">sig_len</TD></TR>
-				<TR><TD PORT="sep_1_pos">2</TD><TD PORT="sep_1_size">1</TD><TD>02</TD><TD PORT="sep_1_type">sep_1</TD></TR>
-				<TR><TD PORT="sig_r_len_pos">3</TD><TD PORT="sig_r_len_size">1</TD><TD>u1</TD><TD PORT="sig_r_len_type">sig_r_len</TD></TR>
-				<TR><TD PORT="sig_r_pos">4</TD><TD PORT="sig_r_size">sig_r_len</TD><TD></TD><TD PORT="sig_r_type">sig_r</TD></TR>
-				<TR><TD PORT="sep_2_pos">...</TD><TD PORT="sep_2_size">1</TD><TD>02</TD><TD PORT="sep_2_type">sep_2</TD></TR>
-				<TR><TD PORT="sig_s_len_pos">...</TD><TD PORT="sig_s_len_size">1</TD><TD>u1</TD><TD PORT="sig_s_len_type">sig_s_len</TD></TR>
-				<TR><TD PORT="sig_s_pos">...</TD><TD PORT="sig_s_size">sig_s_len</TD><TD></TD><TD PORT="sig_s_type">sig_s</TD></TR>
+				<TR><TD PORT="amount_pos">0</TD><TD PORT="amount_size">8</TD><TD>u8le</TD><TD PORT="amount_type">amount</TD></TR>
+				<TR><TD PORT="len_script_pos">8</TD><TD PORT="len_script_size">1</TD><TD>u1</TD><TD PORT="len_script_type">len_script</TD></TR>
+				<TR><TD PORT="script_pub_key_pos">9</TD><TD PORT="script_pub_key_size">len_script</TD><TD></TD><TD PORT="script_pub_key_type">script_pub_key</TD></TR>
 			</TABLE>>];
 		}
 	}
@@ -85,11 +85,11 @@ digraph {
 	bitcoin_transaction__seq:num_vins_type -> bitcoin_transaction__seq:vins__repeat [color="#404040"];
 	bitcoin_transaction__seq:vouts_type -> vout__seq [style=bold];
 	bitcoin_transaction__seq:num_vouts_type -> bitcoin_transaction__seq:vouts__repeat [color="#404040"];
-	vout__seq:script_len_type -> vout__seq:script_pub_key_size [color="#404040"];
-	vin__seq:script_len_type -> vin__seq:script_sig_size [color="#404040"];
+	vin__seq:len_script_type -> vin__seq:script_sig_size [color="#404040"];
 	vin__seq:script_sig_type -> script_signature__seq [style=bold];
 	script_signature__seq:der_sig_type -> der_signature__seq [style=bold];
 	script_signature__seq:pubkey_type -> public_key__seq [style=bold];
-	der_signature__seq:sig_r_len_type -> der_signature__seq:sig_r_size [color="#404040"];
-	der_signature__seq:sig_s_len_type -> der_signature__seq:sig_s_size [color="#404040"];
+	der_signature__seq:len_sig_r_type -> der_signature__seq:sig_r_size [color="#404040"];
+	der_signature__seq:len_sig_s_type -> der_signature__seq:sig_s_size [color="#404040"];
+	vout__seq:len_script_type -> vout__seq:script_pub_key_size [color="#404040"];
 }

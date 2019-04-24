@@ -17,14 +17,6 @@ namespace Kaitai
             return new BitcoinTransaction(new KaitaiStream(fileName));
         }
 
-
-        public enum SighashType
-        {
-            SighashAll = 1,
-            SighashNone = 2,
-            SighashSingle = 3,
-            SighashAnyonecanpay = 80,
-        }
         public BitcoinTransaction(KaitaiStream p__io, KaitaiStruct p__parent = null, BitcoinTransaction p__root = null) : base(p__io)
         {
             m_parent = p__parent;
@@ -48,91 +40,6 @@ namespace Kaitai
             }
             _locktime = m_io.ReadU4le();
         }
-        public partial class Vout : KaitaiStruct
-        {
-            public static Vout FromFile(string fileName)
-            {
-                return new Vout(new KaitaiStream(fileName));
-            }
-
-            public Vout(KaitaiStream p__io, BitcoinTransaction p__parent = null, BitcoinTransaction p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _amount = m_io.ReadU8le();
-                _scriptLen = m_io.ReadU1();
-                _scriptPubKey = m_io.ReadBytes(ScriptLen);
-            }
-            private ulong _amount;
-            private byte _scriptLen;
-            private byte[] _scriptPubKey;
-            private BitcoinTransaction m_root;
-            private BitcoinTransaction m_parent;
-
-            /// <summary>
-            /// Number of Satoshis to be transfered.
-            /// </summary>
-            public ulong Amount { get { return _amount; } }
-
-            /// <summary>
-            /// ScriptPubKey's length.
-            /// </summary>
-            public byte ScriptLen { get { return _scriptLen; } }
-
-            /// <summary>
-            /// ScriptPubKey.
-            /// </summary>
-            /// <remarks>
-            /// Reference: <a href="https://en.bitcoin.it/wiki/Transaction#Output
-            /// https://en.bitcoin.it/wiki/Script
-            /// ">Source</a>
-            /// </remarks>
-            public byte[] ScriptPubKey { get { return _scriptPubKey; } }
-            public BitcoinTransaction M_Root { get { return m_root; } }
-            public BitcoinTransaction M_Parent { get { return m_parent; } }
-        }
-        public partial class PublicKey : KaitaiStruct
-        {
-            public static PublicKey FromFile(string fileName)
-            {
-                return new PublicKey(new KaitaiStream(fileName));
-            }
-
-            public PublicKey(KaitaiStream p__io, BitcoinTransaction.ScriptSignature p__parent = null, BitcoinTransaction p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _type = m_io.ReadU1();
-                _x = m_io.ReadBytes(32);
-                _y = m_io.ReadBytes(32);
-            }
-            private byte _type;
-            private byte[] _x;
-            private byte[] _y;
-            private BitcoinTransaction m_root;
-            private BitcoinTransaction.ScriptSignature m_parent;
-            public byte Type { get { return _type; } }
-
-            /// <summary>
-            /// 'x' coordinate of the public key on the elliptic curve.
-            /// </summary>
-            public byte[] X { get { return _x; } }
-
-            /// <summary>
-            /// 'y' coordinate of the public key on the elliptic curve.
-            /// </summary>
-            public byte[] Y { get { return _y; } }
-            public BitcoinTransaction M_Root { get { return m_root; } }
-            public BitcoinTransaction.ScriptSignature M_Parent { get { return m_parent; } }
-        }
         public partial class Vin : KaitaiStruct
         {
             public static Vin FromFile(string fileName)
@@ -150,15 +57,181 @@ namespace Kaitai
             {
                 _txid = m_io.ReadBytes(32);
                 _outputId = m_io.ReadU4le();
-                _scriptLen = m_io.ReadU1();
-                __raw_scriptSig = m_io.ReadBytes(ScriptLen);
+                _lenScript = m_io.ReadU1();
+                __raw_scriptSig = m_io.ReadBytes(LenScript);
                 var io___raw_scriptSig = new KaitaiStream(__raw_scriptSig);
                 _scriptSig = new ScriptSignature(io___raw_scriptSig, this, m_root);
                 _endOfVin = m_io.EnsureFixedContents(new byte[] { 255, 255, 255, 255 });
             }
+            public partial class ScriptSignature : KaitaiStruct
+            {
+                public static ScriptSignature FromFile(string fileName)
+                {
+                    return new ScriptSignature(new KaitaiStream(fileName));
+                }
+
+
+                public enum SighashType
+                {
+                    SighashAll = 1,
+                    SighashNone = 2,
+                    SighashSingle = 3,
+                    SighashAnyonecanpay = 80,
+                }
+                public ScriptSignature(KaitaiStream p__io, BitcoinTransaction.Vin p__parent = null, BitcoinTransaction p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _lenSigStack = m_io.ReadU1();
+                    _derSig = new DerSignature(m_io, this, m_root);
+                    _sigType = ((SighashType) m_io.ReadU1());
+                    _lenPubkeyStack = m_io.ReadU1();
+                    _pubkey = new PublicKey(m_io, this, m_root);
+                }
+                public partial class DerSignature : KaitaiStruct
+                {
+                    public static DerSignature FromFile(string fileName)
+                    {
+                        return new DerSignature(new KaitaiStream(fileName));
+                    }
+
+                    public DerSignature(KaitaiStream p__io, BitcoinTransaction.Vin.ScriptSignature p__parent = null, BitcoinTransaction p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _sequence = m_io.EnsureFixedContents(new byte[] { 48 });
+                        _lenSig = m_io.ReadU1();
+                        _sep1 = m_io.EnsureFixedContents(new byte[] { 2 });
+                        _lenSigR = m_io.ReadU1();
+                        _sigR = m_io.ReadBytes(LenSigR);
+                        _sep2 = m_io.EnsureFixedContents(new byte[] { 2 });
+                        _lenSigS = m_io.ReadU1();
+                        _sigS = m_io.ReadBytes(LenSigS);
+                    }
+                    private byte[] _sequence;
+                    private byte _lenSig;
+                    private byte[] _sep1;
+                    private byte _lenSigR;
+                    private byte[] _sigR;
+                    private byte[] _sep2;
+                    private byte _lenSigS;
+                    private byte[] _sigS;
+                    private BitcoinTransaction m_root;
+                    private BitcoinTransaction.Vin.ScriptSignature m_parent;
+                    public byte[] Sequence { get { return _sequence; } }
+                    public byte LenSig { get { return _lenSig; } }
+                    public byte[] Sep1 { get { return _sep1; } }
+
+                    /// <summary>
+                    /// 'r' value's length.
+                    /// </summary>
+                    public byte LenSigR { get { return _lenSigR; } }
+
+                    /// <summary>
+                    /// 'r' value of the ECDSA signature.
+                    /// </summary>
+                    /// <remarks>
+                    /// Reference: <a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm">Source</a>
+                    /// </remarks>
+                    public byte[] SigR { get { return _sigR; } }
+                    public byte[] Sep2 { get { return _sep2; } }
+
+                    /// <summary>
+                    /// 's' value's length.
+                    /// </summary>
+                    public byte LenSigS { get { return _lenSigS; } }
+
+                    /// <summary>
+                    /// 's' value of the ECDSA signature.
+                    /// </summary>
+                    /// <remarks>
+                    /// Reference: <a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm">Source</a>
+                    /// </remarks>
+                    public byte[] SigS { get { return _sigS; } }
+                    public BitcoinTransaction M_Root { get { return m_root; } }
+                    public BitcoinTransaction.Vin.ScriptSignature M_Parent { get { return m_parent; } }
+                }
+                public partial class PublicKey : KaitaiStruct
+                {
+                    public static PublicKey FromFile(string fileName)
+                    {
+                        return new PublicKey(new KaitaiStream(fileName));
+                    }
+
+                    public PublicKey(KaitaiStream p__io, BitcoinTransaction.Vin.ScriptSignature p__parent = null, BitcoinTransaction p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _type = m_io.ReadU1();
+                        _x = m_io.ReadBytes(32);
+                        _y = m_io.ReadBytes(32);
+                    }
+                    private byte _type;
+                    private byte[] _x;
+                    private byte[] _y;
+                    private BitcoinTransaction m_root;
+                    private BitcoinTransaction.Vin.ScriptSignature m_parent;
+                    public byte Type { get { return _type; } }
+
+                    /// <summary>
+                    /// 'x' coordinate of the public key on the elliptic curve.
+                    /// </summary>
+                    public byte[] X { get { return _x; } }
+
+                    /// <summary>
+                    /// 'y' coordinate of the public key on the elliptic curve.
+                    /// </summary>
+                    public byte[] Y { get { return _y; } }
+                    public BitcoinTransaction M_Root { get { return m_root; } }
+                    public BitcoinTransaction.Vin.ScriptSignature M_Parent { get { return m_parent; } }
+                }
+                private byte _lenSigStack;
+                private DerSignature _derSig;
+                private SighashType _sigType;
+                private byte _lenPubkeyStack;
+                private PublicKey _pubkey;
+                private BitcoinTransaction m_root;
+                private BitcoinTransaction.Vin m_parent;
+                public byte LenSigStack { get { return _lenSigStack; } }
+
+                /// <summary>
+                /// DER-encoded ECDSA signature.
+                /// </summary>
+                /// <remarks>
+                /// Reference: <a href="https://en.wikipedia.org/wiki/X.690#DER_encoding
+                /// https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
+                /// ">Source</a>
+                /// </remarks>
+                public DerSignature DerSig { get { return _derSig; } }
+
+                /// <summary>
+                /// Type of signature.
+                /// </summary>
+                public SighashType SigType { get { return _sigType; } }
+                public byte LenPubkeyStack { get { return _lenPubkeyStack; } }
+
+                /// <summary>
+                /// Public key (bitcoin address of the recipient).
+                /// </summary>
+                public PublicKey Pubkey { get { return _pubkey; } }
+                public BitcoinTransaction M_Root { get { return m_root; } }
+                public BitcoinTransaction.Vin M_Parent { get { return m_parent; } }
+            }
             private byte[] _txid;
             private uint _outputId;
-            private byte _scriptLen;
+            private byte _lenScript;
             private ScriptSignature _scriptSig;
             private byte[] _endOfVin;
             private BitcoinTransaction m_root;
@@ -179,7 +252,7 @@ namespace Kaitai
             /// <summary>
             /// ScriptSig's length.
             /// </summary>
-            public byte ScriptLen { get { return _scriptLen; } }
+            public byte LenScript { get { return _lenScript; } }
 
             /// <summary>
             /// ScriptSig.
@@ -199,14 +272,14 @@ namespace Kaitai
             public BitcoinTransaction M_Parent { get { return m_parent; } }
             public byte[] M_RawScriptSig { get { return __raw_scriptSig; } }
         }
-        public partial class ScriptSignature : KaitaiStruct
+        public partial class Vout : KaitaiStruct
         {
-            public static ScriptSignature FromFile(string fileName)
+            public static Vout FromFile(string fileName)
             {
-                return new ScriptSignature(new KaitaiStream(fileName));
+                return new Vout(new KaitaiStream(fileName));
             }
 
-            public ScriptSignature(KaitaiStream p__io, BitcoinTransaction.Vin p__parent = null, BitcoinTransaction p__root = null) : base(p__io)
+            public Vout(KaitaiStream p__io, BitcoinTransaction p__parent = null, BitcoinTransaction p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -214,110 +287,37 @@ namespace Kaitai
             }
             private void _read()
             {
-                _sigStackLen = m_io.ReadU1();
-                _derSig = new DerSignature(m_io, this, m_root);
-                _sigType = ((BitcoinTransaction.SighashType) m_io.ReadU1());
-                _pubkeyStackLen = m_io.ReadU1();
-                _pubkey = new PublicKey(m_io, this, m_root);
+                _amount = m_io.ReadU8le();
+                _lenScript = m_io.ReadU1();
+                _scriptPubKey = m_io.ReadBytes(LenScript);
             }
-            private byte _sigStackLen;
-            private DerSignature _derSig;
-            private SighashType _sigType;
-            private byte _pubkeyStackLen;
-            private PublicKey _pubkey;
+            private ulong _amount;
+            private byte _lenScript;
+            private byte[] _scriptPubKey;
             private BitcoinTransaction m_root;
-            private BitcoinTransaction.Vin m_parent;
-            public byte SigStackLen { get { return _sigStackLen; } }
+            private BitcoinTransaction m_parent;
 
             /// <summary>
-            /// DER-encoded ECDSA signature.
+            /// Number of Satoshis to be transfered.
+            /// </summary>
+            public ulong Amount { get { return _amount; } }
+
+            /// <summary>
+            /// ScriptPubKey's length.
+            /// </summary>
+            public byte LenScript { get { return _lenScript; } }
+
+            /// <summary>
+            /// ScriptPubKey.
             /// </summary>
             /// <remarks>
-            /// Reference: <a href="https://en.wikipedia.org/wiki/X.690#DER_encoding
-            /// https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
+            /// Reference: <a href="https://en.bitcoin.it/wiki/Transaction#Output
+            /// https://en.bitcoin.it/wiki/Script
             /// ">Source</a>
             /// </remarks>
-            public DerSignature DerSig { get { return _derSig; } }
-
-            /// <summary>
-            /// Type of signature.
-            /// </summary>
-            public SighashType SigType { get { return _sigType; } }
-            public byte PubkeyStackLen { get { return _pubkeyStackLen; } }
-
-            /// <summary>
-            /// Public key (bitcoin address of the recipient).
-            /// </summary>
-            public PublicKey Pubkey { get { return _pubkey; } }
+            public byte[] ScriptPubKey { get { return _scriptPubKey; } }
             public BitcoinTransaction M_Root { get { return m_root; } }
-            public BitcoinTransaction.Vin M_Parent { get { return m_parent; } }
-        }
-        public partial class DerSignature : KaitaiStruct
-        {
-            public static DerSignature FromFile(string fileName)
-            {
-                return new DerSignature(new KaitaiStream(fileName));
-            }
-
-            public DerSignature(KaitaiStream p__io, BitcoinTransaction.ScriptSignature p__parent = null, BitcoinTransaction p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _sequence = m_io.EnsureFixedContents(new byte[] { 48 });
-                _sigLen = m_io.ReadU1();
-                _sep1 = m_io.EnsureFixedContents(new byte[] { 2 });
-                _sigRLen = m_io.ReadU1();
-                _sigR = m_io.ReadBytes(SigRLen);
-                _sep2 = m_io.EnsureFixedContents(new byte[] { 2 });
-                _sigSLen = m_io.ReadU1();
-                _sigS = m_io.ReadBytes(SigSLen);
-            }
-            private byte[] _sequence;
-            private byte _sigLen;
-            private byte[] _sep1;
-            private byte _sigRLen;
-            private byte[] _sigR;
-            private byte[] _sep2;
-            private byte _sigSLen;
-            private byte[] _sigS;
-            private BitcoinTransaction m_root;
-            private BitcoinTransaction.ScriptSignature m_parent;
-            public byte[] Sequence { get { return _sequence; } }
-            public byte SigLen { get { return _sigLen; } }
-            public byte[] Sep1 { get { return _sep1; } }
-
-            /// <summary>
-            /// 'r' value's length.
-            /// </summary>
-            public byte SigRLen { get { return _sigRLen; } }
-
-            /// <summary>
-            /// 'r' value of the ECDSA signature.
-            /// </summary>
-            /// <remarks>
-            /// Reference: <a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm">Source</a>
-            /// </remarks>
-            public byte[] SigR { get { return _sigR; } }
-            public byte[] Sep2 { get { return _sep2; } }
-
-            /// <summary>
-            /// 's' value's length.
-            /// </summary>
-            public byte SigSLen { get { return _sigSLen; } }
-
-            /// <summary>
-            /// 's' value of the ECDSA signature.
-            /// </summary>
-            /// <remarks>
-            /// Reference: <a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm">Source</a>
-            /// </remarks>
-            public byte[] SigS { get { return _sigS; } }
-            public BitcoinTransaction M_Root { get { return m_root; } }
-            public BitcoinTransaction.ScriptSignature M_Parent { get { return m_parent; } }
+            public BitcoinTransaction M_Parent { get { return m_parent; } }
         }
         private uint _version;
         private byte _numVins;

@@ -110,7 +110,7 @@ section#format-index .row {
                     </div>
                     
                     <div class="panel-body">
-                        License: <a href="https://spdx.org/licenses/CC-BY-SA-4.0.html">CC-BY-SA-4.0</a>
+                        License: <a href="https://spdx.org/licenses/MIT.html">MIT</a>
                     </div>
                     
                     
@@ -252,18 +252,6 @@ var data = new BitcoinTransaction(new KaitaiStream(arrayBuffer));</code></pre>
  */
 
 var BitcoinTransaction = (function() {
-  BitcoinTransaction.SighashType = Object.freeze({
-    SIGHASH_ALL: 1,
-    SIGHASH_NONE: 2,
-    SIGHASH_SINGLE: 3,
-    SIGHASH_ANYONECANPAY: 80,
-
-    1: &quot;SIGHASH_ALL&quot;,
-    2: &quot;SIGHASH_NONE&quot;,
-    3: &quot;SIGHASH_SINGLE&quot;,
-    80: &quot;SIGHASH_ANYONECANPAY&quot;,
-  });
-
   function BitcoinTransaction(_io, _parent, _root) {
     this._io = _io;
     this._parent = _parent;
@@ -286,63 +274,6 @@ var BitcoinTransaction = (function() {
     this.locktime = this._io.readU4le();
   }
 
-  var Vout = BitcoinTransaction.Vout = (function() {
-    function Vout(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Vout.prototype._read = function() {
-      this.amount = this._io.readU8le();
-      this.scriptLen = this._io.readU1();
-      this.scriptPubKey = this._io.readBytes(this.scriptLen);
-    }
-
-    /**
-     * Number of Satoshis to be transfered.
-     */
-
-    /**
-     * ScriptPubKey&#39;s length.
-     */
-
-    /**
-     * ScriptPubKey.
-     * @see {@link https://en.bitcoin.it/wiki/Transaction#Output
-     * https://en.bitcoin.it/wiki/Script
-     * |Source}
-     */
-
-    return Vout;
-  })();
-
-  var PublicKey = BitcoinTransaction.PublicKey = (function() {
-    function PublicKey(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PublicKey.prototype._read = function() {
-      this.type = this._io.readU1();
-      this.x = this._io.readBytes(32);
-      this.y = this._io.readBytes(32);
-    }
-
-    /**
-     * &#39;x&#39; coordinate of the public key on the elliptic curve.
-     */
-
-    /**
-     * &#39;y&#39; coordinate of the public key on the elliptic curve.
-     */
-
-    return PublicKey;
-  })();
-
   var Vin = BitcoinTransaction.Vin = (function() {
     function Vin(_io, _parent, _root) {
       this._io = _io;
@@ -354,12 +285,123 @@ var BitcoinTransaction = (function() {
     Vin.prototype._read = function() {
       this.txid = this._io.readBytes(32);
       this.outputId = this._io.readU4le();
-      this.scriptLen = this._io.readU1();
-      this._raw_scriptSig = this._io.readBytes(this.scriptLen);
+      this.lenScript = this._io.readU1();
+      this._raw_scriptSig = this._io.readBytes(this.lenScript);
       var _io__raw_scriptSig = new KaitaiStream(this._raw_scriptSig);
       this.scriptSig = new ScriptSignature(_io__raw_scriptSig, this, this._root);
       this.endOfVin = this._io.ensureFixedContents([255, 255, 255, 255]);
     }
+
+    var ScriptSignature = Vin.ScriptSignature = (function() {
+      ScriptSignature.SighashType = Object.freeze({
+        SIGHASH_ALL: 1,
+        SIGHASH_NONE: 2,
+        SIGHASH_SINGLE: 3,
+        SIGHASH_ANYONECANPAY: 80,
+
+        1: &quot;SIGHASH_ALL&quot;,
+        2: &quot;SIGHASH_NONE&quot;,
+        3: &quot;SIGHASH_SINGLE&quot;,
+        80: &quot;SIGHASH_ANYONECANPAY&quot;,
+      });
+
+      function ScriptSignature(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      ScriptSignature.prototype._read = function() {
+        this.lenSigStack = this._io.readU1();
+        this.derSig = new DerSignature(this._io, this, this._root);
+        this.sigType = this._io.readU1();
+        this.lenPubkeyStack = this._io.readU1();
+        this.pubkey = new PublicKey(this._io, this, this._root);
+      }
+
+      var DerSignature = ScriptSignature.DerSignature = (function() {
+        function DerSignature(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root || this;
+
+          this._read();
+        }
+        DerSignature.prototype._read = function() {
+          this.sequence = this._io.ensureFixedContents([48]);
+          this.lenSig = this._io.readU1();
+          this.sep1 = this._io.ensureFixedContents([2]);
+          this.lenSigR = this._io.readU1();
+          this.sigR = this._io.readBytes(this.lenSigR);
+          this.sep2 = this._io.ensureFixedContents([2]);
+          this.lenSigS = this._io.readU1();
+          this.sigS = this._io.readBytes(this.lenSigS);
+        }
+
+        /**
+         * &#39;r&#39; value&#39;s length.
+         */
+
+        /**
+         * &#39;r&#39; value of the ECDSA signature.
+         * @see {@link https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm|Source}
+         */
+
+        /**
+         * &#39;s&#39; value&#39;s length.
+         */
+
+        /**
+         * &#39;s&#39; value of the ECDSA signature.
+         * @see {@link https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm|Source}
+         */
+
+        return DerSignature;
+      })();
+
+      var PublicKey = ScriptSignature.PublicKey = (function() {
+        function PublicKey(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root || this;
+
+          this._read();
+        }
+        PublicKey.prototype._read = function() {
+          this.type = this._io.readU1();
+          this.x = this._io.readBytes(32);
+          this.y = this._io.readBytes(32);
+        }
+
+        /**
+         * &#39;x&#39; coordinate of the public key on the elliptic curve.
+         */
+
+        /**
+         * &#39;y&#39; coordinate of the public key on the elliptic curve.
+         */
+
+        return PublicKey;
+      })();
+
+      /**
+       * DER-encoded ECDSA signature.
+       * @see {@link https://en.wikipedia.org/wiki/X.690#DER_encoding
+       * https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
+       * |Source}
+       */
+
+      /**
+       * Type of signature.
+       */
+
+      /**
+       * Public key (bitcoin address of the recipient).
+       */
+
+      return ScriptSignature;
+    })();
 
     /**
      * Previous transaction hash.
@@ -388,78 +430,36 @@ var BitcoinTransaction = (function() {
     return Vin;
   })();
 
-  var ScriptSignature = BitcoinTransaction.ScriptSignature = (function() {
-    function ScriptSignature(_io, _parent, _root) {
+  var Vout = BitcoinTransaction.Vout = (function() {
+    function Vout(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
       this._root = _root || this;
 
       this._read();
     }
-    ScriptSignature.prototype._read = function() {
-      this.sigStackLen = this._io.readU1();
-      this.derSig = new DerSignature(this._io, this, this._root);
-      this.sigType = this._io.readU1();
-      this.pubkeyStackLen = this._io.readU1();
-      this.pubkey = new PublicKey(this._io, this, this._root);
+    Vout.prototype._read = function() {
+      this.amount = this._io.readU8le();
+      this.lenScript = this._io.readU1();
+      this.scriptPubKey = this._io.readBytes(this.lenScript);
     }
 
     /**
-     * DER-encoded ECDSA signature.
-     * @see {@link https://en.wikipedia.org/wiki/X.690#DER_encoding
-     * https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
+     * Number of Satoshis to be transfered.
+     */
+
+    /**
+     * ScriptPubKey&#39;s length.
+     */
+
+    /**
+     * ScriptPubKey.
+     * @see {@link https://en.bitcoin.it/wiki/Transaction#Output
+     * https://en.bitcoin.it/wiki/Script
      * |Source}
      */
 
-    /**
-     * Type of signature.
-     */
-
-    /**
-     * Public key (bitcoin address of the recipient).
-     */
-
-    return ScriptSignature;
-  })();
-
-  var DerSignature = BitcoinTransaction.DerSignature = (function() {
-    function DerSignature(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DerSignature.prototype._read = function() {
-      this.sequence = this._io.ensureFixedContents([48]);
-      this.sigLen = this._io.readU1();
-      this.sep1 = this._io.ensureFixedContents([2]);
-      this.sigRLen = this._io.readU1();
-      this.sigR = this._io.readBytes(this.sigRLen);
-      this.sep2 = this._io.ensureFixedContents([2]);
-      this.sigSLen = this._io.readU1();
-      this.sigS = this._io.readBytes(this.sigSLen);
-    }
-
-    /**
-     * &#39;r&#39; value&#39;s length.
-     */
-
-    /**
-     * &#39;r&#39; value of the ECDSA signature.
-     * @see {@link https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm|Source}
-     */
-
-    /**
-     * &#39;s&#39; value&#39;s length.
-     */
-
-    /**
-     * &#39;s&#39; value of the ECDSA signature.
-     * @see {@link https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm|Source}
-     */
-
-    return DerSignature;
+    return Vout;
   })();
 
   /**
