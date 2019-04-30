@@ -38,14 +38,63 @@ class Websocket < Kaitai::Struct::Struct
   end
 
   def _read
-    @dataframes = []
-    i = 0
-    begin
-      _ = Dataframe.new(@_io, self, @_root)
-      @dataframes << _
-      i += 1
-    end until _.finished
+    @initial_frame = InitialFrame.new(@_io, self, @_root)
+    if initial_frame.finished != true
+      @trailing_frames = []
+      i = 0
+      begin
+        _ = Dataframe.new(@_io, self, @_root)
+        @trailing_frames << _
+        i += 1
+      end until _.finished
+    end
     self
+  end
+  class InitialFrame < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @finished = @_io.read_bits_int(1) != 0
+      @reserved = @_io.read_bits_int(3)
+      @opcode = Kaitai::Struct::Stream::resolve_enum(OPCODE, @_io.read_bits_int(4))
+      @is_masked = @_io.read_bits_int(1) != 0
+      @len_payload_primary = @_io.read_bits_int(7)
+      @_io.align_to_byte
+      if len_payload_primary == 126
+        @len_payload_extended_1 = @_io.read_u2be
+      end
+      if len_payload_primary == 127
+        @len_payload_extended_2 = @_io.read_u4be
+      end
+      if is_masked
+        @mask_key = @_io.read_u4be
+      end
+      if opcode != :opcode_text
+        @payload_bytes = @_io.read_bytes(len_payload)
+      end
+      if opcode == :opcode_text
+        @payload_text = (@_io.read_bytes(len_payload)).force_encoding("UTF-8")
+      end
+      self
+    end
+    def len_payload
+      return @len_payload unless @len_payload.nil?
+      @len_payload = (len_payload_primary <= 125 ? len_payload_primary : (len_payload_primary == 126 ? len_payload_extended_1 : len_payload_extended_2))
+      @len_payload
+    end
+    attr_reader :finished
+    attr_reader :reserved
+    attr_reader :opcode
+    attr_reader :is_masked
+    attr_reader :len_payload_primary
+    attr_reader :len_payload_extended_1
+    attr_reader :len_payload_extended_2
+    attr_reader :mask_key
+    attr_reader :payload_bytes
+    attr_reader :payload_text
   end
   class Dataframe < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -69,10 +118,10 @@ class Websocket < Kaitai::Struct::Struct
       if is_masked
         @mask_key = @_io.read_u4be
       end
-      if _root.dataframes[0].opcode != :opcode_text
+      if _root.initial_frame.opcode != :opcode_text
         @payload_bytes = @_io.read_bytes(len_payload)
       end
-      if _root.dataframes[0].opcode == :opcode_text
+      if _root.initial_frame.opcode == :opcode_text
         @payload_text = (@_io.read_bytes(len_payload)).force_encoding("UTF-8")
       end
       self
@@ -93,5 +142,6 @@ class Websocket < Kaitai::Struct::Struct
     attr_reader :payload_bytes
     attr_reader :payload_text
   end
-  attr_reader :dataframes
+  attr_reader :initial_frame
+  attr_reader :trailing_frames
 end

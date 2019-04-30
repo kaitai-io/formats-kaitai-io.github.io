@@ -14,16 +14,81 @@ class Websocket extends \Kaitai\Struct\Struct {
     }
 
     private function _read() {
-        $this->_m_dataframes = [];
-        $i = 0;
-        do {
-            $_ = new \Websocket\Dataframe($this->_io, $this, $this->_root);
-            $this->_m_dataframes[] = $_;
-            $i++;
-        } while (!($_->finished()));
+        $this->_m_initialFrame = new \Websocket\InitialFrame($this->_io, $this, $this->_root);
+        if ($this->initialFrame()->finished() != true) {
+            $this->_m_trailingFrames = [];
+            $i = 0;
+            do {
+                $_ = new \Websocket\Dataframe($this->_io, $this, $this->_root);
+                $this->_m_trailingFrames[] = $_;
+                $i++;
+            } while (!($_->finished()));
+        }
     }
-    protected $_m_dataframes;
-    public function dataframes() { return $this->_m_dataframes; }
+    protected $_m_initialFrame;
+    protected $_m_trailingFrames;
+    public function initialFrame() { return $this->_m_initialFrame; }
+    public function trailingFrames() { return $this->_m_trailingFrames; }
+}
+
+namespace \Websocket;
+
+class InitialFrame extends \Kaitai\Struct\Struct {
+    public function __construct(\Kaitai\Struct\Stream $_io, \Websocket $_parent = null, \Websocket $_root = null) {
+        parent::__construct($_io, $_parent, $_root);
+        $this->_read();
+    }
+
+    private function _read() {
+        $this->_m_finished = $this->_io->readBitsInt(1) != 0;
+        $this->_m_reserved = $this->_io->readBitsInt(3);
+        $this->_m_opcode = $this->_io->readBitsInt(4);
+        $this->_m_isMasked = $this->_io->readBitsInt(1) != 0;
+        $this->_m_lenPayloadPrimary = $this->_io->readBitsInt(7);
+        $this->_io->alignToByte();
+        if ($this->lenPayloadPrimary() == 126) {
+            $this->_m_lenPayloadExtended1 = $this->_io->readU2be();
+        }
+        if ($this->lenPayloadPrimary() == 127) {
+            $this->_m_lenPayloadExtended2 = $this->_io->readU4be();
+        }
+        if ($this->isMasked()) {
+            $this->_m_maskKey = $this->_io->readU4be();
+        }
+        if ($this->opcode() != \Websocket\Opcode::TEXT) {
+            $this->_m_payloadBytes = $this->_io->readBytes($this->lenPayload());
+        }
+        if ($this->opcode() == \Websocket\Opcode::TEXT) {
+            $this->_m_payloadText = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenPayload()), "UTF-8");
+        }
+    }
+    protected $_m_lenPayload;
+    public function lenPayload() {
+        if ($this->_m_lenPayload !== null)
+            return $this->_m_lenPayload;
+        $this->_m_lenPayload = ($this->lenPayloadPrimary() <= 125 ? $this->lenPayloadPrimary() : ($this->lenPayloadPrimary() == 126 ? $this->lenPayloadExtended1() : $this->lenPayloadExtended2()));
+        return $this->_m_lenPayload;
+    }
+    protected $_m_finished;
+    protected $_m_reserved;
+    protected $_m_opcode;
+    protected $_m_isMasked;
+    protected $_m_lenPayloadPrimary;
+    protected $_m_lenPayloadExtended1;
+    protected $_m_lenPayloadExtended2;
+    protected $_m_maskKey;
+    protected $_m_payloadBytes;
+    protected $_m_payloadText;
+    public function finished() { return $this->_m_finished; }
+    public function reserved() { return $this->_m_reserved; }
+    public function opcode() { return $this->_m_opcode; }
+    public function isMasked() { return $this->_m_isMasked; }
+    public function lenPayloadPrimary() { return $this->_m_lenPayloadPrimary; }
+    public function lenPayloadExtended1() { return $this->_m_lenPayloadExtended1; }
+    public function lenPayloadExtended2() { return $this->_m_lenPayloadExtended2; }
+    public function maskKey() { return $this->_m_maskKey; }
+    public function payloadBytes() { return $this->_m_payloadBytes; }
+    public function payloadText() { return $this->_m_payloadText; }
 }
 
 namespace \Websocket;
@@ -50,10 +115,10 @@ class Dataframe extends \Kaitai\Struct\Struct {
         if ($this->isMasked()) {
             $this->_m_maskKey = $this->_io->readU4be();
         }
-        if ($this->_root()->dataframes()[0]->opcode() != \Websocket\Opcode::TEXT) {
+        if ($this->_root()->initialFrame()->opcode() != \Websocket\Opcode::TEXT) {
             $this->_m_payloadBytes = $this->_io->readBytes($this->lenPayload());
         }
-        if ($this->_root()->dataframes()[0]->opcode() == \Websocket\Opcode::TEXT) {
+        if ($this->_root()->initialFrame()->opcode() == \Websocket\Opcode::TEXT) {
             $this->_m_payloadText = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenPayload()), "UTF-8");
         }
     }

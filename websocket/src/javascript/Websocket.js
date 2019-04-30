@@ -60,14 +60,60 @@ var Websocket = (function() {
     this._read();
   }
   Websocket.prototype._read = function() {
-    this.dataframes = []
-    var i = 0;
-    do {
-      var _ = new Dataframe(this._io, this, this._root);
-      this.dataframes.push(_);
-      i++;
-    } while (!(_.finished));
+    this.initialFrame = new InitialFrame(this._io, this, this._root);
+    if (this.initialFrame.finished != true) {
+      this.trailingFrames = []
+      var i = 0;
+      do {
+        var _ = new Dataframe(this._io, this, this._root);
+        this.trailingFrames.push(_);
+        i++;
+      } while (!(_.finished));
+    }
   }
+
+  var InitialFrame = Websocket.InitialFrame = (function() {
+    function InitialFrame(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    InitialFrame.prototype._read = function() {
+      this.finished = this._io.readBitsInt(1) != 0;
+      this.reserved = this._io.readBitsInt(3);
+      this.opcode = this._io.readBitsInt(4);
+      this.isMasked = this._io.readBitsInt(1) != 0;
+      this.lenPayloadPrimary = this._io.readBitsInt(7);
+      this._io.alignToByte();
+      if (this.lenPayloadPrimary == 126) {
+        this.lenPayloadExtended1 = this._io.readU2be();
+      }
+      if (this.lenPayloadPrimary == 127) {
+        this.lenPayloadExtended2 = this._io.readU4be();
+      }
+      if (this.isMasked) {
+        this.maskKey = this._io.readU4be();
+      }
+      if (this.opcode != Websocket.Opcode.TEXT) {
+        this.payloadBytes = this._io.readBytes(this.lenPayload);
+      }
+      if (this.opcode == Websocket.Opcode.TEXT) {
+        this.payloadText = KaitaiStream.bytesToStr(this._io.readBytes(this.lenPayload), "UTF-8");
+      }
+    }
+    Object.defineProperty(InitialFrame.prototype, 'lenPayload', {
+      get: function() {
+        if (this._m_lenPayload !== undefined)
+          return this._m_lenPayload;
+        this._m_lenPayload = (this.lenPayloadPrimary <= 125 ? this.lenPayloadPrimary : (this.lenPayloadPrimary == 126 ? this.lenPayloadExtended1 : this.lenPayloadExtended2));
+        return this._m_lenPayload;
+      }
+    });
+
+    return InitialFrame;
+  })();
 
   var Dataframe = Websocket.Dataframe = (function() {
     function Dataframe(_io, _parent, _root) {
@@ -93,10 +139,10 @@ var Websocket = (function() {
       if (this.isMasked) {
         this.maskKey = this._io.readU4be();
       }
-      if (this._root.dataframes[0].opcode != Websocket.Opcode.TEXT) {
+      if (this._root.initialFrame.opcode != Websocket.Opcode.TEXT) {
         this.payloadBytes = this._io.readBytes(this.lenPayload);
       }
-      if (this._root.dataframes[0].opcode == Websocket.Opcode.TEXT) {
+      if (this._root.initialFrame.opcode == Websocket.Opcode.TEXT) {
         this.payloadText = KaitaiStream.bytesToStr(this._io.readBytes(this.lenPayload), "UTF-8");
       }
     }

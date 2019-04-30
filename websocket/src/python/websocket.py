@@ -38,14 +38,56 @@ class Websocket(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.dataframes = []
-        i = 0
-        while True:
-            _ = self._root.Dataframe(self._io, self, self._root)
-            self.dataframes.append(_)
-            if _.finished:
-                break
-            i += 1
+        self.initial_frame = self._root.InitialFrame(self._io, self, self._root)
+        if self.initial_frame.finished != True:
+            self.trailing_frames = []
+            i = 0
+            while True:
+                _ = self._root.Dataframe(self._io, self, self._root)
+                self.trailing_frames.append(_)
+                if _.finished:
+                    break
+                i += 1
+
+
+    class InitialFrame(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.finished = self._io.read_bits_int(1) != 0
+            self.reserved = self._io.read_bits_int(3)
+            self.opcode = self._root.Opcode(self._io.read_bits_int(4))
+            self.is_masked = self._io.read_bits_int(1) != 0
+            self.len_payload_primary = self._io.read_bits_int(7)
+            self._io.align_to_byte()
+            if self.len_payload_primary == 126:
+                self.len_payload_extended_1 = self._io.read_u2be()
+
+            if self.len_payload_primary == 127:
+                self.len_payload_extended_2 = self._io.read_u4be()
+
+            if self.is_masked:
+                self.mask_key = self._io.read_u4be()
+
+            if self.opcode != self._root.Opcode.text:
+                self.payload_bytes = self._io.read_bytes(self.len_payload)
+
+            if self.opcode == self._root.Opcode.text:
+                self.payload_text = (self._io.read_bytes(self.len_payload)).decode(u"UTF-8")
+
+
+        @property
+        def len_payload(self):
+            if hasattr(self, '_m_len_payload'):
+                return self._m_len_payload if hasattr(self, '_m_len_payload') else None
+
+            self._m_len_payload = (self.len_payload_primary if self.len_payload_primary <= 125 else (self.len_payload_extended_1 if self.len_payload_primary == 126 else self.len_payload_extended_2))
+            return self._m_len_payload if hasattr(self, '_m_len_payload') else None
+
 
     class Dataframe(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -70,10 +112,10 @@ class Websocket(KaitaiStruct):
             if self.is_masked:
                 self.mask_key = self._io.read_u4be()
 
-            if self._root.dataframes[0].opcode != self._root.Opcode.text:
+            if self._root.initial_frame.opcode != self._root.Opcode.text:
                 self.payload_bytes = self._io.read_bytes(self.len_payload)
 
-            if self._root.dataframes[0].opcode == self._root.Opcode.text:
+            if self._root.initial_frame.opcode == self._root.Opcode.text:
                 self.payload_text = (self._io.read_bytes(self.len_payload)).decode(u"UTF-8")
 
 

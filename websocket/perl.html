@@ -295,16 +295,134 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self-&gt;{dataframes} = ();
-    do {
-        $_ = Websocket::Dataframe-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-        push @{$self-&gt;{dataframes}}, $_;
-    } until ($_-&gt;finished());
+    $self-&gt;{initial_frame} = Websocket::InitialFrame-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    if ($self-&gt;initial_frame()-&gt;finished() != 1) {
+        $self-&gt;{trailing_frames} = ();
+        do {
+            $_ = Websocket::Dataframe-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+            push @{$self-&gt;{trailing_frames}}, $_;
+        } until ($_-&gt;finished());
+    }
 }
 
-sub dataframes {
+sub initial_frame {
     my ($self) = @_;
-    return $self-&gt;{dataframes};
+    return $self-&gt;{initial_frame};
+}
+
+sub trailing_frames {
+    my ($self) = @_;
+    return $self-&gt;{trailing_frames};
+}
+
+########################################################################
+package Websocket::InitialFrame;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{finished} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{reserved} = $self-&gt;{_io}-&gt;read_bits_int(3);
+    $self-&gt;{opcode} = $self-&gt;{_io}-&gt;read_bits_int(4);
+    $self-&gt;{is_masked} = $self-&gt;{_io}-&gt;read_bits_int(1);
+    $self-&gt;{len_payload_primary} = $self-&gt;{_io}-&gt;read_bits_int(7);
+    $self-&gt;{_io}-&gt;align_to_byte();
+    if ($self-&gt;len_payload_primary() == 126) {
+        $self-&gt;{len_payload_extended_1} = $self-&gt;{_io}-&gt;read_u2be();
+    }
+    if ($self-&gt;len_payload_primary() == 127) {
+        $self-&gt;{len_payload_extended_2} = $self-&gt;{_io}-&gt;read_u4be();
+    }
+    if ($self-&gt;is_masked()) {
+        $self-&gt;{mask_key} = $self-&gt;{_io}-&gt;read_u4be();
+    }
+    if ($self-&gt;opcode() != $OPCODE_TEXT) {
+        $self-&gt;{payload_bytes} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_payload());
+    }
+    if ($self-&gt;opcode() == $OPCODE_TEXT) {
+        $self-&gt;{payload_text} = Encode::decode(&quot;UTF-8&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_payload()));
+    }
+}
+
+sub len_payload {
+    my ($self) = @_;
+    return $self-&gt;{len_payload} if ($self-&gt;{len_payload});
+    $self-&gt;{len_payload} = ($self-&gt;len_payload_primary() &lt;= 125 ? $self-&gt;len_payload_primary() : ($self-&gt;len_payload_primary() == 126 ? $self-&gt;len_payload_extended_1() : $self-&gt;len_payload_extended_2()));
+    return $self-&gt;{len_payload};
+}
+
+sub finished {
+    my ($self) = @_;
+    return $self-&gt;{finished};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self-&gt;{reserved};
+}
+
+sub opcode {
+    my ($self) = @_;
+    return $self-&gt;{opcode};
+}
+
+sub is_masked {
+    my ($self) = @_;
+    return $self-&gt;{is_masked};
+}
+
+sub len_payload_primary {
+    my ($self) = @_;
+    return $self-&gt;{len_payload_primary};
+}
+
+sub len_payload_extended_1 {
+    my ($self) = @_;
+    return $self-&gt;{len_payload_extended_1};
+}
+
+sub len_payload_extended_2 {
+    my ($self) = @_;
+    return $self-&gt;{len_payload_extended_2};
+}
+
+sub mask_key {
+    my ($self) = @_;
+    return $self-&gt;{mask_key};
+}
+
+sub payload_bytes {
+    my ($self) = @_;
+    return $self-&gt;{payload_bytes};
+}
+
+sub payload_text {
+    my ($self) = @_;
+    return $self-&gt;{payload_text};
 }
 
 ########################################################################
@@ -352,10 +470,10 @@ sub _read {
     if ($self-&gt;is_masked()) {
         $self-&gt;{mask_key} = $self-&gt;{_io}-&gt;read_u4be();
     }
-    if (@{$self-&gt;_root()-&gt;dataframes()}[0]-&gt;opcode() != $OPCODE_TEXT) {
+    if ($self-&gt;_root()-&gt;initial_frame()-&gt;opcode() != $OPCODE_TEXT) {
         $self-&gt;{payload_bytes} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_payload());
     }
-    if (@{$self-&gt;_root()-&gt;dataframes()}[0]-&gt;opcode() == $OPCODE_TEXT) {
+    if ($self-&gt;_root()-&gt;initial_frame()-&gt;opcode() == $OPCODE_TEXT) {
         $self-&gt;{payload_text} = Encode::decode(&quot;UTF-8&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;len_payload()));
     }
 }

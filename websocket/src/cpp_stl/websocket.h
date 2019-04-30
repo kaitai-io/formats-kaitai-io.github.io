@@ -21,6 +21,7 @@
 class websocket_t : public kaitai::kstruct {
 
 public:
+    class initial_frame_t;
     class dataframe_t;
 
     enum opcode_t {
@@ -49,6 +50,84 @@ private:
 
 public:
     ~websocket_t();
+
+    class initial_frame_t : public kaitai::kstruct {
+
+    public:
+
+        initial_frame_t(kaitai::kstream* p__io, websocket_t* p__parent = 0, websocket_t* p__root = 0);
+
+    private:
+        void _read();
+
+    public:
+        ~initial_frame_t();
+
+    private:
+        bool f_len_payload;
+        int32_t m_len_payload;
+
+    public:
+        int32_t len_payload();
+
+    private:
+        bool m_finished;
+        uint64_t m_reserved;
+        opcode_t m_opcode;
+        bool m_is_masked;
+        uint64_t m_len_payload_primary;
+        uint16_t m_len_payload_extended_1;
+        bool n_len_payload_extended_1;
+
+    public:
+        bool _is_null_len_payload_extended_1() { len_payload_extended_1(); return n_len_payload_extended_1; };
+
+    private:
+        uint32_t m_len_payload_extended_2;
+        bool n_len_payload_extended_2;
+
+    public:
+        bool _is_null_len_payload_extended_2() { len_payload_extended_2(); return n_len_payload_extended_2; };
+
+    private:
+        uint32_t m_mask_key;
+        bool n_mask_key;
+
+    public:
+        bool _is_null_mask_key() { mask_key(); return n_mask_key; };
+
+    private:
+        std::string m_payload_bytes;
+        bool n_payload_bytes;
+
+    public:
+        bool _is_null_payload_bytes() { payload_bytes(); return n_payload_bytes; };
+
+    private:
+        std::string m_payload_text;
+        bool n_payload_text;
+
+    public:
+        bool _is_null_payload_text() { payload_text(); return n_payload_text; };
+
+    private:
+        websocket_t* m__root;
+        websocket_t* m__parent;
+
+    public:
+        bool finished() const { return m_finished; }
+        uint64_t reserved() const { return m_reserved; }
+        opcode_t opcode() const { return m_opcode; }
+        bool is_masked() const { return m_is_masked; }
+        uint64_t len_payload_primary() const { return m_len_payload_primary; }
+        uint16_t len_payload_extended_1() const { return m_len_payload_extended_1; }
+        uint32_t len_payload_extended_2() const { return m_len_payload_extended_2; }
+        uint32_t mask_key() const { return m_mask_key; }
+        std::string payload_bytes() const { return m_payload_bytes; }
+        std::string payload_text() const { return m_payload_text; }
+        websocket_t* _root() const { return m__root; }
+        websocket_t* _parent() const { return m__parent; }
+    };
 
     class dataframe_t : public kaitai::kstruct {
 
@@ -129,12 +208,20 @@ public:
     };
 
 private:
-    std::vector<dataframe_t*>* m_dataframes;
+    initial_frame_t* m_initial_frame;
+    std::vector<dataframe_t*>* m_trailing_frames;
+    bool n_trailing_frames;
+
+public:
+    bool _is_null_trailing_frames() { trailing_frames(); return n_trailing_frames; };
+
+private:
     websocket_t* m__root;
     kaitai::kstruct* m__parent;
 
 public:
-    std::vector<dataframe_t*>* dataframes() const { return m_dataframes; }
+    initial_frame_t* initial_frame() const { return m_initial_frame; }
+    std::vector<dataframe_t*>* trailing_frames() const { return m_trailing_frames; }
     websocket_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
 };
