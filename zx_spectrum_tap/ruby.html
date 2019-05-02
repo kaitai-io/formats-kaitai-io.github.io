@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>WebSocket: Lua parsing library</title>
+  <title>ZX Spectrum tape file format: Ruby parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -82,30 +82,34 @@ section#format-index .row {
     <div class="container">
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
-        <li>Networking Protocols</li>
-        <li class="active">WebSocket</li>
+        <li>Filesystems</li>
+        <li class="active">ZX Spectrum tape file format</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>WebSocket:
+        <h1>ZX Spectrum tape file format:
             
-            Lua parsing library
+            Ruby parsing library
             
         </h1>
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>The WebSocket protocol establishes a two-way communication channel via TCP.
-Messages are made up of one or more dataframes, and are delineated by
-frames with the <code>fin</code> bit set.</p>
-</p>
+                <p></p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
                     
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        tap
+                    </div>
                     
                     
                     <div class="panel-heading">
@@ -128,17 +132,17 @@ frames with the <code>fin</code> bit set.</p>
                             
                             
                             
-                            <li><a href="https://tools.ietf.org/html/rfc6455">RFC 6455</a></li>
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/801">PRONOM fmt/801</a></li>
                             
                             
                             
                             
                             
-                            
-                            
-                            
-                            
-                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/TAP_(ZX_Spectrum)">TAP (ZX Spectrum) in Just Solve the File Format Problem</a></li>
                             
                         </ul>
                     </div>
@@ -150,7 +154,7 @@ frames with the <code>fin</code> bit set.</p>
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of WebSocket
+            This page hosts a formal specification of ZX Spectrum tape file format
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -161,61 +165,83 @@ frames with the <code>fin</code> bit set.</p>
                 
                 <li>
                 
-                <a href="index.html" title="WebSocket parsing Overview library">Overview</a></li>
+                <a href="index.html" title="ZX Spectrum tape file format parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="WebSocket parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title="ZX Spectrum tape file format parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="WebSocket parsing C# library">C#</a></li>
+                <a href="csharp.html" title="ZX Spectrum tape file format parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="WebSocket parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title="ZX Spectrum tape file format parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="WebSocket parsing Java library">Java</a></li>
+                <a href="java.html" title="ZX Spectrum tape file format parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title="WebSocket parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title="ZX Spectrum tape file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="ZX Spectrum tape file format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="ZX Spectrum tape file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="ZX Spectrum tape file format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="ZX Spectrum tape file format parsing Python library">Python</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="lua.html" title="WebSocket parsing Lua library">Lua</a></li>
-                
-                
-                <li>
-                
-                <a href="perl.html" title="WebSocket parsing Perl library">Perl</a></li>
-                
-                
-                <li>
-                
-                <a href="php.html" title="WebSocket parsing PHP library">PHP</a></li>
-                
-                
-                <li>
-                
-                <a href="python.html" title="WebSocket parsing Python library">Python</a></li>
-                
-                
-                <li>
-                
-                <a href="ruby.html" title="WebSocket parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title="ZX Spectrum tape file format parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
         </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="ruby">data = ZxSpectrumTap.from_file("path/to/local/file.tap")</code></pre>
+
+<p>Or parse structure from a string of bytes:</p>
+
+<pre><code class="ruby">bytes = "\x00\x01\x02..."
+data = ZxSpectrumTap.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="ruby">data.block # => get block</code></pre>
+
     </div>
 </section>
 
@@ -224,10 +250,173 @@ frames with the <code>fin</code> bit set.</p>
     <div class="container">
         <h2>
             
-            Lua source code to parse WebSocket
+            Ruby source code to parse ZX Spectrum tape file format
             
         </h2>
 
+        
+
+        <h3>zx_spectrum_tap.rb</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/ruby/zx_spectrum_tap.rb" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+require &#39;kaitai/struct/struct&#39;
+
+unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
+  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
+end
+
+
+##
+# @see https://faqwiki.zxnet.co.uk/wiki/TAP_format Source
+class ZxSpectrumTap &lt; Kaitai::Struct::Struct
+
+  FLAG_ENUM = {
+    0 =&gt; :flag_enum_header,
+    255 =&gt; :flag_enum_data,
+  }
+  I__FLAG_ENUM = FLAG_ENUM.invert
+
+  HEADER_TYPE_ENUM = {
+    0 =&gt; :header_type_enum_program,
+    1 =&gt; :header_type_enum_num_array,
+    2 =&gt; :header_type_enum_char_array,
+    3 =&gt; :header_type_enum_bytes,
+  }
+  I__HEADER_TYPE_ENUM = HEADER_TYPE_ENUM.invert
+  def initialize(_io, _parent = nil, _root = self)
+    super(_io, _parent, _root)
+    _read
+  end
+
+  def _read
+    @block = []
+    i = 0
+    while not @_io.eof?
+      @block &lt;&lt; Block.new(@_io, self, @_root)
+      i += 1
+    end
+    self
+  end
+  class Block &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len_block = @_io.read_u2le
+      @flag = Kaitai::Struct::Stream::resolve_enum(FLAG_ENUM, @_io.read_u1)
+      if  ((len_block == 19) &amp;&amp; (flag == :flag_enum_header)) 
+        @header = Header.new(@_io, self, @_root)
+      end
+      if len_block == 19
+        @data = @_io.read_bytes((header.len_data + 4))
+      end
+      if flag == :flag_enum_data
+        @headerless_data = @_io.read_bytes((len_block - 1))
+      end
+      self
+    end
+    attr_reader :len_block
+    attr_reader :flag
+    attr_reader :header
+    attr_reader :data
+    attr_reader :headerless_data
+  end
+  class ProgramParams &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @autostart_line = @_io.read_u2le
+      @len_program = @_io.read_u2le
+      self
+    end
+    attr_reader :autostart_line
+    attr_reader :len_program
+  end
+  class BytesParams &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @start_address = @_io.read_u2le
+      @reserved = @_io.ensure_fixed_contents([0, 128].pack(&#39;C*&#39;))
+      self
+    end
+    attr_reader :start_address
+    attr_reader :reserved
+  end
+  class Header &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @header_type = Kaitai::Struct::Stream::resolve_enum(HEADER_TYPE_ENUM, @_io.read_u1)
+      @filename = Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(10), 32)
+      @len_data = @_io.read_u2le
+      case header_type
+      when :header_type_enum_program
+        @params = ProgramParams.new(@_io, self, @_root)
+      when :header_type_enum_num_arry
+        @params = ArrayParams.new(@_io, self, @_root)
+      when :header_type_enum_char_arry
+        @params = ArrayParams.new(@_io, self, @_root)
+      when :header_type_enum_bytes
+        @params = BytesParams.new(@_io, self, @_root)
+      end
+      @checksum = @_io.read_u1
+      self
+    end
+    attr_reader :header_type
+    attr_reader :filename
+    attr_reader :len_data
+    attr_reader :params
+
+    ##
+    # Bitwise XOR of all bytes including the flag byte
+    attr_reader :checksum
+  end
+  class ArrayParams &lt; Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @reserved = @_io.read_u1
+      @var_name = @_io.read_u1
+      @reserved1 = @_io.ensure_fixed_contents([0, 128].pack(&#39;C*&#39;))
+      self
+    end
+    attr_reader :reserved
+
+    ##
+    # Variable name (1..26 meaning A$..Z$ +192)
+    attr_reader :var_name
+    attr_reader :reserved1
+  end
+  attr_reader :block
+end
+</code></pre>
+            
+        </div>
         
     </div>
 </section>

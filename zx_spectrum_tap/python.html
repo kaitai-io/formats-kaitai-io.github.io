@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>WebSocket: Lua parsing library</title>
+  <title>ZX Spectrum tape file format: Python parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -82,30 +82,34 @@ section#format-index .row {
     <div class="container">
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
-        <li>Networking Protocols</li>
-        <li class="active">WebSocket</li>
+        <li>Filesystems</li>
+        <li class="active">ZX Spectrum tape file format</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>WebSocket:
+        <h1>ZX Spectrum tape file format:
             
-            Lua parsing library
+            Python parsing library
             
         </h1>
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>The WebSocket protocol establishes a two-way communication channel via TCP.
-Messages are made up of one or more dataframes, and are delineated by
-frames with the <code>fin</code> bit set.</p>
-</p>
+                <p></p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
                     
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        tap
+                    </div>
                     
                     
                     <div class="panel-heading">
@@ -128,17 +132,17 @@ frames with the <code>fin</code> bit set.</p>
                             
                             
                             
-                            <li><a href="https://tools.ietf.org/html/rfc6455">RFC 6455</a></li>
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/801">PRONOM fmt/801</a></li>
                             
                             
                             
                             
                             
-                            
-                            
-                            
-                            
-                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/TAP_(ZX_Spectrum)">TAP (ZX Spectrum) in Just Solve the File Format Problem</a></li>
                             
                         </ul>
                     </div>
@@ -150,7 +154,7 @@ frames with the <code>fin</code> bit set.</p>
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of WebSocket
+            This page hosts a formal specification of ZX Spectrum tape file format
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -161,61 +165,85 @@ frames with the <code>fin</code> bit set.</p>
                 
                 <li>
                 
-                <a href="index.html" title="WebSocket parsing Overview library">Overview</a></li>
+                <a href="index.html" title="ZX Spectrum tape file format parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="WebSocket parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title="ZX Spectrum tape file format parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="WebSocket parsing C# library">C#</a></li>
+                <a href="csharp.html" title="ZX Spectrum tape file format parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="WebSocket parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title="ZX Spectrum tape file format parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="WebSocket parsing Java library">Java</a></li>
+                <a href="java.html" title="ZX Spectrum tape file format parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title="WebSocket parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title="ZX Spectrum tape file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="ZX Spectrum tape file format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="ZX Spectrum tape file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="ZX Spectrum tape file format parsing PHP library">PHP</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="lua.html" title="WebSocket parsing Lua library">Lua</a></li>
+                <a href="python.html" title="ZX Spectrum tape file format parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title="WebSocket parsing Perl library">Perl</a></li>
-                
-                
-                <li>
-                
-                <a href="php.html" title="WebSocket parsing PHP library">PHP</a></li>
-                
-                
-                <li>
-                
-                <a href="python.html" title="WebSocket parsing Python library">Python</a></li>
-                
-                
-                <li>
-                
-                <a href="ruby.html" title="WebSocket parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title="ZX Spectrum tape file format parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
         </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<pre><code class="python">data = ZxSpectrumTap.from_file("path/to/local/file.tap")</code></pre>
+
+<p>Or parse structure from a bytes:</p>
+
+<pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
+
+raw = b"\x00\x01\x02..."
+data = ZxSpectrumTap(KaitaiStream(BytesIO(raw)))</code></pre>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+<pre><code class="python">data.block # => get block</code></pre>
+
     </div>
 </section>
 
@@ -224,10 +252,147 @@ frames with the <code>fin</code> bit set.</p>
     <div class="container">
         <h2>
             
-            Lua source code to parse WebSocket
+            Python source code to parse ZX Spectrum tape file format
             
         </h2>
 
+        
+
+        <h3>zx_spectrum_tap.py</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/python/zx_spectrum_tap.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+from pkg_resources import parse_version
+from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
+from enum import Enum
+
+
+if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
+    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
+
+class ZxSpectrumTap(KaitaiStruct):
+    &quot;&quot;&quot;
+    .. seealso::
+       Source - https://faqwiki.zxnet.co.uk/wiki/TAP_format
+    &quot;&quot;&quot;
+
+    class FlagEnum(Enum):
+        header = 0
+        data = 255
+
+    class HeaderTypeEnum(Enum):
+        program = 0
+        num_array = 1
+        char_array = 2
+        bytes = 3
+    def __init__(self, _io, _parent=None, _root=None):
+        self._io = _io
+        self._parent = _parent
+        self._root = _root if _root else self
+        self._read()
+
+    def _read(self):
+        self.block = []
+        i = 0
+        while not self._io.is_eof():
+            self.block.append(self._root.Block(self._io, self, self._root))
+            i += 1
+
+
+    class Block(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.len_block = self._io.read_u2le()
+            self.flag = self._root.FlagEnum(self._io.read_u1())
+            if  ((self.len_block == 19) and (self.flag == self._root.FlagEnum.header)) :
+                self.header = self._root.Header(self._io, self, self._root)
+
+            if self.len_block == 19:
+                self.data = self._io.read_bytes((self.header.len_data + 4))
+
+            if self.flag == self._root.FlagEnum.data:
+                self.headerless_data = self._io.read_bytes((self.len_block - 1))
+
+
+
+    class ProgramParams(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.autostart_line = self._io.read_u2le()
+            self.len_program = self._io.read_u2le()
+
+
+    class BytesParams(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.start_address = self._io.read_u2le()
+            self.reserved = self._io.ensure_fixed_contents(b&quot;\x00\x80&quot;)
+
+
+    class Header(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.header_type = self._root.HeaderTypeEnum(self._io.read_u1())
+            self.filename = KaitaiStream.bytes_strip_right(self._io.read_bytes(10), 32)
+            self.len_data = self._io.read_u2le()
+            _on = self.header_type
+            if _on == self._root.HeaderTypeEnum.program:
+                self.params = self._root.ProgramParams(self._io, self, self._root)
+            elif _on == self._root.HeaderTypeEnum.num_arry:
+                self.params = self._root.ArrayParams(self._io, self, self._root)
+            elif _on == self._root.HeaderTypeEnum.char_arry:
+                self.params = self._root.ArrayParams(self._io, self, self._root)
+            elif _on == self._root.HeaderTypeEnum.bytes:
+                self.params = self._root.BytesParams(self._io, self, self._root)
+            self.checksum = self._io.read_u1()
+
+
+    class ArrayParams(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.reserved = self._io.read_u1()
+            self.var_name = self._io.read_u1()
+            self.reserved1 = self._io.ensure_fixed_contents(b&quot;\x00\x80&quot;)
+
+
+
+</code></pre>
+            
+        </div>
         
     </div>
 </section>

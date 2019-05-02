@@ -1,0 +1,88 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__zx_spectrum_tap {
+		label="ZxSpectrumTap";
+		graph[style=dotted];
+
+		zx_spectrum_tap__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="block_pos">0</TD><TD PORT="block_size">...</TD><TD>Block</TD><TD PORT="block_type">block</TD></TR>
+			<TR><TD COLSPAN="4" PORT="block__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__block {
+			label="ZxSpectrumTap::Block";
+			graph[style=dotted];
+
+			block__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_block_pos">0</TD><TD PORT="len_block_size">2</TD><TD>u2le</TD><TD PORT="len_block_type">len_block</TD></TR>
+				<TR><TD PORT="flag_pos">2</TD><TD PORT="flag_size">1</TD><TD>u1→FlagEnum</TD><TD PORT="flag_type">flag</TD></TR>
+				<TR><TD PORT="header_pos">3</TD><TD PORT="header_size">...</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="data_pos">...</TD><TD PORT="data_size">(header.len_data + 4)</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+				<TR><TD PORT="headerless_data_pos">...</TD><TD PORT="headerless_data_size">(len_block - 1)</TD><TD></TD><TD PORT="headerless_data_type">headerless_data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__program_params {
+			label="ZxSpectrumTap::ProgramParams";
+			graph[style=dotted];
+
+			program_params__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="autostart_line_pos">0</TD><TD PORT="autostart_line_size">2</TD><TD>u2le</TD><TD PORT="autostart_line_type">autostart_line</TD></TR>
+				<TR><TD PORT="len_program_pos">2</TD><TD PORT="len_program_size">2</TD><TD>u2le</TD><TD PORT="len_program_type">len_program</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bytes_params {
+			label="ZxSpectrumTap::BytesParams";
+			graph[style=dotted];
+
+			bytes_params__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="start_address_pos">0</TD><TD PORT="start_address_size">2</TD><TD>u2le</TD><TD PORT="start_address_type">start_address</TD></TR>
+				<TR><TD PORT="reserved_pos">2</TD><TD PORT="reserved_size">2</TD><TD>00 80</TD><TD PORT="reserved_type">reserved</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__header {
+			label="ZxSpectrumTap::Header";
+			graph[style=dotted];
+
+			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_type_pos">0</TD><TD PORT="header_type_size">1</TD><TD>u1→HeaderTypeEnum</TD><TD PORT="header_type_type">header_type</TD></TR>
+				<TR><TD PORT="filename_pos">1</TD><TD PORT="filename_size">10</TD><TD></TD><TD PORT="filename_type">filename</TD></TR>
+				<TR><TD PORT="len_data_pos">11</TD><TD PORT="len_data_size">2</TD><TD>u2le</TD><TD PORT="len_data_type">len_data</TD></TR>
+				<TR><TD PORT="params_pos">13</TD><TD PORT="params_size">...</TD><TD>switch (header_type)</TD><TD PORT="params_type">params</TD></TR>
+				<TR><TD PORT="checksum_pos">...</TD><TD PORT="checksum_size">1</TD><TD>u1</TD><TD PORT="checksum_type">checksum</TD></TR>
+			</TABLE>>];
+header__seq_params_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:header_type_enum_program</TD><TD PORT="case0">ProgramParams</TD></TR>
+	<TR><TD>:header_type_enum_num_arry</TD><TD PORT="case1">ArrayParams</TD></TR>
+	<TR><TD>:header_type_enum_char_arry</TD><TD PORT="case2">ArrayParams</TD></TR>
+	<TR><TD>:header_type_enum_bytes</TD><TD PORT="case3">BytesParams</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__array_params {
+			label="ZxSpectrumTap::ArrayParams";
+			graph[style=dotted];
+
+			array_params__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">1</TD><TD>u1</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="var_name_pos">1</TD><TD PORT="var_name_size">1</TD><TD>u1</TD><TD PORT="var_name_type">var_name</TD></TR>
+				<TR><TD PORT="reserved1_pos">2</TD><TD PORT="reserved1_size">2</TD><TD>00 80</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+			</TABLE>>];
+		}
+	}
+	zx_spectrum_tap__seq:block_type -> block__seq [style=bold];
+	block__seq:header_type -> header__seq [style=bold];
+	header__seq:len_data_type -> block__seq:data_size [color="#404040"];
+	block__seq:len_block_type -> block__seq:headerless_data_size [color="#404040"];
+	header__seq:params_type -> header__seq_params_switch [style=bold];
+	header__seq_params_switch:case0 -> program_params__seq [style=bold];
+	header__seq_params_switch:case1 -> array_params__seq [style=bold];
+	header__seq_params_switch:case2 -> array_params__seq [style=bold];
+	header__seq_params_switch:case3 -> bytes_params__seq [style=bold];
+	header__seq:header_type_type -> header__seq:params_type [color="#404040"];
+}
