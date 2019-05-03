@@ -270,6 +270,17 @@ section#format-index .row {
 				&lt;TR&gt;&lt;TD PORT=&quot;body_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;body_size&quot;&gt;header.compressed_size&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;body_type&quot;&gt;body&lt;/TD&gt;&lt;/TR&gt;
 			&lt;/TABLE&gt;&gt;];
 		}
+		subgraph cluster__data_descriptor {
+			label=&quot;Zip::DataDescriptor&quot;;
+			graph[style=dotted];
+
+			data_descriptor__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;crc32_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;crc32_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;crc32_type&quot;&gt;crc32&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;compressed_size_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;compressed_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;compressed_size_type&quot;&gt;compressed_size&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;uncompressed_size_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;uncompressed_size_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;uncompressed_size_type&quot;&gt;uncompressed_size&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
 		subgraph cluster__extra_field {
 			label=&quot;Zip::ExtraField&quot;;
 			graph[style=dotted];
@@ -395,6 +406,7 @@ pk_section__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER
 	&lt;TR&gt;&lt;TD&gt;513&lt;/TD&gt;&lt;TD PORT=&quot;case0&quot;&gt;CentralDirEntry&lt;/TD&gt;&lt;/TR&gt;
 	&lt;TR&gt;&lt;TD&gt;1027&lt;/TD&gt;&lt;TD PORT=&quot;case1&quot;&gt;LocalFile&lt;/TD&gt;&lt;/TR&gt;
 	&lt;TR&gt;&lt;TD&gt;1541&lt;/TD&gt;&lt;TD PORT=&quot;case2&quot;&gt;EndOfCentralDir&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;2055&lt;/TD&gt;&lt;TD PORT=&quot;case3&quot;&gt;DataDescriptor&lt;/TD&gt;&lt;/TR&gt;
 &lt;/TABLE&gt;&gt;];
 		}
 		subgraph cluster__extras {
@@ -468,6 +480,7 @@ pk_section__seq_body_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER
 	pk_section__seq_body_switch:case0 -&gt; central_dir_entry__seq [style=bold];
 	pk_section__seq_body_switch:case1 -&gt; local_file__seq [style=bold];
 	pk_section__seq_body_switch:case2 -&gt; end_of_central_dir__seq [style=bold];
+	pk_section__seq_body_switch:case3 -&gt; data_descriptor__seq [style=bold];
 	pk_section__seq:section_type_type -&gt; pk_section__seq:body_type [color=&quot;#404040&quot;];
 	extras__seq:entries_type -&gt; extra_field__seq [style=bold];
 	local_file_header__seq:file_name_len_type -&gt; local_file_header__seq:file_name_size [color=&quot;#404040&quot;];
