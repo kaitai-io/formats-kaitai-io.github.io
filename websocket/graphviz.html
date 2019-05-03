@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>WebSocket: Lua parsing library</title>
+  <title>WebSocket: GraphViz block diagram (.dot) source: Kaitai Struct</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -92,7 +92,7 @@ section#format-index .row {
     <div class="container">
         <h1>WebSocket:
             
-            Lua parsing library
+            GraphViz block diagram (.dot) source
             
         </h1>
 
@@ -174,7 +174,7 @@ frames with the <code>fin</code> bit set.</p>
                 <a href="csharp.html" title="WebSocket parsing C# library">C#</a></li>
                 
                 
-                <li>
+                <li class="active">
                 
                 <a href="graphviz.html" title="WebSocket parsing GraphViz library">GraphViz</a></li>
                 
@@ -189,7 +189,7 @@ frames with the <code>fin</code> bit set.</p>
                 <a href="javascript.html" title="WebSocket parsing JavaScript library">JavaScript</a></li>
                 
                 
-                <li class="active">
+                <li>
                 
                 <a href="lua.html" title="WebSocket parsing Lua library">Lua</a></li>
                 
@@ -224,10 +224,97 @@ frames with the <code>fin</code> bit set.</p>
     <div class="container">
         <h2>
             
-            Lua source code to parse WebSocket
+            GraphViz block diagram source
             
         </h2>
 
+        
+
+        <h3>websocket.dot</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/graphviz/websocket.dot" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="graphviz">digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__websocket {
+		label=&quot;Websocket&quot;;
+		graph[style=dotted];
+
+		websocket__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;initial_frame_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;initial_frame_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;InitialFrame&lt;/TD&gt;&lt;TD PORT=&quot;initial_frame_type&quot;&gt;initial_frame&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;trailing_frames_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;trailing_frames_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Dataframe&lt;/TD&gt;&lt;TD PORT=&quot;trailing_frames_type&quot;&gt;trailing_frames&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;trailing_frames__repeat&quot;&gt;repeat until _.header.finished&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		subgraph cluster__frame_header {
+			label=&quot;Websocket::FrameHeader&quot;;
+			graph[style=dotted];
+
+			frame_header__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;finished_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;finished_size&quot;&gt;1b&lt;/TD&gt;&lt;TD&gt;BitsType1&lt;/TD&gt;&lt;TD PORT=&quot;finished_type&quot;&gt;finished&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;reserved_pos&quot;&gt;0:1&lt;/TD&gt;&lt;TD PORT=&quot;reserved_size&quot;&gt;3b&lt;/TD&gt;&lt;TD&gt;b3&lt;/TD&gt;&lt;TD PORT=&quot;reserved_type&quot;&gt;reserved&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;opcode_pos&quot;&gt;0:4&lt;/TD&gt;&lt;TD PORT=&quot;opcode_size&quot;&gt;4b&lt;/TD&gt;&lt;TD&gt;b4→Opcode&lt;/TD&gt;&lt;TD PORT=&quot;opcode_type&quot;&gt;opcode&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;is_masked_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;is_masked_size&quot;&gt;1b&lt;/TD&gt;&lt;TD&gt;BitsType1&lt;/TD&gt;&lt;TD PORT=&quot;is_masked_type&quot;&gt;is_masked&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_payload_primary_pos&quot;&gt;1:1&lt;/TD&gt;&lt;TD PORT=&quot;len_payload_primary_size&quot;&gt;7b&lt;/TD&gt;&lt;TD&gt;b7&lt;/TD&gt;&lt;TD PORT=&quot;len_payload_primary_type&quot;&gt;len_payload_primary&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_payload_extended_1_pos&quot;&gt;2&lt;/TD&gt;&lt;TD PORT=&quot;len_payload_extended_1_size&quot;&gt;2&lt;/TD&gt;&lt;TD&gt;u2be&lt;/TD&gt;&lt;TD PORT=&quot;len_payload_extended_1_type&quot;&gt;len_payload_extended_1&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_payload_extended_2_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;len_payload_extended_2_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;len_payload_extended_2_type&quot;&gt;len_payload_extended_2&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;mask_key_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;mask_key_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4be&lt;/TD&gt;&lt;TD PORT=&quot;mask_key_type&quot;&gt;mask_key&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+			frame_header__inst__len_payload [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;value&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD&gt;len_payload&lt;/TD&gt;&lt;TD&gt;(len_payload_primary &amp;lt;= 125 ? len_payload_primary : (len_payload_primary == 126 ? len_payload_extended_1 : len_payload_extended_2))&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__initial_frame {
+			label=&quot;Websocket::InitialFrame&quot;;
+			graph[style=dotted];
+
+			initial_frame__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;header_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;header_size&quot;&gt;12&lt;/TD&gt;&lt;TD&gt;FrameHeader&lt;/TD&gt;&lt;TD PORT=&quot;header_type&quot;&gt;header&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;payload_bytes_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;payload_bytes_size&quot;&gt;header.len_payload&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;payload_bytes_type&quot;&gt;payload_bytes&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;payload_text_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;payload_text_size&quot;&gt;header.len_payload&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;payload_text_type&quot;&gt;payload_text&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__dataframe {
+			label=&quot;Websocket::Dataframe&quot;;
+			graph[style=dotted];
+
+			dataframe__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;header_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;header_size&quot;&gt;12&lt;/TD&gt;&lt;TD&gt;FrameHeader&lt;/TD&gt;&lt;TD PORT=&quot;header_type&quot;&gt;header&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;payload_bytes_pos&quot;&gt;12&lt;/TD&gt;&lt;TD PORT=&quot;payload_bytes_size&quot;&gt;header.len_payload&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;payload_bytes_type&quot;&gt;payload_bytes&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;payload_text_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;payload_text_size&quot;&gt;header.len_payload&lt;/TD&gt;&lt;TD&gt;str(UTF-8)&lt;/TD&gt;&lt;TD PORT=&quot;payload_text_type&quot;&gt;payload_text&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+	}
+	websocket__seq:initial_frame_type -&gt; initial_frame__seq [style=bold];
+	websocket__seq:trailing_frames_type -&gt; dataframe__seq [style=bold];
+	frame_header__seq:finished_type -&gt; websocket__seq:trailing_frames__repeat [color=&quot;#404040&quot;];
+	frame_header__seq:len_payload_primary_type -&gt; frame_header__inst__len_payload [color=&quot;#404040&quot;];
+	frame_header__seq:len_payload_primary_type -&gt; frame_header__inst__len_payload [color=&quot;#404040&quot;];
+	frame_header__seq:len_payload_primary_type -&gt; frame_header__inst__len_payload [color=&quot;#404040&quot;];
+	frame_header__seq:len_payload_extended_1_type -&gt; frame_header__inst__len_payload [color=&quot;#404040&quot;];
+	frame_header__seq:len_payload_extended_2_type -&gt; frame_header__inst__len_payload [color=&quot;#404040&quot;];
+	initial_frame__seq:header_type -&gt; frame_header__seq [style=bold];
+	frame_header__inst__len_payload:len_payload_type -&gt; initial_frame__seq:payload_bytes_size [color=&quot;#404040&quot;];
+	frame_header__inst__len_payload:len_payload_type -&gt; initial_frame__seq:payload_text_size [color=&quot;#404040&quot;];
+	dataframe__seq:header_type -&gt; frame_header__seq [style=bold];
+	frame_header__inst__len_payload:len_payload_type -&gt; dataframe__seq:payload_bytes_size [color=&quot;#404040&quot;];
+	frame_header__inst__len_payload:len_payload_type -&gt; dataframe__seq:payload_text_size [color=&quot;#404040&quot;];
+}
+</code></pre>
+            
+        </div>
         
     </div>
 </section>

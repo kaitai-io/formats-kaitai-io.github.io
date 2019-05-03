@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>protocol_body: Python parsing library</title>
+  <title>WebSocket: Python parsing library</title>
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
@@ -83,14 +83,14 @@ section#format-index .row {
     <ol class="breadcrumb">
         <li><a href="../index.html">Format Gallery</a></li>
         <li>Networking Protocols</li>
-        <li class="active">protocol_body</li>
+        <li class="active">WebSocket</li>
     </ol>
     </div>
 </nav>
 
 <section id="format-meta" class="format">
     <div class="container">
-        <h1>protocol_body:
+        <h1>WebSocket:
             
             Python parsing library
             
@@ -98,16 +98,9 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>Protocol body represents particular payload on transport level (OSI
-layer 4).</p>
-<p>Typically this payload in encapsulated into network level (OSI layer
-3) packet, which includes &quot;protocol number&quot; field that would be used
-to decide what's inside the payload and how to parse it. Thanks to
-IANA's standardization effort, multiple network level use the same
-IDs for these payloads named &quot;protocol numbers&quot;.</p>
-<p>This is effectively a &quot;router&quot; type: it expects to get protocol
-number as a parameter, and then invokes relevant type parser based
-on that parameter.</p>
+                <p><p>The WebSocket protocol establishes a two-way communication channel via TCP.
+Messages are made up of one or more dataframes, and are delineated by
+frames with the <code>fin</code> bit set.</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -124,11 +117,31 @@ on that parameter.</p>
                     </div>
                     
                     
-                    <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.8
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
                     </div>
-                    
-                    
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            <li><a href="https://tools.ietf.org/html/rfc6455">RFC 6455</a></li>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                        </ul>
+                    </div>
                     
                 </div>
             </div>
@@ -137,7 +150,7 @@ on that parameter.</p>
         <div class="row">
             <div class="col-md-12">
             <p>
-            This page hosts a formal specification of protocol_body
+            This page hosts a formal specification of WebSocket
             using <a href="http://kaitai.io">Kaitai Struct</a>. This
             specification can be automatically translated into a
             variety of programming languages to get a parsing library.
@@ -148,57 +161,57 @@ on that parameter.</p>
                 
                 <li>
                 
-                <a href="index.html" title="protocol_body parsing Overview library">Overview</a></li>
+                <a href="index.html" title="WebSocket parsing Overview library">Overview</a></li>
                 
                 
                 <li>
                 
-                <a href="cpp_stl.html" title="protocol_body parsing C++/STL library">C++/STL</a></li>
+                <a href="cpp_stl.html" title="WebSocket parsing C++/STL library">C++/STL</a></li>
                 
                 
                 <li>
                 
-                <a href="csharp.html" title="protocol_body parsing C# library">C#</a></li>
+                <a href="csharp.html" title="WebSocket parsing C# library">C#</a></li>
                 
                 
                 <li>
                 
-                <a href="graphviz.html" title="protocol_body parsing GraphViz library">GraphViz</a></li>
+                <a href="graphviz.html" title="WebSocket parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
                 
-                <a href="java.html" title="protocol_body parsing Java library">Java</a></li>
+                <a href="java.html" title="WebSocket parsing Java library">Java</a></li>
                 
                 
                 <li>
                 
-                <a href="javascript.html" title="protocol_body parsing JavaScript library">JavaScript</a></li>
+                <a href="javascript.html" title="WebSocket parsing JavaScript library">JavaScript</a></li>
                 
                 
                 <li>
                 
-                <a href="lua.html" title="protocol_body parsing Lua library">Lua</a></li>
+                <a href="lua.html" title="WebSocket parsing Lua library">Lua</a></li>
                 
                 
                 <li>
                 
-                <a href="perl.html" title="protocol_body parsing Perl library">Perl</a></li>
+                <a href="perl.html" title="WebSocket parsing Perl library">Perl</a></li>
                 
                 
                 <li>
                 
-                <a href="php.html" title="protocol_body parsing PHP library">PHP</a></li>
+                <a href="php.html" title="WebSocket parsing PHP library">PHP</a></li>
                 
                 
                 <li class="active">
                 
-                <a href="python.html" title="protocol_body parsing Python library">Python</a></li>
+                <a href="python.html" title="WebSocket parsing Python library">Python</a></li>
                 
                 
                 <li>
                 
-                <a href="ruby.html" title="protocol_body parsing Ruby library">Ruby</a></li>
+                <a href="ruby.html" title="WebSocket parsing Ruby library">Ruby</a></li>
                 
             </ul>
             </div>
@@ -214,18 +227,18 @@ on that parameter.</p>
 
 
 
-<pre><code class="python">data = ProtocolBody.from_file("path/to/local/file.protocol_body")</code></pre>
+<pre><code class="python">data = Websocket.from_file("path/to/local/file.WebSocket")</code></pre>
 
 <p>Or parse structure from a bytes:</p>
 
 <pre><code class="python">from kaitaistruct import KaitaiStream, BytesIO
 
 raw = b"\x00\x01\x02..."
-data = ProtocolBody(KaitaiStream(BytesIO(raw)))</code></pre>
+data = Websocket(KaitaiStream(BytesIO(raw)))</code></pre>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
-<pre><code class="python">data.body # => get body</code></pre>
+<pre><code class="python">data.initial_frame # => get initial frame</code></pre>
 
     </div>
 </section>
@@ -235,18 +248,18 @@ data = ProtocolBody(KaitaiStream(BytesIO(raw)))</code></pre>
     <div class="container">
         <h2>
             
-            Python source code to parse protocol_body
+            Python source code to parse WebSocket
             
         </h2>
 
         
 
-        <h3>protocol_body.py</h3>
+        <h3>websocket.py</h3>
 
         <div class="row">
             <div class="pull-right">
                 <p>
-                    <a href="src/python/protocol_body.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                    <a href="src/python/websocket.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
                 </p>
             </div>
         </div>
@@ -262,200 +275,49 @@ from enum import Enum
 if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
     raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
 
-from udp_datagram import UdpDatagram
-from icmp_packet import IcmpPacket
-from tcp_segment import TcpSegment
-from ipv4_packet import Ipv4Packet
-from ipv6_packet import Ipv6Packet
-class ProtocolBody(KaitaiStruct):
-    &quot;&quot;&quot;Protocol body represents particular payload on transport level (OSI
-    layer 4).
-    
-    Typically this payload in encapsulated into network level (OSI layer
-    3) packet, which includes &quot;protocol number&quot; field that would be used
-    to decide what&#39;s inside the payload and how to parse it. Thanks to
-    IANA&#39;s standardization effort, multiple network level use the same
-    IDs for these payloads named &quot;protocol numbers&quot;.
-    
-    This is effectively a &quot;router&quot; type: it expects to get protocol
-    number as a parameter, and then invokes relevant type parser based
-    on that parameter.
-    
-    .. seealso::
-       Source - http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
+class Websocket(KaitaiStruct):
+    &quot;&quot;&quot;The WebSocket protocol establishes a two-way communication channel via TCP.
+    Messages are made up of one or more dataframes, and are delineated by
+    frames with the `fin` bit set.
     &quot;&quot;&quot;
 
-    class ProtocolEnum(Enum):
-        hopopt = 0
-        icmp = 1
-        igmp = 2
-        ggp = 3
-        ipv4 = 4
-        st = 5
-        tcp = 6
-        cbt = 7
-        egp = 8
-        igp = 9
-        bbn_rcc_mon = 10
-        nvp_ii = 11
-        pup = 12
-        argus = 13
-        emcon = 14
-        xnet = 15
-        chaos = 16
-        udp = 17
-        mux = 18
-        dcn_meas = 19
-        hmp = 20
-        prm = 21
-        xns_idp = 22
-        trunk_1 = 23
-        trunk_2 = 24
-        leaf_1 = 25
-        leaf_2 = 26
-        rdp = 27
-        irtp = 28
-        iso_tp4 = 29
-        netblt = 30
-        mfe_nsp = 31
-        merit_inp = 32
-        dccp = 33
-        x_3pc = 34
-        idpr = 35
-        xtp = 36
-        ddp = 37
-        idpr_cmtp = 38
-        tp_plus_plus = 39
-        il = 40
-        ipv6 = 41
-        sdrp = 42
-        ipv6_route = 43
-        ipv6_frag = 44
-        idrp = 45
-        rsvp = 46
-        gre = 47
-        dsr = 48
-        bna = 49
-        esp = 50
-        ah = 51
-        i_nlsp = 52
-        swipe = 53
-        narp = 54
-        mobile = 55
-        tlsp = 56
-        skip = 57
-        ipv6_icmp = 58
-        ipv6_nonxt = 59
-        ipv6_opts = 60
-        any_host_internal_protocol = 61
-        cftp = 62
-        any_local_network = 63
-        sat_expak = 64
-        kryptolan = 65
-        rvd = 66
-        ippc = 67
-        any_distributed_file_system = 68
-        sat_mon = 69
-        visa = 70
-        ipcv = 71
-        cpnx = 72
-        cphb = 73
-        wsn = 74
-        pvp = 75
-        br_sat_mon = 76
-        sun_nd = 77
-        wb_mon = 78
-        wb_expak = 79
-        iso_ip = 80
-        vmtp = 81
-        secure_vmtp = 82
-        vines = 83
-        ttp_or_iptm = 84
-        nsfnet_igp = 85
-        dgp = 86
-        tcf = 87
-        eigrp = 88
-        ospfigp = 89
-        sprite_rpc = 90
-        larp = 91
-        mtp = 92
-        ax_25 = 93
-        ipip = 94
-        micp = 95
-        scc_sp = 96
-        etherip = 97
-        encap = 98
-        any_private_encryption_scheme = 99
-        gmtp = 100
-        ifmp = 101
-        pnni = 102
-        pim = 103
-        aris = 104
-        scps = 105
-        qnx = 106
-        a_n = 107
-        ipcomp = 108
-        snp = 109
-        compaq_peer = 110
-        ipx_in_ip = 111
-        vrrp = 112
-        pgm = 113
-        any_0_hop = 114
-        l2tp = 115
-        ddx = 116
-        iatp = 117
-        stp = 118
-        srp = 119
-        uti = 120
-        smp = 121
-        sm = 122
-        ptp = 123
-        isis_over_ipv4 = 124
-        fire = 125
-        crtp = 126
-        crudp = 127
-        sscopmce = 128
-        iplt = 129
-        sps = 130
-        pipe = 131
-        sctp = 132
-        fc = 133
-        rsvp_e2e_ignore = 134
-        mobility_header = 135
-        udplite = 136
-        mpls_in_ip = 137
-        manet = 138
-        hip = 139
-        shim6 = 140
-        wesp = 141
-        rohc = 142
-        reserved_255 = 255
-    def __init__(self, protocol_num, _io, _parent=None, _root=None):
+    class Opcode(Enum):
+        continuation = 0
+        text = 1
+        binary = 2
+        reserved_3 = 3
+        reserved_4 = 4
+        reserved_5 = 5
+        reserved_6 = 6
+        reserved_7 = 7
+        close = 8
+        ping = 9
+        pong = 10
+        reserved_control_b = 11
+        reserved_control_c = 12
+        reserved_control_d = 13
+        reserved_control_e = 14
+        reserved_control_f = 15
+    def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
         self._root = _root if _root else self
-        self.protocol_num = protocol_num
         self._read()
 
     def _read(self):
-        _on = self.protocol
-        if _on == self._root.ProtocolEnum.tcp:
-            self.body = TcpSegment(self._io)
-        elif _on == self._root.ProtocolEnum.ipv6_nonxt:
-            self.body = self._root.NoNextHeader(self._io, self, self._root)
-        elif _on == self._root.ProtocolEnum.icmp:
-            self.body = IcmpPacket(self._io)
-        elif _on == self._root.ProtocolEnum.udp:
-            self.body = UdpDatagram(self._io)
-        elif _on == self._root.ProtocolEnum.hopopt:
-            self.body = self._root.OptionHopByHop(self._io, self, self._root)
-        elif _on == self._root.ProtocolEnum.ipv6:
-            self.body = Ipv6Packet(self._io)
-        elif _on == self._root.ProtocolEnum.ipv4:
-            self.body = Ipv4Packet(self._io)
+        self.initial_frame = self._root.InitialFrame(self._io, self, self._root)
+        if self.initial_frame.header.finished != True:
+            self.trailing_frames = []
+            i = 0
+            while True:
+                _ = self._root.Dataframe(self._io, self, self._root)
+                self.trailing_frames.append(_)
+                if _.header.finished:
+                    break
+                i += 1
 
-    class NoNextHeader(KaitaiStruct):
-        &quot;&quot;&quot;Dummy type for IPv6 &quot;no next header&quot; type, which signifies end of headers chain.&quot;&quot;&quot;
+
+    class FrameHeader(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -463,10 +325,32 @@ class ProtocolBody(KaitaiStruct):
             self._read()
 
         def _read(self):
-            pass
+            self.finished = self._io.read_bits_int(1) != 0
+            self.reserved = self._io.read_bits_int(3)
+            self.opcode = self._root.Opcode(self._io.read_bits_int(4))
+            self.is_masked = self._io.read_bits_int(1) != 0
+            self.len_payload_primary = self._io.read_bits_int(7)
+            self._io.align_to_byte()
+            if self.len_payload_primary == 126:
+                self.len_payload_extended_1 = self._io.read_u2be()
+
+            if self.len_payload_primary == 127:
+                self.len_payload_extended_2 = self._io.read_u4be()
+
+            if self.is_masked:
+                self.mask_key = self._io.read_u4be()
 
 
-    class OptionHopByHop(KaitaiStruct):
+        @property
+        def len_payload(self):
+            if hasattr(self, &#39;_m_len_payload&#39;):
+                return self._m_len_payload if hasattr(self, &#39;_m_len_payload&#39;) else None
+
+            self._m_len_payload = (self.len_payload_primary if self.len_payload_primary &lt;= 125 else (self.len_payload_extended_1 if self.len_payload_primary == 126 else self.len_payload_extended_2))
+            return self._m_len_payload if hasattr(self, &#39;_m_len_payload&#39;) else None
+
+
+    class InitialFrame(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -474,19 +358,31 @@ class ProtocolBody(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.next_header_type = self._io.read_u1()
-            self.hdr_ext_len = self._io.read_u1()
-            self.body = self._io.read_bytes((self.hdr_ext_len - 1))
-            self.next_header = ProtocolBody(self.next_header_type, self._io)
+            self.header = self._root.FrameHeader(self._io, self, self._root)
+            if self.header.opcode != self._root.Opcode.text:
+                self.payload_bytes = self._io.read_bytes(self.header.len_payload)
+
+            if self.header.opcode == self._root.Opcode.text:
+                self.payload_text = (self._io.read_bytes(self.header.len_payload)).decode(u&quot;UTF-8&quot;)
 
 
-    @property
-    def protocol(self):
-        if hasattr(self, &#39;_m_protocol&#39;):
-            return self._m_protocol if hasattr(self, &#39;_m_protocol&#39;) else None
 
-        self._m_protocol = self._root.ProtocolEnum(self.protocol_num)
-        return self._m_protocol if hasattr(self, &#39;_m_protocol&#39;) else None
+    class Dataframe(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.header = self._root.FrameHeader(self._io, self, self._root)
+            if self._root.initial_frame.header.opcode != self._root.Opcode.text:
+                self.payload_bytes = self._io.read_bytes(self.header.len_payload)
+
+            if self._root.initial_frame.header.opcode == self._root.Opcode.text:
+                self.payload_text = (self._io.read_bytes(self.header.len_payload)).decode(u&quot;UTF-8&quot;)
+
+
 
 
 </code></pre>

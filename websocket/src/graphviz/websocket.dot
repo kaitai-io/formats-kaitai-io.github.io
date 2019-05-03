@@ -1,0 +1,71 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__websocket {
+		label="Websocket";
+		graph[style=dotted];
+
+		websocket__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="initial_frame_pos">0</TD><TD PORT="initial_frame_size">...</TD><TD>InitialFrame</TD><TD PORT="initial_frame_type">initial_frame</TD></TR>
+			<TR><TD PORT="trailing_frames_pos">...</TD><TD PORT="trailing_frames_size">...</TD><TD>Dataframe</TD><TD PORT="trailing_frames_type">trailing_frames</TD></TR>
+			<TR><TD COLSPAN="4" PORT="trailing_frames__repeat">repeat until _.header.finished</TD></TR>
+		</TABLE>>];
+		subgraph cluster__frame_header {
+			label="Websocket::FrameHeader";
+			graph[style=dotted];
+
+			frame_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="finished_pos">0</TD><TD PORT="finished_size">1b</TD><TD>BitsType1</TD><TD PORT="finished_type">finished</TD></TR>
+				<TR><TD PORT="reserved_pos">0:1</TD><TD PORT="reserved_size">3b</TD><TD>b3</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="opcode_pos">0:4</TD><TD PORT="opcode_size">4b</TD><TD>b4→Opcode</TD><TD PORT="opcode_type">opcode</TD></TR>
+				<TR><TD PORT="is_masked_pos">1</TD><TD PORT="is_masked_size">1b</TD><TD>BitsType1</TD><TD PORT="is_masked_type">is_masked</TD></TR>
+				<TR><TD PORT="len_payload_primary_pos">1:1</TD><TD PORT="len_payload_primary_size">7b</TD><TD>b7</TD><TD PORT="len_payload_primary_type">len_payload_primary</TD></TR>
+				<TR><TD PORT="len_payload_extended_1_pos">2</TD><TD PORT="len_payload_extended_1_size">2</TD><TD>u2be</TD><TD PORT="len_payload_extended_1_type">len_payload_extended_1</TD></TR>
+				<TR><TD PORT="len_payload_extended_2_pos">4</TD><TD PORT="len_payload_extended_2_size">4</TD><TD>u4be</TD><TD PORT="len_payload_extended_2_type">len_payload_extended_2</TD></TR>
+				<TR><TD PORT="mask_key_pos">8</TD><TD PORT="mask_key_size">4</TD><TD>u4be</TD><TD PORT="mask_key_type">mask_key</TD></TR>
+			</TABLE>>];
+			frame_header__inst__len_payload [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len_payload</TD><TD>(len_payload_primary &lt;= 125 ? len_payload_primary : (len_payload_primary == 126 ? len_payload_extended_1 : len_payload_extended_2))</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__initial_frame {
+			label="Websocket::InitialFrame";
+			graph[style=dotted];
+
+			initial_frame__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">12</TD><TD>FrameHeader</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="payload_bytes_pos">12</TD><TD PORT="payload_bytes_size">header.len_payload</TD><TD></TD><TD PORT="payload_bytes_type">payload_bytes</TD></TR>
+				<TR><TD PORT="payload_text_pos">...</TD><TD PORT="payload_text_size">header.len_payload</TD><TD>str(UTF-8)</TD><TD PORT="payload_text_type">payload_text</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dataframe {
+			label="Websocket::Dataframe";
+			graph[style=dotted];
+
+			dataframe__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">12</TD><TD>FrameHeader</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="payload_bytes_pos">12</TD><TD PORT="payload_bytes_size">header.len_payload</TD><TD></TD><TD PORT="payload_bytes_type">payload_bytes</TD></TR>
+				<TR><TD PORT="payload_text_pos">...</TD><TD PORT="payload_text_size">header.len_payload</TD><TD>str(UTF-8)</TD><TD PORT="payload_text_type">payload_text</TD></TR>
+			</TABLE>>];
+		}
+	}
+	websocket__seq:initial_frame_type -> initial_frame__seq [style=bold];
+	websocket__seq:trailing_frames_type -> dataframe__seq [style=bold];
+	frame_header__seq:finished_type -> websocket__seq:trailing_frames__repeat [color="#404040"];
+	frame_header__seq:len_payload_primary_type -> frame_header__inst__len_payload [color="#404040"];
+	frame_header__seq:len_payload_primary_type -> frame_header__inst__len_payload [color="#404040"];
+	frame_header__seq:len_payload_primary_type -> frame_header__inst__len_payload [color="#404040"];
+	frame_header__seq:len_payload_extended_1_type -> frame_header__inst__len_payload [color="#404040"];
+	frame_header__seq:len_payload_extended_2_type -> frame_header__inst__len_payload [color="#404040"];
+	initial_frame__seq:header_type -> frame_header__seq [style=bold];
+	frame_header__inst__len_payload:len_payload_type -> initial_frame__seq:payload_bytes_size [color="#404040"];
+	frame_header__inst__len_payload:len_payload_type -> initial_frame__seq:payload_text_size [color="#404040"];
+	dataframe__seq:header_type -> frame_header__seq [style=bold];
+	frame_header__inst__len_payload:len_payload_type -> dataframe__seq:payload_bytes_size [color="#404040"];
+	frame_header__inst__len_payload:len_payload_type -> dataframe__seq:payload_text_size [color="#404040"];
+}
