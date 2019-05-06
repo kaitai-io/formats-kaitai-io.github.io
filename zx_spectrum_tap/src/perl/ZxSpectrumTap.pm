@@ -196,7 +196,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{start_address} = $self->{_io}->read_u2le();
-    $self->{reserved} = $self->{_io}->ensure_fixed_contents(pack('C*', (0, 128)));
+    $self->{reserved} = $self->{_io}->read_bytes(2);
 }
 
 sub start_address {

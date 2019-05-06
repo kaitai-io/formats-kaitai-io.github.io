@@ -86,7 +86,7 @@ zx_spectrum_tap_t::bytes_params_t::bytes_params_t(kaitai::kstream* p__io, zx_spe
 
 void zx_spectrum_tap_t::bytes_params_t::_read() {
     m_start_address = m__io->read_u2le();
-    m_reserved = m__io->ensure_fixed_contents(std::string("\x00\x80", 2));
+    m_reserved = m__io->read_bytes(2);
 }
 
 zx_spectrum_tap_t::bytes_params_t::~bytes_params_t() {

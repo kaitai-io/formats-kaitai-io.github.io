@@ -80,7 +80,7 @@ class BytesParams extends \Kaitai\Struct\Struct {
 
     private function _read() {
         $this->_m_startAddress = $this->_io->readU2le();
-        $this->_m_reserved = $this->_io->ensureFixedContents("\x00\x80");
+        $this->_m_reserved = $this->_io->readBytes(2);
     }
     protected $_m_startAddress;
     protected $_m_reserved;

@@ -79,7 +79,7 @@ class ZxSpectrumTap(KaitaiStruct):
 
         def _read(self):
             self.start_address = self._io.read_u2le()
-            self.reserved = self._io.ensure_fixed_contents(b"\x00\x80")
+            self.reserved = self._io.read_bytes(2)
 
 
     class Header(KaitaiStruct):

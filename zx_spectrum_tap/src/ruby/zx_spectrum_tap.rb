@@ -86,7 +86,7 @@ class ZxSpectrumTap < Kaitai::Struct::Struct
 
     def _read
       @start_address = @_io.read_u2le
-      @reserved = @_io.ensure_fixed_contents([0, 128].pack('C*'))
+      @reserved = @_io.read_bytes(2)
       self
     end
     attr_reader :start_address

@@ -131,7 +131,7 @@ namespace Kaitai
             private void _read()
             {
                 _startAddress = m_io.ReadU2le();
-                _reserved = m_io.EnsureFixedContents(new byte[] { 0, 128 });
+                _reserved = m_io.ReadBytes(2);
             }
             private ushort _startAddress;
             private byte[] _reserved;

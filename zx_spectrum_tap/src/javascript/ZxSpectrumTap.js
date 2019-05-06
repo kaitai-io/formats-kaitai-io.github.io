@@ -101,7 +101,7 @@ var ZxSpectrumTap = (function() {
     }
     BytesParams.prototype._read = function() {
       this.startAddress = this._io.readU2le();
-      this.reserved = this._io.ensureFixedContents([0, 128]);
+      this.reserved = this._io.readBytes(2);
     }
 
     return BytesParams;
