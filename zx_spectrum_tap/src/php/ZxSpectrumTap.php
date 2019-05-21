@@ -1,6 +1,15 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * TAP files are used by emulators of ZX Spectrum computer (released in
+ * 1982 by Sinclair Research). TAP file stores blocks of data as if
+ * they are written to magnetic tape, which was used as primary media
+ * for ZX Spectrum. Contents of this file can be viewed as a very
+ * simple linear filesystem, storing named files with some basic
+ * metainformation prepended as a header.
+ */
+
 class ZxSpectrumTap extends \Kaitai\Struct\Struct {
     public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ZxSpectrumTap $_root = null) {
         parent::__construct($_io, $_parent, $_root);

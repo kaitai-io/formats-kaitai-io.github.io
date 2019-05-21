@@ -5,6 +5,14 @@ using System.Collections.Generic;
 namespace Kaitai
 {
 
+    /// <summary>
+    /// TAP files are used by emulators of ZX Spectrum computer (released in
+    /// 1982 by Sinclair Research). TAP file stores blocks of data as if
+    /// they are written to magnetic tape, which was used as primary media
+    /// for ZX Spectrum. Contents of this file can be viewed as a very
+    /// simple linear filesystem, storing named files with some basic
+    /// metainformation prepended as a header.
+    /// </summary>
     /// <remarks>
     /// Reference: <a href="https://faqwiki.zxnet.co.uk/wiki/TAP_format">Source</a>
     /// </remarks>
