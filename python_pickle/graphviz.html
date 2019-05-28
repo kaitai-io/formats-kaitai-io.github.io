@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Python pickle serialization format: GraphViz block diagram (.dot) source: Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Serialization Protocols</li>
+        <li class="active">Python pickle serialization format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Python pickle serialization format:
+            
+            GraphViz block diagram (.dot) source
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Python Pickle format serializes Python objects to a byte stream, as a sequence
+of operations to run on the Pickle Virtual Machine.</p>
+<p>The format is mostly implementation defined, there is no formal specification.
+Pickle data types are closely coupled to the Python object model.
+Python singletons, and most builtin types (e.g. <code>None</code>, <code>int</code>,<code>dict</code>, <code>list</code>)
+are serialised using dedicated Pickle opcodes.
+Other builtin types, and all classes  (e.g. <code>set</code>, <code>datetime.datetime</code>) are
+serialised by encoding the name of a constructor callable.
+They are deserialised by importing that constructor, and calling it.
+So, unpickling an arbitrary pickle, using the Python's stdlib pickle module
+can cause arbitrary code execution.</p>
+<p>Pickle format has evolved with Python, later protocols add opcodes &amp; types.
+Later Python releases can pickle to or unpickle from any earlier protocol.</p>
+<ul>
+<li>Protocol 0: ASCII clean, no explicit version, fields are '\n' terminated.</li>
+<li>Protocol 1: Binary, no explicit version, first length prefixed types.</li>
+<li>Protocol 2: Python 2.3+. Explicit versioning, more length prefixed types.
+https://www.python.org/dev/peps/pep-0307/</li>
+<li>Protocol 3: Python 3.0+. Dedicated opcodes for <code>bytes</code> objects.</li>
+<li>Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, <code>set</code>.
+https://www.python.org/dev/peps/pep-3154/</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Python
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["pickle", "pkl"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q7190889">Wikidata Q7190889</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Pickle">Pickle in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Python pickle serialization format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Python pickle serialization format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Python pickle serialization format parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="graphviz.html" title="Python pickle serialization format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Python pickle serialization format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Python pickle serialization format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Python pickle serialization format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Python pickle serialization format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Python pickle serialization format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Python pickle serialization format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Python pickle serialization format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            GraphViz block diagram source
+            
+        </h2>
+
+        
+
+        <h3>python_pickle.dot</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/graphviz/python_pickle.dot" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="graphviz">digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__python_pickle {
+		label=&quot;PythonPickle&quot;;
+		graph[style=dotted];
+
+		python_pickle__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+			&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD PORT=&quot;ops_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;ops_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;Op&lt;/TD&gt;&lt;TD PORT=&quot;ops_type&quot;&gt;ops&lt;/TD&gt;&lt;/TR&gt;
+			&lt;TR&gt;&lt;TD COLSPAN=&quot;4&quot; PORT=&quot;ops__repeat&quot;&gt;repeat to end of stream&lt;/TD&gt;&lt;/TR&gt;
+		&lt;/TABLE&gt;&gt;];
+		subgraph cluster__unicodestring8 {
+			label=&quot;PythonPickle::Unicodestring8&quot;;
+			graph[style=dotted];
+
+			unicodestring8__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;u8le&lt;/TD&gt;&lt;TD PORT=&quot;len_type&quot;&gt;len&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;len&lt;/TD&gt;&lt;TD&gt;str(utf8)&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__long1 {
+			label=&quot;PythonPickle::Long1&quot;;
+			graph[style=dotted];
+
+			long1__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;len_type&quot;&gt;len&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;len&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__bytes8 {
+			label=&quot;PythonPickle::Bytes8&quot;;
+			graph[style=dotted];
+
+			bytes8__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_size&quot;&gt;8&lt;/TD&gt;&lt;TD&gt;u8le&lt;/TD&gt;&lt;TD PORT=&quot;len_type&quot;&gt;len&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;8&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;len&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__bytes1 {
+			label=&quot;PythonPickle::Bytes1&quot;;
+			graph[style=dotted];
+
+			bytes1__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;len_type&quot;&gt;len&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;len&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__bytes4 {
+			label=&quot;PythonPickle::Bytes4&quot;;
+			graph[style=dotted];
+
+			bytes4__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_type&quot;&gt;len&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;len&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__no_arg {
+			label=&quot;PythonPickle::NoArg&quot;;
+			graph[style=dotted];
+
+			no_arg__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__stringnl_noescape {
+			label=&quot;PythonPickle::StringnlNoescape&quot;;
+			graph[style=dotted];
+
+			stringnl_noescape__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;str(term=10, ascii)&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__decimalnl_long {
+			label=&quot;PythonPickle::DecimalnlLong&quot;;
+			graph[style=dotted];
+
+			decimalnl_long__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;str(term=10, ascii)&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__unicodestring4 {
+			label=&quot;PythonPickle::Unicodestring4&quot;;
+			graph[style=dotted];
+
+			unicodestring4__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_type&quot;&gt;len&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;len&lt;/TD&gt;&lt;TD&gt;str(utf8)&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__unicodestringnl {
+			label=&quot;PythonPickle::Unicodestringnl&quot;;
+			graph[style=dotted];
+
+			unicodestringnl__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;str(term=10, ascii)&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__long4 {
+			label=&quot;PythonPickle::Long4&quot;;
+			graph[style=dotted];
+
+			long4__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_type&quot;&gt;len&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;len&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__string1 {
+			label=&quot;PythonPickle::String1&quot;;
+			graph[style=dotted];
+
+			string1__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1&lt;/TD&gt;&lt;TD PORT=&quot;len_type&quot;&gt;len&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;len&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__decimalnl_short {
+			label=&quot;PythonPickle::DecimalnlShort&quot;;
+			graph[style=dotted];
+
+			decimalnl_short__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;str(term=10, ascii)&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__unicodestring1 {
+			label=&quot;PythonPickle::Unicodestring1&quot;;
+			graph[style=dotted];
+
+			unicodestring1__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;u4le&lt;/TD&gt;&lt;TD PORT=&quot;len_type&quot;&gt;len&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;len&lt;/TD&gt;&lt;TD&gt;str(utf8)&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__stringnl {
+			label=&quot;PythonPickle::Stringnl&quot;;
+			graph[style=dotted];
+
+			stringnl__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;str(term=10, ascii)&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__stringnl_noescape_pair {
+			label=&quot;PythonPickle::StringnlNoescapePair&quot;;
+			graph[style=dotted];
+
+			stringnl_noescape_pair__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val1_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;val1_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;StringnlNoescape&lt;/TD&gt;&lt;TD PORT=&quot;val1_type&quot;&gt;val1&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val2_pos&quot;&gt;...&lt;/TD&gt;&lt;TD PORT=&quot;val2_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;StringnlNoescape&lt;/TD&gt;&lt;TD PORT=&quot;val2_type&quot;&gt;val2&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__string4 {
+			label=&quot;PythonPickle::String4&quot;;
+			graph[style=dotted];
+
+			string4__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;len_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;len_size&quot;&gt;4&lt;/TD&gt;&lt;TD&gt;s4le&lt;/TD&gt;&lt;TD PORT=&quot;len_type&quot;&gt;len&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;4&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;len&lt;/TD&gt;&lt;TD&gt;&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__op {
+			label=&quot;PythonPickle::Op&quot;;
+			graph[style=dotted];
+
+			op__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;code_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;code_size&quot;&gt;1&lt;/TD&gt;&lt;TD&gt;u1→Opcode&lt;/TD&gt;&lt;TD PORT=&quot;code_type&quot;&gt;code&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;arg_pos&quot;&gt;1&lt;/TD&gt;&lt;TD PORT=&quot;arg_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;switch (code)&lt;/TD&gt;&lt;TD PORT=&quot;arg_type&quot;&gt;arg&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+op__seq_arg_switch [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+	&lt;TR&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;case&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#F0F2E4&quot;&gt;type&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_list&lt;/TD&gt;&lt;TD PORT=&quot;case0&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_stop&lt;/TD&gt;&lt;TD PORT=&quot;case1&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_binunicode&lt;/TD&gt;&lt;TD PORT=&quot;case2&quot;&gt;Unicodestring4&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_put&lt;/TD&gt;&lt;TD PORT=&quot;case3&quot;&gt;DecimalnlShort&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_newfalse&lt;/TD&gt;&lt;TD PORT=&quot;case4&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_long1&lt;/TD&gt;&lt;TD PORT=&quot;case5&quot;&gt;Long1&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_unicode&lt;/TD&gt;&lt;TD PORT=&quot;case6&quot;&gt;Unicodestringnl&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_empty_list&lt;/TD&gt;&lt;TD PORT=&quot;case7&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_mark&lt;/TD&gt;&lt;TD PORT=&quot;case8&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_persid&lt;/TD&gt;&lt;TD PORT=&quot;case9&quot;&gt;StringnlNoescape&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_stack_global&lt;/TD&gt;&lt;TD PORT=&quot;case10&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_tuple&lt;/TD&gt;&lt;TD PORT=&quot;case11&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_short_binstring&lt;/TD&gt;&lt;TD PORT=&quot;case12&quot;&gt;String1&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_empty_set&lt;/TD&gt;&lt;TD PORT=&quot;case13&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_string&lt;/TD&gt;&lt;TD PORT=&quot;case14&quot;&gt;Stringnl&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_empty_dict&lt;/TD&gt;&lt;TD PORT=&quot;case15&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_append&lt;/TD&gt;&lt;TD PORT=&quot;case16&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_pop_mark&lt;/TD&gt;&lt;TD PORT=&quot;case17&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_get&lt;/TD&gt;&lt;TD PORT=&quot;case18&quot;&gt;DecimalnlShort&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_newobj&lt;/TD&gt;&lt;TD PORT=&quot;case19&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_reduce&lt;/TD&gt;&lt;TD PORT=&quot;case20&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_binbytes&lt;/TD&gt;&lt;TD PORT=&quot;case21&quot;&gt;Bytes4&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_binbytes8&lt;/TD&gt;&lt;TD PORT=&quot;case22&quot;&gt;Bytes8&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_setitem&lt;/TD&gt;&lt;TD PORT=&quot;case23&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_float&lt;/TD&gt;&lt;TD PORT=&quot;case24&quot;&gt;Floatnl&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_binunicode8&lt;/TD&gt;&lt;TD PORT=&quot;case25&quot;&gt;Unicodestring8&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_int&lt;/TD&gt;&lt;TD PORT=&quot;case26&quot;&gt;DecimalnlShort&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_empty_tuple&lt;/TD&gt;&lt;TD PORT=&quot;case27&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_long&lt;/TD&gt;&lt;TD PORT=&quot;case28&quot;&gt;DecimalnlLong&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_frozenset&lt;/TD&gt;&lt;TD PORT=&quot;case29&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_global&lt;/TD&gt;&lt;TD PORT=&quot;case30&quot;&gt;StringnlNoescapePair&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_obj&lt;/TD&gt;&lt;TD PORT=&quot;case31&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_additems&lt;/TD&gt;&lt;TD PORT=&quot;case32&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_tuple1&lt;/TD&gt;&lt;TD PORT=&quot;case33&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_setitems&lt;/TD&gt;&lt;TD PORT=&quot;case34&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_none&lt;/TD&gt;&lt;TD PORT=&quot;case35&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_build&lt;/TD&gt;&lt;TD PORT=&quot;case36&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_newobj_ex&lt;/TD&gt;&lt;TD PORT=&quot;case37&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_dup&lt;/TD&gt;&lt;TD PORT=&quot;case38&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_long4&lt;/TD&gt;&lt;TD PORT=&quot;case39&quot;&gt;Long4&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_short_binunicode&lt;/TD&gt;&lt;TD PORT=&quot;case40&quot;&gt;Unicodestring1&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_tuple3&lt;/TD&gt;&lt;TD PORT=&quot;case41&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_short_binbytes&lt;/TD&gt;&lt;TD PORT=&quot;case42&quot;&gt;Bytes1&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_dict&lt;/TD&gt;&lt;TD PORT=&quot;case43&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_appends&lt;/TD&gt;&lt;TD PORT=&quot;case44&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_inst&lt;/TD&gt;&lt;TD PORT=&quot;case45&quot;&gt;StringnlNoescapePair&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_binpersid&lt;/TD&gt;&lt;TD PORT=&quot;case46&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_memoize&lt;/TD&gt;&lt;TD PORT=&quot;case47&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_newtrue&lt;/TD&gt;&lt;TD PORT=&quot;case48&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_binstring&lt;/TD&gt;&lt;TD PORT=&quot;case49&quot;&gt;String4&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_tuple2&lt;/TD&gt;&lt;TD PORT=&quot;case50&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+	&lt;TR&gt;&lt;TD&gt;:opcode_pop&lt;/TD&gt;&lt;TD PORT=&quot;case51&quot;&gt;NoArg&lt;/TD&gt;&lt;/TR&gt;
+&lt;/TABLE&gt;&gt;];
+		}
+		subgraph cluster__floatnl {
+			label=&quot;PythonPickle::Floatnl&quot;;
+			graph[style=dotted];
+
+			floatnl__seq [label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;
+				&lt;TR&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;pos&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;size&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;type&lt;/TD&gt;&lt;TD BGCOLOR=&quot;#E0FFE0&quot;&gt;id&lt;/TD&gt;&lt;/TR&gt;
+				&lt;TR&gt;&lt;TD PORT=&quot;val_pos&quot;&gt;0&lt;/TD&gt;&lt;TD PORT=&quot;val_size&quot;&gt;...&lt;/TD&gt;&lt;TD&gt;str(term=10, ascii)&lt;/TD&gt;&lt;TD PORT=&quot;val_type&quot;&gt;val&lt;/TD&gt;&lt;/TR&gt;
+			&lt;/TABLE&gt;&gt;];
+		}
+	}
+	python_pickle__seq:ops_type -&gt; op__seq [style=bold];
+	unicodestring8__seq:len_type -&gt; unicodestring8__seq:val_size [color=&quot;#404040&quot;];
+	long1__seq:len_type -&gt; long1__seq:val_size [color=&quot;#404040&quot;];
+	bytes8__seq:len_type -&gt; bytes8__seq:val_size [color=&quot;#404040&quot;];
+	bytes1__seq:len_type -&gt; bytes1__seq:val_size [color=&quot;#404040&quot;];
+	bytes4__seq:len_type -&gt; bytes4__seq:val_size [color=&quot;#404040&quot;];
+	unicodestring4__seq:len_type -&gt; unicodestring4__seq:val_size [color=&quot;#404040&quot;];
+	long4__seq:len_type -&gt; long4__seq:val_size [color=&quot;#404040&quot;];
+	string1__seq:len_type -&gt; string1__seq:val_size [color=&quot;#404040&quot;];
+	unicodestring1__seq:len_type -&gt; unicodestring1__seq:val_size [color=&quot;#404040&quot;];
+	stringnl_noescape_pair__seq:val1_type -&gt; stringnl_noescape__seq [style=bold];
+	stringnl_noescape_pair__seq:val2_type -&gt; stringnl_noescape__seq [style=bold];
+	string4__seq:len_type -&gt; string4__seq:val_size [color=&quot;#404040&quot;];
+	op__seq:arg_type -&gt; op__seq_arg_switch [style=bold];
+	op__seq_arg_switch:case0 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case1 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case2 -&gt; unicodestring4__seq [style=bold];
+	op__seq_arg_switch:case3 -&gt; decimalnl_short__seq [style=bold];
+	op__seq_arg_switch:case4 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case5 -&gt; long1__seq [style=bold];
+	op__seq_arg_switch:case6 -&gt; unicodestringnl__seq [style=bold];
+	op__seq_arg_switch:case7 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case8 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case9 -&gt; stringnl_noescape__seq [style=bold];
+	op__seq_arg_switch:case10 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case11 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case12 -&gt; string1__seq [style=bold];
+	op__seq_arg_switch:case13 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case14 -&gt; stringnl__seq [style=bold];
+	op__seq_arg_switch:case15 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case16 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case17 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case18 -&gt; decimalnl_short__seq [style=bold];
+	op__seq_arg_switch:case19 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case20 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case21 -&gt; bytes4__seq [style=bold];
+	op__seq_arg_switch:case22 -&gt; bytes8__seq [style=bold];
+	op__seq_arg_switch:case23 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case24 -&gt; floatnl__seq [style=bold];
+	op__seq_arg_switch:case25 -&gt; unicodestring8__seq [style=bold];
+	op__seq_arg_switch:case26 -&gt; decimalnl_short__seq [style=bold];
+	op__seq_arg_switch:case27 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case28 -&gt; decimalnl_long__seq [style=bold];
+	op__seq_arg_switch:case29 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case30 -&gt; stringnl_noescape_pair__seq [style=bold];
+	op__seq_arg_switch:case31 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case32 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case33 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case34 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case35 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case36 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case37 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case38 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case39 -&gt; long4__seq [style=bold];
+	op__seq_arg_switch:case40 -&gt; unicodestring1__seq [style=bold];
+	op__seq_arg_switch:case41 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case42 -&gt; bytes1__seq [style=bold];
+	op__seq_arg_switch:case43 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case44 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case45 -&gt; stringnl_noescape_pair__seq [style=bold];
+	op__seq_arg_switch:case46 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case47 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case48 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case49 -&gt; string4__seq [style=bold];
+	op__seq_arg_switch:case50 -&gt; no_arg__seq [style=bold];
+	op__seq_arg_switch:case51 -&gt; no_arg__seq [style=bold];
+	op__seq:code_type -&gt; op__seq:arg_type [color=&quot;#404040&quot;];
+}
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2019 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

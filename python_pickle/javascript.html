@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Python pickle serialization format: JavaScript parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Serialization Protocols</li>
+        <li class="active">Python pickle serialization format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Python pickle serialization format:
+            
+            JavaScript parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Python Pickle format serializes Python objects to a byte stream, as a sequence
+of operations to run on the Pickle Virtual Machine.</p>
+<p>The format is mostly implementation defined, there is no formal specification.
+Pickle data types are closely coupled to the Python object model.
+Python singletons, and most builtin types (e.g. <code>None</code>, <code>int</code>,<code>dict</code>, <code>list</code>)
+are serialised using dedicated Pickle opcodes.
+Other builtin types, and all classes  (e.g. <code>set</code>, <code>datetime.datetime</code>) are
+serialised by encoding the name of a constructor callable.
+They are deserialised by importing that constructor, and calling it.
+So, unpickling an arbitrary pickle, using the Python's stdlib pickle module
+can cause arbitrary code execution.</p>
+<p>Pickle format has evolved with Python, later protocols add opcodes &amp; types.
+Later Python releases can pickle to or unpickle from any earlier protocol.</p>
+<ul>
+<li>Protocol 0: ASCII clean, no explicit version, fields are '\n' terminated.</li>
+<li>Protocol 1: Binary, no explicit version, first length prefixed types.</li>
+<li>Protocol 2: Python 2.3+. Explicit versioning, more length prefixed types.
+https://www.python.org/dev/peps/pep-0307/</li>
+<li>Protocol 3: Python 3.0+. Dedicated opcodes for <code>bytes</code> objects.</li>
+<li>Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, <code>set</code>.
+https://www.python.org/dev/peps/pep-3154/</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Python
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["pickle", "pkl"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q7190889">Wikidata Q7190889</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Pickle">Pickle in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Python pickle serialization format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Python pickle serialization format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Python pickle serialization format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Python pickle serialization format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Python pickle serialization format parsing Java library">Java</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="javascript.html" title="Python pickle serialization format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Python pickle serialization format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Python pickle serialization format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Python pickle serialization format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Python pickle serialization format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Python pickle serialization format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        
+<p>See the usage examples in the <a href="http://doc.kaitai.io/lang_javascript.html" target="_blank">JavaScript notes</a>.</p>
+
+<p>Parse structure from an ArrayBuffer:</p>
+
+<pre><code class="javascript">var arrayBuffer = ...;
+var data = new PythonPickle(new KaitaiStream(arrayBuffer));</code></pre>
+
+<p>After that, one can get various attributes from the structure by accessing fields or properties like:</p>
+
+<pre><code class="javascript">data.ops // => get ops</code></pre>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            JavaScript source code to parse Python pickle serialization format
+            
+        </h2>
+
+        
+
+        <h3>PythonPickle.js</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/javascript/PythonPickle.js" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+(function (root, factory) {
+  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
+    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
+  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
+    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
+  } else {
+    root.PythonPickle = factory(root.KaitaiStream);
+  }
+}(this, function (KaitaiStream) {
+/**
+ * Python Pickle format serializes Python objects to a byte stream, as a sequence
+ * of operations to run on the Pickle Virtual Machine.
+ * 
+ * The format is mostly implementation defined, there is no formal specification.
+ * Pickle data types are closely coupled to the Python object model.
+ * Python singletons, and most builtin types (e.g. `None`, `int`,`dict`, `list`)
+ * are serialised using dedicated Pickle opcodes.
+ * Other builtin types, and all classes  (e.g. `set`, `datetime.datetime`) are
+ * serialised by encoding the name of a constructor callable.
+ * They are deserialised by importing that constructor, and calling it.
+ * So, unpickling an arbitrary pickle, using the Python&#39;s stdlib pickle module
+ * can cause arbitrary code execution.
+ * 
+ * Pickle format has evolved with Python, later protocols add opcodes &amp; types.
+ * Later Python releases can pickle to or unpickle from any earlier protocol.
+ * 
+ * * Protocol 0: ASCII clean, no explicit version, fields are &#39;\n&#39; terminated.
+ * * Protocol 1: Binary, no explicit version, first length prefixed types.
+ * * Protocol 2: Python 2.3+. Explicit versioning, more length prefixed types.
+ *   https://www.python.org/dev/peps/pep-0307/
+ * * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.
+ * * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.
+ *   https://www.python.org/dev/peps/pep-3154/
+ * @see {@link https://github.com/python/cpython/blob/v3.7.3/Lib/pickletools.py|Source}
+ */
+
+var PythonPickle = (function() {
+  PythonPickle.Opcode = Object.freeze({
+    MARK: 40,
+    EMPTY_TUPLE: 41,
+    STOP: 46,
+    POP: 48,
+    POP_MARK: 49,
+    DUP: 50,
+    BINBYTES: 66,
+    SHORT_BINBYTES: 67,
+    FLOAT: 70,
+    BINFLOAT: 71,
+    INT: 73,
+    BININT: 74,
+    BININT1: 75,
+    LONG: 76,
+    BININT2: 77,
+    NONE: 78,
+    PERSID: 80,
+    BINPERSID: 81,
+    REDUCE: 82,
+    STRING: 83,
+    BINSTRING: 84,
+    SHORT_BINSTRING: 85,
+    UNICODE: 86,
+    BINUNICODE: 88,
+    EMPTY_LIST: 93,
+    APPEND: 97,
+    BUILD: 98,
+    GLOBAL: 99,
+    DICT: 100,
+    APPENDS: 101,
+    GET: 103,
+    BINGET: 104,
+    INST: 105,
+    LONG_BINGET: 106,
+    LIST: 108,
+    OBJ: 111,
+    PUT: 112,
+    BINPUT: 113,
+    LONG_BINPUT: 114,
+    SETITEM: 115,
+    TUPLE: 116,
+    SETITEMS: 117,
+    EMPTY_DICT: 125,
+    PROTO: 128,
+    NEWOBJ: 129,
+    EXT1: 130,
+    EXT2: 131,
+    EXT4: 132,
+    TUPLE1: 133,
+    TUPLE2: 134,
+    TUPLE3: 135,
+    NEWTRUE: 136,
+    NEWFALSE: 137,
+    LONG1: 138,
+    LONG4: 139,
+    SHORT_BINUNICODE: 140,
+    BINUNICODE8: 141,
+    BINBYTES8: 142,
+    EMPTY_SET: 143,
+    ADDITEMS: 144,
+    FROZENSET: 145,
+    NEWOBJ_EX: 146,
+    STACK_GLOBAL: 147,
+    MEMOIZE: 148,
+    FRAME: 149,
+
+    40: &quot;MARK&quot;,
+    41: &quot;EMPTY_TUPLE&quot;,
+    46: &quot;STOP&quot;,
+    48: &quot;POP&quot;,
+    49: &quot;POP_MARK&quot;,
+    50: &quot;DUP&quot;,
+    66: &quot;BINBYTES&quot;,
+    67: &quot;SHORT_BINBYTES&quot;,
+    70: &quot;FLOAT&quot;,
+    71: &quot;BINFLOAT&quot;,
+    73: &quot;INT&quot;,
+    74: &quot;BININT&quot;,
+    75: &quot;BININT1&quot;,
+    76: &quot;LONG&quot;,
+    77: &quot;BININT2&quot;,
+    78: &quot;NONE&quot;,
+    80: &quot;PERSID&quot;,
+    81: &quot;BINPERSID&quot;,
+    82: &quot;REDUCE&quot;,
+    83: &quot;STRING&quot;,
+    84: &quot;BINSTRING&quot;,
+    85: &quot;SHORT_BINSTRING&quot;,
+    86: &quot;UNICODE&quot;,
+    88: &quot;BINUNICODE&quot;,
+    93: &quot;EMPTY_LIST&quot;,
+    97: &quot;APPEND&quot;,
+    98: &quot;BUILD&quot;,
+    99: &quot;GLOBAL&quot;,
+    100: &quot;DICT&quot;,
+    101: &quot;APPENDS&quot;,
+    103: &quot;GET&quot;,
+    104: &quot;BINGET&quot;,
+    105: &quot;INST&quot;,
+    106: &quot;LONG_BINGET&quot;,
+    108: &quot;LIST&quot;,
+    111: &quot;OBJ&quot;,
+    112: &quot;PUT&quot;,
+    113: &quot;BINPUT&quot;,
+    114: &quot;LONG_BINPUT&quot;,
+    115: &quot;SETITEM&quot;,
+    116: &quot;TUPLE&quot;,
+    117: &quot;SETITEMS&quot;,
+    125: &quot;EMPTY_DICT&quot;,
+    128: &quot;PROTO&quot;,
+    129: &quot;NEWOBJ&quot;,
+    130: &quot;EXT1&quot;,
+    131: &quot;EXT2&quot;,
+    132: &quot;EXT4&quot;,
+    133: &quot;TUPLE1&quot;,
+    134: &quot;TUPLE2&quot;,
+    135: &quot;TUPLE3&quot;,
+    136: &quot;NEWTRUE&quot;,
+    137: &quot;NEWFALSE&quot;,
+    138: &quot;LONG1&quot;,
+    139: &quot;LONG4&quot;,
+    140: &quot;SHORT_BINUNICODE&quot;,
+    141: &quot;BINUNICODE8&quot;,
+    142: &quot;BINBYTES8&quot;,
+    143: &quot;EMPTY_SET&quot;,
+    144: &quot;ADDITEMS&quot;,
+    145: &quot;FROZENSET&quot;,
+    146: &quot;NEWOBJ_EX&quot;,
+    147: &quot;STACK_GLOBAL&quot;,
+    148: &quot;MEMOIZE&quot;,
+    149: &quot;FRAME&quot;,
+  });
+
+  function PythonPickle(_io, _parent, _root) {
+    this._io = _io;
+    this._parent = _parent;
+    this._root = _root || this;
+
+    this._read();
+  }
+  PythonPickle.prototype._read = function() {
+    this.ops = [];
+    var i = 0;
+    while (!this._io.isEof()) {
+      this.ops.push(new Op(this._io, this, this._root));
+      i++;
+    }
+  }
+
+  /**
+   * Length prefixed string, between 0 and 2**64-1 bytes long.
+   * 
+   * Only a 64-bit build of Python would produce a pickle containing strings
+   * large enough to need this type. Such a pickle could not be unpickled on
+   * a 32-bit build of Python, because the string would be larger than
+   * `sys.maxsize`.
+   */
+
+  var Unicodestring8 = PythonPickle.Unicodestring8 = (function() {
+    function Unicodestring8(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Unicodestring8.prototype._read = function() {
+      this.len = this._io.readU8le();
+      this.val = KaitaiStream.bytesToStr(this._io.readBytes(this.len), &quot;utf8&quot;);
+    }
+
+    return Unicodestring8;
+  })();
+
+  /**
+   * Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,
+   * encoded as two&#39;s complement.
+   */
+
+  var Long1 = PythonPickle.Long1 = (function() {
+    function Long1(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Long1.prototype._read = function() {
+      this.len = this._io.readU1();
+      this.val = this._io.readBytes(this.len);
+    }
+
+    return Long1;
+  })();
+
+  /**
+   * Length prefixed string, between 0 and 2**64-1 bytes long.
+   * 
+   * Only a 64-bit build of Python would produce a pickle containing strings
+   * large enough to need this type. Such a pickle could not be unpickled on
+   * a 32-bit build of Python, because the string would be larger than
+   * `sys.maxsize`.
+   */
+
+  var Bytes8 = PythonPickle.Bytes8 = (function() {
+    function Bytes8(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Bytes8.prototype._read = function() {
+      this.len = this._io.readU8le();
+      this.val = this._io.readBytes(this.len);
+    }
+
+    return Bytes8;
+  })();
+
+  /**
+   * Length prefixed byte string, between 0 and 255 bytes long.
+   */
+
+  var Bytes1 = PythonPickle.Bytes1 = (function() {
+    function Bytes1(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Bytes1.prototype._read = function() {
+      this.len = this._io.readU1();
+      this.val = this._io.readBytes(this.len);
+    }
+
+    return Bytes1;
+  })();
+
+  /**
+   * Length prefixed string, between 0 and 2**32-1 bytes long
+   */
+
+  var Bytes4 = PythonPickle.Bytes4 = (function() {
+    function Bytes4(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Bytes4.prototype._read = function() {
+      this.len = this._io.readU4le();
+      this.val = this._io.readBytes(this.len);
+    }
+
+    return Bytes4;
+  })();
+
+  /**
+   * Some opcodes take no argument, this empty type is used for them.
+   */
+
+  var NoArg = PythonPickle.NoArg = (function() {
+    function NoArg(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    NoArg.prototype._read = function() {
+    }
+
+    return NoArg;
+  })();
+
+  /**
+   * Unquoted string, does not contain string escapes.
+   */
+
+  var StringnlNoescape = PythonPickle.StringnlNoescape = (function() {
+    function StringnlNoescape(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    StringnlNoescape.prototype._read = function() {
+      this.val = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), &quot;ascii&quot;);
+    }
+
+    return StringnlNoescape;
+  })();
+
+  /**
+   * Integer, encoded with the ASCII chracters [0-9-], followed by &#39;L&#39;.
+   */
+
+  var DecimalnlLong = PythonPickle.DecimalnlLong = (function() {
+    function DecimalnlLong(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    DecimalnlLong.prototype._read = function() {
+      this.val = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), &quot;ascii&quot;);
+    }
+
+    return DecimalnlLong;
+  })();
+
+  /**
+   * Length prefixed string, between 0 and 2**32-1 bytes long
+   */
+
+  var Unicodestring4 = PythonPickle.Unicodestring4 = (function() {
+    function Unicodestring4(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Unicodestring4.prototype._read = function() {
+      this.len = this._io.readU4le();
+      this.val = KaitaiStream.bytesToStr(this._io.readBytes(this.len), &quot;utf8&quot;);
+    }
+
+    return Unicodestring4;
+  })();
+
+  /**
+   * Unquoted string, containing Python Unicode escapes.
+   */
+
+  var Unicodestringnl = PythonPickle.Unicodestringnl = (function() {
+    function Unicodestringnl(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Unicodestringnl.prototype._read = function() {
+      this.val = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), &quot;ascii&quot;);
+    }
+
+    return Unicodestringnl;
+  })();
+
+  /**
+   * Large signed integer, in the range -2**(8*2**32-1) to 2**(8*2**32-1)-1,
+   * encoded as two&#39;s complement.
+   */
+
+  var Long4 = PythonPickle.Long4 = (function() {
+    function Long4(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Long4.prototype._read = function() {
+      this.len = this._io.readU4le();
+      this.val = this._io.readBytes(this.len);
+    }
+
+    return Long4;
+  })();
+
+  /**
+   * Length prefixed string, between 0 and 255 bytes long. Encoding is
+   * unspecified.
+   * 
+   * The default Python 2.x string type (`str`) is a sequence of bytes.
+   * These are pickled as `string1` or `string4`, when protocol == 2.
+   * The bytes are written directly, no explicit encoding is performed.
+   * 
+   * Python 3.x will not pickle an object as `string1` or `string4`.
+   * Instead, opcodes and types with a known encoding are used.
+   * When unpickling
+   * 
+   * - `pickle.Unpickler` objects default to ASCII, which can be overriden
+   * - `pickletools.dis` uses latin1, and cannot be overriden
+   * @see {@link https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495|Source}
+   */
+
+  var String1 = PythonPickle.String1 = (function() {
+    function String1(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    String1.prototype._read = function() {
+      this.len = this._io.readU1();
+      this.val = this._io.readBytes(this.len);
+    }
+
+    return String1;
+  })();
+
+  /**
+   * Integer or boolean, encoded with the ASCII characters [0-9-].
+   * 
+   * The values &#39;00&#39; and &#39;01&#39; encode the Python values `False` and `True`.
+   * Normally a value would not contain leading &#39;0&#39; characters.
+   */
+
+  var DecimalnlShort = PythonPickle.DecimalnlShort = (function() {
+    function DecimalnlShort(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    DecimalnlShort.prototype._read = function() {
+      this.val = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), &quot;ascii&quot;);
+    }
+
+    return DecimalnlShort;
+  })();
+
+  /**
+   * Length prefixed string, between 0 and 255 bytes long
+   */
+
+  var Unicodestring1 = PythonPickle.Unicodestring1 = (function() {
+    function Unicodestring1(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Unicodestring1.prototype._read = function() {
+      this.len = this._io.readU4le();
+      this.val = KaitaiStream.bytesToStr(this._io.readBytes(this.len), &quot;utf8&quot;);
+    }
+
+    return Unicodestring1;
+  })();
+
+  /**
+   * Quoted string, possibly containing Python string escapes.
+   */
+
+  var Stringnl = PythonPickle.Stringnl = (function() {
+    function Stringnl(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Stringnl.prototype._read = function() {
+      this.val = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), &quot;ascii&quot;);
+    }
+
+    return Stringnl;
+  })();
+
+  /**
+   * Pair of unquoted, unescaped strings.
+   */
+
+  var StringnlNoescapePair = PythonPickle.StringnlNoescapePair = (function() {
+    function StringnlNoescapePair(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    StringnlNoescapePair.prototype._read = function() {
+      this.val1 = new StringnlNoescape(this._io, this, this._root);
+      this.val2 = new StringnlNoescape(this._io, this, this._root);
+    }
+
+    return StringnlNoescapePair;
+  })();
+
+  /**
+   * Length prefixed string, between 0 and 2**31-1 bytes long. Encoding is
+   * unspecified.
+   * 
+   * Although the len field is signed, any length &lt; 0 will raise an exception
+   * during unpickling.
+   * 
+   * See the documentation for `string1` for further detail about encodings.
+   * @see {@link https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495|Source}
+   */
+
+  var String4 = PythonPickle.String4 = (function() {
+    function String4(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    String4.prototype._read = function() {
+      this.len = this._io.readS4le();
+      this.val = this._io.readBytes(this.len);
+    }
+
+    return String4;
+  })();
+
+  var Op = PythonPickle.Op = (function() {
+    function Op(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Op.prototype._read = function() {
+      this.code = this._io.readU1();
+      switch (this.code) {
+      case PythonPickle.Opcode.LIST:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.EXT2:
+        this.arg = this._io.readU2le();
+        break;
+      case PythonPickle.Opcode.STOP:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BINUNICODE:
+        this.arg = new Unicodestring4(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.PUT:
+        this.arg = new DecimalnlShort(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.NEWFALSE:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.LONG1:
+        this.arg = new Long1(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.UNICODE:
+        this.arg = new Unicodestringnl(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.EMPTY_LIST:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.MARK:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.PERSID:
+        this.arg = new StringnlNoescape(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.STACK_GLOBAL:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BININT:
+        this.arg = this._io.readS4le();
+        break;
+      case PythonPickle.Opcode.BINPUT:
+        this.arg = this._io.readU1();
+        break;
+      case PythonPickle.Opcode.BININT1:
+        this.arg = this._io.readU1();
+        break;
+      case PythonPickle.Opcode.BININT2:
+        this.arg = this._io.readU2le();
+        break;
+      case PythonPickle.Opcode.TUPLE:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.SHORT_BINSTRING:
+        this.arg = new String1(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.EMPTY_SET:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.STRING:
+        this.arg = new Stringnl(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.EMPTY_DICT:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BINGET:
+        this.arg = this._io.readU1();
+        break;
+      case PythonPickle.Opcode.APPEND:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.POP_MARK:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.GET:
+        this.arg = new DecimalnlShort(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.NEWOBJ:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.REDUCE:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BINBYTES:
+        this.arg = new Bytes4(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BINBYTES8:
+        this.arg = new Bytes8(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.SETITEM:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.FRAME:
+        this.arg = this._io.readU8le();
+        break;
+      case PythonPickle.Opcode.FLOAT:
+        this.arg = new Floatnl(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BINUNICODE8:
+        this.arg = new Unicodestring8(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.INT:
+        this.arg = new DecimalnlShort(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.LONG_BINPUT:
+        this.arg = this._io.readU4le();
+        break;
+      case PythonPickle.Opcode.EMPTY_TUPLE:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.LONG:
+        this.arg = new DecimalnlLong(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.FROZENSET:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.GLOBAL:
+        this.arg = new StringnlNoescapePair(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.OBJ:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.ADDITEMS:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.TUPLE1:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.SETITEMS:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.NONE:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BUILD:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.EXT4:
+        this.arg = this._io.readU4le();
+        break;
+      case PythonPickle.Opcode.NEWOBJ_EX:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BINFLOAT:
+        this.arg = this._io.readF8le();
+        break;
+      case PythonPickle.Opcode.DUP:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.LONG4:
+        this.arg = new Long4(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.SHORT_BINUNICODE:
+        this.arg = new Unicodestring1(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.TUPLE3:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.SHORT_BINBYTES:
+        this.arg = new Bytes1(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.EXT1:
+        this.arg = this._io.readU1();
+        break;
+      case PythonPickle.Opcode.DICT:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.APPENDS:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.INST:
+        this.arg = new StringnlNoescapePair(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BINPERSID:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.MEMOIZE:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.PROTO:
+        this.arg = this._io.readU1();
+        break;
+      case PythonPickle.Opcode.NEWTRUE:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.BINSTRING:
+        this.arg = new String4(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.TUPLE2:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.POP:
+        this.arg = new NoArg(this._io, this, this._root);
+        break;
+      case PythonPickle.Opcode.LONG_BINGET:
+        this.arg = this._io.readU4le();
+        break;
+      }
+    }
+
+    /**
+     * Operation code that determines which action should be
+     * performed next by the Pickle Virtual Machine. Some opcodes
+     * are only available in later versions of the Pickle protocol.
+     */
+
+    /**
+     * Optional argument for the operation. Data type and length
+     * are determined by the value of the opcode.
+     */
+
+    return Op;
+  })();
+
+  /**
+   * Double float, encoded with the ASCII characters [0-9.e+-], &#39;-inf&#39;, &#39;inf&#39;,
+   * or &#39;nan&#39;.
+   */
+
+  var Floatnl = PythonPickle.Floatnl = (function() {
+    function Floatnl(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Floatnl.prototype._read = function() {
+      this.val = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), &quot;ascii&quot;);
+    }
+
+    return Floatnl;
+  })();
+
+  return PythonPickle;
+})();
+return PythonPickle;
+}));
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2019 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Python pickle serialization format: Perl parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+  <script src="//kaitai.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="http://kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="http://kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="http://formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://kaitai.io/repl/index.html">Try it</a></li>
+                    <li><a href="https://ide.kaitai.io/">Web IDE</a></li>
+                    <li><a href="http://doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Serialization Protocols</li>
+        <li class="active">Python pickle serialization format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Python pickle serialization format:
+            
+            Perl parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Python Pickle format serializes Python objects to a byte stream, as a sequence
+of operations to run on the Pickle Virtual Machine.</p>
+<p>The format is mostly implementation defined, there is no formal specification.
+Pickle data types are closely coupled to the Python object model.
+Python singletons, and most builtin types (e.g. <code>None</code>, <code>int</code>,<code>dict</code>, <code>list</code>)
+are serialised using dedicated Pickle opcodes.
+Other builtin types, and all classes  (e.g. <code>set</code>, <code>datetime.datetime</code>) are
+serialised by encoding the name of a constructor callable.
+They are deserialised by importing that constructor, and calling it.
+So, unpickling an arbitrary pickle, using the Python's stdlib pickle module
+can cause arbitrary code execution.</p>
+<p>Pickle format has evolved with Python, later protocols add opcodes &amp; types.
+Later Python releases can pickle to or unpickle from any earlier protocol.</p>
+<ul>
+<li>Protocol 0: ASCII clean, no explicit version, fields are '\n' terminated.</li>
+<li>Protocol 1: Binary, no explicit version, first length prefixed types.</li>
+<li>Protocol 2: Python 2.3+. Explicit versioning, more length prefixed types.
+https://www.python.org/dev/peps/pep-0307/</li>
+<li>Protocol 3: Python 3.0+. Dedicated opcodes for <code>bytes</code> objects.</li>
+<li>Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, <code>set</code>.
+https://www.python.org/dev/peps/pep-3154/</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Python
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["pickle", "pkl"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q7190889">Wikidata Q7190889</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Pickle">Pickle in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Python pickle serialization format
+            using <a href="http://kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Python pickle serialization format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Python pickle serialization format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Python pickle serialization format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Python pickle serialization format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Python pickle serialization format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Python pickle serialization format parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="perl.html" title="Python pickle serialization format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Python pickle serialization format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Python pickle serialization format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Python pickle serialization format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Perl source code to parse Python pickle serialization format
+            
+        </h2>
+
+        
+
+        <h3>PythonPickle.pm</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/perl/PythonPickle.pm" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <pre><code class="perl"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+use strict;
+use warnings;
+use IO::KaitaiStruct 0.007_000;
+use Encode;
+
+########################################################################
+package PythonPickle;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+our $OPCODE_MARK = 40;
+our $OPCODE_EMPTY_TUPLE = 41;
+our $OPCODE_STOP = 46;
+our $OPCODE_POP = 48;
+our $OPCODE_POP_MARK = 49;
+our $OPCODE_DUP = 50;
+our $OPCODE_BINBYTES = 66;
+our $OPCODE_SHORT_BINBYTES = 67;
+our $OPCODE_FLOAT = 70;
+our $OPCODE_BINFLOAT = 71;
+our $OPCODE_INT = 73;
+our $OPCODE_BININT = 74;
+our $OPCODE_BININT1 = 75;
+our $OPCODE_LONG = 76;
+our $OPCODE_BININT2 = 77;
+our $OPCODE_NONE = 78;
+our $OPCODE_PERSID = 80;
+our $OPCODE_BINPERSID = 81;
+our $OPCODE_REDUCE = 82;
+our $OPCODE_STRING = 83;
+our $OPCODE_BINSTRING = 84;
+our $OPCODE_SHORT_BINSTRING = 85;
+our $OPCODE_UNICODE = 86;
+our $OPCODE_BINUNICODE = 88;
+our $OPCODE_EMPTY_LIST = 93;
+our $OPCODE_APPEND = 97;
+our $OPCODE_BUILD = 98;
+our $OPCODE_GLOBAL = 99;
+our $OPCODE_DICT = 100;
+our $OPCODE_APPENDS = 101;
+our $OPCODE_GET = 103;
+our $OPCODE_BINGET = 104;
+our $OPCODE_INST = 105;
+our $OPCODE_LONG_BINGET = 106;
+our $OPCODE_LIST = 108;
+our $OPCODE_OBJ = 111;
+our $OPCODE_PUT = 112;
+our $OPCODE_BINPUT = 113;
+our $OPCODE_LONG_BINPUT = 114;
+our $OPCODE_SETITEM = 115;
+our $OPCODE_TUPLE = 116;
+our $OPCODE_SETITEMS = 117;
+our $OPCODE_EMPTY_DICT = 125;
+our $OPCODE_PROTO = 128;
+our $OPCODE_NEWOBJ = 129;
+our $OPCODE_EXT1 = 130;
+our $OPCODE_EXT2 = 131;
+our $OPCODE_EXT4 = 132;
+our $OPCODE_TUPLE1 = 133;
+our $OPCODE_TUPLE2 = 134;
+our $OPCODE_TUPLE3 = 135;
+our $OPCODE_NEWTRUE = 136;
+our $OPCODE_NEWFALSE = 137;
+our $OPCODE_LONG1 = 138;
+our $OPCODE_LONG4 = 139;
+our $OPCODE_SHORT_BINUNICODE = 140;
+our $OPCODE_BINUNICODE8 = 141;
+our $OPCODE_BINBYTES8 = 142;
+our $OPCODE_EMPTY_SET = 143;
+our $OPCODE_ADDITEMS = 144;
+our $OPCODE_FROZENSET = 145;
+our $OPCODE_NEWOBJ_EX = 146;
+our $OPCODE_STACK_GLOBAL = 147;
+our $OPCODE_MEMOIZE = 148;
+our $OPCODE_FRAME = 149;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{ops} = ();
+    while (!$self-&gt;{_io}-&gt;is_eof()) {
+        push @{$self-&gt;{ops}}, PythonPickle::Op-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+}
+
+sub ops {
+    my ($self) = @_;
+    return $self-&gt;{ops};
+}
+
+########################################################################
+package PythonPickle::Unicodestring8;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{val} = Encode::decode(&quot;utf8&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;len()));
+}
+
+sub len {
+    my ($self) = @_;
+    return $self-&gt;{len};
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
+package PythonPickle::Long1;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{val} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len());
+}
+
+sub len {
+    my ($self) = @_;
+    return $self-&gt;{len};
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
+package PythonPickle::Bytes8;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len} = $self-&gt;{_io}-&gt;read_u8le();
+    $self-&gt;{val} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len());
+}
+
+sub len {
+    my ($self) = @_;
+    return $self-&gt;{len};
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
+package PythonPickle::Bytes1;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{val} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len());
+}
+
+sub len {
+    my ($self) = @_;
+    return $self-&gt;{len};
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
+package PythonPickle::Bytes4;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{val} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len());
+}
+
+sub len {
+    my ($self) = @_;
+    return $self-&gt;{len};
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
+package PythonPickle::NoArg;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+}
+
+########################################################################
+package PythonPickle::StringnlNoescape;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{val} = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes_term(10, 0, 1, 1));
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
+package PythonPickle::DecimalnlLong;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{val} = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes_term(10, 0, 1, 1));
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
+package PythonPickle::Unicodestring4;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{val} = Encode::decode(&quot;utf8&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;len()));
+}
+
+sub len {
+    my ($self) = @_;
+    return $self-&gt;{len};
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
+package PythonPickle::Unicodestringnl;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{val} = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes_term(10, 0, 1, 1));
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
+package PythonPickle::Long4;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{val} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len());
+}
+
+sub len {
+    my ($self) = @_;
+    return $self-&gt;{len};
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
+package PythonPickle::String1;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len} = $self-&gt;{_io}-&gt;read_u1();
+    $self-&gt;{val} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len());
+}
+
+sub len {
+    my ($self) = @_;
+    return $self-&gt;{len};
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
+package PythonPickle::DecimalnlShort;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{val} = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes_term(10, 0, 1, 1));
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
+package PythonPickle::Unicodestring1;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len} = $self-&gt;{_io}-&gt;read_u4le();
+    $self-&gt;{val} = Encode::decode(&quot;utf8&quot;, $self-&gt;{_io}-&gt;read_bytes($self-&gt;len()));
+}
+
+sub len {
+    my ($self) = @_;
+    return $self-&gt;{len};
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
+package PythonPickle::Stringnl;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{val} = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes_term(10, 0, 1, 1));
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
+package PythonPickle::StringnlNoescapePair;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{val1} = PythonPickle::StringnlNoescape-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    $self-&gt;{val2} = PythonPickle::StringnlNoescape-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+}
+
+sub val1 {
+    my ($self) = @_;
+    return $self-&gt;{val1};
+}
+
+sub val2 {
+    my ($self) = @_;
+    return $self-&gt;{val2};
+}
+
+########################################################################
+package PythonPickle::String4;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{len} = $self-&gt;{_io}-&gt;read_s4le();
+    $self-&gt;{val} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;len());
+}
+
+sub len {
+    my ($self) = @_;
+    return $self-&gt;{len};
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+########################################################################
+package PythonPickle::Op;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{code} = $self-&gt;{_io}-&gt;read_u1();
+    my $_on = $self-&gt;code();
+    if ($_on == $OPCODE_LIST) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_EXT2) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u2le();
+    }
+    elsif ($_on == $OPCODE_STOP) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_BINUNICODE) {
+        $self-&gt;{arg} = PythonPickle::Unicodestring4-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_PUT) {
+        $self-&gt;{arg} = PythonPickle::DecimalnlShort-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_NEWFALSE) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_LONG1) {
+        $self-&gt;{arg} = PythonPickle::Long1-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_UNICODE) {
+        $self-&gt;{arg} = PythonPickle::Unicodestringnl-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_EMPTY_LIST) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_MARK) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_PERSID) {
+        $self-&gt;{arg} = PythonPickle::StringnlNoescape-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_STACK_GLOBAL) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_BININT) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_s4le();
+    }
+    elsif ($_on == $OPCODE_BINPUT) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    elsif ($_on == $OPCODE_BININT1) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    elsif ($_on == $OPCODE_BININT2) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u2le();
+    }
+    elsif ($_on == $OPCODE_TUPLE) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_SHORT_BINSTRING) {
+        $self-&gt;{arg} = PythonPickle::String1-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_EMPTY_SET) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_STRING) {
+        $self-&gt;{arg} = PythonPickle::Stringnl-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_EMPTY_DICT) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_BINGET) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    elsif ($_on == $OPCODE_APPEND) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_POP_MARK) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_GET) {
+        $self-&gt;{arg} = PythonPickle::DecimalnlShort-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_NEWOBJ) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_REDUCE) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_BINBYTES) {
+        $self-&gt;{arg} = PythonPickle::Bytes4-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_BINBYTES8) {
+        $self-&gt;{arg} = PythonPickle::Bytes8-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_SETITEM) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_FRAME) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u8le();
+    }
+    elsif ($_on == $OPCODE_FLOAT) {
+        $self-&gt;{arg} = PythonPickle::Floatnl-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_BINUNICODE8) {
+        $self-&gt;{arg} = PythonPickle::Unicodestring8-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_INT) {
+        $self-&gt;{arg} = PythonPickle::DecimalnlShort-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_LONG_BINPUT) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+    elsif ($_on == $OPCODE_EMPTY_TUPLE) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_LONG) {
+        $self-&gt;{arg} = PythonPickle::DecimalnlLong-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_FROZENSET) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_GLOBAL) {
+        $self-&gt;{arg} = PythonPickle::StringnlNoescapePair-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_OBJ) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_ADDITEMS) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_TUPLE1) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_SETITEMS) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_NONE) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_BUILD) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_EXT4) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+    elsif ($_on == $OPCODE_NEWOBJ_EX) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_BINFLOAT) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_f8le();
+    }
+    elsif ($_on == $OPCODE_DUP) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_LONG4) {
+        $self-&gt;{arg} = PythonPickle::Long4-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_SHORT_BINUNICODE) {
+        $self-&gt;{arg} = PythonPickle::Unicodestring1-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_TUPLE3) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_SHORT_BINBYTES) {
+        $self-&gt;{arg} = PythonPickle::Bytes1-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_EXT1) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    elsif ($_on == $OPCODE_DICT) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_APPENDS) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_INST) {
+        $self-&gt;{arg} = PythonPickle::StringnlNoescapePair-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_BINPERSID) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_MEMOIZE) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_PROTO) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u1();
+    }
+    elsif ($_on == $OPCODE_NEWTRUE) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_BINSTRING) {
+        $self-&gt;{arg} = PythonPickle::String4-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_TUPLE2) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_POP) {
+        $self-&gt;{arg} = PythonPickle::NoArg-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
+    }
+    elsif ($_on == $OPCODE_LONG_BINGET) {
+        $self-&gt;{arg} = $self-&gt;{_io}-&gt;read_u4le();
+    }
+}
+
+sub code {
+    my ($self) = @_;
+    return $self-&gt;{code};
+}
+
+sub arg {
+    my ($self) = @_;
+    return $self-&gt;{arg};
+}
+
+########################################################################
+package PythonPickle::Floatnl;
+
+our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, &#39;&lt;&#39;, $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+
+    bless $self, $class;
+    $self-&gt;{_parent} = $_parent;
+    $self-&gt;{_root} = $_root || $self;;
+
+    $self-&gt;_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self-&gt;{val} = Encode::decode(&quot;ascii&quot;, $self-&gt;{_io}-&gt;read_bytes_term(10, 0, 1, 1));
+}
+
+sub val {
+    my ($self) = @_;
+    return $self-&gt;{val};
+}
+
+1;
+</code></pre>
+            
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2019 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
