@@ -4,10 +4,10 @@ use strict;
 use warnings;
 use IO::KaitaiStruct 0.007_000;
 use UdpDatagram;
-use IcmpPacket;
 use TcpSegment;
 use Ipv4Packet;
 use Ipv6Packet;
+use IcmpPacket;
 
 ########################################################################
 package ProtocolBody;

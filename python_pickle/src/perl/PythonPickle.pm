@@ -992,7 +992,7 @@ sub _read {
         $self->{arg} = PythonPickle::NoArg->new($self->{_io}, $self, $self->{_root});
     }
     elsif ($_on == $OPCODE_BINFLOAT) {
-        $self->{arg} = $self->{_io}->read_f8le();
+        $self->{arg} = $self->{_io}->read_f8be();
     }
     elsif ($_on == $OPCODE_DUP) {
         $self->{arg} = PythonPickle::NoArg->new($self->{_io}, $self, $self->{_root});

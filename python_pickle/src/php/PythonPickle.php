@@ -584,7 +584,7 @@ class Op extends \Kaitai\Struct\Struct {
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                 break;
             case \PythonPickle\Opcode::BINFLOAT:
-                $this->_m_arg = $this->_io->readF8le();
+                $this->_m_arg = $this->_io->readF8be();
                 break;
             case \PythonPickle\Opcode::DUP:
                 $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);

@@ -11,10 +11,10 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required"
 #endif
 class udp_datagram_t;
-class icmp_packet_t;
 class tcp_segment_t;
 class ipv4_packet_t;
 class ipv6_packet_t;
+class icmp_packet_t;
 
 /**
  * Protocol body represents particular payload on transport level (OSI

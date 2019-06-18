@@ -877,7 +877,7 @@ namespace Kaitai
                     break;
                 }
                 case PythonPickle.Opcode.Binfloat: {
-                    _arg = m_io.ReadF8le();
+                    _arg = m_io.ReadF8be();
                     break;
                 }
                 case PythonPickle.Opcode.Dup: {
